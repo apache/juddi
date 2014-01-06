@@ -15,6 +15,8 @@
 package org.apache.juddi.api.impl;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
@@ -142,11 +144,15 @@ public class API_100_ClientSubscriptionInfoTest {
 			ClientSubscriptionInfoDetail detail = publisher.saveClientSubscriptionInfo(saveClientSubscriptionInfo);
 			Assert.assertEquals("mykey", detail.getClientSubscriptionInfo().get(0).getSubscriptionKey());
 			
-			GetClientSubscriptionInfoDetail getDetail = new GetClientSubscriptionInfoDetail();
-			getDetail.setAuthInfo(authInfoJoe);
-			getDetail.getClientSubscriptionKey().add("mykey");
-			
-			ClientSubscriptionInfoDetail detail2 = publisher.getClientSubscriptionInfoDetail(getDetail);
+			//GetClientSubscriptionInfoDetail getDetail = new GetClientSubscriptionInfoDetail();
+			//getDetail.setAuthInfo(authInfoJoe);
+			//getDetail.getClientSubscriptionKey().add("mykey");
+			List<String>keys = new ArrayList<String>();
+                        keys.add("mykey");
+                        GetClientSubscriptionInfoDetail req = new GetClientSubscriptionInfoDetail();
+                        req.setAuthInfo(authInfoJoe);
+                        req.getClientSubscriptionKey().addAll(keys);
+			ClientSubscriptionInfoDetail detail2 = publisher.getClientSubscriptionInfoDetail(req);
 			Assert.assertEquals("mykey", detail2.getClientSubscriptionInfo().get(0).getSubscriptionKey());
 	
 			DeleteClientSubscriptionInfo deleteInfo = new DeleteClientSubscriptionInfo();
@@ -156,7 +162,8 @@ public class API_100_ClientSubscriptionInfoTest {
 			
 			try {
 				@SuppressWarnings("unused")
-				ClientSubscriptionInfoDetail detail3 = publisher.getClientSubscriptionInfoDetail(getDetail);
+                                        
+				ClientSubscriptionInfoDetail detail3 = publisher.getClientSubscriptionInfoDetail(req);
 				Assert.fail("We're expecting an InvalidKeyPassedException");
 			} catch (Exception e) {
 				Assert.assertEquals(InvalidKeyPassedException.class, e.getClass());
@@ -188,6 +195,7 @@ public class API_100_ClientSubscriptionInfoTest {
 		saveNode.getNode().add(node);
 		
 		NodeDetail nodeDetail = publisher.saveNode(saveNode);
+                Assert.fail();
 		
 		
 	}

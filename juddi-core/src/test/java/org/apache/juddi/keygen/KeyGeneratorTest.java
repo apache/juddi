@@ -42,6 +42,7 @@ public class KeyGeneratorTest
 			String message = e.getMessage();
 			Assert.assertEquals("The specified Key Generator class 'org.apache.juddi.keygen.FooGenerator' was not found on classpath.", message);
 		}
+                System.clearProperty(Property.JUDDI_KEYGENERATOR);
 	}
 	
 	@Test() 
@@ -56,6 +57,7 @@ public class KeyGeneratorTest
 			String message = e.getMessage();
 			Assert.assertEquals("The specified Key Generator class 'org.apache.juddi.keygen.KeyGenerator' cannot be instantiated.", message);
 		}
+                System.clearProperty(Property.JUDDI_KEYGENERATOR);
 	}
 	/**
 	 * The DefaultKeyGenerator
@@ -74,6 +76,7 @@ public class KeyGeneratorTest
 			logger.error(e.getMessage(),e);
 			Assert.fail("unexpected");
 		}
+                System.clearProperty(Property.JUDDI_KEYGENERATOR);
 	}
 	
 }

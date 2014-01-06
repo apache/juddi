@@ -55,6 +55,7 @@ public class API_030_BusinessEntityTest {
         @BeforeClass
         public static void setup() throws ConfigurationException {
                 Registry.start();
+                logger.info("API_030_BusinessEntityTest");
                 logger.debug("Getting auth token..");
                 try {
                         api010.saveJoePublisher();
@@ -73,6 +74,7 @@ public class API_030_BusinessEntityTest {
 
         @AfterClass
         public static void stopRegistry() throws ConfigurationException {
+                tckTModel.deleteCreatedTModels(authInfoJoe);
                 Registry.stop();
         }
 

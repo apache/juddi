@@ -72,7 +72,7 @@ public class TckBusinessService
 	}
 
 	public void saveJoePublisherServices(String authInfoJoe, int businessInt, int numberOfCopies) {
-		saveServices(authInfoJoe, businessInt, JOE_SERVICE_XML, JOE_SERVICE_KEY, numberOfCopies);
+		saveServices(authInfoJoe, businessInt, JOE_SERVICE_XML, JOE_SERVICE_KEY, numberOfCopies, TckBusiness.JOE_BUSINESS_KEY);
 	}
 	
 	public void deleteJoePublisherService(String authInfoJoe) {
@@ -101,7 +101,7 @@ public class TckBusinessService
 	}
 	
 	public void saveSamSyndicatorServices(String authInfoSam, int businessInt, int numberOfCopies) {
-		saveServices(authInfoSam, businessInt, SAM_SERVICE_XML, SAM_SERVICE_KEY, numberOfCopies);
+		saveServices(authInfoSam, businessInt, SAM_SERVICE_XML, SAM_SERVICE_KEY, numberOfCopies, TckBusiness.SAM_BUSINESS_KEY);
 	}
 	
 	public void deleteSamSyndicatorService(String authInfoSam) {
@@ -112,7 +112,7 @@ public class TckBusinessService
 		deleteServices(authInfoSam, businessInt, SAM_SERVICE_KEY, numberOfCopies);
 	}
 	
-	public void saveServices(String authInfo, int businessInt, String serviceXML, String serviceKey, int numberOfCopies) {
+	public void saveServices(String authInfo, int businessInt, String serviceXML, String serviceKey, int numberOfCopies, String parentBusinessKey) {
 		SaveService ss = null;
 		try {
 			org.uddi.api_v3.BusinessService bsIn = (org.uddi.api_v3.BusinessService)EntityCreator.buildFromDoc(serviceXML, "org.uddi.api_v3");
@@ -123,7 +123,7 @@ public class TckBusinessService
 				ss = new SaveService();
 				ss.setAuthInfo(authInfo);
 				bsIn.getName().get(0).setValue(serviceName + "-" + i);
-				bsIn.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY + "-" + businessInt);
+				bsIn.setBusinessKey(parentBusinessKey);
 				bsIn.setServiceKey(serviceKey + "-" + businessInt + "-" + i);
 				bsIn.getBindingTemplates().getBindingTemplate().get(0).setBindingKey(bindingKey + "-" + businessInt + "-" + i);
 				bsIn.getBindingTemplates().getBindingTemplate().get(0).setServiceKey(serviceKey + "-" + businessInt + "-" + i);
@@ -135,7 +135,7 @@ public class TckBusinessService
 				}
 				
 				publication.saveService(ss);
-				logger.debug("Add service with key " + bsIn.getServiceKey());
+				logger.info("Add service with key " + bsIn.getServiceKey());
 			}
 		}
 		catch(Exception e) {
@@ -150,6 +150,7 @@ public class TckBusinessService
 	
 	public String saveService(String authInfo, String serviceXML, String serviceKey, String description) {
 		try {
+                        logger.info("saving service key " + serviceKey + " from " + serviceXML);
 			// First save the entity
 			SaveService ss = new SaveService();
 			ss.setAuthInfo(authInfo);

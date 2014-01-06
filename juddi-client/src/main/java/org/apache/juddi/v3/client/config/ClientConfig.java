@@ -110,6 +110,10 @@ public class ClientConfig
 		CompositeConfiguration compositeConfig = new CompositeConfiguration();
 		compositeConfig.addConfiguration(new SystemConfiguration());
 		//Properties from XML file
+                if (System.getProperty(UDDI_CONFIG_FILENAME_PROPERTY)!=null){
+                        log.info("Using system property config override");
+                        configurationFile = System.getProperty(UDDI_CONFIG_FILENAME_PROPERTY);
+                }
 		XMLConfiguration xmlConfig = null;
 		if (configurationFile!=null) {
 			xmlConfig = new XMLConfiguration(configurationFile);

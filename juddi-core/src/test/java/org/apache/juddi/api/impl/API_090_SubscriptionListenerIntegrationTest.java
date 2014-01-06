@@ -101,7 +101,7 @@ public class API_090_SubscriptionListenerIntegrationTest
 			//Saving the binding template that will be called by the server for a subscription event
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			//Saving the HTTP Listener Service
-			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, httpPort);
+			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, httpPort, "localhost");
 			//Saving the HTTP Subscription
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_XML);
             //Changing the service we subscribed to "JoePublisherService"
@@ -146,7 +146,7 @@ public class API_090_SubscriptionListenerIntegrationTest
 			//Saving the binding template that will be called by the server for a subscription event
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			//Saving the SMTP Listener Service
-			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_SMTP_SERVICE_XML, 0);
+			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_SMTP_SERVICE_XML, 0, "localhost");
 			//Saving the SMTP Subscription
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_SMTP_XML);
             //Changing the service we subscribed to "JoePublisherService"
@@ -197,13 +197,13 @@ public class API_090_SubscriptionListenerIntegrationTest
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			//Saving the Listener Service
-			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, httpPort);
+			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, httpPort, "localhost");
 			//Saving the Subscription
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_XML);
             //Changing the service we subscribed to "JoePublisherService"
 			Thread.sleep(1000);
 			logger.info("Deleting Business ********** ");
-			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			tckBusiness.updateJoePublisherBusiness(authInfoJoe);
 			
             //waiting up to 100 seconds for the listener to notice the change.
 			String test="";

@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.juddi.v3.tck;
 
 import java.io.StringWriter;
@@ -36,54 +35,56 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 
 /**
- * WebService which implements the UDDI v3 SubscriptionListener API. This service can be
- * brought during integration testing on the test side. The UDDI server can then
- * call in to it.
- * 
+ * WebService which implements the UDDI v3 SubscriptionListener API. This
+ * service can be brought during integration testing on the test side. The UDDI
+ * server can then call in to it.
+ *
  * @author kstam
  *
  */
-@WebService(serviceName="UDDISubscriptionListenerService", 
-			endpointInterface="org.uddi.v3_service.UDDISubscriptionListenerPortType",
-			targetNamespace = "urn:uddi-org:v3_service")
-public class UDDISubscriptionListenerImpl extends UnicastRemoteObject  implements
-		UDDISubscriptionListenerPortType {
-	
-	private static final long serialVersionUID = -4621713293140278731L;
-	private static Log logger = LogFactory.getLog(UDDISubscriptionListenerImpl.class);
-	public static Integer notificationCount = 0;
-	public static Map<Integer,String> notifcationMap = new HashMap<Integer,String>();
-	
-	public UDDISubscriptionListenerImpl() throws RemoteException  {
-		super();
-	}
-	
-	public UDDISubscriptionListenerImpl(int port) throws RemoteException {
-		super(port);
-	}
-	
-	public DispositionReport notifySubscriptionListener(
-			NotifySubscriptionListener body)
-			throws DispositionReportFaultMessage 
-	{
-		try {
-			JAXBContext context = JAXBContext.newInstance(body.getClass());
-			Marshaller marshaller = context.createMarshaller();
-			StringWriter sw = new StringWriter();
-			marshaller.marshal(body, sw);
-			logger.info("Notification received by UDDISubscriptionListenerService : " + sw.toString());
-			
-			//Adding the received subscription XML to a Map.
-			notifcationMap.put(notificationCount++, sw.toString());
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-			
-		DispositionReport dr = new DispositionReport();
-		Result res = new Result();
-		dr.getResult().add(res);
-		return dr;
-	}
-	
+@WebService(serviceName = "UDDISubscriptionListenerService",
+        endpointInterface = "org.uddi.v3_service.UDDISubscriptionListenerPortType",
+        targetNamespace = "urn:uddi-org:v3_service")
+public class UDDISubscriptionListenerImpl extends UnicastRemoteObject implements
+        UDDISubscriptionListenerPortType {
+
+        private static final long serialVersionUID = -4621713293140278731L;
+        private static Log logger = LogFactory.getLog(UDDISubscriptionListenerImpl.class);
+        public static Integer notificationCount = 0;
+        public static Map<Integer, String> notifcationMap = new HashMap<Integer, String>();
+
+        public UDDISubscriptionListenerImpl() throws RemoteException {
+                super();
+        }
+
+        public UDDISubscriptionListenerImpl(int port) throws RemoteException {
+                super(port);
+        }
+
+        public DispositionReport notifySubscriptionListener(
+                NotifySubscriptionListener body)
+                throws DispositionReportFaultMessage {
+                try {
+                        JAXBContext context = JAXBContext.newInstance(body.getClass());
+                        Marshaller marshaller = context.createMarshaller();
+                        StringWriter sw = new StringWriter();
+                        marshaller.marshal(body, sw);
+                        if (TckCommon.isDebug()) {
+                                logger.info("Notification received by UDDISubscriptionListenerService : " + sw.toString());
+                        } else {
+                                logger.info("Notification received by UDDISubscriptionListenerService");
+                        }
+
+                        //Adding the received subscription XML to a Map.
+                        notifcationMap.put(notificationCount++, sw.toString());
+
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+
+                DispositionReport dr = new DispositionReport();
+                Result res = new Result();
+                dr.getResult().add(res);
+                return dr;
+        }
 }

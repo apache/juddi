@@ -19,6 +19,7 @@ import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.AuthToken;
@@ -27,6 +28,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class UDDI_010_PublisherIntegrationTest {
 	
@@ -45,6 +47,7 @@ public class UDDI_010_PublisherIntegrationTest {
 	
      @Test
      public void testAuthToken() {
+             Assume.assumeTrue(TckPublisher.isUDDIAuthMode());
 	     try {
 	    	 Transport transport = manager.getTransport();
         	 UDDISecurityPortType securityService = transport.getUDDISecurityService();
@@ -52,7 +55,7 @@ public class UDDI_010_PublisherIntegrationTest {
         	 getAuthToken.setUserID(TckPublisher.getRootPublisherId());
         	 getAuthToken.setCred(TckPublisher.getRootPassword());
         	 AuthToken authToken = securityService.getAuthToken(getAuthToken);
-        	 System.out.println(authToken.getAuthInfo());
+        	 System.out.println("Don't log auth tokens!");
         	 Assert.assertNotNull(authToken);
 	     } catch (Exception e) {
 	         e.printStackTrace();

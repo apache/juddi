@@ -35,13 +35,13 @@ import org.uddi.sub_v3.GetSubscriptionResults;
 import org.uddi.sub_v3.KeyBag;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionResultsList;
-import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 import static junit.framework.Assert.assertEquals;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.v3_service.UDDIInquiryPortType;
+import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -62,10 +62,7 @@ public class TckSubscription
 	final static String SAM_SUBSCRIPTION2_XML = "uddi_data/subscription/subscription3.xml";
     final static String SAM_SUBSCRIPTION2_KEY = "uddi:www.samco.com:subscriptiontwo";
 	final static String SAM_SUBSCRIPTIONRESULTS2_XML = "uddi_data/subscription/subscriptionresults3.xml";
-        /**
-         * this represents how many find qualifiers are present in the juddi install_data
-         */
-	 static int FINDQUALIFIER_TMODEL_TOTAL = 23;
+	 static int FINDQUALIFIER_TMODEL_TOTAL = 22;
 
 	final static String SAM_SUBSCRIPTION3_XML = "uddi_data/subscription/subscription4.xml";
     final static String SAM_SUBSCRIPTION3_KEY = "uddi:www.samco.com:subscriptionthree";
@@ -73,14 +70,14 @@ public class TckSubscription
 	
 	private Log logger = LogFactory.getLog(this.getClass());
     UDDISubscriptionPortType subscription = null;
-        UDDIInquiryPortType inquiry = null;
 	UDDISecurityPortType security = null;
+        UDDIInquiryPortType inquiry=null;
 	
-	public TckSubscription(UDDISubscriptionPortType subscription, UDDISecurityPortType security, UDDIInquiryPortType inquiry) {
+	public TckSubscription(UDDISubscriptionPortType subscription,UDDISecurityPortType security,UDDIInquiryPortType inquiry) {
 		super();
 		this.subscription = subscription;
 		this.security = security;
-                this.inquiry = inquiry;
+                this.inquiry=inquiry;
 	}
 
 	public void saveJoePublisherSubscription(String authInfoJoe, String subscriptionXML,String subscriptionKey) {
@@ -211,7 +208,7 @@ public class TckSubscription
 			Subscription subIn = (Subscription)EntityCreator.buildFromDoc(SAM_SUBSCRIPTION2_XML, "org.uddi.sub_v3");
 			
 			int expectedIterations = FINDQUALIFIER_TMODEL_TOTAL / subIn.getMaxEntities();
-                        if (FINDQUALIFIER_TMODEL_TOTAL % subIn.getMaxEntities() >0)
+			if (FINDQUALIFIER_TMODEL_TOTAL % subIn.getMaxEntities() >0)
 				expectedIterations++;
 			
                         

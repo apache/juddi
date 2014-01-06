@@ -58,10 +58,10 @@
 		<maxInClause>1000</maxInClause>
 
 		<!-- The maximum number of UDDI artifacts allowed per publisher. A value of '-1' indicates any  number of artifacts is valid (These values can be overridden at the individual publisher level).-->
-		<maxBusinessesPerPublisher>100</maxBusinessesPerPublisher>
-		<maxServicesPerBusiness>100</maxServicesPerBusiness>
-		<maxBindingsPerService>100</maxBindingsPerService>
-		<maxTModelsPerPublisher>100</maxTModelsPerPublisher>
+		<maxBusinessesPerPublisher>-1</maxBusinessesPerPublisher>
+		<maxServicesPerBusiness>-1</maxServicesPerBusiness>
+		<maxBindingsPerService>-1</maxBindingsPerService>
+		<maxTModelsPerPublisher>-1</maxTModelsPerPublisher>
 
 		<!-- Days before a transfer request expires-->
 		<transfer>

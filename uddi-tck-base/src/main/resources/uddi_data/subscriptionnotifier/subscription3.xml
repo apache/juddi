@@ -27,6 +27,6 @@
     </find_tModel>
   </subscriptionFilter>
   <bindingKey xmlns="urn:uddi-org:api_v3">uddi:uddi.joepublisher.com:bindinglistener</bindingKey>
-  <notificationInterval>P5D</notificationInterval>
+  <notificationInterval>PT5S</notificationInterval>
   <maxEntities>1000</maxEntities>
 </subscription>

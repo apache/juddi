@@ -68,7 +68,7 @@ public class API_020_TmodelTest {
 	
 	@Test
 	public void testJoePublisherTmodel() {
-		tckTModel.saveJoePublisherTmodel(authInfoJoe);
+		tckTModel.saveJoePublisherTmodel(authInfoJoe, true);
 		
 		//Now if we use a finder it should be found.
 		TModelList tModelList = tckTModel.findJoeTModelDetail();

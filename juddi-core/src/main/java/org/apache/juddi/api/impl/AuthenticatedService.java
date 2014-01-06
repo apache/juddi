@@ -17,11 +17,7 @@
 
 package org.apache.juddi.api.impl;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Resource;
 
 import javax.persistence.EntityManager;

@@ -98,7 +98,7 @@
   </jaxws:endpoint>
 
    <util:map id="jsonNamespaceMap" map-class="java.util.Hashtable" >
-                <!--<entry key="urn:uddi-org:api_v3" value="uddi-org-api_v3"/>
+                <entry key="urn:uddi-org:api_v3" value="uddi-org-api_v3"/>
 				                <entry key="urn:uddi-org:api_v3" value="urn:uddi-org:api_v3"/>
                 <entry key="urn:uddi-org:sub_v3" value="urn:uddi-org:sub_v3"/>
                 <entry key="urn:uddi-org:custody_v3" value="urn:uddi-org:custody_v3"/>
@@ -109,9 +109,8 @@
                 <entry key="urn:uddi-org:vscache_v3" value="urn:uddi-org:vscache_v3"/>
                 <entry key="urn:uddi-org:policy_v3" value="urn:uddi-org:policy_v3"/>
                 <entry key="urn:uddi-org:policy_instanceParms_v3" value="urn:uddi-org:policy_instanceParms_v3"/>
-                <entry key="http://www.w3.org/2000/09/xmldsig#" value="http://www.w3.org/2000/09/xmldsig#"/>-->
-				<entry key="urn:uddi-org:api_v3" value="uddiv3"/>
-				                <entry key="urn:uddi-org:api_v3" value="uddiv3sub"/>
+                <entry key="http://www.w3.org/2000/09/xmldsig#" value="http://www.w3.org/2000/09/xmldsig#"/>
+				
   </util:map>
  
 

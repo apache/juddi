@@ -61,6 +61,7 @@ public class API_051_BindingTemplateWSDLTest
 	@BeforeClass
 	public static void setup() throws ConfigurationException {
 		Registry.start();
+                logger.info("API_051_BindingTemplateWSDLTest");
 		logger.debug("Getting auth token..");
 		try {
 			api010.saveJoePublisher();
@@ -77,6 +78,7 @@ public class API_051_BindingTemplateWSDLTest
 
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
+                tckTModel.deleteCreatedTModels(authInfoJoe);
 		Registry.stop();
 	}
 	

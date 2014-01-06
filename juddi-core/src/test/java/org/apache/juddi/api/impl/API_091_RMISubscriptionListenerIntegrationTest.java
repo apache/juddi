@@ -120,7 +120,7 @@ public class API_091_RMISubscriptionListenerIntegrationTest
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			//Saving the Listener Service
-			tckSubscriptionListenerRMI.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_RMI_SERVICE_XML, randomPort);
+			tckSubscriptionListenerRMI.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_RMI_SERVICE_XML, randomPort, "localhost");
 			//Saving the Subscription
 			tckSubscriptionListenerRMI.saveNotifierSubscription(authInfoJoe, TckSubscriptionListenerRMI.SUBSCRIPTION_XML_RMI);
 			//Changing the service we subscribed to "JoePublisherService"

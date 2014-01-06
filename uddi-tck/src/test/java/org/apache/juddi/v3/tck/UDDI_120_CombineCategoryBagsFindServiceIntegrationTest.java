@@ -14,8 +14,8 @@ package org.apache.juddi.v3.tck;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import java.util.List;
+import javax.xml.ws.BindingProvider;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
@@ -39,237 +39,236 @@ import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
  * Test to verify JUDDI-456
- * 
- * Test does a find_service with the combinedCategoryBags findQualifier set, expects
- * back one service with a serviceKey of uddi:uddi.tompublisher.com:servicetest02.
- * 
+ *
+ * Test does a find_service with the combinedCategoryBags findQualifier set,
+ * expects back one service with a serviceKey of
+ * uddi:uddi.tompublisher.com:servicetest02.
+ *
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
-public class UDDI_120_CombineCategoryBagsFindServiceIntegrationTest 
-{
-    final static String TOM_PUBLISHER_TMODEL_XML      = "uddi_data/tompublisher/tModelKeyGen.xml";
-    final static String TOM_PUBLISHER_TMODEL01_XML 	  = "uddi_data/tompublisher/tModel01.xml";
-    final static String TOM_PUBLISHER_TMODEL02_XML 	  = "uddi_data/tompublisher/tModel02.xml";
+public class UDDI_120_CombineCategoryBagsFindServiceIntegrationTest {
 
-    final static String TOM_PUBLISHER_TMODEL_KEY      = "uddi:uddi.tompublisher.com:keygenerator";
-    final static String TOM_PUBLISHER_TMODEL01_KEY      = "uddi:uddi.tompublisher.com:tmodeltest01";
-    final static String TOM_PUBLISHER_TMODEL01_NAME 	= "tmodeltest01";
-    final static String TOM_PUBLISHER_TMODEL02_KEY      = "uddi:uddi.tompublisher.com:tmodeltest02";
+        final static String TOM_PUBLISHER_TMODEL_XML = "uddi_data/tompublisher/tModelKeyGen.xml";
+        final static String TOM_PUBLISHER_TMODEL01_XML = "uddi_data/tompublisher/tModel01.xml";
+        final static String TOM_PUBLISHER_TMODEL02_XML = "uddi_data/tompublisher/tModel02.xml";
+        final static String TOM_PUBLISHER_TMODEL_KEY = "uddi:uddi.tompublisher.com:keygenerator";
+        final static String TOM_PUBLISHER_TMODEL01_KEY = "uddi:uddi.tompublisher.com:tmodeltest01";
+        final static String TOM_PUBLISHER_TMODEL01_NAME = "tmodeltest01";
+        final static String TOM_PUBLISHER_TMODEL02_KEY = "uddi:uddi.tompublisher.com:tmodeltest02";
+        final static String TOM_BUSINESS1_XML = "uddi_data/tompublisher/juddi456-business1.xml";
+        final static String TOM_BUSINESS2_XML = "uddi_data/tompublisher/juddi456-business2.xml";
+        final static String TOM_BUSINESS5_XML = "uddi_data/tompublisher/juddi456-business5.xml";
+        final static String TOM_BUSINESS1_KEY = "uddi:uddi.tompublisher.com:businesstest01";
+        final static String TOM_BUSINESS2_KEY = "uddi:uddi.tompublisher.com:businesstest02";
+        final static String TOM_BUSINESS5_KEY = "uddi:uddi.tompublisher.com:businesstest05";
+        final static String SERVICE_KEY1 = "uddi:uddi.tompublisher.com:servicetest01";
+        final static String SERVICE_KEY5 = "uddi:uddi.tompublisher.com:servicetest05";
+        final static String TOM_PUBLISHER_SERVICEINFO_NAME = "servicetest01";
+        private static Log logger = LogFactory.getLog(UDDI_120_CombineCategoryBagsFindServiceIntegrationTest.class);
+        protected static TckTModel tckTModel = null;
+        protected static TckBusiness tckBusiness = null;
+        protected static String authInfoJoe = null;
+        private static UDDIInquiryPortType inquiry = null;
+        private static UDDIClient manager;
 
-    final static String TOM_BUSINESS1_XML       = "uddi_data/tompublisher/juddi456-business1.xml";
-    final static String TOM_BUSINESS2_XML       = "uddi_data/tompublisher/juddi456-business2.xml";
-    final static String TOM_BUSINESS5_XML       = "uddi_data/tompublisher/juddi456-business5.xml";
-    final static String TOM_BUSINESS1_KEY        = "uddi:uddi.tompublisher.com:businesstest01";
-    final static String TOM_BUSINESS2_KEY        = "uddi:uddi.tompublisher.com:businesstest02";
-    final static String TOM_BUSINESS5_KEY       = "uddi:uddi.tompublisher.com:businesstest05";
+        @AfterClass
+        public static void stopManager() throws ConfigurationException {
+                tckTModel.deleteCreatedTModels(authInfoJoe);
+                manager.stop();
+        }
 
-    final static String SERVICE_KEY1 = "uddi:uddi.tompublisher.com:servicetest01";
-    final static String SERVICE_KEY5 = "uddi:uddi.tompublisher.com:servicetest05";
-    
-    final static String TOM_PUBLISHER_SERVICEINFO_NAME = "servicetest01";
-    
-    private static Log logger = LogFactory.getLog(UDDI_120_CombineCategoryBagsFindServiceIntegrationTest.class);
-	
-	protected static TckTModel tckTModel               = null;
-	protected static TckBusiness tckBusiness           = null;
-	
-	protected static String authInfoJoe                = null;
-	
-	private static UDDIInquiryPortType inquiry = null;
-	private static UDDIClient manager;
+        @BeforeClass
+        public static void startManager() throws ConfigurationException {
+                manager = new UDDIClient();
+                manager.start();
 
-	@AfterClass
-	public static void stopManager() throws ConfigurationException {
-		manager.stop();
-	}
-	
-	@BeforeClass
-	public static void startManager() throws ConfigurationException {
-		manager  = new UDDIClient();
-		manager.start();
-		
-		logger.debug("Getting auth tokens..");
-		try {
-			 Transport transport = manager.getTransport();
-        	 UDDISecurityPortType security = transport.getUDDISecurityService();
-        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
-        	 Assert.assertNotNull(authInfoJoe);
-        	 UDDIPublicationPortType publication = transport.getUDDIPublishService();
-        	 inquiry = transport.getUDDIInquiryService();
-        	 
-        	 tckTModel  = new TckTModel(publication, inquiry);
-        	 tckBusiness = new TckBusiness(publication, inquiry);
-	     } catch (Exception e) {
-	    	 logger.error(e.getMessage(), e);
-				Assert.fail("Could not obtain authInfo token.");
-	     } 
-	}
-	
-	@Test
-	public void findServiceByCategoryBag() {
-		try {
-			tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
-			tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
-			tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
-			
-			tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS1_XML, TOM_BUSINESS1_KEY, 1);
-			tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS2_XML, TOM_BUSINESS2_KEY, 1);
-			tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS5_XML, TOM_BUSINESS5_KEY, 1);
-			try {
-				int size = 0;
-				ServiceList sl = null;
+                logger.debug("Getting auth tokens..");
+                try {
+                        Transport transport = manager.getTransport();
+                        UDDISecurityPortType security = transport.getUDDISecurityService();
+                        authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                        //Assert.assertNotNull(authInfoJoe);
+                        UDDIPublicationPortType publication = transport.getUDDIPublishService();
+                        inquiry = transport.getUDDIInquiryService();
 
-				FindService fs = new FindService();
-				
-				//by default keys are ADD, we should only find service 5
-                KeyedReference keyRef1 = new KeyedReference();
-                keyRef1.setTModelKey(TOM_PUBLISHER_TMODEL01_KEY);
-                keyRef1.setKeyValue("value-z");
-                
-                KeyedReference keyRef2 = new KeyedReference();
-                keyRef2.setTModelKey(TOM_PUBLISHER_TMODEL02_KEY);
-				keyRef2.setKeyValue("value-x");
-				
-				CategoryBag cb = new CategoryBag();
-				cb.getKeyedReference().add(keyRef1);
-				cb.getKeyedReference().add(keyRef2);
-				fs.setCategoryBag(cb);
-				
-				sl = inquiry.findService(fs);
-				if (sl.getServiceInfos() == null) {
-                    Assert.fail("Should have found one entry on FindService with TModelBag, "
-                       + "found " + size);
-				}
-				size = sl.getServiceInfos().getServiceInfo().size();
-				if (size != 1) {
-					Assert.fail("Should have found one entry on FindService with TModelBag, "
-							+ "found " + size);
-				} else {
-				    List<ServiceInfo> siList = sl.getServiceInfos().getServiceInfo();
-					String serviceKey = siList.get(0).getServiceKey();
-					if (!SERVICE_KEY5.equals(serviceKey)) {
-					    Assert.fail("Should have found service key " + SERVICE_KEY5
-					            + " but found [" + serviceKey + "]");
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				Assert.fail(e.getMessage());
-			}
-		} finally {
-            tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS1_XML, TOM_BUSINESS1_KEY, 1);
-            tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS2_XML, TOM_BUSINESS2_KEY, 1);
-            tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS5_XML, TOM_BUSINESS5_KEY, 1);
-			
-			tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
-			tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
-			tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
-		}
-	}
-	
-	@Test
-	public void findNoServiceByCategoryBag() {
-		try {
-			tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
-			tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
-			tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
-			
-			tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS1_XML, TOM_BUSINESS1_KEY, 1);
-			tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS2_XML, TOM_BUSINESS2_KEY, 1);
-			tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS5_XML, TOM_BUSINESS5_KEY, 1);
-			try {
-				int size = 0;
-				ServiceList sl = null;
+                        if (!TckPublisher.isUDDIAuthMode()){
+                                TckSecurity.setCredentials((BindingProvider) publication, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                                TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                        }
+                        tckTModel = new TckTModel(publication, inquiry);
+                        tckBusiness = new TckBusiness(publication, inquiry);
+                } catch (Exception e) {
+                        logger.error(e.getMessage(), e);
+                        Assert.fail("Could not obtain authInfo token.");
+                }
+        }
 
-				FindService fs = new FindService();
-				
-				//by default keys are ADD, we should only find service 5
-                KeyedReference keyRef1 = new KeyedReference();
-                keyRef1.setTModelKey(TOM_PUBLISHER_TMODEL01_KEY);
-                keyRef1.setKeyValue("value-y");
-               
-				CategoryBag cb = new CategoryBag();
-				cb.getKeyedReference().add(keyRef1);
-				fs.setCategoryBag(cb);
-				
-				sl = inquiry.findService(fs);
-				if (sl.getServiceInfos() != null) {
-                    Assert.fail("Should have found no entries on FindService, "
-                       + " found " + size);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				Assert.fail(e.getMessage());
-			}
-		} finally {
-            tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS1_XML, TOM_BUSINESS1_KEY, 1);
-            tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS2_XML, TOM_BUSINESS2_KEY, 1);
-            tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS5_XML, TOM_BUSINESS5_KEY, 1);
-			
-			tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
-			tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
-			tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
-		}
-	}
-	/*
-	 * For a combinedCategoryBag, we find a service if either the categoryBag on the service
-	 * matches, or one of the categoryBags on the bindings.
-	 */
-	@Test
-	public void findServiceByCombinedCategoryBag() {
-		try {
-			tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
-			tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
-			tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
-			
-			tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS1_XML, TOM_BUSINESS1_KEY, 1);
-			tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS2_XML, TOM_BUSINESS2_KEY, 1);
-			try {
-				int size = 0;
-				ServiceList sl = null;
+        @Test
+        public void findServiceByCategoryBag() {
+                try {
+                        tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
+                        tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
+                        tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
 
-				FindService fs = new FindService();
-				FindQualifiers fqs = new FindQualifiers();
-				fqs.getFindQualifier().add(UDDIConstants.COMBINE_CATEGORY_BAGS);
-				fs.setFindQualifiers(fqs);
+                        tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS1_XML, TOM_BUSINESS1_KEY, 1);
+                        tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS2_XML, TOM_BUSINESS2_KEY, 1);
+                        tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS5_XML, TOM_BUSINESS5_KEY, 1);
+                        try {
+                                int size = 0;
+                                ServiceList sl = null;
 
-                KeyedReference keyRef1 = new KeyedReference();
-                keyRef1.setTModelKey(TOM_PUBLISHER_TMODEL01_KEY);
-                keyRef1.setKeyValue("value-y");
-				
-				CategoryBag cb = new CategoryBag();
-				cb.getKeyedReference().add(keyRef1);
-				fs.setCategoryBag(cb);
-				
-				sl = inquiry.findService(fs);
-				if (sl.getServiceInfos() == null) {
-                    Assert.fail("Should have found one entry on FindService with TModelBag, "
-                       + "found " + size);
-				}
-				size = sl.getServiceInfos().getServiceInfo().size();
-				if (size != 1) {
-					Assert.fail("Should have found one entry on FindService with TModelBag, "
-							+ "found " + size);
-				} else {
-				    List<ServiceInfo> siList = sl.getServiceInfos().getServiceInfo();
-					String serviceKey = siList.get(0).getServiceKey();
-					if (!SERVICE_KEY1.equals(serviceKey)) {
-					    Assert.fail("Should have found service key " + SERVICE_KEY1
-					            + " but found [" + serviceKey + "]");
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				Assert.fail(e.getMessage());
-			}
-		} finally {
-            tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS1_XML, TOM_BUSINESS1_KEY, 1);
-            tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS2_XML, TOM_BUSINESS2_KEY, 1);
-			
-			tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
-			tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
-			tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
-		}
-	}
-	
+                                FindService fs = new FindService();
+
+                                //by default keys are ADD, we should only find service 5
+                                KeyedReference keyRef1 = new KeyedReference();
+                                keyRef1.setTModelKey(TOM_PUBLISHER_TMODEL01_KEY);
+                                keyRef1.setKeyValue("value-z");
+
+                                KeyedReference keyRef2 = new KeyedReference();
+                                keyRef2.setTModelKey(TOM_PUBLISHER_TMODEL02_KEY);
+                                keyRef2.setKeyValue("value-x");
+
+                                CategoryBag cb = new CategoryBag();
+                                cb.getKeyedReference().add(keyRef1);
+                                cb.getKeyedReference().add(keyRef2);
+                                fs.setCategoryBag(cb);
+
+                                sl = inquiry.findService(fs);
+                                if (sl.getServiceInfos() == null) {
+                                        Assert.fail("Should have found one entry on FindService with TModelBag, "
+                                                + "found " + size);
+                                }
+                                size = sl.getServiceInfos().getServiceInfo().size();
+                                if (size != 1) {
+                                        Assert.fail("Should have found one entry on FindService with TModelBag, "
+                                                + "found " + size);
+                                } else {
+                                        List<ServiceInfo> siList = sl.getServiceInfos().getServiceInfo();
+                                        String serviceKey = siList.get(0).getServiceKey();
+                                        if (!SERVICE_KEY5.equals(serviceKey)) {
+                                                Assert.fail("Should have found service key " + SERVICE_KEY5
+                                                        + " but found [" + serviceKey + "]");
+                                        }
+                                }
+                        } catch (Exception e) {
+                                e.printStackTrace();
+                                Assert.fail(e.getMessage());
+                        }
+                } finally {
+                        tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS1_XML, TOM_BUSINESS1_KEY, 1);
+                        tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS2_XML, TOM_BUSINESS2_KEY, 1);
+                        tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS5_XML, TOM_BUSINESS5_KEY, 1);
+
+                        tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
+                        tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
+                        tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
+                }
+        }
+
+        @Test
+        public void findNoServiceByCategoryBag() {
+                try {
+                        tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
+                        tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
+                        tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
+
+                        tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS1_XML, TOM_BUSINESS1_KEY, 1);
+                        tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS2_XML, TOM_BUSINESS2_KEY, 1);
+                        tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS5_XML, TOM_BUSINESS5_KEY, 1);
+                        try {
+                                int size = 0;
+                                ServiceList sl = null;
+
+                                FindService fs = new FindService();
+
+                                //by default keys are ADD, we should only find service 5
+                                KeyedReference keyRef1 = new KeyedReference();
+                                keyRef1.setTModelKey(TOM_PUBLISHER_TMODEL01_KEY);
+                                keyRef1.setKeyValue("value-y");
+
+                                CategoryBag cb = new CategoryBag();
+                                cb.getKeyedReference().add(keyRef1);
+                                fs.setCategoryBag(cb);
+
+                                sl = inquiry.findService(fs);
+                                if (sl.getServiceInfos() != null) {
+                                        Assert.fail("Should have found no entries on FindService, "
+                                                + " found " + size);
+                                }
+                        } catch (Exception e) {
+                                e.printStackTrace();
+                                Assert.fail(e.getMessage());
+                        }
+                } finally {
+                        tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS1_XML, TOM_BUSINESS1_KEY, 1);
+                        tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS2_XML, TOM_BUSINESS2_KEY, 1);
+                        tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS5_XML, TOM_BUSINESS5_KEY, 1);
+
+                        tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
+                        tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
+                        tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
+                }
+        }
+        /*
+         * For a combinedCategoryBag, we find a service if either the categoryBag on the service
+         * matches, or one of the categoryBags on the bindings.
+         */
+
+        @Test
+        public void findServiceByCombinedCategoryBag() {
+                try {
+                        tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
+                        tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
+                        tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
+
+                        tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS1_XML, TOM_BUSINESS1_KEY, 1);
+                        tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS2_XML, TOM_BUSINESS2_KEY, 1);
+                        try {
+                                int size = 0;
+                                ServiceList sl = null;
+
+                                FindService fs = new FindService();
+                                FindQualifiers fqs = new FindQualifiers();
+                                fqs.getFindQualifier().add(UDDIConstants.COMBINE_CATEGORY_BAGS);
+                                fs.setFindQualifiers(fqs);
+
+                                KeyedReference keyRef1 = new KeyedReference();
+                                keyRef1.setTModelKey(TOM_PUBLISHER_TMODEL01_KEY);
+                                keyRef1.setKeyValue("value-y");
+
+                                CategoryBag cb = new CategoryBag();
+                                cb.getKeyedReference().add(keyRef1);
+                                fs.setCategoryBag(cb);
+
+                                sl = inquiry.findService(fs);
+                                if (sl.getServiceInfos() == null) {
+                                        Assert.fail("Should have found one entry on FindService with TModelBag, "
+                                                + "found " + size);
+                                }
+                                size = sl.getServiceInfos().getServiceInfo().size();
+                                if (size != 1) {
+                                        Assert.fail("Should have found one entry on FindService with TModelBag, "
+                                                + "found " + size);
+                                } else {
+                                        List<ServiceInfo> siList = sl.getServiceInfos().getServiceInfo();
+                                        String serviceKey = siList.get(0).getServiceKey();
+                                        if (!SERVICE_KEY1.equals(serviceKey)) {
+                                                Assert.fail("Should have found service key " + SERVICE_KEY1
+                                                        + " but found [" + serviceKey + "]");
+                                        }
+                                }
+                        } catch (Exception e) {
+                                e.printStackTrace();
+                                Assert.fail(e.getMessage());
+                        }
+                } finally {
+                        tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS1_XML, TOM_BUSINESS1_KEY, 1);
+                        tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS2_XML, TOM_BUSINESS2_KEY, 1);
+
+                        tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
+                        tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
+                        tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
+                }
+        }
 }

@@ -32,6 +32,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uddi.api_v3.TModelList;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -71,7 +72,7 @@ public class API_070_FindEntityTest
 	@Test
 	public void findEntities() {
 		try {
-			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckTModel.saveJoePublisherTmodel(authInfoJoe, true);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
@@ -93,7 +94,7 @@ public class API_070_FindEntityTest
 	@Test
 	public void findSignedEntities() {
 		try {
-			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckTModel.saveJoePublisherTmodel(authInfoJoe, true);
 			tckBusiness.saveJoePublisherBusinessX509Signature(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);

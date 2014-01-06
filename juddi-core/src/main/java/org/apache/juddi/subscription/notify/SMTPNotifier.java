@@ -98,6 +98,7 @@ public class SMTPNotifier implements Notifier {
 					}
 				}
 				final String password = pwd;
+                                log.info("SMTP username = " + username + " from address = " + notificationEmailAddress);
 				session = Session.getInstance(getEMailProperties(), new javax.mail.Authenticator() {
 					protected PasswordAuthentication getPasswordAuthentication() {
 						return new PasswordAuthentication(username, password);
@@ -111,9 +112,10 @@ public class SMTPNotifier implements Notifier {
 
 	public DispositionReport notifySubscriptionListener(NotifySubscriptionListener body) throws DispositionReportFaultMessage, RemoteException {
 
-		log.info("Sending notification email to " + notificationEmailAddress);
+		
 
 		try {
+                        log.info("Sending notification email to " + notificationEmailAddress + " from " + getEMailProperties().getProperty("mail.smtp.from", "jUDDI"));
 			if (session !=null && notificationEmailAddress != null) {
 				MimeMessage message = new MimeMessage(session);
 				InternetAddress address = new InternetAddress(notificationEmailAddress);

@@ -276,11 +276,11 @@
 		<module>juddi-core-openjpa</module>
 		<module>juddiv3-war</module>
 		<module>juddi-examples</module>
-		<!-- this may fail if not on windows -->
 		<module>juddi-gui-dsig</module>
 		<module>juddi-gui</module>
 		<module>juddi-tomcat</module>
 		<module>uddi-tck</module>
+		<module>juddi-tck-runner</module>
         
   </modules>
 	<distributionManagement>
@@ -293,7 +293,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.5</version>
+			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

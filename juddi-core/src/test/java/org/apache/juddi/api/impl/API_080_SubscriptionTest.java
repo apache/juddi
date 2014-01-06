@@ -53,6 +53,7 @@ public class API_080_SubscriptionTest
 	@BeforeClass
 	public static void setup() throws ConfigurationException {
 		Registry.start();
+                logger.info("API_080_SubscriptionTest");
 		logger.debug("Getting auth token..");
 		try {
 			api010.saveJoePublisher();
@@ -68,10 +69,12 @@ public class API_080_SubscriptionTest
 			logger.error(e.getMessage(), e);
 			Assert.fail("Could not obtain authInfo token.");
 		}
+                
 	}
 
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
+                tckTModel.deleteCreatedTModels(authInfoJoe);
 		Registry.stop();
 	}
 	

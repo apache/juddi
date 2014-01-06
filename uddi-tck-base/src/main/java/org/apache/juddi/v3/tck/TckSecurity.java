@@ -15,6 +15,7 @@
 package org.apache.juddi.v3.tck;
 
 import java.rmi.RemoteException;
+import javax.xml.ws.BindingProvider;
 
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISecurityPortType;
@@ -26,6 +27,8 @@ public class TckSecurity {
 
 	public static String getAuthToken(UDDISecurityPortType securityService, String pubId, String cred) throws DispositionReportFaultMessage, RemoteException {
 	
+                if (!TckPublisher.isUDDIAuthMode())
+                        return null;
 		org.uddi.api_v3.GetAuthToken ga = new org.uddi.api_v3.GetAuthToken();
 		ga.setUserID(pubId);
 		ga.setCred(cred);
@@ -34,5 +37,16 @@ public class TckSecurity {
 		
 		return token.getAuthInfo();
 	}
+
+        /**
+         * used for non UDDI AuthToken authentication. I.e. HTTP NTLM, HTTP BASIC, HTTP DIGEST
+         * @param bindingProvider
+         * @param publisherId
+         * @param password 
+         */
+        public static void setCredentials(BindingProvider bindingProvider, String publisherId, String password) {
+                bindingProvider.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, publisherId);
+                bindingProvider.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, password);
+        }
 
 }

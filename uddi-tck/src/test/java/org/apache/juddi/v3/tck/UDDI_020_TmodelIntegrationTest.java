@@ -14,11 +14,13 @@
  */
 package org.apache.juddi.v3.tck;
 
+import javax.xml.ws.BindingProvider;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
+import static org.apache.juddi.v3.tck.UDDI_040_BusinessServiceIntegrationTest.tckTModelJoe;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -33,77 +35,91 @@ import org.uddi.v3_service.UDDISecurityPortType;
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class UDDI_020_TmodelIntegrationTest {
-	
-	private static TckTModel tckTModel                = null;
-	private static Log logger = LogFactory.getLog(UDDI_020_TmodelIntegrationTest.class);
-	
-	private static String authInfoJoe                 = null;
-	private static String authInfoSam                 = null;
-	
-private static UDDIClient manager;
-	
-	
-	@BeforeClass
-	public static void startManager() throws ConfigurationException {
-		
-		manager  = new UDDIClient();
-		manager.start();
-		logger.debug("Getting auth tokens..");
-		try {
-			 Transport transport = manager.getTransport();
-	        	 
-        	 UDDISecurityPortType security = transport.getUDDISecurityService();
-        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
- 			 authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(),  TckPublisher.getSamPassword());
-        	 Assert.assertNotNull(authInfoJoe);
-        	 Assert.assertNotNull(authInfoSam);
-        	 
-        	 UDDIPublicationPortType publication = transport.getUDDIPublishService();
-        	 UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
-        	 tckTModel  = new TckTModel(publication, inquiry);
-	        
-	     } catch (Exception e) {
-	    	 logger.error(e.getMessage(), e);
-				Assert.fail("Could not obtain authInfo token.");
-	     } 
-	}
-	
-	@AfterClass
-	public static void stopManager() throws ConfigurationException {
-		manager.stop();
-	}
-	
-	@Test
-	public void testJoePublisherTmodel() {
-		tckTModel.saveJoePublisherTmodel(authInfoJoe);
-		
-		//Now if we use a finder it should be found.
-		TModelList tModelList = tckTModel.findJoeTModelDetail();
-		Assert.assertNotNull(tModelList.getTModelInfos());
-		
-		tckTModel.deleteJoePublisherTmodel(authInfoJoe);
-		
-		//Even if it deleted you should still be able to access it through a getTModelDetail
-		TModelDetail detail = tckTModel.getJoePublisherTmodel(authInfoJoe);
-		Assert.assertNotNull(detail.getTModel());
-		
-		//However if we use a finder it should not be found.
-		TModelList tModelList2 = tckTModel.findJoeTModelDetail();
-		Assert.assertNull(tModelList2.getTModelInfos());
-		
-		//Make sure none of the found key generators is Joe's key generator
-		TModelList tModelList3 = tckTModel.findJoeTModelDetailByCategoryBag();
-		for (TModelInfo tModelInfo : tModelList3.getTModelInfos().getTModelInfo()) {
-			Assert.assertFalse("uddi:uddi.joepublisher.com:keygenerator".equals(tModelInfo.getTModelKey()));
-		}
-	}
-	
-	@Test
-	public void testSamSyndicatorTmodelTest() {
-		tckTModel.saveSamSyndicatorTmodel(authInfoSam);
-		tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
-	}	
-	
+
+        private static TckTModel tckTModelJoe = null;
+        private static TckTModel tckTModelSam = null;
+        private static Log logger = LogFactory.getLog(UDDI_020_TmodelIntegrationTest.class);
+        private static String authInfoJoe = null;
+        private static String authInfoSam = null;
+        private static UDDIClient manager;
+
+        @BeforeClass
+        public static void startManager() throws ConfigurationException {
+
+                manager = new UDDIClient();
+                manager.start();
+                logger.debug("Getting auth tokens..");
+                try {
+                        Transport transport = manager.getTransport();
+
+                        UDDISecurityPortType security = transport.getUDDISecurityService();
+                        authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                        authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                        //Assert.assertNotNull(authInfoJoe);
+                        //Assert.assertNotNull(authInfoSam);
+
+
+                        UDDIPublicationPortType publication = transport.getUDDIPublishService();
+                        UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
+                        if (!TckPublisher.isUDDIAuthMode()) {
+                                TckSecurity.setCredentials((BindingProvider) publication, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                                TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                        }
+                        tckTModelJoe = new TckTModel(publication, inquiry);
+
+                        transport = manager.getTransport();
+                        publication = transport.getUDDIPublishService();
+                        inquiry = transport.getUDDIInquiryService();
+                        if (!TckPublisher.isUDDIAuthMode()) {
+                                TckSecurity.setCredentials((BindingProvider) publication, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                                TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                        }
+                        tckTModelSam = new TckTModel(publication, inquiry);
+
+                } catch (Exception e) {
+                        logger.error(e.getMessage(), e);
+                        Assert.fail("Could not obtain authInfo token.");
+                }
+        }
+
+        @AfterClass
+        public static void stopManager() throws ConfigurationException {
+                tckTModelJoe.deleteCreatedTModels(authInfoJoe);
+                tckTModelSam.deleteCreatedTModels(authInfoSam);
+                manager.stop();
+        }
+
+        @Test
+        public void testJoePublisherTmodel() {
+                tckTModelJoe.saveJoePublisherTmodel(authInfoJoe, true);
+
+                //Now if we use a finder it should be found.
+                TModelList tModelList = tckTModelJoe.findJoeTModelDetail();
+                Assert.assertNotNull(tModelList.getTModelInfos());
+
+                tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+
+                //Even if it deleted you should still be able to access it through a getTModelDetail
+                TModelDetail detail = tckTModelJoe.getJoePublisherTmodel(authInfoJoe);
+                Assert.assertNotNull(detail.getTModel());
+
+                //However if we use a finder it should not be found.
+                TModelList tModelList2 = tckTModelJoe.findJoeTModelDetail();
+                Assert.assertNull(tModelList2.getTModelInfos());
+
+                //Make sure none of the found key generators is Joe's key generator
+                TModelList tModelList3 = tckTModelJoe.findJoeTModelDetailByCategoryBag();
+                for (TModelInfo tModelInfo : tModelList3.getTModelInfos().getTModelInfo()) {
+                        Assert.assertFalse("uddi:uddi.joepublisher.com:keygenerator".equals(tModelInfo.getTModelKey()));
+                }
+        }
+
+        @Test
+        public void testSamSyndicatorTmodelTest() {
+                tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);
+                tckTModelSam.deleteSamSyndicatorTmodel(authInfoSam);
+        }
 }
