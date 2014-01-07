@@ -11,7 +11,7 @@ Notes:
 -This application requires a number of usernames and passwords for users accounts used on the UDDI server. You'll have to create them ahead of time
 -This application will optionally access a SMTP mail server and scan for subscription alerts send by a UDDI server, if supported
 -Endpoint URLs are loaded from uddi.xml
--If you are running this against jUDDI and want to setup a temporary mail server, try hMail. A sample server config is provided
+-If you are running this against jUDDI and want to setup a temporary mail server, try hMail. A sample server config juddiv3.xml is provided
 
 
 Execute using the following command

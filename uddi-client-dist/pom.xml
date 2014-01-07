@@ -45,14 +45,20 @@
             <artifactId>uddi-tck-runner</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>uddi-tck-runner</artifactId>
+            <version>${project.parent.version}</version>
+            <classifier>jar-with-dependencies</classifier>
+        </dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
-			<artifactId>juddi-migration-tool</artifactId>
+			<artifactId>uddi-migration-tool</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
-			<artifactId>juddi-migration-tool</artifactId>
+			<artifactId>uddi-migration-tool</artifactId>
 			<version>${project.parent.version}</version>
 			<classifier>jar-with-dependencies</classifier>
 		</dependency>
@@ -81,6 +87,12 @@
 			<version>${project.parent.version}</version>
 			<classifier>sources</classifier>
 		</dependency>
+		<dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>uddi-migration-tool</artifactId>
+            <version>${project.parent.version}</version>
+            <classifier>sources</classifier>
+        </dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-tck-base</artifactId>
@@ -119,6 +131,12 @@
 			<version>${project.parent.version}</version>
 			<classifier>javadoc</classifier>
 		</dependency>
+		<dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>uddi-migration-tool</artifactId>
+            <version>${project.parent.version}</version>
+            <classifier>javadoc</classifier>
+        </dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-tck-base</artifactId>

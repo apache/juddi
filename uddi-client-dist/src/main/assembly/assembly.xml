@@ -26,13 +26,15 @@
             <includes>
                 <include>org.apache.juddi:juddi-client:jar</include>
                 <include>org.apache.juddi:uddi-ws:jar</include>
-				<include>org.apache.juddi:juddi-migration-tool:jar</include>
+				<include>org.apache.juddi:uddi-migration-tool:jar</include>
             </includes>
             <excludes>
                 <exclude>org.apache.juddi:juddi-client:jar:sources</exclude>
                 <exclude>org.apache.juddi:uddi-ws:jar:sources</exclude>
+                <exclude>org.apache.juddi:uddi-migration-tool:jar:sources</exclude>
                 <exclude>org.apache.juddi:juddi-client:jar:javadoc</exclude>
                 <exclude>org.apache.juddi:uddi-ws:jar:javadoc</exclude>
+                <exclude>org.apache.juddi:uddi-migration-tool:jar:javadoc</exclude>
             </excludes>
             
             <useProjectArtifact>false</useProjectArtifact>
@@ -48,6 +50,7 @@
             <includes>
                 <include>org.apache.juddi:juddi-client:jar</include>
                 <include>org.apache.juddi:uddi-tck:jar</include>
+                <include>org.apache.juddi:uddi-tck-runner:jar</include>
                 <include>org.apache.juddi:uddi-tck:test-jar</include>
                 <include>org.apache.juddi:uddi-tck-base:jar</include>
                 <include>org.apache.juddi:uddi-ws:jar</include>
@@ -58,11 +61,13 @@
                 <exclude>org.apache.juddi:uddi-tck:jar:test-sources</exclude>
                 <exclude>org.apache.juddi:uddi-tck-base:jar:sources</exclude>
                 <exclude>org.apache.juddi:uddi-ws:jar:sources</exclude>
+                <exclude>org.apache.juddi:uddi-tck-runner:jar:sources</exclude>
                 <exclude>org.apache.juddi:juddi-client:jar:javadoc</exclude>
                 <exclude>org.apache.juddi:uddi-tck:jar:javadoc</exclude>
                 <exclude>org.apache.juddi:uddi-tck:jar:test-javadoc</exclude>
                 <exclude>org.apache.juddi:uddi-tck-base:jar:javadoc</exclude>
                 <exclude>org.apache.juddi:uddi-ws:jar:javadoc</exclude>
+                <exclude>org.apache.juddi:uddi-tck-runner:jar:javadoc</exclude>
             </excludes>
             
             <useProjectArtifact>false</useProjectArtifact>
@@ -202,6 +207,19 @@
                 <exclude>juddi-client.net/input.txt</exclude>
                 <exclude>juddi-client.net/*.suo</exclude>
             </excludes>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>../uddi-tck-runner</directory>
+            <outputDirectory>tck</outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+            <includes>
+                <include>tck.properties</include>
+                <include>readme.txt</include>
+                <include>uddi.xml</include>
+                <include>juddiv3.xml</include>
+            </includes>
             <directoryMode>0755</directoryMode>
             <fileMode>0755</fileMode>
         </fileSet>
