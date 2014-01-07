@@ -18,9 +18,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 
@@ -36,12 +34,15 @@ public class App {
 
         public static void main(String[] args) throws Exception {
                 System.out.println("_________________________________________________");
-                System.out.println("Running! this can take anywhere from 2-5 minutes!");
                 System.out.println("Configure options using uddi.xml and tck.properties");
                 System.out.println("java -Duddi.client.xml=uddi.xml -jar juddi-tck-runner-{VERSION}-SNAPSHOT-jar-with-dependencies.jar");
                 System.out.println("_________________________________________________");
                 System.out.println();
-
+                System.out.println("Options");
+                System.out.println("-Dtests=TestClass1,TestClass2    Comma delimited set of focused tests to run");
+                System.out.println("_________________________________________________");
+                System.out.println("Running! this can take anywhere from 2-5 minutes!");
+                System.out.println("");
                 if (!new File("tck.properties").exists()) {
                         System.out.println("tck.properties was not found! I give up!");
                         System.exit(1);
@@ -51,44 +52,49 @@ public class App {
                         System.out.println("The value for option -Duddi.client.xml=" + s + " is either null or the file doesn't exist! I give up!");
                         System.exit(1);
                 }
-                
+                String focusedTests = System.getProperty("tests");
+                Result result = null;
                 JUnitCore junit = new JUnitCore();
-                List<Class> items = new ArrayList<Class>();
-                items.add(null);
-                Result result = junit.run(
-                        //the bpel tests really only test wsdl to uddi
-                        org.apache.juddi.v3.bpel.BPEL_010_IntegrationTest.class,
-                        org.apache.juddi.v3.bpel.BPEL_020_IntegrationTest.class,
-                        
+                Class[] cs = null;
+                if (focusedTests != null) {
+                        String[] items = focusedTests.split(",");
+                        cs = new Class[items.length];
+                        for (int i = 0; i < items.length; i++) {
+                                cs[i] = Class.forName(items[i]);
+                        }
+                } else {
+                        cs = new Class[]{
+                                //the bpel tests really only test wsdl to uddi
+                                org.apache.juddi.v3.bpel.BPEL_010_IntegrationTest.class,
+                                org.apache.juddi.v3.bpel.BPEL_020_IntegrationTest.class,
+                                org.apache.juddi.v3.tck.JUDDI_010_PublisherIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_010_PublisherIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_020_TmodelIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_030_BusinessEntityIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_030_BusinessEntityLoadIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_040_BusinessServiceIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_040_BusinessServiceLoadIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_050_BindingTemplateIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_060_PublisherAssertionIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_070_FindEntityIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_080_SubscriptionIntegrationTest.class,
+                                //note that this is different, there is an IntegrationTest version
+                                //however it's for hosting our own mail server and reconfiguring juddi
+                                org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerExternalTest.class,
+                                org.apache.juddi.v3.tck.JUDDI_091_RMISubscriptionListenerIntegrationTest.class,
+                                org.apache.juddi.v3.tck.JUDDI_100_ClientSubscriptionInfoIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_110_FindBusinessIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_120_CombineCategoryBagsFindServiceIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_130_CombineCategoryBagsFindBusinessIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_140_NegativePublicationIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_141_JIRAIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_150_CustodyTransferIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_160_RESTIntergrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_170_ValueSetValidation.class
+                        };
+                }
 
-                        org.apache.juddi.v3.tck.JUDDI_010_PublisherIntegrationTest.class,
-                        
-                        org.apache.juddi.v3.tck.UDDI_010_PublisherIntegrationTest.class,
-                        org.apache.juddi.v3.tck.UDDI_020_TmodelIntegrationTest.class,
-                        org.apache.juddi.v3.tck.UDDI_030_BusinessEntityIntegrationTest.class,
-                        
-                        org.apache.juddi.v3.tck.UDDI_030_BusinessEntityLoadIntegrationTest.class,
-                        org.apache.juddi.v3.tck.UDDI_040_BusinessServiceIntegrationTest.class,
-                        org.apache.juddi.v3.tck.UDDI_040_BusinessServiceLoadIntegrationTest.class,
-                        
-                        org.apache.juddi.v3.tck.UDDI_050_BindingTemplateIntegrationTest.class,
-                        org.apache.juddi.v3.tck.UDDI_060_PublisherAssertionIntegrationTest.class,
-                        org.apache.juddi.v3.tck.UDDI_070_FindEntityIntegrationTest.class,
-                        org.apache.juddi.v3.tck.UDDI_080_SubscriptionIntegrationTest.class,
-                        //note that this is different, there is an IntegrationTest version
-                        //however it's for hosting our own mail server and reconfiguring juddi
-                        org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerExternalTest.class,
-                        org.apache.juddi.v3.tck.JUDDI_091_RMISubscriptionListenerIntegrationTest.class,
-                        org.apache.juddi.v3.tck.JUDDI_100_ClientSubscriptionInfoIntegrationTest.class,
-                        
-                        org.apache.juddi.v3.tck.UDDI_110_FindBusinessIntegrationTest.class,
-                        org.apache.juddi.v3.tck.UDDI_120_CombineCategoryBagsFindServiceIntegrationTest.class,
-                        org.apache.juddi.v3.tck.UDDI_130_CombineCategoryBagsFindBusinessIntegrationTest.class,
-                        org.apache.juddi.v3.tck.UDDI_140_NegativePublicationIntegrationTest.class,
-                        org.apache.juddi.v3.tck.UDDI_141_JIRAIntegrationTest.class,
-                        org.apache.juddi.v3.tck.UDDI_150_CustodyTransferIntegrationTest.class,
-                        org.apache.juddi.v3.tck.UDDI_160_RESTIntergrationTest.class,
-                        org.apache.juddi.v3.tck.UDDI_170_ValueSetValidation.class);
+                result = junit.run(cs);
 
                 String filename = "uddi-tck-results-" + new SimpleDateFormat("yyyyMMddhhmm").format(new Date()) + ".txt";
                 FileWriter fw = new FileWriter(filename);
@@ -108,28 +114,38 @@ public class App {
                 bw.newLine();
                 bw.write("Time: " + result.getRunTime());
                 bw.newLine();
-                bw.write("-------------------------------------");
+                bw.write("____________________________________________");
+
                 bw.newLine();
+                bw.write("Tests Ran");
                 bw.newLine();
+                for (int i = 0; i < cs.length; i++) {
+                        bw.write(cs[i].getCanonicalName());
+                        bw.newLine();
+                }
+                bw.write("____________________________________________");
+                bw.newLine();
+                bw.write("Failed Test cases");
+                bw.newLine();
+                bw.write("____________________________________________");
 
                 for (int i = 0; i < result.getFailures().size(); i++) {
-                        try{
-                        bw.write(result.getFailures().get(i).getTestHeader());
-                        bw.newLine();
-                        bw.write(result.getFailures().get(i).getDescription().getClassName());
-                        bw.newLine();
-                        bw.write(result.getFailures().get(i).getDescription().getMethodName());
-                        bw.newLine();
-                        bw.write(result.getFailures().get(i).getMessage());
-                        bw.newLine();
-                        //result.getFailures().get(i).getException().printStackTrace();
+                        try {
+                                bw.write(result.getFailures().get(i).getTestHeader());
+                                bw.newLine();
+                                bw.write(result.getFailures().get(i).getDescription().getClassName());
+                                bw.newLine();
+                                bw.write(result.getFailures().get(i).getDescription().getMethodName());
+                                bw.newLine();
+                                bw.write(result.getFailures().get(i).getMessage());
+                                bw.newLine();
+                                //result.getFailures().get(i).getException().printStackTrace();
 
-                        bw.write(result.getFailures().get(i).getTrace());
-                        bw.newLine();
-                        bw.write("____________________________________________");
-                        bw.newLine();
-                        }catch (Exception ex)
-                        {
+                                bw.write(result.getFailures().get(i).getTrace());
+                                bw.newLine();
+                                bw.write("____________________________________________");
+                                bw.newLine();
+                        } catch (Exception ex) {
                                 ex.printStackTrace();
                         }
                 }

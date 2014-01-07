@@ -54,10 +54,10 @@ public class SMTPNotifier implements Notifier {
 
 	private final static String[] mailProps = {"mail.smtp.from", "mail.smtp.host", "mail.smtp.port", 
 		"mail.smtp.socketFactory.class", "mail.smtp.socketFactory.fallback", "mail.smtp.starttls.enable",
-		"mail.smtp.socketFactory.port","mail.smtp.auth","mail.smtp.user","mail.smtp.password"};
+		"mail.smtp.socketFactory.port","mail.smtp.auth","mail.smtp.user","mail.smtp.password","mail.debug"};
 
-	protected Properties getEMailProperties() throws ConfigurationException {
-		if (properties==null) {
+	protected final Properties getEMailProperties() throws ConfigurationException {
+		if (properties==null || properties.isEmpty()) {
 			properties = new Properties();
 			String mailPrefix = AppConfig.getConfiguration().getString(Property.JUDDI_EMAIL_PREFIX, Property.DEFAULT_JUDDI_EMAIL_PREFIX);
 			if (! mailPrefix.endsWith(".")) mailPrefix = mailPrefix + ".";
@@ -84,9 +84,11 @@ public class SMTPNotifier implements Notifier {
 			//TODO maybe update the user's bindingTemplate with the error?, and also validate setting onsave
 		} else {
 			notificationEmailAddress = accessPointUrl.substring(accessPointUrl.indexOf(":")+1);
-			if (Boolean.getBoolean(getEMailProperties().getProperty("mail.smtp.starttls.enable"))) {
-				final String username = getEMailProperties().getProperty("mail.smtp.username");
+                        boolean auth=(getEMailProperties().getProperty("mail.smtp.auth", "false")).equalsIgnoreCase("true");
+			if (auth) {
+				final String username = getEMailProperties().getProperty("mail.smtp.user");
 				String pwd = getEMailProperties().getProperty("mail.smtp.password");
+                                //decrypt if possible
 				if (getEMailProperties().getProperty("mail.smtp.password" + Property.ENCRYPTED_ATTRIBUTE, "false").equalsIgnoreCase("true"))
 				{
 					try {
@@ -106,14 +108,20 @@ public class SMTPNotifier implements Notifier {
 					}
 				}
 				final String password = pwd;
-                                log.info("SMTP username = " + username + " from address = " + notificationEmailAddress);
+                                log.debug("SMTP username = " + username + " from address = " + notificationEmailAddress);
+                                Properties eMailProperties = getEMailProperties();
+                                eMailProperties.remove("mail.smtp.user");
+                                eMailProperties.remove("mail.smtp.password");
 				session = Session.getInstance(getEMailProperties(), new javax.mail.Authenticator() {
 					protected PasswordAuthentication getPasswordAuthentication() {
 						return new PasswordAuthentication(username, password);
 					}
 				});
 			} else {
-				session = Session.getInstance(getEMailProperties());
+                                Properties eMailProperties = getEMailProperties();
+                                eMailProperties.remove("mail.smtp.user");
+                                eMailProperties.remove("mail.smtp.password");
+				session = Session.getInstance(eMailProperties);
 			}
 		}
 	}

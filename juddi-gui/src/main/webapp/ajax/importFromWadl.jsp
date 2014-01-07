@@ -20,11 +20,9 @@
 <%@page import="javax.wsdl.PortType"%>
 <%@page import="java.util.Map"%>
 <%@page import="org.uddi.api_v3.BusinessServices"%>
-<%@page import="org.apache.juddi.v3.client.mapping.wsdl.WSDL2UDDI"%>
 <%@page import="org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl"%>
 <%@page import="java.util.Properties"%>
 <%@page import="javax.wsdl.Definition"%>
-<%@page import="org.apache.juddi.v3.client.mapping.wsdl.ReadWSDL"%>
 <%@page import="org.apache.juddi.v3.client.config.UDDIClerk"%>
 <%@page import="org.uddi.api_v3.TModel"%>
 <%@page import="java.net.URL"%>

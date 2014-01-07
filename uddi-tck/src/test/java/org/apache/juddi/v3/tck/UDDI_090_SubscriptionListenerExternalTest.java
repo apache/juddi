@@ -112,10 +112,8 @@ public class UDDI_090_SubscriptionListenerExternalTest {
                         UDDISecurityPortType security = transport.getUDDISecurityService();
                         authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                         authInfoMary = TckSecurity.getAuthToken(security, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
-                        Assert.assertNotNull(authInfoJoe);
 
-
-
+                        
                         UDDIPublicationPortType publication = transport.getUDDIPublishService();
                         inquiryJoe = transport.getUDDIInquiryService();
                         subscriptionJoe = transport.getUDDISubscriptionService();
@@ -140,8 +138,8 @@ public class UDDI_090_SubscriptionListenerExternalTest {
                         subscriptionMary = transport.getUDDISubscriptionService();
                         if (!TckPublisher.isUDDIAuthMode()) {
                                 TckSecurity.setCredentials((BindingProvider) publication, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
-                                TckSecurity.setCredentials((BindingProvider) inquiryJoe, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
-                                TckSecurity.setCredentials((BindingProvider) subscriptionJoe, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
+                                TckSecurity.setCredentials((BindingProvider) inquiryMary, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
+                                TckSecurity.setCredentials((BindingProvider) subscriptionMary, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
                         }
 
 
@@ -395,6 +393,8 @@ public class UDDI_090_SubscriptionListenerExternalTest {
                         UDDISubscriptionListenerImpl.notifcationMap.clear();
                         UDDISubscriptionListenerImpl.notificationCount = 0;
                         Thread.sleep(1000);
+                        logger.info("Saving Mary's tModel ********** ");
+                        tckTModelMary.saveMaryPublisherTmodel(authInfoMary);
                         logger.info("Saving Mary's Business ********** ");
                         tckBusinessMary.saveMaryPublisherBusiness(authInfoMary);
                         logger.info("Waiting " + TckPublisher.getSubscriptionTimeout() + " seconds for delivery");
@@ -441,6 +441,7 @@ public class UDDI_090_SubscriptionListenerExternalTest {
                         tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, "uddi:uddi.joepublisher.com:subscriptionone");
                         tckBusinessServiceJoe.deleteJoePublisherService(authInfoJoe);
                         tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+                        tckTModelMary.deleteMaryPublisherTmodel(authInfoMary);
                         tckBusinessMary.deleteMaryPublisherBusiness(authInfoMary);
                 }
         }
@@ -463,6 +464,8 @@ public class UDDI_090_SubscriptionListenerExternalTest {
 
 
                         Thread.sleep(3000);
+                        logger.info("Saving Mary's tModel ********** ");
+                        tckTModelMary.saveMaryPublisherTmodel(authInfoMary);
                         logger.info("Saving Mary's Business ********** ");
                         tckBusinessMary.saveBusiness(authInfoMary, MARY_BUSINESS_XML, "uddi:uddi.marypublisher.com:marybusinessone");
 
@@ -494,8 +497,8 @@ public class UDDI_090_SubscriptionListenerExternalTest {
                         tckBusinessServiceJoe.deleteJoePublisherService(authInfoJoe);
                         tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
                         tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
-                        //      tckTModel.deleteJoePublisherTmodel(authInfoJoe);
                         tckBusinessMary.deleteMaryPublisherBusiness(authInfoMary);
+                        tckTModelMary.deleteMaryPublisherTmodel(authInfoMary);
                 }
         }
 

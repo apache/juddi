@@ -155,6 +155,7 @@
 
 		<!--As of 3.1.5 Email delivery options for subscription API functions-->
 		<mail>
+			<debug>true</debug>
 			<smtp>
 				<!--The Operator’s Email address-->
 				<from>sender@local.domain</from>
@@ -183,10 +184,10 @@
 				<auth>true</auth>
 
 				<!--Username used to authenticate to the SMTP server used only if mail.smtp.auth is true-->
-				<username>sender@local.domain</username>
+				<user>sender@local.domain</user>
 
 				<!--Password used to authenticate to the SMTP server, used only if mail.smtp.auth is true-->
-				<password encrypted="false">da_password1</password>
+				<password encrypted="false">da_password!</password>
 			</smtp>
 		</mail>
 	</juddi>

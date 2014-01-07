@@ -179,7 +179,7 @@
 				<auth>false</auth>-->
 
 				<!--Username used to authenticate to the SMTP server used only if mail.smtp.auth is true
-				<username>user</username>-->
+				<user>user</user>-->
 
 				<!--Password used to authenticate to the SMTP server, used only if mail.smtp.auth is true-->
 				<password encrypted="true">18604180541d172f9827e08c998db568</password>

@@ -70,8 +70,8 @@ public class TempKeyPK implements java.io.Serializable {
 	@Override
 	public int hashCode() {
         return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
-            append(txId).
-            append(entityKey).
+            append(getTxId()).
+            append(getEntityKey()).
             toHashCode();
     }
 }

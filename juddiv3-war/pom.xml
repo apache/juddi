@@ -245,7 +245,7 @@
 				<dependency>
 					<groupId>org.apache.geronimo.javamail</groupId>
 					<artifactId>geronimo-javamail_1.4_mail</artifactId>
-					<version>1.8.2</version>
+					<version>1.8.3</version>
 				</dependency>
 			</dependencies>
 		</profile>
@@ -338,7 +338,7 @@
 				<dependency>
 					<groupId>org.apache.geronimo.javamail</groupId>
 					<artifactId>geronimo-javamail_1.4_mail</artifactId>
-					<version>1.8.2</version>
+					<version>1.8.3</version>
 				</dependency>
 			</dependencies>
 		</profile>
@@ -432,7 +432,7 @@
 				<dependency>
 					<groupId>org.apache.geronimo.javamail</groupId>
 					<artifactId>geronimo-javamail_1.4_mail</artifactId>
-					<version>1.8.2</version>
+					<version>1.8.3</version>
 				</dependency>
 			</dependencies>
 		</profile>

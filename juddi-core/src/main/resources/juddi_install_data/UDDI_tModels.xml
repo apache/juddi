@@ -1643,7 +1643,7 @@
 	</tModel>
 	
 	<tModel tModelKey="uddi:uddi.org:ubr:identifier:dnb.com:d-u-n-s">
-	  <name>Dun and Bradstreet D-U-N-S® Number</name>
+	  <name>Dun and Bradstreet D-U-N-S Number</name>
 	  <description>A unique nine digit identification number, for each physical location of your business. </description>
         <overviewDoc>
             <overviewURL useType="text">
