@@ -50,7 +50,6 @@ import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.ClientConfig;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.config.UDDINode;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.webconsole.AES;
@@ -229,8 +228,7 @@ public class UddiHub implements Serializable {
                 }
                 Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
                 if (transportClass != null) {
-                    transport = (Transport) transportClass.
-                            getConstructor(String.class).newInstance(nodename);
+                    transport = client.getTransport(nodename);
 
                     security = transport.getUDDISecurityService();
                     inquiry = transport.getUDDIInquiryService();

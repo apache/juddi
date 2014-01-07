@@ -384,7 +384,7 @@ public class UDDIClient {
      */
     public Transport getTransport(String nodeName) throws ConfigurationException {
         try {
-            String clazz = clientConfig.getHomeNode().getProxyTransport();
+            String clazz = clientConfig.getUDDINode(nodeName).getProxyTransport();
             String managerName = clientConfig.getClientName();
             Class<?> transportClass = ClassUtil.forName(clazz, UDDIClient.class);
             if (transportClass != null) {
