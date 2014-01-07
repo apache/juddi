@@ -10,6 +10,7 @@
   <artifactId>uddi-tck-runner</artifactId>
   <name>UDDI TCK Test Runner</name>
   <url>http://maven.apache.org</url>
+  <packaging>bundle</packaging>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
