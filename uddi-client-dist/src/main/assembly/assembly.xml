@@ -202,10 +202,10 @@
                 <exclude>**/target/**</exclude>
                 <exclude>**/bin</exclude>
                 <exclude>**/obj</exclude>
-                <exclude>juddi-client.net/*.bat</exclude>
-                <exclude>juddi-client.net/clean.txt</exclude>
-                <exclude>juddi-client.net/input.txt</exclude>
-                <exclude>juddi-client.net/*.suo</exclude>
+                <exclude>*.bat</exclude>
+                <exclude>clean.txt</exclude>
+                <exclude>input.txt</exclude>
+                <exclude>*.suo</exclude>
             </excludes>
             <directoryMode>0755</directoryMode>
             <fileMode>0755</fileMode>
