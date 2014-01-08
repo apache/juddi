@@ -15,13 +15,10 @@
  */
 package org.apache.juddi.samples;
 
-import java.util.Properties;
 import org.apache.juddi.api_v3.AccessPointType;
-import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.ext.wsdm.WSDMQosConstants;
 import org.apache.juddi.v3.client.compare.TModelInstanceDetailsComparator;
-import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.AccessPoint;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BindingTemplates;
@@ -36,13 +33,8 @@ import org.uddi.api_v3.DiscoveryURLs;
 import org.uddi.api_v3.InstanceDetails;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.PersonName;
-import org.uddi.api_v3.SaveTModel;
-import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelInstanceDetails;
 import org.uddi.api_v3.TModelInstanceInfo;
-import org.uddi.v3_service.UDDIInquiryPortType;
-import org.uddi.v3_service.UDDIPublicationPortType;
-import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
  *
@@ -50,32 +42,23 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class CompareByTModelInstanceInfoQOS {
 
-    static PrintUDDI<TModel> pTModel = new PrintUDDI<TModel>();
-    static Properties properties = new Properties();
-    static String wsdlURL = null;
-    private static UDDISecurityPortType security = null;
-    private static JUDDIApiPortType juddiApi = null;
-    private static UDDIPublicationPortType publish = null;
-    private static UDDIInquiryPortType inquiry;
-
-    
     
     public static void main(String[] args) throws Exception {
             BusinessEntity mary = CreateMary();
             BindingTemplate bt1 = mary.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0);
-            BindingTemplate bt2 = mary.getBusinessServices().getBusinessService().get(1).getBindingTemplates().getBindingTemplate().get(1);
+            BindingTemplate bt2 = mary.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(1);
             
             TModelInstanceDetailsComparator tidc = new TModelInstanceDetailsComparator(WSDMQosConstants.METRIC_FAULT_COUNT_KEY, true, false, false);
             int compare = tidc.compare(bt1.getTModelInstanceDetails(), bt2.getTModelInstanceDetails());
             if (compare > 0)
-                    System.out.println(mary.getBusinessServices().getBusinessService().get(0).getName().get(0).getValue() +
-                            " is greater than " + mary.getBusinessServices().getBusinessService().get(1).getName().get(0).getValue());
+                    System.out.println(mary.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getAccessPoint().getValue() +
+                            " is greater than " + mary.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(1).getAccessPoint().getValue());
             if (compare < 0)
-                    System.out.println(mary.getBusinessServices().getBusinessService().get(0).getName().get(0).getValue() +
-                            " is less than " + mary.getBusinessServices().getBusinessService().get(1).getName().get(0).getValue());
+                    System.out.println(mary.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getAccessPoint().getValue() +
+                            " is less than " + mary.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(1).getAccessPoint().getValue());
             if (compare== 0)
-                    System.out.println(mary.getBusinessServices().getBusinessService().get(0).getName().get(0).getValue() +
-                            " is equal than " + mary.getBusinessServices().getBusinessService().get(1).getName().get(0).getValue());
+                    System.out.println(mary.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getAccessPoint().getValue() +
+                            " is equal to " + mary.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(1).getAccessPoint().getValue());
             
     }
 
@@ -138,12 +121,5 @@ public class CompareByTModelInstanceInfoQOS {
         be.getBusinessServices().getBusinessService().add(bs);
         
         return be;
-    }
-    
-    private static void SaveTM(TModel createKeyGenator, String uddi) throws Exception {
-        SaveTModel stm = new SaveTModel();
-        stm.setAuthInfo(uddi);
-        stm.getTModel().add(createKeyGenator);
-        publish.saveTModel(stm);
     }
 }

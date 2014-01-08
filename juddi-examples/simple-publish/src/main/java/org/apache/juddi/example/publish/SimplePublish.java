@@ -48,34 +48,17 @@ public class SimplePublish {
         }
     }
 
+    /**
+     * This function shows you how to publish to UDDI using a fairly generic mechanism
+     * that should be portable (meaning use any UDDI v3 library with this code)
+     */
     public void publish() {
         try {
-            // Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
-            // and can save other publishers).
-            GetAuthToken getAuthTokenRoot = new GetAuthToken();
-            getAuthTokenRoot.setUserID("root");
-            getAuthTokenRoot.setCred("");
-
-            // Making API call that retrieves the authentication token for the 'root' user.
-            AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-            System.out.println("root AUTHTOKEN = " + "******* never log auth tokens!");
-
-            // Creating a new publisher that we will use to publish our entities to.
-            //START: Note, this step is optional and only applies to jUDDI UDDI Servers
-            Publisher p = new Publisher();
-            p.setAuthorizedName("my-publisher");
-            p.setPublisherName("My Publisher");
-
-            // Adding the publisher to the "save" structure, using the 'root' user authentication info and saving away. 
-            SavePublisher sp = new SavePublisher();
-            sp.getPublisher().add(p);
-            sp.setAuthInfo(rootAuthToken.getAuthInfo());
-            juddiApi.savePublisher(sp);
-            //END: Note, this step is optional and only applies to jUDDI UDDI Servers
-
-            // Our publisher is now saved, so now we want to retrieve its authentication token
+          
+            
+            // Login aka retrieve its authentication token
             GetAuthToken getAuthTokenMyPub = new GetAuthToken();
-            getAuthTokenMyPub.setUserID("my-publisher");
+            getAuthTokenMyPub.setUserID("uddi");
             getAuthTokenMyPub.setCred("");
             AuthToken myPubAuthToken = security.getAuthToken(getAuthTokenMyPub);
             System.out.println("myPub AUTHTOKEN = " + "******* never log auth tokens!");
@@ -123,6 +106,8 @@ public class SimplePublish {
             String myServKey = sd.getBusinessService().get(0).getServiceKey();
             System.out.println("myService key:  " + myServKey);
 
+            
+            security.discardAuthToken(new DiscardAuthToken(myPubAuthToken.getAuthInfo()));
             // Now you have a publisher saved who in turn published a business and service via 
             // the jUDDI API!
 

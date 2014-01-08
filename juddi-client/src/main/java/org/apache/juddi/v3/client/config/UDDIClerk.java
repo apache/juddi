@@ -414,9 +414,10 @@ public class UDDIClerk implements Serializable {
         /**
          * Register a tModel. Note, if registration fails, no exception is
          * thrown
+         *
          * @param tModel
          * @param node
-         * @return 
+         * @return
          */
         public TModelDetail register(TModel tModel, Node node) {
                 TModelDetail tModelDetail = null;
@@ -442,8 +443,9 @@ public class UDDIClerk implements Serializable {
         /**
          * Register a BindingTemplate, using the node of current clerk ('this').
          * Note, if registration fails, no exception is thrown
+         *
          * @param binding
-         * @return 
+         * @return
          */
         public BindingTemplate register(BindingTemplate binding) {
                 return register(binding, this.getUDDINode().getApiNode());
@@ -452,9 +454,10 @@ public class UDDIClerk implements Serializable {
         /**
          * Register a BindingTemplate. Note, if registration fails, no exception
          * is thrown
+         *
          * @param binding
          * @param node
-         * @return 
+         * @return
          */
         public BindingTemplate register(BindingTemplate binding, Node node) {
 
@@ -495,7 +498,8 @@ public class UDDIClerk implements Serializable {
          *
          * Note, if registration fails, no exception is thrown
          *
-         * @param service the element returned by the server, it may be modified from the original
+         * @param service the element returned by the server, it may be modified
+         * from the original
          * @param node
          * @return the potentially modified service by the UDDI server
          */
@@ -1038,6 +1042,21 @@ public class UDDIClerk implements Serializable {
          * not found.
          *
          * @param businessKey - the key we are looking for
+         * @return BusinessEntity is found, or null if not found.
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
+        public BusinessEntity getBusinessDetail(String businessKey) throws RemoteException,
+                TransportException, ConfigurationException {
+                return getBusinessDetail(businessKey, this.getUDDINode().getApiNode());
+        }
+
+        /**
+         * Looks up the BusinessEntiry in the registry, will return null if is
+         * not found.
+         *
+         * @param businessKey - the key we are looking for
          * @param node - the node which is going to be queried
          * @return BusinessEntity is found, or null if not found.
          * @throws RemoteException
@@ -1116,6 +1135,52 @@ public class UDDIClerk implements Serializable {
         }
 
         /**
+         * kills the current auth token, aka Logout current Node
+         */
+        public void discardAuthToken() {
+                discardAuthToken(authToken);
+        }
+
+        /**
+         * kills the provided auth token, aka Logout
+         *
+         * @param token
+         */
+        public void discardAuthToken(String token) {
+                if (token != null) {
+                        try {
+                                DiscardAuthToken discardAuthToken = new DiscardAuthToken();
+                                discardAuthToken.setAuthInfo(token);
+                                getUDDINode().getTransport().getUDDISecurityService(getUDDINode().getSecurityUrl()).discardAuthToken(discardAuthToken);
+                                token = null;
+                        } catch (Exception ex) {
+                                log.warn("Error discarding auth token: " + ex.getMessage());
+                                log.debug("Error discarding auth token: " + ex.getMessage(), ex);
+                        }
+                }
+        }
+
+        /**
+         * kills the provided auth token, aka Logout
+         *
+         * @param token
+         * @param endpoint
+         */
+        public void discardAuthToken(String token, String endpoint) {
+                if (token != null) {
+                        try {
+                                DiscardAuthToken discardAuthToken = new DiscardAuthToken();
+                                discardAuthToken.setAuthInfo(token);
+                                getUDDINode().getTransport().getUDDISecurityService(endpoint).discardAuthToken(discardAuthToken);
+                                token = null;
+                        } catch (Exception ex) {
+                                log.warn("Error discarding auth token: " + ex.getMessage());
+                                log.debug("Error discarding auth token: " + ex.getMessage(), ex);
+                        }
+                }
+        }
+
+        /**
          * Gets an auth token from the uddi server using the uddi auth token
          * <br>
          * Notice: never log auth tokens! Treat it like a password
@@ -1138,6 +1203,10 @@ public class UDDIClerk implements Serializable {
                         authToken = null;
                 }
                 if (authToken == null || "".equals(authToken)) {
+                        if (getPublisher()==null || getPassword()==null){
+                                log.warn("No credentials provided for login!");
+                                return null;
+                        }
                         tokenBirthDate = new Date();
                         GetAuthToken getAuthToken = new GetAuthToken();
                         getAuthToken.setUserID(getPublisher());
@@ -1319,7 +1388,7 @@ public class UDDIClerk implements Serializable {
          * Used for the automated registration of services via WSDL2UDDI<br>
          * config file: client.clerks.clerk(" + i + ").wsdl
          *
-         * @return 
+         * @return
          * @see WSDL2UDDI
          */
         public WSDL[] getWsdls() {
@@ -1371,6 +1440,7 @@ public class UDDIClerk implements Serializable {
          */
         public boolean setIsPasswordEncrypted() {
                 return this.isencrypted;
+
         }
 
         public class WSDL {

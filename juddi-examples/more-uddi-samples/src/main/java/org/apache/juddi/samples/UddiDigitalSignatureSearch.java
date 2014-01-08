@@ -63,18 +63,21 @@ public class UddiDigitalSignatureSearch {
     public static void main(String args[]) {
 
         UddiDigitalSignatureSearch sp = new UddiDigitalSignatureSearch();
-        sp.Fire(args);
+        sp.Fire(null);
     }
 
-    public void Fire(String[] args) {
+    public void Fire(String token) {
         try {
 
             FindService fs = new FindService();
             //optional, usually
-            fs.setAuthInfo(GetAuthKey("root", "root"));
+            if (token==null)
+                    token=GetAuthKey("root", "root");
+            fs.setAuthInfo(token);
             fs.setFindQualifiers(new FindQualifiers());
             fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.SORT_BY_DATE_ASC);
-            fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.SORT_BY_DATE_DESC);
+            fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+            fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.SIGNATURE_PRESENT);
             Name n = new Name();
             n.setValue("%");
             fs.getName().add(n);
@@ -105,7 +108,7 @@ public class UddiDigitalSignatureSearch {
 
             // Making API call that retrieves the authentication token for the 'root' user.
             AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-            System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
+            System.out.println("root AUTHTOKEN = " + "dont log auth tokens!");
             return rootAuthToken.getAuthInfo();
         } catch (Exception ex) {
             System.out.println("Could not authenticate with the provided credentials " + ex.getMessage());

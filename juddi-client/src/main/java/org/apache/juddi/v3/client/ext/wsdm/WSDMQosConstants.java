@@ -15,6 +15,9 @@
  */
 package org.apache.juddi.v3.client.ext.wsdm;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Defines constants for OASIS's WSDM specification. Specifically tModels for
  * use in UDDI
@@ -24,77 +27,95 @@ package org.apache.juddi.v3.client.ext.wsdm;
  */
 public abstract class WSDMQosConstants {
 
-    /**
-     * This is the 'for more information' url for WSDM + UDDI
-     */
-    public static final String moreInfoUrl = "https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc";
-    public static final String WSDM_KEYGEN = "urn:wsdm.org:keygenerator";
-    public static final String WSDM_METRIC_KEYGEN = "urn:wsdm.org:metric:keygenerator";
-    public static final String WSDM_IDENTITY_KEYGEN = "urn:wsdm.org:identity:keygenerator";
-    public static final String WSDM_QOS_KEYGEN = "urn:wsdm.org:qos:keygenerator";
-    /**
-     * The number of requests to a given service. (number of requests)
-     */
-    public static final String METRIC_REQUEST_COUNT_KEY = "urn:wsdm.org:metric:requestcount";
-    public static final String METRIC_RequestCount = "RequestCount";
-    /**
-     * The number of replies from a given service. (number of replies)
-     */
-    public static final String METRIC_REPLY_COUNT_KEY = "urn:wsdm.org:metric:replycount";
-    public static final String METRIC_ReplyCount = "ReplyCount";
-    /**
-     * The number of faults from a given service. (number of faults)
-     */
-    public static final String METRIC_FAULT_COUNT_KEY = "urn:wsdm.org:metric:faultcount";
-    public static final String METRIC_FaultCount = "FaultCount";
-    /**
-     * This is the unique identity by which the resource (service) is known to
-     * the management system. It is useful for further queries. (resource
-     * identification in URI format)
-     */
-    public static final String IDENTITY_RESOURCE_ID_KEY = "urn:wsdm.org:identity:resourceId";
-    public static final String IDENTITY_ResourceId = "ResourceId";
-    /**
-     * Represents the last time this metric was updated. (time value)
-     */
-    public static final String METRIC_LAST_UPDATE_TIME_KEY = "urn:wsdm.org:metric:lastupdatetime";
-    public static final String METRIC_LastUpdateTime = "LastUpdateTime";
-    /**
-     * Average response time of the service. (numeric value or symbolic rating)
-     */
-    public static final String QOS_RESPONSE_TIME_AVG_KEY = "urn:wsdm.org:qos:responsetime_average";
-    public static final String QOS_ResponseTime_Average = "ResponseTime_Average";
-    /**
-     * Throughput count. (numeric value or symbolic rating)
-     */
-    public static final String QOS_THROUGHPUT_COUNT_KEY = "urn:wsdm.org:qos:throughput_count";
-    public static final String QOS_Throughput_count = "Throughput_count";
-    /**
-     * Throughput bytes. (numeric value or symbolic rating)
-     */
-    public static final String QOS_THROUGHPUT_BYTES_KEY = "urn:wsdm.org:qos:throughput_bytes";
-    public static final String QOS_Throughput_bytes = "Throughput_bytes";
-    /**
-     * Reliability or the measure of. (numeric value or symbolic rating)
-     */
-    public static final String QOS_RELIABILITY_KEY = "urn:wsdm.org:qos:reliability";
-    public static final String QOS_Reliability = "Reliability";
-    /**
-     * The beginning on the reporting time period used for the information
-     * above. (dateTime)
-     */
-    public static final String QOS_REPORTING_PERIOD_START_KEY = "urn:wsdm.org:qos:reportingperiodstart";
-    public static final String QOS_ReportingPeriodStart = "ReportingPeriodStart";
-    /**
-     * The end of the reporting time period used for the information above.
-     * (dateTime)
-     */
-    public static final String QOS_REPORTING_PERIOD_END_KEY = "urn:wsdm.org:qos:reportingperiodend";
-    public static final String QOS_ReportingPeriodEnd = "ReportingPeriodEnd";
-    /**
-     * How often is this information updated in UDDI (it is not assumed to be
-     * realtime). (duration)
-     */
-    public static final String QOS_UPDATE_INTERVAL_KEY = "urn:wsdm.org:qos:updateinterval";
-    public static final String QOS_UpdateInterval = "UpdateInterval";
+        /**
+         * This is the 'for more information' url for WSDM + UDDI
+         */
+        public static final String moreInfoUrl = "https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc";
+        public static final String WSDM_KEYGEN = "urn:wsdm.org:keygenerator";
+        public static final String WSDM_METRIC_KEYGEN = "urn:wsdm.org:metric:keygenerator";
+        public static final String WSDM_IDENTITY_KEYGEN = "urn:wsdm.org:identity:keygenerator";
+        public static final String WSDM_QOS_KEYGEN = "urn:wsdm.org:qos:keygenerator";
+        /**
+         * The number of requests to a given service. (number of requests)
+         */
+        public static final String METRIC_REQUEST_COUNT_KEY = "urn:wsdm.org:metric:requestcount";
+        public static final String METRIC_RequestCount = "RequestCount";
+        /**
+         * The number of replies from a given service. (number of replies)
+         */
+        public static final String METRIC_REPLY_COUNT_KEY = "urn:wsdm.org:metric:replycount";
+        public static final String METRIC_ReplyCount = "ReplyCount";
+        /**
+         * The number of faults from a given service. (number of faults)
+         */
+        public static final String METRIC_FAULT_COUNT_KEY = "urn:wsdm.org:metric:faultcount";
+        public static final String METRIC_FaultCount = "FaultCount";
+        /**
+         * This is the unique identity by which the resource (service) is known
+         * to the management system. It is useful for further queries. (resource
+         * identification in URI format)
+         */
+        public static final String IDENTITY_RESOURCE_ID_KEY = "urn:wsdm.org:identity:resourceId";
+        public static final String IDENTITY_ResourceId = "ResourceId";
+        /**
+         * Represents the last time this metric was updated. (time value)
+         */
+        public static final String METRIC_LAST_UPDATE_TIME_KEY = "urn:wsdm.org:metric:lastupdatetime";
+        public static final String METRIC_LastUpdateTime = "LastUpdateTime";
+        /**
+         * Average response time of the service. (numeric value or symbolic
+         * rating)
+         */
+        public static final String QOS_RESPONSE_TIME_AVG_KEY = "urn:wsdm.org:qos:responsetime_average";
+        public static final String QOS_ResponseTime_Average = "ResponseTime_Average";
+        /**
+         * Throughput count. (numeric value or symbolic rating)
+         */
+        public static final String QOS_THROUGHPUT_COUNT_KEY = "urn:wsdm.org:qos:throughput_count";
+        public static final String QOS_Throughput_count = "Throughput_count";
+        /**
+         * Throughput bytes. (numeric value or symbolic rating)
+         */
+        public static final String QOS_THROUGHPUT_BYTES_KEY = "urn:wsdm.org:qos:throughput_bytes";
+        public static final String QOS_Throughput_bytes = "Throughput_bytes";
+        /**
+         * Reliability or the measure of. (numeric value or symbolic rating)
+         */
+        public static final String QOS_RELIABILITY_KEY = "urn:wsdm.org:qos:reliability";
+        public static final String QOS_Reliability = "Reliability";
+        /**
+         * The beginning on the reporting time period used for the information
+         * above. (dateTime)
+         */
+        public static final String QOS_REPORTING_PERIOD_START_KEY = "urn:wsdm.org:qos:reportingperiodstart";
+        public static final String QOS_ReportingPeriodStart = "ReportingPeriodStart";
+        /**
+         * The end of the reporting time period used for the information above.
+         * (dateTime)
+         */
+        public static final String QOS_REPORTING_PERIOD_END_KEY = "urn:wsdm.org:qos:reportingperiodend";
+        public static final String QOS_ReportingPeriodEnd = "ReportingPeriodEnd";
+        /**
+         * How often is this information updated in UDDI (it is not assumed to
+         * be realtime). (duration)
+         */
+        public static final String QOS_UPDATE_INTERVAL_KEY = "urn:wsdm.org:qos:updateinterval";
+        public static final String QOS_UpdateInterval = "UpdateInterval";
+
+        public static List<String> getAllQOSKeys() {
+                List<String> x = new ArrayList<String>();
+                x.add(WSDMQosConstants.METRIC_FAULT_COUNT_KEY);
+                x.add(WSDMQosConstants.METRIC_LAST_UPDATE_TIME_KEY);
+                x.add(WSDMQosConstants.METRIC_REPLY_COUNT_KEY);
+                x.add(WSDMQosConstants.METRIC_REQUEST_COUNT_KEY);
+                x.add(WSDMQosConstants.QOS_RELIABILITY_KEY);
+                x.add(WSDMQosConstants.QOS_REPORTING_PERIOD_END_KEY);
+                x.add(WSDMQosConstants.QOS_REPORTING_PERIOD_START_KEY);
+                x.add(WSDMQosConstants.QOS_RESPONSE_TIME_AVG_KEY);
+                x.add(WSDMQosConstants.QOS_THROUGHPUT_BYTES_KEY);
+                x.add(WSDMQosConstants.QOS_THROUGHPUT_COUNT_KEY);
+                x.add(WSDMQosConstants.QOS_UPDATE_INTERVAL_KEY);
+                x.add(WSDMQosConstants.IDENTITY_RESOURCE_ID_KEY);
+                return x;
+        }
 }

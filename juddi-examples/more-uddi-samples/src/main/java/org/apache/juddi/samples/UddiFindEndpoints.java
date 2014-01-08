@@ -16,24 +16,10 @@
  */
 package org.apache.juddi.samples;
 
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.wsdl.Definition;
-
-import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
-import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
-import org.apache.juddi.v3.client.mapping.wsdl.ReadWSDL;
-import org.apache.juddi.v3.client.mapping.wsdl.WSDL2UDDI;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.uddi.api_v3.*;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
@@ -46,46 +32,48 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiFindEndpoints {
 
-    private static UDDISecurityPortType security = null;
-    private static UDDIInquiryPortType inquiry = null;
-    static UDDIClerk clerk = null;
+        private static UDDISecurityPortType security = null;
+        private static UDDIInquiryPortType inquiry = null;
+        static UDDIClerk clerk = null;
 
-    public UddiFindEndpoints() {
-        try {
+        public UddiFindEndpoints() {
+                try {
             // create a manager and read the config in the archive; 
-            // you can use your config file name
-            UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
-            clerk = clerkManager.getClerk("default");
+                        // you can use your config file name
+                        UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
+                        clerk = clerkManager.getClerk("default");
             // a ClerkManager can be a client to multiple UDDI nodes, so 
-            // supply the nodeName (defined in your uddi.xml.
-            // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
-            Transport transport = clerkManager.getTransport();
-            // Now you create a reference to the UDDI API
-            security = transport.getUDDISecurityService();
-            inquiry = transport.getUDDIInquiryService();
-        } catch (Exception e) {
-            e.printStackTrace();
+                        // supply the nodeName (defined in your uddi.xml.
+                        // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
+                        Transport transport = clerkManager.getTransport();
+                        // Now you create a reference to the UDDI API
+                        security = transport.getUDDISecurityService();
+                        inquiry = transport.getUDDIInquiryService();
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
         }
-    }
 
-    public void find() {
-        try {
+        public void Fire(String authtoken, String key) {
+                try {
+                        //TODO Key! insert your key here!
+                        if (key == null) {
+                                key = "uddi:juddi.apache.org:services-inquiry";
+                        }
 
-            //TODO Key! insert your key here!
-            String key = "uddi:juddi.apache.org:services-inquiry";
+                        List<String> endpoints = clerk.getEndpoints(key);
+                        System.out.println("Endpoints returned: " + endpoints.size());
+                        for (int i = 0; i < endpoints.size(); i++) {
+                                System.out.println(endpoints.get(i));
+                        }
 
-            List<String> endpoints = clerk.getEndpoints(key);
-            for (int i = 0; i < endpoints.size(); i++) {
-                System.out.println(endpoints.get(i));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
         }
-    }
 
-    public static void main(String args[]) {
-        UddiFindEndpoints sp = new UddiFindEndpoints();
-        sp.find();
-    }
+        public static void main(String args[]) {
+                UddiFindEndpoints sp = new UddiFindEndpoints();
+                sp.Fire(null, null);
+        }
 }

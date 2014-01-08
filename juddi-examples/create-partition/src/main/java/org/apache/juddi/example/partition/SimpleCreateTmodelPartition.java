@@ -89,6 +89,7 @@ public class SimpleCreateTmodelPartition {
                 SimpleCreateTmodelPartition sp = new SimpleCreateTmodelPartition();
                 sp.TmodelsTheLongAndHardWay(args);
                 sp.TmodelsTheEasyWay(args);
+                
                 uddiClient.stop();
         }
 
@@ -97,7 +98,8 @@ public class SimpleCreateTmodelPartition {
                         
                         //This reads from the config file
                         UDDIClerk clerk = uddiClient.getClerk("defaultClerk");
-                        //Since the pass isn't set there, we have to provide it. Pist. it could be in the config file
+                        //Since the password isn't set in the above config file, we have to provide it manually
+                        //or thrown some fancy dialog box
                         clerk.setPublisher("uddi");     //username
                         clerk.setPassword("uddi");     //pass
                         
@@ -124,6 +126,7 @@ public class SimpleCreateTmodelPartition {
                         clerk.register(tm);
                         System.out.println("Creation of tModel Auth Mode Success!");
 
+                        clerk.discardAuthToken();
                 } catch (Exception e) {
                         e.printStackTrace();
                 }

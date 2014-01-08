@@ -1088,6 +1088,37 @@ namespace org.apache.juddi.v3.client.config
 
 
 
+        /**
+        * kills the current auth token, aka Logout
+        */
+        public void discardAuthToken()
+        {
+            discardAuthToken(authToken);
+        }
+        /**
+        * kills the provided auth token, aka Logout
+        */
+        public void discardAuthToken(String token)
+        {
+            if (token != null)
+            {
+                try
+                {
+                    discard_authToken discardAuthToken = new discard_authToken();
+                    discardAuthToken.authInfo=(token);
+                    getUDDINode().getTransport().getUDDISecurityService().discard_authToken(discardAuthToken);
+                    token = null;
+                }
+                catch (Exception ex)
+                {
+                    log.warn("Error discarding auth token: " + ex.Message);
+                    log.debug("Error discarding auth token: " + ex.Message, ex);
+                }
+            }
+        }
+
+
+
         /// <summary>
         ///  This calls a jUDDI implementation specific API call and is used to help 
         /// configure internode communication between jUDDI servers. This is NOT 

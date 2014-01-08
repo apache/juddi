@@ -38,7 +38,9 @@ import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
  * This class was created to demonstrate that UDDI entities's keys do not need
- * to be from the same key domain
+ * to be from the same key domain.
+ * I.e. Business key = "uddi:1234:business"
+ * which owns Service key "uddi:4567:service1"
  *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */

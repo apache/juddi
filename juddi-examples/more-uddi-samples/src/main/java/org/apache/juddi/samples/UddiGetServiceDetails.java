@@ -34,55 +34,62 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiGetServiceDetails {
 
-    private static UDDISecurityPortType security = null;
-    private static JUDDIApiPortType juddiApi = null;
-    private static UDDIPublicationPortType publish = null;
-    private static UDDIInquiryPortType inquiry = null;
+        private static UDDISecurityPortType security = null;
+        private static JUDDIApiPortType juddiApi = null;
+        private static UDDIPublicationPortType publish = null;
+        private static UDDIInquiryPortType inquiry = null;
 
-    public UddiGetServiceDetails() {
-        try {
-            // create a manager and read the config in the archive; 
-            // you can use your config file name
-            UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
-            Transport transport = clerkManager.getTransport();
-            // Now you create a reference to the UDDI API
-            security = transport.getUDDISecurityService();
-            juddiApi = transport.getJUDDIApiService();
-            publish = transport.getUDDIPublishService();
-            inquiry = transport.getUDDIInquiryService();
-        } catch (Exception e) {
-            e.printStackTrace();
+        public UddiGetServiceDetails() {
+                try {
+                        // create a manager and read the config in the archive; 
+                        // you can use your config file name
+                        UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
+                        Transport transport = clerkManager.getTransport();
+                        // Now you create a reference to the UDDI API
+                        security = transport.getUDDISecurityService();
+                        juddiApi = transport.getJUDDIApiService();
+                        publish = transport.getUDDIPublishService();
+                        inquiry = transport.getUDDIInquiryService();
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
         }
-    }
 
-    public void find() {
-        try {
-            // Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
-            // and can save other publishers).
-            GetAuthToken getAuthTokenRoot = new GetAuthToken();
-            getAuthTokenRoot.setUserID("root");
-            getAuthTokenRoot.setCred("root");
+        public void Fire(String token, String key) {
+                if (key == null) {
+                        System.out.println("No key provided!");
+                        return;
+                }
+                try {
+                        // Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
+                        // and can save other publishers).
+                        if (token == null) {
 
-            // Making API call that retrieves the authentication token for the 'root' user.
-            AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-            System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
+                                GetAuthToken getAuthTokenRoot = new GetAuthToken();
+                                getAuthTokenRoot.setUserID("root");
+                                getAuthTokenRoot.setCred("root");
 
-            GetServiceDetail fs = new GetServiceDetail();
-            fs.setAuthInfo(rootAuthToken.getAuthInfo());
-            fs.getServiceKey().add("mykey");
-            ServiceDetail serviceDetail = inquiry.getServiceDetail(fs);
-            if (serviceDetail == null || serviceDetail.getBusinessService().isEmpty()) {
-                System.out.println("mykey is not registered");
-            } else {
-                JAXB.marshal(serviceDetail, System.out);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+                                // Making API call that retrieves the authentication token for the 'root' user.
+                                AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
+                                System.out.println("root AUTHTOKEN = " + "don't log auth tokens!");
+                                token = rootAuthToken.getAuthInfo();
+                        }
+                        GetServiceDetail fs = new GetServiceDetail();
+                        fs.setAuthInfo(token);
+                        fs.getServiceKey().add(key);
+                        ServiceDetail serviceDetail = inquiry.getServiceDetail(fs);
+                        if (serviceDetail == null || serviceDetail.getBusinessService().isEmpty()) {
+                                System.out.println("mykey is not registered");
+                        } else {
+                                JAXB.marshal(serviceDetail, System.out);
+                        }
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
         }
-    }
 
-    public static void main(String args[]) {
-        UddiGetServiceDetails sp = new UddiGetServiceDetails();
-        sp.find();
-    }
+        public static void main(String args[]) {
+                UddiGetServiceDetails sp = new UddiGetServiceDetails();
+                sp.Fire(null, "uddi:juddi.apache.org:services-inquiry");
+        }
 }

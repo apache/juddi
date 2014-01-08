@@ -56,6 +56,10 @@ public class DiscardAuthToken implements Serializable{
 	@XmlElement(required = true)
     protected String authInfo;
 
+        public DiscardAuthToken(){}
+        public DiscardAuthToken(String token){
+                this.authInfo = token;
+        }
     /**
      * Gets the value of the authInfo property.
      * 

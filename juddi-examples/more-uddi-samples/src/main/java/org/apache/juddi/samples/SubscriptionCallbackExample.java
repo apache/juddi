@@ -19,14 +19,13 @@ package org.apache.juddi.samples;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.ws.Holder;
+import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.subscription.ISubscriptionCallback;
 import org.apache.juddi.v3.client.subscription.SubscriptionCallbackListener;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.*;
 import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.Subscription;
@@ -38,90 +37,107 @@ import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
- * This class shows you how to find an endpoint by searching through all
- * services
+ * This class shows you how to use the client side Subscription callback
+ * interface which fires up an embedded jetty server hosting a callback web
+ * service. It also automates most of the subscription management work.
  *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
-public class SubscriptionCallbackExample implements ISubscriptionCallback {
+public class SubscriptionCallbackExample implements ISubscriptionCallback, Runnable {
 
-    private static UDDISecurityPortType security = null;
-    private static JUDDIApiPortType juddiApi = null;
-    private static UDDIPublicationPortType publish = null;
-    private static UDDIInquiryPortType inquiry = null;
-    private static UDDIClient c = null;
-    private static UDDISubscriptionPortType subscription = null;
-    private static UDDIClerk clerk = null;
+        private static UDDISecurityPortType security = null;
 
-    public SubscriptionCallbackExample() {
-        try {
+        private static UDDIPublicationPortType publish = null;
+        private static UDDIInquiryPortType inquiry = null;
+        private static UDDIClient c = null;
+        private static UDDISubscriptionPortType subscription = null;
+        private static UDDIClerk clerk = null;
 
-            c = new UDDIClient("META-INF/simple-publish-uddi.xml");
-            c.start();
-            clerk = c.getClerk("default");
-            TModel createKeyGenator = UDDIClerk.createKeyGenator("uddi:org.apache.juddi:test:keygenerator", "Test domain", "en");
-            clerk.register(createKeyGenator);
-            Transport transport = c.getTransport();
-            // Now you create a reference to the UDDI API
-            security = transport.getUDDISecurityService();
-            juddiApi = transport.getJUDDIApiService();
-            publish = transport.getUDDIPublishService();
-            inquiry = transport.getUDDIInquiryService();
-            subscription = transport.getUDDISubscriptionService();
-        } catch (Exception e) {
-            e.printStackTrace();
+        public SubscriptionCallbackExample() {
+                try {
+
+                        c = new UDDIClient("META-INF/simple-publish-uddi.xml");
+                        c.start();
+                        clerk = c.getClerk("default");
+                        //!IMPORTANT, this is needed so that the Subscription listener endpoint can register itself correctly
+                        TModel createKeyGenator = UDDIClerk.createKeyGenator("uddi:org.apache.juddi:test:keygenerator", "Test domain", "en");
+                        clerk.register(createKeyGenator);
+                        Transport transport = c.getTransport();
+                        // Now you create a reference to the UDDI API
+                        security = transport.getUDDISecurityService();
+                        publish = transport.getUDDIPublishService();
+                        inquiry = transport.getUDDIInquiryService();
+                        subscription = transport.getUDDISubscriptionService();
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
         }
-    }
 
-    public static void main(String args[]) throws Exception {
-        SubscriptionCallbackExample sp = new SubscriptionCallbackExample();
-        //this will fireup a jetty server and host a UDDI Subscription callback Listener service
-        //and register it per the config file
-        BindingTemplate start = SubscriptionCallbackListener.start(c, "default");
+        public void Fire() throws Exception {
 
-        //register our code for the callback part
-        SubscriptionCallbackListener.registerCallback(sp);
-        
-        //login
-        String token = clerk.getAuthToken(clerk.getUDDINode().getSecurityUrl());
+                //this will fireup a jetty server and host a UDDI Subscription callback Listener service
+                //and register it per the config file
+                BindingTemplate start = SubscriptionCallbackListener.start(c, "default");
 
-        //Set up a subscription using the 'start' BindingTemplate
-        Holder<List<Subscription>> subs = new Holder<List<Subscription>>();
-        subs.value = new ArrayList<Subscription>();
-        Subscription s = new Subscription();
-        s.setBindingKey(start.getBindingKey());
-        s.setBrief(false);
-        s.setSubscriptionFilter(new SubscriptionFilter());
-        s.getSubscriptionFilter().setFindBusiness(new FindBusiness());
-        s.getSubscriptionFilter().getFindBusiness().getName().add(new Name(UDDIConstants.WILDCARD, null));
-        s.getSubscriptionFilter().getFindBusiness().setFindQualifiers(new FindQualifiers());
-        s.getSubscriptionFilter().getFindBusiness().getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
-        subs.value.add(s);
+                //register our code for the callback part
+                SubscriptionCallbackListener.registerCallback(this);
 
-        //save the subscription
-        subscription.saveSubscription(token, subs);
+                //login
+                //credentials come from the config file
+                String token = clerk.getAuthToken(clerk.getUDDINode().getSecurityUrl());
 
-        //Do some useful activities here, perhap something to trigger the callback
-        Thread.sleep(1000);
+                //Set up a subscription using the 'start' BindingTemplate
+                Holder<List<Subscription>> subs = new Holder<List<Subscription>>();
+                subs.value = new ArrayList<Subscription>();
+                Subscription s = new Subscription();
+                s.setBindingKey(start.getBindingKey());
+                s.setBrief(false);
+                s.setSubscriptionFilter(new SubscriptionFilter());
+                s.getSubscriptionFilter().setFindBusiness(new FindBusiness());
+                s.getSubscriptionFilter().getFindBusiness().getName().add(new Name(UDDIConstants.WILDCARD, null));
+                s.getSubscriptionFilter().getFindBusiness().setFindQualifiers(new FindQualifiers());
+                s.getSubscriptionFilter().getFindBusiness().getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                subs.value.add(s);
 
-        //stop and unregister the callback when we're done
-        SubscriptionCallbackListener.stop(c, "default", start.getBindingKey());
-        
-        //clean up the subscription
-        DeleteSubscription ds = new DeleteSubscription();
-        ds.setAuthInfo(token);
-        ds.getSubscriptionKey().add(subs.value.get(0).getSubscriptionKey());
-        subscription.deleteSubscription(ds);
-    }
+                //save the subscription
+                subscription.saveSubscription(token, subs);
 
-    @Override
-    public void HandleCallback(SubscriptionResultsList body) {
-        System.out.println("callback received");
-    }
+                Runtime.getRuntime().addShutdownHook(new Thread(this));
+                //Do some useful activities here, perhap something to trigger the callback
+                System.out.println("Running and waiting for changes, press Ctrl-C to break!");
+                while (running) {
+                        Thread.sleep(1000);
+                }
+                //stop and unregister the callback when we're done
+                SubscriptionCallbackListener.stop(c, "default", start.getBindingKey());
 
-    @Override
-    public void NotifyEndpointStopped() {
+                //clean up the subscription
+                DeleteSubscription ds = new DeleteSubscription();
+                ds.setAuthInfo(token);
+                ds.getSubscriptionKey().add(subs.value.get(0).getSubscriptionKey());
+                subscription.deleteSubscription(ds);
+        }
+        boolean running = true;
 
-        System.out.println("stopped");
-    }
+        public static void main(String args[]) throws Exception {
+                new SubscriptionCallbackExample().Fire();
+        }
+
+        @Override
+        public void HandleCallback(SubscriptionResultsList body) {
+                System.out.println("callback received");
+                System.out.println(new PrintUDDI<SubscriptionResultsList>().print(body));
+        }
+
+        @Override
+        public void NotifyEndpointStopped() {
+
+                System.out.println("stopped");
+        }
+
+        @Override
+        public void run() {
+                System.out.println("Break signal caught!");
+                running = false;
+        }
 }

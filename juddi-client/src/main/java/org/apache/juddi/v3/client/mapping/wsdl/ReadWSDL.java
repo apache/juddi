@@ -29,6 +29,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.ClassUtil;
 
 import com.ibm.wsdl.factory.WSDLFactoryImpl;
+import java.io.File;
+import java.net.MalformedURLException;
 
 /**
  * A WSDL parser/reader
@@ -41,19 +43,29 @@ public class ReadWSDL {
 	private final Log log = LogFactory.getLog(this.getClass());
 	
 	public Definition readWSDL(String fileName) throws WSDLException  {
-            
-		Definition wsdlDefinition = null;
-		WSDLFactory factory = WSDLFactoryImpl.newInstance();
-		WSDLReader reader = factory.newWSDLReader();
-		URL url = ClassUtil.getResource(fileName, this.getClass());
-		try {
-			URI uri = url.toURI();
-			WSDLLocator locator = new WSDLLocatorImpl(uri);
-			wsdlDefinition = reader.readWSDL(locator);
-		} catch (URISyntaxException e) {
-			log.error(e.getMessage(),e);
-		}
-		return wsdlDefinition;
+                Definition wsdlDefinition = null;
+                WSDLFactory factory = WSDLFactoryImpl.newInstance();
+                WSDLReader reader = factory.newWSDLReader();
+
+                try {
+                        File f = new File(fileName);
+                        URL url = null;
+                        if (f.exists()) {
+                                url = f.toURI().toURL();
+                        } else {
+                                url = ClassUtil.getResource(fileName, this.getClass());
+                        }
+                        if (url==null)
+                                throw new WSDLException("null input", fileName);
+                        URI uri = url.toURI();
+                        WSDLLocator locator = new WSDLLocatorImpl(uri);
+                        wsdlDefinition = reader.readWSDL(locator);
+                } catch (URISyntaxException e) {
+                        log.error(e.getMessage(), e);
+                } catch (MalformedURLException ex) {
+                        log.error(ex.getMessage(), ex);
+                }
+                return wsdlDefinition;
 	}
 	
         /**

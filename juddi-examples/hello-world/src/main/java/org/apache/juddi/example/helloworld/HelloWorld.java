@@ -21,40 +21,53 @@ import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.v3_service.UDDISecurityPortType;
 
+/**
+ * This basic hello world example shows you how to sign into a UDDI server that
+ * supports the Security API to issue "auth tokens". 
+ * 
+ * The config loads from META-INF and uses JAXWS transport, meaning that you
+ * need a functioning UDDI server to use this
+ *
+ */
 public class HelloWorld {
-	private static UDDISecurityPortType security = null;
 
-	public HelloWorld() {
-        try {
+        private static UDDISecurityPortType security = null;
+
+        public HelloWorld() {
+                try {
         	// create a client and read the config in the archive; 
-        	// you can use your config file name
-        	UDDIClient uddiClient = new UDDIClient("META-INF/hello-world-uddi.xml");
+                        // you can use your config file name
+                        UDDIClient uddiClient = new UDDIClient("META-INF/hello-world-uddi.xml");
         	// a UddiClient can be a client to multiple UDDI nodes, so 
-        	// supply the nodeName (defined in your uddi.xml.
-        	// The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
-        	Transport transport = uddiClient.getTransport();
-        	// Now you create a reference to the UDDI API
-			security = transport.getUDDISecurityService();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
-	}
+                        // supply the nodeName (defined in your uddi.xml.
+                        // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
+                        Transport transport = uddiClient.getTransport();
+                        // Now you create a reference to the UDDI API
+                        security = transport.getUDDISecurityService();
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+        }
 
-	public void getAuthToken() {
-		GetAuthToken getAuthToken = new GetAuthToken();
-		getAuthToken.setUserID("root");
-		getAuthToken.setCred("");
-		try {
-			AuthToken authToken = security.getAuthToken(getAuthToken);
-			System.out.println ("AUTHTOKEN = " 
-				+ authToken.getAuthInfo());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}		
+        public void getAuthToken() {
+                GetAuthToken getAuthToken = new GetAuthToken();
+                getAuthToken.setUserID("root");
+                getAuthToken.setCred("");
+                try {
+                        AuthToken authToken = security.getAuthToken(getAuthToken);
+                        System.out.println("Login successful!");
+                        System.out.println("AUTHTOKEN = "
+                                + "(don't log auth tokens!)");
+                        
+                        security.discardAuthToken(new DiscardAuthToken(authToken.getAuthInfo()));
+                        System.out.println("Logged out");
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+        }
 
-	public static void main (String args[]) {
-		HelloWorld hw = new HelloWorld();
-		hw.getAuthToken();	
-	}
+        public static void main(String args[]) {
+                HelloWorld hw = new HelloWorld();
+                hw.getAuthToken();
+        }
 }

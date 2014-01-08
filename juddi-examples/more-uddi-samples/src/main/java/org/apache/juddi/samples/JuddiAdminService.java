@@ -56,20 +56,16 @@ public class JuddiAdminService {
         }
     }
 
-    public void go() {
+    public void go(String token) {
         try {
             // Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
             // and can save other publishers).
-            GetAuthToken getAuthTokenRoot = new GetAuthToken();
-            getAuthTokenRoot.setUserID("root");
-            getAuthTokenRoot.setCred("root");
-
-            // Making API call that retrieves the authentication token for the 'root' user.
-            AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-            System.out.println("root AUTHTOKEN = " + "***** don't log auth tokens");
+                
             
+
+          
             SaveNode node = new SaveNode();
-            node.setAuthInfo(rootAuthToken.getAuthInfo());
+            node.setAuthInfo(token);
             Node n = new Node();
             n.setClientName("juddicloud");
             n.setName("juddicloud");
@@ -88,16 +84,12 @@ public class JuddiAdminService {
             System.out.println("Before sending");
             System.out.println(p.print(node));
             juddi.saveNode(node);
-         //   clerk.saveNode(node);
+            System.out.println("Saved");
+         
             
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String args[]) {
-        JuddiAdminService sp = new JuddiAdminService();
-        sp.go();
     }
 }

@@ -99,7 +99,7 @@ public class Publish {
 		// Making API call that retrieves the authentication token for the 'root' user.
 		AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
 		System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
-		//Creating joe publisher
+		//Creating joe publisher THIS IS JUDDI Specific code
 		JUDDIApiPortType juddiApi = uddiClient.getTransport("default").getJUDDIApiService();
 		Publisher p = new Publisher();
 		p.setAuthorizedName("joepublisher");
@@ -109,7 +109,8 @@ public class Publish {
 		sp.getPublisher().add(p);
 		sp.setAuthInfo(rootAuthToken.getAuthInfo());
 		juddiApi.savePublisher(sp);
-		
+		//END jUDDI specific code
+                
 		//Every publisher should have a keyGenerator, Joe has his:
 		TModel keyGenerator = new TModel();
 		keyGenerator.setTModelKey("uddi:uddi.joepublisher.com:keygenerator");

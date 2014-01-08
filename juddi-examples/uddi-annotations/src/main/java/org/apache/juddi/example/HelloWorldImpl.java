@@ -21,6 +21,11 @@ import javax.jws.WebService;
 import org.apache.juddi.v3.annotations.UDDIService;
 import org.apache.juddi.v3.annotations.UDDIServiceBinding;
 
+/**
+ * This example show you how to use UDDI Annotations to decorate a class.
+ * When the Servlet Listener
+ * 
+ */
 
 @UDDIService(
 		businessKey="uddi:${keyDomain}:${department}-asf",

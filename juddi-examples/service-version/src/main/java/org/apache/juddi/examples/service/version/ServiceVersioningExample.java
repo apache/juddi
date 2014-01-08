@@ -44,7 +44,8 @@ import org.uddi.v3_service.UDDISecurityPortType;
  * Hello world!
  *
  * This gives you an example of one way to use service version with UDDI and is
- * a partial solution to https://issues.apache.org/jira/browse/JUDDI-509
+ * a partial solution to https://issues.apache.org/jira/browse/JUDDI-509 which 
+ * references the following
  * http://www.ibm.com/developerworks/webservices/library/ws-version/
  *
  */
@@ -193,5 +194,6 @@ public class ServiceVersioningExample {
     private void Destroy() {
         clerk.unRegisterBusiness(domain_prefix + "zerocoolbiz");
         clerk.unRegisterTModel(keygen.getTModelKey());
+        clerk.discardAuthToken();
     }
 }
