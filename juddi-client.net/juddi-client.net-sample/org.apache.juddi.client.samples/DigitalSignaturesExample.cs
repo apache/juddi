@@ -56,11 +56,11 @@ namespace org.apache.juddi.client.sample
                 {
                     Console.Out.WriteLine(bl.businessInfos[0].name[0].Value);
                     Console.Out.WriteLine("attempting to sign");
-                    serviceDetail sd = clerk.getServiceDetail(bl.businessInfos[0].serviceInfos[0].serviceKey);
+                    businessService sd = clerk.getServiceDetail(bl.businessInfos[0].serviceInfos[0].serviceKey);
 
                     //pist, the signing config comes from the stuff in in uddi.xml
                     DigSigUtil ds = new DigSigUtil(clerkManager.getClientConfig().getDigitalSignatureConfiguration());
-                    businessService signedsvc = (businessService)ds.signUddiEntity(sd.businessService[0]);
+                    businessService signedsvc = (businessService)ds.signUddiEntity(sd);
                     PrintUDDI<businessService> p = new PrintUDDI<businessService>();
                     Console.Out.WriteLine("signed successfully!");
 
@@ -77,12 +77,12 @@ namespace org.apache.juddi.client.sample
                     get_serviceDetail gsd = new get_serviceDetail();
                     gsd.authInfo = clerk.getAuthToken(clerk.getUDDINode().getSecurityUrl());
                     gsd.serviceKey = new string[] { signedsvc.serviceKey };
-                    sd = inquiry.get_serviceDetail(gsd);
+                    sd = inquiry.get_serviceDetail(gsd).businessService[0];
 
-                    Console.Out.WriteLine(p.print(sd.businessService[0]));
+                    Console.Out.WriteLine(p.print(sd));
                     Console.Out.WriteLine("attempting verify and validate");
                     err = "";
-                    valid = ds.verifySignedUddiEntity(sd.businessService[0], out err);
+                    valid = ds.verifySignedUddiEntity(sd, out err);
                     Console.Out.WriteLine("Signature is " + (valid ? "Valid, Yippy!" : "Invalid!") + " msg: " + err);
 
 

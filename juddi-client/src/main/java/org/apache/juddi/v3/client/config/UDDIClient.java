@@ -45,6 +45,7 @@ import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.TModelInstanceDetails;
 import org.uddi.api_v3.TModelInstanceInfo;
+
 /**
  * <p>The UDDIClient is the main entry point for using the jUDDI client. The UDDICLient
  * provides a simple way to get interact with a UDDI registry using the UDDI v3 API.</p>
@@ -293,8 +294,6 @@ public class UDDIClient {
      * Removes the service and all of its bindingTemplates of the annotated
      * classes.
      *
-     * @throws TransportException
-     * @throws RemoteException
      */
     public void unRegisterAnnotatedServices() {
         Map<String, UDDIClerk> clerks = clientConfig.getUDDIClerks();
@@ -335,7 +334,7 @@ public class UDDIClient {
                     }
                     if (removeServiceWithNoBindingTemplates) {
                         try {
-                            BusinessService existingService = clerk.findService(businessService.getServiceKey(), clerk.getUDDINode().getApiNode());
+                            BusinessService existingService = clerk.getServiceDetail(businessService.getServiceKey(), clerk.getUDDINode().getApiNode());
                             if (existingService.getBindingTemplates() == null || existingService.getBindingTemplates().getBindingTemplate().size() == 0) {
                                 clerk.unRegisterService(businessService.getServiceKey(), clerk.getUDDINode().getApiNode());
                             }
@@ -402,7 +401,7 @@ public class UDDIClient {
      * Gets the UDDI Clerk, the entry point into many functions of the juddi
      * client
      *
-     * @param clerkName - This references the uddi/client/clern@name of the
+     * @param clerkName - This references the uddi/client/clerk@name of the
      * juddi client config file. it stores credentials if necessary and
      * associates it with a particular UDDI node (server/cluster) If not
      * specificed, the value of "default" will be used.
@@ -418,11 +417,7 @@ public class UDDIClient {
     /**
      * Registers services to UDDI using a clerk, and the uddi.xml configuration.
      *
-     * @throws WSDLException
-     * @throws TransportException
-     * @throws ConfigurationException
-     * @throws RemoteException
-     */
+          */
     public void registerWSDLs() {
         Map<String, UDDIClerk> uddiClerks = clientConfig.getUDDIClerks();
         if (uddiClerks.size() > 0) {
@@ -432,6 +427,9 @@ public class UDDIClient {
         }
     }
 
+    /**
+     * unregisters all config defined wsdls
+     */
     public void unRegisterWSDLs() {
         Map<String, UDDIClerk> uddiClerks = clientConfig.getUDDIClerks();
         if (uddiClerks.size() > 0) {

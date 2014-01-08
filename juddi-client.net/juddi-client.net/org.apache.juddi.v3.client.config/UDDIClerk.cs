@@ -28,9 +28,38 @@ using System.Configuration;
 namespace org.apache.juddi.v3.client.config
 {
     /// <summary>
-    /// 
+    /// The UDDIClerk provides an easy way to access a UDDI service. The clerk can be
+ /// configured programmatically, but it is recommended to specify the server
+ /// endpoint and access credentials in a uddi.xml file.
     /// </summary>
-    /// 
+/// Recommended use:
+ ///<pre>
+ /// {@code
+ /// UDDIClient uddiClient = new UDDIClient();
+ /// UDDIClerk clerk = uddiClient.getClerk(clerkName);
+ /// }
+ /// </pre> where the clerkName "MyClerk" is defined as attribute on the clerk
+ /// element
+ /// <pre>
+ /// {@code
+ ///  <clerks registerOnStartup="true">
+ ///    <clerk name="MyClerk" node="default" publisher="root" password="root" isPasswordEncrypted="false" cryptoProvider="">
+ ///      <class>org.apache.juddi.example.HelloWorldImpl</class>
+ ///    </clerk>
+ ///  </clerks>
+ /// }
+ /// </pre> Credentials: In the clerk section you need to specify the publisher to
+ /// be used, as well the password. The password can be encrypted and a
+ /// cryptoProvider class can be set.
+ ///
+ /// UDDI Annotations: If you want to register classes containing UDDIAnnotations,
+ /// then you need to set registerOnStartup="true" and you can list the classes
+ /// with the annotations as subelements. See the HelloWorldImpl class above, as
+ /// well as the uddi-annotations example.
+ ///
+ /// @author kstam
+ ///
+ 
     public class UDDIClerk : IDisposable
     {
 
@@ -48,6 +77,11 @@ namespace org.apache.juddi.v3.client.config
         private string cryptoProvider;
         private Dictionary<String, Properties> services = new Dictionary<String, Properties>();
 
+        /// <summary>
+        ///  use caution calling the default constructor, many of the functions of
+         /// the UDDI Clerk will not function unless manually set. The Node must
+         /// be set for using most of the functions provided by this class.
+        /// </summary>
         public UDDIClerk()
         {
         }
@@ -60,37 +94,70 @@ namespace org.apache.juddi.v3.client.config
             this.publisher = clerk.publisher;
             this.uddinode = new UDDINode(clerk.node);
         }
-
+        /**
+         * A list of classes defined in the config file that have UDDI
+         * Annotations on them for automated registration
+         * <br>client.clerks.clerk(" + i + ").class
+         *
+         * @return
+         * @see org.apache.juddi.v3.annotations.UDDIService
+         * @see org.apache.juddi.v3.annotations.UDDIServiceBinding
+         */
         public String[] getClassWithAnnotations()
         {
             return classWithAnnotations;
         }
 
+        /**
+       * A list of classes defined in the config file that have UDDI
+       * Annotations on them for automated registration
+       * <br>client.clerks.clerk(" + i + ").class
+       *
+       * @see org.apache.juddi.v3.annotations.UDDIService
+       * @see org.apache.juddi.v3.annotations.UDDIServiceBinding
+       */
         public void setClassWithAnnotations(String[] classWithAnnotations)
         {
             this.classWithAnnotations = classWithAnnotations;
         }
 
+        [Obsolete]
         public Dictionary<String, Properties> getServices()
         {
             return services;
         }
 
+        [Obsolete]
         public void setServices(Dictionary<String, Properties> services)
         {
             this.services = services;
         }
 
+
+        /**
+         * The client manager name as defined in the config file client[@name]
+         *
+         * @return
+         */
         public String getManagerName()
         {
             return managerName;
         }
-
+        /**
+        * The client manager name as defined in the config file client[@name]
+        *
+        * @param managerName
+        */
         public void setManagerName(String managerName)
         {
             this.managerName = managerName;
         }
 
+        /**
+        * Performans the process of parsing the configuration defined wsdls to
+        * UDDI. This is a convenience wrapper Note, if registration fails, no
+        * exception is thrown
+        */
         public void registerWsdls()
         {
             if (this.getWsdls() != null)
@@ -124,6 +191,19 @@ namespace org.apache.juddi.v3.client.config
             }
         }
 
+        /**
+         * Registers a WSDL Definition onto the UDDI node referenced by the
+         * clerk. Note, if registration fails, no exception is thrown
+         *
+         * @param wsdlDefinition - the WSDL Definition
+         * @param keyDomain - the keyDomain which will be used to construct the
+         * UDDI key IDs. If left null the keyDomain defined in the node's
+         * properties will be used.
+         * @param businessKey - the key of the business to which this service
+         * belongs. If left null the businessKey defined in the node's
+         * properties will be used.
+         *
+         */
         public void registerWsdls(tDefinitions wsdlDefinition, String keyDomain, String businessKey)
         {
 
@@ -149,6 +229,11 @@ namespace org.apache.juddi.v3.client.config
             }
         }
 
+        /**
+         * Removes the UDDI data structures belonging to the WSDLs for this
+         * clerk from the UDDI node. Note, if registration fails, no exception
+         * is thrown
+         */
         public void unRegisterWsdls()
         {
             if (this.getWsdls() != null)
@@ -181,15 +266,30 @@ namespace org.apache.juddi.v3.client.config
                 }
             }
         }
-
+        /**
+        * Registers the Subscription that is passed in to the UDDI node for
+        * this clerk.
+        *
+        * Note, if registration fails, no exception is thrown
+        *
+        * @param subscription
+        * @return
+        */
         public org.uddi.apiv3.subscription register(org.uddi.apiv3.subscription subscription)
         {
             return register(subscription, this.getUDDINode().getApiNode());
         }
 
         /**
-         * Register a Subscription.
-         */
+        * Register a Subscription to UDDI node passed in. Make sure you use a
+        * clerk that has credentials for this node. Note, if registration
+        * fails, no exception is thrown
+        *
+        * @param subscription a UDDI subscription, remember only one filter
+        * type is allowed by UDDI
+        * @param node the UDDI node referenced from the config file
+        * @return the potentially UDDI server modified subscription
+        */
         public org.uddi.apiv3.subscription register(org.uddi.apiv3.subscription subscription, org.apache.juddi.apiv3.node node)
         {
 
@@ -226,18 +326,23 @@ namespace org.apache.juddi.v3.client.config
         }
 
         /**
-         * Register a tModel, using the node of current clerk ('this').
-         *
-         * @param tModel
-         * @return the tModelDetail of the newly registered tModel
-         */
+        * Register a tModel, using the node of current clerk ('this'). Note, if
+        * registration fails, no exception is thrown
+        *
+        * @param tModel
+        * @return the TModelDetail of the newly registered TModel
+        */
         public org.uddi.apiv3.tModelDetail register(org.uddi.apiv3.tModel tModel)
         {
             return register(tModel, this.getUDDINode().getApiNode());
         }
 
         /**
-         * Register a tModel.
+         * Register a tModel. Note, if registration fails, no exception is
+         * thrown
+         * @param tModel
+         * @param node
+         * @return 
          */
         public org.uddi.apiv3.tModelDetail register(org.uddi.apiv3.tModel tModel, org.apache.juddi.apiv3.node node)
         {
@@ -269,7 +374,9 @@ namespace org.apache.juddi.v3.client.config
 
         /**
          * Register a BindingTemplate, using the node of current clerk ('this').
-         *
+         * Note, if registration fails, no exception is thrown
+         * @param binding
+         * @return 
          */
         public org.uddi.apiv3.bindingTemplate register(org.uddi.apiv3.bindingTemplate binding)
         {
@@ -277,9 +384,12 @@ namespace org.apache.juddi.v3.client.config
         }
 
         /**
-         * Register a BindingTemplate.
-         *
-         */
+       * Register a BindingTemplate. Note, if registration fails, no exception
+       * is thrown
+       * @param binding
+       * @param node
+       * @return 
+       */
         public org.uddi.apiv3.bindingTemplate register(org.uddi.apiv3.bindingTemplate binding, org.apache.juddi.apiv3.node node)
         {
 
@@ -314,8 +424,11 @@ namespace org.apache.juddi.v3.client.config
         }
 
         /**
-         * Register a service, using the node of current clerk ('this').
+         * Register a service, using the node of current clerk ('this'). Note,
+         * if registration fails, no exception is thrown
          *
+         * @param service
+         * @return
          */
         public org.uddi.apiv3.businessService register(org.uddi.apiv3.businessService service)
         {
@@ -323,12 +436,15 @@ namespace org.apache.juddi.v3.client.config
         }
 
 
-        /// <summary>
-        /// Register a service.
-        /// </summary>
-        /// <param name="service"></param>
-        /// <param name="node"></param>
-        /// <returns></returns>
+        /**
+         * Register a service.
+         *
+         * Note, if registration fails, no exception is thrown
+         *
+         * @param service the element returned by the server, it may be modified from the original
+         * @param node
+         * @return the potentially modified service by the UDDI server
+         */
         public org.uddi.apiv3.businessService register(org.uddi.apiv3.businessService service, org.apache.juddi.apiv3.node node)
         {
 
@@ -358,14 +474,25 @@ namespace org.apache.juddi.v3.client.config
             return businessService;
         }
 
+        /**
+         * registers a UDDI business. This is a convenience wrapper
+         *
+         * @param business
+         * @return a possibility modified business entity as registered
+         */
         public org.uddi.apiv3.businessEntity register(org.uddi.apiv3.businessEntity business)
         {
             return register(business, this.getUDDINode().getApiNode());
         }
 
         /**
-         * Register a service. returns null if not successful
-         */
+          * Registers a UDDI Business referencing the specified Node from the
+          * config file
+          *
+          * @param business
+          * @param node
+          * @return a possibility modified business entity as registered
+          */
         public org.uddi.apiv3.businessEntity register(org.uddi.apiv3.businessEntity business, org.apache.juddi.apiv3.node node)
         {
 
@@ -397,15 +524,24 @@ namespace org.apache.juddi.v3.client.config
             return businessEntity;
         }
 
+        /**
+        * removes a business from UDDI. This is a convenience wrapper Note, if
+        * registration fails, no exception is thrown
+        *
+        * @param businessKey
+        */
         public void unRegisterBusiness(String businessKey)
         {
             unRegisterBusiness(businessKey, this.getUDDINode().getApiNode());
         }
 
         /**
-         * Unregisters the service with specified serviceKey.
+         * Unregisters the service with specified serviceKey using the specified
+         * Node, as defined in the config file Note, if registration fails, no
+         * exception is thrown
          *
-         * @param service
+         * @param businessKey
+         * @param node
          */
         public void unRegisterBusiness(String businessKey, org.apache.juddi.apiv3.node node)
         {
@@ -429,16 +565,24 @@ namespace org.apache.juddi.v3.client.config
             }
         }
 
+        /**
+         * removes a service by key. This is a convenience wrapper Note, if
+         * registration fails, no exception is thrown
+         *
+         * @param serviceKey
+         */
         public void unRegisterService(String serviceKey)
         {
             unRegisterService(serviceKey, this.getUDDINode().getApiNode());
         }
 
         /**
-         * Unregisters the service with specified serviceKey.
-         *
-         * @param service
-         */
+        * Unregisters the service with specified serviceKey. Note, if
+        * registration fails, no exception is thrown
+        *
+        * @param serviceKey
+        * @param node
+        */
         public void unRegisterService(String serviceKey, org.apache.juddi.apiv3.node node)
         {
             log.info("UnRegistering the service " + serviceKey);
@@ -457,17 +601,25 @@ namespace org.apache.juddi.v3.client.config
             }
         }
 
+        /**
+         * removes a binding by key. This is a convenience wrapper Note, if
+         * registration fails, no exception is thrown
+         *
+         * @param bindingKey
+         */
         public void unRegisterBinding(String bindingKey)
         {
             unRegisterBinding(bindingKey, this.getUDDINode().getApiNode());
         }
 
         /**
-         * Unregisters the BindingTemplate with specified bindingKey.
-         *
-         * @param bindingTemplate
-         * @param node
-         */
+        * Unregisters the BindingTemplate with specified bindingKey and
+        * referenced node defined in the config file Note, if registration
+        * fails, no exception is thrown
+        *
+        * @param bindingKey
+        * @param node
+        */
         public void unRegisterBinding(String bindingKey, org.apache.juddi.apiv3.node node)
         {
             log.info("UnRegistering binding key " + bindingKey);
@@ -486,17 +638,26 @@ namespace org.apache.juddi.v3.client.config
             }
         }
 
+        /**
+         * removes a tModel. Note, UDDI just flags tModels as deleted, it will
+         * still be accessible but not returned in a search. This is a
+         * convenience wrapper Note, if registration fails, no exception is
+         * thrown
+         *
+         * @param tModelKey
+         */
         public void unRegisterTModel(String tModelKey)
         {
             unRegisterTModel(tModelKey, this.getUDDINode().getApiNode());
         }
 
         /**
-         * Unregisters the BindingTemplate with specified bindingKey.
-         *
-         * @param bindingTemplate
-         * @param node
-         */
+        * Unregisters the BindingTemplate with specified bindingKey. Note, if
+        * registration fails, no exception is thrown
+        *
+        * @param tModelKey
+        * @param node
+        */
         public void unRegisterTModel(String tModelKey, org.apache.juddi.apiv3.node node)
         {
             log.info("UnRegistering tModel key " + tModelKey);
@@ -515,11 +676,24 @@ namespace org.apache.juddi.v3.client.config
             }
         }
 
+        /**
+         * removes a subscription by key. This is a convenience wrapper Note, if
+         * registration fails, no exception is thrown
+         *
+         * @param subscriptionKey
+         */
         public void unRegisterSubscription(String subscriptionKey)
         {
             unRegisterSubscription(subscriptionKey, this.getUDDINode().getApiNode());
         }
 
+        /**
+         * removes a subscription by key, referencing the specified node in the
+         * config file Note, if registration fails, no exception is thrown
+         *
+         * @param subscriptionKey
+         * @param node
+         */
         public void unRegisterSubscription(String subscriptionKey, org.apache.juddi.apiv3.node node)
         {
             log.info("UnRegistering subscription with key " + subscriptionKey);
@@ -538,11 +712,30 @@ namespace org.apache.juddi.v3.client.config
             }
         }
 
+        /**
+         * finds a tmodel. This is a convenience wrapper
+         *
+         * @param findTModel
+         * @return null if not found or error
+         * @throws RemoteException
+         * @throws ConfigurationException
+         * @throws TransportException
+         */
         public tModelList findTModel(find_tModel findTModel)
         {
             return this.findTModel(findTModel, this.uddinode.getApiNode());
         }
 
+        /**
+         * finds a tModel
+         *
+         * @param findTModel
+         * @param node
+         * @return null if not found or error
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
         public tModelList findTModel(find_tModel findTModel, org.apache.juddi.apiv3.node node)
         {
 
@@ -562,6 +755,17 @@ namespace org.apache.juddi.v3.client.config
             return null;
         }
 
+        /**
+         * Gets the details of a tModel by the key. This is a convenience
+         * wrapper
+         *
+         * @param tModelKey
+         * @return null if not found or error, otherwise the details of the
+         * tModel(s)
+         * @throws RemoteException
+         * @throws ConfigurationException
+         * @throws TransportException
+         */
         public tModelDetail getTModelDetail(String tModelKey)
         {
             get_tModelDetail getTModelDetail = new get_tModelDetail();
@@ -569,11 +773,32 @@ namespace org.apache.juddi.v3.client.config
             return this.getTModelDetail(getTModelDetail);
         }
 
+        /**
+         * Gets the details of a tModel by the key. This is a convenience
+         * wrapper
+         *
+         * @param getTModelDetail
+         * @return null if not found or error
+         * @throws RemoteException
+         * @throws ConfigurationException
+         * @throws TransportException
+         */
         public tModelDetail getTModelDetail(get_tModelDetail getTModelDetail)
         {
             return this.getTModelDetail(getTModelDetail, this.getUDDINode().getApiNode());
         }
 
+        /**
+         * Gets the details of a tModel by the key using the referenced Node
+         * from the config file
+         *
+         * @param getTModelDetail
+         * @param node
+         * @return null if not found or error
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
         public tModelDetail getTModelDetail(get_tModelDetail getTModelDetail, org.apache.juddi.apiv3.node node)
         {
 
@@ -593,12 +818,31 @@ namespace org.apache.juddi.v3.client.config
             return null;
         }
 
-        public businessService findService(String serviceKey)
+        /**
+        * Finds a service by the key, . This is a convenience wrapper
+        *
+        * @param serviceKey
+        * @return null if not found or error
+        * @throws RemoteException
+        * @throws TransportException
+        * @throws ConfigurationException
+        */
+        public businessService getServiceDetail(String serviceKey)
         {
-            return findService(serviceKey, this.uddinode.getApiNode());
+            return getServiceDetail(serviceKey, this.uddinode.getApiNode());
         }
 
-        public businessService findService(String serviceKey, org.apache.juddi.apiv3.node node)
+        /**
+         * Finds a service by the key, . This is a convenience wrapper
+         *
+         * @param serviceKey
+         * @return null if not found or error
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         * @deprecated see
+         */
+        public businessService getServiceDetail(String serviceKey, org.apache.juddi.apiv3.node node)
         {
             get_serviceDetail getServiceDetail = new get_serviceDetail();
             getServiceDetail.serviceKey = new string[] { serviceKey };
@@ -623,12 +867,33 @@ namespace org.apache.juddi.v3.client.config
             return null;
         }
 
-        public bindingTemplate findServiceBinding(String bindingKey)
+        /**
+         * gets a binding detail by key
+         *
+         * @param bindingKey
+         * @return null if not found or error, or the binding template
+         * @throws DispositionReportFaultMessage
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
+        public bindingTemplate getServiceBindingDetail(String bindingKey)
         {
-            return findServiceBinding(bindingKey, this.uddinode.getApiNode());
+            return getServiceBindingDetail(bindingKey, this.uddinode.getApiNode());
         }
 
-        public bindingTemplate findServiceBinding(String bindingKey, org.apache.juddi.apiv3.node node)
+        /**
+        * Gets the details of a specific service binding key
+        *
+        * @param bindingKey
+        * @param node
+        * @return null if not found, or error, or the details of the binding
+        * @throws DispositionReportFaultMessage
+        * @throws RemoteException
+        * @throws TransportException
+        * @throws ConfigurationException
+        */
+        public bindingTemplate getServiceBindingDetail(String bindingKey, org.apache.juddi.apiv3.node node)
         {
             get_bindingDetail getBindingDetail = new get_bindingDetail();
             getBindingDetail.bindingKey = new string[] { bindingKey };
@@ -653,9 +918,21 @@ namespace org.apache.juddi.v3.client.config
             return null;
         }
 
-        public org.uddi.apiv3.businessEntity findBusiness(String businessKey)
+        /**
+         * Looks up the BusinessEntiry in the registry, will return null if is
+         * not found.
+         *
+         * @deprecated Use getBusinessDetail instead
+         * @param businessKey - the key we are looking for
+         * @param node - the node which is going to be queried
+         * @return BusinessEntity if found, or null if not found.
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
+        public org.uddi.apiv3.businessEntity getBusinessDetail(String businessKey)
         {
-            return this.findBusiness(businessKey, this.getUDDINode().getApiNode());
+            return this.getBusinessDetail(businessKey, this.getUDDINode().getApiNode());
         }
 
         /**
@@ -669,7 +946,7 @@ namespace org.apache.juddi.v3.client.config
          * @throws TransportException
          * @throws ConfigurationException
          */
-        public businessEntity findBusiness(String businessKey, org.apache.juddi.apiv3.node node)
+        public businessEntity getBusinessDetail(String businessKey, org.apache.juddi.apiv3.node node)
         {
             get_businessDetail getBusinessDetail = new get_businessDetail();
             getBusinessDetail.businessKey = new string[] { businessKey };
@@ -689,12 +966,15 @@ namespace org.apache.juddi.v3.client.config
         }
 
         /**
-        * Looks up the BusinessEntiry in the registry, will return null if is not
-        * found.
+        * Looks up the BusinessEntity in the registry for "related" businesses.
+        * This means that there is a business relationship defined. This is
+        * also referred to as a "Publisher Assertion",
         *
+        * @see PublisherAssertion
+        * @see PublisherAssertions
         * @param businessKey - the key we are looking for
         * @param node - the node which is going to be queried
-        * @return businessEntity is found, or null if not found.
+        * @return BusinessEntity is found, or null if not found.
         * @throws RemoteException
         * @throws TransportException
         * @throws ConfigurationException
@@ -742,6 +1022,22 @@ namespace org.apache.juddi.v3.client.config
             }
         }
         */
+
+
+        /**
+         * Gets an auth token from the uddi server using the uddi auth token
+         * <br>
+         * Notice: never log auth tokens! Treat it like a password
+         *
+         * notes: changed to public to have access from the subscription
+         * callback API 8/20/2013 AO
+         *
+         * @param endpointURL
+         * @return
+         * @throws TransportException
+         * @throws DispositionReportFaultMessage
+         * @throws RemoteException
+         */
         public String getAuthToken(String endpointURL)
         {
             //if the token is older then 10 minutes discard it, and create a new one.
@@ -821,52 +1117,132 @@ namespace org.apache.juddi.v3.client.config
             return clerkDetail;
         }
 
-
+        /**
+         * Returns the UDDI node that this clerk is associated with
+         * client.clerks.clerk(" + i + ")@node
+         *
+         * @return
+         */
         public UDDINode getUDDINode()
         {
             return uddinode;
         }
 
+        /**
+       * client.clerks.clerk(" + i + ")[@name]
+       *
+       * @return
+       */
         public String getName()
         {
             return name;
         }
 
+        /**
+        * client.clerks.clerk(" + i + ")[@name]
+        *
+        * @param name
+        */
         public void setName(String name)
         {
             this.name = name;
         }
 
+        /**
+        * client.clerks.clerk(" + i + ")[@node] reference to UDDI Node
+        *
+        * @param uddiNode
+        */
         public void setUDDInode(UDDINode uddinode)
         {
             this.uddinode = uddinode;
         }
 
+        /**
+        * This is the username client.clerks.clerk(" + i + ")[@publisher]
+        *
+        * @return
+        */
         public String getPublisher()
         {
             return publisher;
         }
 
+        /**
+         * This is the username client.clerks.clerk(" + i + ")[@publisher]
+         *
+         * @param publisher
+         */
         public void setPublisher(String publisher)
         {
             this.publisher = publisher;
         }
 
+        /**
+        * If the password is encrypted, it will be decrypted if possible,
+        * otherwise the cipher text will be returned. client.clerks.clerk(" + i
+        * + ")[@password]
+        *
+        * @return
+        */
         public String getPassword()
+        {
+            if (isEncrypted)
+            {
+                try
+                {
+                    return CryptorFactory.getCryptor(cryptoProvider).decrypt(password);
+                }
+                catch (Exception ex)
+                {
+                    log.error("Unable to decrypt the password", ex);
+                }
+            }
+            return password;
+        }
+
+        /**
+         * If the password is encrypted, it cipher text is returned, otherwise
+         * the clear text will be returned. client.clerks.clerk(" + i +
+         * ")[@password]
+         *
+         * @return
+         */
+        public String getRawPassword()
         {
             return password;
         }
 
+        /**
+         * Use with caution, don't forget to set the IsEncrypted and Crypto
+         * provider client.clerks.clerk(" + i + ")[@password]
+         *
+         * @param password
+         */
         public void setPassword(String password)
         {
             this.password = password;
         }
 
+        /**
+         * Used for the automated registration of services via WSDL2UDDI<br>
+         * config file: client.clerks.clerk(" + i + ").wsdl
+         *
+         * @return 
+         * @see WSDL2UDDI
+         */
         public WSDL[] getWsdls()
         {
             return wsdls;
         }
 
+        /**
+         * Used for the automated registration of services via WSDL2UDDI<br>
+         * config file: client.clerks.clerk(" + i + ").wsdl
+         *
+         * @param wsdls
+         * @see WSDL2UDDI
+         */
         public void setWsdls(WSDL[] wsdls)
         {
             this.wsdls = wsdls;
@@ -912,7 +1288,7 @@ namespace org.apache.juddi.v3.client.config
 
         /// <summary>
         /// 
-        /// A helper class to create a tModel key generator.&lt;br&gt;
+        /// A helper function to create a tModel key generator.&lt;br&gt;
         /// Why would I want a key generator? In UDDIv3, you&#39;re suppose to specify what you want the keys (unique identifiers) to be, however there&#39;s
         /// a number of naming rules associated with the keys. Generally, use the FQDN of your business or organization.
         /// Optionally, when saving an UDDI entity, you can just leave the key name blank and the server
@@ -1002,23 +1378,41 @@ namespace org.apache.juddi.v3.client.config
             return nodeDetail;
         }
 
+        /**
+        * client.clerks.clerk(" + i + ")[@cryptoProvider]
+        *
+        * @param clazz
+        */
         public void setCryptoProvider(string p)
         {
 
             this.cryptoProvider = p;
         }
 
+        /**
+         * client.clerks.clerk(" + i + ")[@isPasswordEncrypted] default is false
+         *
+         * @param option
+         */
         public void setPasswordEncrypted(bool p)
         {
             this.isEncrypted = p;
         }
-
+        /**
+         * client.clerks.clerk(" + i + ")[@cryptoProvider]
+         *
+         * @return
+         */
         public string getCryptoProvider()
         {
 
             return this.cryptoProvider;
         }
-
+        /**
+        * client.clerks.clerk(" + i + ")[@isPasswordEncrypted]
+        *
+        * @return
+        */
         public bool getPasswordEncrypted()
         {
             return this.isEncrypted;
@@ -1161,7 +1555,7 @@ namespace org.apache.juddi.v3.client.config
         public List<String> getEndpoints(String serviceKey)
         {
             List<String> items = new List<String>();
-            serviceDetail serviceDetail = null;
+            businessService serviceDetail = null;
             try
             {
                 serviceDetail = this.getServiceDetail(serviceKey);
@@ -1174,15 +1568,14 @@ namespace org.apache.juddi.v3.client.config
             {
                 return items;
             }
-            for (int i = 0; i < serviceDetail.businessService.Length; i++)
-            {
-                if (serviceDetail.businessService[i].bindingTemplates != null)
+           
+                if (serviceDetail.bindingTemplates != null)
                 {
-                    for (int k = 0; k < serviceDetail.businessService[i].bindingTemplates.Length; k++)
+                    for (int k = 0; k < serviceDetail.bindingTemplates.Length; k++)
                     {
                         try
                         {
-                            items.AddRange(ParseBinding(serviceDetail.businessService[i].bindingTemplates[k]));
+                            items.AddRange(ParseBinding(serviceDetail.bindingTemplates[k]));
                         }
                         catch (Exception ex)
                         {
@@ -1190,7 +1583,7 @@ namespace org.apache.juddi.v3.client.config
                         }
                     }
                 }
-            }
+           
             return items;
         }
 
@@ -1214,7 +1607,14 @@ namespace org.apache.juddi.v3.client.config
             return items;
         }
 
-        private clerk getApiClerk()
+        /**
+         * The API Clerk is the JAXWS generated "Clerk" element that is used
+         * both on the jUDDI Client and on the jUDDI Web Service (not part of
+         * the UDDI spec).
+         *
+         * @return
+         */
+        public clerk getApiClerk()
         {
             clerk apiClerk = new clerk();
             apiClerk.name = (name);
@@ -1325,20 +1725,7 @@ namespace org.apache.juddi.v3.client.config
             return items;
         }
 
-        /**
-         * Gets service details or NULL if it doesn't exist or an error occurred
-         * @param key
-         * @return
-         * @throws RemoteException
-         * @throws ConfigurationException
-         * @throws TransportException 
-         */
-        public serviceDetail getServiceDetail(String key)
-        {
-            get_serviceDetail getTModelDetail = new get_serviceDetail();
-            getTModelDetail.serviceKey = new string[] { key };
-            return getServiceDetail(getTModelDetail);
-        }
+      
 
         /**
          * Gets service details or NULL if it doesn't exist or an error occurred

@@ -268,7 +268,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
 	public BusinessService lookupService(String serviceKey) throws RemoteException, ConfigurationException, TransportException {
 		
 		//Checking if this serviceKey already exist
-		BusinessService service = clerk.findService(serviceKey);
+		BusinessService service = clerk.getServiceDetail(serviceKey);
 		return service;
 	}
 	/**

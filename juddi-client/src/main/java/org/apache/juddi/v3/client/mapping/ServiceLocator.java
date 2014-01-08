@@ -232,7 +232,7 @@ public class ServiceLocator {
 	private Topology lookupEndpointInUDDI(String serviceKey) throws RemoteException, ConfigurationException, TransportException {
 		Topology topology = null;
 		
-		BusinessService service = clerk.findService(serviceKey);
+		BusinessService service = clerk.getServiceDetail(serviceKey);
 		if (service==null) {
 			log.warn("No Service with key " + serviceKey + " was found in the registry.");
 			//TODO find service by tModel

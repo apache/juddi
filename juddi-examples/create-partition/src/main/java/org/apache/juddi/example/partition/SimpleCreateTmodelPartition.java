@@ -17,9 +17,12 @@
 package org.apache.juddi.example.partition;
 
 import java.util.Properties;
+import javax.xml.ws.BindingProvider;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.v3.client.config.UDDIClerk;
 
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
+import org.apache.juddi.v3.client.config.UDDINode;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.BindingTemplates;
@@ -30,7 +33,6 @@ import org.uddi.api_v3.Name;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelDetail;
-import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
@@ -42,188 +44,193 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class SimpleCreateTmodelPartition {
 
-    private static UDDISecurityPortType security = null;
-    private static UDDIPublicationPortType publish = null;
+        private static UDDISecurityPortType security = null;
+        private static UDDIPublicationPortType publish = null;
 
-    /**
-     * This sets up the ws proxies using uddi.xml in META-INF
-     */
-    public SimpleCreateTmodelPartition() {
-        try {
-	    	// create a manager and read the config in the archive; 
-	    	// you can use your config file name
-	    	UDDIClient uddiClient = new UDDIClient("META-INF/partition-uddi.xml");
-	    	// a UddiClient can be a client to multiple UDDI nodes, so 
-	    	// supply the nodeName (defined in your uddi.xml.
-	    	// The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
-	    	Transport transport = uddiClient.getTransport("default");
-	    	// Now you create a reference to the UDDI API
-	
-	        security = transport.getUDDISecurityService();
-	        publish = transport.getUDDIPublishService();
-        } catch (Exception e) {
-            e.printStackTrace();
+        private static UDDIClient uddiClient = null;
+
+        /**
+         * This sets up the ws proxies using uddi.xml in META-INF
+         */
+        public SimpleCreateTmodelPartition() {
+                try {
+                        // create a manager and read the config in the archive; 
+                        // you can use your config file name
+                        uddiClient = new UDDIClient("META-INF/partition-uddi.xml");
+                        uddiClient.start();
+
+                        // a UddiClient can be a client to multiple UDDI nodes, so 
+                        // supply the nodeName (defined in your uddi.xml.
+                        // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
+                        Transport transport = uddiClient.getTransport("default");
+                        // Now you create a reference to the UDDI API
+
+                        security = transport.getUDDISecurityService();
+                        publish = transport.getUDDIPublishService();
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
         }
-    }
 
-    private static void DisplayHelp() {
-        //TODO
-    }
-
-    /**
-     * Main entry point
-     *
-     * @param args
-     */
-    public static void main(String args[]) {
-        if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
-            DisplayHelp();
-            return;
+        private static void DisplayHelp() {
+                //TODO
         }
-        SimpleCreateTmodelPartition sp = new SimpleCreateTmodelPartition();
-        sp.Go(args);
-    }
 
-    public void Go(String[] args) {
-        try {
-            Properties prop = ParseArgs(args);
-            if (prop.containsKey("AuthStyle")) {
-                //TODO, determine a way to pass parameters from the command line, hardcoded for now
-                //UDDI Token
-                //HTTP Username/Password (basic or digest)
-                //HTTP Client Cert
-            }
-
-			
-			//Note: when creating a tModel Key Generator, aka Partition, you MUST follow the below pattern
-			//for jUDDI, the following is required
-			//	Name
-			//	CategoryBag/KR for the below fixed values
-			//	a tModelKey that starts with uddi:<something>:keygenerator - recommended all lower case
-
-            String key = GetAuthKey("uddi", "uddi", AuthStyle.UDDI_AUTH);
-            SaveTModel st = new SaveTModel();
-            st.setAuthInfo(key);
-            TModel tm = new TModel();
-            tm.setName(new Name());
-            tm.getName().setValue("My Company's Keymodel generator");
-            tm.getName().setLang("en");
-            tm.setCategoryBag(new CategoryBag());
-            KeyedReference kr = new KeyedReference();
-            kr.setTModelKey("uddi:uddi.org:categorization:types");
-            kr.setKeyName("uddi-org:keyGenerator");
-            kr.setKeyValue("keyGenerator");
-            tm.getCategoryBag().getKeyedReference().add(kr);
-            tm.setTModelKey("uddi:www.mycoolcompany.com:keygenerator");
-            st.getTModel().add(tm);
-            TModelDetail saveTModel = publish.saveTModel(st);
-            System.out.println("Creation of Partition Success!");
-
-            tm = new TModel();
-            tm.setName(new Name());
-            tm.getName().setValue("My Company's Department");
-            tm.getName().setLang("en");
-            tm.setTModelKey("uddi:www.mycoolcompany.com:department");
-            st.getTModel().add(tm);
-            saveTModel = publish.saveTModel(st);
-            System.out.println("Creation of tModel Department Success!");
-            
-             tm = new TModel();
-            tm.setName(new Name());
-            tm.getName().setValue("My Company's Authentication Method");
-            tm.getName().setLang("en");
-            tm.setTModelKey("uddi:www.mycoolcompany.com:authmode");
-            st.getTModel().add(tm);
-            saveTModel = publish.saveTModel(st);
-            System.out.println("Creation of tModel Auth Mode Success!");
-
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        /**
+         * Main entry point
+         *
+         * @param args
+         */
+        public static void main(String args[]) throws ConfigurationException {
+                if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
+                        DisplayHelp();
+                        return;
+                }
+                SimpleCreateTmodelPartition sp = new SimpleCreateTmodelPartition();
+                sp.TmodelsTheLongAndHardWay(args);
+                sp.TmodelsTheEasyWay(args);
+                uddiClient.stop();
         }
-    }
 
-    /**
-     * This function is useful for translating UDDI's somewhat complex data
-     * format to something that is more useful.
-     *
-     * @param bindingTemplates
-     */
-    private void PrintBindingTemplates(BindingTemplates bindingTemplates) {
-        if (bindingTemplates == null) {
-            return;
+        public void TmodelsTheEasyWay(String[] args) {
+                try {
+                        
+                        //This reads from the config file
+                        UDDIClerk clerk = uddiClient.getClerk("defaultClerk");
+                        //Since the pass isn't set there, we have to provide it. Pist. it could be in the config file
+                        clerk.setPublisher("uddi");     //username
+                        clerk.setPassword("uddi");     //pass
+                        
+
+                        TModel keygen = UDDIClerk.createKeyGenator("www.mycoolcompany.com", "My Company's Keymodel generator", "en");
+                        clerk.register(keygen);
+                        System.out.println("Creation of Partition Success!");
+
+
+                        //Now lets make a few tModels using the new domain
+                        TModel tm = new TModel();
+                        tm.setName(new Name());
+                        tm.getName().setValue("My Company's Department");
+                        tm.getName().setLang("en");
+                        tm.setTModelKey("uddi:www.mycoolcompany.com:department");
+                        clerk.register(tm);
+                        System.out.println("Creation of tModel Department Success!");
+
+                        tm = new TModel();
+                        tm.setName(new Name());
+                        tm.getName().setValue("My Company's Authentication Method");
+                        tm.getName().setLang("en");
+                        tm.setTModelKey("uddi:www.mycoolcompany.com:authmode");
+                        clerk.register(tm);
+                        System.out.println("Creation of tModel Auth Mode Success!");
+
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
         }
-        for (int i = 0; i < bindingTemplates.getBindingTemplate().size(); i++) {
-            System.out.println("Binding Key: " + bindingTemplates.getBindingTemplate().get(i).getBindingKey());
-            //TODO The UDDI spec is kind of strange at this point.
-            //An access point could be a URL, a reference to another UDDI binding key, a hosting redirector (which is 
-            //essentially a pointer to another UDDI registry) or a WSDL Deployment
-            //From an end client's perspective, all you really want is the endpoint.
 
-            //So if you have a wsdlDeployment useType, fetch the wsdl and parse for the invocation URL
-            //If its hosting director, you'll have to fetch that data from uddi recursively until the leaf node is found
-            //Consult the UDDI specification for more information
+        public void TmodelsTheLongAndHardWay(String[] args) {
+                try {
+                        //TODO this is where you, the developer need to find out if your UDDI server
+                        //supports UDDI's auth tokens or not. jUDDI does, so moving onwards.
+                        AuthStyle style = AuthStyle.UDDI_AUTH;
+                        //Login
+                        String key = GetAuthKey("uddi", "password", style);
 
-            if (bindingTemplates.getBindingTemplate().get(i).getAccessPoint() != null) {
-                System.out.println("Access Point: " + bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getValue() + " type " + bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getUseType());
-            }
+                        //Note: when creating a tModel Key Generator, aka Partition, you MUST follow the below pattern
+                        //for jUDDI, the following is required
+                        //	Name
+                        //	CategoryBag/KR for the below fixed values
+                        //	a tModelKey that starts with uddi:<something>:keygenerator - all lower case
+                        //First, Here's the long way to do it to make a Key Generator tModel.
+                        SaveTModel st = new SaveTModel();
+                        st.setAuthInfo(key);
+                        TModel tm = new TModel();
+                        tm.setName(new Name());
+                        tm.getName().setValue("My Company's Keymodel generator");
+                        tm.getName().setLang("en");
+                        tm.setCategoryBag(new CategoryBag());
+                        KeyedReference kr = new KeyedReference();
+                        kr.setTModelKey("uddi:uddi.org:categorization:types");
+                        kr.setKeyName("uddi-org:keyGenerator");
+                        kr.setKeyValue("keyGenerator");
+                        tm.getCategoryBag().getKeyedReference().add(kr);
+                        tm.setTModelKey("uddi:www.mycoolcompany.com:keygenerator");
+                        st.getTModel().add(tm);
+                        TModelDetail saveTModel = publish.saveTModel(st);
+                        System.out.println("Creation of Partition Success!");
+
+                        //Here's the easy and fun way!
+                        TModel keygen = UDDIClerk.createKeyGenator("www.mycoolcompany.com", "My Company's Keymodel generator", "en");
+                        //st = new SaveTModel();
+                        //st.setAuthInfo(key);
+                        //st.getTModel().add(keygen);
+                        //saveTModel = publish.saveTModel(st);
+                        
+
+                        //Now lets make a few tModels using the new domain
+                        tm = new TModel();
+                        tm.setName(new Name());
+                        tm.getName().setValue("My Company's Department");
+                        tm.getName().setLang("en");
+                        tm.setTModelKey("uddi:www.mycoolcompany.com:department");
+                        st.getTModel().add(tm);
+                        saveTModel = publish.saveTModel(st);
+                        System.out.println("Creation of tModel Department Success!");
+
+                        tm = new TModel();
+                        tm.setName(new Name());
+                        tm.getName().setValue("My Company's Authentication Method");
+                        tm.getName().setLang("en");
+                        tm.setTModelKey("uddi:www.mycoolcompany.com:authmode");
+                        st.getTModel().add(tm);
+                        saveTModel = publish.saveTModel(st);
+                        System.out.println("Creation of tModel Auth Mode Success!");
+
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+        }
+
+        
+        private enum AuthStyle {
+
+                HTTP,
+                UDDI_AUTH
 
         }
-    }
 
-    private enum AuthStyle {
+        /**
+         * Gets a UDDI style auth token, otherwise, appends credentials to the
+         * ws proxies (not yet implemented)
+         *
+         * @param username
+         * @param password
+         * @param style
+         * @return
+         */
+        private String GetAuthKey(String username, String password, AuthStyle style) {
+                switch (style) {
+                        case HTTP:
+                                ((BindingProvider) publish).getRequestContext().put(BindingProvider.USERNAME_PROPERTY, username);
+                                ((BindingProvider) publish).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, password);
+                                return null;
+                        case UDDI_AUTH:
+                                try {
 
-        HTTP_BASIC,
-        HTTP_DIGEST,
-        HTTP_NTLM,
-        UDDI_AUTH,
-        HTTP_CLIENT_CERT
-    }
+                                        GetAuthToken getAuthTokenRoot = new GetAuthToken();
+                                        getAuthTokenRoot.setUserID(username);
+                                        getAuthTokenRoot.setCred(password);
 
-    /**
-     * Gets a UDDI style auth token, otherwise, appends credentials to the ws
-     * proxies (not yet implemented)
-     *
-     * @param username
-     * @param password
-     * @param style
-     * @return
-     */
-    private String GetAuthKey(String username, String password, AuthStyle style) {
-        try {
+                                        // Making API call that retrieves the authentication token for the 'root' user.
+                                        AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
+                                        System.out.println(username + " AUTHTOKEN = (don't log auth tokens!)");
+                                        return rootAuthToken.getAuthInfo();
+                                } catch (Exception ex) {
+                                        System.out.println("Could not authenticate with the provided credentials " + ex.getMessage());
+                                }
+                }
 
-            GetAuthToken getAuthTokenRoot = new GetAuthToken();
-            getAuthTokenRoot.setUserID(username);
-            getAuthTokenRoot.setCred(password);
-
-            // Making API call that retrieves the authentication token for the 'root' user.
-            AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-            System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
-            return rootAuthToken.getAuthInfo();
-        } catch (Exception ex) {
-            System.out.println("Could not authenticate with the provided credentials " + ex.getMessage());
+                return null;
         }
-        return null;
-    }
-
-    /**
-     * Converts command line args into a simple property structure
-     *
-     * @param args
-     * @return
-     */
-    private Properties ParseArgs(String[] args) {
-
-        Properties p = new Properties();
-        if (args == null) {
-            return p;
-        }
-        for (int i = 0; i < args.length; i++) {
-            if (args[i] != null && args[i].length() >= 3) {
-                p.put(args[i].split("=")[0], args[i].split("=")[1]);
-            }
-        }
-        return p;
-    }
 }

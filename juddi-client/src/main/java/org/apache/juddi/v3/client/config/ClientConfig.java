@@ -38,13 +38,14 @@ import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 
 /**
  * Handles the client configuration of the uddi-client. By default it first
- * looks at system properties.
+ * looks at system properties. Then loads from the config file from the system property
+ * "uddi.client.xml", next the user specified file, finally, "META-INF/uddi.xml"
  * 
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class ClientConfig 
 {
-	private final static String UDDI_CONFIG_FILENAME_PROPERTY = "uddi.client.xml";
+	public final static String UDDI_CONFIG_FILENAME_PROPERTY = "uddi.client.xml";
 	public final static String DEFAULT_UDDI_CONFIG = "META-INF/uddi.xml";
 	private Log log = LogFactory.getLog(ClientConfig.class);
 	private Configuration config = null;;
@@ -213,6 +214,12 @@ public class ClientConfig
 		return clerks;
 	}
 	
+        /**
+         * signals that the specified classes/wsdls are registered with the UDDI server
+         * when UDDIClient.start() is called
+         * client.clerks[@registerOnStartup]
+         * @return 
+         */
 	public boolean isRegisterOnStartup() {
 		boolean isRegisterOnStartup = false;
 		if (config.containsKey("client.clerks[@registerOnStartup]")) {

@@ -79,7 +79,7 @@ namespace org.apache.juddi.v3.client.config
             businessEntity businessEntity;
             try
             {
-                businessEntity = fromClerk.findBusiness(entityKey, fromClerk.getUDDINode().getApiNode());
+                businessEntity = fromClerk.getBusinessDetail(entityKey, fromClerk.getUDDINode().getApiNode());
                 log.info("xregister business " + businessEntity.name[0].Value + " + from "
                         + fromClerk.getName() + " to " + toClerk.getName() + ".");
                 //not bringing over the services. They need to be explicitly copied using xRegisterService.
@@ -100,7 +100,7 @@ namespace org.apache.juddi.v3.client.config
             businessEntity businessEntity;
             try
             {
-                businessEntity = fromClerk.findBusiness(entityKey, fromClerk.getUDDINode().getApiNode());
+                businessEntity = fromClerk.getBusinessDetail(entityKey, fromClerk.getUDDINode().getApiNode());
                 log.info("xregister business " + businessEntity.name[0].Value + " + from "
                         + fromClerk.getName() + " to " + toClerk.getName() + " including all services owned by this business.");
                 toClerk.register(businessEntity, toClerk.getUDDINode().getApiNode());
@@ -118,7 +118,7 @@ namespace org.apache.juddi.v3.client.config
             businessService businessService;
             try
             {
-                businessService = fromClerk.findService(entityKey, fromClerk.getUDDINode().getApiNode());
+                businessService = fromClerk.getServiceDetail(entityKey, fromClerk.getUDDINode().getApiNode());
                 log.info("xregister service " + businessService.name[0].Value + " + from "
                         + fromClerk.getName() + " to " + toClerk.getName());
                 businessService.bindingTemplates=(null);
@@ -137,7 +137,7 @@ namespace org.apache.juddi.v3.client.config
             businessService businessService;
             try
             {
-                businessService = fromClerk.findService(entityKey, fromClerk.getUDDINode().getApiNode());
+                businessService = fromClerk.getServiceDetail(entityKey, fromClerk.getUDDINode().getApiNode());
                 log.info("xregister service " + businessService.name[0].Value+ " + from "
                         + fromClerk.getName() + " to " + toClerk.getName());
                 toClerk.register(businessService, toClerk.getUDDINode().getApiNode());
@@ -154,7 +154,7 @@ namespace org.apache.juddi.v3.client.config
         {
             try
             {
-                bindingTemplate bindingTemplate = fromClerk.findServiceBinding(entityKey, fromClerk.getUDDINode().getApiNode());
+                bindingTemplate bindingTemplate = fromClerk.getServiceBindingDetail(entityKey, fromClerk.getUDDINode().getApiNode());
                 log.info("xregister binding " + bindingTemplate.bindingKey + " + from "
                         + fromClerk.getName() + " to " + toClerk.getName());
                 toClerk.register(bindingTemplate, toClerk.getUDDINode().getApiNode());

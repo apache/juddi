@@ -213,7 +213,7 @@ namespace org.apache.juddi.v3.client.mapping
         private businessService lookupService(string serviceKey)
         {
             //Checking if this serviceKey already exist
-            businessService service = clerk.findService(serviceKey);
+            businessService service = clerk.getServiceDetail(serviceKey);
             return service;
         }
 
