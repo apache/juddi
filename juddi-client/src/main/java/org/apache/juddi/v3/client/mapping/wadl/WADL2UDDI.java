@@ -50,6 +50,7 @@ import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIKeyConvention;
+import org.apache.juddi.v3.client.mapping.Common2UDDI;
 import org.apache.juddi.v3.client.mapping.MockSSLSocketFactory;
 import org.apache.juddi.v3.client.mapping.URLLocalizer;
 import org.uddi.api_v3.AccessPoint;
@@ -259,47 +260,29 @@ public class WADL2UDDI {
         service.setServiceKey(UDDIKeyConvention.getServiceKey(properties, serviceQName.getLocalPart()));
         // Description
         String serviceDescription = properties.getProperty(Property.SERVICE_DESCRIPTION, Property.DEFAULT_SERVICE_DESCRIPTION);
-        // Override with the service description from the WSDL if present
+        // Override with the service description from the WADL if present
         boolean lengthwarn = false;
         if (!wadlDefinition.getDoc().isEmpty()) {
 
             for (int i = 0; i < wadlDefinition.getDoc().size(); i++) {
-                Description description = new Description();
+                String locallang=lang;
                 if (wadlDefinition.getDoc().get(i).getLang() != null) {
-                    description.setLang(wadlDefinition.getDoc().get(i).getLang());
-                } else {
-                    description.setLang(lang);
-                }
-                if (description.getLang() != null && description.getLang().length() > UDDIConstants.MAX_xml_lang_length) {
+                   locallang=(wadlDefinition.getDoc().get(i).getLang());
+                } 
+                if (locallang.length() > UDDIConstants.MAX_xml_lang_length) {
                     lengthwarn = true;
-                    description.setLang(description.getLang().substring(0, UDDIConstants.MAX_xml_lang_length - 1));
+                    locallang=(locallang.substring(0, UDDIConstants.MAX_xml_lang_length - 1));
                 }
 
                 StringBuilder sb = new StringBuilder();
                 sb.append(wadlDefinition.getDoc().get(i).getTitle()).append(" ");
                 sb.append(ContentToString(wadlDefinition.getDoc().get(i).getContent()));
 
-                description.setValue(wadlDefinition.getDoc().get(i).getTitle());
-                if (description.getValue() != null && description.getValue().length() > UDDIConstants.MAX_description_length) {
-                    lengthwarn = true;
-                    description.setValue(description.getValue().substring(0, UDDIConstants.MAX_description_length - 1));
-                }
+                service.getDescription().addAll(Common2UDDI.mapDescription(sb.toString(), locallang));
 
             }
         } else {
-
-            Description description = new Description();
-            description.setLang(lang);
-            if (description.getLang() != null && description.getLang().length() > UDDIConstants.MAX_xml_lang_length) {
-                lengthwarn = true;
-                description.setLang(description.getLang().substring(0, UDDIConstants.MAX_xml_lang_length - 1));
-            }
-            description.setValue(serviceDescription);
-            service.getDescription().add(description);
-            if (description.getValue() != null && description.getValue().length() > UDDIConstants.MAX_description_length) {
-                lengthwarn = true;
-                description.setValue(description.getValue().substring(0, UDDIConstants.MAX_description_length - 1));
-            }
+                service.getDescription().addAll(Common2UDDI.mapDescription(serviceDescription, lang));
         }
 
 
@@ -385,10 +368,8 @@ public class WADL2UDDI {
             String bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceQName, portName, serviceUrl);
             bindingTemplate.setBindingKey(bindingKey);
 
-            Description description = new Description();
-            description.setLang(lang);
-            description.setValue(getDescription(res.getDoc()));
-            bindingTemplate.getDescription().add(description);
+            
+            bindingTemplate.getDescription().addAll(Common2UDDI.mapDescription(getDescription(res.getDoc()), lang));
 
             // reference wsdl:binding tModel
             TModelInstanceInfo tModelInstanceInfoBinding = new TModelInstanceInfo();
@@ -396,11 +377,9 @@ public class WADL2UDDI {
             InstanceDetails instanceDetails = new InstanceDetails();
             instanceDetails.setInstanceParms(portName);
             tModelInstanceInfoBinding.setInstanceDetails(instanceDetails);
-            Description descriptionB = new Description();
-            descriptionB.setLang(lang);
-            descriptionB.setValue("The binding that this endpoint implements. " + bindingTemplate.getDescription().get(0).getValue()
-                    + " The instanceParms specifies the port local name.");
-            tModelInstanceInfoBinding.getDescription().add(descriptionB);
+           
+            tModelInstanceInfoBinding.getDescription().addAll(Common2UDDI.mapDescription("The binding that this endpoint implements. " + bindingTemplate.getDescription().get(0).getValue()
+                    + " The instanceParms specifies the \" port local name.", lang));
             TModelInstanceDetails tModelInstanceDetails = new TModelInstanceDetails();
             tModelInstanceDetails.getTModelInstanceInfo().add(tModelInstanceInfoBinding);
 
@@ -541,6 +520,10 @@ public class WADL2UDDI {
             sb.append(doc.get(i).getTitle()).append(" ");
             sb.append(ContentToString(doc.get(i).getContent()));
         }
-        return sb.toString().trim();
+        String ret= sb.toString().trim();
+        
+        if (ret.length()==0)
+                return "No Description";
+        return ret;
     }
 }

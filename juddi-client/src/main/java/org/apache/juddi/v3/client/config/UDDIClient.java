@@ -16,7 +16,6 @@
  */
 package org.apache.juddi.v3.client.config;
 
-import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +23,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.wsdl.WSDLException;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
@@ -38,7 +36,6 @@ import org.apache.juddi.v3.client.mapping.ServiceLocator;
 import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
 import org.apache.juddi.v3.client.transport.InVMTransport;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.CategoryBag;

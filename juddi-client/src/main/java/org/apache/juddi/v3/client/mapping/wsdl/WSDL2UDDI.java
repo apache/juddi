@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.v3.client.mapping.wsdl;
 
+import org.apache.juddi.v3.client.mapping.Common2UDDI;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -45,6 +46,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.jaxb.PrintUDDI;
+import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
@@ -810,10 +812,9 @@ public class WSDL2UDDI {
                 serviceDescription = docElement.getTextContent();
             }
         }
-        Description description = new Description();
-        description.setLang(lang);
-        description.setValue(serviceDescription);
-        service.getDescription().add(description);
+        
+        service.getDescription().addAll(Common2UDDI.mapDescription(serviceDescription, lang));
+        
         // Service name
         Name sName = new Name();
         sName.setLang(lang);
@@ -906,10 +907,8 @@ public class WSDL2UDDI {
                 if (docElement != null && docElement.getTextContent() != null) {
                     bindingDescription = docElement.getTextContent();
                 }
-                Description description = new Description();
-                description.setLang(lang);
-                description.setValue(bindingDescription);
-                bindingTemplate.getDescription().add(description);
+                
+                bindingTemplate.getDescription().addAll(Common2UDDI.mapDescription(bindingDescription, lang));
 
                 // reference wsdl:binding tModel
                 TModelInstanceInfo tModelInstanceInfoBinding = new TModelInstanceInfo();
@@ -917,11 +916,9 @@ public class WSDL2UDDI {
                 InstanceDetails instanceDetails = new InstanceDetails();
                 instanceDetails.setInstanceParms(portName);
                 tModelInstanceInfoBinding.setInstanceDetails(instanceDetails);
-                Description descriptionB = new Description();
-                descriptionB.setLang(lang);
-                descriptionB.setValue("The wsdl:binding that this wsdl:port implements. " + bindingDescription
-                        + " The instanceParms specifies the port local name.");
-                tModelInstanceInfoBinding.getDescription().add(descriptionB);
+               
+                tModelInstanceInfoBinding.getDescription().addAll(Common2UDDI.mapDescription("The wsdl:binding that this wsdl:port implements. " + bindingDescription
+                        + " The instanceParms specifies the port local name.", lang));
                 tModelInstanceDetails.getTModelInstanceInfo().add(tModelInstanceInfoBinding);
 
                 // reference wsdl:portType tModel
@@ -933,10 +930,8 @@ public class WSDL2UDDI {
                 if (docElement != null && docElement.getTextContent() != null) {
                     portTypeDescription = docElement.getTextContent();
                 }
-                Description descriptionPT = new Description();
-                descriptionPT.setLang(lang);
-                descriptionPT.setValue("The wsdl:portType that this wsdl:port implements." + portTypeDescription);
-                tModelInstanceInfoPortType.getDescription().add(descriptionPT);
+                
+                tModelInstanceInfoPortType.getDescription().addAll(Common2UDDI.mapDescription("The wsdl:portType that this wsdl:port implements." + portTypeDescription,lang));
                 tModelInstanceDetails.getTModelInstanceInfo().add(tModelInstanceInfoPortType);
 
                 bindingTemplate.setTModelInstanceDetails(tModelInstanceDetails);
