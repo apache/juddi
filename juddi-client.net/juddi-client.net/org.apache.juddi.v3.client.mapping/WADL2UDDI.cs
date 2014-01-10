@@ -1,4 +1,20 @@
-﻿using net.java.dev.wadl;
+﻿    /*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+ using net.java.dev.wadl;
 using org.apache.juddi.client.org.apache.juddi.v3.client.mapping;
 using org.apache.juddi.v3.client.config;
 using org.apache.juddi.v3.client.log;
@@ -14,6 +30,62 @@ using System.Xml.Serialization;
 
 namespace org.apache.juddi.v3.client.mapping
 {
+    /// <summary>
+    /// 
+    /// This class converts a WADL document, web application description language into a
+    /// structure that more or less works within the UDDI data structures.<br><br>
+    /// <h1>Example Usage Scenario</h1>
+    /// <pre>
+    /// Application app = WADL2UDDI.parseWadl(new File("A path to your file.wadl"));
+    /// List<URL> urls = WADL2UDDI.getBaseAddresses(app);
+    /// URL url = urls.get(0);
+    /// String domain = url.getHost();
+    /// TModel keygen = UDDIClerk.createKeyGenator("uddi:" + domain + ":keygenerator", domain, "en");
+    /// //save the keygen
+    /// SaveTModel stm = new SaveTModel();
+    /// stm.setAuthInfo(rootAuthToken.getAuthInfo());
+    /// stm.getTModel().add(keygen);
+    /// properties.put("keyDomain", domain);
+    /// properties.put("businessName", domain);
+    /// properties.put("serverName", url.getHost());
+    /// properties.put("serverPort", url.getPort());
+    /// WADL2UDDI wadl2UDDI = new WADL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
+    /// BusinessService businessServices = wadl2UDDI.createBusinessService(new QName("MyWasdl.namespace", "Servicename"), app);
+    /// Set<TModel> portTypeTModels = wadl2UDDI.createWADLPortTypeTModels(wsdlURL, app);
+    /// //Since the service depends on the tModel, we have to save the tModels first
+    /// SaveTModel tms = new SaveTModel();
+    /// TModel[] tmodels = portTypeTModels.toArray(new TModel[0]);
+    /// for (int i = 0; i < tmodels.length; i++) {
+    /// System.out.println(tmodelPrinter.print(tmodels[i]));
+    /// tms.getTModel().add(tmodels[i]);
+    /// }
+    /// //important, you'll need to save your new tModels, or else saving the business/service may fail
+    /// publish.saveTModel(stm);
+    /// //finaly, we're ready to save all of the services defined in the WSDL
+    /// //again, we're creating a new business, if you have one already, look it up using the Inquiry getBusinessDetails
+    /// PrintUDDI<BusinessService> servicePrinter = new PrintUDDI<BusinessService>();
+    /// System.out.println(servicePrinter.print(businessServices));
+    /// SaveBusiness sb = new SaveBusiness();
+    /// sb.setAuthInfo(rootAuthToken.getAuthInfo());
+    /// BusinessEntity be = new BusinessEntity();
+    /// be.setBusinessKey(businessServices.getBusinessKey());
+    /// be.getName().add(new Name());
+    /// //TODO, use some relevant here
+    /// be.getName().get(0).setValue(domain);
+    /// be.getName().get(0).setLang("en");
+    /// be.setBusinessServices(new BusinessServices());
+    /// be.getBusinessServices().getBusinessService().add(businessServices);
+    /// sb.getBusinessEntity().add(be);
+    /// PrintUDDI<SaveBusiness> sbp = new PrintUDDI<SaveBusiness>();
+    /// System.out.println("Request " + sbp.print(sb));
+    /// publish.saveBusiness(sb);
+    /// //and we're done
+    /// //Be sure to report any problems to the jUDDI JIRA bug tracker at
+    /// //https://issues.apache.org/jira/browse/JUDDI
+    /// </pre>
+    /// 
+    /// @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
+
     public class WADL2UDDI
     {
         private static Log log = LogFactory.getLog(typeof(WADL2UDDI));

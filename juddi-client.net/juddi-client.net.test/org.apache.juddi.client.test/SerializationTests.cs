@@ -274,7 +274,6 @@ namespace juddi_client.net_mono_test
             try
             {
                 clerkManager = new UDDIClient("uddi.xml");
-                UDDIClientContainer.addClient(clerkManager);
                 transport = clerkManager.getTransport("default");
                 org.uddi.apiv3.UDDI_Security_SoapBinding security = transport.getUDDISecurityService();
                 org.uddi.apiv3.UDDI_Inquiry_SoapBinding inquiry = transport.getUDDIInquiryService();
@@ -315,7 +314,6 @@ namespace juddi_client.net_mono_test
             try
             {
                 clerkManager = new UDDIClient("uddi.xml");
-                UDDIClientContainer.addClient(clerkManager);
                 transport = clerkManager.getTransport("default");
                 org.uddi.apiv3.UDDI_Security_SoapBinding security = transport.getUDDISecurityService();
                 org.uddi.apiv3.UDDI_Inquiry_SoapBinding inquiry = transport.getUDDIInquiryService();

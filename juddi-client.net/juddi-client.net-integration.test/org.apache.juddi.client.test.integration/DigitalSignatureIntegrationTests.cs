@@ -124,7 +124,6 @@ namespace juddi_client.net_integration.test
             try
             {
                 clerkManager = new UDDIClient(config);
-                UDDIClientContainer.addClient(clerkManager);
                 transport = clerkManager.getTransport("default");
                 UDDI_Security_SoapBinding security = transport.getUDDISecurityService();
                 UDDI_Inquiry_SoapBinding inquiry = transport.getUDDIInquiryService();

@@ -50,7 +50,6 @@ namespace juddi_client.net_integration.test
             UDDIClerk clerk = null;
 
             clerkManager = new UDDIClient("resource/uddi-autoregAnnotations.xml");
-            UDDIClientContainer.addClient(clerkManager);
 
             transport = clerkManager.getTransport("default");
 

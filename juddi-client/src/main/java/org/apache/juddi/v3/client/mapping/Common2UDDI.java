@@ -21,7 +21,7 @@ import org.apache.juddi.v3.client.UDDIConstants;
 import org.uddi.api_v3.Description;
 
 /**
- *
+ * Common parsing functions for converting to UDDI's data structures
  * @author Alex O'Ree
  */
 public abstract class Common2UDDI {

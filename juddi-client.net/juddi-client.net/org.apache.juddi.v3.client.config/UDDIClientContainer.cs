@@ -21,7 +21,7 @@ using System.Configuration;
 
 namespace org.apache.juddi.v3.client
 {
-    public class UDDIClientContainer
+    internal class UDDIClientContainer
     {
         private static Log log = LogFactory.getLog(typeof(UDDIClientContainer));
         private static Dictionary<String, UDDIClient> clients = new Dictionary<String, UDDIClient>();

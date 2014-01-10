@@ -37,7 +37,6 @@ namespace WcfServiceLifeCycle
             UDDIClerk clerk = null;
 
             clerkManager = new UDDIClient("uddi.xml");
-            UDDIClientContainer.addClient(clerkManager);
 
             transport = clerkManager.getTransport("default");
 

@@ -35,7 +35,6 @@ namespace org.apache.juddi.client.sample.juddi
             try
             {
                 clerkManager = new UDDIClient("uddi.xml");
-                UDDIClientContainer.addClient(clerkManager);
 
                 transport = clerkManager.getTransport("default");
 
