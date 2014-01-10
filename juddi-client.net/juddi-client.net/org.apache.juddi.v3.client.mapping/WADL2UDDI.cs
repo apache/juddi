@@ -1,4 +1,5 @@
 ﻿using net.java.dev.wadl;
+using org.apache.juddi.client.org.apache.juddi.v3.client.mapping;
 using org.apache.juddi.v3.client.config;
 using org.apache.juddi.v3.client.log;
 using org.uddi.apiv3;
@@ -132,60 +133,41 @@ namespace org.apache.juddi.v3.client.mapping
             String serviceDescription = properties.getProperty(Property.SERVICE_DESCRIPTION, Property.DEFAULT_SERVICE_DESCRIPTION);
             // Override with the service description from the WSDL if present
             bool lengthwarn = false;
+            List<description> ds = new List<description>();
             if (wadlDefinition.doc != null)
             {
 
                 for (int i = 0; i < wadlDefinition.doc.Length; i++)
                 {
+                    
+                    String locallang = lang;
                     description description = new description();
                     if (wadlDefinition.doc[i].lang != null)
                     {
-                        description.lang = (wadlDefinition.doc[i].lang);
+                        locallang = (wadlDefinition.doc[i].lang);
                     }
-                    else
-                    {
-                        description.lang = (lang);
-                    }
-                    if (description.lang != null && description.lang.Length > UDDIConstants.MAX_xml_lang_length)
+
+
+                    if (locallang.Length > UDDIConstants.MAX_xml_lang_length)
                     {
                         lengthwarn = true;
-                        description.lang = (description.lang.Substring(0, UDDIConstants.MAX_xml_lang_length - 1));
+                        locallang = (locallang.Substring(0, UDDIConstants.MAX_xml_lang_length - 1));
                     }
 
                     StringBuilder sb = new StringBuilder();
                     sb.Append(wadlDefinition.doc[i].title).Append(" ");
                     sb.Append(ContentToString(wadlDefinition.doc[i].Any));
 
-                    description.Value = (wadlDefinition.doc[i].title);
-                    if (description.Value != null && description.Value.Length > UDDIConstants.MAX_description_length)
-                    {
-                        lengthwarn = true;
-                        description.Value = (description.Value.Substring(0, UDDIConstants.MAX_description_length - 1));
-                    }
+                    ds.AddRange(Common2UDDI.mapdescription(sb.ToString(), locallang));
 
                 }
             }
             else
             {
-
-                description description = new description();
-                description.lang = (lang);
-                if (description.lang != null && description.lang.Length > UDDIConstants.MAX_xml_lang_length)
-                {
-                    lengthwarn = true;
-                    description.lang = (description.lang.Substring(0, UDDIConstants.MAX_xml_lang_length - 1));
-                }
-                description.Value = (serviceDescription);
-                if (service.description == null)
-                    service.description = new uddi.apiv3.description[] { description };
-
-                if (description.Value != null && description.Value.Length > UDDIConstants.MAX_description_length)
-                {
-                    lengthwarn = true;
-                    description.Value = (description.Value.Substring(0, UDDIConstants.MAX_description_length - 1));
-                }
+                ds.AddRange(Common2UDDI.mapdescription(serviceDescription, lang));
+                
             }
-
+            service.description = ds.ToArray();
 
 
             // Service name
@@ -282,7 +264,7 @@ namespace org.apache.juddi.v3.client.mapping
             bindingTemplate bindingTemplate = new bindingTemplate();
             // Set BusinessService Key
             bindingTemplate.serviceKey = (UDDIKeyConvention.getServiceKey(properties, serviceQName.getLocalPart()));
-
+            List<tModelInstanceInfo> items = new List<tModelInstanceInfo>();
             if (serviceUrl != null)
             {
                 // Set AccessPoint
@@ -294,37 +276,32 @@ namespace org.apache.juddi.v3.client.mapping
                 String bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceQName, portName, serviceUrl);
                 bindingTemplate.bindingKey = (bindingKey);
 
-                description description = new description();
-                description.lang = (lang);
-                description.Value = (getDescription(res.doc));
-                bindingTemplate.description = new description[] { description };
-
+                bindingTemplate.description = Common2UDDI.mapdescription(getDescription(res.doc), lang).ToArray();
+                
                 // reference wsdl:binding tModel
                 tModelInstanceInfo tModelInstanceInfoBinding = new tModelInstanceInfo();
                 tModelInstanceInfoBinding.tModelKey = (keyDomainURI + "binding");
                 instanceDetails id = new instanceDetails();
                 id.instanceParms=  portName ;
                 tModelInstanceInfoBinding.instanceDetails = (id);
-                description descriptionB = new description();
-                descriptionB.lang = (lang);
-                descriptionB.Value = ("The binding that this endpoint implements. " + bindingTemplate.description[0].Value
-                        + " The instanceParms specifies the port local name.");
-                tModelInstanceInfoBinding.description = new description[] { descriptionB };
+              
+                tModelInstanceInfoBinding.description = Common2UDDI.mapdescription("The binding that this endpoint implements. " + bindingTemplate.description[0].Value
+                        + " The instanceParms specifies the port local name.", lang).ToArray();
+                items.Add(tModelInstanceInfoBinding);
 
                 tModelInstanceInfo tModelInstanceInfoPortType = new tModelInstanceInfo();
                 tModelInstanceInfoPortType.tModelKey = (keyDomainURI + "rest");
+                tModelInstanceInfoPortType.description = Common2UDDI.mapdescription("The wadl:Resource:base implements.", lang).ToArray();
+                items.Add(tModelInstanceInfoPortType);
 
-                description descriptionPT = new description();
-                descriptionPT.lang = (lang);
-                descriptionPT.Value = ("The wadl:Resource:base implements.");
-                tModelInstanceInfoPortType.description = new description[] { descriptionPT };
             }
+            bindingTemplate.tModelInstanceDetails = items.ToArray();
             return bindingTemplate;
         }
 
         private string getDescription(doc[] doc)
         {
-            if (doc == null) return "";
+            if (doc == null) return "No Description.";
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < doc.Length; i++)
             {

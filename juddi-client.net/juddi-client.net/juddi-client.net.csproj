@@ -73,6 +73,7 @@
     <Compile Include="org.apache.juddi.v3.client.cryptor\DigSigUtil.cs" />
     <Compile Include="org.apache.juddi.v3.client.cryptor\TripleDESCryptor.cs" />
     <Compile Include="org.apache.juddi.v3.client.ext.wsdm\WSDMQosConstants.cs" />
+    <Compile Include="org.apache.juddi.v3.client.mapping\Common2UDDI.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\easyWsdl.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\ServiceRegistrationResponse.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\URLLocalizer.cs" />

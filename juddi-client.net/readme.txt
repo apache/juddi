@@ -10,7 +10,7 @@ Build Instructions
 msbuild.exe juddi-client.net\juddi-client.net.sln /p:Configuration=Debug /p:Platform="Any CPU" /m  
 
 Tests
-"%NUNIT_HOME%\bin\nunit-console.exe" juddi-client.net\juddi-client.net.test\bin\Debug\juddi-client.net.test.dll
+"%NUNIT_HOME%\bin\nunit-console.exe" juddi-client.net.test\bin\Debug\juddi-client.net.test.dll
 
 Integration Tests
 Start Tomcat or a container with jUDDIv3.war deployed (and working!)
@@ -25,3 +25,7 @@ Start your own .NET project
 Add a reference to juddi-client.net.dll
 Add a copy of juddi-client.net-sample\uddi.xml (set it to copy to output directory always)
 Follow the patterns in the example projects and consult the documentation
+
+
+Important, you'll want to run in your code something similar to what's in the code for juddi-client-installer.
+It's purpose to solely to register the logging system with windows and it requires elevated privledges to do so.

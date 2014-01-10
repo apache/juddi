@@ -45,6 +45,13 @@ namespace juddi_client.net.test
             runTest(path + Path.DirectorySeparatorChar + "juddi-api-flattened.wsdl");
         }
 
+        [Test]
+        public void juddiapiflattenedTestLongDescriptions()
+        {
+            Assume.That(path != null);
+            runTest(path + Path.DirectorySeparatorChar + "sample_1.wsdl");
+        }
+
 
         [Test]
         public void ReadWSDLTest1()
@@ -78,7 +85,7 @@ namespace juddi_client.net.test
         {
             Assume.That(File.Exists(pathAndFile));
 
-           
+
             ReadWSDL wsi = new ReadWSDL();
             tDefinitions wsdlDefinition = wsi.readWSDL(
                pathAndFile
@@ -110,8 +117,18 @@ namespace juddi_client.net.test
             Assert.True(businessServices.Length > 0);
             for (int i = 0; i < businessServices.Length; i++)
             {
+                foreach (description d in businessServices[i].description)
+                {
+                    if (d.lang != null)
+                        Assert.True(d.lang.Length <= UDDIConstants.MAX_xml_lang_length);
+                    if (d.Value != null)
+                        Assert.True(d.Value.Length <= UDDIConstants.MAX_description_length);
+                }
                 foreach (bindingTemplate bt in businessServices[i].bindingTemplates)
                 {
+                    
+
+
                     Assert.NotNull(bt);
                     Assert.NotNull(bt.bindingKey);
                     Assert.NotNull(bt.Item);
@@ -119,6 +136,26 @@ namespace juddi_client.net.test
                     Assert.True(bt.Item is accessPoint);
                     Assert.NotNull(((accessPoint)bt.Item).useType);
                     Assert.NotNull(((accessPoint)bt.Item).Value);
+
+                    foreach (description d in bt.description)
+                    {
+                        if (d.lang != null)
+                            Assert.True(d.lang.Length <= UDDIConstants.MAX_xml_lang_length);
+                        if (d.Value != null)
+                            Assert.True(d.Value.Length <= UDDIConstants.MAX_description_length);
+                    }
+
+                    foreach (tModelInstanceInfo tm in bt.tModelInstanceDetails)
+                    {
+                        foreach (description d in tm.description)
+                        {
+                            if (d.lang != null)
+                                Assert.True(d.lang.Length <= UDDIConstants.MAX_xml_lang_length);
+                            if (d.Value != null)
+                                Assert.True(d.Value.Length <= UDDIConstants.MAX_description_length);
+                        }
+                    }
+
                 }
                 Assert.True(businessServices[i].bindingTemplates.Length > 0);
                 Assert.NotNull(businessServices[i].description);

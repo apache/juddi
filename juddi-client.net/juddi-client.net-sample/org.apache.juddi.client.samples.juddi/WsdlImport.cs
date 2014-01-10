@@ -30,18 +30,27 @@ namespace org.apache.juddi.client.sample
         {
             Console.Out.Write("Enter WSDL url: >");
             String input = Console.In.ReadLine();
-            if (String.IsNullOrEmpty("input"))
+            if (String.IsNullOrEmpty(input))
                 input = "http://wsf.cdyne.com/WeatherWS/Weather.asmx?WSDL";
             //String wsdlURL = "http://wsf.cdyne.com/WeatherWS/Weather.asmx?WSDL";
-            Uri url = new Uri(input);
-
+            //if (String.IsNullOrEmpty(input))
+            Uri url = null;
+            String host = "localhost";
+            int port = 80;
+            try
+            {
+                url = new Uri(input);
+                host = url.Host;
+                port = url.Port;
+            }
+            catch { }
             ReadWSDL wsi = new ReadWSDL();
             tDefinitions wsdlDefinition = wsi.readWSDL(input);
             Properties properties1 = new Properties();
-            properties1.put("serverName", url.Host);
-            properties1.put("businessName", url.Host);
-            properties1.put("keyDomain", "uddi:" + url.Host);
-            int port = url.Port;
+            properties1.put("serverName", host);
+            properties1.put("businessName", host);
+            properties1.put("keyDomain", "uddi:" + host);
+            
             if (port <= 0)
             {
                 if (url.ToString().StartsWith("https", StringComparison.CurrentCultureIgnoreCase))
@@ -50,7 +59,7 @@ namespace org.apache.juddi.client.sample
             }
             properties1.put("serverPort", port.ToString());
 
-            tModel keypart = UDDIClerk.createKeyGenator(url.Host, url.Host + "'s key partition", "en");
+            tModel keypart = UDDIClerk.createKeyGenator(host, host + "'s key partition", "en");
 
             WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizer(), properties1);
             List<tModel> tModels1 = new List<tModel>();

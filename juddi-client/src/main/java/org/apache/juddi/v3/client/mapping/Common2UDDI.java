@@ -32,7 +32,6 @@ public abstract class Common2UDDI {
                 if (content == null) {
                         return ret;
                 }
-                System.out.println("enter " + content.length());
                 if (content.length() > UDDIConstants.MAX_description_length) {
                         int offset = 0;
                         while (offset < content.length()) {

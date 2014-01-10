@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions name="StockQuote" targetNamespace="http://example.com/stockquote/"
+	xmlns:tns="http://example.com/stockquote/" xmlns:xsd1="http://example.com/stockquote/schema/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+        <documentation>This WSDL defines the Lorem ipsum dolor sit amet, ad vim laudem mediocritatem, in mutat illum electram has. Vim ex aliquid elaboraret, modus alienum cum et. Dicta erroribus at nec. Eos ullum pertinax no, consul maiorum eam cu. Alia munere quaeque duo ne.
+
+Oratio gubergren pri eu. Ei vis ludus soleat virtute. Usu te corpora delicata. Quidam suscipit voluptatum eos at, ei mea augue meliore eloquentiam. Alterum deleniti oporteat sea in, saperet singulis inciderint ius ei, nulla voluptatum nam ea. Vim debitis noluisse referrentur no. Ei pro recteque reprimique, ad usu oratio aperiam volutpat.
+
+Et quando indoctum voluptaria vel, eum falli vocibus qualisque ne, molestiae intellegam et vis. Ea mei admodum mediocrem dissentiunt, cibo nostrud conclusionemque ea eum. Vel nisl mnesarchum no, id simul pertinax has, ut alterum legimus qualisque nam. Id mentitum erroribus vel. Cum in omnes verear iuvaret, pro eros dolor numquam et, adipisci partiendo et ius. Mea vivendo epicuri ex, ad sit mollis quaerendum. Ad est iracundia adversarium, vis et autem nostro, saepe similique an his.
+Lorem ipsum dolor sit amet, ad vim laudem mediocritatem, in mutat illum electram has. Vim ex aliquid elaboraret, modus alienum cum et. Dicta erroribus at nec. Eos ullum pertinax no, consul maiorum eam cu. Alia munere quaeque duo ne.
+
+Oratio gubergren pri eu. Ei vis ludus soleat virtute. Usu te corpora delicata. Quidam suscipit voluptatum eos at, ei mea augue meliore eloquentiam. Alterum deleniti oporteat sea in, saperet singulis inciderint ius ei, nulla voluptatum nam ea. Vim debitis noluisse referrentur no. Ei pro recteque reprimique, ad usu oratio aperiam volutpat.
+
+Et quando indoctum voluptaria vel, eum falli vocibus qualisque ne, molestiae intellegam et vis. Ea mei admodum mediocrem dissentiunt, cibo nostrud conclusionemque ea eum. Vel nisl mnesarchum no, id simul pertinax has, ut alterum legimus qualisque nam. Id mentitum erroribus vel. Cum in omnes verear iuvaret, pro eros dolor numquam et, adipisci partiendo et ius. Mea vivendo epicuri ex, ad sit mollis quaerendum. Ad est iracundia adversarium, vis et autem nostro, saepe similique an his.
+</documentation>
+
+	<types>
+		<schema targetNamespace="http://example.com/stockquote/schema/"
+			xmlns="http://www.w3.org/2001/XMLSchema">
+			<element name="TradePriceRequest">
+				<complexType>
+					<all>
+						<element name="tickerSymbol" type="string" />
+					</all>
+				</complexType>
+			</element>
+			<element name="TradePrice">
+				<complexType>
+					<all>
+						<element name="price" type="float" />
+					</all>
+				</complexType>
+			</element>
+		</schema>
+	</types>
+	<message name="GetLastTradePriceInput">
+		<part name="body" element="xsd1:TradePriceRequest" />
+	</message>
+	<message name="GetLastTradePriceOutput">
+		<part name="body" element="xsd1:TradePrice" />
+	</message>
+	<portType name="StockQuotePortType">
+                <documentation>This PORT defines the Lorem ipsum dolor sit amet, ad vim laudem mediocritatem, in mutat illum electram has. Vim ex aliquid elaboraret, modus alienum cum et. Dicta erroribus at nec. Eos ullum pertinax no, consul maiorum eam cu. Alia munere quaeque duo ne.
+
+Oratio gubergren pri eu. Ei vis ludus soleat virtute. Usu te corpora delicata. Quidam suscipit voluptatum eos at, ei mea augue meliore eloquentiam. Alterum deleniti oporteat sea in, saperet singulis inciderint ius ei, nulla voluptatum nam ea. Vim debitis noluisse referrentur no. Ei pro recteque reprimique, ad usu oratio aperiam volutpat.
+
+Et quando indoctum voluptaria vel, eum falli vocibus qualisque ne, molestiae intellegam et vis. Ea mei admodum mediocrem dissentiunt, cibo nostrud conclusionemque ea eum. Vel nisl mnesarchum no, id simul pertinax has, ut alterum legimus qualisque nam. Id mentitum erroribus vel. Cum in omnes verear iuvaret, pro eros dolor numquam et, adipisci partiendo et ius. Mea vivendo epicuri ex, ad sit mollis quaerendum. Ad est iracundia adversarium, vis et autem nostro, saepe similique an his.
+Lorem ipsum dolor sit amet, ad vim laudem mediocritatem, in mutat illum electram has. Vim ex aliquid elaboraret, modus alienum cum et. Dicta erroribus at nec. Eos ullum pertinax no, consul maiorum eam cu. Alia munere quaeque duo ne.
+
+Oratio gubergren pri eu. Ei vis ludus soleat virtute. Usu te corpora delicata. Quidam suscipit voluptatum eos at, ei mea augue meliore eloquentiam. Alterum deleniti oporteat sea in, saperet singulis inciderint ius ei, nulla voluptatum nam ea. Vim debitis noluisse referrentur no. Ei pro recteque reprimique, ad usu oratio aperiam volutpat.
+
+Et quando indoctum voluptaria vel, eum falli vocibus qualisque ne, molestiae intellegam et vis. Ea mei admodum mediocrem dissentiunt, cibo nostrud conclusionemque ea eum. Vel nisl mnesarchum no, id simul pertinax has, ut alterum legimus qualisque nam. Id mentitum erroribus vel. Cum in omnes verear iuvaret, pro eros dolor numquam et, adipisci partiendo et ius. Mea vivendo epicuri ex, ad sit mollis quaerendum. Ad est iracundia adversarium, vis et autem nostro, saepe similique an his.
+</documentation>
+		<operation name="GetLastTradePrice">
+                        
+			<input message="tns:GetLastTradePriceInput" />
+			<output message="tns:GetLastTradePriceOutput" />
+		</operation>
+	</portType>
+	<binding name="StockQuoteSoapBinding" type="tns:StockQuotePortType">
+                <documentation>This BINDING defines the Lorem ipsum dolor sit amet, ad vim laudem mediocritatem, in mutat illum electram has. Vim ex aliquid elaboraret, modus alienum cum et. Dicta erroribus at nec. Eos ullum pertinax no, consul maiorum eam cu. Alia munere quaeque duo ne.
+
+Oratio gubergren pri eu. Ei vis ludus soleat virtute. Usu te corpora delicata. Quidam suscipit voluptatum eos at, ei mea augue meliore eloquentiam. Alterum deleniti oporteat sea in, saperet singulis inciderint ius ei, nulla voluptatum nam ea. Vim debitis noluisse referrentur no. Ei pro recteque reprimique, ad usu oratio aperiam volutpat.
+
+Et quando indoctum voluptaria vel, eum falli vocibus qualisque ne, molestiae intellegam et vis. Ea mei admodum mediocrem dissentiunt, cibo nostrud conclusionemque ea eum. Vel nisl mnesarchum no, id simul pertinax has, ut alterum legimus qualisque nam. Id mentitum erroribus vel. Cum in omnes verear iuvaret, pro eros dolor numquam et, adipisci partiendo et ius. Mea vivendo epicuri ex, ad sit mollis quaerendum. Ad est iracundia adversarium, vis et autem nostro, saepe similique an his.
+Lorem ipsum dolor sit amet, ad vim laudem mediocritatem, in mutat illum electram has. Vim ex aliquid elaboraret, modus alienum cum et. Dicta erroribus at nec. Eos ullum pertinax no, consul maiorum eam cu. Alia munere quaeque duo ne.
+
+Oratio gubergren pri eu. Ei vis ludus soleat virtute. Usu te corpora delicata. Quidam suscipit voluptatum eos at, ei mea augue meliore eloquentiam. Alterum deleniti oporteat sea in, saperet singulis inciderint ius ei, nulla voluptatum nam ea. Vim debitis noluisse referrentur no. Ei pro recteque reprimique, ad usu oratio aperiam volutpat.
+
+Et quando indoctum voluptaria vel, eum falli vocibus qualisque ne, molestiae intellegam et vis. Ea mei admodum mediocrem dissentiunt, cibo nostrud conclusionemque ea eum. Vel nisl mnesarchum no, id simul pertinax has, ut alterum legimus qualisque nam. Id mentitum erroribus vel. Cum in omnes verear iuvaret, pro eros dolor numquam et, adipisci partiendo et ius. Mea vivendo epicuri ex, ad sit mollis quaerendum. Ad est iracundia adversarium, vis et autem nostro, saepe similique an his.
+</documentation>
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<operation name="GetLastTradePrice">
+			<soap:operation soapAction="http://example.com/GetLastTradePrice" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+	</binding>
+	<service name="StockQuoteService">
+                <documentation>This Service doc defines the Lorem ipsum dolor sit amet, ad vim laudem mediocritatem, in mutat illum electram has. Vim ex aliquid elaboraret, modus alienum cum et. Dicta erroribus at nec. Eos ullum pertinax no, consul maiorum eam cu. Alia munere quaeque duo ne.
+
+Oratio gubergren pri eu. Ei vis ludus soleat virtute. Usu te corpora delicata. Quidam suscipit voluptatum eos at, ei mea augue meliore eloquentiam. Alterum deleniti oporteat sea in, saperet singulis inciderint ius ei, nulla voluptatum nam ea. Vim debitis noluisse referrentur no. Ei pro recteque reprimique, ad usu oratio aperiam volutpat.
+
+Et quando indoctum voluptaria vel, eum falli vocibus qualisque ne, molestiae intellegam et vis. Ea mei admodum mediocrem dissentiunt, cibo nostrud conclusionemque ea eum. Vel nisl mnesarchum no, id simul pertinax has, ut alterum legimus qualisque nam. Id mentitum erroribus vel. Cum in omnes verear iuvaret, pro eros dolor numquam et, adipisci partiendo et ius. Mea vivendo epicuri ex, ad sit mollis quaerendum. Ad est iracundia adversarium, vis et autem nostro, saepe similique an his.
+Lorem ipsum dolor sit amet, ad vim laudem mediocritatem, in mutat illum electram has. Vim ex aliquid elaboraret, modus alienum cum et. Dicta erroribus at nec. Eos ullum pertinax no, consul maiorum eam cu. Alia munere quaeque duo ne.
+
+Oratio gubergren pri eu. Ei vis ludus soleat virtute. Usu te corpora delicata. Quidam suscipit voluptatum eos at, ei mea augue meliore eloquentiam. Alterum deleniti oporteat sea in, saperet singulis inciderint ius ei, nulla voluptatum nam ea. Vim debitis noluisse referrentur no. Ei pro recteque reprimique, ad usu oratio aperiam volutpat.
+
+Et quando indoctum voluptaria vel, eum falli vocibus qualisque ne, molestiae intellegam et vis. Ea mei admodum mediocrem dissentiunt, cibo nostrud conclusionemque ea eum. Vel nisl mnesarchum no, id simul pertinax has, ut alterum legimus qualisque nam. Id mentitum erroribus vel. Cum in omnes verear iuvaret, pro eros dolor numquam et, adipisci partiendo et ius. Mea vivendo epicuri ex, ad sit mollis quaerendum. Ad est iracundia adversarium, vis et autem nostro, saepe similique an his.
+</documentation>
+		<port name="StockQuotePort" binding="tns:StockQuoteSoapBinding">
+			<soap:address location="http://location/sample" />
+		</port>
+	</service>
+</definitions>

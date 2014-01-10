@@ -15,6 +15,7 @@
  *
  */
 
+using org.apache.juddi.client.org.apache.juddi.v3.client.mapping;
 using org.apache.juddi.jaxb;
 using org.apache.juddi.v3.client.config;
 using org.apache.juddi.v3.client.log;
@@ -531,10 +532,8 @@ namespace org.apache.juddi.v3.client.mapping
             {
                 serviceDescription = properties.getProperty(Property.SERVICE_DESCRIPTION, Property.DEFAULT_SERVICE_DESCRIPTION);
             }
-            description description = new description();
-            description.lang = (lang);
-            description.Value = (serviceDescription);
-            service.description = new description[] { (description) };
+            
+            service.description = Common2UDDI.mapdescription(serviceDescription, lang).ToArray();
             // Service name
             name sName = new name();
             sName.lang = (lang);
@@ -660,10 +659,7 @@ namespace org.apache.juddi.v3.client.mapping
                     if (String.IsNullOrEmpty(bindingDescription))
                         bindingDescription = properties.getProperty(Property.BINDING_DESCRIPTION, Property.DEFAULT_BINDING_DESCRIPTION); ;
 
-                    description description = new description();
-                    description.lang = (lang);
-                    description.Value = (bindingDescription);
-                    bindingTemplate.description = new description[] { (description) };
+                    bindingTemplate.description = Common2UDDI.mapdescription(bindingDescription, lang).ToArray();
 
 
                     // reference wsdl:binding tModel
@@ -672,11 +668,9 @@ namespace org.apache.juddi.v3.client.mapping
                     instanceDetails instanceDetails = new instanceDetails();
                     instanceDetails.instanceParms = (portName);
                     tModelInstanceInfoBinding.instanceDetails = (instanceDetails);
-                    description descriptionB = new description();
-                    descriptionB.lang = (lang);
-                    descriptionB.Value = ("The wsdl:binding that this wsdl:port implements. " + bindingDescription
-                            + " The instanceParms specifies the port local name.");
-                    tModelInstanceInfoBinding.description = new uddi.apiv3.description[] { description };
+                   
+                    tModelInstanceInfoBinding.description = Common2UDDI.mapdescription("The wsdl:binding that this wsdl:port implements. " + bindingDescription
+                            + " The instanceParms specifies the port local name.", lang).ToArray();
                     tii.Add(tModelInstanceInfoBinding);
 
 
@@ -693,10 +687,8 @@ namespace org.apache.juddi.v3.client.mapping
                             portTypeDescription += it.Current.Value;
                         }
                     }
-                    description descriptionPT = new description();
-                    descriptionPT.lang = (lang);
-                    descriptionPT.Value = ("The wsdl:portType that this wsdl:port implements." + portTypeDescription);
-                    tModelInstanceInfoPortType.description = new description[] { (descriptionPT) };
+                    
+                    tModelInstanceInfoPortType.description = Common2UDDI.mapdescription("The wsdl:portType that this wsdl:port implements." + portTypeDescription,lang).ToArray();
                     tii.Add(tModelInstanceInfoPortType);
 
                     bindingTemplate.tModelInstanceDetails = tii.ToArray();
