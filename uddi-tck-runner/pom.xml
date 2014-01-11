@@ -63,6 +63,8 @@
 						<configuration>
 							<tasks>
 								<copy file="${basedir}/uddi.xml" tofile="${basedir}/target/uddi.xml"/>
+								<copy file="${basedir}keystore.jks" tofile="${basedir}/target/keystore.jks"/>
+								<copy file="${basedir}truststore.jks" tofile="${basedir}/target/truststore.jks"/>
 								<copy file="${basedir}/tck.properties" tofile="${basedir}/target/tck.properties"/>
 							</tasks>
 						</configuration>

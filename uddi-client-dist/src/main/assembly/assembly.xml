@@ -219,6 +219,8 @@
                 <include>readme.txt</include>
                 <include>uddi.xml</include>
                 <include>juddiv3.xml</include>
+				<include>keystore.jks</include>
+				<include>truststore.jks</include>
             </includes>
             <directoryMode>0755</directoryMode>
             <fileMode>0755</fileMode>
