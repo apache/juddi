@@ -86,7 +86,7 @@ public class ClientConfig
             Iterator<String> keys = this.config.getKeys();
             while (keys.hasNext()){
                 String key = keys.next();
-                if (key.startsWith("client"))
+                if (key.startsWith("client") || key.startsWith("config"))
                 {
                     cc.setProperty(key, config.getProperty(key));
                 }

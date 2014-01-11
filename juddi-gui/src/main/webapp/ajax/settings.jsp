@@ -50,6 +50,7 @@
             }
             try {
                 x.GetJuddiClientConfig().saveConfig();
+                out.write("Saved!");
             } catch (Exception ex) {
                 response.setStatus(500);
                 out.write("Error saving Juddi Client Config" + ex.getMessage());

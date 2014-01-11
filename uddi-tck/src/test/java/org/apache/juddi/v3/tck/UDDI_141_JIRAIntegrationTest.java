@@ -16,11 +16,13 @@ package org.apache.juddi.v3.tck;
 
 import java.net.InetAddress;
 import java.rmi.RemoteException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.xml.bind.JAXB;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.soap.SOAPFault;
@@ -31,8 +33,10 @@ import javax.xml.ws.soap.SOAPFaultException;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
+import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -1387,14 +1391,24 @@ public class UDDI_141_JIRAIntegrationTest {
                 }
         }
 
-        //TODO tmodel tests
-        //TODO create tests for enforcing ref integrity of tmodel keys, after enforcing this, the tests in this class will need to be heavily revised
+        
         private void DeleteBusinesses(List<String> businesskeysToDelete, String authinfo, UDDIPublicationPortType pub) {
                 //cleanup
                 try {
                         DeleteBusiness db = new DeleteBusiness();
                         db.setAuthInfo(authinfo);
                         db.getBusinessKey().addAll(businesskeysToDelete);
+                        pub.deleteBusiness(db);
+                } catch (Exception ex) {
+                        ex.printStackTrace();
+                }
+        }
+        private void DeleteBusinesses(String businesskeysToDelete, String authinfo, UDDIPublicationPortType pub) {
+                //cleanup
+                try {
+                        DeleteBusiness db = new DeleteBusiness();
+                        db.setAuthInfo(authinfo);
+                        db.getBusinessKey().add(businesskeysToDelete);
                         pub.deleteBusiness(db);
                 } catch (Exception ex) {
                         ex.printStackTrace();
@@ -1413,4 +1427,729 @@ public class UDDI_141_JIRAIntegrationTest {
                         ex.printStackTrace();
                 }
         }
+        
+        
+        
+        @Test()
+    public void JUDDI_712_SaveBusinessProjectionWithSignature() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_JUDDI_712_SaveBusinessProjectionWithSignature");
+        be.getName().add(n);
+        DigSigUtil ds = GetDigSig();
+        be = ds.signUddiEntity(be);
+        sb.getBusinessEntity().add(be);
+        try {
+            BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+        }
+    }
+
+    @Test()
+    public void JUDDI_712_SaveBusinessProjectionNoServiceKeyWithSignature() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_712_SaveBusinessProjectionNoServiceKeyWithSignature");
+        be.getName().add(n);
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+
+        //service has neither business or service key
+        BusinessService bs = new BusinessService();
+        bs.getName().add(new Name("Joe's bs", null));
+        be.setBusinessServices(new BusinessServices());
+        be.getBusinessServices().getBusinessService().add(bs);
+
+        DigSigUtil ds = GetDigSig();
+        be = ds.signUddiEntity(be);
+        sb.getBusinessEntity().add(be);
+        try {
+            BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+        }
+    }
+
+    @Test()
+    public void JUDDI_712_SaveBusinessProjectionNoServiceKey2WithSignature() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_712_SaveBusinessProjectionNoServiceKey2WithSignature");
+        be.getName().add(n);
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+
+        //service has business but not service key
+        BusinessService bs = new BusinessService();
+        bs.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        bs.getName().add(new Name("Joe's bs", null));
+        be.setBusinessServices(new BusinessServices());
+        be.getBusinessServices().getBusinessService().add(bs);
+
+        DigSigUtil ds = GetDigSig();
+        be = ds.signUddiEntity(be);
+        sb.getBusinessEntity().add(be);
+        try {
+            BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+        }
+    }
+
+    @Test()
+    public void JUDDI_712_SaveBusinessProjectionNoServiceKey3WithSignature() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_712_SaveBusinessProjectionNoServiceKey3WithSignature");
+        be.getName().add(n);
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+
+        //service has business but not service key
+        BusinessService bs = new BusinessService();
+        //bs.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        bs.setServiceKey(TckBusinessService.JOE_SERVICE_KEY);
+        bs.getName().add(new Name("Joe's bs", null));
+        be.setBusinessServices(new BusinessServices());
+        be.getBusinessServices().getBusinessService().add(bs);
+
+        DigSigUtil ds = GetDigSig();
+        be = ds.signUddiEntity(be);
+        sb.getBusinessEntity().add(be);
+        try {
+            BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+        }
+    }
+
+    @Test()
+    public void JUDDI_712_SaveServiceProjectionNoServiceKey3WithSignature() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_712_SaveServiceProjectionNoServiceKey3WithSignature");
+        be.getName().add(n);
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+
+
+        BusinessService bs = new BusinessService();
+        bs.setBusinessKey(null);
+        bs.setServiceKey(null);
+        bs.getName().add(new Name("Joe's bs", null));
+        DigSigUtil ds = GetDigSig();
+        bs = ds.signUddiEntity(bs);
+
+        be.setBusinessServices(new BusinessServices());
+        be.getBusinessServices().getBusinessService().add(bs);
+
+
+        sb.getBusinessEntity().add(be);
+        try {
+            BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+        }
+    }
+
+    @Test()
+    public void JUDDI_712_SaveServiceProjectionNoServiceKey1WithSignature() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_712_SaveServiceProjectionNoServiceKey1WithSignature");
+        be.getName().add(n);
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+
+
+        BusinessService bs = new BusinessService();
+        bs.setBusinessKey(null);
+        bs.setServiceKey(TckBusinessService.JOE_SERVICE_KEY);
+        bs.getName().add(new Name("Joe's bs", null));
+        DigSigUtil ds = GetDigSig();
+        bs = ds.signUddiEntity(bs);
+
+        be.setBusinessServices(new BusinessServices());
+        be.getBusinessServices().getBusinessService().add(bs);
+
+
+        sb.getBusinessEntity().add(be);
+        try {
+            BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+        }
+    }
+
+    @Test()
+    public void JUDDI_712_SaveServiceProjectionNoServiceKey2WithSignature() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_712_SaveServiceProjectionNoServiceKey2WithSignature");
+        be.getName().add(n);
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+
+
+        BusinessService bs = new BusinessService();
+        bs.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        bs.setServiceKey(null);
+        bs.getName().add(new Name("Joe's bs", null));
+        DigSigUtil ds = GetDigSig();
+        bs = ds.signUddiEntity(bs);
+
+        be.setBusinessServices(new BusinessServices());
+        be.getBusinessServices().getBusinessService().add(bs);
+
+
+        sb.getBusinessEntity().add(be);
+        try {
+            BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+        }
+    }
+
+    
+    public void JUDDI_712_SaveBusinessNoneDefined() throws Exception {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_712_SaveServiceWithSignature");
+        be.getName().add(n);
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+
+        try {
+            BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+            throw ex;
+        }
+    }
+
+    @Test()
+    public void JUDDI_712_SaveServiceWithSignature() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_712_SaveServiceWithSignature");
+        be.getName().add(n);
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        sb.getBusinessEntity().add(be);
+        try {
+            BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
+        } catch (Exception ex) {
+            logger.info("UnExpected failure: ", ex);
+            Assert.fail();
+        }
+
+        SaveService ss = new SaveService();
+        ss.setAuthInfo(authInfoJoe);
+        BusinessService bs = new BusinessService();
+        bs.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        bs.setServiceKey(null);
+        bs.getName().add(new Name("Joe's bs", null));
+        DigSigUtil ds = GetDigSig();
+        bs = ds.signUddiEntity(bs);
+
+        be.setBusinessServices(new BusinessServices());
+        be.getBusinessServices().getBusinessService().add(bs);
+
+
+        sb.getBusinessEntity().add(be);
+        try {
+            publicationJoe.saveService(ss);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+        }
+    }
+
+    @Test()
+    public void JUDDI_712_SaveService1WithSignature() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_712_SaveService1WithSignature");
+        be.getName().add(n);
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        sb.getBusinessEntity().add(be);
+        BusinessDetail saveBusiness=null;
+        try {
+             saveBusiness = publicationJoe.saveBusiness(sb);
+        } catch (Exception ex) {
+            logger.info("UnExpected failure: ", ex);
+            Assert.fail();
+        }
+
+        SaveService ss = new SaveService();
+        ss.setAuthInfo(authInfoJoe);
+        BusinessService bs = new BusinessService();
+        bs.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        bs.setServiceKey(TckBusinessService.JOE_SERVICE_KEY);
+        bs.setBindingTemplates(new BindingTemplates());
+        BindingTemplate bt = new BindingTemplate();
+        bt.setBindingKey(null);
+        bt.setServiceKey(null);
+        bt.setAccessPoint(new AccessPoint("http://localhost", "wsdl"));
+        bs.getBindingTemplates().getBindingTemplate().add(bt);
+        bs.getName().add(new Name("Joe's bs", null));
+        DigSigUtil ds = GetDigSig();
+        bs = ds.signUddiEntity(bs);
+
+        be.setBusinessServices(new BusinessServices());
+        be.getBusinessServices().getBusinessService().add(bs);
+
+
+        sb.getBusinessEntity().add(be);
+        try {
+            publicationJoe.saveService(ss);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+        }
+        finally{
+                DeleteBusinesses(saveBusiness.getBusinessEntity().get(0).getBusinessKey(), authInfoJoe, publicationJoe);
+        }
+    }
+
+    @Test()
+    public void JUDDI_712_SaveService2WithSignature() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_712_SaveService2WithSignature");
+        be.getName().add(n);
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        sb.getBusinessEntity().add(be); 
+        BusinessDetail saveBusiness=null;
+        try {
+           
+                saveBusiness = publicationJoe.saveBusiness(sb);
+        } catch (Exception ex) {
+            logger.info("UnExpected failure: ", ex);
+            Assert.fail();
+        }
+
+        SaveService ss = new SaveService();
+        ss.setAuthInfo(authInfoJoe);
+        BusinessService bs = new BusinessService();
+        bs.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        bs.setServiceKey(TckBusinessService.JOE_SERVICE_KEY);
+        bs.setBindingTemplates(new BindingTemplates());
+        BindingTemplate bt = new BindingTemplate();
+        bt.setBindingKey(null);
+        bt.setServiceKey(TckBusinessService.JOE_SERVICE_KEY);
+        bt.setAccessPoint(new AccessPoint("http://localhost", "wsdl"));
+        bs.getBindingTemplates().getBindingTemplate().add(bt);
+        bs.getName().add(new Name("Joe's bs", null));
+        DigSigUtil ds = GetDigSig();
+        bs = ds.signUddiEntity(bs);
+
+        be.setBusinessServices(new BusinessServices());
+        be.getBusinessServices().getBusinessService().add(bs);
+
+
+        sb.getBusinessEntity().add(be);
+        try {
+            publicationJoe.saveService(ss);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+        }
+        finally{
+                DeleteBusinesses(saveBusiness.getBusinessEntity().get(0).getBusinessKey(), authInfoJoe, publicationJoe);
+        }
+    }
+
+    @Test()
+    public void JUDDI_712_SaveService3WithSignature() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_712_SaveService3WithSignature");
+        be.getName().add(n);
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        sb.getBusinessEntity().add(be);
+        BusinessDetail saveBusiness=null;
+        try {
+             saveBusiness = publicationJoe.saveBusiness(sb);
+        } catch (Exception ex) {
+            logger.info("UnExpected failure: ", ex);
+            Assert.fail();
+        }
+
+        SaveService ss = new SaveService();
+        ss.setAuthInfo(authInfoJoe);
+        BusinessService bs = new BusinessService();
+        bs.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        bs.setServiceKey(TckBusinessService.JOE_SERVICE_KEY);
+        bs.setBindingTemplates(new BindingTemplates());
+        BindingTemplate bt = new BindingTemplate();
+        bt.setBindingKey(TckBusinessService.JOE_BINDING_KEY_1);
+        bt.setServiceKey(null);
+        bt.setAccessPoint(new AccessPoint("http://localhost", "wsdl"));
+        bs.getBindingTemplates().getBindingTemplate().add(bt);
+        bs.getName().add(new Name("Joe's bs", null));
+        DigSigUtil ds = GetDigSig();
+        bs = ds.signUddiEntity(bs);
+
+        be.setBusinessServices(new BusinessServices());
+        be.getBusinessServices().getBusinessService().add(bs);
+
+
+        sb.getBusinessEntity().add(be);
+        try {
+            publicationJoe.saveService(ss);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+        }
+        finally{
+                DeleteBusinesses(saveBusiness.getBusinessEntity().get(0).getBusinessKey(), authInfoJoe, publicationJoe);
+        }
+    }
+
+    @Test()
+    public void JUDDI_712_SaveTModelWithSignature() throws CertificateException {
+        SaveTModel sb = new SaveTModel();
+        sb.setAuthInfo(authInfoJoe);
+        DigSigUtil ds = GetDigSig();
+        TModel bs = new TModel();
+        bs.setName(new Name("Joe's Tmodel", null));
+        bs = ds.signUddiEntity(bs);
+
+
+        sb.getTModel().add(bs);
+        try {
+            publicationJoe.saveTModel(sb);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+        }
+    }
+
+    @Test()
+    public void JUDDI_712_SaveService4BTWithSignature() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_712_SaveService4BTWithSignature");
+        be.getName().add(n);
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        sb.getBusinessEntity().add(be);
+        BusinessDetail saveBusiness=null;
+        try {
+             saveBusiness = publicationJoe.saveBusiness(sb);
+        } catch (Exception ex) {
+            logger.info("UnExpected failure: ", ex);
+            Assert.fail();
+        }
+
+        SaveService ss = new SaveService();
+        ss.setAuthInfo(authInfoJoe);
+        BusinessService bs = new BusinessService();
+        bs.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        bs.setServiceKey(TckBusinessService.JOE_SERVICE_KEY);
+        bs.setBindingTemplates(new BindingTemplates());
+        BindingTemplate bt = new BindingTemplate();
+        bt.setBindingKey(TckBusinessService.JOE_BINDING_KEY_1);
+        bt.setServiceKey(null);
+        bt.setAccessPoint(new AccessPoint("http://localhost", "wsdl"));
+
+        bs.getName().add(new Name("Joe's bs", null));
+        DigSigUtil ds = GetDigSig();
+        bt = ds.signUddiEntity(bt);
+        bs.getBindingTemplates().getBindingTemplate().add(bt);
+        be.setBusinessServices(new BusinessServices());
+        be.getBusinessServices().getBusinessService().add(bs);
+
+
+        sb.getBusinessEntity().add(be);
+        try {
+            publicationJoe.saveService(ss);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+        }
+        finally{
+                DeleteBusinesses(saveBusiness.getBusinessEntity().get(0).getBusinessKey(), authInfoJoe, publicationJoe);
+        }
+    }
+
+    @Test()
+    public void JUDDI_712_SaveService5BTWithSignature() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_712_SaveService5BTWithSignature");
+        be.getName().add(n);
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        sb.getBusinessEntity().add(be);
+        BusinessDetail saveBusiness=null;
+        try {
+            saveBusiness = publicationJoe.saveBusiness(sb);
+        } catch (Exception ex) {
+            logger.info("UnExpected failure: ", ex);
+            Assert.fail();
+        }
+
+        SaveService ss = new SaveService();
+        ss.setAuthInfo(authInfoJoe);
+        BusinessService bs = new BusinessService();
+        bs.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        bs.setServiceKey(TckBusinessService.JOE_SERVICE_KEY);
+        bs.setBindingTemplates(new BindingTemplates());
+        BindingTemplate bt = new BindingTemplate();
+        bt.setBindingKey(null);
+        bt.setServiceKey(null);
+        bt.setAccessPoint(new AccessPoint("http://localhost", "wsdl"));
+
+        bs.getName().add(new Name("Joe's bs", null));
+        DigSigUtil ds = GetDigSig();
+        bt = ds.signUddiEntity(bt);
+        bs.getBindingTemplates().getBindingTemplate().add(bt);
+        be.setBusinessServices(new BusinessServices());
+        be.getBusinessServices().getBusinessService().add(bs);
+
+
+        sb.getBusinessEntity().add(be);
+        try {
+            publicationJoe.saveService(ss);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+        }
+        finally{
+                DeleteBusinesses(saveBusiness.getBusinessEntity().get(0).getBusinessKey(), authInfoJoe, publicationJoe);
+        }
+    }
+
+    @Test()
+    public void JUDDI_712_SaveService6BTWithSignature() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_712_SaveService6BTWithSignature");
+        be.getName().add(n);
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        sb.getBusinessEntity().add(be);
+         BusinessDetail saveBusiness=null;
+        try {
+             saveBusiness = publicationJoe.saveBusiness(sb);
+        } catch (Exception ex) {
+            logger.info("UnExpected failure: ", ex);
+            Assert.fail();
+        }
+
+        SaveService ss = new SaveService();
+        ss.setAuthInfo(authInfoJoe);
+        BusinessService bs = new BusinessService();
+        bs.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        bs.setServiceKey(TckBusinessService.JOE_SERVICE_KEY);
+        bs.setBindingTemplates(new BindingTemplates());
+        BindingTemplate bt = new BindingTemplate();
+        bt.setBindingKey(null);
+        bt.setServiceKey(TckBusinessService.JOE_SERVICE_KEY);
+        bt.setAccessPoint(new AccessPoint("http://localhost", "wsdl"));
+
+        bs.getName().add(new Name("Joe's bs", null));
+        DigSigUtil ds = GetDigSig();
+        bt = ds.signUddiEntity(bt);
+        bs.getBindingTemplates().getBindingTemplate().add(bt);
+        be.setBusinessServices(new BusinessServices());
+        be.getBusinessServices().getBusinessService().add(bs);
+
+
+        sb.getBusinessEntity().add(be);
+        try {
+            publicationJoe.saveService(ss);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+        }
+        finally{
+                DeleteBusinesses(saveBusiness.getBusinessEntity().get(0).getBusinessKey(), authInfoJoe, publicationJoe);
+        }
+    }
+
+    @Test()
+    public void JUDDI_712_SaveBusinessWithSignature() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_712_SaveBindingWithSignature");
+        be.getName().add(n);
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        sb.getBusinessEntity().add(be);
+        BusinessDetail saveBusiness=null;
+        try {
+             saveBusiness = publicationJoe.saveBusiness(sb);
+        } catch (Exception ex) {
+            logger.info("UnExpected failure: ", ex);
+            Assert.fail();
+        }
+
+        SaveService ss = new SaveService();
+        ss.setAuthInfo(authInfoJoe);
+        BusinessService bs = new BusinessService();
+        bs.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+        bs.setServiceKey(TckBusinessService.JOE_SERVICE_KEY);
+        bs.getName().add(new Name("joe's service", null));
+
+
+        be.setBusinessServices(new BusinessServices());
+        be.getBusinessServices().getBusinessService().add(bs);
+
+
+        sb.getBusinessEntity().add(be);
+        ServiceDetail saveService = null;
+        ss.getBusinessService().add(bs);
+        try {
+            saveService = publicationJoe.saveService(ss);
+        } catch (Exception ex) {
+            //logger.error("unExpected failure: ",ex);
+            Assert.fail("unexpected failure " + ex.getMessage() + ex.toString());
+        }
+
+
+        bs = saveService.getBusinessService().get(0);
+        bs.setBindingTemplates(new BindingTemplates());
+        BindingTemplate bt = new BindingTemplate();
+        bt.setBindingKey(null);
+        bt.setServiceKey(TckBusinessService.JOE_SERVICE_KEY);
+        bt.setAccessPoint(new AccessPoint("http://localhost", "wsdl"));
+
+        bs.getName().add(new Name("Joe's bs", null));
+        DigSigUtil ds = GetDigSig();
+        bt = ds.signUddiEntity(bt);
+        bs.getBindingTemplates().getBindingTemplate().add(bt);
+
+        try {
+            SaveBinding sb1 = new SaveBinding();
+            sb1.setAuthInfo(authInfoJoe);
+            sb1.getBindingTemplate().add(bt);
+            publicationJoe.saveBinding(sb1);
+            Assert.fail("unexpected success");
+        } catch (Exception ex) {
+            logger.info("Expected failure: " + ex.getMessage());
+        }
+        finally{
+                DeleteBusinesses(saveBusiness.getBusinessEntity().get(0).getBusinessKey(), authInfoJoe, publicationJoe);
+        }
+    }
+
+    @Test()
+    public void JUDDI_716_SaveBusinessWithSignatureX509IssuerSerial() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+                
+        Name n = new Name();
+        n.setValue("JUDDI_716_SaveBusinessWithSignatureX509IssuerSerial");
+        be.getName().add(n);
+        DigSigUtil ds = GetDigSig();
+        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, "true");
+        be = ds.signUddiEntity(be);
+        sb.getBusinessEntity().add(be);
+        BusinessDetail saveBusiness=null;
+        try {
+             saveBusiness = publicationJoe.saveBusiness(sb);
+            GetBusinessDetail gsb=new GetBusinessDetail();
+            gsb.setAuthInfo(authInfoJoe);
+            gsb.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+            BusinessDetail businessDetail = inquiryJoe.getBusinessDetail(gsb);
+            PrintUDDI<BusinessEntity> printer = new PrintUDDI<BusinessEntity>();
+            System.out.println(printer.print(businessDetail.getBusinessEntity().get(0)));
+            AtomicReference<String> msg = new AtomicReference<String>();
+            boolean b=ds.verifySignedUddiEntity(businessDetail.getBusinessEntity().get(0), msg);
+            Assert.assertTrue(msg.get(),b );
+            Assert.assertTrue(msg.get()==null || msg.get().length()==0);
+
+        } catch (Exception ex) {
+            logger.error("unExpected failure: ", ex);
+            Assert.fail("unexpected failure");
+        }
+        finally{
+                DeleteBusinesses(saveBusiness.getBusinessEntity().get(0).getBusinessKey(), authInfoJoe, publicationJoe);
+        }
+    }
+    
+    @Test()
+    public void JUDDI_716_SaveBusinessAllOptions() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+                
+        Name n = new Name();
+        n.setValue("JUDDI_716_SaveBusinessWithSignatureX509IssuerSerial");
+        be.getName().add(n);
+        DigSigUtil ds = GetDigSig();
+        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, "true");
+        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, "true");
+        be = ds.signUddiEntity(be);
+        sb.getBusinessEntity().add(be);
+        BusinessDetail saveBusiness=null;
+        try {
+             saveBusiness = publicationJoe.saveBusiness(sb);
+            GetBusinessDetail gsb=new GetBusinessDetail();
+            gsb.setAuthInfo(authInfoJoe);
+            gsb.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+            BusinessDetail businessDetail = inquiryJoe.getBusinessDetail(gsb);
+            PrintUDDI<BusinessEntity> printer = new PrintUDDI<BusinessEntity>();
+            System.out.println(printer.print(businessDetail.getBusinessEntity().get(0)));
+            AtomicReference<String> msg = new AtomicReference<String>();
+            boolean b=ds.verifySignedUddiEntity(businessDetail.getBusinessEntity().get(0), msg);
+            Assert.assertTrue(msg.get(),b );
+            Assert.assertTrue(msg.get()==null || msg.get().length()==0);
+
+        } catch (Exception ex) {
+            logger.error("unExpected failure: ", ex);
+            Assert.fail("unexpected failure");
+        }
+        finally{
+                DeleteBusinesses(saveBusiness.getBusinessEntity().get(0).getBusinessKey(), authInfoJoe, publicationJoe);
+        }
+    }
+    
+     org.apache.juddi.v3.client.cryptor.DigSigUtil GetDigSig() throws CertificateException {
+        org.apache.juddi.v3.client.cryptor.DigSigUtil ds = new DigSigUtil();
+        ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE, "./src/test/resources/keystore.jks");
+        ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE, "JKS");
+        ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, "Test");
+        ds.put(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS, "Test");
+        ds.put(DigSigUtil.TRUSTSTORE_FILE, "./src/test/resources/truststore.jks");
+        ds.put(DigSigUtil.TRUSTSTORE_FILETYPE, "JKS");
+        ds.put(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, "Test");
+        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "true");
+        return ds;
+    }
 }

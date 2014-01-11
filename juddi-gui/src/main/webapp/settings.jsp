@@ -53,7 +53,7 @@
                                         out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
                                         out.write(StringEscapeUtils.escapeHtml(key));
                                         out.write("</td><td><div ");
-                                        if (key.startsWith("client") && !key.startsWith("client.nodes")) {
+                                        if ((key.startsWith("client") && !key.startsWith("client.nodes")) || key.startsWith("config.props")) {
                                             out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\"");
                                         }
                                         out.write(">");

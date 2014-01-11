@@ -126,7 +126,7 @@ It currently does not use the ValueSet, jUDDI, Replication, or REST APIs
                 <duration>900000</duration>
             </automaticLogouts>
             <!--#node, this is the node defined in uddi.xml that the jUDDI-GUI will use for connections-->
-            <node>default-ssl</node>
+            <node>default</node>
             <!-- controls remote access to the settings/configuration page -->
             <configLocalHostOnly>true</configLocalHostOnly>
         </props>
