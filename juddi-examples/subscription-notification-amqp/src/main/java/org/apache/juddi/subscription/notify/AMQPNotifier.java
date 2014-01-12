@@ -46,102 +46,116 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * AMQP Notifier
- * 
- * This is designed to enable users to setup AMQP based alerts for UDDI subscriptions
- * 
- * This class is partically complete, but it is largely untested and lacks any kind of 
- * 
+ *
+ * This is designed to enable users to setup AMQP based alerts for UDDI
+ * subscriptions
+ *
+ * This class is partically complete, but it is largely untested and lacks any
+ * kind of
+ *
  * the following settings need to be added to the juddiv3.xml file
  * amqp.java.naming.factory.initial=org.apache.qpid.jndi.PropertiesFileInitialContextFactory
- * amqp.connectionfactory.qpidConnectionfactory
- * amqp.destination=(some topic or queue name)
- * amqp.destination.type=topic
- * 
- * usage
- * create a service/bindingtemplate/accessPoint where the value is amqp://url_to_qpid/amqp The useType must be "endPoint".
- * create a subscription where the binding template reference points to this endpoint.
- * trigger the subscription and wait for delivery.
+ * amqp.connectionfactory.qpidConnectionfactory amqp.destination=(some topic or
+ * queue name) amqp.destination.type=topic
+ *
+ * usage create a service/bindingtemplate/accessPoint where the value is
+ * amqp://url_to_qpid/amqp The useType must be "endPoint". create a subscription
+ * where the binding template reference points to this endpoint. trigger the
+ * subscription and wait for delivery.
+ *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class AMQPNotifier implements Notifier {
 
-    Log log = LogFactory.getLog(this.getClass());
-    String destination = null;
+        Log log = LogFactory.getLog(this.getClass());
+        String destination = null;
 
-    public AMQPNotifier(BindingTemplate bindingTemplate) throws URISyntaxException, ConfigurationException {
-        super();
-        if (!AccessPointType.END_POINT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType())) {
-            log.error("AMQP enpoints only support AccessPointType " + AccessPointType.END_POINT);
+        String exchangeType = null;
+        String exchangeName = null;
+
+        public AMQPNotifier(BindingTemplate bindingTemplate) throws URISyntaxException, ConfigurationException {
+                super();
+                if (!AccessPointType.END_POINT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType())) {
+                        log.error("AMQP enpoints only support AccessPointType " + AccessPointType.END_POINT);
+                }
+                String accessPointUrl = bindingTemplate.getAccessPointUrl().toLowerCase();
+                if (!accessPointUrl.startsWith("amqp:")) {
+                        log.warn("AMQP accessPointUrl for bindingTemplate " + bindingTemplate.getEntityKey()
+                                + " should start with 'amqp:'");
+                } else {
+                        destination = accessPointUrl.substring(accessPointUrl.indexOf(":") + 1);
+
+                }
+                for (int i = 0; i < bindingTemplate.getTmodelInstanceInfos().size(); i++) {
+                        if (bindingTemplate.getTmodelInstanceInfos().get(i).getTmodelKey().equals(Demo.TMODEL_DESTINATION_TYPE)) {
+                                exchangeType = bindingTemplate.getTmodelInstanceInfos().get(i).getInstanceParms();
+                        }
+                        if (bindingTemplate.getTmodelInstanceInfos().get(i).getTmodelKey().equals(Demo.TMODEL_DESTINATION_NAME)) {
+                                exchangeName = bindingTemplate.getTmodelInstanceInfos().get(i).getInstanceParms();
+                        }
+                }
         }
-        String accessPointUrl = bindingTemplate.getAccessPointUrl().toLowerCase();
-        if (!accessPointUrl.startsWith("amqp:")) {
-            log.warn("AMQP accessPointUrl for bindingTemplate " + bindingTemplate.getEntityKey()
-                    + " should start with 'amqp:'");
-        } else {
-            destination = accessPointUrl.substring(accessPointUrl.indexOf(":") + 1);
 
+        @Override
+        public DispositionReport notifySubscriptionListener(NotifySubscriptionListener body) throws DispositionReportFaultMessage, RemoteException {
+                Connection connection = null;
+                Context context = null;
+                boolean success = false;
+                String err = null;
+                try {
+                        if (destination != null && exchangeType != null && exchangeName != null) {
+                                log.info("Sending notification AMQP to " + destination);
+                                Properties properties = new Properties();
+
+                                properties.put("java.naming.factory.initial", "org.apache.qpid.jndi.PropertiesFileInitialContextFactory");
+                                properties.put("connectionfactory.qpidConnectionfactory", destination);
+                                properties.put("destination." + exchangeName,exchangeType);
+
+                                context = new InitialContext(properties);
+
+                                ConnectionFactory connectionFactory = (ConnectionFactory) context.lookup("qpidConnectionfactory");
+                                connection = connectionFactory.createConnection();
+                                connection.start();
+
+                                Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+                                Destination destinationLocal = (Destination) context.lookup(exchangeName);
+
+                                MessageProducer messageProducer = session.createProducer(destinationLocal);
+
+                                String subscriptionResultXML = JAXBMarshaller.marshallToString(body, JAXBMarshaller.PACKAGE_SUBSCR_RES);
+                                TextMessage message = session.createTextMessage(subscriptionResultXML);
+                                messageProducer.send(message);
+                                success = true;
+
+                        }
+                } catch (Exception e) {
+                        log.error("Error deliverying AMQP subscription " + e.getMessage());
+                        log.debug("Error deliverying AMQP subscription " + e.getMessage(),e);
+                        err = e.getMessage();
+
+                } finally {
+                        try {
+                                if (connection != null) {
+                                        connection.close();
+                                }
+                        } catch (JMSException ex) {
+                                log.error(null, ex);
+                        }
+                        try {
+                                if (context != null) {
+                                        context.close();
+                                }
+                        } catch (NamingException ex) {
+                                log.error(null, ex);
+                        }
+                }
+                if (!success) {
+                        throw new DispositionReportFaultMessage(err, null);
+                }
+                DispositionReport dr = new DispositionReport();
+                Result res = new Result();
+                dr.getResult().add(res);
+
+                return dr;
         }
-    }
-
-    @Override
-    public DispositionReport notifySubscriptionListener(NotifySubscriptionListener body) throws DispositionReportFaultMessage, RemoteException {
-        Connection connection = null;
-        Context context = null;
-        boolean success = false;
-        String err = null;
-        try {
-            if (destination != null) {
-                log.info("Sending notification AMQP to " + destination);
-                Properties properties = new Properties();
-                 
-                properties.put("java.naming.factory.initial", 
-                        AppConfig.getConfiguration().getString("amqp.java.naming.factory.initial", "org.apache.qpid.jndi.PropertiesFileInitialContextFactory"));
-                properties.put("connectionfactory.qpidConnectionfactory", destination);
-                properties.put("destination." +AppConfig.getConfiguration().getString("amqp.destination") ,
-                        AppConfig.getConfiguration().getString("amqp.destination.type"));
-                //test only
-                //properties.load(this.getClass().getResourceAsStream("hello.properties"));
-                context = new InitialContext(properties);
-
-                ConnectionFactory connectionFactory = (ConnectionFactory) context.lookup("qpidConnectionfactory");
-                connection = connectionFactory.createConnection();
-                connection.start();
-
-                Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-                Destination destinationLocal = (Destination) context.lookup("UDDISubscriptionUpdates");
-
-                MessageProducer messageProducer = session.createProducer(destinationLocal);
-
-
-                String subscriptionResultXML = JAXBMarshaller.marshallToString(body, JAXBMarshaller.PACKAGE_SUBSCR_RES);
-                TextMessage message = session.createTextMessage(subscriptionResultXML);
-                messageProducer.send(message);
-                success = true;
-
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            err = e.getMessage();
-
-        } finally {
-            try {
-                connection.close();
-            } catch (JMSException ex) {
-                log.error(null, ex);
-            }
-            try {
-                context.close();
-            } catch (NamingException ex) {
-                log.error(null, ex);
-            }
-        }
-        if (!success) {
-            throw new DispositionReportFaultMessage(err, null);
-        }
-        DispositionReport dr = new DispositionReport();
-        Result res = new Result();
-        dr.getResult().add(res);
-
-        return dr;
-    }
 }
