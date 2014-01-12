@@ -63,7 +63,7 @@ public class UddiCustodyTransfer {
 
         public static void main(String args[]) throws Exception {
                 UddiCustodyTransfer sp = new UddiCustodyTransfer();
-                
+
                 GetAuthToken getAuthTokenRoot = new GetAuthToken();
                 getAuthTokenRoot.setUserID("root");
                 getAuthTokenRoot.setCred("root");
@@ -80,16 +80,13 @@ public class UddiCustodyTransfer {
                 AuthToken uddiAuthToken = security.getAuthToken(getAuthTokenRoot);
                 System.out.println("uddi AUTHTOKEN = " + "don't log auth tokens!");
                 BusinessEntity biz = sp.CreateBusiness("uddi");
-                
-                
-                
-                        //save user uddi's business
+
+                //save user uddi's business
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(uddiAuthToken.getAuthInfo());
                 sb.getBusinessEntity().add(biz);
                 BusinessDetail saveBusiness = publish.saveBusiness(sb);
-                
-                
+
                 sp.TransferBusiness(uddiAuthToken.getAuthInfo(), "uddi", rootAuthToken.getAuthInfo(), "root", saveBusiness.getBusinessEntity().get(0).getBusinessKey());
         }
 
@@ -102,50 +99,61 @@ public class UddiCustodyTransfer {
                 gcal.setTimeInMillis(System.currentTimeMillis());
                 XMLGregorianCalendar xcal = df.newXMLGregorianCalendar(gcal);
 
-                
-               
                 //Create a transfer token from fromUser to toUser
                 KeyBag kb = new KeyBag();
                 kb.getKey().add(BusinessKey);
                 Holder<String> nodeidOUT = new Holder<String>();
                 Holder<XMLGregorianCalendar> expiresOUT = new Holder<XMLGregorianCalendar>();
                 Holder<byte[]> tokenOUT = new Holder<byte[]>();
-                custodyTransferPortType.getTransferToken(fromUser, kb, nodeidOUT, expiresOUT, tokenOUT);
+                custodyTransferPortType.getTransferToken(fromUserAuthToken, kb, nodeidOUT, expiresOUT, tokenOUT);
+
+                System.out.println("Transfer token obtained. Give this to user " + toUser);
+                System.out.println("Expires " + expiresOUT.value.toXMLFormat());
+                System.out.println("Node " + nodeidOUT.value);
+                System.out.println("Token " + org.apache.commons.codec.binary.Base64.encodeBase64String(tokenOUT.value));
+
+                if (toUser == null || toUser.length() == 0 || toUserAuthToken == null || toUserAuthToken.length() == 0) {
+                        System.out.println("The toUser parameters are either null or empty, I can't complete the transfer here");
+                        return;
+                }
 
                 //The magic part happens here, the user ROOT needs to give the user UDDI the token information out of band
                 //in practice, all values must match exactly
                 //UDDI now accepts the transfer
                 TransferEntities te = new TransferEntities();
-                te.setAuthInfo(toUser);
+                te.setAuthInfo(toUserAuthToken);
                 te.setKeyBag(kb);
                 TransferToken tt = new TransferToken();
                 tt.setExpirationTime(expiresOUT.value);
                 tt.setNodeID(nodeidOUT.value);
                 tt.setOpaqueToken(tokenOUT.value);
                 te.setTransferToken(tt);
+                System.out.println("Excuting transfer...");
                 custodyTransferPortType.transferEntities(te);
+                System.out.println("Complete! verifing ownership change...");
 
                 //confirm the transfer
                 GetOperationalInfo go = new GetOperationalInfo();
-                go.setAuthInfo(fromUser);
+                go.setAuthInfo(fromUserAuthToken);
                 go.getEntityKey().add(BusinessKey);
                 OperationalInfos operationalInfo = uddiInquiryService.getOperationalInfo(go);
                 boolean ok = false;
+                boolean found = false;
                 for (int i = 0; i < operationalInfo.getOperationalInfo().size(); i++) {
                         if (operationalInfo.getOperationalInfo().get(i).getEntityKey().equalsIgnoreCase(BusinessKey)) {
+                                found = true;
                                 if (operationalInfo.getOperationalInfo().get(i).getAuthorizedName().equalsIgnoreCase(fromUser)) {
                                         System.out.println("Transfer unexpected failed");
                                 }
-                        } else if (operationalInfo.getOperationalInfo().get(i).getEntityKey().equalsIgnoreCase(BusinessKey)) {
                                 if (operationalInfo.getOperationalInfo().get(i).getAuthorizedName().equalsIgnoreCase(toUser)) {
-                                        //success
                                         ok = true;
                                 }
-                        } else {
-                                System.out.println("the key wasn't found!");
+
                         }
                 }
-
+                if (!found) {
+                        System.out.println("Could get the operational info the transfed business");
+                }
                 System.out.println("Transfer " + (ok ? "success" : " failed"));
         }
 
@@ -155,5 +163,4 @@ public class UddiCustodyTransfer {
                 return be;
         }
 
-        
 }

@@ -180,7 +180,8 @@ public class WSDLLocatorImpl implements WSDLLocator {
             //inputSource = new InputSource(inputStream);
             latestImportURI = url;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error(e.getMessage());
+            log.debug(e.getMessage(), e);
             lastException = e;
         } finally {
             if (httpclient != null) {
@@ -213,7 +214,8 @@ public class WSDLLocatorImpl implements WSDLLocator {
         try {
             baseURIStr = baseURI.toURL().toExternalForm();
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            log.error(e.getMessage());
+            log.debug(e.getMessage(), e);
             lastException=e;
         }
         return baseURIStr;
@@ -248,7 +250,8 @@ public class WSDLLocatorImpl implements WSDLLocator {
             inputSource = new InputSource(inputStream);
             latestImportURI = importUrl.toExternalForm();
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error(e.getMessage());
+            log.debug(e.getMessage(), e);
             lastException=e;
         }
         return inputSource;
