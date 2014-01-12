@@ -41,6 +41,11 @@ import org.uddi.subr_v3.NotifySubscriptionListener;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 
+/**
+ * This class implements the UDDI v3 Subscription Listener API (server side) 
+ * for jUDDI. It is primarily used for server to server subscriptions.
+ * 
+ */
 @WebService(serviceName="UDDISubscriptionListenerService", 
 			endpointInterface="org.uddi.v3_service.UDDISubscriptionListenerPortType",
 			targetNamespace = "urn:uddi-org:v3_service")

@@ -1438,7 +1438,7 @@ public class UDDIClerk implements Serializable {
          *
          * @return
          */
-        public boolean setIsPasswordEncrypted() {
+        public boolean getIsPasswordEncrypted() {
                 return this.isencrypted;
 
         }

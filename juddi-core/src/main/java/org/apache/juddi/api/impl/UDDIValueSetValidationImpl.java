@@ -33,6 +33,10 @@ import org.uddi.vs_v3.ValidateValues;
 //@WebService(serviceName="UDDIValueSetValidationService", 
 //			endpointInterface="org.uddi.v3_service.UDDIValueSetValidationPortType",
 //			targetNamespace = "urn:uddi-org:v3_service")
+/**
+ * This implements the UDDIv3 Value Set Validation API. It is not complete
+ * 
+ */
 public class UDDIValueSetValidationImpl extends AuthenticatedService implements
 		UDDIValueSetValidationPortType {
         private static Log logger = LogFactory.getLog(UDDIValueSetValidationImpl.class);

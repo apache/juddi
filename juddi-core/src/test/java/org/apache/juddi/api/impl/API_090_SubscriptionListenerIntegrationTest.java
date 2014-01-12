@@ -45,7 +45,7 @@ import com.dumbster.smtp.SmtpMessage;
  */
 public class API_090_SubscriptionListenerIntegrationTest
 {
-	private static Log logger = LogFactory.getLog(API_090_SubscriptionListenerIntegrationTest.class);
+	private static final Log logger = LogFactory.getLog(API_090_SubscriptionListenerIntegrationTest.class);
 	private static API_010_PublisherTest api010      = new API_010_PublisherTest();
 	private static TckTModel tckTModel               = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
 	private static TckBusiness tckBusiness           = new TckBusiness(new UDDIPublicationImpl(), new UDDIInquiryImpl());

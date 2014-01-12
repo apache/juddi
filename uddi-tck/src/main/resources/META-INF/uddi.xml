@@ -133,14 +133,14 @@
 			<keyInfoInclusionBase64PublicKey>true</keyInfoInclusionBase64PublicKey>
 			<digestMethod>http://www.w3.org/2000/09/xmldsig#sha1</digestMethod>
 		</signature>
-		<subscriptionCallbacks>
-			<keyDomain>uddi:somebusiness</keyDomain>
-			<listenUrl>http://MyHostname:4444/callback</listenUrl>
-			<autoRegisterBindingTemplate>false</autoRegisterBindingTemplate>
-			<autoRegisterBusinessServiceKey>uddi:somebusiness:someservicekey</autoRegisterBusinessServiceKey>
-			<signatureBehavior>DoNothing</signatureBehavior>
-			<!--valid values are AbortIfSigned,Sign,DoNothing,SignOnlyIfParentIsntSigned, default is DoNothing-->
-		</subscriptionCallbacks>
+		  <subscriptionCallbacks>
+                        <keyDomain>uddi:somebusiness</keyDomain>
+                        <listenUrl></listenUrl> <!-- leave this blank, it will be generated automatically -->
+                        <autoRegisterBindingTemplate>true</autoRegisterBindingTemplate>
+                        <autoRegisterBusinessServiceKey>uddi:somebusiness:someservicekey</autoRegisterBusinessServiceKey>
+                        <signatureBehavior>DoNothing</signatureBehavior>
+                        <!--valid values are AbortIfSigned,Sign,DoNothing,SignOnlyIfParentIsntSigned, default is DoNothing-->
+                </subscriptionCallbacks>
 		<XtoWsdl>
 			<IgnoreSSLErrors>false</IgnoreSSLErrors>
 		</XtoWsdl>

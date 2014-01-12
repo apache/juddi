@@ -55,7 +55,10 @@ import org.uddi.custody_v3.KeyBag;
 import org.uddi.custody_v3.TransferEntities;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
-
+/**
+ * This implements the UDDI v3 Custody Transfer API web service
+ * 
+ */
 @WebService(serviceName="UDDICustodyTransferService", 
 			endpointInterface="org.uddi.v3_service.UDDICustodyTransferPortType",
 			targetNamespace = "urn:uddi-org:v3_service")

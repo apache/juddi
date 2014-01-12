@@ -63,6 +63,7 @@ import org.uddi.v3_service.UDDIInquiryPortType;
 
 
 /**
+ * This implements the UDDI v3 Inquiry API web service
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @WebService(serviceName="UDDIInquiryService",   

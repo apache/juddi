@@ -70,8 +70,6 @@ import org.apache.juddi.api.util.QueryStatus;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
-import org.apache.juddi.model.Tmodel;
-import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
 

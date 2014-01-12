@@ -111,7 +111,13 @@ public class TckTModel {
                 try {
                         TModelDetail td1 = inquiry.getTModelDetail(gt1);
                         if (td1 != null && !td1.getTModel().isEmpty()) {
-                                exists = true;
+                                if (!td1.getTModel().get(0).isDeleted()) {
+                                        exists = true;
+                                }
+                                else
+                                {
+                                        logger.info("The tModel with key " + tmIn.getTModelKey() + " exists already, but is flagged as deleted. Overwritting");
+                                }
                         }
                 } catch (Exception ex) {
                 }
@@ -176,7 +182,7 @@ public class TckTModel {
         }
 
         public synchronized void deleteTModel(String authInfo, String tModelXml, String tModelKey, boolean force) {
-                 if (keyscreated.contains(tModelKey) || force) {
+                if (keyscreated.contains(tModelKey) || force) {
                         try {
                                 keyscreated.remove(tModelKey);
                                 //Now deleting the TModel
@@ -196,9 +202,10 @@ public class TckTModel {
                         logger.info("skipping the deletion of tmodel " + tModelKey + " since it wasn't created by the tck");
                 }
         }
+
         public synchronized void deleteTModel(String authInfo, String tModelXml, String tModelKey) {
 
-               deleteTModel(authInfo, tModelXml, tModelKey,false);
+                deleteTModel(authInfo, tModelXml, tModelKey, false);
         }
 
         public TModelDetail getTModelDetail(String authInfo, String tModelXml, String tModelKey) {

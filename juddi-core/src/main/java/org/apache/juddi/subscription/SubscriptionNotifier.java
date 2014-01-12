@@ -401,7 +401,7 @@ public class SubscriptionNotifier extends TimerTask {
 						//} else {
 							//log.warn("Unexpected WebServiceException " + e.getMessage() + e.getCause());
 						}
-						log.warn("Unexpected notification exception:" + e.getMessage() + e.getCause());
+						log.warn("Unexpected notification exception:" + e.getMessage() + e.getCause(),e);
 					}
 				} else {
 					log.info("Binding " + bindingTemplate.getEntityKey() + " has an unsupported binding type of " 

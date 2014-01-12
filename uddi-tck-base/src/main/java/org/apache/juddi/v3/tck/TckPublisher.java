@@ -36,13 +36,20 @@ public class TckPublisher {
         public final static String MARY_PUBLISHER_XML = "uddi_data/marypublisher/publisher.xml";
 
         private static Log logger = LogFactory.getLog(TckPublisher.class);
+
         static {
+                String s = System.getProperty("tck.properties");
                 InputStream inputSteam = null;
                 try {
-                        File f = new File("tck.properties");
-
+                        File f = null;
+                        if (s != null && s.length() != 0) {
+                                f = new File(s);
+                        }
+                        if (f == null || !f.exists()) {
+                                f = new File("tck.properties");
+                        }
                         if (f.exists()) {
-                                
+
                                 inputSteam = new FileInputStream(f);
                                 logger.info("Loading tck.properties from " + f.getAbsolutePath());
                         } else {

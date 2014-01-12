@@ -39,6 +39,10 @@ import org.uddi.v3_service.UDDIReplicationPortType;
 //@WebService(serviceName="UDDIReplicationService", 
 //			endpointInterface="org.uddi.v3_service.UDDIReplicationPortType",
 //			targetNamespace = "urn:uddi-org:v3_service")
+/**
+ * This implements the UDDI v3 Replication API web service. It is not complete
+ * 
+ */
 public class UDDIReplicationImpl extends AuthenticatedService implements UDDIReplicationPortType {
         private static Log log = LogFactory.getLog(UDDIReplicationImpl.class);
         private UDDIServiceCounter serviceCounter;

@@ -74,10 +74,10 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
  * Implements the jUDDI API service
-
+ *
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
-* @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 @WebService(serviceName="JUDDIApiService", 
 			endpointInterface="org.apache.juddi.v3_service.JUDDIApiPortType",

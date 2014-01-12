@@ -20,11 +20,9 @@ import java.util.logging.Logger;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.transport.TransportException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.uddi.api_v3.BindingTemplate;
-import org.uddi.api_v3.TModel;
 import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.subr_v3.NotifySubscriptionListener;
 

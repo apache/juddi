@@ -78,7 +78,6 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
- * 
  * This is jUDDI's implementation of the UDDIv3 Subscription API
  */
 @WebService(serviceName="UDDISubscriptionService", 
