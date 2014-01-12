@@ -82,7 +82,7 @@
 			<name>jUDDI SVN List</name>
 			<subscribe>cvs-subscribe@juddi.apache.org</subscribe>
 			<unsubscribe>cvs-unsubscribe@juddi.apache.org</unsubscribe>
-			<post>cvs@juddi.apache.org</post>
+			<post>commits@juddi.apache.org</post>
 			<archive>http://mail-archives.apache.org/mod_mbox/juddi-cvs/</archive>
 		</mailingList>
 	</mailingLists>
