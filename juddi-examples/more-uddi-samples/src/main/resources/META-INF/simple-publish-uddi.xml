@@ -67,10 +67,10 @@
                 </signature>
         
                 <subscriptionCallbacks>
-                        <keyDomain>uddi:org.apache.juddi:test</keyDomain>
-                        <listenUrl>http://localhost:4789/callback</listenUrl>
+                        <keyDomain>uddi:somebusiness</keyDomain>
+                        <listenUrl></listenUrl> <!-- this is to override the generated values -->
                         <autoRegisterBindingTemplate>true</autoRegisterBindingTemplate>
-                        <autoRegisterBusinessServiceKey>uddi:org.apache.juddi:test:callbacktest</autoRegisterBusinessServiceKey>
+                        <autoRegisterBusinessServiceKey>uddi:somebusiness:someservicekey</autoRegisterBusinessServiceKey>
                         <signatureBehavior>DoNothing</signatureBehavior>
                 </subscriptionCallbacks>
         </client>
