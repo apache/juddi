@@ -97,7 +97,7 @@
         </dependencySet>
         
         <dependencySet>
-            <outputDirectory>javadoc</outputDirectory>
+            <outputDirectory>docs/javadoc</outputDirectory>
             <includes>
                 <include>org.apache.juddi:juddi-client:jar:javadoc</include>
                 <include>org.apache.juddi:juddi-core:jar:javadoc</include>
