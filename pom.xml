@@ -424,7 +424,6 @@
 				</plugins>
 			</build>
 		</profile>
-	</profile>
 		<!-- END SNIPPET: release-profile -->
 
 		<!-- same as the apache-release minus signing. CI should use this -->
