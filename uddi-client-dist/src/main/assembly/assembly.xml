@@ -9,88 +9,88 @@
 <assembly>
 	<id>distro</id>
 	<formats>
-	    <format>zip</format>
+		<format>zip</format>
 		<format>tar.gz</format>
 	</formats>
 	<includeBaseDirectory>true</includeBaseDirectory>
 	<moduleSets>
-        <moduleSet>
-        <!-- Enable access to all projects in the current multi-module build -->
-        <useAllReactorProjects>true</useAllReactorProjects>
-    </moduleSet>
-    </moduleSets>
+		<moduleSet>
+			<!-- Enable access to all projects in the current multi-module build -->
+			<useAllReactorProjects>true</useAllReactorProjects>
+		</moduleSet>
+	</moduleSets>
 	<dependencySets>
 		<!-- binary artifacts -->
 		<dependencySet>
-            <outputDirectory>bin</outputDirectory>
-            <includes>
-                <include>org.apache.juddi:juddi-client:jar</include>
-                <include>org.apache.juddi:uddi-ws:jar</include>
+			<outputDirectory>bin</outputDirectory>
+			<includes>
+				<include>org.apache.juddi:juddi-client:jar</include>
+				<include>org.apache.juddi:uddi-ws:jar</include>
 				<include>org.apache.juddi:uddi-migration-tool:jar</include>
-            </includes>
-            <excludes>
-                <exclude>org.apache.juddi:juddi-client:jar:sources</exclude>
-                <exclude>org.apache.juddi:uddi-ws:jar:sources</exclude>
-                <exclude>org.apache.juddi:uddi-migration-tool:jar:sources</exclude>
-                <exclude>org.apache.juddi:juddi-client:jar:javadoc</exclude>
-                <exclude>org.apache.juddi:uddi-ws:jar:javadoc</exclude>
-                <exclude>org.apache.juddi:uddi-migration-tool:jar:javadoc</exclude>
-            </excludes>
-            
-            <useProjectArtifact>false</useProjectArtifact>
-            <useProjectAttachments>false</useProjectAttachments>
-            <useTransitiveDependencies>false</useTransitiveDependencies>
-            <useTransitiveFiltering>false</useTransitiveFiltering>
-            <directoryMode>0755</directoryMode>
-            <fileMode>0755</fileMode>
-        </dependencySet>
-        <!-- tck artifacts -->
-        <dependencySet>
-            <outputDirectory>tck</outputDirectory>
-            <includes>
-                <include>org.apache.juddi:juddi-client:jar</include>
-                <include>org.apache.juddi:uddi-tck:jar</include>
-                <include>org.apache.juddi:uddi-tck-runner:jar</include>
-                <include>org.apache.juddi:uddi-tck:test-jar</include>
-                <include>org.apache.juddi:uddi-tck-base:jar</include>
-                <include>org.apache.juddi:uddi-ws:jar</include>
-            </includes>
-            <excludes>
-                <exclude>org.apache.juddi:juddi-client:jar:sources</exclude>
-                <exclude>org.apache.juddi:uddi-tck:jar:sources</exclude>
-                <exclude>org.apache.juddi:uddi-tck:jar:test-sources</exclude>
-                <exclude>org.apache.juddi:uddi-tck-base:jar:sources</exclude>
-                <exclude>org.apache.juddi:uddi-ws:jar:sources</exclude>
-                <exclude>org.apache.juddi:uddi-tck-runner:jar:sources</exclude>
-                <exclude>org.apache.juddi:juddi-client:jar:javadoc</exclude>
-                <exclude>org.apache.juddi:uddi-tck:jar:javadoc</exclude>
-                <exclude>org.apache.juddi:uddi-tck:jar:test-javadoc</exclude>
-                <exclude>org.apache.juddi:uddi-tck-base:jar:javadoc</exclude>
-                <exclude>org.apache.juddi:uddi-ws:jar:javadoc</exclude>
-                <exclude>org.apache.juddi:uddi-tck-runner:jar:javadoc</exclude>
-            </excludes>
-            
-            <useProjectArtifact>false</useProjectArtifact>
-            <useProjectAttachments>false</useProjectAttachments>
-            <useTransitiveDependencies>false</useTransitiveDependencies>
-            <useTransitiveFiltering>false</useTransitiveFiltering>
-            <directoryMode>0755</directoryMode>
-            <fileMode>0755</fileMode>
-        </dependencySet>
-         <!--  wars -->
-        <dependencySet>
-            <outputDirectory>bin</outputDirectory>
-            <includes>
-                <include>org.apache.juddi:juddi-gui-war:war</include>
-            </includes>
-            <outputFileNameMapping>juddi-gui.war</outputFileNameMapping>
-            <useProjectArtifact>false</useProjectArtifact>
-            <useProjectAttachments>false</useProjectAttachments>
-            <useTransitiveDependencies>false</useTransitiveDependencies>
-            <useTransitiveFiltering>false</useTransitiveFiltering>
-            <directoryMode>0755</directoryMode>
-            <fileMode>0755</fileMode>
-        </dependencySet>
+			</includes>
+			<excludes>
+				<exclude>org.apache.juddi:juddi-client:jar:sources</exclude>
+				<exclude>org.apache.juddi:uddi-ws:jar:sources</exclude>
+				<exclude>org.apache.juddi:uddi-migration-tool:jar:sources</exclude>
+				<exclude>org.apache.juddi:juddi-client:jar:javadoc</exclude>
+				<exclude>org.apache.juddi:uddi-ws:jar:javadoc</exclude>
+				<exclude>org.apache.juddi:uddi-migration-tool:jar:javadoc</exclude>
+			</excludes>
+
+			<useProjectArtifact>false</useProjectArtifact>
+			<useProjectAttachments>false</useProjectAttachments>
+			<useTransitiveDependencies>false</useTransitiveDependencies>
+			<useTransitiveFiltering>false</useTransitiveFiltering>
+			<directoryMode>0755</directoryMode>
+			<fileMode>0755</fileMode>
+		</dependencySet>
+		<!-- tck artifacts -->
+		<dependencySet>
+			<outputDirectory>tck</outputDirectory>
+			<includes>
+				<include>org.apache.juddi:juddi-client:jar</include>
+				<include>org.apache.juddi:uddi-tck:jar</include>
+				<include>org.apache.juddi:uddi-tck-runner:jar</include>
+				<include>org.apache.juddi:uddi-tck:test-jar</include>
+				<include>org.apache.juddi:uddi-tck-base:jar</include>
+				<include>org.apache.juddi:uddi-ws:jar</include>
+			</includes>
+			<excludes>
+				<exclude>org.apache.juddi:juddi-client:jar:sources</exclude>
+				<exclude>org.apache.juddi:uddi-tck:jar:sources</exclude>
+				<exclude>org.apache.juddi:uddi-tck:jar:test-sources</exclude>
+				<exclude>org.apache.juddi:uddi-tck-base:jar:sources</exclude>
+				<exclude>org.apache.juddi:uddi-ws:jar:sources</exclude>
+				<exclude>org.apache.juddi:uddi-tck-runner:jar:sources</exclude>
+				<exclude>org.apache.juddi:juddi-client:jar:javadoc</exclude>
+				<exclude>org.apache.juddi:uddi-tck:jar:javadoc</exclude>
+				<exclude>org.apache.juddi:uddi-tck:jar:test-javadoc</exclude>
+				<exclude>org.apache.juddi:uddi-tck-base:jar:javadoc</exclude>
+				<exclude>org.apache.juddi:uddi-ws:jar:javadoc</exclude>
+				<exclude>org.apache.juddi:uddi-tck-runner:jar:javadoc</exclude>
+			</excludes>
+
+			<useProjectArtifact>false</useProjectArtifact>
+			<useProjectAttachments>false</useProjectAttachments>
+			<useTransitiveDependencies>false</useTransitiveDependencies>
+			<useTransitiveFiltering>false</useTransitiveFiltering>
+			<directoryMode>0755</directoryMode>
+			<fileMode>0755</fileMode>
+		</dependencySet>
+		<!-- wars -->
+		<dependencySet>
+			<outputDirectory>bin</outputDirectory>
+			<includes>
+				<include>org.apache.juddi:juddi-gui-war:war</include>
+			</includes>
+			<outputFileNameMapping>juddi-gui.war</outputFileNameMapping>
+			<useProjectArtifact>false</useProjectArtifact>
+			<useProjectAttachments>false</useProjectAttachments>
+			<useTransitiveDependencies>false</useTransitiveDependencies>
+			<useTransitiveFiltering>false</useTransitiveFiltering>
+			<directoryMode>0755</directoryMode>
+			<fileMode>0755</fileMode>
+		</dependencySet>
 		<!-- The source archives JARs -->
 		<dependencySet>
 			<outputDirectory>src</outputDirectory>
@@ -110,121 +110,126 @@
 			<directoryMode>0755</directoryMode>
 			<fileMode>0755</fileMode>
 		</dependencySet>
-		
-		<!-- uncomment once we have client docs
+
+		<!-- The jUDDI client documentation -->
 		<dependencySet>
-            <outputDirectory>docs</outputDirectory>
-            <includes>
-                <include>org.apache.juddi:juddi-docs:zip</include>
-            </includes>
-            <unpack>true</unpack>
-            <useProjectArtifact>false</useProjectArtifact>
-            <useProjectAttachments>false</useProjectAttachments>
-            <useTransitiveDependencies>false</useTransitiveDependencies>
-            <useTransitiveFiltering>false</useTransitiveFiltering>
-            <directoryMode>0755</directoryMode>
-            <fileMode>0755</fileMode>
-        </dependencySet>
-         -->
-         
-        <dependencySet>
-            <outputDirectory>javadoc</outputDirectory>
-            <scope>test</scope>
-            <includes>
-                <include>org.apache.juddi:juddi-client:jar:javadoc</include>
-                <include>org.apache.juddi:uddi-tck-base:jar:javadoc</include>
-                <include>org.apache.juddi:uddi-tck:jar:javadoc</include>
-                <include>org.apache.juddi:uddi-tck-runner:jar:javadoc</include>
-                <include>org.apache.juddi:uddi-tck:jar:test-javadoc</include>
-                <include>org.apache.juddi:uddi-ws:jar:javadoc</include>
-            </includes>
-            <useProjectArtifact>false</useProjectArtifact>
-            <useProjectAttachments>false</useProjectAttachments>
-            <useTransitiveDependencies>false</useTransitiveDependencies>
-            <useTransitiveFiltering>false</useTransitiveFiltering>
-            <directoryMode>0755</directoryMode>
-            <fileMode>0755</fileMode>
-        </dependencySet>
-        
+			<outputDirectory>docs/juddi-client-guide</outputDirectory>
+			<includes>
+				<include>org.apache.juddi.juddi-docs:juddi-client-guide:jdocbook
+				</include>
+			</includes>
+			<useProjectArtifact>false</useProjectArtifact>
+			<useProjectAttachments>false</useProjectAttachments>
+			<useTransitiveDependencies>false</useTransitiveDependencies>
+			<useTransitiveFiltering>false</useTransitiveFiltering>
+			<directoryMode>0755</directoryMode>
+			<fileMode>0755</fileMode>
+			<unpack>true</unpack>
+			<unpackOptions>
+				<excludes>
+					<exclude>**/META-INF/**</exclude>
+				</excludes>
+			</unpackOptions>
+		</dependencySet>
+
+		<dependencySet>
+			<outputDirectory>docs/javadoc</outputDirectory>
+			<scope>test</scope>
+			<includes>
+				<include>org.apache.juddi:juddi-client:jar:javadoc</include>
+				<include>org.apache.juddi:uddi-tck-base:jar:javadoc</include>
+				<include>org.apache.juddi:uddi-tck:jar:javadoc</include>
+				<include>org.apache.juddi:uddi-tck-runner:jar:javadoc</include>
+				<include>org.apache.juddi:uddi-tck:jar:test-javadoc</include>
+				<include>org.apache.juddi:uddi-ws:jar:javadoc</include>
+			</includes>
+			<useProjectArtifact>false</useProjectArtifact>
+			<useProjectAttachments>false</useProjectAttachments>
+			<useTransitiveDependencies>false</useTransitiveDependencies>
+			<useTransitiveFiltering>false</useTransitiveFiltering>
+			<directoryMode>0755</directoryMode>
+			<fileMode>0755</fileMode>
+		</dependencySet>
+
 	</dependencySets>
 	<fileSets>
 		<fileSet>
-            <directory>${basedir}</directory>
-            <outputDirectory></outputDirectory>
-            <filtered>true</filtered>
-            <directoryMode>0755</directoryMode>
-            <fileMode>0755</fileMode>
+			<directory>${basedir}</directory>
+			<outputDirectory></outputDirectory>
+			<filtered>true</filtered>
+			<directoryMode>0755</directoryMode>
+			<fileMode>0755</fileMode>
 			<includes>
 				<include>LICENSE</include>
 			</includes>
 		</fileSet>
 		<fileSet>
-            <directory>${basedir}/src/main</directory>
-            <outputDirectory></outputDirectory>
-            <filtered>true</filtered>
-            <directoryMode>0755</directoryMode>
-            <fileMode>0755</fileMode>
-            <includes>
-                <include>bin/**</include>
-            </includes>
-        </fileSet>
+			<directory>${basedir}/src/main</directory>
+			<outputDirectory></outputDirectory>
+			<filtered>true</filtered>
+			<directoryMode>0755</directoryMode>
+			<fileMode>0755</fileMode>
+			<includes>
+				<include>bin/**</include>
+			</includes>
+		</fileSet>
 		<fileSet>
-            <directory>../juddi-examples</directory>
-            <outputDirectory>examples</outputDirectory>
-            <useDefaultExcludes>true</useDefaultExcludes>
-            <excludes>
+			<directory>../juddi-examples</directory>
+			<outputDirectory>examples</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+			<excludes>
 				<exclude>**/dist/**</exclude>
 				<exclude>**/build/**</exclude>
-                <exclude>**/.settings/**</exclude>
-                <exclude>**/.classpath</exclude>
-                <exclude>**/.project</exclude>
-                <exclude>**/.gitignore</exclude>
-                <exclude>**/.svn/**</exclude>
-                <exclude>**/.svnignore</exclude>
-                <exclude>**/target/**</exclude>
-            </excludes>
-            <directoryMode>0755</directoryMode>
-            <fileMode>0755</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>../juddi-client.net</directory>
-            <outputDirectory>juddi-client.net</outputDirectory>
-            <useDefaultExcludes>true</useDefaultExcludes>
-            <excludes>
-                <exclude>**/dist/**</exclude>
-                <exclude>**/build/**</exclude>
-                <exclude>**/.settings/**</exclude>
-                <exclude>**/.classpath</exclude>
-                <exclude>**/.project</exclude>
-                <exclude>**/.gitignore</exclude>
-                <exclude>**/.svn/**</exclude>
-                <exclude>**/.svnignore</exclude>
-                <exclude>**/target/**</exclude>
-                <exclude>**/bin</exclude>
-                <exclude>**/obj</exclude>
-                <exclude>*.bat</exclude>
-                <exclude>clean.txt</exclude>
-                <exclude>input.txt</exclude>
-                <exclude>*.suo</exclude>
-            </excludes>
-            <directoryMode>0755</directoryMode>
-            <fileMode>0755</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>../uddi-tck-runner</directory>
-            <outputDirectory>tck</outputDirectory>
-            <useDefaultExcludes>true</useDefaultExcludes>
-            <includes>
-                <include>tck.properties</include>
-                <include>readme.txt</include>
-                <include>uddi.xml</include>
-                <include>juddiv3.xml</include>
+				<exclude>**/.settings/**</exclude>
+				<exclude>**/.classpath</exclude>
+				<exclude>**/.project</exclude>
+				<exclude>**/.gitignore</exclude>
+				<exclude>**/.svn/**</exclude>
+				<exclude>**/.svnignore</exclude>
+				<exclude>**/target/**</exclude>
+			</excludes>
+			<directoryMode>0755</directoryMode>
+			<fileMode>0755</fileMode>
+		</fileSet>
+		<fileSet>
+			<directory>../juddi-client.net</directory>
+			<outputDirectory>juddi-client.net</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+			<excludes>
+				<exclude>**/dist/**</exclude>
+				<exclude>**/build/**</exclude>
+				<exclude>**/.settings/**</exclude>
+				<exclude>**/.classpath</exclude>
+				<exclude>**/.project</exclude>
+				<exclude>**/.gitignore</exclude>
+				<exclude>**/.svn/**</exclude>
+				<exclude>**/.svnignore</exclude>
+				<exclude>**/target/**</exclude>
+				<exclude>**/bin</exclude>
+				<exclude>**/obj</exclude>
+				<exclude>*.bat</exclude>
+				<exclude>clean.txt</exclude>
+				<exclude>input.txt</exclude>
+				<exclude>*.suo</exclude>
+			</excludes>
+			<directoryMode>0755</directoryMode>
+			<fileMode>0755</fileMode>
+		</fileSet>
+		<fileSet>
+			<directory>../uddi-tck-runner</directory>
+			<outputDirectory>tck</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+			<includes>
+				<include>tck.properties</include>
+				<include>readme.txt</include>
+				<include>uddi.xml</include>
+				<include>juddiv3.xml</include>
 				<include>keystore.jks</include>
 				<include>truststore.jks</include>
-            </includes>
-            <directoryMode>0755</directoryMode>
-            <fileMode>0755</fileMode>
-        </fileSet>
+			</includes>
+			<directoryMode>0755</directoryMode>
+			<fileMode>0755</fileMode>
+		</fileSet>
 
 	</fileSets>
 
