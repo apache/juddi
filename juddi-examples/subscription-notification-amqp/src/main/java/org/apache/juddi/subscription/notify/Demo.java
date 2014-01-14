@@ -71,7 +71,7 @@ public class Demo implements MessageListener {
 
         private void Fire() throws Exception {
                 String amqpURL = "amqp://guest:guest@clientid/?brokerlist='tcp://localhost:5672'";
-                UDDIClient client = new UDDIClient("META-INF/uddi.xml");
+                UDDIClient client = new UDDIClient("META-INF/subscription-notification-client-uddi.xml");
                 UDDIClerk clerk = client.getClerk("default");
                 String base = "uddi:amqptestdomain:";
                 String lang = "en";
