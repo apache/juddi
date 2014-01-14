@@ -32,9 +32,9 @@ import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.UnknownUserException;
 
 /**
- * This is the default implementation of jUDDI's Authenticator interface, which
- * if the user id has an associated publisher, and adds the publisher is this is not the
- * case. Please do NOT use this class in production.
+ * This is the default implementation of jUDDI's Authenticator interface.
+ * If the user id does not have an associated publisher, it adds the publisher.
+ * Please do NOT use this class in production.
  *
  * @author Steve Viens (sviens@apache.org)
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
