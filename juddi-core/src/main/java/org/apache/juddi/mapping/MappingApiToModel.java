@@ -1145,6 +1145,7 @@ public class MappingApiToModel {
                         } else if (x509IssuerSerialOrX509SKIOrX509SubjectName != null) {
                                 throw new RuntimeException("Unrecognized Value for Element: " + tagName + ": " + x509IssuerSerialOrX509SKIOrX509SubjectName.getClass().getCanonicalName());
                         }
+                        modelKeyInfoValue.setKeyDataValue(modelX509KeyData);
                         modelX509KeyData.getKeyDataValueList().add(modelKeyInfoValue);
                 }
                 return modelX509KeyData;
