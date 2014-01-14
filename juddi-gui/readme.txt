@@ -5,7 +5,7 @@ Direction for building:
 Pre-requists:
 1) Maven 3.0.x
 2) Full source for jUDDI
-3) Oracle Java JDK 1.6+ (needed for the digital signature applet)
+3) OpenJDK with IcedTea installed, or Oracle's JDK
 
 Build:
 1) First, build the main jUDDI project. 
@@ -16,4 +16,5 @@ Build:
 3) Access
 	http://localhost:8080/juddi-gui
 4) Configure
-	Alter the contents of juddi-gui/META-INF/config.properties and juddi-gui/WEB-INF/classes/META-INF/uddi.xml as necessary
+	Alter the contents of juddi-gui/META-INF/config.properties and juddi-gui/WEB-INF/classes/META-INF/uddi.xml as necessary.
+	These can also be edited in browser via Settings > Config
