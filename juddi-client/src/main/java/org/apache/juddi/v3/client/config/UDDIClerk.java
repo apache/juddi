@@ -484,7 +484,7 @@ public class UDDIClerk implements Serializable {
 
         /**
          * Register a service, using the node of current clerk ('this'). Note,
-         * if registration fails, no exception is thrown
+         * if registration fails, no exception is thrown and null is returned
          *
          * @param service
          * @return
@@ -501,7 +501,7 @@ public class UDDIClerk implements Serializable {
          * @param service the element returned by the server, it may be modified
          * from the original
          * @param node
-         * @return the potentially modified service by the UDDI server
+         * @return the potentially modified service by the UDDI server or NULL if save failed
          */
         public BusinessService register(BusinessService service, Node node) {
 
@@ -531,7 +531,7 @@ public class UDDIClerk implements Serializable {
          * registers a UDDI business. This is a convenience wrapper
          *
          * @param business
-         * @return a possibility modified business entity as registered
+         * @return a possibility modified business entity as registered or NULL if the save failed
          */
         public BusinessEntity register(BusinessEntity business) {
                 return register(business, this.getUDDINode().getApiNode());
@@ -543,7 +543,7 @@ public class UDDIClerk implements Serializable {
          *
          * @param business
          * @param node
-         * @return a possibility modified business entity as registered
+         * @return a possibility modified business entity as registered or NULL if the save failed
          */
         public BusinessEntity register(BusinessEntity business, Node node) {
 

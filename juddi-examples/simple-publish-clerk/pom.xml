@@ -6,9 +6,9 @@
      <version>3.2.0-SNAPSHOT</version>
      <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>simple-publish</artifactId>
-  <name>jUDDI Example Simple Publish</name>
-  <description>Demonstrates the steps taken to publish a service using the jUDDI API directly</description>
+  <artifactId>simple-publish-clerk</artifactId>
+  <name>jUDDI Example Simple Publish using clerks</name>
+  <description>Demonstrates the steps taken to publish a service using the UDDI</description>
 
   <dependencies>
     <dependency>
@@ -56,7 +56,7 @@
                                     <goal>java</goal>
                                 </goals>
                                 <configuration>
-                                    <mainClass>org.apache.juddi.example.publish.SimplePublish</mainClass>
+                                    <mainClass>org.apache.juddi.example.publish.SimplePublishClerk</mainClass>
                                 </configuration>
                             </execution>
                         </executions>

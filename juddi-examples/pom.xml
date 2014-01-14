@@ -22,20 +22,21 @@
 	<artifactId>juddi-examples</artifactId>
 	<name>jUDDI Examples</name>
 	<packaging>pom</packaging>
-	 <prerequisites>
-      <maven>3.0.3</maven>
-    </prerequisites>
-    <modules>
-       <module>create-partition</module>
-       <module>hello-world</module>
-       <module>hello-world-embedded</module>
-       <module>simple-browse</module>
-       <module>simple-publish</module>
-       <module>uddi-annotations</module>
-       <module>wsdl2uddi</module>
-       <module>wsdl2uddi-lifecyle</module>
-    <module>subscription-notification-amqp</module>
-    <module>more-uddi-samples</module>
-    <module>service-version</module>
-  </modules>
+	<prerequisites>
+		<maven>3.0.3</maven>
+	</prerequisites>
+	<modules>
+		<module>create-partition</module>
+		<module>hello-world</module>
+		<module>hello-world-embedded</module>
+		<module>simple-browse</module>
+		<module>simple-publish-portable</module>
+		<module>simple-publish-clerk</module>
+		<module>uddi-annotations</module>
+		<module>wsdl2uddi</module>
+		<module>wsdl2uddi-lifecyle</module>
+		<module>subscription-notification-amqp</module>
+		<module>more-uddi-samples</module>
+		<module>service-version</module>
+	</modules>
 </project>

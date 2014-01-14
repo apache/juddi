@@ -1,4 +1,6 @@
-This example is a command line demonstration of how to interact with JUDDI.
+This example is a command line demonstration of how to interact with UDDI.
+
+Specifically, this code shows you how to perform the same functions as simple-publish-portable, however using much less code by utilizing the UDDIClerk and UDDIClient functions.
 
 1. Start the jUDDI-server (juddi-tomcat or juddi-bundle)
 
