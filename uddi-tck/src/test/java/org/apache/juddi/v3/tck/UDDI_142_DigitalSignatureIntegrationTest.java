@@ -764,7 +764,8 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
                 }
         }
 
-        //JUDDI-716@Test()
+        //JUDDI-716
+        @Test()
         public void JUDDI_716_SaveBusinessWithSignatureX509IssuerSerial() throws CertificateException {
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
@@ -800,7 +801,8 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
                 }
         }
 
-        //JUDDI-716 @Test()
+        //JUDDI-716 
+        @Test()
         public void JUDDI_716_SaveBusinessAllOptions() throws CertificateException {
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);

@@ -1138,14 +1138,13 @@ public class MappingApiToModel {
                         } else if (x509IssuerSerialOrX509SKIOrX509SubjectName instanceof String) {
                                 modelKeyInfoValue.setKeyDataValueString((String) x509IssuerSerialOrX509SKIOrX509SubjectName);
                         } else if (x509IssuerSerialOrX509SKIOrX509SubjectName instanceof X509IssuerSerialType) {
-                        	modelX509KeyData.setKeyDataType(X509IssuerSerialType.class.getSimpleName());
+                        	modelKeyInfoValue.setKeyDataType(X509IssuerSerialType.class.getSimpleName());
                         	X509IssuerSerialType x509IssuerSerialType = (X509IssuerSerialType) x509IssuerSerialOrX509SKIOrX509SubjectName;
-                        	modelX509KeyData.setKeyDataValueString(x509IssuerSerialType.getX509IssuerName());
-                        	modelX509KeyData.setKeyDataValueBytes(x509IssuerSerialType.getX509SerialNumber().toByteArray());
+                        	modelKeyInfoValue.setKeyDataValueString(x509IssuerSerialType.getX509IssuerName());
+                        	modelKeyInfoValue.setKeyDataValueBytes(x509IssuerSerialType.getX509SerialNumber().toByteArray());
                         } else if (x509IssuerSerialOrX509SKIOrX509SubjectName != null) {
                                 throw new RuntimeException("Unrecognized Value for Element: " + tagName + ": " + x509IssuerSerialOrX509SKIOrX509SubjectName.getClass().getCanonicalName());
                         }
-                        modelKeyInfoValue.setKeyDataValue(modelX509KeyData);
                         modelX509KeyData.getKeyDataValueList().add(modelKeyInfoValue);
                 }
                 return modelX509KeyData;
