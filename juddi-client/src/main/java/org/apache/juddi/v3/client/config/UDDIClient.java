@@ -401,8 +401,8 @@ public class UDDIClient {
      * @param clerkName - This references the uddi/client/clerk@name of the
      * juddi client config file. it stores credentials if necessary and
      * associates it with a particular UDDI node (server/cluster) If not
-     * specificed, the value of "default" will be used.
-     * @return
+     * specified, the value of "default" will be used.
+     * @return A clerk instance if the clerk is defined in the config file or NULL if not found
      */
     public UDDIClerk getClerk(String clerkName) {
         if (clerkName == null || clerkName.length() == 0) {

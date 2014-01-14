@@ -112,6 +112,7 @@ public class SimplePublishClerk {
                         clerk.discardAuthToken();
                         // Now you have a business and service via 
                         // the jUDDI API!
+                        System.out.println("Success!");
 
                 } catch (Exception e) {
                         e.printStackTrace();

@@ -116,6 +116,7 @@ public class SimplePublishPortable {
                         security.discardAuthToken(new DiscardAuthToken(myPubAuthToken.getAuthInfo()));
                         // Now you have published a business and service via 
                         // the jUDDI API!
+                        System.out.println("Success!");
 
                 } catch (Exception e) {
                         e.printStackTrace();
