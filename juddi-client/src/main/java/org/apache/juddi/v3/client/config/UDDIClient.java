@@ -352,7 +352,13 @@ public class UDDIClient {
     public String getName() {
         return clientConfig.getClientName();
     }
-    
+    /**
+     * maps to config file
+     * client[@callbackUrl]
+     * Not currently used
+     * @return 
+     */
+    @Deprecated
     public String getClientCallbackUrl() {
         return clientConfig.getClientCallbackUrl();
     }

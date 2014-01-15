@@ -1189,6 +1189,21 @@ public class UDDIClerk implements Serializable {
          * <br>
          * Notice: never log auth tokens! Treat it like a password
          *
+         * Calls 
+         * @return  getAuthToken(getUDDINode().getSecurityUrl());
+         * @throws TransportException
+         * @throws DispositionReportFaultMessage
+         * @throws RemoteException
+         * @since 3.2
+         */
+        public String getAuthToken() throws TransportException, DispositionReportFaultMessage, RemoteException {
+                return getAuthToken(getUDDINode().getSecurityUrl());
+        }
+        /**
+         * Gets an auth token from the uddi server using the uddi auth token
+         * <br>
+         * Notice: never log auth tokens! Treat it like a password
+         *
          * notes: changed to public to have access from the subscription
          * callback API 8/20/2013 AO
          *

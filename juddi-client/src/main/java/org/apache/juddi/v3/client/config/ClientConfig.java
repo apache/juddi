@@ -349,10 +349,12 @@ public class ClientConfig
             return clientName;
         }
         
+        @Deprecated
         public String getClientCallbackUrl() {
         	return clientCallbackUrl;
         }
 
+        
         public String getConfigurationFile() {
             return configurationFile;
         }
