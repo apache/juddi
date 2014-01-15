@@ -220,8 +220,7 @@ public class UddiAdminHub {
                 }
                 Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
                 if (transportClass != null) {
-                    transport = (Transport) transportClass.
-                            getConstructor(String.class).newInstance(nodename);
+                    transport = client.getTransport(nodename);
 
                     security = transport.getUDDISecurityService();
                     juddi = transport.getJUDDIApiService();
