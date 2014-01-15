@@ -56,7 +56,6 @@ public class SimplePublishClerk {
          */
         public void publish() {
                 try {
-
                         // Creating the parent business entity that will contain our service.
                         BusinessEntity myBusEntity = new BusinessEntity();
                         Name myBusName = new Name();

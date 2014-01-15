@@ -62,8 +62,8 @@ public class SimplePublishPortable {
 
                         // Login aka retrieve its authentication token
                         GetAuthToken getAuthTokenMyPub = new GetAuthToken();
-                        getAuthTokenMyPub.setUserID("uddi");                    //your username
-                        getAuthTokenMyPub.setCred("");                          //your password
+                        getAuthTokenMyPub.setUserID("bob");                    //your username
+                        getAuthTokenMyPub.setCred("bob");                          //your password
                         AuthToken myPubAuthToken = security.getAuthToken(getAuthTokenMyPub);
                         System.out.println("myPub AUTHTOKEN = " + "******* never log auth tokens!");
 
