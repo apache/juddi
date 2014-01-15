@@ -33,10 +33,6 @@ import org.apache.juddi.v3_service.JUDDIApiPortType;
  */
 public class SimplePublishClerk {
 
-        private static UDDISecurityPortType security = null;
-        private static JUDDIApiPortType juddiApi = null;
-        private static UDDIPublicationPortType publish = null;
-
         private static UDDIClerk clerk = null;
 
         public SimplePublishClerk() {
@@ -44,15 +40,10 @@ public class SimplePublishClerk {
                         // create a client and read the config in the archive; 
                         // you can use your config file name
                         UDDIClient uddiClient = new UDDIClient("META-INF/uddi.xml");
+                        //get the clerk
                         clerk = uddiClient.getClerk("default");
-                        // a UddiClient can be a client to multiple UDDI nodes, so 
-                        // supply the nodeName (defined in your uddi.xml.
-                        // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
-                        Transport transport = uddiClient.getTransport("default");
-                        // Now you create a reference to the UDDI API
-                        security = transport.getUDDISecurityService();
-                        juddiApi = transport.getJUDDIApiService();
-                        publish = transport.getUDDIPublishService();
+                        if (clerk==null)
+                                throw new Exception("the clerk wasn't found, check the config file!");
                 } catch (Exception e) {
                         e.printStackTrace();
                 }

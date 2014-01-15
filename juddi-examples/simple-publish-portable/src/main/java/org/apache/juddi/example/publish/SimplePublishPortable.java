@@ -22,7 +22,6 @@ import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
-import org.apache.juddi.v3_service.JUDDIApiPortType;
 
 /**
  * This shows you to interact with a UDDI server by publishing a Business,
@@ -34,7 +33,6 @@ import org.apache.juddi.v3_service.JUDDIApiPortType;
 public class SimplePublishPortable {
 
         private static UDDISecurityPortType security = null;
-        private static JUDDIApiPortType juddiApi = null;
         private static UDDIPublicationPortType publish = null;
 
         public SimplePublishPortable() {
@@ -48,7 +46,6 @@ public class SimplePublishPortable {
                         Transport transport = uddiClient.getTransport("default");
                         // Now you create a reference to the UDDI API
                         security = transport.getUDDISecurityService();
-                        juddiApi = transport.getJUDDIApiService();
                         publish = transport.getUDDIPublishService();
                 } catch (Exception e) {
                         e.printStackTrace();

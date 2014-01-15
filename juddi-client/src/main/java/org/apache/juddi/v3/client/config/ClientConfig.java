@@ -126,7 +126,7 @@ public class ClientConfig
 				xmlConfig = new XMLConfiguration(DEFAULT_UDDI_CONFIG);	
 			}
 		}
-		log.info("Reading UDDI Client properties file " + xmlConfig.getBasePath());
+		log.info("Reading UDDI Client properties file " + xmlConfig.getBasePath() + " use -D"+UDDI_CONFIG_FILENAME_PROPERTY+ " to override");
 		this.configurationFile = xmlConfig.getBasePath();
 		long refreshDelay = xmlConfig.getLong(Property.UDDI_RELOAD_DELAY, 1000l);
 		log.debug("Setting refreshDelay to " + refreshDelay);
