@@ -506,6 +506,10 @@ public class UDDIClerk implements Serializable {
         public BusinessService register(BusinessService service, Node node) {
 
                 BusinessService businessService = null;
+                if (service.getName().isEmpty()){
+                        log.error("Unable to register service, a 'name' element is required");
+                        return null;
+                }
                 log.info("Registering service " + service.getName().get(0).getValue()
                         + " with key " + service.getServiceKey());
                 try {

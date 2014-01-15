@@ -82,10 +82,8 @@ public class AMQPNotifier implements Notifier {
                 if (!accessPointUrl.startsWith("amqp:")) {
                         log.warn("AMQP accessPointUrl for bindingTemplate " + bindingTemplate.getEntityKey()
                                 + " should start with 'amqp:'");
-                } else {
-                        destination = accessPointUrl.substring(accessPointUrl.indexOf(":") + 1);
-
-                }
+                } 
+                destination = accessPointUrl;
                 for (int i = 0; i < bindingTemplate.getTmodelInstanceInfos().size(); i++) {
                         if (bindingTemplate.getTmodelInstanceInfos().get(i).getTmodelKey().equals(Demo.TMODEL_DESTINATION_TYPE)) {
                                 exchangeType = bindingTemplate.getTmodelInstanceInfos().get(i).getInstanceParms();
@@ -129,6 +127,7 @@ public class AMQPNotifier implements Notifier {
 
                         }
                 } catch (Exception e) {
+                        e.printStackTrace();
                         log.error("Error deliverying AMQP subscription " + e.getMessage());
                         log.debug("Error deliverying AMQP subscription " + e.getMessage(),e);
                         err = e.getMessage();

@@ -63,7 +63,7 @@ public class Demo implements MessageListener {
                 new Demo().Fire();
         }
 
-        public static final String TOPIC="UDDI";
+        public static final String TOPIC = "UDDI";
         public static final String TMODEL_KEY_BASE = "uddi:amqptestdomain:";
         public static final String TMODEL_KEY_TOPIC = TMODEL_KEY_BASE + ":topic";
         public static final String TMODEL_DESTINATION_TYPE = TMODEL_KEY_BASE + "amqp.destination.type";
@@ -92,6 +92,7 @@ public class Demo implements MessageListener {
                 be.getName().add(new Name("AMQP Test callbacks", lang));
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
+                bs.getName().add(new Name("AMQP Test service", lang));
                 bs.setBindingTemplates(new BindingTemplates());
                 bs.setBusinessKey(base + "business");
                 bs.setServiceKey(base + "service");
@@ -112,15 +113,14 @@ public class Demo implements MessageListener {
                 TModelInstanceInfo topic = new TModelInstanceInfo();
                 topic.setTModelKey(TMODEL_DESTINATION_TYPE);
                 topic.setInstanceDetails(new InstanceDetails());
-                topic.getInstanceDetails().setInstanceParms("topicExchange");
+                topic.getInstanceDetails().setInstanceParms("amq.topic");
                 bt.getTModelInstanceDetails().getTModelInstanceInfo().add(topic);
-                
+
                 TModelInstanceInfo name = new TModelInstanceInfo();
                 name.setTModelKey(TMODEL_DESTINATION_NAME);
                 name.setInstanceDetails(new InstanceDetails());
                 name.getInstanceDetails().setInstanceParms(TOPIC);
                 bt.getTModelInstanceDetails().getTModelInstanceInfo().add(name);
-                
 
                 bs.getBindingTemplates().getBindingTemplate().add(bt);
 
@@ -132,25 +132,25 @@ public class Demo implements MessageListener {
                         clerk.register(destinationType);
                         System.out.println("Registering destination name tmodel");
                         clerk.register(destinationName);
-                        
+
                         System.out.println("Registering business with callback definition");
-                        clerk.register(bs);
+                        clerk.register(be);
 
                         Properties p = new Properties();
                         p.setProperty("java.naming.factory.initial", "org.apache.qpid.jndi.PropertiesFileInitialContextFactory");
                         p.setProperty("connectionfactory.qpidConnectionfactory", amqpURL);
-                        p.setProperty("destination.topicExchange", TOPIC);
+                        p.setProperty("destination." + TOPIC, "amq.topic");
 
                         System.out.println("Connecting to AMQP at " + amqpURL);
 
                         Context context = new InitialContext(p);
 
-                        ConnectionFactory connectionFactory = (ConnectionFactory) context.lookup("topicExchange");
+                        ConnectionFactory connectionFactory = (ConnectionFactory) context.lookup("qpidConnectionfactory");
                         Connection connection = connectionFactory.createConnection();
                         connection.start();
 
                         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-                        Destination destination = (Destination) context.lookup("topicExchange");
+                        Destination destination = (Destination) context.lookup(TOPIC);
 
                         MessageConsumer consumer = session.createConsumer(destination);
 
@@ -160,6 +160,7 @@ public class Demo implements MessageListener {
                         Subscription sub = new Subscription();
                         sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(1000));
                         sub.setBindingKey(base + "binding");
+                        sub.setSubscriptionKey(base + "sub-fb");
                         sub.setSubscriptionFilter(new SubscriptionFilter());
                         sub.getSubscriptionFilter().setFindBusiness(new FindBusiness());
                         sub.getSubscriptionFilter().getFindBusiness().setFindQualifiers(new FindQualifiers());
@@ -171,6 +172,7 @@ public class Demo implements MessageListener {
                         System.out.println("Registered FindBusiness subscription key: " + (subscriptionBiz.getSubscriptionKey()) + " bindingkey: " + subscriptionBiz.getBindingKey());
 
                         sub = new Subscription();
+                        sub.setSubscriptionKey(base + "sub-fs");
                         sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(1000));
                         sub.setBindingKey(base + "binding");
                         sub.setSubscriptionFilter(new SubscriptionFilter());
@@ -186,6 +188,7 @@ public class Demo implements MessageListener {
                         sub = new Subscription();
                         sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(1000));
                         sub.setBindingKey(base + "binding");
+                        sub.setSubscriptionKey(base + "sub-ft");
                         sub.setSubscriptionFilter(new SubscriptionFilter());
                         sub.getSubscriptionFilter().setFindTModel(new FindTModel());
                         sub.getSubscriptionFilter().getFindTModel().setFindQualifiers(new FindQualifiers());
@@ -203,10 +206,10 @@ public class Demo implements MessageListener {
                         connection.close();
 
                 } catch (Exception ex) {
-
+                        ex.printStackTrace();
                 } finally {
-                        clerk.unRegisterBusiness(be.getBusinessKey());
-                        clerk.unRegisterTModel(createKeyGenator.getTModelKey());
+                        //clerk.unRegisterBusiness(be.getBusinessKey());
+                        //clerk.unRegisterTModel(createKeyGenator.getTModelKey());
                 }
         }
 
