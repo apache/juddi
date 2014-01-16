@@ -23,6 +23,18 @@
     </dependency>
   </dependencies>
   
+  <build>
+    <plugins>
+        <!-- examples are not very useful from a maven repo, so don't put it there -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration>
+                <skip>true</skip>
+            </configuration>
+        </plugin>
+     </plugins>
+  </build>
     <profiles>
         <profile>
             <id>default</id>
