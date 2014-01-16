@@ -65,7 +65,7 @@ public class SimplePublishPortable {
                         getAuthTokenMyPub.setUserID("bob");                    //your username
                         getAuthTokenMyPub.setCred("bob");                          //your password
                         AuthToken myPubAuthToken = security.getAuthToken(getAuthTokenMyPub);
-                        System.out.println("myPub AUTHTOKEN = " + "******* never log auth tokens!");
+                        System.out.println(getAuthTokenMyPub.getUserID() + "'s AUTHTOKEN = " + "******* never log auth tokens!");
 
                         // Creating the parent business entity that will contain our service.
                         BusinessEntity myBusEntity = new BusinessEntity();

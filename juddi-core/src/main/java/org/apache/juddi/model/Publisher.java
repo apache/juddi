@@ -38,8 +38,8 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 	private static final long serialVersionUID = 1960575191518050887L;
 	private String publisherName;
 	private String emailAddress;
-	private String isAdmin;
-	private String isEnabled;
+	private Boolean isAdmin;
+	private Boolean isEnabled;
 	private Integer maxBusinesses;
 	private Integer maxServicesPerBusiness;
 	private Integer maxBindingsPerService;
@@ -56,7 +56,7 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 		this.publisherName = publisherName;
 	}
 	public Publisher(String publisherId, String publisherName,
-			String emailAddress, String isAdmin, String isEnabled,
+			String emailAddress, Boolean isAdmin, Boolean isEnabled,
 			Integer maxBusinesses, Integer maxServicesPerBusiness,
 			Integer maxBindingsPerService, Integer maxTmodels) {
 
@@ -90,39 +90,40 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 	}
 
 	@Column(name = "is_admin", length = 5)
-	public String getIsAdmin() {
+	public Boolean getIsAdmin() {
 		return this.isAdmin;
 	}
-	public void setIsAdmin(String isAdmin) {
+	public void setIsAdmin(Boolean isAdmin) {
 		this.isAdmin = isAdmin;
+	}
+        
+        @Deprecated
+        public void setIsAdmin(String isAdmin) {
+		this.isAdmin = Boolean.parseBoolean(isAdmin);
 	}
 
 	@Transient
 	public boolean isAdmin() {
-		boolean ret = false;
-		if (getIsAdmin() != null) {
-			if (getIsAdmin().equalsIgnoreCase("true"))
-				ret = true;
-		}
-		return ret;
+		
+		return isAdmin;
 	}
 	
 	@Column(name = "is_enabled", length = 5)
-	public String getIsEnabled() {
+	public Boolean getIsEnabled() {
 		return this.isEnabled;
 	}
-	public void setIsEnabled(String isEnabled) {
+	public void setIsEnabled(Boolean isEnabled) {
 		this.isEnabled = isEnabled;
 	}
-
+        
+        @Deprecated
+        public void setIsEnabled(String isEnabled) {
+		this.isEnabled = Boolean.parseBoolean(isEnabled);
+	}
+        
 	@Transient
 	public boolean isEnabled() {
-		boolean ret = false;
-		if (getIsEnabled() != null) {
-			if (getIsEnabled().equalsIgnoreCase("true"))
-				ret = true;
-		}
-		return ret;
+		return getIsEnabled();
 	}
 	
 	@Column(name = "max_businesses")

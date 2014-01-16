@@ -15,6 +15,11 @@
         UddiAdminHub x = UddiAdminHub.getInstance(application, session);
         try {
             out.write(x.go(request));
+            /*Enumeration it=request.getParameterNames();
+            while (it.hasMoreElements()){
+                    String s= (String)it.nextElement();
+                    out.write("<br>"+s+"="+ request.getParameter(s));
+            }*/
         } catch (Exception ex) {
             out.write("<i class=\"icon-thumbs-down icon-2x\"> Save Failed!<br>" + StringEscapeUtils.escapeHtml(ex.getMessage()));
         }

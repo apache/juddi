@@ -61,7 +61,7 @@ public class JUDDIApiService extends UnicastRemoteObject implements JUDDIApiPort
 			throws DispositionReportFaultMessage, RemoteException {
 		return juddiAPI.getAllPublisherDetail(body);
 	}
-
+ 
 	public PublisherDetail getPublisherDetail(GetPublisherDetail body)
 			throws DispositionReportFaultMessage, RemoteException {
 		return juddiAPI.getPublisherDetail(body);

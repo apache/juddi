@@ -38,8 +38,8 @@ import org.w3._2000._09.xmldsig_.SignatureType;
  *       &lt;sequence>
  *         &lt;element name="publisherName" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="emailAddress" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="isAdmin" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="isEnabled" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="isAdmin" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
+ *         &lt;element name="isEnabled" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="maxBindingsPerService" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="maxBusinesses" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="maxServicePerBusiness" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
@@ -71,8 +71,8 @@ public class Publisher {
     @XmlElement(required = true)
     protected String publisherName;
     protected String emailAddress;
-    protected String isAdmin;
-    protected String isEnabled;
+    protected Boolean isAdmin;
+    protected Boolean isEnabled;
     protected Integer maxBindingsPerService;
     protected Integer maxBusinesses;
     protected Integer maxServicePerBusiness;
@@ -138,7 +138,7 @@ public class Publisher {
      *     {@link String }
      *     
      */
-    public String getIsAdmin() {
+    public Boolean isIsAdmin() {
         return isAdmin;
     }
 
@@ -150,7 +150,7 @@ public class Publisher {
      *     {@link String }
      *     
      */
-    public void setIsAdmin(String value) {
+    public void setIsAdmin(Boolean value) {
         this.isAdmin = value;
     }
 
@@ -162,7 +162,7 @@ public class Publisher {
      *     {@link String }
      *     
      */
-    public String getIsEnabled() {
+    public Boolean isIsEnabled() {
         return isEnabled;
     }
 
@@ -174,7 +174,7 @@ public class Publisher {
      *     {@link String }
      *     
      */
-    public void setIsEnabled(String value) {
+    public void setIsEnabled(Boolean value) {
         this.isEnabled = value;
     }
 

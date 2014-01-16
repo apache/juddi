@@ -40,11 +40,11 @@ namespace org.apache.juddi.apiv3
 
         private System.Threading.SendOrPostCallback delete_publisherOperationCompleted;
 
-        private System.Threading.SendOrPostCallback adminDelete_tModelOperationCompleted;
-
         private System.Threading.SendOrPostCallback save_publisherOperationCompleted;
 
         private System.Threading.SendOrPostCallback save_NodeOperationCompleted;
+
+        private System.Threading.SendOrPostCallback adminDelete_tModelOperationCompleted;
 
         private System.Threading.SendOrPostCallback save_ClientSubscriptionInfoOperationCompleted;
 
@@ -53,7 +53,7 @@ namespace org.apache.juddi.apiv3
         /// <remarks/>
         public JUDDIApiService()
         {
-            this.Url = "http://localhost:8080/juddiv3/services/juddi-api";
+            this.Url = "http://localhost/juddiv3/services/juddi-api";
         }
 
         /// <remarks/>
@@ -72,13 +72,13 @@ namespace org.apache.juddi.apiv3
         public event delete_publisherCompletedEventHandler delete_publisherCompleted;
 
         /// <remarks/>
-        public event adminDelete_tModelCompletedEventHandler adminDelete_tModelCompleted;
-
-        /// <remarks/>
         public event save_publisherCompletedEventHandler save_publisherCompleted;
 
         /// <remarks/>
         public event save_NodeCompletedEventHandler save_NodeCompleted;
+
+        /// <remarks/>
+        public event adminDelete_tModelCompletedEventHandler adminDelete_tModelCompleted;
 
         /// <remarks/>
         public event save_ClientSubscriptionInfoCompletedEventHandler save_ClientSubscriptionInfoCompleted;
@@ -87,7 +87,7 @@ namespace org.apache.juddi.apiv3
         public event invoke_SyncSubscriptionCompletedEventHandler invoke_SyncSubscriptionCompleted;
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_publisherDetail", RequestNamespace = "urn:juddi-apache-org:api_v3", ResponseElementName = "publisherDetail", ResponseNamespace = "urn:juddi-apache-org:api_v3", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_publisherDetail", RequestNamespace = "urn:juddi-apache-org:api_v3", ResponseElementName = "publisherDetailResponse", ResponseNamespace = "urn:juddi-apache-org:api_v3", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("publisher", IsNullable = true)]
         public publisher[] get_publisherDetail(string authInfo, [System.Xml.Serialization.XmlElementAttribute("publisherId")] string[] publisherId, [System.Xml.Serialization.XmlAttributeAttribute()] out bool truncated, [System.Xml.Serialization.XmlAttributeAttribute()] [System.Xml.Serialization.XmlIgnoreAttribute()] out bool truncatedSpecified)
         {
@@ -145,7 +145,7 @@ namespace org.apache.juddi.apiv3
 
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("delete_ClientSubscriptionInfo", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        public void delete_ClientSubscriptionInfo([System.Xml.Serialization.XmlElementAttribute("delete_ClientSubscriptionInfo", Namespace = "urn:juddi-apache-org:api_v3")] delete_clientSubscriptionInfo delete_ClientSubscriptionInfo1)
+        public void delete_ClientSubscriptionInfo([System.Xml.Serialization.XmlElementAttribute("delete_ClientSubscriptionInfo", Namespace = "urn:juddi-apache-org:api_v3", IsNullable = true)] delete_clientSubscriptionInfo delete_ClientSubscriptionInfo1)
         {
             this.Invoke("delete_ClientSubscriptionInfo", new object[] {
                     delete_ClientSubscriptionInfo1});
@@ -192,7 +192,7 @@ namespace org.apache.juddi.apiv3
 
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("save_Clerk", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        [return: System.Xml.Serialization.XmlArrayAttribute("save_ClerkResponse", Namespace = "urn:juddi-apache-org:api_v3")]
+        [return: System.Xml.Serialization.XmlArrayAttribute("save_ClerkResponse", Namespace = "urn:juddi-apache-org:api_v3", IsNullable = true)]
         public clerk[] save_Clerk([System.Xml.Serialization.XmlElementAttribute(Namespace = "urn:juddi-apache-org:api_v3")] save_clerk save_ClerkRequest)
         {
             object[] results = this.Invoke("save_Clerk", new object[] {
@@ -239,15 +239,15 @@ namespace org.apache.juddi.apiv3
                 this.save_ClerkCompleted(this, new save_ClerkCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
-/*
+
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_allPublisherDetail", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("publisherDetail", Namespace = "urn:juddi-apache-org:api_v3")]
-        public object[] get_allPublisherDetail([System.Xml.Serialization.XmlElementAttribute("get_allPublisherDetail", Namespace = "urn:juddi-apache-org:api_v3")] get_allPublisherDetail get_allPublisherDetail1)
+        public publisherDetail get_allPublisherDetail([System.Xml.Serialization.XmlElementAttribute("get_allPublisherDetail", Namespace = "urn:juddi-apache-org:api_v3")] get_allPublisherDetail get_allPublisherDetail1)
         {
             object[] results = this.Invoke("get_allPublisherDetail", new object[] {
                     get_allPublisherDetail1});
-            return ((object[])(results[0]));
+            return ((publisherDetail)(results[0]));
         }
 
         /// <remarks/>
@@ -258,10 +258,10 @@ namespace org.apache.juddi.apiv3
         }
 
         /// <remarks/>
-        public object[] Endget_allPublisherDetail(System.IAsyncResult asyncResult)
+        public publisherDetail Endget_allPublisherDetail(System.IAsyncResult asyncResult)
         {
             object[] results = this.EndInvoke(asyncResult);
-            return ((object[])(results[0]));
+            return ((publisherDetail)(results[0]));
         }
 
         /// <remarks/>
@@ -289,7 +289,7 @@ namespace org.apache.juddi.apiv3
                 this.get_allPublisherDetailCompleted(this, new get_allPublisherDetailCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
-        */
+
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("delete_publisher", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         public void delete_publisher([System.Xml.Serialization.XmlElementAttribute("delete_publisher", Namespace = "urn:juddi-apache-org:api_v3")] delete_publisher delete_publisher1)
@@ -338,55 +338,8 @@ namespace org.apache.juddi.apiv3
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("adminDelete_tmodel", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        public void adminDelete_tModel([System.Xml.Serialization.XmlElementAttribute("adminDelete_tmodel", Namespace = "urn:juddi-apache-org:api_v3")] delete_tModel adminDelete_tmodel1)
-        {
-            this.Invoke("adminDelete_tModel", new object[] {
-                    adminDelete_tmodel1});
-        }
-
-        /// <remarks/>
-        public System.IAsyncResult BeginadminDelete_tModel(delete_tModel adminDelete_tmodel1, System.AsyncCallback callback, object asyncState)
-        {
-            return this.BeginInvoke("adminDelete_tModel", new object[] {
-                    adminDelete_tmodel1}, callback, asyncState);
-        }
-
-        /// <remarks/>
-        public void EndadminDelete_tModel(System.IAsyncResult asyncResult)
-        {
-            this.EndInvoke(asyncResult);
-        }
-
-        /// <remarks/>
-        public void adminDelete_tModelAsync(delete_tModel adminDelete_tmodel1)
-        {
-            this.adminDelete_tModelAsync(adminDelete_tmodel1, null);
-        }
-
-        /// <remarks/>
-        public void adminDelete_tModelAsync(delete_tModel adminDelete_tmodel1, object userState)
-        {
-            if ((this.adminDelete_tModelOperationCompleted == null))
-            {
-                this.adminDelete_tModelOperationCompleted = new System.Threading.SendOrPostCallback(this.OnadminDelete_tModelOperationCompleted);
-            }
-            this.InvokeAsync("adminDelete_tModel", new object[] {
-                    adminDelete_tmodel1}, this.adminDelete_tModelOperationCompleted, userState);
-        }
-
-        private void OnadminDelete_tModelOperationCompleted(object arg)
-        {
-            if ((this.adminDelete_tModelCompleted != null))
-            {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
-                this.adminDelete_tModelCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
-            }
-        }
-
-        /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("save_publisher", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        [return: System.Xml.Serialization.XmlElementAttribute("save_publisherResponse", Namespace = "urn:juddi-apache-org:api_v3")]
+        [return: System.Xml.Serialization.XmlElementAttribute("save_publisherResponse", Namespace = "urn:juddi-apache-org:api_v3", IsNullable = true)]
         public publisherDetail save_publisher([System.Xml.Serialization.XmlElementAttribute("save_publisher", Namespace = "urn:juddi-apache-org:api_v3")] save_publisher save_publisher1)
         {
             object[] results = this.Invoke("save_publisher", new object[] {
@@ -436,7 +389,7 @@ namespace org.apache.juddi.apiv3
 
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("save_Node", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        [return: System.Xml.Serialization.XmlArrayAttribute("save_NodeResponse", Namespace = "urn:juddi-apache-org:api_v3")]
+        [return: System.Xml.Serialization.XmlArrayAttribute("save_NodeResponse", Namespace = "urn:juddi-apache-org:api_v3", IsNullable = true)]
         public node[] save_Node([System.Xml.Serialization.XmlElementAttribute(Namespace = "urn:juddi-apache-org:api_v3")] save_node save_NodeRequest)
         {
             object[] results = this.Invoke("save_Node", new object[] {
@@ -485,9 +438,56 @@ namespace org.apache.juddi.apiv3
         }
 
         /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("adminDelete_tmodel", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+        public void adminDelete_tModel([System.Xml.Serialization.XmlElementAttribute("adminDelete_tmodel", Namespace = "urn:juddi-apache-org:api_v3", IsNullable = true)] delete_tModel adminDelete_tmodel1)
+        {
+            this.Invoke("adminDelete_tModel", new object[] {
+                    adminDelete_tmodel1});
+        }
+
+        /// <remarks/>
+        public System.IAsyncResult BeginadminDelete_tModel(delete_tModel adminDelete_tmodel1, System.AsyncCallback callback, object asyncState)
+        {
+            return this.BeginInvoke("adminDelete_tModel", new object[] {
+                    adminDelete_tmodel1}, callback, asyncState);
+        }
+
+        /// <remarks/>
+        public void EndadminDelete_tModel(System.IAsyncResult asyncResult)
+        {
+            this.EndInvoke(asyncResult);
+        }
+
+        /// <remarks/>
+        public void adminDelete_tModelAsync(delete_tModel adminDelete_tmodel1)
+        {
+            this.adminDelete_tModelAsync(adminDelete_tmodel1, null);
+        }
+
+        /// <remarks/>
+        public void adminDelete_tModelAsync(delete_tModel adminDelete_tmodel1, object userState)
+        {
+            if ((this.adminDelete_tModelOperationCompleted == null))
+            {
+                this.adminDelete_tModelOperationCompleted = new System.Threading.SendOrPostCallback(this.OnadminDelete_tModelOperationCompleted);
+            }
+            this.InvokeAsync("adminDelete_tModel", new object[] {
+                    adminDelete_tmodel1}, this.adminDelete_tModelOperationCompleted, userState);
+        }
+
+        private void OnadminDelete_tModelOperationCompleted(object arg)
+        {
+            if ((this.adminDelete_tModelCompleted != null))
+            {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.adminDelete_tModelCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+
+        /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("save_ClientSubscriptionInfo", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        [return: System.Xml.Serialization.XmlArrayAttribute("save_ClientSubscriptionInfoResponse", Namespace = "urn:juddi-apache-org:api_v3")]
-        public clientSubscriptionInfo[] save_ClientSubscriptionInfo([System.Xml.Serialization.XmlElementAttribute(Namespace = "urn:juddi-apache-org:api_v3")] save_clientSubscriptionInfo save_ClientSubscriptionInfoRequest)
+        [return: System.Xml.Serialization.XmlArrayAttribute("save_ClientSubscriptionInfoResponse", Namespace = "urn:juddi-apache-org:api_v3", IsNullable = true)]
+        public clientSubscriptionInfo[] save_ClientSubscriptionInfo([System.Xml.Serialization.XmlElementAttribute(Namespace = "urn:juddi-apache-org:api_v3", IsNullable = true)] save_clientSubscriptionInfo save_ClientSubscriptionInfoRequest)
         {
             object[] results = this.Invoke("save_ClientSubscriptionInfo", new object[] {
                     save_ClientSubscriptionInfoRequest});
@@ -536,8 +536,8 @@ namespace org.apache.juddi.apiv3
 
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("invoke_SyncSubscription", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        [return: System.Xml.Serialization.XmlElementAttribute("invoke_SyncSubscriptionResponse", Namespace = "urn:juddi-apache-org:api_v3")]
-        public syncSubscriptionDetailResponse invoke_SyncSubscription([System.Xml.Serialization.XmlElementAttribute("invoke_SyncSubscription", Namespace = "urn:juddi-apache-org:api_v3")] syncSubscriptionRequest invoke_SyncSubscription1)
+        [return: System.Xml.Serialization.XmlElementAttribute("invoke_SyncSubscriptionResponse", Namespace = "urn:juddi-apache-org:api_v3", IsNullable = true)]
+        public syncSubscriptionDetailResponse invoke_SyncSubscription([System.Xml.Serialization.XmlElementAttribute("invoke_SyncSubscription", Namespace = "urn:juddi-apache-org:api_v3", IsNullable = true)] syncSubscriptionRequest invoke_SyncSubscription1)
         {
             object[] results = this.Invoke("invoke_SyncSubscription", new object[] {
                     invoke_SyncSubscription1});
@@ -604,9 +604,13 @@ namespace org.apache.juddi.apiv3
 
         private string emailAddressField;
 
-        private string isAdminField;
+        private bool isAdminField;
 
-        private string isEnabledField;
+        private bool isAdminFieldSpecified;
+
+        private bool isEnabledField;
+
+        private bool isEnabledFieldSpecified;
 
         private int maxBindingsPerServiceField;
 
@@ -655,7 +659,7 @@ namespace org.apache.juddi.apiv3
         }
 
         /// <remarks/>
-        public string isAdmin
+        public bool isAdmin
         {
             get
             {
@@ -668,7 +672,21 @@ namespace org.apache.juddi.apiv3
         }
 
         /// <remarks/>
-        public string isEnabled
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool isAdminSpecified
+        {
+            get
+            {
+                return this.isAdminFieldSpecified;
+            }
+            set
+            {
+                this.isAdminFieldSpecified = value;
+            }
+        }
+
+        /// <remarks/>
+        public bool isEnabled
         {
             get
             {
@@ -677,6 +695,20 @@ namespace org.apache.juddi.apiv3
             set
             {
                 this.isEnabledField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool isEnabledSpecified
+        {
+            get
+            {
+                return this.isEnabledFieldSpecified;
+            }
+            set
+            {
+                this.isEnabledFieldSpecified = value;
             }
         }
 
@@ -819,10 +851,6 @@ namespace org.apache.juddi.apiv3
 
 
 
-
-
-
- 
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
     [System.SerializableAttribute()]
@@ -849,7 +877,8 @@ namespace org.apache.juddi.apiv3
         }
     }
 
-   
+    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
     [System.SerializableAttribute()]
@@ -1426,6 +1455,88 @@ namespace org.apache.juddi.apiv3
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
+    public partial class save_publisher
+    {
+
+        private string authInfoField;
+
+        private publisher[] publisherField;
+
+        /// <remarks/>
+        public string authInfo
+        {
+            get
+            {
+                return this.authInfoField;
+            }
+            set
+            {
+                this.authInfoField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("publisher")]
+        public publisher[] publisher
+        {
+            get
+            {
+                return this.publisherField;
+            }
+            set
+            {
+                this.publisherField = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
+    public partial class delete_publisher
+    {
+
+        private string authInfoField;
+
+        private string[] publisherIdField;
+
+        /// <remarks/>
+        public string authInfo
+        {
+            get
+            {
+                return this.authInfoField;
+            }
+            set
+            {
+                this.authInfoField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("publisherId")]
+        public string[] publisherId
+        {
+            get
+            {
+                return this.publisherIdField;
+            }
+            set
+            {
+                this.publisherIdField = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
     public partial class publisherDetail
     {
 
@@ -1484,89 +1595,6 @@ namespace org.apache.juddi.apiv3
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-    public partial class save_publisher
-    {
-
-        private string authInfoField;
-
-        private publisher[] publisherField;
-
-        /// <remarks/>
-        public string authInfo
-        {
-            get
-            {
-                return this.authInfoField;
-            }
-            set
-            {
-                this.authInfoField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("publisher")]
-        public publisher[] publisher
-        {
-            get
-            {
-                return this.publisherField;
-            }
-            set
-            {
-                this.publisherField = value;
-            }
-        }
-    }
-
- 
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-    public partial class delete_publisher
-    {
-
-        private string authInfoField;
-
-        private string[] publisherIdField;
-
-        /// <remarks/>
-        public string authInfo
-        {
-            get
-            {
-                return this.authInfoField;
-            }
-            set
-            {
-                this.authInfoField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("publisherId")]
-        public string[] publisherId
-        {
-            get
-            {
-                return this.publisherIdField;
-            }
-            set
-            {
-                this.publisherIdField = value;
-            }
-        }
-    }
-    /*
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
     public partial class get_allPublisherDetail
     {
 
@@ -1586,7 +1614,7 @@ namespace org.apache.juddi.apiv3
             }
         }
     }
-    */
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
     [System.SerializableAttribute()]
@@ -1669,7 +1697,7 @@ namespace org.apache.juddi.apiv3
         }
     }
 
- 
+    
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
     public delegate void get_publisherDetailCompletedEventHandler(object sender, get_publisherDetailCompletedEventArgs e);
@@ -1774,12 +1802,12 @@ namespace org.apache.juddi.apiv3
         }
 
         /// <remarks/>
-        public object[] Result
+        public publisherDetail Result
         {
             get
             {
                 this.RaiseExceptionIfNecessary();
-                return ((object[])(this.results[0]));
+                return ((publisherDetail)(this.results[0]));
             }
         }
     }
@@ -1787,10 +1815,6 @@ namespace org.apache.juddi.apiv3
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
     public delegate void delete_publisherCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    public delegate void adminDelete_tModelCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
 
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
@@ -1851,6 +1875,10 @@ namespace org.apache.juddi.apiv3
             }
         }
     }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+    public delegate void adminDelete_tModelCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
 
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]

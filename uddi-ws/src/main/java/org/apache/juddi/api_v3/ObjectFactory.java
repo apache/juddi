@@ -46,6 +46,7 @@ public class ObjectFactory {
     private final static QName _DeleteClientSubscriptionInfo_QNAME = new QName("urn:juddi-apache-org:api_v3", "delete_ClientSubscriptionInfo");
     private final static QName _SaveNodeRequest_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_NodeRequest");
     private final static QName _SyncSubscription_QNAME = new QName("urn:juddi-apache-org:api_v3", "sync_subscription");
+    private final static QName _PublisherDetailResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "publisherDetailResponse");
     private final static QName _SaveNodeResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_NodeResponse");
     private final static QName _SaveClientSubscriptionInfoResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_ClientSubscriptionInfoResponse");
     private final static QName _SyncSubscriptionDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "sync_subscriptionDetail");
@@ -282,6 +283,15 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link PublisherDetail }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "publisherDetailResponse")
+    public JAXBElement<PublisherDetail> createPublisherDetailResponse(PublisherDetail value) {
+        return new JAXBElement<PublisherDetail>(_PublisherDetailResponse_QNAME, PublisherDetail.class, null, value);
+    }
+
+	/**
      * Create an instance of {@link JAXBElement }{@code <}{@link NodeDetail }{@code >}}
      * 
      */

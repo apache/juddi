@@ -37,6 +37,8 @@ xmlns:uddi="urn:uddi-org:api_v3">
 			<xs:element name="get_publisherDetail" type="tns:get_publisher_detail"/>
 			<xs:element name="publisher" type="tns:publisher"/>
 			<xs:element name="publisherDetail" type="tns:publisherDetail"/>
+			<xs:element name="publisherDetailResponse" type="tns:publisherDetail"/>
+			
 			<xs:element name="save_publisher" type="tns:save_publisher"/>
 			<xs:element name="sync_subscription" type="tns:syncSubscription"/>
 			<xs:element name="sync_subscriptionDetail" type="tns:syncSubscriptionDetail"/>
@@ -56,8 +58,8 @@ xmlns:uddi="urn:uddi-org:api_v3">
 				<xs:sequence>
 					<xs:element name="publisherName" type="xs:string"/>
 					<xs:element minOccurs="0" name="emailAddress" type="xs:string"/>
-					<xs:element minOccurs="0" name="isAdmin" type="xs:string"/>
-					<xs:element minOccurs="0" name="isEnabled" type="xs:string"/>
+					<xs:element minOccurs="0" name="isAdmin" type="xs:boolean"/>
+					<xs:element minOccurs="0" name="isEnabled" type="xs:boolean"/>
 					<xs:element minOccurs="0" name="maxBindingsPerService" type="xs:int"/>
 					<xs:element minOccurs="0" name="maxBusinesses" type="xs:int"/>
 					<xs:element minOccurs="0" name="maxServicePerBusiness" type="xs:int"/>
@@ -206,7 +208,7 @@ xmlns:uddi="urn:uddi-org:api_v3">
 		<wsdl:part element="juddi:get_publisherDetail" name="parameters"/>
 	</wsdl:message>
 	<wsdl:message name="get_publisherDetailResponse">
-		<wsdl:part element="juddi:publisherDetail" name="parameters"/>
+		<wsdl:part element="juddi:publisherDetailResponse" name="parameters"/>
 	</wsdl:message>
 	<wsdl:message name="save_ClerkResponse">
 		<wsdl:part element="juddi:save_ClerkResponse" name="save_ClerkResponse"/>

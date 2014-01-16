@@ -209,8 +209,8 @@ public class JUDDI_010_PublisherIntegrationTest {
                         Assert.assertEquals(pubIn.getAuthorizedName(), pubOut.getAuthorizedName());
                         Assert.assertEquals(pubIn.getPublisherName(), pubOut.getPublisherName());
                         Assert.assertEquals(pubIn.getEmailAddress(), pubOut.getEmailAddress());
-                        Assert.assertEquals(pubIn.getIsAdmin(), pubOut.getIsAdmin());
-                        Assert.assertEquals(pubIn.getIsEnabled(), pubOut.getIsEnabled());
+                        Assert.assertEquals(pubIn.isIsAdmin(), pubOut.isIsAdmin());
+                        Assert.assertEquals(pubIn.isIsEnabled(), pubOut.isIsEnabled());
                         Assert.assertEquals(pubIn.getMaxBindingsPerService(), pubOut.getMaxBindingsPerService());
                         Assert.assertEquals(pubIn.getMaxBusinesses(), pubOut.getMaxBusinesses());
                         Assert.assertEquals(pubIn.getMaxServicePerBusiness(), pubOut.getMaxServicePerBusiness());

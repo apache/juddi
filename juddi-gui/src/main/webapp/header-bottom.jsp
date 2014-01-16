@@ -20,9 +20,9 @@
 <div style="
      padding: 0px 0px 0px 0px; bottom: 0px; margin: 0px 0px 0px 0px; width:100%; text-align: center; position: fixed; 
      background-color: white; 
-     "><center><footer> - v<%
+     "><center><footer>v<%
      out.write(StringEscapeUtils.escapeHtml(org.apache.juddi.v3.client.Release.getRegistryVersion()));
-        %> - <a href="http://www.apache.org"><%=ResourceLoader.GetResource(session, "footer.apachecopyright")%></a</footer></center></div>
+     %> - <a href="http://www.apache.org"><%=ResourceLoader.GetResource(session, "footer.apachecopyright")%></a></footer></center></div>
 </body>
 </html>
 

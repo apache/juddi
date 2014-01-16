@@ -88,8 +88,8 @@ public class MappingApiToModel {
                 modelPublisher.setAuthorizedName(apiPublisher.getAuthorizedName());
                 modelPublisher.setPublisherName(apiPublisher.getPublisherName());
                 modelPublisher.setEmailAddress(apiPublisher.getEmailAddress());
-                modelPublisher.setIsAdmin(apiPublisher.getIsAdmin());
-                modelPublisher.setIsEnabled(apiPublisher.getIsEnabled());
+                modelPublisher.setIsAdmin(apiPublisher.isIsAdmin());
+                modelPublisher.setIsEnabled(apiPublisher.isIsEnabled());
                 modelPublisher.setMaxBindingsPerService(apiPublisher.getMaxBindingsPerService());
                 modelPublisher.setMaxBusinesses(apiPublisher.getMaxBusinesses());
                 modelPublisher.setMaxServicesPerBusiness(apiPublisher.getMaxServicePerBusiness());

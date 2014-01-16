@@ -168,8 +168,8 @@ public class API_010_PublisherTest {
                         assertEquals(pubIn.getAuthorizedName(), pubOut.getAuthorizedName());
                         assertEquals(pubIn.getPublisherName(), pubOut.getPublisherName());
                         assertEquals(pubIn.getEmailAddress(), pubOut.getEmailAddress());
-                        assertEquals(pubIn.getIsAdmin(), pubOut.getIsAdmin());
-                        assertEquals(pubIn.getIsEnabled(), pubOut.getIsEnabled());
+                        assertEquals(pubIn.isIsAdmin(), pubOut.isIsAdmin());
+                        assertEquals(pubIn.isIsEnabled(), pubOut.isIsEnabled());
                         assertEquals(pubIn.getMaxBindingsPerService(), pubOut.getMaxBindingsPerService());
                         assertEquals(pubIn.getMaxBusinesses(), pubOut.getMaxBusinesses());
                         assertEquals(pubIn.getMaxServicePerBusiness(), pubOut.getMaxServicePerBusiness());

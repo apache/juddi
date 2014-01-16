@@ -17,6 +17,7 @@ import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.NodeDetail;
+import org.apache.juddi.api_v3.Publisher;
 import org.apache.juddi.api_v3.PublisherDetail;
 import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
@@ -50,6 +51,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 public interface JUDDIApiPortType {
 
 
+
     /**
      *  Returns a specific publisher 
      * 
@@ -59,14 +61,14 @@ public interface JUDDIApiPortType {
      * @throws DispositionReportFaultMessage
      */
     @WebMethod(operationName = "get_publisherDetail", action = "get_publisherDetail")
-    @WebResult(name = "publisherDetail", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "parameters")
+    @WebResult(name = "publisherDetailResponse", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "parameters")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public PublisherDetail getPublisherDetail(
         @WebParam(name = "get_publisherDetail", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "parameters")
         GetPublisherDetail parameters)
         throws DispositionReportFaultMessage, RemoteException
     ;
-
+    
     /**
      *  deletes records created from calling save_ClientSubscriptionInfo 
      * 

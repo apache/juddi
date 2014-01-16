@@ -271,8 +271,8 @@
     create table j3_publisher (
         authorized_name varchar(255) not null,
         email_address varchar(255) null,
-        is_admin varchar(5) null,
-        is_enabled varchar(5) null,
+        is_admin bool null,
+        is_enabled bool null,
         max_bindings_per_service int null,
         max_businesses int null,
         max_services_per_business int null,
