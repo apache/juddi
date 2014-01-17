@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -150,6 +152,114 @@ public class UddiHub implements Serializable {
                 // token = null;
         }
 
+        public String verifyLogin() {
+                EnsureConfig();
+                if (style != AuthStyle.UDDI_AUTH) {
+                        if (WS_Transport) {
+                                BindingProvider bp = null;
+                                Map<String, Object> context = null;
+                                bp = (BindingProvider) inquiry;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
+
+                                context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
+                                context.put(BindingProvider.PASSWORD_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
+
+                                bp = (BindingProvider) publish;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
+
+                                context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
+                                context.put(BindingProvider.PASSWORD_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
+
+                                bp = (BindingProvider) custody;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
+
+                                context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
+                                context.put(BindingProvider.PASSWORD_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
+
+                                bp = (BindingProvider) subscription;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
+
+                                context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
+                                context.put(BindingProvider.PASSWORD_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
+                        }
+                        FindBusiness fb = new FindBusiness();
+                        fb.setListHead(0);
+                        fb.setMaxRows(1);
+                        fb.setFindQualifiers(new FindQualifiers());
+                        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                        fb.getName().add(new Name(UDDIConstants.WILDCARD, null));
+                        try {
+                                inquiry.findBusiness(fb);
+                        } catch (Exception ex) {
+                                return HandleException(ex);
+                        }
+                        /*
+                         bp = (BindingProvider) juddi;
+                         context = bp.getRequestContext();
+                         context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
+                         context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));*/
+                        return null;
+                } else {
+                        if (token != null) {
+                                return token;
+                        }
+                        if (WS_Transport) {
+                                BindingProvider bp = null;
+                                Map<String, Object> context = null;
+
+                                bp = (BindingProvider) inquiry;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
+
+                                bp = (BindingProvider) publish;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
+
+                                bp = (BindingProvider) custody;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
+
+                                bp = (BindingProvider) subscription;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
+                        }
+                        GetAuthToken req = new GetAuthToken();
+                        try {
+                                if (security == null) {
+                                        security = transport.getUDDISecurityService();
+                                }
+                        } catch (Exception ex) {
+                                return HandleException(ex);
+                        }
+                        if (session.getAttribute("username") != null
+                                && session.getAttribute("password") != null) {
+                                req.setUserID((String) session.getAttribute("username"));
+                                req.setCred(AES.Decrypt((String) session.getAttribute("password"), (String) properties.get("key")));
+                                log.info("AUDIT: fetching auth token for " + req.getUserID() + " Auth Mode is " + ((security == null) ? "HTTP" : "AUTH_TOKEN"));
+                                try {
+                                        AuthToken authToken = security.getAuthToken(req);
+                                        token = authToken.getAuthInfo();
+                                        return null;
+                                } catch (Exception ex) {
+                                        return HandleException(ex);
+                                }
+                        }
+                }
+                return "Unexpected error";
+        }
+
         /**
          * This kills any authentication tokens, logs the user out and nulls out
          * all services
@@ -259,6 +369,9 @@ public class UddiHub implements Serializable {
 
                 URL prop = application.getResource("/META-INF/config.properties");
                 if (prop == null) {
+                        prop = application.getResource("META-INF/config.properties");
+                }
+                if (prop == null) {
                         throw new Exception("Cannot locate the configuration file.");
                 }
 
@@ -312,40 +425,41 @@ public class UddiHub implements Serializable {
         private String GetToken() {
                 EnsureConfig();
                 if (style != AuthStyle.UDDI_AUTH) {
-                        BindingProvider bp = null;
-                        Map<String, Object> context = null;
-                        bp = (BindingProvider) inquiry;
-                        context = bp.getRequestContext();
-                        context.remove(BindingProvider.USERNAME_PROPERTY);
-                        context.remove(BindingProvider.PASSWORD_PROPERTY);
+                        if (WS_Transport) {
+                                BindingProvider bp = null;
+                                Map<String, Object> context = null;
+                                bp = (BindingProvider) inquiry;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
 
-                        context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
-                        context.put(BindingProvider.PASSWORD_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
+                                context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
+                                context.put(BindingProvider.PASSWORD_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
 
-                        bp = (BindingProvider) publish;
-                        context = bp.getRequestContext();
-                        context.remove(BindingProvider.USERNAME_PROPERTY);
-                        context.remove(BindingProvider.PASSWORD_PROPERTY);
+                                bp = (BindingProvider) publish;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
 
-                        context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
-                        context.put(BindingProvider.PASSWORD_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
+                                context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
+                                context.put(BindingProvider.PASSWORD_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
 
-                        bp = (BindingProvider) custody;
-                        context = bp.getRequestContext();
-                        context.remove(BindingProvider.USERNAME_PROPERTY);
-                        context.remove(BindingProvider.PASSWORD_PROPERTY);
+                                bp = (BindingProvider) custody;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
 
-                        context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
-                        context.put(BindingProvider.PASSWORD_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
+                                context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
+                                context.put(BindingProvider.PASSWORD_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
 
-                        bp = (BindingProvider) subscription;
-                        context = bp.getRequestContext();
-                        context.remove(BindingProvider.USERNAME_PROPERTY);
-                        context.remove(BindingProvider.PASSWORD_PROPERTY);
+                                bp = (BindingProvider) subscription;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
 
-                        context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
-                        context.put(BindingProvider.PASSWORD_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
-
+                                context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
+                                context.put(BindingProvider.PASSWORD_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
+                        }
                         /*
                          bp = (BindingProvider) juddi;
                          context = bp.getRequestContext();
@@ -356,29 +470,30 @@ public class UddiHub implements Serializable {
                         if (token != null) {
                                 return token;
                         }
-                        BindingProvider bp = null;
-                        Map<String, Object> context = null;
+                        if (WS_Transport) {
+                                BindingProvider bp = null;
+                                Map<String, Object> context = null;
 
-                        bp = (BindingProvider) inquiry;
-                        context = bp.getRequestContext();
-                        context.remove(BindingProvider.USERNAME_PROPERTY);
-                        context.remove(BindingProvider.PASSWORD_PROPERTY);
+                                bp = (BindingProvider) inquiry;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
 
-                        bp = (BindingProvider) publish;
-                        context = bp.getRequestContext();
-                        context.remove(BindingProvider.USERNAME_PROPERTY);
-                        context.remove(BindingProvider.PASSWORD_PROPERTY);
+                                bp = (BindingProvider) publish;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
 
-                        bp = (BindingProvider) custody;
-                        context = bp.getRequestContext();
-                        context.remove(BindingProvider.USERNAME_PROPERTY);
-                        context.remove(BindingProvider.PASSWORD_PROPERTY);
+                                bp = (BindingProvider) custody;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
 
-                        bp = (BindingProvider) subscription;
-                        context = bp.getRequestContext();
-                        context.remove(BindingProvider.USERNAME_PROPERTY);
-                        context.remove(BindingProvider.PASSWORD_PROPERTY);
-
+                                bp = (BindingProvider) subscription;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
+                        }
                         GetAuthToken req = new GetAuthToken();
                         try {
                                 if (security == null) {
@@ -1195,7 +1310,7 @@ public class UddiHub implements Serializable {
                         } else {
                                 // if (!isChooser) {
                                 ret.renderedHtml = Printers.PrintTModelListAsHtml(findTModel, session, isChooser);
-                // } else {
+                                // } else {
                                 //     ret.renderedHtml = Printers.PrintTModelListAsHtmlModel(findTModel, session);
                                 // }
 
@@ -1605,8 +1720,8 @@ public class UddiHub implements Serializable {
                         if (findBusiness != null && findBusiness.getRelatedBusinessInfos() != null) {
                                 StringBuilder sb = new StringBuilder();
                                 sb.append("<table class=\"table table-hover\">");
-                                sb.append("<tr><th>" + ResourceLoader.GetResource(session, "items.business") + "</th><th>" + 
-                                        ResourceLoader.GetResource(session, "items.publisherassertions.relationship")+"</th><tr>");
+                                sb.append("<tr><th>" + ResourceLoader.GetResource(session, "items.business") + "</th><th>"
+                                        + ResourceLoader.GetResource(session, "items.publisherassertions.relationship") + "</th><tr>");
                                 for (int i = 0; i < findBusiness.getRelatedBusinessInfos().getRelatedBusinessInfo().size(); i++) {
                                         sb.append("<tr><td>");
                                         sb.append("<a href=\"businessEditor2.jsp?id=").
@@ -2036,7 +2151,7 @@ public class UddiHub implements Serializable {
          */
         public static String SignatureToReadable(SignatureType sig) {
                 StringBuilder sb = new StringBuilder();
-        // X509Certificate signingcert = null;
+                // X509Certificate signingcert = null;
                 //sb.append("Signature Id: ").append(sig.getKeyInfo().getId());
                 for (int i = 0; i < sig.getKeyInfo().getContent().size(); i++) {
                         //sb.append("Signature #").append((i + 1)).append(": ");
@@ -2858,7 +2973,7 @@ public class UddiHub implements Serializable {
          */
         public String GetCustodyTransferToken(org.uddi.custody_v3.KeyBag keys, Holder<String> nodeid, Holder<XMLGregorianCalendar> outExpires, Holder<byte[]> outToken) {
 
-        // org.uddi.custody_v3.KeyBag kb = new org.uddi.custody_v3.KeyBag();
+                // org.uddi.custody_v3.KeyBag kb = new org.uddi.custody_v3.KeyBag();
                 // kb.getKey().addAll(keys);
                 try {
                         try {
