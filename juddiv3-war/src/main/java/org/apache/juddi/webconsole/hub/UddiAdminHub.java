@@ -23,6 +23,8 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -38,14 +40,19 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api_v3.Clerk;
+import org.apache.juddi.api_v3.ClerkDetail;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
+import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.api_v3.Publisher;
 import org.apache.juddi.api_v3.PublisherDetail;
+import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
+import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.api_v3.SyncSubscription;
 import org.apache.juddi.api_v3.SyncSubscriptionDetail;
@@ -309,7 +316,7 @@ public class UddiAdminHub {
                                 return delete_ClientSubscriptionInfo(parameters);
                         }
                         if (action.equalsIgnoreCase("delete_publisher")) {
-                                delete_publisher(parameters);
+                                return delete_publisher(parameters);
                         }
                         if (action.equalsIgnoreCase("getAllPublisherDetail")) {
                                 return getAllPublisherDetail(parameters);
@@ -321,13 +328,13 @@ public class UddiAdminHub {
                                 return invoke_SyncSubscription(parameters);
                         }
                         if (action.equalsIgnoreCase("save_Clerk")) {
-                                //    return save_Clerk(parameters);
+                                //return save_Clerk(parameters);
                         }
                         if (action.equalsIgnoreCase("save_ClientSubscriptionInfo")) {
                                 return save_ClientSubscriptionInfo(parameters);
                         }
                         if (action.equalsIgnoreCase("save_Node")) {
-                                //    return save_Node(parameters);
+                                return save_Node(parameters);
                         }
                         if (action.equalsIgnoreCase("save_publisher")) {
                                 return save_publisher(parameters);
@@ -335,8 +342,79 @@ public class UddiAdminHub {
                 } catch (Exception ex) {
                         return "Error!" + HandleException(ex);
                 }
-                return "error!";
+                return "not yet implemented!";
         }
+
+        private String save_Clerk(HttpServletRequest parameters) {
+                SaveClerk sc = new SaveClerk();
+                sc.setAuthInfo(GetToken());
+                Clerk c = new Clerk();
+                c.setName(parameters.getParameter("CLERKsetName"));
+                //c.setNode(getNode(parameters.getParameter("CLERKsetNode")));
+                c.setPassword(parameters.getParameter("CLERKsetPassword"));
+                c.setPublisher(parameters.getParameter("CLERKsetPublisher"));
+                
+                sc.getClerk().add(c);
+                try {
+                        juddi.saveClerk(sc);
+                } catch (Exception ex) {
+                        if (isExceptionExpiration(ex)) {
+                                token = null;
+                                sc.setAuthInfo(GetToken());
+                                try {
+                                        juddi.saveClerk(sc);
+                                } catch (Exception ex1) {
+                                        return "Error!" + HandleException(ex1);
+                                }
+
+                        } else {
+                                return "Error!" + HandleException(ex);
+                        }
+                }
+                return "Success";
+        }
+
+        private String save_Node(HttpServletRequest parameters) {
+                SaveNode sn = new SaveNode();
+                sn.setAuthInfo(GetToken());
+                Node node = new Node();
+                node.setClientName(parameters.getParameter("NODEsetClientName"));
+                node.setCustodyTransferUrl(parameters.getParameter("NODEsetCustodyTransferUrl"));
+                node.setDescription(parameters.getParameter("NODEsetDescription"));
+                node.setFactoryInitial(parameters.getParameter("NODEsetFactoryInitial"));
+                node.setFactoryNamingProvider(parameters.getParameter("NODEsetFactoryNamingProvider"));
+                node.setFactoryURLPkgs(parameters.getParameter("NODEsetFactoryURLPkgs"));
+                node.setInquiryUrl(parameters.getParameter("NODEsetInquiryUrl"));
+                node.setJuddiApiUrl(parameters.getParameter("NODEsetJuddiApiUrl"));
+                node.setName(parameters.getParameter("NODEsetName"));
+                node.setProxyTransport(parameters.getParameter("NODEsetProxyTransport"));
+                node.setPublishUrl(parameters.getParameter("NODEsetPublishUrl"));
+                node.setReplicationUrl(parameters.getParameter("NODEsetReplicationUrl"));
+                node.setSecurityUrl(parameters.getParameter("NODEsetSecurityUrl"));
+                node.setSubscriptionListenerUrl(parameters.getParameter("NODEsetSubscriptionListenerUrl"));
+                node.setSubscriptionUrl(parameters.getParameter("NODEsetSubscriptionUrl"));
+                sn.getNode().add(node);
+
+                try {
+                        juddi.saveNode(sn);
+                } catch (Exception ex) {
+                        if (isExceptionExpiration(ex)) {
+                                token = null;
+                                sn.setAuthInfo(GetToken());
+                                try {
+                                        juddi.saveNode(sn);
+                                } catch (Exception ex1) {
+                                        return "Error!" + HandleException(ex1);
+                                }
+
+                        } else {
+                                return "Error!" + HandleException(ex);
+                        }
+                }
+                return "Success";
+        }
+
+      
 
         public enum AuthStyle {
 
@@ -382,7 +460,7 @@ public class UddiAdminHub {
                 return token;
         }
 
-        private void delete_publisher(HttpServletRequest parameters) throws Exception {
+        private String delete_publisher(HttpServletRequest parameters) {
                 DeletePublisher sb = new DeletePublisher();
                 sb.setAuthInfo(GetToken());
                 sb.getPublisherId().add(parameters.getParameter("delete_publisherKEY"));
@@ -392,12 +470,17 @@ public class UddiAdminHub {
                         if (isExceptionExpiration(ex)) {
                                 token = null;
                                 sb.setAuthInfo(GetToken());
-                                juddi.deletePublisher(sb);
+                                try {
+                                        juddi.deletePublisher(sb);
+                                } catch (Exception e) {
+                                        return HandleException(e);
+                                }
 
                         } else {
-                                throw ex;
+                                return HandleException(ex);
                         }
                 }
+                return "Success";
         }
 
         private String getAllPublisherDetail(HttpServletRequest parameters) {

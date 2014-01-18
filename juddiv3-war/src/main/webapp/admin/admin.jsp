@@ -23,7 +23,7 @@
 
         <!-- Main hero unit for a primary marketing message or call to action -->
         <div class="well">
-                <h1>Administration</h1>
+                <h1><%=ResourceLoader.GetResource(session, "pages.home.admin")%></h1>
 
         </div>
 
@@ -32,14 +32,10 @@
 
 
                 <div class="span12">
-                        <%                    UddiAdminHub x = UddiAdminHub.getInstance(application, session);
-
-
+                        <% UddiAdminHub x = UddiAdminHub.getInstance(application, session);
                         %>
-                        This page lets you access the jUDDI Web Service.
-                        Its functions are outside the scope of the UDDI specification and provide basic administrative functions
-                        for managing your UDDI node. <br><br><b>You'll need to be logged (top right) in order to do anything.</b><br>
-                        Please select an item from the drop down menu.<br>
+                        <%=ResourceLoader.GetResource(session, "pages.admin.content")%>
+                        <br>
                         <select onchange="toggledivs();" id="divselector">
                                 <option>adminDelete_tmodel</option>
                                 <option>delete_ClientSubscriptionInfo</option>
@@ -47,9 +43,9 @@
                                 <option>getAllPublisherDetail</option>
                                 <option>get_publisherDetail</option>
                                 <option>invoke_SyncSubscription</option>
-                                <!--                <option>save_Clerk</option>-->
+                                <option>save_Clerk</option>
                                 <option>save_ClientSubscriptionInfo</option>
-                                <!--<option>save_Node</option>-->
+                                <option>save_Node</option>
                                 <option>save_publisher</option>
                         </select>
 
@@ -61,33 +57,62 @@
                                         <input type="text" id="delete_ClientSubscriptionInfoKEY" class="forminput" placeholder="Enter subscription Key">
                                 </div>
                                 <div id="invoke_SyncSubscription" style="display:none">
-                                        Leave the auth token blank!*<br>
+                                        <%=ResourceLoader.GetResource(session, "items.noauthtoken")%>  <br>
                                         <textarea rows="4" cols="80" id="invokeSyncSubscriptionXML" class="forminput" placeholder="Enter subscription XML"></textarea>
                                 </div>
                                 <div id="delete_publisher" style="display:none">
                                         <input type="text"  class="forminput" id="delete_publisherKEY" placeholder="Enter publisher id">
                                 </div>
                                 <div id="getAllPublisherDetail" style="display:none">
-                                        no input required.
+                                        <%=ResourceLoader.GetResource(session, "items.noinput")%>
                                 </div>
                                 <div id="get_publisherDetail" style="display:none">
                                         <input type="text" id="get_publisherDetailKEY"  class="forminput" placeholder="Enter publisher id">
                                 </div>
                                 <div id="save_ClientSubscriptionInfo" style="display:none">
-                                        Leave the auth token blank!*<br>
+                                        <%=ResourceLoader.GetResource(session, "items.noauthtoken")%><br>
                                         <textarea rows="4" cols="80" id="ClientSubscriptionInfoDetailXML" class="forminput" placeholder="Enter subscription XML"></textarea>
                                 </div>
                                 <div id="save_publisher" style="display:none">
-                                        Name<input type="text" id="savePublisherNAME"  class="forminput" placeholder="Enter name"><br>
-                                        Email<input type="text" id="savePublisherEMAIL"  class="forminput" placeholder="Enter email"><br>
-                                        Authorized Name (username) <input type="text" id="savePublisherAuthorizedName"  class="forminput" placeholder="Enter Authorized Name"><br>
-                                        Is Admin <input type="checkbox" id="savePublisherIsAdmin"  class="forminput" ><br>
-                                        Is Enabled <input type="checkbox" id="savePublisherIsEnabled"  class="forminput"><br>
-                                        Max bindings per service <input type="text" id="savePublisherMaxBindings" placeholder="100"  class="forminput"><br>
-                                        Max Services Per Business <input type="text" id="savePublisherMaxServices" placeholder="1000" class="forminput"><br>
-                                        Max Business <input type="text" id="savePublisherMaxBusiness" placeholder="1000"  class="forminput"><br>
-                                        Max TModels <input type="text" id="savePublisherMaxTModels" placeholder="1000" class="forminput"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.name")%> <input type="text" id="savePublisherNAME"  class="forminput" placeholder="Enter name"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.email")%>  <input type="text" id="savePublisherEMAIL"  class="forminput" placeholder="Enter email"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.authorizedname")%>  <input type="text" id="savePublisherAuthorizedName"  class="forminput" placeholder="Enter Authorized Name (username)"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.publisher.admin")%>  <input type="checkbox" id="savePublisherIsAdmin"  class="forminput" ><br>
+                                        <%=ResourceLoader.GetResource(session, "items.enable")%>  <input type="checkbox" id="savePublisherIsEnabled"  class="forminput"><br>
+                                        <%=ResourceLoader.GetResource(session, "max.bindings.per.service")%> <input type="text" id="savePublisherMaxBindings" placeholder="100"  class="forminput"><br>
+                                        <%=ResourceLoader.GetResource(session, "max.services.per.business")%> <input type="text" id="savePublisherMaxServices" placeholder="1000" class="forminput"><br>
+                                        <%=ResourceLoader.GetResource(session, "max.business")%> <input type="text" id="savePublisherMaxBusiness" placeholder="1000"  class="forminput"><br>
+                                        <%=ResourceLoader.GetResource(session, "max.tmodel")%> <input type="text" id="savePublisherMaxTModels" placeholder="1000" class="forminput"><br>
+                                        <br>
+                                        <%=ResourceLoader.GetResource(session, "pages.admin.max")%>
                                 </div>
+                                <div id="save_Node" style="display:none">
+                                        
+                                        <%=ResourceLoader.GetResource(session, "items.clientname")%> <input type="text" id="NODEsetClientName"  class="forminput" placeholder="Client Name"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.name")%> <input type="text" id="NODEsetName"  class="forminput" placeholder="Enter name"><br>
+                                        
+                                        <%=ResourceLoader.GetResource(session, "items.description")%> <input type="text" id="NODEsetDescription"  class="forminput" placeholder="Enter description"><br>
+                                        Factory Initial <input type="text" id="NODEsetFactoryInitial"  class="forminput" placeholder="only needed for RMI transport"><br>
+                                        Factory URL Packages <input type="text" id="NODEsetFactoryURLPkgs"  class="forminput" placeholder="only needed for RMI transport"><br>
+                                        Factory Naming Provider <input type="text" id="NODEsetFactoryNamingProvider"  class="forminput" placeholder="only needed for RMI transport"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.transport")%> <input type="text" id="NODEsetProxyTransport"  class="forminput" placeholder="org.apache.juddi.v3.client.transport.JAXWSTransport" value="org.apache.juddi.v3.client.transport.JAXWSTransport"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.inquiry")%> <input type="text" id="NODEsetInquiryUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/inquiry" value="http://localhost:8080/juddiv3/services/inquiry"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.publish")%> <input type="text" id="NODEsetPublishUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/publish" value="http://localhost:8080/juddiv3/services/publish"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.security")%> <input type="text" id="NODEsetSecurityUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/security" value="http://localhost:8080/juddiv3/services/security"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.subscription.list")%> <input type="text" id="NODEsetSubscriptionListenerUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/subscription-listener" value="http://localhost:8080/juddiv3/services/subscription-listener"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.subscription")%> <input type="text" id="NODEsetSubscriptionUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/subscription" value="http://localhost:8080/juddiv3/services/subscription"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.custodytransfer")%> <input type="text" id="NODEsetCustodyTransferUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/custody-transfer" value="http://localhost:8080/juddiv3/services/custody-transfer"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.replication")%> <input type="text" id="NODEsetReplicationUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/replication" value="http://localhost:8080/juddiv3/services/replication"><br>
+                                        jUDDI API <input type="text" id="NODEsetJuddiApiUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/juddi-api" value="http://localhost:8080/juddiv3/services/juddi-api"><br>
+                                </div>
+                                <div id="save_Clerk" style="display:none">
+                                        <%=ResourceLoader.GetResource(session, "items.name")%> <input type="text" id="CLERKsetName"  class="forminput" placeholder="Enter name"><br>
+                                        Node Name <input type="text" id="CLERKsetNode"  class="forminput" placeholder="Enter node name"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.authorizedname")%> <input type="text" id="CLERKsetPublisher"  class="forminput" placeholder="Enter Authorized Name (username)"><br>
+                                        <%=ResourceLoader.GetResource(session, "navbar.login.password")%> <input type="password" id="CLERKsetPassword"  class="forminput" placeholder="Enter password"><br>
+
+                                </div>
+
                         </div>
                         <script type="text/javascript">
                                 function toggledivs()
@@ -102,8 +127,8 @@
                                         $("#invoke_SyncSubscription").hide();
                                         $("#save_ClientSubscriptionInfo").hide();
                                         $("#save_publisher").hide();
-
-
+                                        $("#save_Clerk").hide();
+                                        $("#save_Node").hide();
                                         $("#" + x).show();
                                 }
                                 toggledivs();//run when the page loads
@@ -127,7 +152,7 @@
                                         {
                                                 var id = $(this).attr("id");
                                                 var value = $(this).text();
-                                                if (value===null || value=="" || value==undefined)
+                                                if (value === null || value == "" || value == undefined)
                                                         value = $(this).val();
                                                 postbackdata.push({
                                                         name: id,
@@ -161,8 +186,10 @@
                                 }
                         </script>
                         <br>
-                        * For items that require XML input, leave the UDDI authentication token blank. It will be populated automatically.
-                        <a href="javascript:submitform();" class="btn btn-primary">Go!</a>
+                        <%=ResourceLoader.GetResource(session, "pages.admin.notes")%>
+
+                        <br>
+                        <a href="javascript:submitform();" class="btn btn-primary"><%=ResourceLoader.GetResource(session, "actions.go")%></a>
                 </div>
         </div>
 
@@ -170,7 +197,7 @@
         <div class="modal hide fade container " id="adminresultsmodal">
                 <div class="modal-header">
                         <a href="javascript:$('#adminresultsmodal').modal('hide');" class="close" data-dismiss="modal" aria-hidden="true">&times;</a>
-                        <h3>Results</h3>
+                        <h3><%=ResourceLoader.GetResource(session, "items.results")%></h3>
                 </div>
                 <div class="modal-body" align="center">
                         <div id="adminresults"></div>

@@ -4,6 +4,7 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page import="org.apache.juddi.webconsole.hub.UddiAdminHub"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="java.util.Enumeration"%>
@@ -21,7 +22,7 @@
                     out.write("<br>"+s+"="+ request.getParameter(s));
             }*/
         } catch (Exception ex) {
-            out.write("<i class=\"icon-thumbs-down icon-2x\"> Save Failed!<br>" + StringEscapeUtils.escapeHtml(ex.getMessage()));
+            out.write("<i class=\"icon-thumbs-down icon-2x\"> " + ResourceLoader.GetResource(session, "pages.config.savefailed") +"<br>" + StringEscapeUtils.escapeHtml(ex.getMessage()));
         }
     }
 %>

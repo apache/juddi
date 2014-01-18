@@ -142,7 +142,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BusinessNotFound", entityKey));
                         }
 
-                        if (!publisher.isOwner((UddiEntity) obj)) {
+                        if (!publisher.isOwner((UddiEntity) obj)&& !((Publisher) publisher).isAdmin() ) {
                                 throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
                         }
 
@@ -181,7 +181,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ServiceNotFound", entityKey));
                         }
 
-                        if (!publisher.isOwner((UddiEntity) obj)) {
+                        if (!publisher.isOwner((UddiEntity) obj) && !((Publisher) publisher).isAdmin() ) {
                                 throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
                         }
 
@@ -221,7 +221,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BindingTemplateNotFound", entityKey));
                         }
 
-                        if (!publisher.isOwner((UddiEntity) obj)) {
+                        if (!publisher.isOwner((UddiEntity) obj) && !((Publisher) publisher).isAdmin() ) {
                                 throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
                         }
 
@@ -260,7 +260,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNotFound", entityKey));
                         }
 
-                        if (!publisher.isOwner((UddiEntity) obj)) {
+                        if (!publisher.isOwner((UddiEntity) obj) && !((Publisher) publisher).isAdmin() ) {
                                 throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
                         }
 
@@ -1490,9 +1490,12 @@ public class ValidatePublish extends ValidateUDDIApi {
 
         }
 
-        /*-------------------------------------------------------------------
-         Publishing API functions are specific to jUDDI.
-         --------------------------------------------------------------------*/
+        /**
+         * Publishing API functions are specific to jUDDI. Requires administrative privilege
+         * @param em
+         * @param body
+         * @throws DispositionReportFaultMessage 
+         */ 
         public void validateDeletePublisher(EntityManager em, DeletePublisher body) throws DispositionReportFaultMessage {
 
                 // No null input

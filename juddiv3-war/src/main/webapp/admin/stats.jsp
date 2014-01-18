@@ -172,7 +172,7 @@
 
     <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="well">
-        <h1>Status and Statistics</h1>
+        <h1><%=ResourceLoader.GetResource(session, "pages.home.stats")%></h1>
 
     </div>
 
@@ -191,15 +191,15 @@
 
 
             <ul class="nav nav-tabs" id="myTab" data-tabs="tabs">
-                <li class="active"><a href="#status"  data-toggle="tab">Status</a></li>
-                <li><a href="#stats"  data-toggle="tab">Statistics</a></li>
+                <li class="active"><a href="#status"  data-toggle="tab"><%=ResourceLoader.GetResource(session, "items.status")%></a></li>
+                <li><a href="#stats"  data-toggle="tab"><%=ResourceLoader.GetResource(session, "items.statistics")%></a></li>
 
             </ul>
 
             <div class="tab-content">
                 <div class="tab-pane active" id="status">
 
-                    <h3>Happy jUDDI!</h3>
+                    <h3><%=ResourceLoader.GetResource(session, "items.happyjuddi")%></h3>
 
                     <h4>jUDDI Version Information</h4>
 

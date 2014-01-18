@@ -139,7 +139,7 @@ public class JUDDI_200_GUI_IntegrationTest {
                 runTest(baseurl + "index.jsp");
         }
 
-        @Test
+        //@Test
         public void Test0016() throws Exception {
                 runTest(baseurl + "reginfo.jsp");
         }

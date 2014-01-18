@@ -4,6 +4,7 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.apache.juddi.config.AppConfig"%>
 <%@page import="org.apache.commons.configuration.Configuration"%>
@@ -71,9 +72,9 @@
                     UddiAdminHub.getInstance(application, session).GetJuddiClientConfig().saveConfig();
                     //note server config is autosave.
                 }
-                out.write("<i class=\"icon-thumbs-up icon-2x\"> Saved!");
+                out.write("<i class=\"icon-thumbs-up icon-2x\"> " + ResourceLoader.GetResource(session, "actions.saved"));
             } catch (Exception ex) {
-                out.write("<i class=\"icon-thumbs-down icon-2x\"> Save Failed!<br>" + StringEscapeUtils.escapeHtml(ex.getMessage()));
+                out.write("<i class=\"icon-thumbs-down icon-2x\"> " + ResourceLoader.GetResource(session, "pages.config.savefailed") +"<br>" + StringEscapeUtils.escapeHtml(ex.getMessage()));
             }
         }
     }

@@ -11,7 +11,7 @@
 
     <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="hero-unit">
-        <h1>jUDDI Administration</h1>
+        <h1><%=ResourceLoader.GetResource(session, "pages.home.title")%></h1>
 
     </div>
 
@@ -20,19 +20,19 @@
 
 
         <div class="span4">
-            <h2>Configure jUDDI</h2>
-            <p><% //=ResourceLoader.GetResource(session, "index.config")%>Configure jUDDI</p>
-            <p><a class="btn" href="configure.jsp"><%=ResourceLoader.GetResource(session, "viewdetails")%> &raquo;</a></p>
+            <h2><%=ResourceLoader.GetResource(session, "pages.home.config")%></h2>
+            <p><%=ResourceLoader.GetResource(session, "pages.home.config")%></p>
+            <p><a class="btn btn-primary" href="configure.jsp"><%=ResourceLoader.GetResource(session, "viewdetails")%> &raquo;</a></p>
         </div>
         <div class="span4">
-            <h2>Status and Statistics</h2>
-            <p><% //=ResourceLoader.GetResource(session, "index.search")%>Find out how busy jUDDI is.</p>
-            <p><a class="btn" href="stats.jsp"><%=ResourceLoader.GetResource(session, "viewdetails")%> &raquo;</a></p>
+            <h2><%=ResourceLoader.GetResource(session, "pages.home.stats")%></h2>
+            <p><%=ResourceLoader.GetResource(session, "pages.home.stats.content")%></p>
+            <p><a class="btn btn-primary" href="stats.jsp"><%=ResourceLoader.GetResource(session, "viewdetails")%> &raquo;</a></p>
         </div>
         <div class="span4">
-            <h2>Administration</h2>
-            <p><%//=ResourceLoader.GetResource(session, "index.learn")%>Administration options, such as deleting entities.</p>
-            <p><a class="btn" href="admin.jsp"><%=ResourceLoader.GetResource(session, "viewdetails")%> &raquo;</a></p>
+            <h2><%=ResourceLoader.GetResource(session, "pages.home.admin")%></h2>
+            <p><%=ResourceLoader.GetResource(session, "pages.home.admin.content")%>Administration options, such as deleting entities.</p>
+            <p><a class="btn btn-primary" href="admin.jsp"><%=ResourceLoader.GetResource(session, "viewdetails")%> &raquo;</a></p>
         </div>
 
     </div>
