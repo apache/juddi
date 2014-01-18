@@ -115,6 +115,7 @@ public class UDDI_160_RESTIntergrationTest {
                 HttpGet httpGet = new HttpGet(url + "?businessKey=" + findBusiness.getBusinessInfos().getBusinessInfo().get(0).getBusinessKey());
                 logger.info("Fetching " + httpGet.getURI());
                 HttpResponse response = client.execute(httpGet);
+                client.getConnectionManager().shutdown();
                 Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
                 logger.info("Response content: " + response.getEntity().getContent());
                 BusinessEntity unmarshal = JAXB.unmarshal(response.getEntity().getContent(), BusinessEntity.class);
@@ -146,6 +147,7 @@ public class UDDI_160_RESTIntergrationTest {
                 HttpGet httpGet = new HttpGet(url + "?tModelKey=" + findTModel.getTModelInfos().getTModelInfo().get(0).getTModelKey());
                 logger.info("Fetching " + httpGet.getURI());
                 HttpResponse response = client.execute(httpGet);
+                client.getConnectionManager().shutdown();
                 Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
                 logger.info("Response content: " + response.getEntity().getContent());
                 TModel unmarshal = JAXB.unmarshal(response.getEntity().getContent(), TModel.class);
@@ -178,6 +180,7 @@ public class UDDI_160_RESTIntergrationTest {
                 HttpGet httpGet = new HttpGet(url + "?serviceKey=" + findService.getServiceInfos().getServiceInfo().get(0).getServiceKey());
                 logger.info("Fetching " + httpGet.getURI());
                 HttpResponse response = client.execute(httpGet);
+                client.getConnectionManager().shutdown();
                 Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
                 logger.info("Response content: " + response.getEntity().getContent());
                 BusinessService unmarshal = JAXB.unmarshal(response.getEntity().getContent(), BusinessService.class);
@@ -244,6 +247,7 @@ public class UDDI_160_RESTIntergrationTest {
                 HttpGet httpGet = new HttpGet(url + "?bindingKey=" + bt.getBindingKey());
                 logger.info("Fetching " + httpGet.getURI());
                 HttpResponse response = client.execute(httpGet);
+                client.getConnectionManager().shutdown();
                 Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
                 logger.info("Response content: " + response.getEntity().getContent());
                 BindingTemplate unmarshal = JAXB.unmarshal(response.getEntity().getContent(), BindingTemplate.class);

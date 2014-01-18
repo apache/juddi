@@ -87,6 +87,8 @@ function Login()
         //TODO handle expired nonce values?
         RefreshLoginPage();
         $("#loginbutton").text(i18n_login);
+        $("#loginfailuredetails").text("Login failed: " + textStatus + " " + jqXHR.responseText);
+        $("#loginfailure").modal();
     });
 }
 

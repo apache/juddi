@@ -44,24 +44,39 @@ public class StartupServlet implements javax.servlet.ServletContextListener {
                 try {
                         //URL resource = sce.getServletContext().getResource("/META-INF/config.properties");
                         Properties p = new Properties();
-                        InputStream is = sce.getServletContext().getResourceAsStream("/META-INF/config.properties");
-                        p.load(is);
-                        is.close();
-                        p.remove("key");
+
                         log.info("Attempting to generate 256 bit AES key");
+                        boolean ok = false;
                         String key = AES.GEN(256);
                         if (key == null) {
-                                log.info("FAILED. Now attempting to generate 128 bit AES key");
-                                key = AES.GEN(128);
+                                ok = false;
                         } else {
-                                log.info("Generatation of 256 bit AES key successful");
+                                if (AES.ValidateKey(key)) {
+                                        log.info("Generation of 256 bit AES key successful");
+                                        ok = true;
+                                } else {
+                                        log.info("256 bit key validation failed.");
+                                }
                         }
-                        if (key == null) {
-                                log.log(Level.SEVERE, "128 bit key generation failed! user credentials may not be encrypted");
+                        if (!ok) {
+                                log.info("Attempting to generate 128 bit AES key");
+                                key = AES.GEN(128);
+                                if (key == null) {
+                                        log.log(Level.SEVERE, "128 bit key generation failed! user's won't be able to login!");
+                                        return;
+                                } else if (AES.ValidateKey(key)) {
+                                        log.info("Generation of 128 bit AES key successful");
+                                } else {
+                                        log.severe("128 bit key validation failed! giving up, user's won't be able to login! ");
+                                        return;
+
+                                }
                         }
+
                         p.put("key", key);
                         fos = new FileOutputStream(sce.getServletContext().getRealPath("/META-INF/config.properties"));
 
+                        log.log(Level.INFO, "Storing key to " + sce.getServletContext().getRealPath("/META-INF/config.properties"));
                         p.store(fos, "No comments");
                         fos.flush();
                         fos.close();

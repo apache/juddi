@@ -4,6 +4,7 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="org.apache.juddi.webconsole.hub.UddiAdminHub"%>
 <%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -43,7 +44,7 @@
         <input class="span2" type="password" placeholder="<%=ResourceLoader.GetResource(session, "navbar.login.password")%>" name="password" id="password">
         <button type="button" onclick="javascript:Login();" class="btn" id="loginbutton">
             <%
-                if (!request.isSecure()) {
+                if (!request.isSecure() ||  !UddiAdminHub.getInstance(application, session).isSecure()) {
             %>
             <i class="icon-warning-sign" title="<%=ResourceLoader.GetResource(session, "warning.ssl")%>"></i>
             <%
@@ -56,4 +57,20 @@
         %>
 
 
+</div>
+
+        
+            
+<div class="modal hide fade container" id="loginfailure">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3><%=ResourceLoader.GetResource(session, "errors.generic")%></h3>
+    </div>
+    <div class="modal-body">
+            <i class="icon-4x icon-thumbs-down"></i><br>
+            <div id="loginfailuredetails"></div>
+    </div>
+    <div class="modal-footer">
+            <button type="button" class="btn" data-dismiss="modal" ><%=ResourceLoader.GetResource(session, "modal.close")%></button>
+    </div>
 </div>

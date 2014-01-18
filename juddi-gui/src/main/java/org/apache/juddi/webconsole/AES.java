@@ -18,6 +18,7 @@ package org.apache.juddi.webconsole;
 
 import javax.crypto.*;
 import javax.crypto.spec.*;
+import org.apache.commons.codec.binary.Base64;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,49 +37,6 @@ public class AES {
         public static final Log log = LogFactory.getLog(logname);
 
         /**
-         * Turns array of bytes into string
-         *
-         * @param buf	Array of bytes to convert to hex string
-         * @return	Generated hex string
-         */
-        private static String asHex(byte buf[]) {
-                //return new String(buf);
-                StringBuilder strbuf = new StringBuilder(buf.length * 2);
-                int i;
-
-                for (i = 0; i < buf.length; i++) {
-                        if (((int) buf[i] & 0xff) < 0x10) {
-                                strbuf.append("0");
-                        }
-                        strbuf.append(Long.toString((int) buf[i] & 0xff, 16));
-                }
-
-                return strbuf.toString();
-        }
-
-        private static byte[] hexToBytes(String s) {
-                //return s.getBytes();
-                return hexToBytes(s.toCharArray());
-        }
-        private static final char[] kDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
-                'b', 'c', 'd', 'e', 'f'};
-
-        private static byte[] hexToBytes(char[] hex) {
-                int length = hex.length / 2;
-                byte[] raw = new byte[length];
-                for (int i = 0; i < length; i++) {
-                        int high = Character.digit(hex[i * 2], 16);
-                        int low = Character.digit(hex[i * 2 + 1], 16);
-                        int value = (high << 4) | low;
-                        if (value > 127) {
-                                value -= 256;
-                        }
-                        raw[i] = (byte) value;
-                }
-                return raw;
-        }
-
-        /**
          * generates an AES based off of the selected key size
          *
          * @param keysize
@@ -92,7 +50,7 @@ public class AES {
                         kgen.init(keysize);
                         SecretKey skey = kgen.generateKey();
                         byte[] raw = skey.getEncoded();
-                        return asHex(raw);
+                        return Base64.encodeBase64String(raw);
                 } catch (Exception ex) {
                         log.fatal("error generating key", ex);
                 }
@@ -111,22 +69,22 @@ public class AES {
 
         static String EN(String cleartext, String key) throws Exception {
                 byte[] raw =//skey.getEncoded();
-                        hexToBytes(key); //
+                        Base64.decodeBase64(key); //
                 SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
                 // Instantiate the cipher
                 Cipher cipher = Cipher.getInstance("AES");
                 cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
                 byte[] encrypted = cipher.doFinal(cleartext.getBytes());
-                return asHex(encrypted);
+                return Base64.encodeBase64String(encrypted);
         }
 
         static String DE(String ciphertext, String key) throws Exception {
                 byte[] raw =//skey.getEncoded();
-                        hexToBytes(key); //
+                        Base64.decodeBase64(key); //
                 SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
                 Cipher cipher = Cipher.getInstance("AES");
                 cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-                byte[] original = cipher.doFinal(hexToBytes(ciphertext));
+                byte[] original = cipher.doFinal(Base64.decodeBase64(ciphertext));
                 return new String(original);
         }
 

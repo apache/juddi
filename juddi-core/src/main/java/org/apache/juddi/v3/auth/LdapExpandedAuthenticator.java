@@ -49,15 +49,15 @@ import org.apache.commons.configuration.ConfigurationException;
  * Usage:
  * 
  * To use this class you must add the following properties to the
- * juddiv3.properties file:
+ * juddiv3.xml file:
  * 
  * # The LDAP Authenticator
- * juddi.authenticator=org.apache.juddi.v3.auth.LdapSimpleAuthenticator
+ * juddi/auth/class=org.apache.juddi.v3.auth.LdapSimpleAuthenticator
  * 
  * # LDAP authentication URL
- * juddi.authenticator.url=ldap://localhost:389
+ * juddi/auth/url=ldap://localhost:389
  *
- * juddi.authenticator.ldapexp=CN=%s, OU=Users,DC=Domain, etc
+ * juddi/auth/ldapexp=CN=%s, OU=Users,DC=Domain, etc
  * 
  * This authenticator assumes that the publisher username can be reformatted to a LDAP 
  * common name. This is common for Microsoft based LDAPs. The configuration item juddi.authenticator.ldapexp

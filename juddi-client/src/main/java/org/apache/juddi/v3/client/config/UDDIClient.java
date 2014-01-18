@@ -135,7 +135,8 @@ public class UDDIClient {
     }
 
     /**
-     * Stops the clerks.
+     * Stops the clerks. If transport is InVM, all database resources are released.
+     * If anything was auto registered, it will be removed prior to shutdown
      *
      * @throws ConfigurationException
      */
@@ -162,7 +163,8 @@ public class UDDIClient {
     }
 
     /**
-     * Initializes the UDDI Clerk.
+     * Initializes the UDDI Clerk. If transport is set to InVM, this will initialize 
+     * all database connections, other it will trigger all background registration threads
      *
      * @throws ConfigurationException
      */
@@ -206,6 +208,10 @@ public class UDDIClient {
         }
     }
 
+    /**
+     * calls stop and start again
+     * @throws ConfigurationException 
+     */
     public void restart() throws ConfigurationException {
         stop();
         start();
@@ -345,10 +351,18 @@ public class UDDIClient {
 
     }
 
+    /**
+     * Returns a live instance of the raw configuration file
+     * @return 
+     */
     public ClientConfig getClientConfig() {
         return clientConfig;
     }
     
+    /**
+     * returns getClientConfig().getClientName()
+     * @return 
+     */
     public String getName() {
         return clientConfig.getClientName();
     }

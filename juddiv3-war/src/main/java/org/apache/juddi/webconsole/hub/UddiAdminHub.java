@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXB;
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -50,10 +49,9 @@ import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.api_v3.SyncSubscription;
 import org.apache.juddi.api_v3.SyncSubscriptionDetail;
-import org.apache.juddi.v3.client.ClassUtil;
+import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.ClientConfig;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.config.UDDINode;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
@@ -63,7 +61,10 @@ import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.api_v3.DiscardAuthToken;
 import org.uddi.api_v3.DispositionReport;
+import org.uddi.api_v3.FindBusiness;
+import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.GetAuthToken;
+import org.uddi.api_v3.Name;
 
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISecurityPortType;
@@ -183,6 +184,9 @@ public class UddiAdminHub {
 
         private UddiAdminHub(ServletContext application, HttpSession _session) throws Exception {
                 URL prop = application.getResource("/WEB-INF/config.properties");
+                if (prop == null) {
+                        application.getResource("WEB-INF/config.properties");
+                }
                 if (prop == null) {
                         throw new Exception("Cannot locate the configuration file.");
                 }
@@ -350,11 +354,13 @@ public class UddiAdminHub {
                 EnsureConfig();
                 if (style != AuthStyle.UDDI_AUTH) {
                         BindingProvider bp = null;
-                        Map<String, Object> context = null;
-                        bp = (BindingProvider) juddi;
-                        context = bp.getRequestContext();
-                        context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
-                        context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
+                        if (WS_Transport) {
+                                Map<String, Object> context = null;
+                                bp = (BindingProvider) juddi;
+                                context = bp.getRequestContext();
+                                context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
+                                context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
+                        }
                         return null;
                 } else {
                         if (token != null) {
@@ -484,7 +490,7 @@ public class UddiAdminHub {
                         }
                 }
                 if (d != null) {
-                        ret.append("<table class=\"table table-hover\"><tr>th>Name</th><th>Info</th></tr>");
+                        ret.append("<table class=\"table table-hover\"><tr><th>Name</th><th>Info</th></tr>");
                         for (int i = 0; i < d.getPublisher().size(); i++) {
                                 ret.append("<tr><td>").append(StringEscapeUtils.escapeHtml(d.getPublisher().get(i).getPublisherName()))
                                         .append("</td><td>");
@@ -635,14 +641,16 @@ public class UddiAdminHub {
                         p.setIsAdmin(Boolean.parseBoolean(parameters.getParameter("savePublisherIsAdmin")));
                 } catch (Exception ex) {
                 }
-                if ("on".equalsIgnoreCase(parameters.getParameter("savePublisherIsAdmin")))
+                if ("on".equalsIgnoreCase(parameters.getParameter("savePublisherIsAdmin"))) {
                         p.setIsAdmin(true);
+                }
                 try {
                         p.setIsEnabled(Boolean.parseBoolean(parameters.getParameter("savePublisherIsEnabled")));
                 } catch (Exception ex) {
                 }
-                if ("on".equalsIgnoreCase(parameters.getParameter("savePublisherIsEnabled")))
+                if ("on".equalsIgnoreCase(parameters.getParameter("savePublisherIsEnabled"))) {
                         p.setIsEnabled(true);
+                }
 
                 PublisherDetail d = null;
                 sb.setAuthInfo(GetToken());
@@ -746,4 +754,75 @@ public class UddiAdminHub {
         public boolean isAdminLocalhostOnly() {
                 return clientConfig.getConfiguration().getBoolean(PROP_ADMIN_LOCALHOST_ONLY, true);
         }
+
+        public String verifyLogin() {
+                EnsureConfig();
+                if (style != AuthStyle.UDDI_AUTH) {
+                        if (WS_Transport) {
+                                BindingProvider bp = null;
+                                Map<String, Object> context = null;
+
+                                bp = (BindingProvider) juddi;
+                                context = bp.getRequestContext();
+                                context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
+                                context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
+                        }
+                        FindBusiness fb = new FindBusiness();
+                        fb.setListHead(0);
+                        fb.setMaxRows(1);
+                        fb.setFindQualifiers(new FindQualifiers());
+                        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                        fb.getName().add(new Name(UDDIConstants.WILDCARD, null));
+                        try {
+                                GetPublisherDetail publisherDetail = new GetPublisherDetail();
+                                publisherDetail.getPublisherId().add((String) session.getAttribute("username"));
+                                juddi.getPublisherDetail(publisherDetail);
+
+                        } catch (Exception ex) {
+                                return HandleException(ex);
+                        }
+                        /*
+                         bp = (BindingProvider) juddi;
+                         context = bp.getRequestContext();
+                         context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
+                         context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));*/
+                        return null;
+                } else {
+                        if (token != null) {
+                                return token;
+                        }
+                        if (WS_Transport) {
+                                BindingProvider bp = null;
+                                Map<String, Object> context = null;
+
+                                bp = (BindingProvider) juddi;
+                                context = bp.getRequestContext();
+                                context.remove(BindingProvider.USERNAME_PROPERTY);
+                                context.remove(BindingProvider.PASSWORD_PROPERTY);
+                        }
+                        GetAuthToken req = new GetAuthToken();
+                        try {
+                                if (security == null) {
+                                        security = transport.getUDDISecurityService();
+                                }
+                        } catch (Exception ex) {
+                                return HandleException(ex);
+                        }
+                        if (session.getAttribute("username") != null
+                                && session.getAttribute("password") != null) {
+                                req.setUserID((String) session.getAttribute("username"));
+                                req.setCred(AES.Decrypt((String) session.getAttribute("password"), (String) properties.get("key")));
+                                log.info("AUDIT: fetching auth token for " + req.getUserID() + " Auth Mode is " + ((security == null) ? "HTTP" : "AUTH_TOKEN"));
+                                try {
+                                        AuthToken authToken = security.getAuthToken(req);
+                                        token = authToken.getAuthInfo();
+                                        return null;
+                                } catch (Exception ex) {
+                                        return HandleException(ex);
+                                }
+                        }
+                }
+                return "Unexpected error";
+        }
+
 }

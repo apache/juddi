@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.rmi.RemoteException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -844,35 +845,7 @@ public class UddiHub implements Serializable {
                 return null;
         }
 
-        /**
-         * Calls Publisher Save Service API
-         *
-         * @param be
-         * @return
-         */
-        public String SaveService(BusinessService be) {
-                try {
-                        SaveService sb = new SaveService();
-                        sb.setAuthInfo(GetToken());
-                        sb.getBusinessService().add(be);
-                        try {
-                                publish.saveService(sb);
-                        } catch (Exception ex) {
-                                if (isExceptionExpiration(ex)) {
-                                        token = null;
-                                        sb.setAuthInfo(GetToken());
-                                        publish.saveService(sb);
-                                } else {
-                                        throw ex;
-                                }
-                        }
-
-                        return ResourceLoader.GetResource(session, "actions.saved");
-                } catch (Exception ex) {
-                        return HandleException(ex);
-                }
-        }
-
+        
         /**
          * don't think this is used yet
          *
@@ -953,20 +926,23 @@ public class UddiHub implements Serializable {
                 try {
                         SaveService sb = new SaveService();
                         sb.setAuthInfo(GetToken());
+                         ServiceDetail saveService =null;
                         sb.getBusinessService().add(be);
                         try {
-                                publish.saveService(sb);
+                                 saveService = publish.saveService(sb);
                         } catch (Exception ex) {
                                 if (isExceptionExpiration(ex)) {
                                         token = null;
                                         sb.setAuthInfo(GetToken());
-                                        publish.saveService(sb);
+                                        saveService =   publish.saveService(sb);
 
                                 } else {
                                         throw ex;
                                 }
                         }
-                        return ResourceLoader.GetResource(session, "actions.save.service");
+                        return ResourceLoader.GetResource(session, "actions.saved") + " " +
+                                "<a href=\"businessEditor2.jsp?id=" + URLEncoder.encode(saveService.getBusinessService().get(0).getServiceKey(),"UTF8") +
+                                "\">" + StringEscapeUtils.escapeHtml(saveService.getBusinessService().get(0).getServiceKey()) + "</a>";        
                 } catch (Exception ex) {
                         return HandleException(ex);
                 }
@@ -983,20 +959,23 @@ public class UddiHub implements Serializable {
                         SaveBusiness sb = new SaveBusiness();
                         sb.setAuthInfo(GetToken());
                         sb.getBusinessEntity().add(be);
+                        BusinessDetail saveBusiness=null;
                         try {
-                                publish.saveBusiness(sb);
+                                 saveBusiness = publish.saveBusiness(sb);
                         } catch (Exception ex) {
                                 if (isExceptionExpiration(ex)) {
                                         token = null;
                                         sb.setAuthInfo(GetToken());
-                                        publish.saveBusiness(sb);
+                                      saveBusiness=  publish.saveBusiness(sb);
 
                                 } else {
                                         throw ex;
                                 }
                         }
 
-                        return ResourceLoader.GetResource(session, "actions.saved");
+                        return ResourceLoader.GetResource(session, "actions.saved") + " " +
+                                "<a href=\"businessEditor2.jsp?id=" + URLEncoder.encode(saveBusiness.getBusinessEntity().get(0).getBusinessKey(),"UTF8") +
+                                "\">" + StringEscapeUtils.escapeHtml(saveBusiness.getBusinessEntity().get(0).getBusinessKey()) + "</a>";        
                 } catch (Exception ex) {
                         return HandleException(ex);
                 }
@@ -2070,22 +2049,25 @@ public class UddiHub implements Serializable {
                 try {
                         SaveTModel sb = new SaveTModel();
                         sb.setAuthInfo(GetToken());
-
+                        TModelDetail saveTModel=null;
                         sb.getTModel().add(be);
                         //JAXB.marshal(be, System.out);
                         try {
-                                publish.saveTModel(sb);
+                                 saveTModel = publish.saveTModel(sb);
                         } catch (Exception ex) {
                                 if (isExceptionExpiration(ex)) {
                                         token = null;
                                         sb.setAuthInfo(GetToken());
-                                        publish.saveTModel(sb);
+                                         saveTModel = publish.saveTModel(sb);
 
                                 } else {
                                         throw ex;
                                 }
                         }
-                        return ResourceLoader.GetResource(session, "actions.saved");
+                        //return ResourceLoader.GetResource(session, "actions.saved");
+                        return ResourceLoader.GetResource(session, "actions.saved") + " " +
+                                "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(saveTModel.getTModel().get(0).getTModelKey(),"UTF8") +
+                                "\">" + StringEscapeUtils.escapeHtml(saveTModel.getTModel().get(0).getTModelKey()) + "</a>";
                 } catch (Exception ex) {
                         return HandleException(ex);
                 }
