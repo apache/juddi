@@ -20,10 +20,6 @@ import org.uddi.api_v3.*;
 import org.apache.juddi.api_v3.*;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.transport.Transport;
-import org.uddi.v3_service.UDDISecurityPortType;
-import org.uddi.v3_service.UDDIPublicationPortType;
-import org.apache.juddi.v3_service.JUDDIApiPortType;
 
 /**
  * This shows you to interact with a UDDI server by publishing a Business,
