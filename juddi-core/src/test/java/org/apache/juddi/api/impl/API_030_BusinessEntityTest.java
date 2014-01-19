@@ -136,9 +136,9 @@ public class API_030_BusinessEntityTest {
                 UDDIPublicationImplExt pubRemoteNode = new UDDIPublicationImplExt(new MockWebServiceContext(null));
                 UDDIPublicationImpl pubLocalNode = new UDDIPublicationImpl();
                 UDDISecurityPortType security = new UDDISecurityImpl();
-                authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
                 SaveBusiness sb = new SaveBusiness();
-                sb.setAuthInfo(authInfoJoe);
+                sb.setAuthInfo(authInfoSam);
                 BusinessEntity be = new BusinessEntity();
                 be.getName().add(new Name("testJIRA727", "en"));
                 String node = "testJIRA727Node" + UUID.randomUUID().toString();
@@ -146,7 +146,7 @@ public class API_030_BusinessEntityTest {
                 BusinessDetail saveBusinessFudge = pubRemoteNode.saveBusinessFudge(sb, node);
 
                 sb = new SaveBusiness();
-                sb.setAuthInfo(authInfoJoe);
+                sb.setAuthInfo(authInfoSam);
                 sb.getBusinessEntity().add(saveBusinessFudge.getBusinessEntity().get(0));
                 try {
                         saveBusinessFudge = pubLocalNode.saveBusiness(sb);
