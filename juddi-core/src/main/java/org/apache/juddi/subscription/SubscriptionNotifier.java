@@ -32,7 +32,6 @@ import javax.persistence.Query;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
-import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
@@ -322,9 +321,9 @@ public class SubscriptionNotifier extends TimerTask {
 	}
 	/**
 	 * Sends out the notifications.
-	 * @param resultList
-	 * @throws MalformedURLException 
-	 * @throws DispositionReportFaultMessage 
+         * @param getSubscriptionResults
+	 * @param resultList 
+         * @param notificationDate 
 	 */
 	protected void notify(GetSubscriptionResults getSubscriptionResults, SubscriptionResultsList resultList, Date notificationDate) 
 	{

@@ -56,7 +56,7 @@ public class UDDIInquiryJAXRS {
          * Returns the details of a business entity in JSON
          *
          * @param id
-         * @return
+         * @return json 
          */
         @GET
         @Path("/JSON/businessKey/{id}")
@@ -70,7 +70,7 @@ public class UDDIInquiryJAXRS {
          * Returns the details of a business entity in XML
          *
          * @param id
-         * @return
+         * @return xml
          * @throws WebApplicationException
          */
         @GET
@@ -98,7 +98,7 @@ public class UDDIInquiryJAXRS {
          * Returns the details of a tModel entity in XML
          *
          * @param id
-         * @return
+         * @return xml
          * @throws WebApplicationException
          */
         @GET
@@ -113,7 +113,7 @@ public class UDDIInquiryJAXRS {
          * Returns the details of a tModel entity in JSON
          *
          * @param id
-         * @return
+         * @return json
          * @throws WebApplicationException
          */
         @GET
@@ -141,7 +141,7 @@ public class UDDIInquiryJAXRS {
          * Returns the details of a service entity in JSON
          *
          * @param id
-         * @return
+         * @return json
          * @throws WebApplicationException
          */
         @GET
@@ -152,6 +152,15 @@ public class UDDIInquiryJAXRS {
                 return getServiceDetail(id);
         }
 
+        /**
+         * This implements the UDDIv3 spec for HTTP GET Inquiry services
+         * @param serviceKey
+         * @param businessKey
+         * @param tModelKey
+         * @param bindingKey
+         * @return json
+         * @throws WebApplicationException 
+         */
         @GET
         @Path("/JSON/getDetail")
         @Produces("application/json")
@@ -193,6 +202,15 @@ public class UDDIInquiryJAXRS {
                 throw new WebApplicationException(400);
         }
 
+        /**
+         * This implements the UDDIv3 spec for HTTP GET Inquiry services
+         * @param serviceKey
+         * @param businessKey
+         * @param tModelKey
+         * @param bindingKey
+         * @return xml
+         * @throws WebApplicationException 
+         */
         @GET
         @Path("/XML/getDetail")
         @Produces("application/xml")
@@ -237,7 +255,7 @@ public class UDDIInquiryJAXRS {
          * Returns the details of a service entity in XML
          *
          * @param id
-         * @return
+         * @return xml
          * @throws WebApplicationException
          */
         @GET
@@ -265,7 +283,7 @@ public class UDDIInquiryJAXRS {
          * Returns the operational details of a given entity in JSON
          *
          * @param id
-         * @return
+         * @return json
          * @throws WebApplicationException
          */
         @GET
@@ -280,7 +298,7 @@ public class UDDIInquiryJAXRS {
          * Returns the operational details of a given entity in XML
          *
          * @param id
-         * @return
+         * @return xml
          * @throws WebApplicationException
          */
         @GET
@@ -307,7 +325,7 @@ public class UDDIInquiryJAXRS {
          * Returns the binding details of a given entity in JSON
          *
          * @param id
-         * @return
+         * @return json
          * @throws WebApplicationException
          */
         @GET
@@ -322,7 +340,7 @@ public class UDDIInquiryJAXRS {
          * Returns the binding details of a given entity in XML
          *
          * @param id
-         * @return
+         * @return xml
          * @throws WebApplicationException
          */
         @GET
@@ -349,7 +367,7 @@ public class UDDIInquiryJAXRS {
          * Returns the binding details of a given entity in JSON
          *
          * @param id
-         * @return
+         * @return json
          * @throws WebApplicationException
          */
         @GET
@@ -364,7 +382,7 @@ public class UDDIInquiryJAXRS {
          * Returns the binding details of a given entity in XML
          *
          * @param id
-         * @return
+         * @return xml
          * @throws WebApplicationException
          */
         @GET
@@ -375,6 +393,11 @@ public class UDDIInquiryJAXRS {
                 return getEndpointsByService(id);
         }
 
+        /**
+         * 
+         * @return xml
+         * @throws WebApplicationException 
+         */
         @GET
         @Path("/XML/businessList")
         @Produces("application/xml")
@@ -383,6 +406,11 @@ public class UDDIInquiryJAXRS {
                 return getBusinessListData();
         }
 
+        /**
+         * 
+         * @return json
+         * @throws WebApplicationException 
+         */
         @GET
         @Path("/JSON/businessList")
         @Produces("application/json")
@@ -391,6 +419,11 @@ public class UDDIInquiryJAXRS {
                 return getBusinessListData();
         }
 
+        /**
+         * 
+         * @return xml
+         * @throws WebApplicationException 
+         */
         @GET
         @Path("/XML/serviceList")
         @Produces("application/xml")
@@ -399,6 +432,11 @@ public class UDDIInquiryJAXRS {
                 return getServiceListData();
         }
 
+        /**
+         * 
+         * @return json
+         * @throws WebApplicationException 
+         */
         @GET
         @Path("/JSON/serviceList")
         @Produces("application/json")
@@ -407,6 +445,11 @@ public class UDDIInquiryJAXRS {
                 return getServiceListData();
         }
 
+        /**
+         * 
+         * @return xml
+         * @throws WebApplicationException 
+         */
         @GET
         @Path("/XML/tModelList")
         @Produces("application/xml")
@@ -415,6 +458,11 @@ public class UDDIInquiryJAXRS {
                 return getTmodelListData();
         }
 
+        /**
+         * 
+         * @return json
+         * @throws WebApplicationException 
+         */
         @GET
         @Path("/JSON/tModelList")
         @Produces("application/json")

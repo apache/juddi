@@ -197,9 +197,10 @@ public class UDDIClerk implements Serializable {
         }
 
         /**
-         * Is this used?
+         * This is not used within the jUDDI code base and will be removed in the next release
          *
-         * @return
+         * @return a map
+         * @deprecated 
          */
         @Deprecated
         public Map<String, Properties> getServices() {
@@ -207,7 +208,9 @@ public class UDDIClerk implements Serializable {
         }
 
         /**
-         * Is this used?
+         * This is not used within the jUDDI code base and will be removed in the next release
+         * @param services
+         * @deprecated 
          */
         @Deprecated
         public void setServices(Map<String, Properties> services) {
@@ -217,7 +220,7 @@ public class UDDIClerk implements Serializable {
         /**
          * The client manager name as defined in the config file client[@name]
          *
-         * @return
+         * @return the manager name
          */
         public String getManagerName() {
                 return managerName;
@@ -360,7 +363,7 @@ public class UDDIClerk implements Serializable {
          * Note, if registration fails, no exception is thrown
          *
          * @param subscription
-         * @return
+         * @return a subscription object, or null if failed
          */
         public Subscription register(Subscription subscription) {
                 return register(subscription, this.getUDDINode().getApiNode());
@@ -417,7 +420,7 @@ public class UDDIClerk implements Serializable {
          *
          * @param tModel
          * @param node
-         * @return
+         * @return a tModel object or null if registration failed
          */
         public TModelDetail register(TModel tModel, Node node) {
                 TModelDetail tModelDetail = null;
@@ -445,7 +448,7 @@ public class UDDIClerk implements Serializable {
          * Note, if registration fails, no exception is thrown
          *
          * @param binding
-         * @return
+         * @return a binding object or null
          */
         public BindingTemplate register(BindingTemplate binding) {
                 return register(binding, this.getUDDINode().getApiNode());
@@ -457,7 +460,7 @@ public class UDDIClerk implements Serializable {
          *
          * @param binding
          * @param node
-         * @return
+         * @return a binding object or null
          */
         public BindingTemplate register(BindingTemplate binding, Node node) {
 
@@ -487,7 +490,7 @@ public class UDDIClerk implements Serializable {
          * if registration fails, no exception is thrown and null is returned
          *
          * @param service
-         * @return
+         * @return a service object or null
          */
         public BusinessService register(BusinessService service) {
                 return register(service, this.getUDDINode().getApiNode());
@@ -860,7 +863,7 @@ public class UDDIClerk implements Serializable {
          * @throws RemoteException
          * @throws TransportException
          * @throws ConfigurationException
-         * @deprecated see
+         * @deprecated see getServiceDetail
          */
         @Deprecated
         public BusinessService findService(String serviceKey) throws RemoteException,
@@ -925,7 +928,7 @@ public class UDDIClerk implements Serializable {
         /**
          *
          * @param bindingKey
-         * @return
+         * @return returns a binding template or null if not found
          * @throws DispositionReportFaultMessage
          * @throws RemoteException
          * @throws TransportException
@@ -957,7 +960,7 @@ public class UDDIClerk implements Serializable {
          * @deprecated use getServiceBindingDetail instead
          * @param bindingKey
          * @param node
-         * @return
+         * @return null if not found
          * @throws DispositionReportFaultMessage
          * @throws RemoteException
          * @throws TransportException
@@ -1208,7 +1211,7 @@ public class UDDIClerk implements Serializable {
          * callback API 8/20/2013 AO
          *
          * @param endpointURL
-         * @return
+         * @return an auth token
          * @throws TransportException
          * @throws DispositionReportFaultMessage
          * @throws RemoteException
@@ -1256,7 +1259,7 @@ public class UDDIClerk implements Serializable {
          * Note: this API call should only be used with secure ports (SSL/TLS)
          *
          * @param node
-         * @return
+         * @return a node or null if registration fails
          */
         public NodeDetail saveNode(Node node) {
                 NodeDetail nodeDetail = null;
@@ -1283,7 +1286,7 @@ public class UDDIClerk implements Serializable {
          * Note: this API call should only be used with secure ports (SSL/TLS)
          *
          * @param senderClerk
-         * @return
+         * @return null if registration fails
          */
         public ClerkDetail saveClerk(UDDIClerk senderClerk) {
                 ClerkDetail clerkDetail = null;
@@ -1308,7 +1311,7 @@ public class UDDIClerk implements Serializable {
          * both on the jUDDI Client and on the jUDDI Web Service (not part of
          * the UDDI spec).
          *
-         * @return
+         * @return the config file defined clerk
          */
         public Clerk getApiClerk() {
                 Clerk apiClerk = new Clerk();
@@ -1322,7 +1325,7 @@ public class UDDIClerk implements Serializable {
         /**
          * client.clerks.clerk(" + i + ")[@name]
          *
-         * @return
+         * @return name
          */
         public String getName() {
                 return name;
@@ -1349,7 +1352,7 @@ public class UDDIClerk implements Serializable {
         /**
          * This is the username client.clerks.clerk(" + i + ")[@publisher]
          *
-         * @return
+         * @return the username
          */
         public String getPublisher() {
                 return publisher;
@@ -1369,7 +1372,7 @@ public class UDDIClerk implements Serializable {
          * otherwise the cipher text will be returned. client.clerks.clerk(" + i
          * + ")[@password]
          *
-         * @return
+         * @return unencrypted password
          */
         public String getPassword() {
                 if (isencrypted) {
@@ -1387,7 +1390,7 @@ public class UDDIClerk implements Serializable {
          * the clear text will be returned. client.clerks.clerk(" + i +
          * ")[@password]
          *
-         * @return
+         * @return password as is in the config file
          */
         public String getRawPassword() {
                 return password;
@@ -1407,7 +1410,7 @@ public class UDDIClerk implements Serializable {
          * Used for the automated registration of services via WSDL2UDDI<br>
          * config file: client.clerks.clerk(" + i + ").wsdl
          *
-         * @return
+         * @return a WSDL array
          * @see WSDL2UDDI
          */
         public WSDL[] getWsdls() {
@@ -1446,7 +1449,7 @@ public class UDDIClerk implements Serializable {
         /**
          * client.clerks.clerk(" + i + ")[@cryptoProvider]
          *
-         * @return
+         * @return may be null if not defined
          */
         public String getCryptoProvider() {
                 return this.cryptoProvider;
@@ -1455,13 +1458,16 @@ public class UDDIClerk implements Serializable {
         /**
          * client.clerks.clerk(" + i + ")[@isPasswordEncrypted]
          *
-         * @return
+         * @return true/false
          */
         public boolean getIsPasswordEncrypted() {
                 return this.isencrypted;
 
         }
 
+        /**
+         * Internal classed used for wsdl registration
+         */
         public class WSDL {
 
                 private String businessKey;
@@ -1628,10 +1634,10 @@ public class UDDIClerk implements Serializable {
          * <li>1.0</li>
          * <li>0.1</li>
          * </ul>
-         * @param version
-         * @param bindingTemplate
+         * @param bindingTemplate the input binding template, must not be null
          * @return a list if binding templates where the version equals ignoring
          * case trimmed equals the version value
+         * @throws IllegalArgumentException if the version or bindingTemplate is null
          */
         public static Set<BindingTemplate> getBindingByVersion(String version, List<BindingTemplate> bindingTemplate) throws IllegalArgumentException {
                 if (version == null) {
@@ -1669,7 +1675,7 @@ public class UDDIClerk implements Serializable {
          * <i>should</i> be accessible for the given service.
          *
          * @param serviceKey
-         * @return
+         * @return a list of URI endpoints
          */
         public List<String> getEndpoints(String serviceKey) {
                 List<String> items = new ArrayList<String>();
@@ -1754,7 +1760,7 @@ public class UDDIClerk implements Serializable {
          * fetches a wsdl endpoint and parses for execution urls
          *
          * @param value
-         * @return
+         * @return a list of endpoints from a WSDL provided it is reachable and parsable 
          */
         private List<String> FetchWSDL(String value) {
                 List<String> items = new ArrayList<String>();
@@ -1793,7 +1799,7 @@ public class UDDIClerk implements Serializable {
          * Gets service details or NULL if it doesn't exist or an error occurred
          *
          * @param getDetail
-         * @return
+         * @return null if not found
          * @throws RemoteException
          * @throws ConfigurationException
          * @throws TransportException
@@ -1807,7 +1813,7 @@ public class UDDIClerk implements Serializable {
          *
          * @param getDetail
          * @param node
-         * @return
+         * @return null if not found
          * @throws RemoteException
          * @throws TransportException
          * @throws ConfigurationException

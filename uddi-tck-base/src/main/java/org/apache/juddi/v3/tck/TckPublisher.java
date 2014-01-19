@@ -225,7 +225,7 @@ public class TckPublisher {
         /**
          * time in seconds, default is 60
          *
-         * @return
+         * @return the subscription timeout in seconds or the default is not defined
          */
         public static int getSubscriptionTimeout() {
                 String x = tckProperties.getProperty("sub.timeout");

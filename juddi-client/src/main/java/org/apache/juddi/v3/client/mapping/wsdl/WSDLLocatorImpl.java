@@ -75,7 +75,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
      * @param baseURI
      * @param username
      * @param password
-     * @param domain
+     * @param ignoreSSLErrors 
      */
     public WSDLLocatorImpl(URI baseURI, String username, String password, boolean ignoreSSLErrors) {
         this.baseURI = baseURI;
@@ -97,7 +97,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
      *
      * @param parentLocation
      * @param importLocation
-     * @return
+     * @return a url
      */
     protected URL constructImportUrl(String parentLocation, String importLocation) {
         URL importUrl = null;
@@ -191,9 +191,12 @@ public class WSDLLocatorImpl implements WSDLLocator {
         return inputSource;
     }
 
-    /**
-     * @see WSDLLocatorImpl.getImportInputSource
-     */
+   /**
+    * @see WSDLLocatorImpl.getImportInputSource
+    * @param parentLocation
+    * @param importLocation
+    * @return input source
+    */
     public InputSource getImportInputSource(String parentLocation, String importLocation) {
         InputSource inputSource = null;
         try {
@@ -208,6 +211,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
 
     /**
      * @see WSDLLocatorImpl.getBaseURI
+     * @return string
      */
     public String getBaseURI() {
         String baseURIStr = null;
@@ -223,6 +227,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
 
     /**
      * @see WSDLLocatorImpl.getLatestImportURI
+     * @return string
      */
     public String getLatestImportURI() {
         return latestImportURI;
@@ -259,7 +264,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
     
     /**
      * Returns the last exception or null if there wasn't any. This was done because the authors of WSDLLocator apparently thought it would always work
-     * @return 
+     * @return the last exception or null
      */
     public Exception getLastException()
     {

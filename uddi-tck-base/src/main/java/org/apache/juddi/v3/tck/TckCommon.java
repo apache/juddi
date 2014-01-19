@@ -42,7 +42,7 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
- * Common Utlities for TCK tests
+ * Common Utilities for TCK tests
  *
  * @author Alex O'Ree
  */
@@ -55,7 +55,7 @@ public class TckCommon {
          * Converts category bags of tmodels to a readable string
          *
          * @param categoryBag
-         * @return
+         * @return human readable category bag
          */
         public static String CatBagToString(CategoryBag categoryBag) {
                 StringBuilder sb = new StringBuilder();
@@ -236,8 +236,8 @@ public class TckCommon {
         }
 
         /**
-         * returns true if the environment variable "debug" is equal to "true"
-         * @return 
+         * returns true if the System Property "debug" is equal to "true"
+         * @return true/false
          */
         public static boolean isDebug() {
                 boolean serialize = false;

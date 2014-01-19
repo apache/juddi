@@ -67,7 +67,9 @@ import org.apache.commons.configuration.ConfigurationException;
  * 
  * 
  * @since 3.2, all values are now configurable
- * @see Property.JUDDI_AUTHENTICATOR_INITIAL_CONTEXT, JUDDI_AUTHENTICATOR_STYLE
+ * @see Property
+ * @see Property.JUDDI_AUTHENTICATOR_INITIAL_CONTEXT
+ * @see Property.JUDDI_AUTHENTICATOR_STYLE
  */
 public class LdapSimpleAuthenticator implements Authenticator {
     private Log logger = LogFactory.getLog(this.getClass());

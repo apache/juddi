@@ -175,7 +175,8 @@ public class AnnotationProcessor {
 	 * parse something like: [keyName=uddi-org:types:wsdl,keyValue=wsdlDeployment,tModelKey=uddi:uddi.org:categorization:types]
 							
 	 * @param categoryBagStr
-	 * @return
+	 * @return a UDDI CategoryBag
+         * @see CategoryBag
 	 */
 	protected CategoryBag parseCategoryBag(String categoryBagStr) {
 		

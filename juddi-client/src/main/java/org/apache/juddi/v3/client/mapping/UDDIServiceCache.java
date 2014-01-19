@@ -216,7 +216,7 @@ public class UDDIServiceCache implements UDDIServiceCacheMBean {
 	/**
 	 * Adds or updates epr information for the given serviceKey.
 	 * @param serviceKey
-	 * @param eprs
+	 * @param topology
 	 */
 	public void addService(String serviceKey, Topology topology) {
 		serviceLocationMap.put(serviceKey, topology);
@@ -233,6 +233,7 @@ public class UDDIServiceCache implements UDDIServiceCacheMBean {
         /**
          * Create a subscription for changes in any Service in the Registry
          * @throws DatatypeConfigurationException 
+         * @param bindingKey the binding key
          */
 	public void registerSubscription(String bindingKey) throws DatatypeConfigurationException {
 		

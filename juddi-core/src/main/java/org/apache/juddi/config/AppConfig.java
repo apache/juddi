@@ -71,7 +71,7 @@ public class AppConfig
          * Enables an administrator to identify the physical location of the configuration file from which it was loaded.<br>
          * Always call via the singleton function AppConfig.getInstance().getConfigFileURL()
          * @since 3.2
-         * @return, may return null if no config file was found
+         * @return may return null if no config file was found
          */
         public static  URL getConfigFileURL()
         {

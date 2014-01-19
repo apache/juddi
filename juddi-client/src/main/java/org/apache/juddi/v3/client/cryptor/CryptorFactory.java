@@ -18,11 +18,9 @@ package org.apache.juddi.v3.client.cryptor;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.ClassUtil;
-import org.apache.juddi.v3.client.config.ClientConfig;
 import org.apache.juddi.v3.client.config.Property;
 
 /**
@@ -36,7 +34,7 @@ import org.apache.juddi.v3.client.config.Property;
  */
 public abstract class CryptorFactory {
 
-    private static Log log = LogFactory.getLog(CryptorFactory.class);
+    private static final Log log = LogFactory.getLog(CryptorFactory.class);
     // the shared Cryptor instance
     private static Cryptor cryptor = null;
     private static Map<String, Cryptor> cache = new HashMap<String, Cryptor>();
@@ -44,7 +42,7 @@ public abstract class CryptorFactory {
     /**
      * Returns a crypto provider with the matching classname, throws if not possible
      * @param className
-     * @return
+     * @return a Cryptor instance
      * @throws Exception 
      */
     public static Cryptor getCryptor(String className) throws Exception {

@@ -38,7 +38,7 @@ import org.uddi.api_v3.BusinessService;
 /**
  * The ServiceLocator contacts the UDDI registry to lookup an Endpoint given a UDDI ServiceKey.
  *
- * 
+ * @see UDDIClerk.getEndpoints
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class ServiceLocator {
@@ -91,7 +91,7 @@ public class ServiceLocator {
 	 * The baseCallbackURL can be set to solve binding issue. If
 	 * 
 	 * @param baseCallbackURL
-	 * @return
+	 * @return a service locator object
 	 * @throws ConfigurationException
 	 * @throws BindException
 	 */
@@ -219,7 +219,8 @@ public class ServiceLocator {
 	 * 
 	 * @param serviceQName
 	 * @param portName
-	 * @return 
+	 * @return Returns null if no endpoints
+	 * are found.
 	 * @throws TransportException 
 	 * @throws ConfigurationException 
 	 * @throws RemoteException 

@@ -339,7 +339,7 @@ is a matter of node policy.</p>
 <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span><b><i>subscriptionKey:</i></b>&nbsp; This required argument specifies,
 using <i>anyURIs,</i> the subscription or subscriptions to be deleted.</p>
-* @return If no errors occur then an empty message is returned.
+* <Br><b>If no errors occur then an empty message is returned.</b>
      * @throws DispositionReportFaultMessage, RemoteException
      * <p class="MsoBodyText">If an error occurs in processing this API call, a dispositionReport structure is returned to the caller in a SOAP Fault.&nbsp; In addition
 to the errors common to all APIs, the following error information is relevant
@@ -567,7 +567,7 @@ This API returns a duration for which this particular subscription is valid.  De
 <p class="MsoBodyText">The syntax of the subscriptionFilter structure is:</p>
 
 <p class="MsoBodyText"><img src="http://uddi.org/pubs/uddi-v3.0.2-20041019_files/image098.gif" border="0" height="368" width="441"></p>
-     * @param subscription<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * @param subscription <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span><b><i>bindingKey:</i></b>&nbsp; This optional argument of type anyURI
 specifies the <i>bindingTemplate</i> which the node is to use to deliver
 notifications to subscription listeners.&nbsp; It is only required when asynchronous
@@ -662,7 +662,8 @@ period that is supported.&nbsp; The adjusted value is provided with the returns 
 this API.&nbsp; Also see Section <a href="#_Ref535515666 ">5.5.1.1</a> <i>Specifying
 Durations</i>.</p>
      * @param authInfo       authInfo:  This optional argument is an element that contains an authentication token.  Registries that wish to restrict who can save a subscription typically require authInfo for this call, though this is a matter of node policy.
-     * @return <p class="MsoBodyText">Upon successful completion this API returns a <i>subscriptions</i>
+     * <br><br>
+     * return <p class="MsoBodyText">Upon successful completion this API returns a <i>subscriptions</i>
 structure.&nbsp; Included in the subscription structure(s) it MUST contain is a <i>subscriptionKey</i>
 (of type anyURI) that is used by the subscriber to manage the subscription.&nbsp;&nbsp;
 This key is required in order to delete (unsubscribe), modify or renew the

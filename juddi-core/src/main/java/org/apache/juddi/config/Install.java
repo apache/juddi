@@ -65,8 +65,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * This class is called when jUDDI starts up
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
- * @see org.apache.juddi.Registry.RegistryServlet
- * @see 
+ * @see org.apache.juddi.servlets.RegistryServlet
  */
 public class Install {
 

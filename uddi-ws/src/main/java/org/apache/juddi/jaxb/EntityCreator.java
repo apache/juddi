@@ -50,7 +50,7 @@ public class EntityCreator {
          * Builds UDDI data from a document, URL, file, etc
          * @param fileName
          * @param thePackage
-         * @return
+         * @return UDDI entity from the file or null
          * @throws JAXBException
          * @throws IOException 
          */
@@ -81,7 +81,7 @@ public class EntityCreator {
          * converts a XML in a String to a UDDI entity
          * @param source
          * @param thePackage
-         * @return
+         * @return UDDI entity from the file
          * @throws JAXBException
          * @throws IOException 
          */

@@ -155,7 +155,7 @@ public class UDDINode implements Serializable {
 	}
         
         /**
-         * used ONLY for jUDDI's HTTP GET (REST) endpoint
+         * used ONLY for UDDI's HTTP GET (REST) endpoint
          * @since 3.2
          * @param url 
          */
@@ -165,7 +165,7 @@ public class UDDINode implements Serializable {
         /**
          * used ONLY for jUDDI's HTTP GET (REST) endpoint
          * @since 3.2
-         * @return 
+         * @return the REST url for the Inquiry, not supported by all registries 
          */
         public String getInquiry_REST_Url() {
 		return inquiryRESTUrl;

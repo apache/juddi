@@ -159,7 +159,7 @@ public abstract class AuthenticatedService {
         /**
          * Attempts to get the requestor's ip address from the servlet context, defaults to null it it can't be
          * retrieved
-         * @return 
+         * @return requestor's ip address or null if it's not available
          */
         public String getRequestorsIPAddress()
         {

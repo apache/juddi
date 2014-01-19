@@ -191,7 +191,7 @@ public interface UDDIReplicationPortType extends Remote {
      *
      * <span
      * style="font-size:10.0pt;font-family:Arial;letter-spacing:-.25pt"></span>
-     * @return Success reporting SHALL be that specified by Section 4.8 –
+     * Success reporting SHALL be that specified by Section 4.8 –
      * Success and Error Reporting of this specification.
      * @throws DispositionReportFaultMessage, RemoteException Processing an
      * inbound replication message may fail due to a server internal error. The
@@ -311,7 +311,8 @@ public interface UDDIReplicationPortType extends Remote {
      * ">7.5.2</a> <i>Configuration of a UDDI Node – operator element</i>. The
      * authorizedName is obtained from the call to transfer_entities by the
      * requesting publisher.</p>
-     * @return <p class="MsoBodyText">The custodial node must verify that it has
+     * 
+     * <p class="MsoBodyText">The custodial node must verify that it has
      * granted permission to transfer the entities identified and that this
      * permission is still valid.&nbsp; This operation is comprised of two
      * steps:</p>

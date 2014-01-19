@@ -37,7 +37,7 @@ public class Release {
         /**
          * Returns the version of this jUDDI-Client jar as defined in the manifest.
          * Calls getRegistryVersion()
-         * @return 
+         * @return  the version number of the release
          * @since 3.2
          */
         public static String getjUDDIClientVersion() {
@@ -46,7 +46,7 @@ public class Release {
         /**
          * Returns the version of this jUDDI-Client jar as defined in the manifest.
          * This function is poorly named, but left in place for backward compatibility
-         * @return 
+         * @return  the version number of the release
          */
 	public static String getRegistryVersion() {
 		if (registryVersion == null) {

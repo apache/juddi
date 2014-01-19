@@ -50,7 +50,7 @@ public class WebHelper {
 	 * &lt;/context-param&gt;
 	 * </pre>
 	 * @param servletContext
-	 * @return
+	 * @return a UDDI Client instance
 	 * @throws ConfigurationException
 	 */
 	public static UDDIClient getUDDIClient(ServletContext servletContext) throws ConfigurationException 

@@ -106,7 +106,7 @@ public class AuthToken implements java.io.Serializable {
 
         /**
          * @since 3.2
-         * @return 
+         * @return ip address
          */
 	@Column(name = "ipaddress", nullable = true, length = 51)
 	public String getIPAddress() {

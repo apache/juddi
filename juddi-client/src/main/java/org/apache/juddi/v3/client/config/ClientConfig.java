@@ -218,7 +218,7 @@ public class ClientConfig
          * signals that the specified classes/wsdls are registered with the UDDI server
          * when UDDIClient.start() is called
          * client.clerks[@registerOnStartup]
-         * @return 
+         * @return true/false
          */
 	public boolean isRegisterOnStartup() {
 		boolean isRegisterOnStartup = false;
@@ -361,7 +361,7 @@ public class ClientConfig
         
         /**
          * Used for WADL/WSDL to WSDL
-         * @return 
+         * @return true/false
          */
         public boolean isX_To_Wsdl_Ignore_SSL_Errors()
         {
@@ -373,8 +373,10 @@ public class ClientConfig
         /**
          * Fetches all digital signature related properties for the digital signature utility.
          * warning, this will decrypt all passwords
-         * @return
+         * @return a properties object
          * @throws Exception 
+         * @see DigSigUtil
+         * @see Properties
          */
     public Properties getDigitalSignatureConfiguration() throws Exception {
         Properties p = new Properties();

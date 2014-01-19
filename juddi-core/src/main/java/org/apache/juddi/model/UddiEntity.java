@@ -90,8 +90,8 @@ public abstract class UddiEntity implements Comparable<UddiEntity>{
 	}
 	
         /**
-         * As of 3.3, node_id is a required field
-         * @return 
+         * As of 3.2, node_id is a required field
+         * @return node id
          */
 	@Column(name = "node_id", nullable=false,length = 255)
 	public String getNodeId() {

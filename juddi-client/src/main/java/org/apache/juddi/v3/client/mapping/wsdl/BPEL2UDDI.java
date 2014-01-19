@@ -49,7 +49,6 @@ import org.uddi.api_v3.AccessPoint;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.CategoryBag;
-import org.uddi.api_v3.Description;
 import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.GetTModelDetail;
@@ -151,6 +150,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
 	 * @param portName - portName of the service
 	 * @param serviceUrl - URL at which the service can be invoked
 	 * @param wsdlDefinition - WSDL Definition of the Web Service
+         * @return a binding template
 	 * @throws WSDLException 
 	 * @throws MalformedURLException 
 	 * @throws TransportException 
@@ -261,7 +261,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
 	/**
 	 * Perform a lookup by serviceKey, and will return null if not found.
 	 * @param serviceKey
-	 * @return
+	 * @return a business service
 	 * @throws RemoteException
 	 * @throws ConfigurationException
 	 * @throws TransportException
@@ -276,8 +276,8 @@ public class BPEL2UDDI extends AnnotationProcessor {
 	 * Registers the Service into UDDI.
 	 * 
 	 * @param serviceName
-	 * @param wsldDefinition
-	 * @return
+	 * @param wsdlDefinition
+	 * @return a business service
 	 */
 	public BusinessService createBusinessService(QName serviceName, Definition wsdlDefinition) {
 		
@@ -475,8 +475,8 @@ public class BPEL2UDDI extends AnnotationProcessor {
     /** Finds and returns ALL the tModels related to the process, so that i.e. they
      * can be removed on undeployment of the service.
      * 
-     * @param processName
-     * @return
+     * @param serviceName
+     * @return a tModel if found
      */
     public FindTModel createFindTModelForProcessName (QName serviceName) {
     	
@@ -507,7 +507,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
      * Find all processes that use the given portType.
      * 
      * @param portTypeKey
-     * @return
+     * @return tmodel info
      */
     public FindTModel createFindProcessesForPortTypes(String portTypeKey) {
     	FindTModel findTModel = new FindTModel();
@@ -543,7 +543,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
      * Once retrieved, the second call is made to get the tModel registrations 
      * for the portTypes with the keys found in the first step.
      * 
-     * @param tModelKeys - List of portType tModels found in the first step.
+     * @param portTypeTModelKeys - List of portType tModels found in the first step.
      * @return GetTModelDetail
      */
     public GetTModelDetail createFindAllPortTypesForProcess_2(List<String> portTypeTModelKeys) {

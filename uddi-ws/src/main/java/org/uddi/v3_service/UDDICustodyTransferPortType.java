@@ -299,7 +299,8 @@ public interface UDDICustodyTransferPortType extends Remote {
      * were to be transferred to some other publisher and/or node in the
      * registry as the result of invocation of get_transferToken.&nbsp; At least
      * one businessKey or tModelKey must be provided in a keyBag.</p>
-     * @return Upon successful completion, an empty message is returned. See
+     * <Br>
+     * Upon successful completion, an empty message is returned. See
      * section 4.8 Success and Error Reporting.
      *
      * No error will be reported if the transferToken provided in the call does
@@ -434,7 +435,8 @@ public interface UDDICustodyTransferPortType extends Remote {
      * in the registry. The set of keys must be the same as the set of keys in
      * the keyBag of the get_transferToken API call from which the given
      * transferToken was once obtained.
-     * @return <p class="MsoBodyText">The target node responds to this API by
+     * <br>
+     * <p class="MsoBodyText">The target node responds to this API by
      * performing the transfer operation.&nbsp; This operation is comprised of
      * four steps:</p>
      *

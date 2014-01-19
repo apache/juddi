@@ -92,7 +92,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * to jUDDI. Administrative privilege required.
          *
          * @param body
-         * @return
+         * @return PublisherDetail
          * @throws DispositionReportFaultMessage
          */
         public PublisherDetail savePublisher(SavePublisher body)
@@ -175,7 +175,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * Retrieves publisher(s) from the persistence layer. This method is
          * specific to jUDDI. Administrative privilege required. 
          * @param body
-         * @return
+         * @return PublisherDetail
          * @throws DispositionReportFaultMessage 
          */
         public PublisherDetail getPublisherDetail(GetPublisherDetail body)
@@ -227,7 +227,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * set is not bound. If there are many publishers, it is possible to have a 
          * result set that is too large
          * @param body
-         * @return
+         * @return PublisherDetail
          * @throws DispositionReportFaultMessage
          * @throws RemoteException 
          */
@@ -344,7 +344,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * serverr subscription to clerk
          * Administrative privilege required.
          * @param body
-         * @return
+         * @return ClientSubscriptionInfoDetail
          * @throws DispositionReportFaultMessage
          * @throws RemoteException 
          */
@@ -392,7 +392,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * Gets all client subscription information. This is used for server to server subscriptions
          * Administrative privilege required.
          * @param body
-         * @return
+         * @return ClientSubscriptionInfoDetail
          * @throws DispositionReportFaultMessage 
          */
         @SuppressWarnings("unchecked")
@@ -438,7 +438,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * method is specific to jUDDI. Used for server to server subscriptions
          * Administrative privilege required.
          * @param body
-         * @return
+         * @return ClientSubscriptionInfoDetail
          * @throws DispositionReportFaultMessage 
          */
         public ClientSubscriptionInfoDetail getClientSubscriptionInfoDetail(GetClientSubscriptionInfoDetail body)
@@ -491,7 +491,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * jUDDI. This is used for server to server subscriptions and for future use
          * with replication. Administrative privilege required.
          * @param body
-         * @return
+         * @return ClerkDetail
          * @throws DispositionReportFaultMessage 
          */
         public ClerkDetail saveClerk(SaveClerk body)
@@ -540,7 +540,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * jUDDI. Administrative privilege required. This is used for server to server subscriptions and for future use
          * with replication. Administrative privilege required.
          * @param body
-         * @return
+         * @return NodeDetail
          * @throws DispositionReportFaultMessage 
          */
         public NodeDetail saveNode(SaveNode body)
@@ -588,7 +588,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * Instructs the registry to perform a synchronous subscription
          * response.
          * @param body
-         * @return
+         * @return SyncSubscriptionDetail
          * @throws DispositionReportFaultMessage
          * @throws RemoteException 
          */

@@ -2348,7 +2348,8 @@ node, it is necessary to track a modified date for publisherAssertion elements
 so that nodes have the necessary information for responding to subscription
 requests involving find_relatedBusinesses and get_assertionStatusReport
 filters.</p>
-* @return  <p class="MsoBodyText">Upon successful completion, a publisherAssertions
+<Br>
+* <p class="MsoBodyText">Upon successful completion, a publisherAssertions
 structure is returned containing all of the relationship assertions currently
 attributed to the publisher.&nbsp; When registries distinguish between publishers,
 the structure contains assertion data that is associated with the authInfo

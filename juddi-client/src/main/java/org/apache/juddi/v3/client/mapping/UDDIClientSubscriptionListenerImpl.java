@@ -46,7 +46,7 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 
 public class UDDIClientSubscriptionListenerImpl implements UDDISubscriptionListenerPortType {
 	
-	private static Log logger = LogFactory.getLog(UDDIClientSubscriptionListenerImpl.class);
+	private static final Log logger = LogFactory.getLog(UDDIClientSubscriptionListenerImpl.class);
 	private UDDIServiceCache serviceCache = null;
 	
 	public UDDIClientSubscriptionListenerImpl(String bindingKey, UDDIServiceCache serviceCache) {
@@ -54,10 +54,14 @@ public class UDDIClientSubscriptionListenerImpl implements UDDISubscriptionListe
 		this.serviceCache = serviceCache;
 	}
 
-	/**
-	 * The SubscriptionListener is called by the UDDI Server when there is a change to any of the
+	
+        /**
+         * The SubscriptionListener is called by the UDDI Server when there is a change to any of the
 	 * services Endpoints. With every call the serviceCache is cleared.
-	 */
+         * @param body
+         * @return success or fail
+         * @throws DispositionReportFaultMessage 
+         */
 	public DispositionReport notifySubscriptionListener(
 			NotifySubscriptionListener body)
 			throws DispositionReportFaultMessage 

@@ -74,7 +74,6 @@ public class ReadWSDL {
          * @param wsdlUrl
          * @param username
          * @param password
-         * @param domain
          * @return a Definition object representing the WSDL
          * @throws WSDLException 
          */

@@ -120,9 +120,7 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
          * connect to the client's subscription listener service Recommend
          * specifying a port that is firewall friendly
          * @param keydomain
-         * @param callbackBusinessService - optional. if specified, a binding
-         * template is appended to the business service and returned. The new
-         * binding template is annotated for subscription callbacks.
+         
          * @param autoregister
          * @param behavior
          * @param serviceKey
@@ -131,6 +129,13 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
          * can then use it to continue the registration process.
          * @throws ServiceAlreadyStartedException
          * @throws SecurityException
+         * @throws ConfigurationException
+         * @throws TransportException
+         * @throws DispositionReportFaultMessage
+         * @throws java.rmi.UnexpectedException
+         * @throws org.apache.juddi.v3.client.subscription.RegistrationAbortedException
+         * @throws java.net.MalformedURLException
+         * @throws org.apache.juddi.v3.client.subscription.UnableToSignException
          * @see Endpoint
          */
         public static synchronized BindingTemplate start(UDDIClient client, String cfg_node_name, String endpoint,
@@ -218,6 +223,9 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
          * @throws DispositionReportFaultMessage
          * @throws UnexpectedException
          * @throws RemoteException
+         * @throws org.apache.juddi.v3.client.subscription.RegistrationAbortedException
+         * @throws org.apache.juddi.v3.client.subscription.UnableToSignException
+         * @throws java.net.MalformedURLException
          */
         public static synchronized BindingTemplate start(UDDIClient client, String cfg_node_name) throws ServiceAlreadyStartedException, SecurityException, ConfigurationException, TransportException, DispositionReportFaultMessage, UnexpectedException, RemoteException, RegistrationAbortedException, UnableToSignException, MalformedURLException {
 
@@ -305,7 +313,7 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
          * @param uddiInquiryService
          * @param token
          * @param behavior
-         * @return
+         * @return true/false
          */
         private static boolean CheckExistingBindingForSignature(String bindingKey, UDDIInquiryPortType uddiInquiryService, String token, SignatureBehavior behavior) {
                 GetBindingDetail gbd = new GetBindingDetail();
@@ -437,7 +445,7 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
          * @param cfg_node_name
          * @param bt - Binding Template
          * @param behavior
-         * @return
+         * @return a binding template
          * @throws ServiceAlreadyStartedException
          * @throws SecurityException
          * @throws ConfigurationException
@@ -525,6 +533,10 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
          * from the callback list. If the configuration file is set to automatically
          * register binding templates, the binding template will be unregistered from
          * the UDDI server
+         * @param client
+         * @param cfg_node_name
+         * @param bindingKey
+         * @throws org.apache.commons.configuration.ConfigurationException
          */
         public static synchronized void stop(UDDIClient client, String cfg_node_name, String bindingKey) throws ConfigurationException {
                 //stop the service

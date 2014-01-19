@@ -17,9 +17,10 @@ package org.apache.juddi.v3.client.cryptor;
 
  
 /**
- *
+ * A static entry point for encrypting text via CLI
+ * @since 3.1.5
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
- * @see org.apache.juddi.cryptor.DefaultCryptor
+ * @see CryptorFactory
  */
 public class CryptorUtil {
 

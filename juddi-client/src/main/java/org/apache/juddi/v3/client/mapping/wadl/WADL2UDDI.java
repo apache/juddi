@@ -247,8 +247,9 @@ public class WADL2UDDI {
      *
      * @param serviceQName This must be specified to identify the namespace of
      * the service, which is used to set the service uddi key
-     * @param waldDefinition
-     * @return
+     * @param wadlDefinition
+     * @return BusinessService
+     * @throws MalformedURLException
      */
     public BusinessService createBusinessService(QName serviceQName, Application wadlDefinition) throws MalformedURLException {
 
@@ -404,7 +405,7 @@ public class WADL2UDDI {
     /**
      * parses a wadl from stream
      * @param stream
-     * @return 
+     * @return Application instance (WADL FILE)
      */
     public static Application parseWadl(InputStream stream) {
         Application unmarshal = JAXB.unmarshal(stream, Application.class);
@@ -415,7 +416,7 @@ public class WADL2UDDI {
     /**
      * parses a wadl from a URL or file
      * @param file
-     * @return 
+     * @return  Application instance (WADL FILE)
      */
     public static Application parseWadl(URL file) {
         Application unmarshal = JAXB.unmarshal(file, Application.class);

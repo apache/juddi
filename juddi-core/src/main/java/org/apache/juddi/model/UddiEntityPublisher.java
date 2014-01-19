@@ -94,7 +94,7 @@ public class UddiEntityPublisher {
         /**
          * Determines if *this publisher owns a specific key
          * @param entity
-         * @return 
+         * @return true/false
          */
 	public boolean isOwner(UddiEntity entity){
             boolean ret = false;

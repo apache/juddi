@@ -101,7 +101,6 @@ public class MappingApiToModel {
          *
          * @param apiBusinessEntity
          * @param modelBusinessEntity
-         * @param node
          * @throws DispositionReportFaultMessage
          */
         public static void mapBusinessEntity(org.uddi.api_v3.BusinessEntity apiBusinessEntity,
@@ -282,7 +281,6 @@ public class MappingApiToModel {
          *
          * @param apiSignatures
          * @param modelBusinessEntity
-         * @param node
          * @throws DispositionReportFaultMessage
          */
         public static void mapBusinessSignature(List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures,
@@ -538,7 +536,6 @@ public class MappingApiToModel {
          * @param modelBusinessServiceList
          * @param modelServiceProjectionList
          * @param modelBusinessEntity
-         * @param node
          * @throws DispositionReportFaultMessage
          */
         public static void mapBusinessServices(org.uddi.api_v3.BusinessServices apiBusinessServices,
@@ -573,7 +570,6 @@ public class MappingApiToModel {
          * @param apiBusinessService
          * @param modelBusinessService
          * @param modelBusinessEntity
-         * @param node
          * @throws DispositionReportFaultMessage
          */
         public static void mapBusinessService(org.uddi.api_v3.BusinessService apiBusinessService,
@@ -636,7 +632,6 @@ public class MappingApiToModel {
          * @param apiBindingTemplates
          * @param modelBindingTemplateList
          * @param modelBusinessService
-         * @param node
          * @throws DispositionReportFaultMessage
          */
         public static void mapBindingTemplates(org.uddi.api_v3.BindingTemplates apiBindingTemplates,
@@ -662,7 +657,6 @@ public class MappingApiToModel {
          * @param apiBindingTemplate
          * @param modelBindingTemplate
          * @param modelBusinessService
-         * @param node
          * @throws DispositionReportFaultMessage
          */
         public static void mapBindingTemplate(org.uddi.api_v3.BindingTemplate apiBindingTemplate,
@@ -879,7 +873,6 @@ public class MappingApiToModel {
          *
          * @param apiTModel
          * @param modelTModel
-         * @param node
          * @throws DispositionReportFaultMessage
          */
         public static void mapTModel(org.uddi.api_v3.TModel apiTModel,

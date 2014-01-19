@@ -75,7 +75,7 @@ public class TripleDESCrytor implements Cryptor {
 
     /**
      * generates a new key
-     * @return 
+     * @return a new key
      */
     public static String GEN() {
         KeyGenerator kgen;
