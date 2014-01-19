@@ -262,12 +262,12 @@ public class UddiAdminHub {
                 if (ex instanceof DispositionReportFaultMessage) {
                         DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                         log.error(null, ex);
-                        return ResourceLoader.GetResource(session, "errors.uddi") + " " + ex.getMessage() + " " + f.detail.getMessage();
+                        return ResourceLoader.GetResource(session, "errors.uddi") + " " + ex.getMessage() + " " + (f.detail!=null ? f.detail.getMessage() : "");
                 }
                 if (ex instanceof RemoteException) {
                         RemoteException f = (RemoteException) ex;
                         log.error(null, ex);
-                        return ResourceLoader.GetResource(session, "errors.generic") + " " + ex.getMessage() + " " + f.detail.getMessage();
+                        return ResourceLoader.GetResource(session, "errors.generic") + " " + ex.getMessage() + " " + (f.detail!=null ? f.detail.getMessage() : "");
                 }
                 log.error(null, ex);
                 return //"<div class=\"alert alert-error\" ><h3><i class=\"icon-warning-sign\"></i> "
@@ -328,7 +328,7 @@ public class UddiAdminHub {
                                 return invoke_SyncSubscription(parameters);
                         }
                         if (action.equalsIgnoreCase("save_Clerk")) {
-                                //return save_Clerk(parameters);
+                                return save_Clerk(parameters);
                         }
                         if (action.equalsIgnoreCase("save_ClientSubscriptionInfo")) {
                                 return save_ClientSubscriptionInfo(parameters);
@@ -350,7 +350,23 @@ public class UddiAdminHub {
                 sc.setAuthInfo(GetToken());
                 Clerk c = new Clerk();
                 c.setName(parameters.getParameter("CLERKsetName"));
-                //c.setNode(getNode(parameters.getParameter("CLERKsetNode")));
+                Node node=new Node();
+                node.setClientName(parameters.getParameter("CLERKNODEsetClientName"));
+                node.setCustodyTransferUrl(parameters.getParameter("CLERKNODEsetCustodyTransferUrl"));
+                node.setDescription(parameters.getParameter("CLERKNODEsetDescription"));
+                node.setFactoryInitial(parameters.getParameter("CLERKNODEsetFactoryInitial"));
+                node.setFactoryNamingProvider(parameters.getParameter("CLERKNODEsetFactoryNamingProvider"));
+                node.setFactoryURLPkgs(parameters.getParameter("CLERKNODEsetFactoryURLPkgs"));
+                node.setInquiryUrl(parameters.getParameter("CLERKNODEsetInquiryUrl"));
+                node.setJuddiApiUrl(parameters.getParameter("CLERKNODEsetJuddiApiUrl"));
+                node.setName(parameters.getParameter("CLERKNODEsetName"));
+                node.setProxyTransport(parameters.getParameter("CLERKNODEsetProxyTransport"));
+                node.setPublishUrl(parameters.getParameter("CLERKNODEsetPublishUrl"));
+                node.setReplicationUrl(parameters.getParameter("CLERKNODEsetReplicationUrl"));
+                node.setSecurityUrl(parameters.getParameter("CLERKNODEsetSecurityUrl"));
+                node.setSubscriptionListenerUrl(parameters.getParameter("CLERKNODEsetSubscriptionListenerUrl"));
+                node.setSubscriptionUrl(parameters.getParameter("CLERKNODEsetSubscriptionUrl"));
+                c.setNode(node);
                 c.setPassword(parameters.getParameter("CLERKsetPassword"));
                 c.setPublisher(parameters.getParameter("CLERKsetPublisher"));
                 

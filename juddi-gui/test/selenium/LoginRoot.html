@@ -13,7 +13,7 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/UDDIBrowser/home.jsp</td>
+	<td>/juddi-gui/home.jsp</td>
 	<td></td>
 </tr>
 <tr>
@@ -33,15 +33,24 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Show 7</td>
+	<td>link=Show 8</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>UDDI Custody and Ownership Transfer Service</td>
+	<td>selectWindow</td>
+	<td>null</td>
 	<td></td>
 </tr>
-
+<tr>
+	<td>assertText</td>
+	<td>link=UDDI Inquiry Service</td>
+	<td>UDDI Inquiry Service</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=UDDI Custody and Ownership Transfer Service</td>
+	<td>UDDI Custody and Ownership Transfer Service</td>
+</tr>
 </tbody></table>
 </body>
 </html>

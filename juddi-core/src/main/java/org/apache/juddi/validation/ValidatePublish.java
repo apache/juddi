@@ -648,7 +648,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 entityExists = true;
 
                                 // Make sure publisher owns this entity.
-                                if (!publisher.isOwner((UddiEntity) obj)) {
+                                if (!publisher.isOwner((UddiEntity) obj) && !((Publisher) publisher).isAdmin()) {
                                         throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
                                 }
                         } else {
@@ -784,7 +784,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                         }
 
                                         // Make sure publisher owns this entity.
-                                        if (!publisher.isOwner((UddiEntity) obj)) {
+                                        if (!publisher.isOwner((UddiEntity) obj) && !((Publisher) publisher).isAdmin()) {
                                                 throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
                                         }
 
@@ -939,7 +939,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 }
 
                                 // Make sure publisher owns this entity.
-                                if (!publisher.isOwner((UddiEntity) obj)) {
+                                if (!publisher.isOwner((UddiEntity) obj)&& !((Publisher) publisher).isAdmin()) {
                                         throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
                                 }
 
@@ -1028,7 +1028,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 entityExists = true;
 
                                 // Make sure publisher owns this entity.
-                                if (!publisher.isOwner((UddiEntity) obj)) {
+                                if (!publisher.isOwner((UddiEntity) obj)&& !((Publisher) publisher).isAdmin()) {
                                         throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
                                 }
                         } else {

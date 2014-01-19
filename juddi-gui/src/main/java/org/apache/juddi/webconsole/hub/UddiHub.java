@@ -33,8 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -74,7 +72,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 import org.w3._2000._09.xmldsig_.SignatureType;
 import org.w3._2000._09.xmldsig_.X509DataType;
-import sun.misc.BASE64Encoder;
+
 
 /**
  * UddiHub - The hub acts as a single point for managing browser to uddi
@@ -1225,13 +1223,13 @@ public class UddiHub implements Serializable {
                         DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                         log.error(ex.getMessage());
                         log.debug(null, ex);
-                        return ResourceLoader.GetResource(session, "errors.uddi") + " " + ex.getMessage() + " " + f.detail.getMessage();
+                        return ResourceLoader.GetResource(session, "errors.uddi") + " " + ex.getMessage() + " " + (f.detail!=null ? f.detail.getMessage() : "");
                 }
                 if (ex instanceof RemoteException) {
                         RemoteException f = (RemoteException) ex;
                         log.error(ex.getMessage());
                         log.debug(null, ex);
-                        return ResourceLoader.GetResource(session, "errors.generic") + " " + ex.getMessage() + " " + f.detail.getMessage();
+                        return ResourceLoader.GetResource(session, "errors.generic") + " " + ex.getMessage() + " " + (f.detail!=null ? f.detail.getMessage() : "");
                 }
                 log.error(ex.getMessage());
                 log.debug(null, ex);
@@ -2189,8 +2187,9 @@ public class UddiHub implements Serializable {
                                                                 X509Certificate cert = (X509Certificate) cf.generateCertificate(is);
                                                                 is.close();
                                                                 //this is the most supportable way to do this
-                                                                BASE64Encoder encoder = new BASE64Encoder();
-                                                                return encoder.encodeBuffer(cert.getEncoded());
+                                                                return org.apache.commons.codec.binary.Base64.encodeBase64String(cert.getEncoded());
+                                                                //BASE64Encoder encoder = new BASE64Encoder();
+                                                                //return encoder.encodeBuffer(cert.getEncoded());
 
                                                         } catch (Exception ex) {
                                                                 return HandleException(ex);
@@ -2291,10 +2290,12 @@ public class UddiHub implements Serializable {
                                         throw ex;
                                 }
                         }
+                        return ResourceLoader.GetResource(session, "messages.success") + 
+                        "<a href=\"editSubscription.jsp?id=" + URLEncoder.encode(data.value.get(0).getSubscriptionKey(),"UTF8") +
+                        "\">" + StringEscapeUtils.escapeHtml(data.value.get(0).getSubscriptionKey()) + "</a>";
                 } catch (Exception ex) {
                         return HandleException(ex);
                 }
-                return ResourceLoader.GetResource(session, "messages.success");
         }
 
         /**

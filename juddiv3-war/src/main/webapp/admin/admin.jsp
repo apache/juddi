@@ -87,10 +87,10 @@
                                         <%=ResourceLoader.GetResource(session, "pages.admin.max")%>
                                 </div>
                                 <div id="save_Node" style="display:none">
-                                        
+
                                         <%=ResourceLoader.GetResource(session, "items.clientname")%> <input type="text" id="NODEsetClientName"  class="forminput" placeholder="Client Name"><br>
                                         <%=ResourceLoader.GetResource(session, "items.name")%> <input type="text" id="NODEsetName"  class="forminput" placeholder="Enter name"><br>
-                                        
+
                                         <%=ResourceLoader.GetResource(session, "items.description")%> <input type="text" id="NODEsetDescription"  class="forminput" placeholder="Enter description"><br>
                                         Factory Initial <input type="text" id="NODEsetFactoryInitial"  class="forminput" placeholder="only needed for RMI transport"><br>
                                         Factory URL Packages <input type="text" id="NODEsetFactoryURLPkgs"  class="forminput" placeholder="only needed for RMI transport"><br>
@@ -107,9 +107,25 @@
                                 </div>
                                 <div id="save_Clerk" style="display:none">
                                         <%=ResourceLoader.GetResource(session, "items.name")%> <input type="text" id="CLERKsetName"  class="forminput" placeholder="Enter name"><br>
-                                        Node Name <input type="text" id="CLERKsetNode"  class="forminput" placeholder="Enter node name"><br>
                                         <%=ResourceLoader.GetResource(session, "items.authorizedname")%> <input type="text" id="CLERKsetPublisher"  class="forminput" placeholder="Enter Authorized Name (username)"><br>
                                         <%=ResourceLoader.GetResource(session, "navbar.login.password")%> <input type="password" id="CLERKsetPassword"  class="forminput" placeholder="Enter password"><br>
+                                        <hr>
+                                        <%=ResourceLoader.GetResource(session, "items.clientname")%> <input type="text" id="CLERKNODEsetClientName"  class="forminput" placeholder="Client Name"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.name")%> <input type="text" id="CLERKNODEsetName"  class="forminput" placeholder="Enter name"><br>
+
+                                        <%=ResourceLoader.GetResource(session, "items.description")%> <input type="text" id="CLERKNODEsetDescription"  class="forminput" placeholder="Enter description"><br>
+                                        Factory Initial <input type="text" id="CLERKNODEsetFactoryInitial"  class="forminput" placeholder="only needed for RMI transport"><br>
+                                        Factory URL Packages <input type="text" id="CLERKNODEsetFactoryURLPkgs"  class="forminput" placeholder="only needed for RMI transport"><br>
+                                        Factory Naming Provider <input type="text" id="CLERKNODEsetFactoryNamingProvider"  class="forminput" placeholder="only needed for RMI transport"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.transport")%> <input type="text" id="CLERKNODEsetProxyTransport"  class="forminput" placeholder="org.apache.juddi.v3.client.transport.JAXWSTransport" value="org.apache.juddi.v3.client.transport.JAXWSTransport"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.inquiry")%> <input type="text" id="CLERKNODEsetInquiryUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/inquiry" value="http://localhost:8080/juddiv3/services/inquiry"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.publish")%> <input type="text" id="CLERKNODEsetPublishUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/publish" value="http://localhost:8080/juddiv3/services/publish"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.security")%> <input type="text" id="CLERKNODEsetSecurityUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/security" value="http://localhost:8080/juddiv3/services/security"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.subscription.list")%> <input type="text" id="CLERKNODEsetSubscriptionListenerUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/subscription-listener" value="http://localhost:8080/juddiv3/services/subscription-listener"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.subscription")%> <input type="text" id="CLERKNODEsetSubscriptionUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/subscription" value="http://localhost:8080/juddiv3/services/subscription"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.custodytransfer")%> <input type="text" id="CLERKNODEsetCustodyTransferUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/custody-transfer" value="http://localhost:8080/juddiv3/services/custody-transfer"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.replication")%> <input type="text" id="CLERKNODEsetReplicationUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/replication" value="http://localhost:8080/juddiv3/services/replication"><br>
+                                        jUDDI API <input type="text" id="CLERKNODEsetJuddiApiUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/juddi-api" value="http://localhost:8080/juddiv3/services/juddi-api"><br>
 
                                 </div>
 

@@ -13,7 +13,7 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/UDDIBrowser/home.jsp</td>
+	<td>/juddi-gui/home.jsp</td>
 	<td></td>
 </tr>
 <tr>
@@ -33,7 +33,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Show 7</td>
+	<td>link=Show 8</td>
 	<td></td>
 </tr>
 <tr>
@@ -46,7 +46,46 @@
 	<td>UDDI Custody and Ownership Transfer Service</td>
 	<td></td>
 </tr>
-
+<tr>
+	<td>click</td>
+	<td>link=Discover</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Search</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button.btn.active</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=#searchcriteria &gt; button.btn.active</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>name=approximateMatch</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=searchcontent</td>
+	<td>%</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>xpath=(//a[contains(text(),'Search')])[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=td</td>
+	<td></td>
+</tr>
 </tbody></table>
 </body>
 </html>

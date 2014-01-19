@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8080/UDDIBrowser" />
+<title>WadlImport</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">WadlImport</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/juddi-gui/search.jsp</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Discover</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Register Services from WADL</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=wsdlurl</td>
+	<td>http://svn.apache.org/repos/asf/juddi/trunk/juddi-client/src/test/resources/wadl/cxf.wadl</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[contains(text(),'Step 2)&nbsp;&nbsp;Key Domain')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=keydomain</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[contains(text(),'Step 3)&nbsp;&nbsp;&nbsp;Business Selection')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=businessname</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Step 4) Review and Approve</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Preview</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=preview</td>
+	<td>WADL successfully parsed! This will create 0 Port tModels, 2 Binding tModels, one tModel Key Generator, 1 binding, and 1 service(s) attached to the business with the key test .<br />Services:<br />Key: uddi:svn.apache.org:service_servicename <br />Name: Servicename <br />Binding Templates:Key: uddi:svn.apache.org:binding_svn.apache.org_servicename_a resource base url without a description_8080<br />Access Point: http://localhost:8080/tModels<br />Key:uddi:svn.apache.org:binding Name: uddi:svn.apache.org: Binding tModelKey:uddi:svn.apache.org:rest Name: uddi:svn.apache.org: Rest tModel</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=preview</td>
+	<td>WADL successfully parsed! This will create 0 Port tModels, 2 Binding tModels, one tModel Key Generator, 1 binding, and 1 service(s) attached to the business with the key test .<br />Services:<br />Key: uddi:svn.apache.org:service_servicename <br />Name: Servicename <br />Binding Templates:Key: uddi:svn.apache.org:binding_svn.apache.org_servicename_a resource base url without a description_8080<br />Access Point: http://localhost:8080/tModels<br />Key:uddi:svn.apache.org:rest Name: uddi:svn.apache.org: Rest tModelKey:uddi:svn.apache.org:binding Name: uddi:svn.apache.org: Binding tModelSaving tModel svn.apache.org Key Generator Partition...Error Authentication is required for this API call<br />Saving tModel uddi:svn.apache.org: Rest tModel...Error Authentication is required for this API call<br />Saving tModel uddi:svn.apache.org: Binding tModel...Error Authentication is required for this API call<br />Saving business test...Error Authentication is required for this API call</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=username</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=loginbutton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=exact:uddi:svn.apache.org:keygenerator</td>
+	<td>exact:uddi:svn.apache.org:keygenerator</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=exact:uddi:svn.apache.org:binding</td>
+	<td>exact:uddi:svn.apache.org:binding</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=exact:uddi:svn.apache.org:rest</td>
+	<td>exact:uddi:svn.apache.org:rest</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=exact:uddi:svn.apache.org:business_test</td>
+	<td>exact:uddi:svn.apache.org:business_test</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Welcome test</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Discover</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Businesses</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>link=test</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=test</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>xpath=(//a[contains(text(),'Services')])[4]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>link=exact:uddi:svn.apache.org:service_servicename</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=exact:uddi:svn.apache.org:service_servicename</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Binding Template</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Home</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=img</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

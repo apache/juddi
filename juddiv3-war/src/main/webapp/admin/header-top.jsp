@@ -117,16 +117,15 @@
 
                                 <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><i class="icon-question-sign icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.help")%> <b class="caret"></b></a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="http://juddi.apache.org/docs/3.x/userguide/html/index.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.userguide")%>"><%=ResourceLoader.GetResource(session, "navbar.help.userguide")%></a></li>
+                                       <li><a href="http://juddi.apache.org/docs/3.x/userguide/html/index.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.userguide")%>"><%=ResourceLoader.GetResource(session, "navbar.help.userguide")%></a></li>
                                         <li><a href="http://juddi.apache.org/docs/3.x/devguide/html/index.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.devguide")%>"><%=ResourceLoader.GetResource(session, "navbar.help.devguide")%></a></li>
                                         <li><a href="http://juddi.apache.org/docs.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.api")%>"><%=ResourceLoader.GetResource(session, "navbar.help.api")%></a></li>
                                         <li><a href="http://wiki.apache.org/juddi" title="<%=ResourceLoader.GetResource(session, "navbar.help.wiki")%>"><%=ResourceLoader.GetResource(session, "navbar.help.wiki")%></a></li>
                                         <li><a href="http://juddi.apache.org/issue-tracking.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.bugreport")%>"><%=ResourceLoader.GetResource(session, "navbar.help.bugreport")%></a></li>
                                         <li><a href="http://juddi.apache.org/" title="<%=ResourceLoader.GetResource(session, "navbar.help.website")%>"><%=ResourceLoader.GetResource(session, "navbar.help.website")%></a></li>
-                                        <li><a href="http://www.nabble.com/jUDDI-f218.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.mailinglist")%>"><%=ResourceLoader.GetResource(session, "navbar.help.mailinglist")%></a></li>
+                                        <li><a href="http://mail-archives.apache.org/mod_mbox/juddi-user/" title="<%=ResourceLoader.GetResource(session, "navbar.help.mailinglist")%>"><%=ResourceLoader.GetResource(session, "navbar.help.mailinglist")%></a></li>
                                         <li><a href="http://svn.apache.org/viewvc/juddi/" title="<%=ResourceLoader.GetResource(session, "navbar.help.source")%>"><%=ResourceLoader.GetResource(session, "navbar.help.source")%></a></li>
                                         <li><a href="about.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.help.about.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.help.about")%></a></li>
-
                                     </ul>
                                 </li>
                             </ul>

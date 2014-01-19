@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8080/UDDIBrowser" />
+<title>WsdlImport</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">WsdlImport</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/juddi-gui/home.jsp</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Register Services from WSDL</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=wsdlurl</td>
+	<td>http://svn.apache.org/repos/asf/juddi/trunk/juddi-client/src/test/resources/wsdl/sample_1.wsdl</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[contains(text(),'Step 2)&nbsp;&nbsp;Key Domain')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=keydomain</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[contains(text(),'Step 3)&nbsp;&nbsp;&nbsp;Business Selection')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=businessname</td>
+	<td>big wsdl</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Step 4) Review and Approve</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Preview</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=preview</td>
+	<td>WSDL successfully parsed! This will create 1 portType tmodel(s), 1 binding tModel(s), 1 binding(s), and 1 service(s) attached to the business with the key big wsdl .<br />Services:<br />Key: uddi:svn.apache.org:service_stockquoteservice <br />Name: StockQuoteService <br />Binding Templates:Key: uddi:svn.apache.org:binding_svn.apache.org_stockquoteservice_stockquoteport_80<br />Access Point: http://location/sampletModels<br />Key: uddi:svn.apache.org:StockQuoteSoapBinding Name: StockQuoteSoapBindingKey: uddi:svn.apache.org:StockQuotePortType Name: StockQuotePortType</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=preview</td>
+	<td>WSDL successfully parsed! This will create 1 portType tmodel(s), 1 binding tModel(s), 1 binding(s), and 1 service(s) attached to the business with the key big wsdl .<br />Services:<br />Key: uddi:svn.apache.org:service_stockquoteservice <br />Name: StockQuoteService <br />Binding Templates:Key: uddi:svn.apache.org:binding_svn.apache.org_stockquoteservice_stockquoteport_80<br />Access Point: http://location/sampletModels<br />Key: uddi:svn.apache.org:StockQuoteSoapBinding Name: StockQuoteSoapBindingKey: uddi:svn.apache.org:StockQuotePortType Name: StockQuotePortTypeSaving tModel StockQuoteSoapBinding...Error Authentication is required for this API call<br />Saving tModel StockQuotePortType...Error Authentication is required for this API call<br />Saving business big wsdl along with our imported service(s)...Error Authentication is required for this API call</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=username</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=loginbutton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='preview']/ul[2]/li</td>
+	<td>exact:Key: uddi:svn.apache.org:StockQuoteSoapBinding Name: StockQuoteSoapBinding</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=exact:uddi:svn.apache.org:business_big wsdl</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=Name0Value</td>
+	<td>big wsdl</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Discovery</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Contacts</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Categories</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Identifiers</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>xpath=(//a[contains(text(),'Services')])[4]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=sigtagheader</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Operational Info</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='opinfodiv']/table/tbody/tr[2]/td[2]</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Related Businesses</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>xpath=(//a[contains(text(),'Services')])[4]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=services</td>
+	<td>Business Services - 1 are defined for this business. <br /> Add a Service <br /> Name Key Binding Template StockQuoteService uddi:svn.apache.org:service_stockquoteservice 1</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=exact:uddi:svn.apache.org:service_stockquoteservice</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Categories</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Binding Template</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=sigtagheader</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Operational Info</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='opinfodiv']/table/tbody/tr[2]/td[2]</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=View as XML</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Home</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Welcome test</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

@@ -13,12 +13,7 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/UDDIBrowser/businessBrowse.jsp</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Discover</td>
+	<td>/juddi-gui/home.jsp</td>
 	<td></td>
 </tr>
 <tr>
@@ -63,8 +58,13 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>xpath=(//a[contains(text(),'Close')])[2]</td>
-	<td></td>
+	<td>css=#viewAsXml &gt; div.modal-header &gt; button.close</td>
+	<td>×</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Discovery</td>
+	<td>Discovery</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -73,8 +73,8 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>xpath=(//a[contains(text(),'Services')])[2]</td>
-	<td></td>
+	<td>xpath=(//a[contains(text(),'Services')])[4]</td>
+	<td>Services</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -138,7 +138,7 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>id=Name0Lang</td>
+	<td>id=Name1Lang</td>
 	<td>Click to edit</td>
 </tr>
 <tr>
@@ -163,7 +163,7 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>id=Name1Lang</td>
+	<td>id=Name0Lang</td>
 	<td>en</td>
 </tr>
 <tr>
@@ -257,11 +257,25 @@
 	<td></td>
 </tr>
 <tr>
+	<td>assertText</td>
+	<td>id=displayrecords</td>
+	<td>10</td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
-	<td>link=exact:uddi:uddi.org:ubr:postaladdress</td>
+	<td>link=Welcome root</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>id=password</td>
 	<td></td>
 </tr>
-
+<tr>
+	<td>verifyValue</td>
+	<td>id=username</td>
+	<td></td>
+</tr>
 </tbody></table>
 </body>
 </html>
