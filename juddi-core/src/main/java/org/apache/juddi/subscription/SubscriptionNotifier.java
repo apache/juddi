@@ -348,6 +348,10 @@ public class SubscriptionNotifier extends TimerTask {
 //				resultList.getServiceList().setServiceInfos(null);
 //			}
 			body.setSubscriptionResultsList(resultList);
+                        
+                         //TODO if the endpoint requires an auth token, look up the security endpoint of the remote registry
+                        //via ClientSubscriptionInfo
+                        
                         if (sendToken)
                         {
                             String authorizedName = modelSubscription.getAuthorizedName();

@@ -59,6 +59,7 @@
                                 <div id="invoke_SyncSubscription" style="display:none">
                                         <%=ResourceLoader.GetResource(session, "items.noauthtoken")%>  <br>
                                         <textarea rows="4" cols="80" id="invokeSyncSubscriptionXML" class="forminput" placeholder="Enter subscription XML"></textarea>
+                                       
                                 </div>
                                 <div id="delete_publisher" style="display:none">
                                         <input type="text"  class="forminput" id="delete_publisherKEY" placeholder="Enter publisher id">
@@ -71,7 +72,7 @@
                                 </div>
                                 <div id="save_ClientSubscriptionInfo" style="display:none">
                                         <%=ResourceLoader.GetResource(session, "items.noauthtoken")%><br>
-                                        <textarea rows="4" cols="80" id="ClientSubscriptionInfoDetailXML" class="forminput" placeholder="Enter subscription XML"></textarea>
+                                        <textarea rows="4" cols="80" id="ClientSubscriptionInfoDetailXML" class="forminput" placeholder="Enter subscription XML"><%=StringEscapeUtils.escapeHtml(UddiAdminHub.getSampleSave_ClientSubscriptionInfo())%></textarea>
                                 </div>
                                 <div id="save_publisher" style="display:none">
                                         <%=ResourceLoader.GetResource(session, "items.name")%> <input type="text" id="savePublisherNAME"  class="forminput" placeholder="Enter name"><br>

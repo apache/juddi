@@ -73,7 +73,8 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
- * Implements the jUDDI API service
+ * Implements the jUDDI API service. These methods are outside of the UDDI spec
+ * and are specific to jUDDI. They are primarily used for administrative functions.
  *
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>

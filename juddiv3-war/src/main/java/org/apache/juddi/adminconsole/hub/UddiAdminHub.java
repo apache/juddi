@@ -64,6 +64,7 @@ import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.juddi.adminconsole.AES;
 import org.apache.juddi.adminconsole.resources.ResourceLoader;
+import org.apache.juddi.api_v3.ClientSubscriptionInfo;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.api_v3.DiscardAuthToken;
@@ -656,13 +657,57 @@ public class UddiAdminHub {
                 return null;
         }
 
+        public static String getSampleSave_ClientSubscriptionInfo(){
+                SaveClientSubscriptionInfo x = new SaveClientSubscriptionInfo();
+                x.setAuthInfo("");
+                x.getClientSubscriptionInfo().add(new ClientSubscriptionInfo());
+                x.getClientSubscriptionInfo().get(0).setFromClerk(new Clerk());
+                x.getClientSubscriptionInfo().get(0).setToClerk(new Clerk());
+                x.getClientSubscriptionInfo().get(0).setSubscriptionKey("subscription key");
+                x.getClientSubscriptionInfo().get(0).setLastModified(null);
+                x.getClientSubscriptionInfo().get(0).setLastNotified(null);
+                x.getClientSubscriptionInfo().get(0).getFromClerk().setName("ClerkName");
+                x.getClientSubscriptionInfo().get(0).getFromClerk().setPublisher("username");
+                x.getClientSubscriptionInfo().get(0).getFromClerk().setPassword("password");
+                x.getClientSubscriptionInfo().get(0).getFromClerk().setNode(new Node());
+                x.getClientSubscriptionInfo().get(0).getFromClerk().getNode().setClientName("clientname");
+                x.getClientSubscriptionInfo().get(0).getFromClerk().getNode().setName("nodename");
+                x.getClientSubscriptionInfo().get(0).getFromClerk().getNode().setDescription("description");
+                x.getClientSubscriptionInfo().get(0).getFromClerk().getNode().setInquiryUrl("http://localhost:8080/juddiv3/services/inquiry");
+                x.getClientSubscriptionInfo().get(0).getFromClerk().getNode().setPublishUrl("http://localhost:8080/juddiv3/services/publish");
+                x.getClientSubscriptionInfo().get(0).getFromClerk().getNode().setCustodyTransferUrl("http://localhost:8080/juddiv3/services/custody-transfer");
+                x.getClientSubscriptionInfo().get(0).getFromClerk().getNode().setSubscriptionUrl("http://localhost:8080/juddiv3/services/subscription");
+                x.getClientSubscriptionInfo().get(0).getFromClerk().getNode().setSubscriptionListenerUrl("http://localhost:8080/juddiv3/services/subscription-listener");
+                x.getClientSubscriptionInfo().get(0).getFromClerk().getNode().setJuddiApiUrl("http://localhost:8080/juddiv3/services/juddi-api");
+                x.getClientSubscriptionInfo().get(0).getFromClerk().getNode().setReplicationUrl("http://localhost:8080/juddiv3/services/replication");
+                
+                x.getClientSubscriptionInfo().get(0).getToClerk().setName("ClerkName");
+                x.getClientSubscriptionInfo().get(0).getToClerk().setPublisher("username");
+                x.getClientSubscriptionInfo().get(0).getToClerk().setPassword("password");
+                x.getClientSubscriptionInfo().get(0).getToClerk().setNode(new Node());
+                x.getClientSubscriptionInfo().get(0).getToClerk().getNode().setClientName("clientname");
+                x.getClientSubscriptionInfo().get(0).getToClerk().getNode().setName("nodename");
+                x.getClientSubscriptionInfo().get(0).getToClerk().getNode().setDescription("description");
+                x.getClientSubscriptionInfo().get(0).getToClerk().getNode().setInquiryUrl("http://localhost:8080/juddiv3/services/inquiry");
+                x.getClientSubscriptionInfo().get(0).getToClerk().getNode().setPublishUrl("http://localhost:8080/juddiv3/services/publish");
+                x.getClientSubscriptionInfo().get(0).getToClerk().getNode().setCustodyTransferUrl("http://localhost:8080/juddiv3/services/custody-transfer");
+                x.getClientSubscriptionInfo().get(0).getToClerk().getNode().setSubscriptionUrl("http://localhost:8080/juddiv3/services/subscription");
+                x.getClientSubscriptionInfo().get(0).getToClerk().getNode().setSubscriptionListenerUrl("http://localhost:8080/juddiv3/services/subscription-listener");
+                x.getClientSubscriptionInfo().get(0).getToClerk().getNode().setJuddiApiUrl("http://localhost:8080/juddiv3/services/juddi-api");
+                x.getClientSubscriptionInfo().get(0).getToClerk().getNode().setReplicationUrl("http://localhost:8080/juddiv3/services/replication");
+                StringWriter sw = new StringWriter();
+                JAXB.marshal(x, sw);
+                return sw.toString();
+        }
         private String save_ClientSubscriptionInfo(HttpServletRequest parameters) {
                 StringBuilder ret = new StringBuilder();
                 SaveClientSubscriptionInfo sb = new SaveClientSubscriptionInfo();
 
+                if (parameters.getParameter("ClientSubscriptionInfoDetailXML")==null)
+                        return "No input!";
                 ClientSubscriptionInfoDetail d = null;
                 try {
-                        StringReader sr = new StringReader(parameters.getParameter("invokeSyncSubscriptionXML").trim());
+                        StringReader sr = new StringReader(parameters.getParameter("ClientSubscriptionInfoDetailXML").trim());
                         sb = (JAXB.unmarshal(sr, SaveClientSubscriptionInfo.class));
                         sb.setAuthInfo(GetToken());
                         d = juddi.saveClientSubscriptionInfo(sb);
