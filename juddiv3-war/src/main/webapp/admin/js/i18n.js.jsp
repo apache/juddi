@@ -1,5 +1,5 @@
 
-<%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
+<%@page import="org.apache.juddi.adminconsole.resources.ResourceLoader"%>
 <%-- 
 /*
  * Copyright 2001-2013 The Apache Software Foundation.

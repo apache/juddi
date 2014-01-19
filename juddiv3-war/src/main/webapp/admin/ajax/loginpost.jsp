@@ -10,8 +10,8 @@
 <%@page import="java.util.Properties"%>
 <%@page import="java.io.InputStream"%>
 <%@page import="java.net.URL"%>
-<%@page import="org.apache.juddi.webconsole.AES"%>
-<%@page import="org.apache.juddi.webconsole.hub.UddiAdminHub"%>
+<%@page import="org.apache.juddi.adminconsole.AES"%>
+<%@page import="org.apache.juddi.adminconsole.hub.UddiAdminHub"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include  file="../csrf.jsp" %>
 <%        boolean ok = true;

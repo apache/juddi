@@ -22,7 +22,7 @@
     Author     : Alex O'Ree
 --%>
 
-<%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
+<%@page import="org.apache.juddi.adminconsole.resources.ResourceLoader"%>
 <%@page import="javax.xml.datatype.DatatypeFactory"%>
 <%@page import="java.util.GregorianCalendar"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

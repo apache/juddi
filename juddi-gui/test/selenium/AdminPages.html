@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8080/juddiv3/" />
+<title>AdminPages</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">AdminPages</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/juddiv3/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=div.content &gt; div</td>
+	<td>jUDDI has been successfully installed!</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View the service listing on this UDDI node</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>link={urn:juddi-apache-org:v3_service}JUDDIApiService</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>link={urn:uddi-org:v3_service}UDDICustodyTransferService</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>link={urn:uddi-org:v3_service}UDDIInquiryService</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>link={urn:uddi-org:v3_service}UDDIPublicationService</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>link={urn:uddi-org:v3_service}UDDISecurityService</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>link={urn:uddi-org:v3_service}UDDISubscriptionListenerService</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>link={urn:uddi-org:v3_service}UDDISubscriptionService</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>link=exact:http://localhost:8080/juddiv3/services/inquiryRest?_wadl</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/juddiv3/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View the jUDDI Administration Interface</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=button.btn.btn-primary</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>xpath=(//a[contains(text(),'View Details »')])[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='status']/pre[3]/font</td>
+	<td>Data source is valid and online!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Statistics</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=td</td>
+	<td>Failed API Queries</td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>null</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Configure</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Save</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=i.icon-thumbs-up.icon-2x</td>
+	<td>Saved!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Show Debug Information</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='debugtable']/table/tbody/tr[11]/td</td>
+	<td>java.home</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.icon-question-sign.icon-large</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=divselector</td>
+	<td>label=getAllPublisherDetail</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Go!</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=×</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=username</td>
+	<td>root</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>root</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=loginbutton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Go!</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>//div[@id='adminresults']/table/tbody/tr[2]/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Close</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=divselector</td>
+	<td>label=get_publisherDetail</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=get_publisherDetailKEY</td>
+	<td>root</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Go!</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>//div[@id='adminresults']/table/tbody/tr[2]/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Close</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=divselector</td>
+	<td>label=invoke_SyncSubscription</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=divselector</td>
+	<td>label=save_Clerk</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=divselector</td>
+	<td>label=save_Node</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=NODEsetClientName</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=NODEsetName</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=NODEsetDescription</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Go!</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=adminresults</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Close</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=divselector</td>
+	<td>label=save_publisher</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=savePublisherNAME</td>
+	<td>bob</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=savePublisherEMAIL</td>
+	<td>bob@mail.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=savePublisherAuthorizedName</td>
+	<td>bob</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Go!</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=adminresults</td>
+	<td>Success</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Close</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=divselector</td>
+	<td>label=save_Node</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=divselector</td>
+	<td>label=get_publisherDetail</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=get_publisherDetailKEY</td>
+	<td>bob</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Go!</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='adminresults']/table/tbody/tr[2]/td[2]</td>
+	<td>Authorized Name = bob<br />Publisher Name = bob<br />Email = bob@mail.com<br />Administrator = true<br />Enabled = true<br />Max Bindings per = null<br />Max Businesses = null<br />Max Services per = null<br />Max tModels = null</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Close</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

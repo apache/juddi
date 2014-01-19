@@ -20,8 +20,8 @@
     Author     : Alex O'Ree
 --%>
 
-<%@page import="org.apache.juddi.webconsole.hub.UddiAdminHub"%>
-<%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
+<%@page import="org.apache.juddi.adminconsole.hub.UddiAdminHub"%>
+<%@page import="org.apache.juddi.adminconsole.resources.ResourceLoader"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%

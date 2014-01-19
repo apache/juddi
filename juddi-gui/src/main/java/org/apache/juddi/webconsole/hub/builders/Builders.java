@@ -610,6 +610,8 @@ public class Builders {
                     String[] t = (String[]) map.get(prefix + index + PostBackConstants.VALUE);
                     if (t != null && t.length > 0) {
                         pn.setBindingKey(t[0]);
+                        if (pn.getBindingKey().equalsIgnoreCase(ResourceLoader.GetResource(locale, "items.clicktoedit")))
+                                pn.setBindingKey(null);
                     }
 
                     t = (String[]) map.get(prefix + index + PostBackConstants.HOSTINGREDIRECTOR);

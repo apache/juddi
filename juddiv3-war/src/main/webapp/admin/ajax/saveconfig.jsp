@@ -4,7 +4,7 @@
     Author     : Alex O'Ree
 --%>
 
-<%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
+<%@page import="org.apache.juddi.adminconsole.resources.ResourceLoader"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.apache.juddi.config.AppConfig"%>
 <%@page import="org.apache.commons.configuration.Configuration"%>

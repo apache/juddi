@@ -38,7 +38,7 @@
       org.springframework.web.context.ContextLoaderListener
 		</listener-class>
 		 <!-- this class setups the encryption key for the session-->
-    <listener-class>org.apache.juddi.webconsole.StartupServlet</listener-class>
+    <listener-class>org.apache.juddi.adminconsole.StartupServlet</listener-class>
     
   </listener>
 

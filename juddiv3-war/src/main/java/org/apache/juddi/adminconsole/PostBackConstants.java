@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.apache.juddi.webconsole;
+package org.apache.juddi.adminconsole;
 
 /**
  * A collection of constants to use for form postbacks and parsing data from the

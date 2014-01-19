@@ -12,7 +12,7 @@
 <%@page import="java.util.jar.JarFile"%>
 <%@page import="java.net.URL"%>
 <%@page import="java.util.Enumeration"%>
-<%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
+<%@page import="org.apache.juddi.adminconsole.resources.ResourceLoader"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 </div> <!-- /container -->

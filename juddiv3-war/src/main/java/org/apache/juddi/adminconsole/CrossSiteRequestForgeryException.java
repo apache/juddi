@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.webconsole;
+package org.apache.juddi.adminconsole;
 
 /**
  * Provides a very basic, no stack trace exception, useful for throwing at a browser without revealing any details 

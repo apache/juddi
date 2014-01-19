@@ -73,7 +73,6 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
 import org.w3._2000._09.xmldsig_.SignatureType;
 import org.w3._2000._09.xmldsig_.X509DataType;
 
-
 /**
  * UddiHub - The hub acts as a single point for managing browser to uddi
  * services. At most 1 instance is allowed per http session. In general, all
@@ -843,7 +842,6 @@ public class UddiHub implements Serializable {
                 return null;
         }
 
-        
         /**
          * don't think this is used yet
          *
@@ -924,23 +922,23 @@ public class UddiHub implements Serializable {
                 try {
                         SaveService sb = new SaveService();
                         sb.setAuthInfo(GetToken());
-                         ServiceDetail saveService =null;
+                        ServiceDetail saveService = null;
                         sb.getBusinessService().add(be);
                         try {
-                                 saveService = publish.saveService(sb);
+                                saveService = publish.saveService(sb);
                         } catch (Exception ex) {
                                 if (isExceptionExpiration(ex)) {
                                         token = null;
                                         sb.setAuthInfo(GetToken());
-                                        saveService =   publish.saveService(sb);
+                                        saveService = publish.saveService(sb);
 
                                 } else {
                                         throw ex;
                                 }
                         }
-                        return ResourceLoader.GetResource(session, "actions.saved") + " " +
-                                "<a href=\"businessEditor2.jsp?id=" + URLEncoder.encode(saveService.getBusinessService().get(0).getServiceKey(),"UTF8") +
-                                "\">" + StringEscapeUtils.escapeHtml(saveService.getBusinessService().get(0).getServiceKey()) + "</a>";        
+                        return ResourceLoader.GetResource(session, "actions.saved") + " "
+                                + "<a href=\"serviceEditor.jsp?id=" + URLEncoder.encode(saveService.getBusinessService().get(0).getServiceKey(), "UTF8")
+                                + "\">" + StringEscapeUtils.escapeHtml(saveService.getBusinessService().get(0).getServiceKey()) + "</a>";
                 } catch (Exception ex) {
                         return HandleException(ex);
                 }
@@ -957,23 +955,23 @@ public class UddiHub implements Serializable {
                         SaveBusiness sb = new SaveBusiness();
                         sb.setAuthInfo(GetToken());
                         sb.getBusinessEntity().add(be);
-                        BusinessDetail saveBusiness=null;
+                        BusinessDetail saveBusiness = null;
                         try {
-                                 saveBusiness = publish.saveBusiness(sb);
+                                saveBusiness = publish.saveBusiness(sb);
                         } catch (Exception ex) {
                                 if (isExceptionExpiration(ex)) {
                                         token = null;
                                         sb.setAuthInfo(GetToken());
-                                      saveBusiness=  publish.saveBusiness(sb);
+                                        saveBusiness = publish.saveBusiness(sb);
 
                                 } else {
                                         throw ex;
                                 }
                         }
 
-                        return ResourceLoader.GetResource(session, "actions.saved") + " " +
-                                "<a href=\"businessEditor2.jsp?id=" + URLEncoder.encode(saveBusiness.getBusinessEntity().get(0).getBusinessKey(),"UTF8") +
-                                "\">" + StringEscapeUtils.escapeHtml(saveBusiness.getBusinessEntity().get(0).getBusinessKey()) + "</a>";        
+                        return ResourceLoader.GetResource(session, "actions.saved") + " "
+                                + "<a href=\"businessEditor2.jsp?id=" + URLEncoder.encode(saveBusiness.getBusinessEntity().get(0).getBusinessKey(), "UTF8")
+                                + "\">" + StringEscapeUtils.escapeHtml(saveBusiness.getBusinessEntity().get(0).getBusinessKey()) + "</a>";
                 } catch (Exception ex) {
                         return HandleException(ex);
                 }
@@ -1221,19 +1219,23 @@ public class UddiHub implements Serializable {
         private String HandleException(Exception ex) {
                 if (ex instanceof DispositionReportFaultMessage) {
                         DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        log.error(ex.getMessage());
-                        log.debug(null, ex);
-                        return ResourceLoader.GetResource(session, "errors.uddi") + " " + ex.getMessage() + " " + (f.detail!=null ? f.detail.getMessage() : "");
-                }
-                if (ex instanceof RemoteException) {
+                        log.error(ex.getMessage() + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : ""));
+                        log.debug(ex.getMessage(), ex);
+                        return ResourceLoader.GetResource(session, "errors.uddi") + " " + StringEscapeUtils.escapeHtml(ex.getMessage()) + " " + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : "");
+                } else if (ex instanceof RemoteException) {
                         RemoteException f = (RemoteException) ex;
-                        log.error(ex.getMessage());
-                        log.debug(null, ex);
-                        return ResourceLoader.GetResource(session, "errors.generic") + " " + ex.getMessage() + " " + (f.detail!=null ? f.detail.getMessage() : "");
+                        log.error("RemoteException " + ex.getMessage());
+                        log.debug("RemoteException " + ex.getMessage(), ex);
+                        return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage()) + " " + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : "");
+                } else if (ex instanceof NullPointerException) {
+                        log.error("NPE! Please report! " + ex.getMessage(), ex);
+                        log.debug("NPE! Please report! " + ex.getMessage(), ex);
+                        return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage());
+                } else {
+                        log.error("Unexpected error " + ex.getMessage(), ex);
+                        //log.debug(ex.getMessage(), ex);
+                        return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage());
                 }
-                log.error(ex.getMessage());
-                log.debug(null, ex);
-                return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage());
         }
 
         /**
@@ -2047,25 +2049,25 @@ public class UddiHub implements Serializable {
                 try {
                         SaveTModel sb = new SaveTModel();
                         sb.setAuthInfo(GetToken());
-                        TModelDetail saveTModel=null;
+                        TModelDetail saveTModel = null;
                         sb.getTModel().add(be);
                         //JAXB.marshal(be, System.out);
                         try {
-                                 saveTModel = publish.saveTModel(sb);
+                                saveTModel = publish.saveTModel(sb);
                         } catch (Exception ex) {
                                 if (isExceptionExpiration(ex)) {
                                         token = null;
                                         sb.setAuthInfo(GetToken());
-                                         saveTModel = publish.saveTModel(sb);
+                                        saveTModel = publish.saveTModel(sb);
 
                                 } else {
                                         throw ex;
                                 }
                         }
                         //return ResourceLoader.GetResource(session, "actions.saved");
-                        return ResourceLoader.GetResource(session, "actions.saved") + " " +
-                                "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(saveTModel.getTModel().get(0).getTModelKey(),"UTF8") +
-                                "\">" + StringEscapeUtils.escapeHtml(saveTModel.getTModel().get(0).getTModelKey()) + "</a>";
+                        return ResourceLoader.GetResource(session, "actions.saved") + " "
+                                + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(saveTModel.getTModel().get(0).getTModelKey(), "UTF8")
+                                + "\">" + StringEscapeUtils.escapeHtml(saveTModel.getTModel().get(0).getTModelKey()) + "</a>";
                 } catch (Exception ex) {
                         return HandleException(ex);
                 }
@@ -2290,9 +2292,9 @@ public class UddiHub implements Serializable {
                                         throw ex;
                                 }
                         }
-                        return ResourceLoader.GetResource(session, "messages.success") + 
-                        "<a href=\"editSubscription.jsp?id=" + URLEncoder.encode(data.value.get(0).getSubscriptionKey(),"UTF8") +
-                        "\">" + StringEscapeUtils.escapeHtml(data.value.get(0).getSubscriptionKey()) + "</a>";
+                        return ResourceLoader.GetResource(session, "messages.success")
+                                + " <a href=\"editSubscription.jsp?id=" + URLEncoder.encode(data.value.get(0).getSubscriptionKey(), "UTF8")
+                                + "\">" + StringEscapeUtils.escapeHtml(data.value.get(0).getSubscriptionKey()) + "</a>";
                 } catch (Exception ex) {
                         return HandleException(ex);
                 }

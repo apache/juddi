@@ -7,7 +7,7 @@
 
 <%@page import="javax.persistence.EntityTransaction"%>
 <%@page import="org.uddi.api_v3.BusinessEntity"%>
-<%@page import="org.apache.juddi.config.Property"%>
+<%@page import="org.apache.juddi.config.Property"%> 
 <%@page import="org.apache.juddi.config.AppConfig"%>
 <%@page import="javax.persistence.EntityManager"%>
 <%@page import="org.apache.juddi.config.PersistenceManager"%>

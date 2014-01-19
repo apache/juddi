@@ -91,7 +91,7 @@ public class Registry {
 				}
 			}
 			
-			log.info("jUDDI registry started succesfully.");
+			log.info("jUDDI registry started successfully.");
 		}
  	}
 	

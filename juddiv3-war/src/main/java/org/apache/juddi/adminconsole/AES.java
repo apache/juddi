@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.webconsole;
+package org.apache.juddi.adminconsole;
 
 import java.nio.charset.Charset;
 import javax.crypto.*;

@@ -14,12 +14,12 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.webconsole.hub.builders;
+package org.apache.juddi.adminconsole.hub.builders;
 
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.juddi.webconsole.resources.ResourceLoader;
+import org.apache.juddi.adminconsole.resources.ResourceLoader;
 import org.uddi.api_v3.*;
 
 /**

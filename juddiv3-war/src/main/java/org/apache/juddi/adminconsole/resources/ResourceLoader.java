@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.apache.juddi.webconsole.resources;
+package org.apache.juddi.adminconsole.resources;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -56,7 +56,7 @@ public class ResourceLoader {
 
         ResourceBundle bundle = (ResourceBundle) map.get(locale);
         if (bundle == null) {
-            bundle = ResourceBundle.getBundle("org.apache.juddi.webconsole.resources.web", new Locale(locale));
+            bundle = ResourceBundle.getBundle("org.apache.juddi.adminconsole.resources.web", new Locale(locale));
             map.put(locale, bundle);
         }
         try {

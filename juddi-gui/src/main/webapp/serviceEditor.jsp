@@ -41,6 +41,7 @@
         if (businessid != null && businessid.length() > 0) {
             newitem = true;
         } else {
+                //no service id or business id
             response.sendRedirect("index.jsp");
         }
 
@@ -97,13 +98,18 @@
                 <br>
                 <div style="border-width: 2px; border-style: solid;" class="noedit" id="<%=PostBackConstants.BUSINESSKEY%>">
                     <%
-                        out.write("<a href=\"businessEditor2.jsp?id=" + StringEscapeUtils.escapeHtml(bd.getBusinessKey()) + "\">");
+                    if (bd==null || bd.getBusinessKey() ==null){
+                            out.write("");
+                    }
+                    else{
+                            out.write("<a href=\"businessEditor2.jsp?id=" + StringEscapeUtils.escapeHtml(bd.getBusinessKey()) + "\">");
                         out.write(StringEscapeUtils.escapeHtml(bd.getBusinessKey()));
                         out.write("</a>");
+                    
                         if (bd.getCategoryBag() == null) {
                             bd.setCategoryBag(new CategoryBag());
                         }
-
+}
                     %>
                 </div>
                 <br>

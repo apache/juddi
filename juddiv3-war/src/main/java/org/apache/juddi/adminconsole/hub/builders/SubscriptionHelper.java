@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.apache.juddi.webconsole.hub.builders;
+package org.apache.juddi.adminconsole.hub.builders;
 
 import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;

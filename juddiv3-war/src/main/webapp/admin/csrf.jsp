@@ -4,8 +4,8 @@
     Author     : Alex O'Ree
 --%>
 
-<%@page import="org.apache.juddi.webconsole.hub.UddiAdminHub"%>
-<%@page import="org.apache.juddi.webconsole.CrossSiteRequestForgeryException"%>
+<%@page import="org.apache.juddi.adminconsole.hub.UddiAdminHub"%>
+<%@page import="org.apache.juddi.adminconsole.CrossSiteRequestForgeryException"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     //this is to catch someone that bookmarked a page after selecting a language

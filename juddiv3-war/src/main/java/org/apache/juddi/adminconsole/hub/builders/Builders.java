@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.webconsole.hub.builders;
+package org.apache.juddi.adminconsole.hub.builders;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,8 +32,8 @@ import javax.servlet.http.HttpSession;
 import javax.xml.datatype.DatatypeFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.webconsole.PostBackConstants;
-import org.apache.juddi.webconsole.resources.ResourceLoader;
+import org.apache.juddi.adminconsole.PostBackConstants;
+import org.apache.juddi.adminconsole.resources.ResourceLoader;
 import org.uddi.api_v3.*;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionFilter;

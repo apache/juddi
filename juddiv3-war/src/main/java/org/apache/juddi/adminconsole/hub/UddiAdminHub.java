@@ -1,4 +1,4 @@
-package org.apache.juddi.webconsole.hub;
+package org.apache.juddi.adminconsole.hub;
 
 /*
  * Copyright 2001-2013 The Apache Software Foundation.
@@ -62,8 +62,8 @@ import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDINode;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
-import org.apache.juddi.webconsole.AES;
-import org.apache.juddi.webconsole.resources.ResourceLoader;
+import org.apache.juddi.adminconsole.AES;
+import org.apache.juddi.adminconsole.resources.ResourceLoader;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.api_v3.DiscardAuthToken;
@@ -261,19 +261,23 @@ public class UddiAdminHub {
         private String HandleException(Exception ex) {
                 if (ex instanceof DispositionReportFaultMessage) {
                         DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        log.error(null, ex);
-                        return ResourceLoader.GetResource(session, "errors.uddi") + " " + ex.getMessage() + " " + (f.detail!=null ? f.detail.getMessage() : "");
-                }
-                if (ex instanceof RemoteException) {
+                        log.error(ex.getMessage() + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : ""));
+                        log.debug(ex.getMessage(), ex);
+                        return ResourceLoader.GetResource(session, "errors.uddi") + " " + StringEscapeUtils.escapeHtml(ex.getMessage()) + " " + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : "");
+                } else if (ex instanceof RemoteException) {
                         RemoteException f = (RemoteException) ex;
-                        log.error(null, ex);
-                        return ResourceLoader.GetResource(session, "errors.generic") + " " + ex.getMessage() + " " + (f.detail!=null ? f.detail.getMessage() : "");
+                        log.error("RemoteException " + ex.getMessage());
+                        log.debug("RemoteException " + ex.getMessage(), ex);
+                        return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage()) + " " + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : "");
+                } else if (ex instanceof NullPointerException) {
+                        log.error("NPE! Please report! " + ex.getMessage(), ex);
+                        log.debug("NPE! Please report! " + ex.getMessage(), ex);
+                        return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage());
+                } else {
+                        log.error("Unexpected error " + ex.getMessage(), ex);
+                        //log.debug(ex.getMessage(), ex);
+                        return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage());
                 }
-                log.error(null, ex);
-                return //"<div class=\"alert alert-error\" ><h3><i class=\"icon-warning-sign\"></i> "
-                        ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage());
-                //+ "</h3></div>";
-
         }
 
         /**
@@ -350,7 +354,7 @@ public class UddiAdminHub {
                 sc.setAuthInfo(GetToken());
                 Clerk c = new Clerk();
                 c.setName(parameters.getParameter("CLERKsetName"));
-                Node node=new Node();
+                Node node = new Node();
                 node.setClientName(parameters.getParameter("CLERKNODEsetClientName"));
                 node.setCustodyTransferUrl(parameters.getParameter("CLERKNODEsetCustodyTransferUrl"));
                 node.setDescription(parameters.getParameter("CLERKNODEsetDescription"));
@@ -369,7 +373,7 @@ public class UddiAdminHub {
                 c.setNode(node);
                 c.setPassword(parameters.getParameter("CLERKsetPassword"));
                 c.setPublisher(parameters.getParameter("CLERKsetPublisher"));
-                
+
                 sc.getClerk().add(c);
                 try {
                         juddi.saveClerk(sc);
@@ -429,8 +433,6 @@ public class UddiAdminHub {
                 }
                 return "Success";
         }
-
-      
 
         public enum AuthStyle {
 

@@ -33,7 +33,7 @@
 
                 <div class="span12">
                         <% UddiAdminHub x = UddiAdminHub.getInstance(application, session);
-                        %>
+                        %> 
                         <%=ResourceLoader.GetResource(session, "pages.admin.content")%>
                         <br>
                         <select onchange="toggledivs();" id="divselector">
