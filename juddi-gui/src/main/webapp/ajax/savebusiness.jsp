@@ -11,7 +11,7 @@
 <%
     if (request.getMethod().equalsIgnoreCase("POST")) {
       /*  Enumeration it = request.getParameterNames();
-        while (it.hasMoreElements()) {
+        while (it.hasMoreElements()) { 
             String name = (String) it.nextElement();
             out.write(name + " " + request.getParameter(name) + "<br>");
         }*/

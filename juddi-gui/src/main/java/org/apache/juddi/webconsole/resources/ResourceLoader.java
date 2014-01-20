@@ -49,7 +49,7 @@ public class ResourceLoader {
          * returns a localized string in the locale defined within locale or in
          * the default locale, en
          *
-         * @param session
+         * @param locale
          * @param key
          * @return a localized string
          * @throws IllegalArgumentException if the key is null

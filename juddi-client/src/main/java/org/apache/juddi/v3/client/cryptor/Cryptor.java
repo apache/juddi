@@ -53,7 +53,7 @@ public interface Cryptor {
          * decrypts the string
          *
          * @param str
-         * @return, if the password can be decrypted, the decrypted value is
+         * @return if the password can be decrypted, the decrypted value is
          * returned, otherwise the original value is returned<br>
          * In the event that decryption fails, the error message must be logged.
          * @throws NoSuchPaddingException

@@ -61,7 +61,7 @@ public class AES {
          * Generate a new AES 256 bit encryption key. Once generated, this key
          * can be used to replace the default key.
          *
-         * @return
+         * @return a new key
          */
         public static String GEN() {
                 return GEN(256);
@@ -92,7 +92,7 @@ public class AES {
          * return true is the supplied key is a valid aes key
          *
          * @param key
-         * @return
+         * @return true if the key is valid
          */
         public static boolean ValidateKey(String key) {
                 try {
@@ -116,7 +116,7 @@ public class AES {
          *
          * @param clear
          * @param key
-         * @return
+         * @return encrypted base64 text
          */
         public static String Encrypt(String clear, String key) throws Exception {
                 if ((clear == null || clear.length() == 0)) {
@@ -142,7 +142,7 @@ public class AES {
          *
          * @param cipher encrypted text
          * @param key
-         * @return
+         * @return encrypted text
          */
         public static String Decrypt(String cipher, String key) {
                 if ((cipher == null || cipher.length() == 0)) {

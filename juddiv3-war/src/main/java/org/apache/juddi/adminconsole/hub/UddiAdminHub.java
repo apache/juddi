@@ -23,8 +23,6 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -41,7 +39,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.Clerk;
-import org.apache.juddi.api_v3.ClerkDetail;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeletePublisher;
@@ -175,7 +172,7 @@ public class UddiAdminHub {
          *
          * @param application
          * @param _session
-         * @return
+         * @return instance
          * @throws Exception
          */
         public static UddiAdminHub getInstance(ServletContext application, HttpSession _session) throws Exception {
@@ -285,7 +282,7 @@ public class UddiAdminHub {
          * returns true if we are using JAXWS transport AND all of the URLs
          * start with https://
          *
-         * @return
+         * @return true/false
          */
         public boolean isSecure() {
 
@@ -297,7 +294,7 @@ public class UddiAdminHub {
          * gets a reference to the current juddi client config file. this is a
          * live instance changes can be stored to disk, usually
          *
-         * @return
+         * @return client config
          * @throws ConfigurationException g
          */
         public ClientConfig GetJuddiClientConfig() throws ConfigurationException {
@@ -309,7 +306,7 @@ public class UddiAdminHub {
          * Handles all API calls to the juddi web service
          *
          * @param parameters
-         * @return
+         * @return html formatted status message
          */
         public String go(HttpServletRequest parameters) {
                 try {
@@ -895,7 +892,7 @@ public class UddiAdminHub {
          * true, it will only be accessible from the server hosting juddi-gui.
          * if not defined, the result is true.
          *
-         * @return
+         * @return true/false
          */
         public boolean isAdminLocalhostOnly() {
                 return clientConfig.getConfiguration().getBoolean(PROP_ADMIN_LOCALHOST_ONLY, true);

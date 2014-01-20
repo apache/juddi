@@ -19,7 +19,7 @@
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="../csrf.jsp" />
-<%
+<% 
     if (request.getMethod().equalsIgnoreCase("POST")) {
         String keyBagXML = request.getParameter("keybag");
         String tokenXML = request.getParameter("tokenxml");

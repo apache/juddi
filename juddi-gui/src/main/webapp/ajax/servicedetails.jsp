@@ -10,6 +10,6 @@
 <!DOCTYPE html>
 <%
     UddiHub x = UddiHub.getInstance(application, request.getSession());
-
+ 
     out.write(x.GetServiceDetailAsHtml(request.getParameter("id")));
 %>

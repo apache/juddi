@@ -100,7 +100,7 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
          * used for unit tests, may return null if the endpoint isn't started
          * yet
          *
-         * @return
+         * @return gets an instance
          */
         protected static SubscriptionCallbackListener getInstance() {
                 return instance;
@@ -249,7 +249,7 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
          * gets the current callback url, may be null if the endpoint isn't
          * started yet
          *
-         * @return
+         * @return the current callback url or null
          */
         public static String getCallbackURL() {
                 return callback;

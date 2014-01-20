@@ -13,7 +13,7 @@
 <%@include  file="../csrf.jsp" %>
 <%
     UddiHub x = UddiHub.getInstance(application, session);
-    if (x.isAdminLocalhostOnly() && 
+    if (x.isAdminLocalhostOnly() &&  
             !request.getRemoteAddr().equalsIgnoreCase("localhost") && 
             !request.getRemoteHost().equalsIgnoreCase("127.0.0.1") &&
             !request.getRemoteHost().equalsIgnoreCase("0:0:0:0:0:0:0:1")) {

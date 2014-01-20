@@ -342,7 +342,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
 	 * @param targetNamespace
 	 * @param portTypes
 	 * @param bpelOverviewURL
-	 * @return
+	 * @return tmodels
 	 */
     public TModel createBPEL4WSProcessTModel(QName serviceName, String targetNamespace, Map<QName,PortType> portTypes, String bpelOverviewURL) {
     	TModel tModel = new TModel();

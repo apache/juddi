@@ -46,13 +46,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.jaxb.PrintUDDI;
-import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIKeyConvention;
 import org.apache.juddi.v3.client.mapping.ServiceRegistrationResponse;
 import org.apache.juddi.v3.client.mapping.URLLocalizer;
+import org.apache.juddi.v3.client.mapping.wadl.WADL2UDDI;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.AccessPoint;
 import org.uddi.api_v3.BindingTemplate;
@@ -60,7 +60,6 @@ import org.uddi.api_v3.BindingTemplates;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.BusinessServices;
 import org.uddi.api_v3.CategoryBag;
-import org.uddi.api_v3.Description;
 import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.InstanceDetails;
 import org.uddi.api_v3.KeyedReference;
@@ -86,9 +85,10 @@ import org.w3c.dom.Element;
  * uddi:bindingTemplate</li> <li>TODO: 2.4.5 wsdl:port Address Extensions ->
  * uddi:bindingTemplate</li> </ul>
  *
- * @see
+ * @see WADL2UDDI
+ * @see BPEL2UDDI
  * @author Kurt T Stam
- * @Since 3.1.5
+ * @since 3.1.5
  */
 public class WSDL2UDDI {
 

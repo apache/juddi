@@ -16,7 +16,7 @@
 <%@page import="org.uddi.api_v3.BindingTemplate"%>
 <%@page import="org.uddi.api_v3.BusinessService"%>
 <%@page import="org.uddi.api_v3.BusinessEntity"%>
-<%@page import="org.apache.juddi.jaxb.EntityCreator"%>
+<%@page import="org.apache.juddi.jaxb.EntityCreator"%> 
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page import="org.apache.juddi.jaxb.PrintUDDI"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%><%
@@ -48,7 +48,7 @@
                     msg = (x.SaveBusinessDetails(be));
                 } else if (type.equalsIgnoreCase("service")) {
                     BusinessService be = (BusinessService) JAXB.unmarshal(sr, BusinessService.class);
-                    msg = (x.SaveService(be));
+                    msg = (x.SaveServiceDetails(be));
                 } else if (type.equalsIgnoreCase("bindingTemplate")) {
                     BindingTemplate be = (BindingTemplate) JAXB.unmarshal(sr, BindingTemplate.class);
                     msg = (x.SaveBindingTemplate(be));

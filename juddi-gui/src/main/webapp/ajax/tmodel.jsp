@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <%    
     UddiHub hub = UddiHub.getInstance(application, session);
-    if (request.getParameter("action") != null) {
+    if (request.getParameter("action") != null) { 
         String action = request.getParameter("action");
         if (action.equalsIgnoreCase("createKeyGen")) {
             out.write(hub.AddTmodelKenGenerator(request.getParameter("key"),request.getParameter("name"), request.getParameter("lang")));

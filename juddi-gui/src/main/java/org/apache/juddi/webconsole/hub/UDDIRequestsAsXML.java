@@ -56,7 +56,8 @@ import org.uddi.sub_v3.GetSubscriptions;
 import org.uddi.sub_v3.SaveSubscription;
 
 /**
- * This class generates XML as String objects for UDDI requests
+ * This class generates XML as String objects for UDDI requests.
+ * This is used from the "advanced" web pages
  *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */

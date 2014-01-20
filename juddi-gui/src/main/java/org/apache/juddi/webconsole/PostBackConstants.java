@@ -24,7 +24,7 @@ package org.apache.juddi.webconsole;
  *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
-public class PostBackConstants {
+public interface PostBackConstants {
 
     public static final String INSTANCE = "instance";
     public static final String ACCESSPOINT_TYPE = "accessPointType";

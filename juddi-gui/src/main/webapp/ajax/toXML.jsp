@@ -12,7 +12,7 @@
     if ((type != null && type.length() != 0) && (id != null && id.length() != 0)) {
         Object j = null;
         if (type.equalsIgnoreCase("business")) {
-            j = x.GetBusinessDetailsAsObject(id);
+            j = x.GetBusinessDetailsAsObject(id); 
         } else if (type.equalsIgnoreCase("service")) {
             j = x.GetServiceDetailsAsObject(id);
         } else if (type.equalsIgnoreCase("bindingTemplate")) {

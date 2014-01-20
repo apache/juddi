@@ -12,7 +12,7 @@
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="java.util.Set"%>
 <%@page import="javax.xml.namespace.QName"%>
-<%@page import="javax.wsdl.PortType"%>
+<%@page import="javax.wsdl.PortType"%> 
 <%@page import="java.util.Map"%>
 <%@page import="org.uddi.api_v3.BusinessServices"%>
 <%@page import="org.apache.juddi.v3.client.mapping.wsdl.WSDL2UDDI"%>

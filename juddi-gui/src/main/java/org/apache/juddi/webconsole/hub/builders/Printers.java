@@ -42,7 +42,7 @@ public class Printers {
          * Converts category bags of tmodels to a readable string used from hub
          *
          * @param categoryBag
-         * @return
+         * @return string
          */
         public static String CatBagToString(CategoryBag categoryBag, String locale) {
                 StringBuilder sb = new StringBuilder();
@@ -89,6 +89,8 @@ public class Printers {
          * format to something that is more useful. used from hub
          *
          * @param bindingTemplates
+         * @param locale
+         * @return string
          */
         public static String PrintBindingTemplates(BindingTemplates bindingTemplates, String locale) {
                 if (bindingTemplates == null) {
@@ -134,7 +136,7 @@ public class Printers {
          * Description to space separated string
          *
          * @param name
-         * @return
+         * @return string
          */
         public static String ListToDescString(List<Description> name) {
                 StringBuilder sb = new StringBuilder();
@@ -148,7 +150,7 @@ public class Printers {
          * Name to space separated string
          *
          * @param name
-         * @return
+         * @return string
          */
         public static String ListNamesToString(List<Name> name) {
                 StringBuilder sb = new StringBuilder();
@@ -164,7 +166,7 @@ public class Printers {
          * @param findTModel
          * @param session
          * @param isChooser
-         * @return
+         * @return string
          */
         public static String PrintTModelListAsHtml(TModelList findTModel, HttpSession session, boolean isChooser) {
 
@@ -215,8 +217,8 @@ public class Printers {
          *
          * @param findBusiness
          * @param session
-         * @param isChooser
-         * @return
+         * @param isChooser if it's a chooser/modal the format is different and adds check boxes
+         * @return string
          */
         public static String BusinessListAsTable(BusinessList findBusiness, HttpSession session, boolean isChooser) {
                 StringBuilder sb = new StringBuilder();
@@ -271,9 +273,9 @@ public class Printers {
          * service list as html, used
          *
          * @param findService
-         * @param chooser
+         * @param chooser adds checkboxes for a modal
          * @param session
-         * @return
+         * @return string
          */
         public static String ServiceListAsHtml(ServiceList findService, boolean chooser, HttpSession session) {
                 StringBuilder sb = new StringBuilder();

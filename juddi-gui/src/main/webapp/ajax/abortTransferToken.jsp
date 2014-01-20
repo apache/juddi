@@ -20,7 +20,7 @@
 <%
     if (request.getMethod().equalsIgnoreCase("POST")) {
         String tokenxml = request.getParameter("tokenxml");
-
+ 
 
         UddiHub x = UddiHub.getInstance(application, session);
 

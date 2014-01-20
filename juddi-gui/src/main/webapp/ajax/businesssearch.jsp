@@ -18,7 +18,7 @@
     String lang = request.getParameter("lang");
     if (lang == null || lang.length() == 0) {
         lang = null;
-    }
+    } 
     if (lang!=null && lang.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
         lang = null;
     }

@@ -11,7 +11,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="../csrf.jsp"></jsp:include>
 <%
-    if (request.getMethod().equalsIgnoreCase("POST")) {
+    if (request.getMethod().equalsIgnoreCase("POST")) { 
         UddiHub x = UddiHub.getInstance(application, session);
         if (request.getParameter("DELETE") != null) {
           out.write( x.RemoveSubscription(request.getParameter("DELETE")));

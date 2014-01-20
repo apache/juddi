@@ -17,7 +17,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <jsp:include page="../csrf.jsp" />
-<%
+<% 
     UddiHub x = UddiHub.getInstance(application, session);
     if (request.getMethod().equalsIgnoreCase("post")) {
         if (request.getParameter("action") != null) {

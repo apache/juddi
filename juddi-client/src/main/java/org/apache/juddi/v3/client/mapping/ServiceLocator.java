@@ -186,7 +186,7 @@ public class ServiceLocator {
 	 * are found.
 	 * 
 	 * @param serviceKey
-	 * @return
+	 * @return endpoint
 	 * @throws RemoteException
 	 * @throws ConfigurationException
 	 * @throws TransportException

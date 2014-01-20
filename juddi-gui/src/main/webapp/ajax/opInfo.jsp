@@ -10,7 +10,7 @@
 <%
     String id=null;
     id = request.getParameter("id");
-    if (id!=null){
+    if (id!=null){ 
         UddiHub x = UddiHub.getInstance(application, session);
         out.write(x.GetOperationalInfo(x.GetOperationalInfo(id)));
     }

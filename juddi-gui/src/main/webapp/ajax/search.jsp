@@ -11,7 +11,7 @@
 <%@include file="../csrf.jsp" %>
 <%
     if (request.getMethod().equalsIgnoreCase("post")) {
-        String lang = request.getParameter("lang");
+        String lang = request.getParameter("lang"); 
         //searchcriteria name category key tmodel
         String selection = request.getParameter("selection");
         //searchcontent the thing we're looking for

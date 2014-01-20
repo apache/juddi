@@ -9,7 +9,7 @@
 <%@page import="org.apache.juddi.v3.client.mapping.wadl.WADL2UDDI"%>
 <%@page import="java.io.File"%>
 <%@page import="org.apache.juddi.v3.client.config.TokenResolver"%>
-<%@page import="org.uddi.api_v3.Name"%>
+<%@page import="org.uddi.api_v3.Name"%> 
 <%@page import="org.uddi.api_v3.BusinessEntity"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>

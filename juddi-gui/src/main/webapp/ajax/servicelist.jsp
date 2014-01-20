@@ -11,5 +11,5 @@
 <!DOCTYPE html>
 <%
     UddiHub x = UddiHub.getInstance(application, request.getSession());
-    out.write(x.GetServiceList(request.getParameter("id")));
+    out.write(x.GetServiceList(request.getParameter("id"))); 
 %>

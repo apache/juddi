@@ -14,7 +14,7 @@
 <%@include  file="../csrf.jsp" %>
 <%  URL prop = application.getResource("/WEB-INF/config.properties");
         boolean ok = true;
-        if (prop == null) {
+        if (prop == null) { 
                 prop = application.getResource("WEB-INF/config.properties");
 
         }

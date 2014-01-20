@@ -11,7 +11,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include  file="../csrf.jsp" %>
 <!DOCTYPE html>
-<%
+<% 
     UddiHub x = UddiHub.getInstance(application, request.getSession());
     int maxrecords = 50;
     int offset = 0;

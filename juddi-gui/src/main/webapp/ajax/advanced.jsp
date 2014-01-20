@@ -19,7 +19,7 @@
             String service = request.getParameter("service");
             UddiHub x = UddiHub.getInstance(application,session);
             if (action.equalsIgnoreCase("getdefaultrequest")) {
-
+ 
                 if (service != null && service.equalsIgnoreCase(UDDIRequestsAsXML.custody)) {
                     out.write(UDDIRequestsAsXML.getCustody(method));
                 }

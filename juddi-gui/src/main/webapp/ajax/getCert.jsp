@@ -9,7 +9,7 @@
     try {
         index = Integer.parseInt(request.getParameter("index"));
     } catch (Exception ex) {
-    }
+    } 
 
     UddiHub x = UddiHub.getInstance(application, session);
     String data = null;

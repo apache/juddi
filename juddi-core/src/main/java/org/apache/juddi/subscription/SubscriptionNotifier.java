@@ -17,7 +17,6 @@
 package org.apache.juddi.subscription;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -106,7 +105,7 @@ public class SubscriptionNotifier extends TimerTask {
 	 * If the CRUD methods on the publication API where not called, this registry node does not contain changes. If
 	 * the registry database is shared with other registry nodes and one of those registries pushed in a change, then
 	 * that registry node will take care of sending out notifications.
-	 * @return
+	 * @return true/false
 	 */
 	protected boolean registryMayContainUpdates() {
 		boolean isUpdated = false;

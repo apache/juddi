@@ -10,7 +10,7 @@
 <jsp:include page="../csrf.jsp" />
 <%
     UddiHub x = UddiHub.getInstance(application, session);
-
+ 
     out.write(x.GetMyTransferableKeys(true, true));
 
 %>

@@ -115,23 +115,23 @@ public class UddiHub implements Serializable {
          */
         public static final String PROP_CONFIG_NODE = "config.props.node";
         /**
-         *
+         *"config.props.authtype"
          */
         public static final String PROP_AUTH_TYPE = "config.props.authtype";
         /**
-         *
+         *"config.props.automaticLogouts.enable"
          */
         public static final String PROP_AUTO_LOGOUT = "config.props.automaticLogouts.enable";
         /**
-         *
+         *"config.props.automaticLogouts.duration"
          */
         public static final String PROP_AUTO_LOGOUT_TIMER = "config.props.automaticLogouts.duration";
         /**
-         *
+         *"config.props."
          */
         public static final String PROP_PREFIX = "config.props.";
         /**
-         *
+         *"config.props.configLocalHostOnly"
          *
          */
         public static final String PROP_ADMIN_LOCALHOST_ONLY = "config.props.configLocalHostOnly";
@@ -286,7 +286,7 @@ public class UddiHub implements Serializable {
          *
          * @param application
          * @param _session
-         * @return
+         * @return instance
          * @throws Exception
          */
         public static UddiHub getInstance(ServletContext application, HttpSession _session) throws Exception {
@@ -305,7 +305,7 @@ public class UddiHub implements Serializable {
         /**
          * gets the user selected locale
          *
-         * @return
+         * @return something like "en" or "es"
          */
         public String getLocale() {
                 return locale;
@@ -386,7 +386,7 @@ public class UddiHub implements Serializable {
          * returns true if we are using JAXWS transport AND all of the URLs
          * start with https://
          *
-         * @return
+         * @return true if all coms are SSL based
          */
         public boolean isSecure() {
 
@@ -398,7 +398,7 @@ public class UddiHub implements Serializable {
          * gets a reference to the current juddi client config file. this is a
          * live instance changes can be stored to disk, usually
          *
-         * @return
+         * @return client config
          * @throws ConfigurationException g
          */
         public ClientConfig GetJuddiClientConfig() throws ConfigurationException {
@@ -409,7 +409,7 @@ public class UddiHub implements Serializable {
         /**
          * returns all of the current properties defining digital signatures
          *
-         * @return
+         * @return digsig properties
          */
         public Properties GetDigitalSignatureConfig() {
                 try {
@@ -520,7 +520,7 @@ public class UddiHub implements Serializable {
          * Returns true if the current user has a token and is signed in. Does
          * not apply to non-UDDI security API logins
          *
-         * @return
+         * @return true if authenticated
          */
         public boolean getUddiIsAuthenticated() {
                 return (token != null && !token.isEmpty());
@@ -534,7 +534,7 @@ public class UddiHub implements Serializable {
          * @param keyword
          * @param lang
          * @param isChooser
-         * @return
+         * @return PagableContainer of businesses
          */
         public PagableContainer GetBusinessListAsHtml(int offset, int maxrecords, String keyword, String lang, boolean isChooser) {
                 PagableContainer ret = new PagableContainer();
@@ -595,7 +595,9 @@ public class UddiHub implements Serializable {
          * after a network problem results in an unknown status of saved
          * information.
          *
-         * @return
+         * @param businesses
+         * @param tModels
+         * @return returns all of "my" keys
          */
         public String GetMyTransferableKeys(boolean businesses, boolean tModels) {
 
@@ -666,7 +668,7 @@ public class UddiHub implements Serializable {
          * Performs Inquiry Find_service API used from servicedetails.jsp
          *
          * @param serviceid
-         * @return
+         * @return string
          */
         public String GetServiceDetailAsHtml(String serviceid) {
                 if (serviceid == null || serviceid.length() == 0) {
@@ -719,7 +721,7 @@ public class UddiHub implements Serializable {
          * code representing an expired token
          *
          * @param ex
-         * @return r
+         * @return true if it's an expired token
          */
         public static boolean isExceptionExpiration(Exception ex) {
                 if (ex == null) {
@@ -756,7 +758,7 @@ public class UddiHub implements Serializable {
          * used on browse.jsp
          *
          * @param bizid
-         * @return retu
+         * @return string
          */
         public String GetServiceList(String bizid) {
                 if (bizid == null || bizid.isEmpty()) {
@@ -843,12 +845,11 @@ public class UddiHub implements Serializable {
         }
 
         /**
-         * don't think this is used yet
+         * this is used from the save from xml.jsp page
          *
          * @param be
-         * @return
+         * @return status message
          */
-        @Deprecated
         public String SaveBindingTemplate(BindingTemplate be) {
                 try {
                         SaveBinding sb = new SaveBinding();
@@ -985,7 +986,7 @@ public class UddiHub implements Serializable {
          * parameters. A human readable response message is returned
          *
          * @param request
-         * @return
+         * @return string
          */
         public String SaveBusinessDetails(HttpServletRequest request) {
 
@@ -1019,13 +1020,7 @@ public class UddiHub implements Serializable {
                 return SaveBusinessDetails(be);
         }
 
-        /**
-         * Returns
-         *
-         * @param bizid
-         * @return
-         * @throws Exception
-         */
+        
         /**
          * Gets a business's details used for the businessEditor
          *
@@ -1071,7 +1066,7 @@ public class UddiHub implements Serializable {
          * icon
          *
          * @param HandleException, any string representing an error message
-         * @return
+         * @return string
          */
         public static String ToErrorAlert(String HandleException) {
                 return "<div class=\"alert alert-error\"><i class=\"icon-warning-sign icon-large\"></i>&nbsp;" + HandleException + "</div>";
@@ -1100,7 +1095,7 @@ public class UddiHub implements Serializable {
          * @param maxrecords
          * @param offset
          * @param isChooser
-         * @return
+         * @return PagableContainer of services
          */
         public PagableContainer SearchForServices(String keyword, String lang, int maxrecords, int offset, boolean isChooser) {
                 PagableContainer ret = new PagableContainer();
@@ -1164,7 +1159,9 @@ public class UddiHub implements Serializable {
          * E_valueNotAllowed returned.
          *
          * @param partitionName
-         * @return
+         * @param name
+         * @param lang
+         * @return string
          */
         public String AddTmodelKenGenerator(String partitionName, String name, String lang) {
                 try {
@@ -1214,7 +1211,7 @@ public class UddiHub implements Serializable {
          * bootstrap stylized html error message
          *
          * @param ex
-         * @return
+         * @return string
          */
         private String HandleException(Exception ex) {
                 if (ex instanceof DispositionReportFaultMessage) {
@@ -1247,7 +1244,7 @@ public class UddiHub implements Serializable {
          * @param maxrecords
          * @param isChooser if true, tModel keys will not be clickable and will
          * instead be render for a modal dialog box
-         * @return
+         * @return PagableContainer tmodel
          */
         public PagableContainer tModelListAsHtml(String keyword, String lang, int offset, int maxrecords, boolean isChooser) {
                 PagableContainer ret = new PagableContainer();
@@ -1305,7 +1302,7 @@ public class UddiHub implements Serializable {
          *
          * @param id
          * @return the details or null if it doesn't exist or a null value was
-         * passed
+         * passed tmodel
          */
         public TModel getTmodelDetails(String id) {
                 try {
@@ -1345,7 +1342,7 @@ public class UddiHub implements Serializable {
          * A convenience function for GetBusinessDetails
          *
          * @param key
-         * @return
+         * @return be
          */
         public BusinessEntity GetBusinessDetailsAsObject(String key) {
                 return GetBusinessDetails(key);
@@ -1355,7 +1352,7 @@ public class UddiHub implements Serializable {
          * A convenience function for GetServiceDetail
          *
          * @param key
-         * @return
+         * @return bs
          */
         public BusinessService GetServiceDetailsAsObject(String key) {
                 return GetServiceDetail(key);
@@ -1699,8 +1696,7 @@ public class UddiHub implements Serializable {
                         if (findBusiness != null && findBusiness.getRelatedBusinessInfos() != null) {
                                 StringBuilder sb = new StringBuilder();
                                 sb.append("<table class=\"table table-hover\">");
-                                sb.append("<tr><th>" + ResourceLoader.GetResource(session, "items.business") + "</th><th>"
-                                        + ResourceLoader.GetResource(session, "items.publisherassertions.relationship") + "</th><tr>");
+                                sb.append("<tr><th>").append(ResourceLoader.GetResource(session, "items.business")).append("</th><th>").append(ResourceLoader.GetResource(session, "items.publisherassertions.relationship")).append("</th><tr>");
                                 for (int i = 0; i < findBusiness.getRelatedBusinessInfos().getRelatedBusinessInfo().size(); i++) {
                                         sb.append("<tr><td>");
                                         sb.append("<a href=\"businessEditor2.jsp?id=").
@@ -1917,7 +1913,7 @@ public class UddiHub implements Serializable {
          * delete a service
          *
          * @param serviceId
-         * @return
+         * @return status msg
          */
         public String deleteService(String serviceId) {
                 if (serviceId == null || serviceId.length() == 0) {
@@ -1932,7 +1928,7 @@ public class UddiHub implements Serializable {
          * deletes a list of services
          *
          * @param serviceId
-         * @return
+         * @return status msg
          */
         public String deleteService(List<String> serviceId) {
                 if (serviceId == null || serviceId.isEmpty()) {
@@ -1996,7 +1992,7 @@ public class UddiHub implements Serializable {
          * delete a tmodel
          *
          * @param bizid
-         * @return
+         * @return status msg
          */
         public String deleteTmodel(String bizid) {
                 if (bizid == null || bizid.length() == 0) {
@@ -2043,7 +2039,7 @@ public class UddiHub implements Serializable {
          * saves a tmodel object
          *
          * @param be
-         * @return
+         * @return status msg
          */
         public String SaveTModel(TModel be) {
                 try {
@@ -2078,7 +2074,7 @@ public class UddiHub implements Serializable {
          * editor page
          *
          * @param request
-         * @return
+         * @return status msg
          */
         public String SaveTModel(HttpServletRequest request) {
 
@@ -2129,7 +2125,7 @@ public class UddiHub implements Serializable {
          * certificate subject name
          *
          * @param sig
-         * @return
+         * @return human readable signature
          */
         public static String SignatureToReadable(SignatureType sig) {
                 StringBuilder sb = new StringBuilder();
@@ -2168,7 +2164,7 @@ public class UddiHub implements Serializable {
          * containing the raw data for the signing certificate, if present
          *
          * @param sig
-         * @return
+         * @return x509 cert
          */
         public String SignatureToBase64(SignatureType sig) {
                 if (sig == null) {
@@ -2248,7 +2244,7 @@ public class UddiHub implements Serializable {
         }
 
         /**
-         *
+         *gets all of my subscriptions
          * @return null if there's an error
          */
         public List<Subscription> GetSubscriptions() {
@@ -2332,8 +2328,7 @@ public class UddiHub implements Serializable {
         }
 
         /**
-         *
-         * @param ft
+         * gets the opinfo on an item
          * @param id
          * @return null if theres an error
          */
@@ -2369,7 +2364,7 @@ public class UddiHub implements Serializable {
          * GetOperationalInfo
          *
          * @param info
-         * @return
+         * @return  formatted html
          */
         public String GetOperationalInfo(List<OperationalInfo> info) {
                 StringBuilder sb = new StringBuilder();
@@ -2422,7 +2417,7 @@ public class UddiHub implements Serializable {
          * after a network problem results in an unknown status of saved
          * information.
          *
-         * @return
+         * @return RegisteredInfo
          */
         public RegisteredInfo GetNodeInformation(AtomicReference<String> outmsg) {
                 if (outmsg == null) {
@@ -2470,7 +2465,7 @@ public class UddiHub implements Serializable {
          * Relationships and Publisher Assertions for more information.
          *
          * @param msg
-         * @return
+         * @return list
          */
         public List<AssertionStatusItem> GetPublisherAssertions(AtomicReference<String> msg) {
                 List<AssertionStatusItem> out = new ArrayList<AssertionStatusItem>();
@@ -2551,7 +2546,7 @@ public class UddiHub implements Serializable {
          * @param tmodelkey
          * @param keyname
          * @param keyvalue
-         * @return
+         * @return  status msg
          */
         public String DeletePublisherAssertion(String tokey, String fromkey, String tmodelkey, String keyname, String keyvalue) {
                 DeletePublisherAssertions dp = new DeletePublisherAssertions();
@@ -2590,7 +2585,7 @@ public class UddiHub implements Serializable {
          * @param fromkey
          * @param keyname
          * @param keyvalue
-         * @return
+         * @return status msg
          */
         public String AddPublisherAssertion(String tokey, String fromkey, String tmodelkey, String keyname, String keyvalue) {
                 // List<PublisherAssertion> x = GetPublisherAssertions();
@@ -2630,7 +2625,7 @@ public class UddiHub implements Serializable {
          * refresh
          *
          * @param lastRefresh
-         * @return
+         * @return formatted html
          * @throws DatatypeConfigurationException
          */
         public String GetNewsFeed(XMLGregorianCalendar lastRefresh) throws DatatypeConfigurationException {
@@ -2810,7 +2805,7 @@ public class UddiHub implements Serializable {
          * @param offset
          * @param maxrecords
          * @param isChooser
-         * @return
+         * @return PagableContainer
          */
         public PagableContainer SearchForBinding(String keyword, String lang, int offset, int maxrecords, boolean isChooser) {
                 PagableContainer ret = new PagableContainer();
@@ -2954,7 +2949,7 @@ public class UddiHub implements Serializable {
          * @param nodeid
          * @param outExpires
          * @param outToken
-         * @return
+         * @return status 
          */
         public String GetCustodyTransferToken(org.uddi.custody_v3.KeyBag keys, Holder<String> nodeid, Holder<XMLGregorianCalendar> outExpires, Holder<byte[]> outToken) {
 
@@ -3028,7 +3023,7 @@ public class UddiHub implements Serializable {
          *
          * @param tokenXML
          * @param keyBagXML
-         * @return
+         * @return status msg
          */
         public String AcceptCustodyTranferToken(String tokenXML, String keyBagXML) {
                 try {
@@ -3087,7 +3082,7 @@ public class UddiHub implements Serializable {
          * @param request
          * @param service
          * @param method
-         * @return
+         * @return xml response
          * @see UDDIRequestsAsXML
          */
         public String SendAdvancedQuery(Object request, String service, String method) {
@@ -3659,7 +3654,7 @@ public class UddiHub implements Serializable {
         /**
          * returns true if automatic logouts are configured
          *
-         * @return
+         * @return true/false
          */
         public boolean isAutoLogoutEnabled() {
 
@@ -3681,7 +3676,7 @@ public class UddiHub implements Serializable {
         /**
          * defaults to 15 minutes if not defined
          *
-         * @return
+         * @return duration
          */
         public long GetAutoLogoutDuration() {
                 String val = clientConfig.getConfiguration().getString(PROP_AUTO_LOGOUT_TIMER);
@@ -3701,7 +3696,7 @@ public class UddiHub implements Serializable {
          * true, it will only be accessible from the server hosting juddi-gui.
          * if not defined, the result is true.
          *
-         * @return
+         * @return true/false
          */
         public boolean isAdminLocalhostOnly() {
                 return clientConfig.getConfiguration().getBoolean(PROP_ADMIN_LOCALHOST_ONLY, true);

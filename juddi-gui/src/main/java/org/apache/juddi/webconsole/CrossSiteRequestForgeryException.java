@@ -17,51 +17,60 @@
 package org.apache.juddi.webconsole;
 
 /**
- * Provides a very basic, no stack trace exception, useful for throwing at a browser without revealing any details 
+ * Provides a very basic, no stack trace exception, useful for throwing at a
+ * browser without revealing any details
+ *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class CrossSiteRequestForgeryException extends Exception {
+
+        private static final long serialVersionUID = 1L;
     //Parameterless Constructor
-/**
- * CrossSiteRequestForgeryException
- */
-    public CrossSiteRequestForgeryException() {
-        super(msg, null);
-    }
 
-    /**
-     * Constructor that accepts a message
-     */
-    public CrossSiteRequestForgeryException(String message) {
-        super(msg, null);
-    }
-/**
- * CrossSiteRequestForgeryException
- * @param message
- * @param cause 
- */
-    public CrossSiteRequestForgeryException(String message, Throwable cause) {
-        super(msg, null);
-    }
-    private static final String msg = "Cross Site Request Forgery";
+        /**
+         * CrossSiteRequestForgeryException
+         */
+        public CrossSiteRequestForgeryException() {
+                super(msg, null);
+        }
 
-    @Override
-    public String toString() {
-        return msg;
-    }
+        /**
+         * Constructor that accepts a message
+         *
+         * @param message
+         */
+        public CrossSiteRequestForgeryException(String message) {
+                super(msg, null);
+        }
 
-    @Override
-    public String getMessage() {
-        return msg;
-    }
+        /**
+         * CrossSiteRequestForgeryException
+         *
+         * @param message
+         * @param cause
+         */
+        public CrossSiteRequestForgeryException(String message, Throwable cause) {
+                super(msg, null);
+        }
+        private static final String msg = "Cross Site Request Forgery";
 
-    @Override
-    public String getLocalizedMessage() {
-        return msg;
-    }
+        @Override
+        public String toString() {
+                return msg;
+        }
 
-    @Override
-    public Throwable getCause() {
-        return null;
-    }
+        @Override
+        public String getMessage() {
+                return msg;
+        }
+
+        @Override
+        public String getLocalizedMessage() {
+                return msg;
+        }
+
+        @Override
+        public Throwable getCause() {
+                return null;
+        }
 }

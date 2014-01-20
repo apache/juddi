@@ -12,7 +12,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include  file="../csrf.jsp" %>
 <!DOCTYPE html>
-<%
+<% 
     UddiHub x = UddiHub.getInstance(application, request.getSession());
     //keyword=' + keyword + "&offset=" + offset + "&maxrecords=" + maxrecords
     int maxrecords = 50;

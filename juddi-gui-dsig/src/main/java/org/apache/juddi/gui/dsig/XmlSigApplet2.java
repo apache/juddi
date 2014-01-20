@@ -18,59 +18,39 @@ package org.apache.juddi.gui.dsig;
 import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.Popup;
-import javax.swing.PopupFactory;
 import javax.xml.bind.JAXB;
-import javax.xml.crypto.dsig.CanonicalizationMethod;
-import javax.xml.crypto.dsig.DigestMethod;
-import javax.xml.crypto.dsig.Reference;
-import javax.xml.crypto.dsig.SignatureMethod;
-import javax.xml.crypto.dsig.SignedInfo;
-import javax.xml.crypto.dsig.Transform;
-import javax.xml.crypto.dsig.XMLSignature;
-import javax.xml.crypto.dsig.XMLSignatureFactory;
-import javax.xml.crypto.dsig.dom.DOMSignContext;
-import javax.xml.crypto.dsig.keyinfo.KeyInfo;
-import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
-import javax.xml.crypto.dsig.keyinfo.X509Data;
-import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
-import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import netscape.javascript.JSObject;
 import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.TModel;
-import org.w3c.dom.Node;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 
 /**
- *
- * @author Daddy
+ * This is the current Digital Signature Applet used by juddi-gui. It can easily
+ * be adapted to sign any xml document
+ * @author <a href="mailto:alexoree@apache.org>Alex O'Ree</a>
  */
 public class XmlSigApplet2 extends java.applet.Applet {
+        private static final long serialVersionUID = 1L;
 
     /**
      * Initializes the applet XmlSigApplet2
      */
+        @Override
     public void init() {
         try {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
@@ -85,38 +65,13 @@ public class XmlSigApplet2 extends java.applet.Applet {
 
     }
 
-    private XMLSignatureFactory initXMLSigFactory() {
-        XMLSignatureFactory fac = XMLSignatureFactory.getInstance();
-        return fac;
-    }
 
-    private Reference initReference(XMLSignatureFactory fac) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-        List transformers = new ArrayList();
-        transformers.add(fac.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null));
-
-        //  String dm = map.getProperty(SIGNATURE_OPTION_DIGEST_METHOD);
-        //if (dm == null) {
-        String dm = DigestMethod.SHA1;
-        //}
-        Reference ref = fac.newReference("", fac.newDigestMethod(dm, null), transformers, null, null);
-        return ref;
-    }
-
-    private SignedInfo initSignedInfo(XMLSignatureFactory fac) throws Exception {
-        Reference ref = initReference(fac);
-        SignedInfo si = fac.newSignedInfo(fac.newCanonicalizationMethod(CanonicalizationMethod.EXCLUSIVE,
-                (C14NMethodParameterSpec) null),
-                fac.newSignatureMethod(SignatureMethod.RSA_SHA1,
-                null),
-                Collections.singletonList(ref));
-        return si;
-    }
 
     /**
      * this converts a xml document to a string for writing back to the browser
      *
      * @param doc
-     * @return
+     * @return string
      */
     public String getStringFromDoc(org.w3c.dom.Document doc) {
         DOMImplementationLS domImplementation = (DOMImplementationLS) doc.getImplementation();
@@ -171,14 +126,13 @@ public class XmlSigApplet2 extends java.applet.Applet {
             }
         }
         try {
-            //printMessageToConsole("Key Store loaded");
             Enumeration<String> aliases = keyStore.aliases();
 
             while (aliases.hasMoreElements()) {
                 String a = aliases.nextElement();
                 X509Certificate certificate = (X509Certificate) keyStore.getCertificate(a);
-                //PublicKey publicKey = certificate.getPublicKey();
-                //  X509Certificate cert = (X509Certificate) publicKey;
+                //this is needed to test for access
+                
                 try {
                     Key key = keyStore.getKey(a, null);
                     certs.add(a);
@@ -387,8 +341,8 @@ public class XmlSigApplet2 extends java.applet.Applet {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:]
-        JPopupMenu jp = new JPopupMenu("Certificate Info");
+        
+        //JPopupMenu jp = new JPopupMenu("Certificate Info");
         String data = "No certificate selected";
         try {
             Certificate publickey = keyStore.getCertificate((String) jList1.getSelectedValue());
@@ -406,7 +360,7 @@ public class XmlSigApplet2 extends java.applet.Applet {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        
         String signedXml = "error!";
         JSObject window = JSObject.getWindow(this);
         try {
@@ -426,11 +380,11 @@ public class XmlSigApplet2 extends java.applet.Applet {
             return;
         }
 
-        Object object2 = window.call("getBrowserName", null);
-        Object object1 = window.call("getOsName", null);
+        //Object object2 = window.call("getBrowserName", null);
+        //Object object1 = window.call("getOsName", null);
         Object object3 = window.call("getObjectType", null);
-        String browserName = (String) object2;
-        String osName = (String) object2;
+        //String browserName = (String) object2;
+        //tring osName = (String) object2;
         String objecttype = (String) object3;
 
         //get the xml
@@ -493,7 +447,7 @@ public class XmlSigApplet2 extends java.applet.Applet {
                 JAXB.marshal(j, sw);
                 signedXml = sw.toString();
             } catch (Exception ex) {
-                Logger.getLogger(XmlSignatureApplet.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
                 signedXml = "Sorry I couldn't sign the data. " + ex.getMessage();
             }
         } else {
@@ -525,33 +479,7 @@ public class XmlSigApplet2 extends java.applet.Applet {
      */
     public final static String XML_DIGSIG_NS = "http://www.w3.org/2000/09/xmldsig#";
 
-    private void signDOM(Node node, PrivateKey privateKey, Certificate origCert) {
-        XMLSignatureFactory fac = initXMLSigFactory();
-        X509Certificate cert = (X509Certificate) origCert;
-        // Create the KeyInfo containing the X509Data.
-        KeyInfoFactory kif = fac.getKeyInfoFactory();
-        List<Object> x509Content = new ArrayList<Object>();
-        //x509Content.add(cert.getSubjectX500Principal().getName());
-        x509Content.add(cert);
-        X509Data xd = kif.newX509Data(x509Content);
-        KeyInfo ki = kif.newKeyInfo(Collections.singletonList(xd));
-
-        // Create a DOMSignContext and specify the RSA PrivateKey and
-        // location of the resulting XMLSignature's parent element.
-        DOMSignContext dsc = new DOMSignContext(privateKey, node);
-        dsc.putNamespacePrefix(XML_DIGSIG_NS, "ns2");
-
-        // Create the XMLSignature, but don't sign it yet.
-        try {
-            SignedInfo si = initSignedInfo(fac);
-            XMLSignature signature = fac.newXMLSignature(si, ki);
-
-            // Marshal, generate, and sign the enveloped signature.
-            signature.sign(dsc);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox isIncludeIssuer;

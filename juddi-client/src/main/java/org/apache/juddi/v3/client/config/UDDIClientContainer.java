@@ -71,7 +71,7 @@ public class UDDIClientContainer {
         /**
          * return true if the client exists in the current client collection
          * @param name
-         * @return 
+         * @return  true/false
          */
     public static boolean contains(String name) {
         return 	(clients.containsKey(name)) ;

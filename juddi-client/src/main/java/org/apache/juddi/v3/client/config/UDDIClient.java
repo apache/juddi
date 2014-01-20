@@ -398,8 +398,7 @@ public class UDDIClient {
          * Returns the transport defined for the node with the given name
          * "default". deprecated, use the getTransport(String nodeName) instead.
          * Returns the "default" jUDDI nodes Transport.
-         *
-         * @deprecated, use the getTransport(String nodeName) instead. Returns
+         * @deprecated use the getTransport(String nodeName) instead. Returns
          * the "default" jUDDI nodes Transport. Note: this will always return a
          * new instance of Transport
          * @return a transport object

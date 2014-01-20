@@ -6,7 +6,7 @@
 
 <%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page import="javax.xml.bind.JAXB"%>
-<%@page import="java.io.StringWriter"%>
+<%@page import="java.io.StringWriter"%> 
 <%@page import="org.apache.juddi.jaxb.PrintUDDI"%>
 <%@page import="org.uddi.custody_v3.TransferToken"%>
 <%@page import="javax.xml.datatype.DatatypeFactory"%>

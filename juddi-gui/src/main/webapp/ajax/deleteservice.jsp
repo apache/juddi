@@ -8,7 +8,7 @@
 
 <%@include  file="../csrf.jsp" %>
 <%
-    if (request.getMethod().equalsIgnoreCase("POST")) {
+    if (request.getMethod().equalsIgnoreCase("POST")) { 
         UddiHub x = UddiHub.getInstance(application, session);
         out.write(x.deleteService(request.getParameter("id")));
     }

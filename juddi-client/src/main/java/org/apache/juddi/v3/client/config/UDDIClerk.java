@@ -166,7 +166,7 @@ public class UDDIClerk implements Serializable {
          * Annotations on them for automated registration
          * <br>client.clerks.clerk(" + i + ").class
          *
-         * @return
+         * @return classes with UDDI Annotations
          * @see org.apache.juddi.v3.annotations.UDDIService
          * @see org.apache.juddi.v3.annotations.UDDIServiceBinding
          */
@@ -178,7 +178,7 @@ public class UDDIClerk implements Serializable {
          * Returns the UDDI node that this clerk is associated with
          * client.clerks.clerk(" + i + ")@node
          *
-         * @return
+         * @return UDDINode
          */
         public UDDINode getUDDINode() {
                 return this.uddiNode;

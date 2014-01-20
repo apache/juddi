@@ -71,8 +71,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * Provides a Java web applet that digitally signs UDDI xml
- *
+ * Provides a Java web applet that digitally signs UDDI xml. This class 
+ * provides the most basic code for signing and was more of a proof of concept
+ * @deprecated XmlSigApplet2 instead
+ * @see XmlSigApplet2
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class XmlSignatureApplet extends java.applet.Applet {
@@ -155,7 +157,7 @@ public class XmlSignatureApplet extends java.applet.Applet {
     /**
      * this converts a xml document to a string for writing back to the browser
      * @param doc
-     * @return 
+     * @return string
      */
     public String getStringFromDoc(org.w3c.dom.Document doc) {
         DOMImplementationLS domImplementation = (DOMImplementationLS) doc.getImplementation();
