@@ -17,6 +17,7 @@ package org.apache.juddi.api.impl.rest;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -45,18 +46,19 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 @Path("/")
-@Produces({"application/xml", "application/json"})
-@org.apache.cxf.jaxrs.model.wadl.Description("This service provides access to UDDI data via a REST interface")
+@Produces({"application/xml", "application/json", "text/html"})
+@org.apache.cxf.jaxrs.model.wadl.Description("This service provides access to UDDIv3 data via a REST interface, including the "
+        + "recommendation specified in the UDDIv3 spec titled, HTTP GET, as well as a number of methods above and beyond.")
 public class UDDIInquiryJAXRS {
 
         private static org.apache.juddi.api.impl.UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
-        private static Log log = LogFactory.getLog(UDDIInquiryJAXRS.class);
+        private static final Log log = LogFactory.getLog(UDDIInquiryJAXRS.class);
 
         /**
          * Returns the details of a business entity in JSON
          *
          * @param id
-         * @return json 
+         * @return json
          */
         @GET
         @Path("/JSON/businessKey/{id}")
@@ -153,13 +155,16 @@ public class UDDIInquiryJAXRS {
         }
 
         /**
-         * This implements the UDDIv3 spec for HTTP GET Inquiry services
+         * This method implements the UDDIv3 spec for HTTP GET Inquiry services
+         * Returns the details of a UDDI entity in JSON, use query parameters
+         * serviceKey,businessKey,tModelKey, or bindingKey
+         *
          * @param serviceKey
          * @param businessKey
          * @param tModelKey
          * @param bindingKey
          * @return json
-         * @throws WebApplicationException 
+         * @throws WebApplicationException
          */
         @GET
         @Path("/JSON/getDetail")
@@ -186,7 +191,7 @@ public class UDDIInquiryJAXRS {
                 if (params != 1) {
                         throw new WebApplicationException(400);
                 }
-                
+
                 if (businessKey != null) {
                         return getBusinessDetail(businessKey);
                 }
@@ -203,18 +208,21 @@ public class UDDIInquiryJAXRS {
         }
 
         /**
-         * This implements the UDDIv3 spec for HTTP GET Inquiry services
+         * This method implements the UDDIv3 spec for HTTP GET Inquiry services.
+         * Returns the details of a UDDI entity in XML, use query parameters
+         * serviceKey,businessKey,tModelKey, or bindingKey
+         *
          * @param serviceKey
          * @param businessKey
          * @param tModelKey
          * @param bindingKey
          * @return xml
-         * @throws WebApplicationException 
+         * @throws WebApplicationException
          */
         @GET
         @Path("/XML/getDetail")
         @Produces("application/xml")
-        @org.apache.cxf.jaxrs.model.wadl.Description("Returns the details of a UDDI entity in XML, use query parameters"
+        @org.apache.cxf.jaxrs.model.wadl.Description("This method implements the UDDIv3 spec for HTTP GET Inquiry services. Returns the details of a UDDI entity in XML, use query parameters"
                 + "serviceKey,businessKey,tModelKey, bindingKey")
         public Object getDetailXML(@QueryParam("serviceKey") String serviceKey,
                 @QueryParam("businessKey") String businessKey,
@@ -394,9 +402,11 @@ public class UDDIInquiryJAXRS {
         }
 
         /**
-         * 
+         * Returns the business keys of the first 100 registered businesses in
+         * XML
+         *
          * @return xml
-         * @throws WebApplicationException 
+         * @throws WebApplicationException
          */
         @GET
         @Path("/XML/businessList")
@@ -407,9 +417,11 @@ public class UDDIInquiryJAXRS {
         }
 
         /**
-         * 
+         * Returns the business keys of the first 100 registered businesses in
+         * JSON
+         *
          * @return json
-         * @throws WebApplicationException 
+         * @throws WebApplicationException
          */
         @GET
         @Path("/JSON/businessList")
@@ -420,9 +432,10 @@ public class UDDIInquiryJAXRS {
         }
 
         /**
-         * 
+         * Returns the Service keys of the first 100 registered services in XML
+         *
          * @return xml
-         * @throws WebApplicationException 
+         * @throws WebApplicationException
          */
         @GET
         @Path("/XML/serviceList")
@@ -433,9 +446,10 @@ public class UDDIInquiryJAXRS {
         }
 
         /**
-         * 
+         * Returns the Service keys of the first 100 registered services in JSON
+         *
          * @return json
-         * @throws WebApplicationException 
+         * @throws WebApplicationException
          */
         @GET
         @Path("/JSON/serviceList")
@@ -446,9 +460,10 @@ public class UDDIInquiryJAXRS {
         }
 
         /**
-         * 
+         * Returns the tModel keys of the first 100 registered services in XML
+         *
          * @return xml
-         * @throws WebApplicationException 
+         * @throws WebApplicationException
          */
         @GET
         @Path("/XML/tModelList")
@@ -459,9 +474,102 @@ public class UDDIInquiryJAXRS {
         }
 
         /**
-         * 
+         * Returns the search results for registered businesses in XML
+         *
+         * @param name
+         * @param lang
+         * @param findQualifiers
+         * @param maxrows
+         * @param offset
+         * @return BusinessList
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path("/XML/businessSearch")
+        @Produces("application/xml")
+        @org.apache.cxf.jaxrs.model.wadl.Description("Returns the search results for registered businesses in XML")
+        public BusinessList getBusinessSearchXML(@QueryParam("name") String name,
+                @QueryParam("lang") String lang,
+                @QueryParam("findQualifiers") String findQualifiers,
+                @QueryParam("maxrows") Integer maxrows,
+                @QueryParam("offset") Integer offset) throws WebApplicationException {
+                return getBusinessSearch(name, lang, findQualifiers, maxrows, offset);
+        }
+
+        /**
+         * Returns the search results for registered businesses in JSON
+         *
+         * @param name
+         * @param lang
+         * @param findQualifiers
+         * @param maxrows
+         * @param offset
+         * @return BusinessList
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path("/JSON/businessSearch")
+        @Produces("application/json")
+        @org.apache.cxf.jaxrs.model.wadl.Description("Returns the search results for registered businesses in JSON")
+        public BusinessList getBusinessSearchJSON(@QueryParam("name") String name,
+                @QueryParam("lang") String lang,
+                @QueryParam("findQualifiers") String findQualifiers,
+                @QueryParam("maxrows") Integer maxrows,
+                @QueryParam("offset") Integer offset) throws WebApplicationException {
+                return getBusinessSearch(name, lang, findQualifiers, maxrows, offset);
+        }
+
+        /**
+         * Returns the search results for registered services in JSON
+         *
+         * @param name
+         * @param lang
+         * @param findQualifiers
+         * @param maxrows
+         * @param offset
+         * @return
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path("/JSON/serviceSearch")
+        @Produces("application/json")
+        @org.apache.cxf.jaxrs.model.wadl.Description("Returns the search results for registered services in JSON")
+        public ServiceList getServiceSearchJSON(@QueryParam("name") String name,
+                @QueryParam("lang") String lang,
+                @QueryParam("findQualifiers") String findQualifiers,
+                @QueryParam("maxrows") Integer maxrows,
+                @QueryParam("offset") Integer offset) throws WebApplicationException {
+                return getServiceSearch(name, lang, findQualifiers, maxrows, offset);
+        }
+
+        /**
+         * Returns the search results for registered services in XML
+         *
+         * @param name
+         * @param lang
+         * @param findQualifiers
+         * @param maxrows
+         * @param offset
+         * @return
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path("/XML/serviceSearch")
+        @Produces("application/json")
+        @org.apache.cxf.jaxrs.model.wadl.Description("Returns the search results for registered services in XML")
+        public ServiceList getServiceSearchXML(@QueryParam("name") String name,
+                @QueryParam("lang") String lang,
+                @QueryParam("findQualifiers") String findQualifiers,
+                @QueryParam("maxrows") Integer maxrows,
+                @QueryParam("offset") Integer offset) throws WebApplicationException {
+                return getServiceSearch(name, lang, findQualifiers, maxrows, offset);
+        }
+
+        /**
+         * Returns the tModel keys of the first 100 registered services in JSON
+         *
          * @return json
-         * @throws WebApplicationException 
+         * @throws WebApplicationException
          */
         @GET
         @Path("/JSON/tModelList")
@@ -469,6 +577,52 @@ public class UDDIInquiryJAXRS {
         @org.apache.cxf.jaxrs.model.wadl.Description("Returns the tModel keys of the first 100 registered services in JSON")
         public KeyBag getTModelListJSON() throws WebApplicationException {
                 return getTmodelListData();
+        }
+
+        /**
+         * Returns the search results for registered tModel in JSON
+         *
+         * @param name
+         * @param lang
+         * @param findQualifiers
+         * @param maxrows
+         * @param offset
+         * @return
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path("/JSON/tModelSearch")
+        @Produces("application/json")
+        @org.apache.cxf.jaxrs.model.wadl.Description("Returns the search results for registered tModel in JSON")
+        public TModelList getTModelSearchJSON(@QueryParam("name") String name,
+                @QueryParam("lang") String lang,
+                @QueryParam("findQualifiers") String findQualifiers,
+                @QueryParam("maxrows") Integer maxrows,
+                @QueryParam("offset") Integer offset) throws WebApplicationException {
+                return getTModelSearch(name, lang, findQualifiers, maxrows, offset);
+        }
+
+        /**
+         * Returns the search results for registered tModel in XML
+         *
+         * @param name
+         * @param lang
+         * @param findQualifiers
+         * @param maxrows
+         * @param offset
+         * @return
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path("/XML/tModelSearch")
+        @Produces("application/json")
+        @org.apache.cxf.jaxrs.model.wadl.Description("Returns the search results for registered tModel in XML")
+        public TModelList getTModelSearchXML(@QueryParam("name") String name,
+                @QueryParam("lang") String lang,
+                @QueryParam("findQualifiers") String findQualifiers,
+                @QueryParam("maxrows") Integer maxrows,
+                @QueryParam("offset") Integer offset) throws WebApplicationException {
+                return getTModelSearch(name, lang, findQualifiers, maxrows, offset);
         }
 
         private UriContainer getEndpointsByService(String id) throws WebApplicationException {
@@ -532,7 +686,6 @@ public class UDDIInquiryJAXRS {
                         try {
                                 Definition wsdlDefinition = r.readWSDL(new URL(value));
                                 Properties properties = new Properties();
-
 
                                 properties.put("keyDomain", "domain");
                                 properties.put("businessName", "biz");
@@ -684,5 +837,117 @@ public class UDDIInquiryJAXRS {
                         }
                 }
                 return kb;
+        }
+
+        private BusinessList getBusinessSearch(String name, String lang, String findQualifiers, Integer maxrows, Integer offset) {
+                FindBusiness fb = new FindBusiness();
+
+                fb.getName().add(new Name(UDDIConstants.WILDCARD, null));
+                if (name != null) {
+                        fb.getName().get(0).setValue(name);
+                }
+                if (lang != null) {
+                        fb.getName().get(0).setValue(lang);
+                }
+                fb.setFindQualifiers(new FindQualifiers());
+                if (findQualifiers == null) {
+                        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                } else {
+                        String[] fqs = findQualifiers.split(",");
+                        fb.getFindQualifiers().getFindQualifier().addAll(Arrays.asList(fqs));
+                }
+                fb.setMaxRows(MAX_ROWS);
+
+                if (maxrows != null) {
+                        fb.setMaxRows(maxrows);
+                }
+                fb.setListHead(0);
+                if (offset != null) {
+                        fb.setListHead(offset);
+                }
+
+                BusinessList findBusiness = null;
+                try {
+                        findBusiness = inquiry.findBusiness(fb);
+                } catch (Exception ex) {
+                        HandleException(ex);
+                }
+                return findBusiness;
+
+        }
+
+        private ServiceList getServiceSearch(String name, String lang, String findQualifiers, Integer maxrows, Integer offset) {
+                FindService fb = new FindService();
+
+                fb.getName().add(new Name(UDDIConstants.WILDCARD, null));
+                if (name != null) {
+                        fb.getName().get(0).setValue(name);
+                }
+                if (lang != null) {
+                        fb.getName().get(0).setValue(lang);
+                }
+                fb.setFindQualifiers(new FindQualifiers());
+                if (findQualifiers == null) {
+                        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                } else {
+                        String[] fqs = findQualifiers.split(",");
+                        fb.getFindQualifiers().getFindQualifier().addAll(Arrays.asList(fqs));
+                }
+                fb.setMaxRows(MAX_ROWS);
+
+                if (maxrows != null) {
+                        fb.setMaxRows(maxrows);
+                }
+                fb.setListHead(0);
+                if (offset != null) {
+                        fb.setListHead(offset);
+                }
+
+                ServiceList findBusiness = null;
+                try {
+                        findBusiness = inquiry.findService(fb);
+                } catch (Exception ex) {
+                        HandleException(ex);
+                }
+
+                return findBusiness;
+        }
+
+        private TModelList getTModelSearch(String name, String lang, String findQualifiers, Integer maxrows, Integer offset) {
+                FindTModel fb = new FindTModel();
+
+                fb.setName(new Name(UDDIConstants.WILDCARD, null));
+                if (name != null) {
+                        fb.getName().setValue(name);
+                }
+                if (lang != null) {
+                        fb.getName().setValue(lang);
+                }
+                fb.setFindQualifiers(new FindQualifiers());
+                if (findQualifiers == null) {
+                        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                } else {
+                        String[] fqs = findQualifiers.split(",");
+                        fb.getFindQualifiers().getFindQualifier().addAll(Arrays.asList(fqs));
+                }
+                fb.setMaxRows(MAX_ROWS);
+
+                if (maxrows != null) {
+                        fb.setMaxRows(maxrows);
+                }
+                fb.setListHead(0);
+                if (offset != null) {
+                        fb.setListHead(offset);
+                }
+
+                TModelList findBusiness = null;
+                try {
+                        findBusiness = inquiry.findTModel(fb);
+                } catch (Exception ex) {
+                        HandleException(ex);
+                }
+
+                return findBusiness;
+
         }
 }
