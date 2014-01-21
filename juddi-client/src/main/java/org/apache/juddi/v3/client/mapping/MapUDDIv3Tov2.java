@@ -16,7 +16,6 @@
 package org.apache.juddi.v3.client.mapping;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.xml.ws.Holder;
 import org.apache.juddi.v3.client.UDDIConstants;
@@ -158,7 +157,7 @@ public class MapUDDIv3Tov2 {
         private static List<Name> MapName(List<org.uddi.api_v3.Name> name) {
                 List<Name> items = new ArrayList<Name>();
                 for (int i = 0; i < name.size(); i++) {
-                        Name n = new Name(name.get(i).getValue(), name.get(i).getValue());
+                        Name n = new Name(name.get(i).getValue(), name.get(i).getLang());
                         items.add(n);
                 }
                 return items;
@@ -533,6 +532,51 @@ public class MapUDDIv3Tov2 {
                         }
                         if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uddi:uddi.org:categorization:types")) {
                                 r.getFindQualifier().add("uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4");
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.EXACT_MATCH)
+                                || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.EXACT_MATCH_TMODEL)) {
+                                r.getFindQualifier().add("exactNameMatch");
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.CASE_SENSITIVE_MATCH)
+                                || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.CASE_SENSITIVE_MATCH_TMODEL)) {
+                                r.getFindQualifier().add("caseSensitiveMatch");
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.OR_ALL_KEYS)
+                                || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.OR_ALL_KEYS_TMODEL)) {
+                                r.getFindQualifier().add("orAllKeys");
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.OR_LIKE_KEYS)
+                                || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.OR_LIKE_KEYS_TMODEL)) {
+                                r.getFindQualifier().add("orLikeKeys");
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.AND_ALL_KEYS)
+                                || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.AND_ALL_KEYS_TMODEL)) {
+                                r.getFindQualifier().add("andAllKeys");
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_DATE_ASC)
+                                || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_DATE_ASC_TMODEL)) {
+                                r.getFindQualifier().add(UDDIConstants.SORT_BY_DATE_ASC);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_DATE_DESC)
+                                || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_DATE_DESC_TMODEL)) {
+                                r.getFindQualifier().add(UDDIConstants.SORT_BY_DATE_DESC);
+                        }
+
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_NAME_ASC)
+                                || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_NAME_ASC_TMODEL)) {
+                                r.getFindQualifier().add(UDDIConstants.SORT_BY_NAME_ASC);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_NAME_DESC)
+                                || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_NAME_DESC_TMODEL)) {
+                                r.getFindQualifier().add(UDDIConstants.SORT_BY_NAME_DESC);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SERVICE_SUBSET)
+                                || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SERVICE_SUBSET_TMODEL)) {
+                                r.getFindQualifier().add(UDDIConstants.SERVICE_SUBSET);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.COMBINE_CATEGORY_BAGS)
+                                || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.COMBINE_CATEGORY_BAGS_TMODEL)) {
+                                r.getFindQualifier().add(UDDIConstants.COMBINE_CATEGORY_BAGS);
                         }
                 }
                 return r;

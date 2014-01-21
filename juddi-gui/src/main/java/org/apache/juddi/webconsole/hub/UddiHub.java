@@ -115,23 +115,23 @@ public class UddiHub implements Serializable {
          */
         public static final String PROP_CONFIG_NODE = "config.props.node";
         /**
-         *"config.props.authtype"
+         * "config.props.authtype"
          */
         public static final String PROP_AUTH_TYPE = "config.props.authtype";
         /**
-         *"config.props.automaticLogouts.enable"
+         * "config.props.automaticLogouts.enable"
          */
         public static final String PROP_AUTO_LOGOUT = "config.props.automaticLogouts.enable";
         /**
-         *"config.props.automaticLogouts.duration"
+         * "config.props.automaticLogouts.duration"
          */
         public static final String PROP_AUTO_LOGOUT_TIMER = "config.props.automaticLogouts.duration";
         /**
-         *"config.props."
+         * "config.props."
          */
         public static final String PROP_PREFIX = "config.props.";
         /**
-         *"config.props.configLocalHostOnly"
+         * "config.props.configLocalHostOnly"
          *
          */
         public static final String PROP_ADMIN_LOCALHOST_ONLY = "config.props.configLocalHostOnly";
@@ -313,6 +313,7 @@ public class UddiHub implements Serializable {
 
         private void EnsureConfig() {
                 if (clientConfig == null) {
+                        String clazz = null;
                         try {
                                 UDDIClient client = new UDDIClient();
                                 clientConfig = client.getClientConfig();
@@ -330,33 +331,31 @@ public class UddiHub implements Serializable {
                                 }
                                 UDDINode uddiNode = clientConfig.getUDDINode(nodename);
 
-                                String clazz = uddiNode.getProxyTransport();
-                                if (clazz.contains("JAXWSTransport")) {
+                                clazz = uddiNode.getProxyTransport();
+                                if (clazz.contains("JAXWS")) {
                                         WS_Transport = true;
                                 }
-                                Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
-                                if (transportClass != null) {
-                                        transport = client.getTransport(nodename);
 
-                                        security = transport.getUDDISecurityService();
-                                        inquiry = transport.getUDDIInquiryService();
-                                        subscription = transport.getUDDISubscriptionService();
-                                        publish = transport.getUDDIPublishService();
-                                        custody = transport.getUDDICustodyTransferService();
+                                transport = client.getTransport(nodename);
 
-                                        if (WS_Transport) {
-                                                if (uddiNode.getPublishUrl().toLowerCase().startsWith("https://")
-                                                        && (uddiNode.getSecurityUrl() != null && uddiNode.getSecurityUrl().toLowerCase().startsWith("https://"))
-                                                        && uddiNode.getInquiryUrl().toLowerCase().startsWith("https://")
-                                                        && (uddiNode.getCustodyTransferUrl() != null && uddiNode.getCustodyTransferUrl().toLowerCase().startsWith("https://"))
-                                                        && uddiNode.getSubscriptionUrl().toLowerCase().startsWith("https://")) {
-                                                        WS_securePorts = true;
-                                                }
+                                security = transport.getUDDISecurityService();
+                                inquiry = transport.getUDDIInquiryService();
+                                subscription = transport.getUDDISubscriptionService();
+                                publish = transport.getUDDIPublishService();
+                                custody = transport.getUDDICustodyTransferService();
+
+                                if (WS_Transport) {
+                                        if (uddiNode.getPublishUrl().toLowerCase().startsWith("https://")
+                                                && (uddiNode.getSecurityUrl() != null && uddiNode.getSecurityUrl().toLowerCase().startsWith("https://"))
+                                                && uddiNode.getInquiryUrl().toLowerCase().startsWith("https://")
+                                                && (uddiNode.getCustodyTransferUrl() != null && uddiNode.getCustodyTransferUrl().toLowerCase().startsWith("https://"))
+                                                && (uddiNode.getSubscriptionUrl() != null && uddiNode.getSubscriptionUrl().toLowerCase().startsWith("https://"))) {
+                                                WS_securePorts = true;
                                         }
-
                                 }
                         } catch (Exception ex) {
                                 HandleException(ex);
+                                log.info("DEBUG info node=" + nodename + " transport=" + clazz);
                         }
                 }
 
@@ -571,9 +570,15 @@ public class UddiHub implements Serializable {
                         if (findBusiness == null || findBusiness.getBusinessInfos() == null) {
                                 ret.renderedHtml = (ResourceLoader.GetResource(session, "errors.nodatareturned"));
                         } else {
-                                ret.displaycount = findBusiness.getListDescription().getIncludeCount();
-                                ret.offset = findBusiness.getListDescription().getListHead();
-                                ret.totalrecords = findBusiness.getListDescription().getActualCount();
+                                if (findBusiness.getListDescription() != null) {
+                                        ret.displaycount = findBusiness.getListDescription().getIncludeCount();
+                                        ret.offset = findBusiness.getListDescription().getListHead();
+                                        ret.totalrecords = findBusiness.getListDescription().getActualCount();
+                                } else {
+                                        ret.displaycount = findBusiness.getBusinessInfos().getBusinessInfo().size();
+                                        ret.offset = offset;
+                                        ret.totalrecords = findBusiness.getBusinessInfos().getBusinessInfo().size();
+                                }
                                 ret.renderedHtml = Printers.BusinessListAsTable(findBusiness, session, isChooser);
                         }
 
@@ -1020,7 +1025,6 @@ public class UddiHub implements Serializable {
                 return SaveBusinessDetails(be);
         }
 
-        
         /**
          * Gets a business's details used for the businessEditor
          *
@@ -1218,20 +1222,32 @@ public class UddiHub implements Serializable {
                         DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                         log.error(ex.getMessage() + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : ""));
                         log.debug(ex.getMessage(), ex);
-                        return ResourceLoader.GetResource(session, "errors.uddi") + " " + StringEscapeUtils.escapeHtml(ex.getMessage()) + " " + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : "");
+                        return ResourceLoader.GetResource(session, "errors.uddi") + " " + StringEscapeUtils.escapeHtml(ex.getMessage()) + " " + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : "") + " " + ex.getClass().getCanonicalName();
                 } else if (ex instanceof RemoteException) {
                         RemoteException f = (RemoteException) ex;
                         log.error("RemoteException " + ex.getMessage());
                         log.debug("RemoteException " + ex.getMessage(), ex);
-                        return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage()) + " " + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : "");
+                        return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage()) + " " + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : "") + " " + ex.getClass().getCanonicalName();
                 } else if (ex instanceof NullPointerException) {
                         log.error("NPE! Please report! " + ex.getMessage(), ex);
-                        log.debug("NPE! Please report! " + ex.getMessage(), ex);
-                        return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage());
+                        return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage()) + " " + ex.getClass().getCanonicalName();
+                } else if (ex instanceof javax.xml.ws.soap.SOAPFaultException) {
+                        javax.xml.ws.soap.SOAPFaultException x = (javax.xml.ws.soap.SOAPFaultException) ex;
+
+                        log.error("SOAP Fault returned: " + x.getMessage() + (x.getFault()!=null ? x.getFault().getFaultString() : ""));
+                        String err = null;
+                        if (x.getFault() != null
+                                && x.getFault().getDetail() != null) {
+                                while (x.getFault().getDetail().getDetailEntries().hasNext()) {
+                                        err += x.getFault().getDetail().getDetailEntries().next().toString();
+                                }
+                        }
+                        return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage() + " " + err) + " " + ex.getClass().getCanonicalName();
+
                 } else {
                         log.error("Unexpected error " + ex.getMessage(), ex);
                         //log.debug(ex.getMessage(), ex);
-                        return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage());
+                        return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage()) + " " + ex.getClass().getCanonicalName();
                 }
         }
 
@@ -2244,7 +2260,8 @@ public class UddiHub implements Serializable {
         }
 
         /**
-         *gets all of my subscriptions
+         * gets all of my subscriptions
+         *
          * @return null if there's an error
          */
         public List<Subscription> GetSubscriptions() {
@@ -2329,6 +2346,7 @@ public class UddiHub implements Serializable {
 
         /**
          * gets the opinfo on an item
+         *
          * @param id
          * @return null if theres an error
          */
@@ -2364,7 +2382,7 @@ public class UddiHub implements Serializable {
          * GetOperationalInfo
          *
          * @param info
-         * @return  formatted html
+         * @return formatted html
          */
         public String GetOperationalInfo(List<OperationalInfo> info) {
                 StringBuilder sb = new StringBuilder();
@@ -2546,7 +2564,7 @@ public class UddiHub implements Serializable {
          * @param tmodelkey
          * @param keyname
          * @param keyvalue
-         * @return  status msg
+         * @return status msg
          */
         public String DeletePublisherAssertion(String tokey, String fromkey, String tmodelkey, String keyname, String keyvalue) {
                 DeletePublisherAssertions dp = new DeletePublisherAssertions();
@@ -2949,7 +2967,7 @@ public class UddiHub implements Serializable {
          * @param nodeid
          * @param outExpires
          * @param outToken
-         * @return status 
+         * @return status
          */
         public String GetCustodyTransferToken(org.uddi.custody_v3.KeyBag keys, Holder<String> nodeid, Holder<XMLGregorianCalendar> outExpires, Holder<byte[]> outToken) {
 

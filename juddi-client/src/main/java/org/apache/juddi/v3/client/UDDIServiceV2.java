@@ -20,7 +20,6 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebEndpoint;
 import javax.xml.ws.WebServiceClient;
-import javax.xml.ws.WebServiceFeature;
 import org.uddi.v2_service.Inquire;
 import org.uddi.v2_service.Publish;
 

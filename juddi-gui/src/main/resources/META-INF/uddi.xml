@@ -8,6 +8,7 @@ It currently does not use the ValueSet, jUDDI, Replication, or REST APIs
     <reloadDelay>5000</reloadDelay>
     <client name="juddigui">
         <nodes>
+		
             <node>
                 <!-- required 'default' node -->
                 <name>default</name> 
@@ -19,6 +20,16 @@ It currently does not use the ValueSet, jUDDI, Replication, or REST APIs
                 <publishUrl>http://localhost:8080/juddiv3/services/publish</publishUrl>
                 <securityUrl>http://localhost:8080/juddiv3/services/security</securityUrl>
                 <subscriptionUrl>http://localhost:8080/juddiv3/services/subscription</subscriptionUrl>
+            </node>
+			<node>
+                <!-- for jUDDI v0.9 to 2.0.1 -->
+                <name>juddiv2</name> 
+                <description>UDDIv2 Node</description>
+                <!-- JAX-WS Transport -->
+                <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSv2TranslationTransport</proxyTransport>
+                <inquiryUrl>http://localhost:9080/juddi/inquiry</inquiryUrl>
+                <publishUrl>http://localhost:9080/juddi/publish</publishUrl>
+                
             </node>
              <node>
                 <name>default-ssl</name> 

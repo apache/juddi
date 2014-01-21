@@ -15,16 +15,16 @@
  */
 package org.apache.juddi.v3.client.mapping;
 
-import java.util.AbstractSequentialList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.xml.soap.SOAPFault;
+import javax.xml.ws.soap.SOAPFaultException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.AccessPointType;
-import org.uddi.api_v2.BindingDetail;
-import org.uddi.api_v2.FindBusiness;
-import org.uddi.api_v2.PublisherAssertions;
+import org.apache.juddi.v3.client.transport.JAXWSv2TranslationTransport;
 import org.uddi.api_v2.Truncated;
-import org.uddi.api_v2.URLType;
 import org.uddi.api_v3.AccessPoint;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BindingTemplates;
@@ -43,6 +43,7 @@ import org.uddi.api_v3.IdentifierBag;
 import org.uddi.api_v3.InstanceDetails;
 import org.uddi.api_v3.KeyType;
 import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.ListDescription;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.OverviewDoc;
 import org.uddi.api_v3.OverviewURL;
@@ -288,7 +289,13 @@ public class MapUDDIv2Tov3 {
 
         public static BusinessList MapBusinessList(org.uddi.api_v2.BusinessList findBinding) {
                 org.uddi.api_v3.BusinessList r = new org.uddi.api_v3.BusinessList();
+                r.setListDescription(new ListDescription());
+                r.getListDescription().setActualCount(0);
+                r.getListDescription().setIncludeCount(0);
+                r.getListDescription().setListHead(0);
                 if (findBinding.getBusinessInfos() != null) {
+                        r.getListDescription().setIncludeCount(findBinding.getBusinessInfos().getBusinessInfo().size());
+                        r.getListDescription().setActualCount(findBinding.getBusinessInfos().getBusinessInfo().size());
                         r.setBusinessInfos(new BusinessInfos());
                         r.getBusinessInfos().getBusinessInfo().addAll(MapBusinessInfo(findBinding.getBusinessInfos().getBusinessInfo()));
 
@@ -315,8 +322,15 @@ public class MapUDDIv2Tov3 {
                         return null;
                 }
                 ServiceList r = new ServiceList();
+                r.setListDescription(new ListDescription());
+                r.getListDescription().setActualCount(0);
+                r.getListDescription().setIncludeCount(0);
+                r.getListDescription().setListHead(0);
+
                 if (serviceDetail.getServiceInfos() != null) {
                         r.setServiceInfos(new ServiceInfos());
+                        r.getListDescription().setIncludeCount(serviceDetail.getServiceInfos().getServiceInfo().size());
+                        r.getListDescription().setActualCount(serviceDetail.getServiceInfos().getServiceInfo().size());
                         for (int i = 0; i < serviceDetail.getServiceInfos().getServiceInfo().size(); i++) {
                                 ServiceInfo x = new ServiceInfo();
                                 x.setBusinessKey(serviceDetail.getServiceInfos().getServiceInfo().get(i).getBusinessKey());
@@ -367,8 +381,15 @@ public class MapUDDIv2Tov3 {
 
         public static TModelList MapTModelList(org.uddi.api_v2.TModelList findTModel) {
                 org.uddi.api_v3.TModelList r = new org.uddi.api_v3.TModelList();
+                r.setListDescription(new ListDescription());
+                r.getListDescription().setActualCount(0);
+                r.getListDescription().setIncludeCount(0);
+                r.getListDescription().setListHead(0);
+
                 if (findTModel.getTModelInfos() != null) {
                         r.setTModelInfos(new TModelInfos());
+                        r.getListDescription().setIncludeCount(findTModel.getTModelInfos().getTModelInfo().size());
+                        r.getListDescription().setActualCount(findTModel.getTModelInfos().getTModelInfo().size());
                         for (int i = 0; i < findTModel.getTModelInfos().getTModelInfo().size(); i++) {
                                 TModelInfo x = new TModelInfo();
                                 x.setName(new Name(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getValue(), findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang()));
@@ -382,7 +403,6 @@ public class MapUDDIv2Tov3 {
                 return r;
         }
 
-        
         public static List<PublisherAssertion> MapListPublisherAssertion(org.uddi.api_v2.PublisherAssertions publisherAssertions) {
                 List<PublisherAssertion> r = new ArrayList<PublisherAssertion>();
                 if (publisherAssertions == null) {
@@ -493,6 +513,32 @@ public class MapUDDIv2Tov3 {
                 return r;
         }
 
-        
+        public static DispositionReportFaultMessage MapException(SOAPFaultException ex) {
+                org.uddi.api_v3.DispositionReport r = new org.uddi.api_v3.DispositionReport();
+                r.setTruncated(false);
+                r.getResult().addAll(MapFault(ex.getFault()));
 
+                DispositionReportFaultMessage x = new DispositionReportFaultMessage(ex.getMessage(), r);
+                return x;
+        }
+
+        private static List<Result> MapFault(SOAPFault result) {
+                List<Result> r = new ArrayList<Result>();
+                if (result == null) {
+                        return r;
+                }
+                while (result.getDetail().getDetailEntries().hasNext()) {
+                        Object next = result.getDetail().getDetailEntries().next();
+                        if (next instanceof DispositionReport) {
+
+                                DispositionReport z = (DispositionReport)next;
+                                Result x = new Result();
+                                r.addAll(MapResult(z.getFaultInfo().getResult()));
+                                
+                        }
+                        logger.warn("unable to parse fault detail, type:" + next.getClass().getCanonicalName()+" " + next.toString());
+                }
+                return r;
+        }
+        private static Log logger = LogFactory.getLog(MapUDDIv2Tov3.class);
 }
