@@ -52,10 +52,6 @@ public class UDDIServiceV2
         super(UDDISERVICE_WSDL_LOCATION, UDDISERVICE_QNAME);
     }
 
-    public UDDIServiceV2(WebServiceFeature... features) {
-        super(UDDISERVICE_WSDL_LOCATION, UDDISERVICE_QNAME, features);
-    }
-
     public UDDIServiceV2(URL wsdlLocation) {
         super(wsdlLocation, UDDISERVICE_QNAME);
     }
