@@ -106,7 +106,8 @@ public class AES {
                         }
                         return false;
                 } catch (Exception ex) {
-                        log.info("Key validation failed!", ex);
+                        log.info("Key validation failed! "+ ex.getMessage());
+                        log.debug("Key validation failed! "+ ex.getMessage(), ex);
                         return false;
                 }
         }
