@@ -43,7 +43,7 @@ public class StartupServlet implements javax.servlet.ServletContextListener {
                                         log.info("Generation of 256 bit AES key successful");
                                         ok = true;
                                 } else {
-                                        log.info("256 bit key validation failed.");
+                                        log.warning("256 bit key validation failed. To use higher key sizes, try installing the Java Cryptographic Extensions (JCE) Unlimited Strength");
                                 }
                         }
                         if (!ok) {
