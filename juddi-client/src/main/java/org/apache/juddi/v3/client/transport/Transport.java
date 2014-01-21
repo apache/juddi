@@ -24,17 +24,25 @@ import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;;
 
+/**
+ * This abstract class defined the basic model for accessing different transport mechanisms
+ * using the same interfaces for UDDIv3.
+ * @see JAXWSTransport
+ * @see RMITransport
+ * @see InVMTransport
+ * 
+ */
 public abstract class Transport {
 	
 	public final static String DEFAULT_NODE_NAME             = "default";
 	
-	public abstract UDDIInquiryPortType getUDDIInquiryService(String enpointURL)           throws TransportException;
-	public abstract UDDISecurityPortType getUDDISecurityService(String enpointURL)         throws TransportException;
-	public abstract UDDIPublicationPortType getUDDIPublishService(String enpointURL)       throws TransportException;
-	public abstract UDDISubscriptionPortType getUDDISubscriptionService(String enpointURL) throws TransportException;
-	public abstract UDDICustodyTransferPortType getUDDICustodyTransferService(String enpointURL) throws TransportException;
-	public abstract UDDISubscriptionListenerPortType getUDDISubscriptionListenerService(String enpointURL) throws TransportException;
-	public abstract JUDDIApiPortType getJUDDIApiService(String enpointURL) throws TransportException;
+	public abstract UDDIInquiryPortType getUDDIInquiryService(String endpointURL)           throws TransportException;
+	public abstract UDDISecurityPortType getUDDISecurityService(String endpointURL)         throws TransportException;
+	public abstract UDDIPublicationPortType getUDDIPublishService(String endpointURL)       throws TransportException;
+	public abstract UDDISubscriptionPortType getUDDISubscriptionService(String endpointURL) throws TransportException;
+	public abstract UDDICustodyTransferPortType getUDDICustodyTransferService(String endpointURL) throws TransportException;
+	public abstract UDDISubscriptionListenerPortType getUDDISubscriptionListenerService(String endpointURL) throws TransportException;
+	public abstract JUDDIApiPortType getJUDDIApiService(String endpointURL) throws TransportException;
 	
 	public UDDIInquiryPortType getUDDIInquiryService() throws TransportException {
 		return getUDDIInquiryService(null);

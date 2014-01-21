@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */ -->
+ <definitions 
+ xmlns="http://schemas.xmlsoap.org/wsdl/" 
+ xmlns:tns="urn:uddi-org:publication_v2" 
+ xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+ xmlns:uddi="urn:uddi-org:api_v2" 
+ xmlns:uddiv2pub="urn:uddi-org:publication_v2"
+ xmlns:uddiv2inquire="urn:uddi-org:inquiry_v2"
+  targetNamespace="urn:uddi-org:v2_service" >
+	<documentation>
+		Copyright (c) 2000 - 2002 by Accenture, Ariba, Inc., Commerce One, Inc. 
+		Fujitsu Limited, Hewlett-Packard Company, i2 Technologies, Inc., 
+		Intel Corporation, International Business Machines Corporation,  
+		Microsoft Corporation, Oracle Corporation, SAP AG, Sun Microsystems, Inc., 
+		and VeriSign, Inc.  All Rights Reserved.
+		
+		WSDL Service Interface for UDDI Publication API V2.0
+		
+		This WSDL document defines the publication API calls for interacting with 
+		the UDDI registry.  The complete UDDI API specification is available
+		at http://www.uddi.org/specification.html.
+	</documentation> 
+	<import namespace="urn:uddi-org:publication_v2" location="publish_v2.wsdl"/>
+	<import namespace="urn:uddi-org:inquiry_v2" location="inquire_v2.wsdl"/>
+	
+    <service name="UDDI_Service">
+        <!-- UDDI API Interface-->
+        <port name="Inquire" binding="uddiv2inquire:InquireSoap">
+            <soap:address location="http://localhost/uddi/inquire/"/>
+        </port>
+        <port name="Publish" binding="uddiv2pub:PublishSoap">
+            <soap:address location="http://localhost/uddi/publish/"/>
+        </port>
+        
+    </service>
+
+	
+</definitions>
+	

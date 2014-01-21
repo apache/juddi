@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="urn:uddi-org:v2Custody_k" xmlns="urn:uddi-org:v2Custody_k" xmlns:xsd="http://www.w3.org/2000/10/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<!-- 
+		Copyright (c) 2000 - 2002 by Accenture, Ariba, Inc., Commerce One, Inc. 
+		Fujitsu Limited, Hewlett-Packard Company, i2 Technologies, Inc., 
+		Intel Corporation, International Business Machines Corporation,  
+		Microsoft Corporation, Oracle Corporation, SAP AG, Sun Microsystems, Inc., 
+		and VeriSign, Inc.  All Rights Reserved.
+		
+             Copyright (c) OASIS Open 2002. All Rights Reserved.
+
+	-->
+	<xsd:element name="authInfo" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>This element is used as the authorization token for requests submitted to the Operator Node.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="authorizedName" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>This element is the person's name that is associated with a UDDI publisher account.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="errInfo">
+		<xsd:annotation>
+			<xsd:documentation>Provided for conveying text and structured error code (alphanumeric) information. Error message text is contained by this element.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:simpleContent>
+				<xsd:restriction base="xsd:string">
+					<xsd:attribute name="errCode" type="xsd:string" use="required">
+						<xsd:annotation>
+							<xsd:documentation>Returned on output. Signifies error status. See error code appendix in the API specification.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:restriction>
+			</xsd:simpleContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="sourceEmail" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>This element is the email address of the source publisher account for the entities being transferred.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="targetEmail" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>This element is the email address of the target publisher for the entities being transferred.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="sourceOperator" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>This element is the operator identifier for the node that is the original custodian of the entities.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="targetOperator" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>This element is the operator identifier for the node that is the destination custodian of the entities.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="transferGroup">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>This is the list of the registry entities to be transferred in the operation.</xsd:documentation>
+			</xsd:annotation>
+			<xsd:sequence>
+				<xsd:element ref="registryKey" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="registryKey">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>The business or tModel key being transferred.</xsd:documentation>
+			</xsd:annotation>
+			<xsd:attribute name="businessKey" type="xsd:string" use="optional"/>
+			<xsd:attribute name="tModelKey" type="xsd:string" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="requestExpiration" type="xsd:timeInstant">
+		<xsd:annotation>
+			<xsd:documentation>The time the custody transfer request expires.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="transferKey" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>The identifier of the transfer operation.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="sharedSecret" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>The secret exchanged directly between the publishers for custody transfer.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="request_transfer">
+		<xsd:annotation>
+			<xsd:documentation>API Call: This message initiates the custody transfer process.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="authInfo"/>
+				<xsd:element ref="authorizedName"/>
+				<xsd:element ref="sharedSecret"/>
+				<xsd:element ref="targetEmail"/>
+				<xsd:element ref="sourceOperator"/>
+				<xsd:element ref="targetOperator"/>
+				<xsd:element ref="requestExpiration"/>
+				<xsd:element ref="transferKey"/>
+				<xsd:element ref="transferGroup"/>
+			</xsd:sequence>
+			<xsd:attribute name="generic" type="xsd:string" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="confirm_transfer">
+		<xsd:annotation>
+			<xsd:documentation>API Call: This message confirms the custody transfer.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="authInfo"/>
+				<xsd:element ref="authorizedName"/>
+				<xsd:element ref="sourceOperator"/>
+				<xsd:element ref="targetOperator"/>
+				<xsd:element ref="transferKey"/>
+			</xsd:sequence>
+			<xsd:attribute name="generic" type="xsd:string" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="cancel_transfer">
+		<xsd:annotation>
+			<xsd:documentation>API Call: This message cancels the custody transfer.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="authInfo"/>
+				<xsd:element ref="authorizedName"/>
+				<xsd:element ref="errInfo"/>
+				<xsd:element ref="sourceOperator"/>
+				<xsd:element ref="targetOperator"/>
+				<xsd:element ref="transferKey"/>
+			</xsd:sequence>
+			<xsd:attribute name="generic" type="xsd:string" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

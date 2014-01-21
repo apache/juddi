@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- This is how to use the UDDI v2 interfaces from the jUDDI Client-->
+<uddi xmlns="urn:juddi-apache-org:v3_client" xsi:schemaLocation="classpath:/xsd/uddi-client.xsd">
+    <reloadDelay>5000</reloadDelay>
+    <client name="default">
+        <nodes>
+            <node isHomeJUDDI="true" >
+                <!-- required 'default' node -->
+                <name>default</name> 
+                <description>Main jUDDI node</description>
+                <properties>
+                    <property name="serverName" value="localhost" />
+                    <property name="serverPort" value="8880" />
+                    <!-- for UDDI nodes that use HTTP u/p, using the following 
+                    <property name="basicAuthUsername" value="root" />
+                    <property name="basicAuthPassword" value="password" />
+                    <property name="basicAuthPasswordIsEncrypted" value="false" />
+                    <property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
+                </properties>
+                <!-- JAX-WS Transport -->
+                <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSv2TranslationTransport</proxyTransport>
+                <inquiryUrl>http://${serverName}:${serverPort}/juddiv2/services/inquire?wsdl</inquiryUrl>
+                <publishUrl>http://${serverName}:${serverPort}/juddiv2/services/publish?wsdl</publishUrl>
+            </node>
+        </nodes>
+		
+        <clerks registerOnStartup="false" >
+            <clerk name="default" node="default" publisher="userjoe" password="******" >
+                <!--<wsdl businessKey="" businessName="" keyDomain=""></wsdl>-->
+                <class></class>
+            </clerk>
+        </clerks>
+    </client>
+</uddi>

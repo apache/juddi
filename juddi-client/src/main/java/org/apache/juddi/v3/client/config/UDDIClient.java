@@ -431,8 +431,8 @@ public class UDDIClient {
                         throw new ConfigurationException(e.getMessage(), e);
                 }
         }
-
-        /**
+        
+       /**
          * Gets the UDDI Clerk, the entry point into many functions of the juddi
          * client
          *
