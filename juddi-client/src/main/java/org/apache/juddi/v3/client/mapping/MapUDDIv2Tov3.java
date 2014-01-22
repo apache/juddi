@@ -23,7 +23,12 @@ import javax.xml.ws.soap.SOAPFaultException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.AccessPointType;
+import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.transport.JAXWSv2TranslationTransport;
+import org.uddi.api_v2.GetBusinessDetailExt;
+import org.uddi.api_v2.GetPublisherAssertions;
+import org.uddi.api_v2.GetTModelDetail;
+import org.uddi.api_v2.SetPublisherAssertions;
 import org.uddi.api_v2.Truncated;
 import org.uddi.api_v3.AccessPoint;
 import org.uddi.api_v3.BindingTemplate;
@@ -36,10 +41,29 @@ import org.uddi.api_v3.BusinessList;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.BusinessServices;
 import org.uddi.api_v3.CategoryBag;
+import org.uddi.api_v3.DeleteBinding;
+import org.uddi.api_v3.DeleteBusiness;
+import org.uddi.api_v3.DeletePublisherAssertions;
+import org.uddi.api_v3.DeleteService;
+import org.uddi.api_v3.DeleteTModel;
 import org.uddi.api_v3.Description;
+import org.uddi.api_v3.Direction;
+import org.uddi.api_v3.DiscoveryURL;
+import org.uddi.api_v3.DiscoveryURLs;
 import org.uddi.api_v3.ErrInfo;
+import org.uddi.api_v3.FindBinding;
+import org.uddi.api_v3.FindBusiness;
+import org.uddi.api_v3.FindQualifiers;
+import org.uddi.api_v3.FindRelatedBusinesses;
+import org.uddi.api_v3.FindService;
+import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.GetBindingDetail;
+import org.uddi.api_v3.GetBusinessDetail;
+import org.uddi.api_v3.GetRegisteredInfo;
+import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.HostingRedirector;
 import org.uddi.api_v3.IdentifierBag;
+import org.uddi.api_v3.InfoSelection;
 import org.uddi.api_v3.InstanceDetails;
 import org.uddi.api_v3.KeyType;
 import org.uddi.api_v3.KeyedReference;
@@ -49,13 +73,21 @@ import org.uddi.api_v3.OverviewDoc;
 import org.uddi.api_v3.OverviewURL;
 import org.uddi.api_v3.PublisherAssertion;
 import org.uddi.api_v3.RegisteredInfo;
+import org.uddi.api_v3.RelatedBusinessInfo;
+import org.uddi.api_v3.RelatedBusinessInfos;
 import org.uddi.api_v3.RelatedBusinessesList;
 import org.uddi.api_v3.Result;
+import org.uddi.api_v3.SaveBinding;
+import org.uddi.api_v3.SaveBusiness;
+import org.uddi.api_v3.SaveService;
+import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.ServiceDetail;
 import org.uddi.api_v3.ServiceInfo;
 import org.uddi.api_v3.ServiceInfos;
 import org.uddi.api_v3.ServiceList;
+import org.uddi.api_v3.SharedRelationships;
 import org.uddi.api_v3.TModel;
+import org.uddi.api_v3.TModelBag;
 import org.uddi.api_v3.TModelDetail;
 import org.uddi.api_v3.TModelInfo;
 import org.uddi.api_v3.TModelInfos;
@@ -314,7 +346,25 @@ public class MapUDDIv2Tov3 {
         }
 
         public static RelatedBusinessesList MapRelatedBusinessesList(org.uddi.api_v2.RelatedBusinessesList findRelatedBusinesses) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                if (findRelatedBusinesses == null) {
+                        return null;
+                }
+                RelatedBusinessesList r = new RelatedBusinessesList();
+                r.setTruncated(findRelatedBusinesses.getTruncated() == Truncated.TRUE);
+                r.setBusinessKey(findRelatedBusinesses.getBusinessKey());
+
+                if (findRelatedBusinesses.getRelatedBusinessInfos() != null) {
+                        r.setRelatedBusinessInfos(new RelatedBusinessInfos());
+                        for (int i = 0; i < findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().size(); i++) {
+                                RelatedBusinessInfo x = new RelatedBusinessInfo();
+                                x.setBusinessKey(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getBusinessKey());
+                                x.getDescription().addAll(MapDescription(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getDescription()));
+                                x.getName().addAll(MapName(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getName()));
+                                x.getSharedRelationships().addAll(MapSharedRelationship(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getSharedRelationships()));
+                                r.getRelatedBusinessInfos().getRelatedBusinessInfo().add(x);
+                        }
+                }
+                return r;
         }
 
         public static ServiceList MapServiceList(org.uddi.api_v2.ServiceList serviceDetail) {
@@ -403,22 +453,33 @@ public class MapUDDIv2Tov3 {
                 return r;
         }
 
+        public static List<PublisherAssertion> MapListPublisherAssertion(List<org.uddi.api_v2.PublisherAssertion> publisherAssertions) {
+                List<PublisherAssertion> r = new ArrayList<PublisherAssertion>();
+                if (publisherAssertions == null) {
+                        return r;
+                }
+                for (int i = 0; i < publisherAssertions.size(); i++) {
+                        PublisherAssertion x = new PublisherAssertion();
+                        x.setFromKey(publisherAssertions.get(i).getFromKey());
+                        x.setToKey(publisherAssertions.get(i).getToKey());
+                        if (publisherAssertions.get(i).getKeyedReference() != null) {
+                                x.setKeyedReference(new KeyedReference(publisherAssertions.get(i).getKeyedReference().getTModelKey(),
+                                        publisherAssertions.get(i).getKeyedReference().getKeyName(),
+                                        publisherAssertions.get(i).getKeyedReference().getKeyValue()));
+                        }
+                        r.add(x);
+                }
+                return r;
+        }
+
         public static List<PublisherAssertion> MapListPublisherAssertion(org.uddi.api_v2.PublisherAssertions publisherAssertions) {
                 List<PublisherAssertion> r = new ArrayList<PublisherAssertion>();
                 if (publisherAssertions == null) {
                         return r;
                 }
-                for (int i = 0; i < publisherAssertions.getPublisherAssertion().size(); i++) {
-                        PublisherAssertion x = new PublisherAssertion();
-                        x.setFromKey(publisherAssertions.getPublisherAssertion().get(i).getFromKey());
-                        x.setToKey(publisherAssertions.getPublisherAssertion().get(i).getToKey());
-                        if (publisherAssertions.getPublisherAssertion().get(i).getKeyedReference() != null) {
-                                x.setKeyedReference(new KeyedReference(publisherAssertions.getPublisherAssertion().get(i).getKeyedReference().getTModelKey(),
-                                        publisherAssertions.getPublisherAssertion().get(i).getKeyedReference().getKeyName(),
-                                        publisherAssertions.getPublisherAssertion().get(i).getKeyedReference().getKeyValue()));
-                        }
-                        r.add(x);
-                }
+
+                r.addAll(MapListPublisherAssertion(publisherAssertions.getPublisherAssertion()));
+
                 return r;
         }
 
@@ -531,14 +592,364 @@ public class MapUDDIv2Tov3 {
                         Object next = result.getDetail().getDetailEntries().next();
                         if (next instanceof DispositionReport) {
 
-                                DispositionReport z = (DispositionReport)next;
+                                DispositionReport z = (DispositionReport) next;
                                 Result x = new Result();
                                 r.addAll(MapResult(z.getFaultInfo().getResult()));
-                                
+
                         }
-                        logger.warn("unable to parse fault detail, type:" + next.getClass().getCanonicalName()+" " + next.toString());
+                        logger.warn("unable to parse fault detail, type:" + next.getClass().getCanonicalName() + " " + next.toString());
                 }
                 return r;
         }
         private static Log logger = LogFactory.getLog(MapUDDIv2Tov3.class);
+
+        public static FindBinding MapFindBinding(org.uddi.api_v2.FindBinding body) {
+                if (body == null) {
+                        return null;
+                }
+                FindBinding r = new FindBinding();
+                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers()));
+                r.setMaxRows(body.getMaxRows());
+                r.setTModelBag(MapTModelBag(body.getTModelBag()));
+                return r;
+
+        }
+
+        private static TModelBag MapTModelBag(org.uddi.api_v2.TModelBag tModelBag) {
+                if (tModelBag == null) {
+                        return null;
+                }
+                TModelBag r = new TModelBag();
+                r.getTModelKey().addAll(tModelBag.getTModelKey());
+                return r;
+        }
+
+        private static FindQualifiers MapFindQualifiers(org.uddi.api_v2.FindQualifiers findQualifiers) {
+                if (findQualifiers == null) {
+                        return null;
+                }
+                FindQualifiers r = new FindQualifiers();
+                for (int i = 0; i < findQualifiers.getFindQualifier().size(); i++) {
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uuid:68DE9E80-AD09-469D-8A37-088422BFBC36")) {
+                                r.getFindQualifier().add(UDDIConstants.TRANSPORT_HTTP);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uuid:93335D49-3EFB-48A0-ACEA-EA102B60DDC6")) {
+                                r.getFindQualifier().add(UDDIConstants.TRANSPORT_EMAIL);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uuid:5FCF5CD0-629A-4C50-8B16-F94E9CF2A674")) {
+                                r.getFindQualifier().add(UDDIConstants.TRANSPORT_FTP);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uuid:1A2B00BE-6E2C-42F5-875B-56F32686E0E7")) {
+                                r.getFindQualifier().add(UDDIConstants.TRANSPORT_FAX);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uuid:38E12427-5536-4260-A6F9-B5B530E63A07")) {
+                                r.getFindQualifier().add(UDDIConstants.TRANSPORT_POTS);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uuid:E59AE320-77A5-11D5-B898-0004AC49CC1E")) {
+                                r.getFindQualifier().add(UDDIConstants.IS_REPLACED_BY);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uuid:4064C064-6D14-4F35-8953-9652106476A9")) {
+                                r.getFindQualifier().add(UDDIConstants.OWNING_BUSINESS);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uuid:807A2C6A-EE22-470D-ADC7-E0424A337C03")) {
+                                r.getFindQualifier().add(UDDIConstants.RELATIONSHIPS);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uuid:327A56F0-3299-4461-BC23-5CD513E95C55")) {
+                                r.getFindQualifier().add("uddi:uddi.org:categorization:nodes");
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uuid:A035A07C-F362-44dd-8F95-E2B134BF43B4")) {
+                                r.getFindQualifier().add("uddi:uddi.org:categorization:general_keywords");
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4")) {
+                                r.getFindQualifier().add("uddi:uddi.org:categorization:types");
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.EXACT_MATCH)) {
+                                r.getFindQualifier().add("exactNameMatch");
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.CASE_SENSITIVE_MATCH)) {
+                                r.getFindQualifier().add("caseSensitiveMatch");
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.OR_ALL_KEYS)) {
+                                r.getFindQualifier().add("orAllKeys");
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.OR_LIKE_KEYS)) {
+                                r.getFindQualifier().add("orLikeKeys");
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.AND_ALL_KEYS)) {
+                                r.getFindQualifier().add("andAllKeys");
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_DATE_ASC)) {
+                                r.getFindQualifier().add(UDDIConstants.SORT_BY_DATE_ASC);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_DATE_DESC)) {
+                                r.getFindQualifier().add(UDDIConstants.SORT_BY_DATE_DESC);
+                        }
+
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_NAME_ASC)) {
+                                r.getFindQualifier().add(UDDIConstants.SORT_BY_NAME_ASC);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_NAME_DESC)) {
+                                r.getFindQualifier().add(UDDIConstants.SORT_BY_NAME_DESC);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SERVICE_SUBSET)) {
+                                r.getFindQualifier().add(UDDIConstants.SERVICE_SUBSET);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.COMBINE_CATEGORY_BAGS)) {
+                                r.getFindQualifier().add(UDDIConstants.COMBINE_CATEGORY_BAGS);
+                        }
+                }
+                return r;
+        }
+
+        public static FindBusiness MapFindBusiness(org.uddi.api_v2.FindBusiness body) {
+                if (body == null) {
+                        return null;
+                }
+                FindBusiness r = new FindBusiness();
+                r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));
+                r.setDiscoveryURLs(MapDiscoveryURLs(body.getDiscoveryURLs()));
+                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers()));
+                r.setTModelBag(MapTModelBag(body.getTModelBag()));
+                r.setMaxRows(body.getMaxRows());
+                r.getName().addAll(MapName(body.getName()));
+                return r;
+        }
+
+        private static DiscoveryURLs MapDiscoveryURLs(org.uddi.api_v2.DiscoveryURLs discoveryURLs) {
+                if (discoveryURLs == null) {
+                        return null;
+                }
+                DiscoveryURLs r = new DiscoveryURLs();
+                for (int i = 0; i < discoveryURLs.getDiscoveryURL().size(); i++) {
+                        DiscoveryURL x = new DiscoveryURL(discoveryURLs.getDiscoveryURL().get(i).getUseType(), discoveryURLs.getDiscoveryURL().get(i).getValue());
+                        r.getDiscoveryURL().add(x);
+                }
+                return r;
+        }
+
+        public static FindRelatedBusinesses MapFindRelatedBusiness(org.uddi.api_v2.FindRelatedBusinesses body) {
+                if (body == null) {
+                        return null;
+                }
+                FindRelatedBusinesses r = new FindRelatedBusinesses();
+                r.setBusinessKey(body.getBusinessKey());
+                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers()));
+                if (body.getKeyedReference() != null) {
+                        r.setKeyedReference(new KeyedReference(body.getKeyedReference().getTModelKey(), body.getKeyedReference().getKeyName(), body.getKeyedReference().getKeyValue()));
+                }
+                r.setMaxRows(body.getMaxRows());
+                return r;
+        }
+
+        public static FindService MapFindService(org.uddi.api_v2.FindService body) {
+                if (body == null) {
+                        return null;
+                }
+                FindService r = new FindService();
+                r.setBusinessKey(body.getBusinessKey());
+                r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));
+                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers()));
+                r.setMaxRows(body.getMaxRows());
+                r.setTModelBag(MapTModelBag(body.getTModelBag()));
+                r.getName().addAll(MapName(body.getName()));
+                return r;
+
+        }
+
+        public static FindTModel MapFindTModel(org.uddi.api_v2.FindTModel body) {
+                if (body == null) {
+                        return null;
+                }
+                FindTModel r = new FindTModel();
+                r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));
+                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers()));
+                r.setMaxRows(body.getMaxRows());
+                if (body.getName() != null) {
+                        r.setName(new Name(body.getName().getValue(), body.getName().getLang()));
+                }
+                return r;
+        }
+
+        public static GetBusinessDetail MapGetBusinessDetailExt(GetBusinessDetailExt body) {
+                if (body == null) {
+                        return null;
+                }
+                GetBusinessDetail r = new GetBusinessDetail();
+                r.getBusinessKey().addAll(body.getBusinessKey());
+                return r;
+        }
+
+        public static GetServiceDetail MapGetServiceDetail(org.uddi.api_v2.GetServiceDetail body) {
+                if (body == null) {
+                        return null;
+                }
+                GetServiceDetail r = new GetServiceDetail();
+                r.getServiceKey().addAll(body.getServiceKey());
+                return r;
+        }
+
+        public static org.uddi.api_v3.GetTModelDetail MapGetTModelDetail(GetTModelDetail body) {
+                if (body == null) {
+                        return null;
+                }
+                org.uddi.api_v3.GetTModelDetail r = new org.uddi.api_v3.GetTModelDetail();
+                r.getTModelKey().addAll(body.getTModelKey());
+                return r;
+        }
+
+        public static GetBindingDetail MapGetBindingDetail(org.uddi.api_v2.GetBindingDetail body) {
+                if (body == null) {
+                        return null;
+                }
+                GetBindingDetail r = new GetBindingDetail();
+                r.getBindingKey().addAll(body.getBindingKey());
+                return r;
+        }
+
+        public static GetBusinessDetail MapGetBusinessDetail(org.uddi.api_v2.GetBusinessDetail body) {
+                if (body == null) {
+                        return null;
+                }
+                GetBusinessDetail r = new GetBusinessDetail();
+                r.getBusinessKey().addAll(body.getBusinessKey());
+                return r;
+        }
+
+        private static List<SharedRelationships> MapSharedRelationship(List<org.uddi.api_v2.SharedRelationships> sharedRelationships) {
+                if (sharedRelationships == null) {
+                        return null;
+                }
+                List<SharedRelationships> r = new ArrayList<SharedRelationships>();
+                for (int i = 0; i < sharedRelationships.size(); i++) {
+                        SharedRelationships x = new SharedRelationships();
+
+                        switch (sharedRelationships.get(i).getDirection()) {
+                                case FROM_KEY:
+                                        x.setDirection(Direction.FROM_KEY);
+                                        break;
+                                case TO_KEY:
+                                        x.setDirection(Direction.TO_KEY);
+                                        break;
+                        }
+                        x.getKeyedReference().addAll(MapKeyedReference(sharedRelationships.get(i).getKeyedReference()));
+                        r.add(x);
+                }
+                return r;
+        }
+
+        public static DeleteBinding MapDeleteBinding(org.uddi.api_v2.DeleteBinding body) {
+                if (body == null) {
+                        return null;
+                }
+                DeleteBinding r = new DeleteBinding();
+                r.setAuthInfo(body.getAuthInfo());
+                r.getBindingKey().addAll(body.getBindingKey());
+                return r;
+        }
+
+        public static DeleteBusiness MapDeleteBusiness(org.uddi.api_v2.DeleteBusiness body) {
+                if (body == null) {
+                        return null;
+                }
+                DeleteBusiness r = new DeleteBusiness();
+                r.setAuthInfo(body.getAuthInfo());
+                r.getBusinessKey().addAll(body.getBusinessKey());
+                return r;
+        }
+
+        public static DeletePublisherAssertions MapDeletePublisherAssertion(org.uddi.api_v2.DeletePublisherAssertions body) {
+                if (body == null) {
+                        return null;
+                }
+                DeletePublisherAssertions r = new DeletePublisherAssertions();
+                r.setAuthInfo(body.getAuthInfo());
+                //r.getPublisherAssertion().addAll(Map));
+                return r;
+        }
+
+        public static DeleteService MapDeleteService(org.uddi.api_v2.DeleteService body) {
+                if (body == null) {
+                        return null;
+                }
+                DeleteService r = new DeleteService();
+                r.setAuthInfo(body.getAuthInfo());
+                r.getServiceKey().addAll(body.getServiceKey());
+                return r;
+        }
+
+        public static DeleteTModel MapDeleteTModel(org.uddi.api_v2.DeleteTModel body) {
+                if (body == null) {
+                        return null;
+                }
+                DeleteTModel r = new DeleteTModel();
+                r.setAuthInfo(body.getAuthInfo());
+                r.getTModelKey().addAll(body.getTModelKey());
+                return r;
+        }
+
+        public static SaveTModel MapSaveTModel(org.uddi.api_v2.SaveTModel body) {
+                if (body == null) {
+                        return null;
+                }
+                SaveTModel r = new SaveTModel();
+                r.setAuthInfo(body.getAuthInfo());
+                for (int i = 0; i < body.getTModel().size(); i++) {
+                        r.getTModel().add(MapTModel(body.getTModel().get(i)));
+                }
+                return r;
+        }
+
+        public static SaveService MapSaveService(org.uddi.api_v2.SaveService body) {
+                if (body == null) {
+                        return null;
+                }
+                SaveService r = new SaveService();
+                r.setAuthInfo(body.getAuthInfo());
+                for (int i = 0; i < body.getBusinessService().size(); i++) {
+                        r.getBusinessService().add(MapService(body.getBusinessService().get(i)));
+                }
+                return r;
+        }
+
+        public static SaveBusiness MapSaveBusiness(org.uddi.api_v2.SaveBusiness body) {
+                if (body == null) {
+                        return null;
+                }
+                SaveBusiness r = new SaveBusiness();
+                r.setAuthInfo(body.getAuthInfo());
+                for (int i = 0; i < body.getBusinessEntity().size(); i++) {
+                        r.getBusinessEntity().add(MapBusiness(body.getBusinessEntity().get(i)));
+                }
+                return r;
+        }
+
+        public static GetRegisteredInfo MapGetRegisteredInfo(org.uddi.api_v2.GetRegisteredInfo body) {
+                if (body == null) {
+                        return null;
+                }
+                GetRegisteredInfo r = new GetRegisteredInfo();
+                r.setAuthInfo(body.getAuthInfo());
+                r.setInfoSelection(InfoSelection.ALL);
+                return r;
+        }
+
+        public static SaveBinding MapSaveBinding(org.uddi.api_v2.SaveBinding body) {
+                if (body == null) {
+                        return null;
+                }
+                SaveBinding r = new SaveBinding();
+                r.setAuthInfo(body.getAuthInfo());
+                for (int i = 0; i < body.getBindingTemplate().size(); i++) {
+                        r.getBindingTemplate().add(MapBinding(body.getBindingTemplate().get(i)));
+                }
+                return r;
+        }
+
+        public static List<PublisherAssertion> MapSetPublisherAssertions(SetPublisherAssertions body) {
+                if (body == null) {
+                        return null;
+                }
+                return MapListPublisherAssertion(body.getPublisherAssertion());
+        }
+
 }

@@ -60,6 +60,22 @@
     </init-param>
   </servlet>
   <servlet>
+    <servlet-name>UDDIInquiryWSv2</servlet-name>
+    <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
+    <init-param>
+      <param-name>jboss.ws.endpoint</param-name>
+      <param-value>org.apache.juddi.api.impl.UDDIv2InquiryImpl</param-value>
+    </init-param>
+  </servlet>
+   <servlet>
+    <servlet-name>UDDIPublishWSv2</servlet-name>
+    <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
+    <init-param>
+      <param-name>jboss.ws.endpoint</param-name>
+      <param-value>org.apache.juddi.api.impl.UDDIv2PublishImpl</param-value>
+    </init-param>
+  </servlet>
+  <servlet>
     <servlet-name>UDDISubscriptionWS</servlet-name>
     <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
     <init-param>
@@ -100,8 +116,16 @@
     <url-pattern>/services/publish/*</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
+    <servlet-name>UDDIPublishWSv2</servlet-name>
+    <url-pattern>/services/publishv2/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
     <servlet-name>UDDIInquiryWS</servlet-name>
     <url-pattern>/services/inquiry/*</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>UDDIInquiryWSv2</servlet-name>
+    <url-pattern>/services/inquire/*</url-pattern>
   </servlet-mapping>
     <servlet-mapping>
     <servlet-name>UDDISubscriptionWS</servlet-name>

@@ -46,10 +46,19 @@
 		<servlet-name>InquiryService</servlet-name>
 		<servlet-class>org.apache.juddi.api.impl.UDDIInquiryImpl</servlet-class>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>InquiryServicev2</servlet-name>
+		<servlet-class>org.apache.juddi.api.impl.UDDIv2InquiryImpl</servlet-class>
+	</servlet>
 
 	<servlet>
 		<servlet-name>PublicationService</servlet-name>
 		<servlet-class>org.apache.juddi.api.impl.UDDIPublicationImpl</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>PublicationServicev2</servlet-name>
+		<servlet-class>org.apache.juddi.api.impl.UDDIv2PublishImpl</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -92,8 +101,17 @@
 		<url-pattern>/services/inquiry</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
+		<servlet-name>InquiryServicev2</servlet-name>
+		<url-pattern>/services/inquiryv2</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
 		<servlet-name>PublicationService</servlet-name>
 		<url-pattern>/services/publish</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>PublicationServicev2</servlet-name>
+		<url-pattern>/services/publishv2</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

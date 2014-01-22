@@ -16,9 +16,11 @@
  */
 package org.apache.juddi.v3.client.config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -33,6 +35,7 @@ import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.v3.client.cryptor.CryptorFactory;
 import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 
@@ -308,6 +311,27 @@ public class ClientConfig
 	protected Map<String, UDDINode> getUDDINodes() {
 		return uddiNodes;
 	}
+
+        /**
+         * gets the current configuration's node list
+         * only the node name, client name, descriptions and transport class are returned, everything else is nulled out for
+         * security reasons. Only a copy of these values are returned
+         * @return 
+         */
+        public List<Node> getUDDINodeList(){
+                List<Node> ret = new ArrayList<Node>();
+                Iterator<UDDINode> it = uddiNodes.values().iterator();
+                while (it.hasNext()){
+                        UDDINode next = it.next();
+                        Node n = new Node();
+                        n.setClientName(next.getClientName());
+                        n.setDescription(next.getDescription());
+                        n.setName(next.getName());
+                        n.setProxyTransport(next.getProxyTransport());
+                        ret.add(n);
+                }
+                return ret;
+        }
 	
 	public UDDINode getHomeNode() throws ConfigurationException {
 		if (uddiNodes==null) throw new ConfigurationException("The juddi client configuration " +

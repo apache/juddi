@@ -211,6 +211,7 @@ public class Publish3to2 implements UDDIPublicationPortType, BindingProvider {
         public void setPublisherAssertions(String authInfo, Holder<List<PublisherAssertion>> publisherAssertion) throws DispositionReportFaultMessage, RemoteException {
                 try {
                         SetPublisherAssertions req = MapUDDIv3Tov2.MapSetPublisherAssertions(publisherAssertion.value);
+                        req.setAuthInfo(authInfo);
                         PublisherAssertions setPublisherAssertions = publishService.setPublisherAssertions(req);
                         publisherAssertion.value = MapUDDIv2Tov3.MapListPublisherAssertion(setPublisherAssertions);
 

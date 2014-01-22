@@ -266,7 +266,9 @@ public class UddiHub implements Serializable {
                 DiscardAuthToken da = new DiscardAuthToken();
                 da.setAuthInfo(token);
                 try {
-                        security.discardAuthToken(da);
+                        if (token != null) {
+                                security.discardAuthToken(da);
+                        }
                 } catch (Exception ex) {
                         HandleException(ex);
                 }
@@ -323,8 +325,9 @@ public class UddiHub implements Serializable {
                                         log.warn("'UDDI_AUTH' is not defined in the config (" + PROP_AUTH_TYPE + ")! defaulting to UDDI_AUTH");
                                         style = AuthStyle.UDDI_AUTH;
                                 }
-
-                                nodename = clientConfig.getConfiguration().getString(PROP_CONFIG_NODE);
+                                if (nodename == null) {
+                                        nodename = clientConfig.getConfiguration().getString(PROP_CONFIG_NODE);
+                                }
                                 if (nodename == null || nodename.equals("")) {
                                         log.warn("'node' is not defined in the config! defaulting to 'default'");
                                         nodename = "default";
@@ -403,6 +406,21 @@ public class UddiHub implements Serializable {
         public ClientConfig GetJuddiClientConfig() throws ConfigurationException {
                 EnsureConfig();
                 return clientConfig;
+        }
+
+        public String getNodeName() {
+                EnsureConfig();
+                return nodename;
+        }
+
+        public String switchNodes(String newnode) {
+                if (this.nodename.equalsIgnoreCase(newnode)) {
+                        this.die();
+                        clientConfig = null;
+                        this.nodename = newnode;
+                }
+                EnsureConfig();
+                return this.nodename;
         }
 
         /**
@@ -1234,7 +1252,7 @@ public class UddiHub implements Serializable {
                 } else if (ex instanceof javax.xml.ws.soap.SOAPFaultException) {
                         javax.xml.ws.soap.SOAPFaultException x = (javax.xml.ws.soap.SOAPFaultException) ex;
 
-                        log.error("SOAP Fault returned: " + x.getMessage() + (x.getFault()!=null ? x.getFault().getFaultString() : ""));
+                        log.error("SOAP Fault returned: " + x.getMessage() + (x.getFault() != null ? x.getFault().getFaultString() : ""));
                         String err = null;
                         if (x.getFault() != null
                                 && x.getFault().getDetail() != null) {
