@@ -67,6 +67,7 @@ import org.uddi.api_v2.TModelInstanceInfo;
 import org.uddi.api_v2.URLType;
 import org.uddi.api_v2.FindBusiness;
 import org.uddi.api_v2.FindTModel;
+import org.uddi.api_v2.GetAssertionStatusReport;
 import org.uddi.api_v2.GetBindingDetail;
 import org.uddi.api_v2.GetBusinessDetail;
 import org.uddi.api_v2.GetServiceDetail;
@@ -89,6 +90,7 @@ import org.uddi.api_v2.TModelInfos;
 import org.uddi.api_v2.TModelList;
 import org.uddi.api_v2.Truncated;
 import org.uddi.api_v3.BusinessDetail;
+import org.uddi.api_v3.CompletionStatus;
 import org.uddi.v2_service.DispositionReport;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
@@ -341,6 +343,9 @@ public class MapUDDIv3Tov2 {
                 r.setDiscoveryURLs(MapDiscoveryURLs(body.getDiscoveryURLs()));
                 r.setIdentifierBag(MapIdentBag(body.getIdentifierBag()));
                 r.getName().addAll(MapName(body.getName()));
+                if (ContainsWildCard(r.getName())) {
+                        r.setFindQualifiers(AddApproximateMatch(r.getFindQualifiers()));
+                }
                 return r;
         }
 
@@ -367,6 +372,7 @@ public class MapUDDIv3Tov2 {
                 r.setTModelBag(MapTModelBag(body.getTModelBag()));
                 r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));
                 r.setGeneric(VERSION);
+                
                 r.setBusinessKey(body.getBusinessKey());
                 r.getName().addAll(MapName(body.getName()));
                 return r;
@@ -378,6 +384,7 @@ public class MapUDDIv3Tov2 {
                 r.setMaxRows(body.getMaxRows());
                 r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));
                 r.setGeneric(VERSION);
+                
                 if (body.getName() != null) {
                         r.setName(new Name(body.getName().getValue(), body.getName().getLang()));
                 }
@@ -388,6 +395,7 @@ public class MapUDDIv3Tov2 {
                 GetBindingDetail r = new GetBindingDetail();
                 r.getBindingKey().addAll(body.getBindingKey());
                 r.setGeneric(VERSION);
+                
                 return r;
         }
 
@@ -395,6 +403,7 @@ public class MapUDDIv3Tov2 {
                 GetBusinessDetail r = new GetBusinessDetail();
                 r.getBusinessKey().addAll(body.getBusinessKey());
                 r.setGeneric(VERSION);
+                
                 return r;
         }
 
@@ -402,6 +411,7 @@ public class MapUDDIv3Tov2 {
                 GetServiceDetail r = new GetServiceDetail();
                 r.getServiceKey().addAll(body.getServiceKey());
                 r.setGeneric(VERSION);
+                
                 return r;
         }
 
@@ -409,6 +419,7 @@ public class MapUDDIv3Tov2 {
                 GetTModelDetail r = new GetTModelDetail();
                 r.getTModelKey().addAll(body.getTModelKey());
                 r.setGeneric(VERSION);
+                
                 return r;
         }
 
@@ -419,6 +430,7 @@ public class MapUDDIv3Tov2 {
                 AddPublisherAssertions r = new AddPublisherAssertions();
                 r.setAuthInfo(body.getAuthInfo());
                 r.setGeneric(VERSION);
+                
                 r.getPublisherAssertion().addAll(MapPublisherAssertion(body.getPublisherAssertion()));
                 return r;
 
@@ -427,6 +439,7 @@ public class MapUDDIv3Tov2 {
         public static DeleteBinding MapDeleteBinding(org.uddi.api_v3.DeleteBinding body) {
                 DeleteBinding r = new DeleteBinding();
                 r.setGeneric(VERSION);
+                
                 r.setAuthInfo(body.getAuthInfo());
                 r.getBindingKey().addAll(body.getBindingKey());
                 return r;
@@ -436,14 +449,17 @@ public class MapUDDIv3Tov2 {
         public static DeleteBusiness MapDeleteBusiness(org.uddi.api_v3.DeleteBusiness body) {
                 DeleteBusiness r = new DeleteBusiness();
                 r.setGeneric(VERSION);
+                
                 r.setAuthInfo(body.getAuthInfo());
                 r.getBusinessKey().addAll(body.getBusinessKey());
                 return r;
         }
 
         public static DeletePublisherAssertions MapDeletePublisherAssertions(org.uddi.api_v3.DeletePublisherAssertions body) {
-                if (body==null)return null;
-                DeletePublisherAssertions r = new  DeletePublisherAssertions();
+                if (body == null) {
+                        return null;
+                }
+                DeletePublisherAssertions r = new DeletePublisherAssertions();
                 r.setAuthInfo(body.getAuthInfo());
                 r.getPublisherAssertion().addAll(MapPublisherAssertion(body.getPublisherAssertion()));
                 return r;
@@ -452,6 +468,7 @@ public class MapUDDIv3Tov2 {
         public static DeleteService MapDeleteService(org.uddi.api_v3.DeleteService body) {
                 DeleteService r = new DeleteService();
                 r.setGeneric(VERSION);
+                
                 r.setAuthInfo(body.getAuthInfo());
                 r.getServiceKey().addAll(body.getServiceKey());
                 return r;
@@ -460,6 +477,7 @@ public class MapUDDIv3Tov2 {
         public static DeleteTModel MapDeleteTModel(org.uddi.api_v3.DeleteTModel body) {
                 DeleteTModel r = new DeleteTModel();
                 r.setGeneric(VERSION);
+                
                 r.setAuthInfo(body.getAuthInfo());
                 r.getTModelKey().addAll(body.getTModelKey());
                 return r;
@@ -468,6 +486,7 @@ public class MapUDDIv3Tov2 {
         public static SaveBinding MapSaveBinding(org.uddi.api_v3.SaveBinding body) {
                 SaveBinding r = new SaveBinding();
                 r.setGeneric(VERSION);
+                
                 r.setAuthInfo(body.getAuthInfo());
                 r.getBindingTemplate().addAll(MapBinding(body.getBindingTemplate()));
                 return r;
@@ -476,6 +495,7 @@ public class MapUDDIv3Tov2 {
         public static SaveBusiness MapSaveBusiness(org.uddi.api_v3.SaveBusiness body) {
                 SaveBusiness r = new SaveBusiness();
                 r.setGeneric(VERSION);
+                
                 r.setAuthInfo(body.getAuthInfo());
                 r.getBusinessEntity().addAll(MapBusinessList(body.getBusinessEntity()));
                 return r;
@@ -484,6 +504,7 @@ public class MapUDDIv3Tov2 {
         public static SaveService MapSaveService(org.uddi.api_v3.SaveService body) {
                 SaveService r = new SaveService();
                 r.setGeneric(VERSION);
+
                 r.setAuthInfo(body.getAuthInfo());
                 r.getBusinessService().addAll(MapService(body.getBusinessService()));
                 return r;
@@ -501,6 +522,7 @@ public class MapUDDIv3Tov2 {
                 GetPublisherAssertions r = new GetPublisherAssertions();
                 r.setAuthInfo(authInfo);
                 r.setGeneric(VERSION);
+                
                 return r;
         }
 
@@ -508,11 +530,12 @@ public class MapUDDIv3Tov2 {
                 GetRegisteredInfo r = new GetRegisteredInfo();
                 r.setAuthInfo(body.getAuthInfo());
                 r.setGeneric(VERSION);
+                
                 return r;
         }
 
         private static FindQualifiers MapFindQualifiers(org.uddi.api_v3.FindQualifiers findQualifiers) {
-                if (findQualifiers == null) {
+                if (findQualifiers == null || findQualifiers.getFindQualifier().isEmpty()) {
                         return null;
                 }
                 FindQualifiers r = new FindQualifiers();
@@ -600,11 +623,11 @@ public class MapUDDIv3Tov2 {
         }
 
         private static TModelBag MapTModelBag(org.uddi.api_v3.TModelBag tModelBag) {
-
-                TModelBag r = new TModelBag();
-                if (tModelBag != null) {
-                        r.getTModelKey().addAll(tModelBag.getTModelKey());
+                if (tModelBag == null || tModelBag.getTModelKey().isEmpty()) {
+                        return null;
                 }
+                TModelBag r = new TModelBag();
+                r.getTModelKey().addAll(tModelBag.getTModelKey());
                 return r;
 
         }
@@ -636,10 +659,11 @@ public class MapUDDIv3Tov2 {
         }
 
         private static List<TModel> MapTModelList(List<org.uddi.api_v3.TModel> tModel) {
-                if (tModel == null) {
-                        return null;
-                }
                 List<TModel> r = new ArrayList<TModel>();
+                if (tModel == null) {
+                        return r;
+                }
+                
                 for (int i = 0; i < tModel.size(); i++) {
                         r.add(MapTModel(tModel.get(i)));
                 }
@@ -647,20 +671,24 @@ public class MapUDDIv3Tov2 {
         }
 
         public static SetPublisherAssertions MapSetPublisherAssertions(List<org.uddi.api_v3.PublisherAssertion> value) {
-                if (value==null)return null;
+                if (value == null) {
+                        return null;
+                }
                 SetPublisherAssertions r = new SetPublisherAssertions();
                 r.setGeneric(VERSION);
+                
                 r.getPublisherAssertion().addAll(MapPublisherAssertion(value));
                 return r;
-                
+
         }
 
-        public static BindingDetail MapBindingDetail(org.uddi.api_v3.BindingDetail findBinding) {
+        public static BindingDetail MapBindingDetail(org.uddi.api_v3.BindingDetail findBinding, String operator) {
                 if (findBinding == null) {
                         return null;
                 }
                 BindingDetail r = new BindingDetail();
                 r.setGeneric(VERSION);
+                r.setOperator(operator);
                 if (findBinding.getListDescription().getActualCount() == findBinding.getListDescription().getIncludeCount()) {
                         r.setTruncated(Truncated.FALSE);
                 } else {
@@ -670,20 +698,21 @@ public class MapUDDIv3Tov2 {
                 return r;
         }
 
-        public static DispositionReport MapException(DispositionReportFaultMessage ex) {
+        public static DispositionReport MapException(DispositionReportFaultMessage ex, String operator) {
                 if (ex == null) {
                         return null;
                 }
-                DispositionReport r = new DispositionReport("err", MapDispositionReport(ex.getFaultInfo()));
+                DispositionReport r = new DispositionReport("err", MapDispositionReport(ex.getFaultInfo(),  operator));
                 return r;
         }
 
-        private static org.uddi.api_v2.DispositionReport MapDispositionReport(org.uddi.api_v3.DispositionReport faultInfo) {
+        private static org.uddi.api_v2.DispositionReport MapDispositionReport(org.uddi.api_v3.DispositionReport faultInfo, String operator) {
                 if (faultInfo == null) {
                         return null;
                 }
                 org.uddi.api_v2.DispositionReport r = new org.uddi.api_v2.DispositionReport();
                 r.setGeneric(VERSION);
+                r.setOperator(operator);
                 r.setTruncated(Truncated.FALSE);
                 r.getResult().addAll(MapResults(faultInfo.getResult()));
                 return r;
@@ -722,15 +751,16 @@ public class MapUDDIv3Tov2 {
                 return r;
         }
 
-        public static BusinessList MapBusinessListEntity(org.uddi.api_v3.BusinessList findBusiness) {
+        public static BusinessList MapBusinessListEntity(org.uddi.api_v3.BusinessList findBusiness, String operator) {
 
                 if (findBusiness == null) {
                         return null;
                 }
                 BusinessList r = new BusinessList();
                 r.setGeneric(VERSION);
+                r.setOperator(operator);
                 r.setBusinessInfos(MapBusinessInfos(findBusiness.getBusinessInfos()));
-                if (findBusiness.isTruncated()) {
+                if (findBusiness.isTruncated()!=null && findBusiness.isTruncated()) {
                         r.setTruncated(Truncated.TRUE);
                 } else {
                         r.setTruncated(Truncated.FALSE);
@@ -744,7 +774,7 @@ public class MapUDDIv3Tov2 {
                 }
                 RelatedBusinessesList r = new RelatedBusinessesList();
                 r.setBusinessKey(findRelatedBusinesses.getBusinessKey());
-                if (findRelatedBusinesses.isTruncated()) {
+                if (findRelatedBusinesses.isTruncated()!=null && findRelatedBusinesses.isTruncated()) {
                         r.setTruncated(Truncated.TRUE);
                 } else {
                         r.setTruncated(Truncated.FALSE);
@@ -762,14 +792,15 @@ public class MapUDDIv3Tov2 {
                 return r;
         }
 
-        public static ServiceList MapServiceList(org.uddi.api_v3.ServiceList findService) {
+        public static ServiceList MapServiceList(org.uddi.api_v3.ServiceList findService, String operator) {
                 if (findService == null) {
                         return null;
                 }
                 ServiceList r = new ServiceList();
                 r.setGeneric(VERSION);
+                r.setOperator(operator);
                 r.setServiceInfos(MapServiceInfos(findService.getServiceInfos()));
-                if (findService.isTruncated()) {
+                if (findService.isTruncated()!=null && findService.isTruncated()) {
                         r.setTruncated(Truncated.TRUE);
                 } else {
                         r.setTruncated(Truncated.FALSE);
@@ -792,28 +823,29 @@ public class MapUDDIv3Tov2 {
 
         }
 
-        public static ServiceDetail MapServiceDetail(org.uddi.api_v3.ServiceDetail serviceDetail) {
+        public static ServiceDetail MapServiceDetail(org.uddi.api_v3.ServiceDetail serviceDetail, String operator) {
                 if (serviceDetail == null) {
                         return null;
                 }
                 ServiceDetail r = new ServiceDetail();
-                if (serviceDetail.isTruncated()) {
+                if (serviceDetail.isTruncated()!=null && serviceDetail.isTruncated()) {
                         r.setTruncated(Truncated.TRUE);
                 } else {
                         r.setTruncated(Truncated.FALSE);
                 }
                 r.setGeneric(VERSION);
+                r.setOperator(operator);
                 r.getBusinessService().addAll(MapService(serviceDetail.getBusinessService()));
                 return r;
 
         }
 
-        public static TModelList MapTModelListElement(org.uddi.api_v3.TModelList findTModel) {
+        public static TModelList MapTModelListElement(org.uddi.api_v3.TModelList findTModel, String operator) {
                 if (findTModel == null) {
                         return null;
                 }
                 TModelList r = new TModelList();
-                if (findTModel.isTruncated()) {
+                if (findTModel.isTruncated()!=null && findTModel.isTruncated()) {
                         r.setTruncated(Truncated.TRUE);
                 } else {
                         r.setTruncated(Truncated.FALSE);
@@ -823,16 +855,18 @@ public class MapUDDIv3Tov2 {
                         r.getTModelInfos().getTModelInfo().addAll(MapTModelInfo(findTModel.getTModelInfos().getTModelInfo()));
                 }
                 r.setGeneric(VERSION);
+                r.setOperator(operator);
                 return r;
         }
 
-        public static org.uddi.api_v2.BusinessDetail MapBusinessDetail(BusinessDetail businessDetail) {
+        public static org.uddi.api_v2.BusinessDetail MapBusinessDetail(BusinessDetail businessDetail, String operator) {
                 if (businessDetail == null) {
                         return null;
                 }
                 org.uddi.api_v2.BusinessDetail r = new org.uddi.api_v2.BusinessDetail();
                 r.setGeneric(VERSION);
-                if (businessDetail.isTruncated()) {
+                r.setOperator(operator);
+                if (businessDetail.isTruncated()!=null && businessDetail.isTruncated()) {
                         r.setTruncated(Truncated.TRUE);
                 } else {
                         r.setTruncated(Truncated.FALSE);
@@ -842,13 +876,14 @@ public class MapUDDIv3Tov2 {
                 return r;
         }
 
-        public static TModelDetail MapTModelDetail(org.uddi.api_v3.TModelDetail tModelDetail) {
+        public static TModelDetail MapTModelDetail(org.uddi.api_v3.TModelDetail tModelDetail, String operator) {
                 if (tModelDetail == null) {
                         return null;
                 }
                 TModelDetail r = new TModelDetail();
                 r.setGeneric(VERSION);
-                if (tModelDetail.isTruncated()) {
+                r.setOperator(operator);
+                if (tModelDetail.isTruncated()!=null && tModelDetail.isTruncated()) {
                         r.setTruncated(Truncated.TRUE);
                 } else {
                         r.setTruncated(Truncated.FALSE);
@@ -868,6 +903,7 @@ public class MapUDDIv3Tov2 {
                         x.setBusinessKey(businessInfos.getBusinessInfo().get(i).getBusinessKey());
                         x.setServiceInfos(MapServiceInfos(businessInfos.getBusinessInfo().get(i).getServiceInfos()));
                         x.getDescription().addAll(MapDescription(businessInfos.getBusinessInfo().get(i).getDescription()));
+                        x.getName().addAll(MapName(businessInfos.getBusinessInfo().get(i).getName()));
                         r.getBusinessInfo().add(x);
                 }
 
@@ -903,13 +939,14 @@ public class MapUDDIv3Tov2 {
                 return r;
         }
 
-        public static RegisteredInfo MapRegisteredInfo(org.uddi.api_v3.RegisteredInfo registeredInfo) {
+        public static RegisteredInfo MapRegisteredInfo(org.uddi.api_v3.RegisteredInfo registeredInfo, String operator) {
                 if (registeredInfo == null) {
                         return null;
                 }
                 RegisteredInfo r = new RegisteredInfo();
                 r.setGeneric(VERSION);
-                if (registeredInfo.isTruncated()) {
+                r.setOperator(operator);
+                if (registeredInfo.isTruncated()!=null && registeredInfo.isTruncated()) {
                         r.setTruncated(Truncated.TRUE);
                 } else {
                         r.setTruncated(Truncated.FALSE);
@@ -924,22 +961,23 @@ public class MapUDDIv3Tov2 {
                                 x.setServiceInfos(MapServiceInfos(registeredInfo.getBusinessInfos().getBusinessInfo().get(i).getServiceInfos()));
                         }
                 }
-                if (registeredInfo.getTModelInfos()!=null){
+                if (registeredInfo.getTModelInfos() != null) {
                         r.setTModelInfos(new TModelInfos());
                         r.getTModelInfos().getTModelInfo().addAll(MapTModelInfo(registeredInfo.getTModelInfos().getTModelInfo()));
                 }
-                
+
                 return r;
 
         }
 
-        public static PublisherAssertions MapPublisherAssertions(List<org.uddi.api_v3.PublisherAssertion> publisherAssertions) {
+        public static PublisherAssertions MapPublisherAssertions(List<org.uddi.api_v3.PublisherAssertion> publisherAssertions, String operator) {
                 if (publisherAssertions == null) {
                         return null;
                 }
                 PublisherAssertions r = new PublisherAssertions();
                 r.getPublisherAssertion().addAll(MapPublisherAssertion(publisherAssertions));
                 r.setGeneric(VERSION);
+                r.setOperator(operator);
                 return r;
         }
 
@@ -958,6 +996,38 @@ public class MapUDDIv3Tov2 {
                         r.add(x);
                 }
                 return r;
+        }
+
+        private static FindQualifiers AddApproximateMatch(FindQualifiers findQualifiers) {
+                if (findQualifiers == null) {
+                        findQualifiers = new FindQualifiers();
+                }
+                findQualifiers.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                return findQualifiers;
+        }
+
+        private static boolean ContainsWildCard(List<Name> name) {
+                for (int i = 0; i < name.size(); i++) {
+                        if (name.get(i).getValue() != null && name.get(i).getValue().contains(UDDIConstants.WILDCARD)) {
+                                return true;
+                        }
+                        if (name.get(i).getValue() != null && name.get(i).getValue().contains(UDDIConstants.WILDCARD_CHAR)) {
+                                return true;
+                        }
+                        if (name.get(i).getLang() != null
+                                && name.get(i).getLang().contains(UDDIConstants.WILDCARD)) {
+                                return true;
+                        }
+                         if (name.get(i).getLang() != null
+                                && name.get(i).getLang().contains(UDDIConstants.WILDCARD_CHAR)) {
+                                return true;
+                        }
+                }
+                return false;
+        }
+
+        public static GetAssertionStatusReport MapGetAssertionStatusReport(String authInfo, CompletionStatus completionStatus) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
 }

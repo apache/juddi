@@ -26,6 +26,7 @@ import javax.xml.ws.soap.SOAPFaultException;
 import org.apache.juddi.v3.client.UDDIServiceV2;
 import org.apache.juddi.v3.client.mapping.MapUDDIv2Tov3;
 import org.apache.juddi.v3.client.mapping.MapUDDIv3Tov2;
+import org.uddi.api_v2.AssertionStatusReport;
 import org.uddi.api_v2.PublisherAssertions;
 import org.uddi.api_v2.SetPublisherAssertions;
 import org.uddi.api_v3.AddPublisherAssertions;
@@ -133,7 +134,14 @@ public class Publish3to2 implements UDDIPublicationPortType, BindingProvider {
 
         @Override
         public List<AssertionStatusItem> getAssertionStatusReport(String authInfo, CompletionStatus completionStatus) throws DispositionReportFaultMessage, RemoteException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                try {
+                        AssertionStatusReport assertionStatusReport = publishService.getAssertionStatusReport(MapUDDIv3Tov2.MapGetAssertionStatusReport(authInfo, completionStatus));
+                        return MapUDDIv2Tov3.MapAssertionStatusItems(assertionStatusReport);
+                } catch (DispositionReport ex) {
+                        throw MapUDDIv2Tov3.MapException(ex);
+                } catch (SOAPFaultException ex) {
+                        throw MapUDDIv2Tov3.MapException(ex);
+                }
         }
 
         @Override

@@ -12,7 +12,7 @@ It currently does not use the ValueSet, jUDDI, Replication, or REST APIs
             <node>
                 <!-- required 'default' node -->
                 <name>default</name> 
-                <description>Main UDDI Node</description>
+                <description>Main UDDI Node v3</description>
                 <!-- JAX-WS Transport -->
                 <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
                 <custodyTransferUrl>http://localhost:8080/juddiv3/services/custody-transfer</custodyTransferUrl>
@@ -27,13 +27,13 @@ It currently does not use the ValueSet, jUDDI, Replication, or REST APIs
                 <description>UDDIv2 Node</description>
                 <!-- JAX-WS Transport -->
                 <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSv2TranslationTransport</proxyTransport>
-                <inquiryUrl>http://localhost:9080/juddi/inquiry</inquiryUrl>
-                <publishUrl>http://localhost:9080/juddi/publish</publishUrl>
+                <inquiryUrl>http://localhost:9080/juddiv3/services/inquiryv2</inquiryUrl>
+                <publishUrl>http://localhost:9080/juddiv3/services/publishv2</publishUrl>
                 
             </node>
              <node>
                 <name>default-ssl</name> 
-                <description>Main UDDI Node using SSL</description>
+                <description>Main UDDI Node v3 using SSL</description>
                 <!-- JAX-WS Transport -->
                 <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
                 <custodyTransferUrl>http://localhost:8443/juddiv3/services/custody-transfer</custodyTransferUrl>
@@ -44,7 +44,7 @@ It currently does not use the ValueSet, jUDDI, Replication, or REST APIs
             </node>
             <node>
                 <name>jboss7</name> 
-                <description>Main UDDI node running on Jboss EAP6 or AS7</description>
+                <description>UDDI node running on Jboss EAP6 or AS7</description>
                 <!-- 
                 Jboss users, note that the url is typically different, here's an example for Jboss EAP 6.x-->
                 <custodyTransferUrl>http://localhost:8080/juddiv3/UDDICustodyTransferService</custodyTransferUrl>
@@ -64,6 +64,18 @@ It currently does not use the ValueSet, jUDDI, Replication, or REST APIs
                 <publishUrl>https://localhost:8443/juddiv3/UDDIPublicationService</publishUrl>
                 <securityUrl>https://localhost:8443/juddiv3/UDDISecurityService</securityUrl>
                 <subscriptionUrl>https://localhost:8443/juddiv3/UDDISubscriptionService</subscriptionUrl>
+            </node>
+            <node>
+                <!-- required 'default' node -->
+                <name>cloud</name> 
+                <description>jUDDI Cloud Sandbox</description>
+                <!-- JAX-WS Transport -->
+                <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
+                <custodyTransferUrl>http://uddi-jbossoverlord.rhcloud.com/services/custody-transfer</custodyTransferUrl>
+                <inquiryUrl>http://uddi-jbossoverlord.rhcloud.com/services/inquiry</inquiryUrl>
+                <publishUrl>http://uddi-jbossoverlord.rhcloud.com/services/publish</publishUrl>
+                <securityUrl>http://uddi-jbossoverlord.rhcloud.com/services/security</securityUrl>
+                <subscriptionUrl>http://uddi-jbossoverlord.rhcloud.com/services/subscription</subscriptionUrl>
             </node>
         </nodes>
 		<signature>

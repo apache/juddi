@@ -29,6 +29,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -534,7 +535,7 @@ public class UddiHub implements Serializable {
                         } catch (Exception ex) {
                                 log.error(ex);
                         }
-                        if (session.getAttribute("username") != null
+                        if (session!=null && session.getAttribute("username") != null
                                 && session.getAttribute("password") != null) {
                                 req.setUserID((String) session.getAttribute("username"));
                                 req.setCred(AES.Decrypt((String) session.getAttribute("password"), (String) properties.get("key")));
@@ -1208,7 +1209,7 @@ public class UddiHub implements Serializable {
                                 return ResourceLoader.GetResource(session, "errors.tmodel.prefix");
 
                         }
-                        if (!partitionName.endsWith(":keyGenerator")) {
+                        if (!partitionName.endsWith(":keygenerator")) {
                                 return ResourceLoader.GetResource(session, "errors.tmodel.postfix");
                         }
 
@@ -1273,8 +1274,9 @@ public class UddiHub implements Serializable {
                         String err = null;
                         if (x.getFault() != null
                                 && x.getFault().getDetail() != null) {
-                                while (x.getFault().getDetail().getDetailEntries().hasNext()) {
-                                        err += x.getFault().getDetail().getDetailEntries().next().toString();
+                                Iterator detailEntries = x.getFault().getDetail().getDetailEntries();
+                                while (detailEntries.hasNext()) {
+                                        err += detailEntries.next().toString();
                                 }
                         }
                         return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage() + " " + err) + " " + ex.getClass().getCanonicalName();

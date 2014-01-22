@@ -17,7 +17,7 @@
 
 
 var offsetBusiness=0; //start at the begining
-var maxrecordsBusiness=10;  //record 20 at a time
+var maxrecordsBusiness=20;  //record 20 at a time
 var totalrecordsBusiness=0;
 
 RenderBusinessListBySearch('%', offsetBusiness, maxrecordsBusiness);

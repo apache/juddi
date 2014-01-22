@@ -25,12 +25,14 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.transport.JAXWSv2TranslationTransport;
+import org.uddi.api_v2.AssertionStatusReport;
 import org.uddi.api_v2.GetBusinessDetailExt;
 import org.uddi.api_v2.GetPublisherAssertions;
 import org.uddi.api_v2.GetTModelDetail;
 import org.uddi.api_v2.SetPublisherAssertions;
 import org.uddi.api_v2.Truncated;
 import org.uddi.api_v3.AccessPoint;
+import org.uddi.api_v3.AssertionStatusItem;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BindingTemplates;
 import org.uddi.api_v3.BusinessDetail;
@@ -41,6 +43,7 @@ import org.uddi.api_v3.BusinessList;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.BusinessServices;
 import org.uddi.api_v3.CategoryBag;
+import org.uddi.api_v3.CompletionStatus;
 import org.uddi.api_v3.DeleteBinding;
 import org.uddi.api_v3.DeleteBusiness;
 import org.uddi.api_v3.DeletePublisherAssertions;
@@ -67,6 +70,7 @@ import org.uddi.api_v3.InfoSelection;
 import org.uddi.api_v3.InstanceDetails;
 import org.uddi.api_v3.KeyType;
 import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.KeysOwned;
 import org.uddi.api_v3.ListDescription;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.OverviewDoc;
@@ -588,16 +592,18 @@ public class MapUDDIv2Tov3 {
                 if (result == null) {
                         return r;
                 }
-                while (result.getDetail().getDetailEntries().hasNext()) {
-                        Object next = result.getDetail().getDetailEntries().next();
-                        if (next instanceof DispositionReport) {
+                if (result.getDetail() != null) {
+                        while (result.getDetail().getDetailEntries().hasNext()) {
+                                Object next = result.getDetail().getDetailEntries().next();
+                                if (next instanceof DispositionReport) {
 
-                                DispositionReport z = (DispositionReport) next;
-                                Result x = new Result();
-                                r.addAll(MapResult(z.getFaultInfo().getResult()));
+                                        DispositionReport z = (DispositionReport) next;
+                                        Result x = new Result();
+                                        r.addAll(MapResult(z.getFaultInfo().getResult()));
 
+                                }
+                                logger.warn("unable to parse fault detail, type:" + next.getClass().getCanonicalName() + " " + next.toString());
                         }
-                        logger.warn("unable to parse fault detail, type:" + next.getClass().getCanonicalName() + " " + next.toString());
                 }
                 return r;
         }
@@ -616,7 +622,7 @@ public class MapUDDIv2Tov3 {
         }
 
         private static TModelBag MapTModelBag(org.uddi.api_v2.TModelBag tModelBag) {
-                if (tModelBag == null) {
+                if (tModelBag == null || tModelBag.getTModelKey().isEmpty()) {
                         return null;
                 }
                 TModelBag r = new TModelBag();
@@ -625,7 +631,7 @@ public class MapUDDIv2Tov3 {
         }
 
         private static FindQualifiers MapFindQualifiers(org.uddi.api_v2.FindQualifiers findQualifiers) {
-                if (findQualifiers == null) {
+                if (findQualifiers == null || findQualifiers.getFindQualifier().isEmpty()) {
                         return null;
                 }
                 FindQualifiers r = new FindQualifiers();
@@ -712,7 +718,38 @@ public class MapUDDIv2Tov3 {
                 r.setTModelBag(MapTModelBag(body.getTModelBag()));
                 r.setMaxRows(body.getMaxRows());
                 r.getName().addAll(MapName(body.getName()));
+                if (ContainsWildCard(r.getName())) {
+                        r.setFindQualifiers(AddApproximateMatch(r.getFindQualifiers()));
+                }
                 return r;
+        }
+
+        private static org.uddi.api_v3.FindQualifiers AddApproximateMatch(org.uddi.api_v3.FindQualifiers findQualifiers) {
+                if (findQualifiers == null) {
+                        findQualifiers = new org.uddi.api_v3.FindQualifiers();
+                }
+                findQualifiers.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                return findQualifiers;
+        }
+
+        private static boolean ContainsWildCard(List<org.uddi.api_v3.Name> name) {
+                for (int i = 0; i < name.size(); i++) {
+                        if (name.get(i).getValue() != null && name.get(i).getValue().contains(UDDIConstants.WILDCARD)) {
+                                return true;
+                        }
+                        if (name.get(i).getValue() != null && name.get(i).getValue().contains(UDDIConstants.WILDCARD_CHAR)) {
+                                return true;
+                        }
+                        if (name.get(i).getLang() != null
+                                && name.get(i).getLang().contains(UDDIConstants.WILDCARD)) {
+                                return true;
+                        }
+                         if (name.get(i).getLang() != null
+                                && name.get(i).getLang().contains(UDDIConstants.WILDCARD_CHAR)) {
+                                return true;
+                        }
+                }
+                return false;
         }
 
         private static DiscoveryURLs MapDiscoveryURLs(org.uddi.api_v2.DiscoveryURLs discoveryURLs) {
@@ -752,6 +789,9 @@ public class MapUDDIv2Tov3 {
                 r.setMaxRows(body.getMaxRows());
                 r.setTModelBag(MapTModelBag(body.getTModelBag()));
                 r.getName().addAll(MapName(body.getName()));
+                if (ContainsWildCard(r.getName())) {
+                        r.setFindQualifiers(AddApproximateMatch(r.getFindQualifiers()));
+                }
                 return r;
 
         }
@@ -766,6 +806,9 @@ public class MapUDDIv2Tov3 {
                 r.setMaxRows(body.getMaxRows());
                 if (body.getName() != null) {
                         r.setName(new Name(body.getName().getValue(), body.getName().getLang()));
+                }
+                if (ContainsWildCardSingle(r.getName())) {
+                        r.setFindQualifiers(AddApproximateMatch(r.getFindQualifiers()));
                 }
                 return r;
         }
@@ -950,6 +993,52 @@ public class MapUDDIv2Tov3 {
                         return null;
                 }
                 return MapListPublisherAssertion(body.getPublisherAssertion());
+        }
+
+        private static boolean ContainsWildCardSingle(Name name) {
+                if (name!=null){
+                        if (name.getValue()!=null && name.getValue().contains(UDDIConstants.WILDCARD))
+                                return true;
+                         if (name.getValue()!=null && name.getValue().contains(UDDIConstants.WILDCARD_CHAR))
+                                return true;
+                        if (name.getLang()!=null && name.getLang().contains(UDDIConstants.WILDCARD))
+                                return true;
+                         if (name.getLang()!=null && name.getLang().contains(UDDIConstants.WILDCARD_CHAR))
+                                return true;
+                }
+                return false;
+        }
+
+        public static List<AssertionStatusItem> MapAssertionStatusItems(AssertionStatusReport assertionStatusReport) {
+                List<AssertionStatusItem> r = new ArrayList<AssertionStatusItem>();
+                if (assertionStatusReport==null)return r;
+                for (int i=0; i < assertionStatusReport.getAssertionStatusItem().size(); i++){
+                        AssertionStatusItem x = new AssertionStatusItem();
+                        x.setFromKey(assertionStatusReport.getAssertionStatusItem().get(i).getFromKey());
+                        x.setToKey(assertionStatusReport.getAssertionStatusItem().get(i).getToKey());
+                        if ("status:complete".equalsIgnoreCase(assertionStatusReport.getAssertionStatusItem().get(i).getCompletionStatus()))
+                                x.setCompletionStatus(CompletionStatus.STATUS_COMPLETE);
+                        else if (" status:toKey_incomplete".equalsIgnoreCase(assertionStatusReport.getAssertionStatusItem().get(i).getCompletionStatus()))
+                                x.setCompletionStatus(CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
+                        else if (" status:fromKey_incomplete".equalsIgnoreCase(assertionStatusReport.getAssertionStatusItem().get(i).getCompletionStatus()))
+                                x.setCompletionStatus(CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);
+                        else 
+                                        x.setCompletionStatus(CompletionStatus.STATUS_BOTH_INCOMPLETE);
+                        x.setKeysOwned(MapKeysOwned(assertionStatusReport.getAssertionStatusItem().get(i).getKeysOwned()));
+                        if (assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference()!=null)
+                        x.setKeyedReference(new KeyedReference(assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getTModelKey(),
+                                assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getKeyName(),
+                                assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getKeyValue()));
+                }
+                return r;
+        }
+
+        private static KeysOwned MapKeysOwned(org.uddi.api_v2.KeysOwned keysOwned) {
+                if (keysOwned==null)return null;
+                KeysOwned r = new KeysOwned();
+                r.setFromKey(keysOwned.getFromKey());
+                r.setToKey(keysOwned.getToKey());
+                return r;
         }
 
 }
