@@ -149,10 +149,12 @@ public class InquiryHelper {
 		if (currentIndex < (queryResults.size() - 1)) {
 			if (subscriptionStartIndex != null)
 				subscriptionStartIndex.value = currentIndex + 1;
+			result.setTruncated(Boolean.TRUE);
 		}
 		else {
 			if (subscriptionStartIndex != null)
 				subscriptionStartIndex.value = null;
+			result.setTruncated(Boolean.FALSE);
 		}
 		
 		return result;
@@ -268,12 +270,13 @@ public class InquiryHelper {
 		if (queryResults!=null && currentIndex < (queryResults.size() - 1)) {
 			if (subscriptionStartIndex != null)
 				subscriptionStartIndex.value = currentIndex + 1;
+			result.setTruncated(Boolean.TRUE);
 		}
 		else {
 			if (subscriptionStartIndex != null)
 				subscriptionStartIndex.value = null;
+			result.setTruncated(Boolean.FALSE);
 		}
-		
 		return result;
 	}
 	
@@ -357,10 +360,12 @@ public class InquiryHelper {
 		if (queryResults!=null && currentIndex < (queryResults.size() - 1)) {
 			if (subscriptionStartIndex != null)
 				subscriptionStartIndex.value = currentIndex + 1;
+			result.setTruncated(Boolean.TRUE);
 		}
 		else {
 			if (subscriptionStartIndex != null)
 				subscriptionStartIndex.value = null;
+			result.setTruncated(Boolean.FALSE);
 		}
 		
 		return result;
@@ -435,10 +440,12 @@ public class InquiryHelper {
 		if (queryResults!=null && currentIndex < (queryResults.size() - 1)) {
 			if (subscriptionStartIndex != null)
 				subscriptionStartIndex.value = currentIndex + 1;
+			result.setTruncated(Boolean.TRUE);
 		}
 		else {
 			if (subscriptionStartIndex != null)
 				subscriptionStartIndex.value = null;
+			result.setTruncated(Boolean.FALSE);
 		}
 		
 		return result;
