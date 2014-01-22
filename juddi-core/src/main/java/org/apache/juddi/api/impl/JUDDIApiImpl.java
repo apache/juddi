@@ -19,6 +19,7 @@ package org.apache.juddi.api.impl;
 import java.io.StringWriter;
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,7 @@ import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.ClientSubscriptionInfo;
 import org.apache.juddi.model.Publisher;
+import org.apache.juddi.model.Tmodel;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.subscription.NotificationList;
 import org.apache.juddi.v3.client.transport.Transport;
@@ -66,7 +68,15 @@ import org.apache.juddi.validation.ValidateClientSubscriptionInfo;
 import org.apache.juddi.validation.ValidateNode;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidatePublisher;
+import org.uddi.api_v3.AuthToken;
+import org.uddi.api_v3.BusinessInfo;
+import org.uddi.api_v3.BusinessInfos;
 import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.GetRegisteredInfo;
+import org.uddi.api_v3.InfoSelection;
+import org.uddi.api_v3.RegisteredInfo;
+import org.uddi.api_v3.TModelInfo;
+import org.uddi.api_v3.TModelInfos;
 import org.uddi.sub_v3.GetSubscriptionResults;
 import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -157,8 +167,47 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                         List<String> entityKeyList = body.getPublisherId();
                         for (String entityKey : entityKeyList) {
-                                Object obj = em.find(org.apache.juddi.model.Publisher.class, entityKey);
-                                em.remove(obj);
+                        	Publisher obj = em.find(org.apache.juddi.model.Publisher.class, entityKey);
+                        
+                        	//get an authtoken for this publisher so that we can get its registeredInfo
+                        	UDDISecurityImpl security = new UDDISecurityImpl();
+                        	AuthToken authToken = security.getAuthToken(entityKey);
+                        	
+                        	GetRegisteredInfo r = new GetRegisteredInfo();
+                        	r.setAuthInfo(authToken.getAuthInfo());
+                        	r.setInfoSelection(InfoSelection.ALL);
+	                       
+                        	log.info("removing all businesses owned by publisher " + entityKey + ".");
+                        	UDDIPublicationImpl publish = new UDDIPublicationImpl();
+                        	RegisteredInfo registeredInfo = publish.getRegisteredInfo(r);
+                        	BusinessInfos businessInfos = registeredInfo.getBusinessInfos();
+                        	if (businessInfos!=null && businessInfos.getBusinessInfo()!=null) {
+                        		Iterator<BusinessInfo> iter = businessInfos.getBusinessInfo().iterator();
+                        	    while (iter.hasNext()) {
+                        	    	BusinessInfo businessInfo = iter.next();
+                        	    	Object business = em.find(org.apache.juddi.model.BusinessEntity.class, businessInfo.getBusinessKey());
+                        	    	em.remove(business);
+                        	    }
+							}
+                        	
+                        	log.info("mark all tmodels for publisher " + entityKey + " as deleted.");
+                        	TModelInfos tmodelInfos = registeredInfo.getTModelInfos();
+                        	if (tmodelInfos!=null && tmodelInfos.getTModelInfo()!=null) {
+                        		Iterator<TModelInfo> iter = tmodelInfos.getTModelInfo().iterator();
+                        		while (iter.hasNext()) {
+                        			TModelInfo tModelInfo = iter.next();
+                        			Tmodel tmodel = (Tmodel) em.find(org.apache.juddi.model.Tmodel.class, tModelInfo.getTModelKey());
+                        			tmodel.setDeleted(true);
+                        			em.persist(tmodel);
+                        		}
+                        	}
+                        	log.info("remove all persisted AuthTokens for publisher " + entityKey + ".");
+                        	Query q1 = em.createQuery("DELETE FROM AuthToken auth WHERE auth.authorizedName = '" + entityKey + "'");
+                            q1.executeUpdate();
+                      
+                            log.info("removing publisher " + entityKey + ".");
+                            //delete the publisher
+                        	em.remove(obj);
                         }
 
                         tx.commit();
