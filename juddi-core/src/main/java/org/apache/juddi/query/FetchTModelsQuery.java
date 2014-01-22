@@ -113,9 +113,13 @@ public class FetchTModelsQuery extends TModelQuery {
 	private static void appendSortCriteria(DynamicQuery qry, FindQualifiers fq) {
 		
 		String nameTerm = ENTITY_ALIAS + ".name";
-		if (fq.isCaseInsensitiveSort())
-			nameTerm = "upper(" + nameTerm + ")";
-		
+		if (fq.isCaseInsensitiveSort()) {
+			// See JUDDI-785
+			log.info("jUDDI does not support caseInsensitive sort, as JPA does not support sortBy "
+					+ "with UPPER or LOWER, see https://issues.apache.org/jira/browse/OPENJPA-1817. "
+					+ "A work around is to do a caseInsentive Match.");
+			//nameTerm = "upper(" + nameTerm + ")";
+		}
 		String dateTerm = ENTITY_ALIAS + ".modified";
 
 		String orderClause = nameTerm + " " + DynamicQuery.SORT_ASC + ", " + dateTerm + " " + DynamicQuery.SORT_DESC;

@@ -15,7 +15,9 @@
 package org.apache.juddi.v3.tck;
 
 import java.util.Arrays;
+
 import javax.xml.ws.BindingProvider;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -345,26 +347,45 @@ public class UDDI_070_FindEntityIntegrationTest {
 //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="CASE_INSENSITIVE_SORT">
+        /**
+         * Note that jUDDI ignores caseInsensiveSort. 
+         * 
+         * @See UDDIConstants.CASE_INSENSITIVE_SORT 
+         * @throws Exception
+         */
         @Test
-        @Ignore
         public void UDDI_764caseInsensitiveSortBusiness() throws Exception {
-                findbuinsess(UDDIConstants.CASE_INSENSITIVE_SORT);
+				findbuinsess(UDDIConstants.CASE_INSENSITIVE_SORT);
         }
 
+        
+        /**
+         * Note that jUDDI ignores caseInsensiveSort. 
+         * 
+         * @See UDDIConstants.CASE_INSENSITIVE_SORT 
+         * @throws Exception
+         */
         @Test
-        @Ignore
         public void UDDI_764caseInsensitiveSortService() throws Exception {
                 findservice(UDDIConstants.CASE_INSENSITIVE_SORT);
         }
-
+        /**
+         * Note that jUDDI ignores caseInsensiveSort. 
+         * 
+         * @See UDDIConstants.CASE_INSENSITIVE_SORT 
+         * @throws Exception
+         */
         @Test
-        @Ignore
         public void UDDI_764caseInsensitiveSortTModel() throws Exception {
                 findtmodel(UDDIConstants.CASE_INSENSITIVE_SORT);
         }
-
+        /**
+         * Note that jUDDI ignores caseInsensiveSort. 
+         * 
+         * @See UDDIConstants.CASE_INSENSITIVE_SORT 
+         * @throws Exception
+         */
         @Test
-        @Ignore
         public void UDDI_764caseInsensitiveSortBinding() throws Exception {
                 try {
                         findbinding(UDDIConstants.CASE_INSENSITIVE_SORT);
@@ -374,9 +395,13 @@ public class UDDI_070_FindEntityIntegrationTest {
                         logger.debug("Expected failure: " + ex.getMessage(), ex);
                 }
         }
-
+        /**
+         * Note that jUDDI ignores caseInsensiveSort. 
+         * 
+         * @See UDDIConstants.CASE_INSENSITIVE_SORT 
+         * @throws Exception
+         */
         @Test
-        @Ignore
         public void UDDI_764caseInsensitiveSortRelatedBiz() throws Exception {
                 findrelated(UDDIConstants.CASE_INSENSITIVE_SORT);
         }
