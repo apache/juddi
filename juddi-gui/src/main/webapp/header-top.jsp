@@ -256,7 +256,6 @@
         <h3><%=ResourceLoader.GetResource(session, "items.switchnode")%></h3>
     </div>
     <div class="modal-body">
-            <%=ResourceLoader.GetResource(session, "items.nowconnectedto")%> <br>
             <div id="nodeswitcherdetails"></div>
     </div>
     <div class="modal-footer">

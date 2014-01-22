@@ -31,6 +31,7 @@
                 out.write("Not found.");
         } else {
                 node = x.switchNodes(node);
+                out.write(ResourceLoader.GetResource(session, "items.nowconnectedto") +"<br>");
                 out.write(ResourceLoader.GetResource(session, "items.nodeid") + ": " + StringEscapeUtils.escapeHtml(node));
                 out.write("<br>");
                 out.write(ResourceLoader.GetResource(session, "items.description") + ": " + StringEscapeUtils.escapeHtml(description));

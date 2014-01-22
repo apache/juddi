@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -47,6 +49,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.ClientConfig;
@@ -413,12 +416,26 @@ public class UddiHub implements Serializable {
                 return nodename;
         }
 
+        private boolean NodeExists(String newnode){
+                try {
+                        List<Node> uddiNodeList = GetJuddiClientConfig().getUDDINodeList();
+                        for (int i=0; i < uddiNodeList.size(); i++){
+                                if (uddiNodeList.get(i).getName().equals(newnode))
+                                        return true;
+                        }
+                } catch (ConfigurationException ex) {
+                        log.error(ex);
+                        return false;
+                }
+                return false;
+        }
         public String switchNodes(String newnode) {
-                if (this.nodename.equalsIgnoreCase(newnode)) {
+                if (!this.nodename.equalsIgnoreCase(newnode) && NodeExists(newnode)) {
                         this.die();
                         clientConfig = null;
                         this.nodename = newnode;
                 }
+                else return ResourceLoader.GetResource(session, "error.nodeexists");
                 EnsureConfig();
                 return this.nodename;
         }

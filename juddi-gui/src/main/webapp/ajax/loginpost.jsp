@@ -4,6 +4,7 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="java.util.Properties"%>
 <%@page import="java.io.InputStream"%>
@@ -41,14 +42,12 @@
         if (request.getParameter("password") == null || request.getParameter("password").length() == 0) {
                 response.setStatus(406);
                 ok = false;
-                out.write("Please enter a password");
-                //TODO i18n
+                out.write(ResourceLoader.GetResource(session, "error.nopassword"));
         }
         if (request.getParameter("username") == null || request.getParameter("username").length() == 0) {
                 response.setStatus(406);
                 ok = false;
-                out.write("Please enter a username");
-                //TODO i18n
+                out.write(ResourceLoader.GetResource(session, "error.nousername"));
         }
         if (ok) {
                 try {

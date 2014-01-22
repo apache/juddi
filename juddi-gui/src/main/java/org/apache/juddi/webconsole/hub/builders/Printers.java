@@ -65,7 +65,6 @@ public class Printers {
         }
 
         private static String KeyedReferenceToString(KeyedReference item, String locale) {
-                //TODO i18n
                 StringBuilder sb = new StringBuilder();
                 sb.append(ResourceLoader.GetResource(locale, "items.keyrefgroup")).
                         append(": ").
