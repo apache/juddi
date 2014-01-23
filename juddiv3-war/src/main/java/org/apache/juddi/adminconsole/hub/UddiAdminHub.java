@@ -784,17 +784,11 @@ public class UddiAdminHub {
                         p.setIsAdmin(Boolean.parseBoolean(parameters.getParameter("savePublisherIsAdmin")));
                 } catch (Exception ex) {
                 }
-                if ("on".equalsIgnoreCase(parameters.getParameter("savePublisherIsAdmin"))) {
-                        p.setIsAdmin(true);
-                }
                 try {
                         p.setIsEnabled(Boolean.parseBoolean(parameters.getParameter("savePublisherIsEnabled")));
                 } catch (Exception ex) {
                 }
-                if ("on".equalsIgnoreCase(parameters.getParameter("savePublisherIsEnabled"))) {
-                        p.setIsEnabled(true);
-                }
-
+              
                 PublisherDetail d = null;
                 sb.setAuthInfo(GetToken());
                 try {

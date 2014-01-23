@@ -59,7 +59,7 @@
                                 <div id="invoke_SyncSubscription" style="display:none">
                                         <%=ResourceLoader.GetResource(session, "items.noauthtoken")%>  <br>
                                         <textarea rows="4" cols="80" id="invokeSyncSubscriptionXML" class="forminput" placeholder="Enter subscription XML"></textarea>
-                                       
+
                                 </div>
                                 <div id="delete_publisher" style="display:none">
                                         <input type="text"  class="forminput" id="delete_publisherKEY" placeholder="Enter publisher id">
@@ -78,8 +78,8 @@
                                         <%=ResourceLoader.GetResource(session, "items.name")%> <input type="text" id="savePublisherNAME"  class="forminput" placeholder="Enter name"><br>
                                         <%=ResourceLoader.GetResource(session, "items.email")%>  <input type="text" id="savePublisherEMAIL"  class="forminput" placeholder="Enter email"><br>
                                         <%=ResourceLoader.GetResource(session, "items.authorizedname")%>  <input type="text" id="savePublisherAuthorizedName"  class="forminput" placeholder="Enter Authorized Name (username)"><br>
-                                        <%=ResourceLoader.GetResource(session, "items.publisher.admin")%>  <input type="checkbox" id="savePublisherIsAdmin"  class="forminput" ><br>
-                                        <%=ResourceLoader.GetResource(session, "items.enable")%>  <input type="checkbox" id="savePublisherIsEnabled"  class="forminput"><br>
+                                        <%=ResourceLoader.GetResource(session, "items.publisher.admin")%>  <input type="checkbox" id="savePublisherIsAdmin"   ><br>
+                                        <%=ResourceLoader.GetResource(session, "items.enable")%>  <input type="checkbox" id="savePublisherIsEnabled"  ><br>
                                         <%=ResourceLoader.GetResource(session, "max.bindings.per.service")%> <input type="text" id="savePublisherMaxBindings" placeholder="100"  class="forminput"><br>
                                         <%=ResourceLoader.GetResource(session, "max.services.per.business")%> <input type="text" id="savePublisherMaxServices" placeholder="1000" class="forminput"><br>
                                         <%=ResourceLoader.GetResource(session, "max.business")%> <input type="text" id="savePublisherMaxBusiness" placeholder="1000"  class="forminput"><br>
@@ -169,13 +169,23 @@
                                         {
                                                 var id = $(this).attr("id");
                                                 var value = $(this).text();
-                                                if (value === null || value == "" || value == undefined)
+                                                if (value === null || value === "" || value === undefined)
                                                         value = $(this).val();
                                                 postbackdata.push({
                                                         name: id,
                                                         value: value
                                                 });
                                         });
+                                     
+                                        postbackdata.push({
+                                                name: "savePublisherIsEnabled",
+                                                value: $('#savePublisherIsEnabled').prop("checked")
+                                        });
+                                        postbackdata.push({
+                                                name: "savePublisherIsAdmin",
+                                                value: $('#savePublisherIsAdmin').prop("checked")
+                                        });
+
 
 
                                         var request = $.ajax({
