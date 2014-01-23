@@ -284,6 +284,8 @@ public class UddiHub implements Serializable {
                 security = null;
                 //juddi = null;
                 subscription = null;
+                session.removeAttribute("username");
+                session.removeAttribute("password");
         }
 
         /**

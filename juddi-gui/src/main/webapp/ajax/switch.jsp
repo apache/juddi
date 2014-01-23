@@ -30,7 +30,7 @@
                 response.setStatus(406);
                 out.write("Not found.");
         } else {
-                node = x.switchNodes(node);
+                node=x.getNodeName();
                 out.write(ResourceLoader.GetResource(session, "items.nowconnectedto") +"<br>");
                 out.write(ResourceLoader.GetResource(session, "items.nodeid") + ": " + StringEscapeUtils.escapeHtml(node));
                 out.write("<br>");
