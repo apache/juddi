@@ -6,13 +6,22 @@
 
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<%    
-    UddiHub hub = UddiHub.getInstance(application, session);
-    if (request.getParameter("action") != null) { 
-        String action = request.getParameter("action");
-        if (action.equalsIgnoreCase("createKeyGen")) {
-            out.write(hub.AddTmodelKenGenerator(request.getParameter("key"),request.getParameter("name"), request.getParameter("lang")));
+<%@include  file="../csrf.jsp" %>
+<%        UddiHub hub = UddiHub.getInstance(application, session);
+        if (request.getMethod().equalsIgnoreCase("POST")) {
+                if (request.getParameter("action") != null) {
+                        String action = request.getParameter("action");
+                        if (action.equalsIgnoreCase("createKeyGen")) {
+                                out.write(hub.AddTmodelKenGenerator(request.getParameter("keygen"), 
+                                        request.getParameter("keyname"), 
+                                        request.getParameter("keylang")));
+                        } else {
+                                response.sendRedirect("/index.jsp");
+                        }
+                } else {
+                        response.sendRedirect("/index.jsp");
+                }
+        } else {
+                response.sendRedirect("/index.jsp");
         }
-    }
 %>

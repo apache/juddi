@@ -417,12 +417,13 @@ public class UddiHub implements Serializable {
                 return nodename;
         }
 
-        private boolean NodeExists(String newnode){
+        private boolean NodeExists(String newnode) {
                 try {
                         List<Node> uddiNodeList = GetJuddiClientConfig().getUDDINodeList();
-                        for (int i=0; i < uddiNodeList.size(); i++){
-                                if (uddiNodeList.get(i).getName().equals(newnode))
+                        for (int i = 0; i < uddiNodeList.size(); i++) {
+                                if (uddiNodeList.get(i).getName().equals(newnode)) {
                                         return true;
+                                }
                         }
                 } catch (ConfigurationException ex) {
                         log.error(ex);
@@ -430,13 +431,15 @@ public class UddiHub implements Serializable {
                 }
                 return false;
         }
+
         public String switchNodes(String newnode) {
                 if (!this.nodename.equalsIgnoreCase(newnode) && NodeExists(newnode)) {
                         this.die();
                         clientConfig = null;
                         this.nodename = newnode;
+                } else {
+                        return ResourceLoader.GetResource(session, "error.nodeexists");
                 }
-                else return ResourceLoader.GetResource(session, "error.nodeexists");
                 EnsureConfig();
                 return this.nodename;
         }
@@ -535,7 +538,7 @@ public class UddiHub implements Serializable {
                         } catch (Exception ex) {
                                 log.error(ex);
                         }
-                        if (session!=null && session.getAttribute("username") != null
+                        if (session != null && session.getAttribute("username") != null
                                 && session.getAttribute("password") != null) {
                                 req.setUserID((String) session.getAttribute("username"));
                                 req.setCred(AES.Decrypt((String) session.getAttribute("password"), (String) properties.get("key")));
@@ -1204,12 +1207,15 @@ public class UddiHub implements Serializable {
          * @return string
          */
         public String AddTmodelKenGenerator(String partitionName, String name, String lang) {
+                if (partitionName == null || partitionName.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
+                        return ToErrorAlert(ResourceLoader.GetResource(session, "errors.noinput"));
+                }
                 try {
-                        if (!partitionName.startsWith("uddi:")) {
+                        if (!partitionName.toLowerCase().startsWith("uddi:")) {
                                 return ResourceLoader.GetResource(session, "errors.tmodel.prefix");
 
                         }
-                        if (!partitionName.endsWith(":keygenerator")) {
+                        if (!partitionName.toLowerCase().endsWith(":keygenerator")) {
                                 return ResourceLoader.GetResource(session, "errors.tmodel.postfix");
                         }
 
@@ -1237,11 +1243,13 @@ public class UddiHub implements Serializable {
                         tm.getOverviewDoc().add(overviewDoc);
                         tm.setTModelKey(partitionName.toLowerCase());
                         st.getTModel().add(tm);
-                        publish.saveTModel(st);
-                        return ResourceLoader.GetResource(session, "messages.success");
+                        TModelDetail saveTModel = publish.saveTModel(st);
+                        return "<div class=\"alert alert-success\"><i class=\"icon-2x icon-thumbs-up\"></i> " + ResourceLoader.GetResource(session, "messages.success") + " <a href=\"tmodelEditor.jsp?id="
+                                + URLEncoder.encode(saveTModel.getTModel().get(0).getTModelKey(), "UTF8") + "\">"
+                                + StringEscapeUtils.escapeHtml(saveTModel.getTModel().get(0).getTModelKey()) + "</a></div>";
                         // "Success";
                 } catch (Exception ex) {
-                        return HandleException(ex);
+                        return ToErrorAlert(HandleException(ex));
                 }
         }
 
@@ -1579,10 +1587,12 @@ public class UddiHub implements Serializable {
                                         fb.getTModelBag().getTModelKey().add(parameters);
                                         break;
                                 case uid:
-                                        BusinessEntity t = GetBusinessDetails(parameters);
+                                        //BusinessEntity t = GetBusinessDetails(parameters);
                                         findBusiness = new BindingDetail();
                                         BindingTemplate bt = GetBindingDetailsAsObject(parameters);
-                                        findBusiness.getBindingTemplate().add(bt);
+                                        if (bt != null) {
+                                                findBusiness.getBindingTemplate().add(bt);
+                                        }
 
                                         break;
 
@@ -1602,7 +1612,7 @@ public class UddiHub implements Serializable {
                                 }
 
                         }
-                        if (findBusiness != null && findBusiness.getBindingTemplate() != null) {
+                        if (findBusiness != null && !findBusiness.getBindingTemplate().isEmpty()) {
                                 StringBuilder sb = new StringBuilder();
                                 sb.append("<table class=\"table\">");
                                 for (int i = 0; i < findBusiness.getBindingTemplate().size(); i++) {
@@ -1666,12 +1676,13 @@ public class UddiHub implements Serializable {
                                 case uid:
                                         BusinessEntity t = GetBusinessDetails(parameters);
                                         findBusiness = new BusinessList();
-                                        findBusiness.setBusinessInfos(new BusinessInfos());
-
-                                        BusinessInfo bd = new BusinessInfo();
-                                        bd.setBusinessKey(t.getBusinessKey());
-                                        bd.getName().addAll(t.getName());
-                                        findBusiness.getBusinessInfos().getBusinessInfo().add(bd);
+                                        if (t != null) {
+                                                findBusiness.setBusinessInfos(new BusinessInfos());
+                                                BusinessInfo bd = new BusinessInfo();
+                                                bd.setBusinessKey(t.getBusinessKey());
+                                                bd.getName().addAll(t.getName());
+                                                findBusiness.getBusinessInfos().getBusinessInfo().add(bd);
+                                        }
                                         break;
 
                         }
@@ -1805,11 +1816,12 @@ public class UddiHub implements Serializable {
                                         fb.getTModelBag().getTModelKey().add(parameters);
                                         break;
                                 case uid:
-                                        BusinessEntity t = GetBusinessDetails(parameters);
+
                                         findBusiness = new ServiceList();
-                                        findBusiness.setServiceInfos(new ServiceInfos());
+                                        
                                         BusinessService GetServiceDetail = GetServiceDetail(parameters);
                                         if (GetServiceDetail != null) {
+                                                findBusiness.setServiceInfos(new ServiceInfos());
                                                 ServiceInfo si = new ServiceInfo();
                                                 si.setBusinessKey(GetServiceDetail.getBusinessKey());
                                                 si.setServiceKey(GetServiceDetail.getServiceKey());
@@ -1834,7 +1846,7 @@ public class UddiHub implements Serializable {
                                 }
 
                         }
-                        if (findBusiness.getServiceInfos() != null) {
+                        if (findBusiness!=null && findBusiness.getServiceInfos() != null) {
                                 StringBuilder sb = new StringBuilder();
                                 sb.append("<table class=\"table\">");
                                 for (int i = 0; i < findBusiness.getServiceInfos().getServiceInfo().size(); i++) {
@@ -1866,11 +1878,11 @@ public class UddiHub implements Serializable {
                         fb.setAuthInfo(GetToken());
                         if (fq != null) {
                                 fb.setFindQualifiers(new org.uddi.api_v3.FindQualifiers());
-                                if (fq != null) {
-                                        for (int i = 0; i < fq.length; i++) {
-                                                fb.getFindQualifiers().getFindQualifier().add(fq[i]);
-                                        }
+
+                                for (int i = 0; i < fq.length; i++) {
+                                        fb.getFindQualifiers().getFindQualifier().add(fq[i]);
                                 }
+
                         }
                         TModelList findBusiness = null;
                         switch (criteria) {
@@ -1891,18 +1903,18 @@ public class UddiHub implements Serializable {
                                         KeyedReference kr2 = new KeyedReference();
                                         kr2.setTModelKey(parameters);
                                         fb.getCategoryBag().getKeyedReference().add(kr2);
-                                        //TODO
                                         break;
                                 case uid:
-                                        BusinessEntity t = GetBusinessDetails(parameters);
                                         TModel tmodelDetails = this.getTmodelDetails(parameters);
-                                        TModelInfo tmi = new TModelInfo();
-                                        tmi.setName(tmodelDetails.getName());
-                                        tmi.setTModelKey(tmodelDetails.getTModelKey());
-                                        tmi.getDescription().addAll(tmodelDetails.getDescription());
-                                        findBusiness.setTModelInfos(new TModelInfos());
-                                        findBusiness.getTModelInfos().getTModelInfo().add(tmi);
-
+                                        findBusiness = new TModelList();
+                                        if (tmodelDetails != null) {
+                                                findBusiness.setTModelInfos(new TModelInfos());
+                                                TModelInfo tmi = new TModelInfo();
+                                                tmi.setName(tmodelDetails.getName());
+                                                tmi.setTModelKey(tmodelDetails.getTModelKey());
+                                                tmi.getDescription().addAll(tmodelDetails.getDescription());
+                                                findBusiness.getTModelInfos().getTModelInfo().add(tmi);
+                                        }
                                         break;
 
                         }
