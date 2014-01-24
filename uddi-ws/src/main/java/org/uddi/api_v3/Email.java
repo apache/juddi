@@ -50,6 +50,11 @@ import javax.xml.bind.annotation.XmlValue;
     "value"
 })
 public class Email implements Serializable{
+        public Email(){}
+        public Email(String val, String type){
+                value=val;
+                useType=type;
+        }
 	@XmlTransient
 	private static final long serialVersionUID = -1865977988663098552L;
 	@XmlValue

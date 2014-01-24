@@ -51,6 +51,12 @@ import javax.xml.bind.annotation.XmlValue;
     "value"
 })
 public class AddressLine implements Serializable{
+        public AddressLine(){}
+        public AddressLine(String keyname, String keyval,String val){
+                value=val;
+                keyName=keyname;
+                keyValue=keyval;
+        }
 	@XmlTransient
 	private static final long serialVersionUID = -1219407731100892960L;
 	@XmlValue

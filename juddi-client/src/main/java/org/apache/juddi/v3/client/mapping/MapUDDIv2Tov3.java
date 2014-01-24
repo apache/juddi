@@ -24,14 +24,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.v3.client.UDDIConstants;
-import org.apache.juddi.v3.client.transport.JAXWSv2TranslationTransport;
 import org.uddi.api_v2.AssertionStatusReport;
 import org.uddi.api_v2.GetBusinessDetailExt;
-import org.uddi.api_v2.GetPublisherAssertions;
 import org.uddi.api_v2.GetTModelDetail;
 import org.uddi.api_v2.SetPublisherAssertions;
 import org.uddi.api_v2.Truncated;
 import org.uddi.api_v3.AccessPoint;
+import org.uddi.api_v3.Address;
 import org.uddi.api_v3.AssertionStatusItem;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BindingTemplates;
@@ -44,6 +43,8 @@ import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.BusinessServices;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.CompletionStatus;
+import org.uddi.api_v3.Contact;
+import org.uddi.api_v3.Contacts;
 import org.uddi.api_v3.DeleteBinding;
 import org.uddi.api_v3.DeleteBusiness;
 import org.uddi.api_v3.DeletePublisherAssertions;
@@ -53,6 +54,7 @@ import org.uddi.api_v3.Description;
 import org.uddi.api_v3.Direction;
 import org.uddi.api_v3.DiscoveryURL;
 import org.uddi.api_v3.DiscoveryURLs;
+import org.uddi.api_v3.Email;
 import org.uddi.api_v3.ErrInfo;
 import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindBusiness;
@@ -75,6 +77,8 @@ import org.uddi.api_v3.ListDescription;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.OverviewDoc;
 import org.uddi.api_v3.OverviewURL;
+import org.uddi.api_v3.PersonName;
+import org.uddi.api_v3.Phone;
 import org.uddi.api_v3.PublisherAssertion;
 import org.uddi.api_v3.RegisteredInfo;
 import org.uddi.api_v3.RelatedBusinessInfo;
@@ -117,6 +121,11 @@ public class MapUDDIv2Tov3 {
                 BusinessEntity item = new org.uddi.api_v3.BusinessEntity();
                 item.setBusinessKey(be.getBusinessKey());
                 item.getName().addAll(MapName(be.getName()));
+                item.setCategoryBag(MapCategoryBag(be.getCategoryBag()));
+                item.setDiscoveryURLs(MapDiscoveryURLs(be.getDiscoveryURLs()));
+                item.getDescription().addAll(MapDescription(be.getDescription()));
+                item.setContacts(MapContacts(be.getContacts()));
+                item.setIdentifierBag(MapIdentBag(be.getIdentifierBag()));
                 if (be.getBusinessServices() != null && !be.getBusinessServices().getBusinessService().isEmpty()) {
                         item.setBusinessServices(new BusinessServices());
                         item.getBusinessServices().getBusinessService().addAll(MapService(be.getBusinessServices().getBusinessService()));
@@ -136,6 +145,8 @@ public class MapUDDIv2Tov3 {
                         item.setBindingTemplates(new BindingTemplates());
                         item.getBindingTemplates().getBindingTemplate().addAll(MapBinding(be.getBindingTemplates().getBindingTemplate()));
                 }
+                item.setCategoryBag(MapCategoryBag(be.getCategoryBag()));
+                item.getDescription().addAll(MapDescription(be.getDescription()));
                 return item;
         }
 
@@ -157,6 +168,7 @@ public class MapUDDIv2Tov3 {
                 BindingTemplate item = new org.uddi.api_v3.BindingTemplate();
                 item.setBindingKey(be.getBindingKey());
                 item.setServiceKey(be.getServiceKey());
+                
                 item.setAccessPoint(MapAccessPoint(be.getAccessPoint()));
                 item.setHostingRedirector(MapHostingRedir(be.getHostingRedirector()));
                 item.getDescription().addAll(MapDescription(be.getDescription()));
@@ -192,7 +204,7 @@ public class MapUDDIv2Tov3 {
         private static List<Name> MapName(List<org.uddi.api_v2.Name> name) {
                 List<Name> items = new ArrayList<Name>();
                 for (int i = 0; i < name.size(); i++) {
-                        Name n = new Name(name.get(i).getValue(), name.get(i).getValue());
+                        Name n = new Name(name.get(i).getValue(), name.get(i).getLang());
                         items.add(n);
                 }
                 return items;
@@ -243,6 +255,7 @@ public class MapUDDIv2Tov3 {
                 r.getDescription().addAll(MapDescription(overviewDoc.getDescription()));
                 if (overviewDoc.getOverviewURL() != null) {
                         r.setOverviewURL(new OverviewURL());
+                        overviewDoc.getDescription();
                         r.getOverviewURL().setValue(overviewDoc.getOverviewURL());
                 }
                 return r;
@@ -744,7 +757,7 @@ public class MapUDDIv2Tov3 {
                                 && name.get(i).getLang().contains(UDDIConstants.WILDCARD)) {
                                 return true;
                         }
-                         if (name.get(i).getLang() != null
+                        if (name.get(i).getLang() != null
                                 && name.get(i).getLang().contains(UDDIConstants.WILDCARD_CHAR)) {
                                 return true;
                         }
@@ -996,48 +1009,152 @@ public class MapUDDIv2Tov3 {
         }
 
         private static boolean ContainsWildCardSingle(Name name) {
-                if (name!=null){
-                        if (name.getValue()!=null && name.getValue().contains(UDDIConstants.WILDCARD))
+                if (name != null) {
+                        if (name.getValue() != null && name.getValue().contains(UDDIConstants.WILDCARD)) {
                                 return true;
-                         if (name.getValue()!=null && name.getValue().contains(UDDIConstants.WILDCARD_CHAR))
+                        }
+                        if (name.getValue() != null && name.getValue().contains(UDDIConstants.WILDCARD_CHAR)) {
                                 return true;
-                        if (name.getLang()!=null && name.getLang().contains(UDDIConstants.WILDCARD))
+                        }
+                        if (name.getLang() != null && name.getLang().contains(UDDIConstants.WILDCARD)) {
                                 return true;
-                         if (name.getLang()!=null && name.getLang().contains(UDDIConstants.WILDCARD_CHAR))
+                        }
+                        if (name.getLang() != null && name.getLang().contains(UDDIConstants.WILDCARD_CHAR)) {
                                 return true;
+                        }
                 }
                 return false;
         }
 
         public static List<AssertionStatusItem> MapAssertionStatusItems(AssertionStatusReport assertionStatusReport) {
                 List<AssertionStatusItem> r = new ArrayList<AssertionStatusItem>();
-                if (assertionStatusReport==null)return r;
-                for (int i=0; i < assertionStatusReport.getAssertionStatusItem().size(); i++){
+                if (assertionStatusReport == null) {
+                        return r;
+                }
+                for (int i = 0; i < assertionStatusReport.getAssertionStatusItem().size(); i++) {
                         AssertionStatusItem x = new AssertionStatusItem();
                         x.setFromKey(assertionStatusReport.getAssertionStatusItem().get(i).getFromKey());
                         x.setToKey(assertionStatusReport.getAssertionStatusItem().get(i).getToKey());
-                        if ("status:complete".equalsIgnoreCase(assertionStatusReport.getAssertionStatusItem().get(i).getCompletionStatus()))
+                        if ("status:complete".equalsIgnoreCase(assertionStatusReport.getAssertionStatusItem().get(i).getCompletionStatus())) {
                                 x.setCompletionStatus(CompletionStatus.STATUS_COMPLETE);
-                        else if (" status:toKey_incomplete".equalsIgnoreCase(assertionStatusReport.getAssertionStatusItem().get(i).getCompletionStatus()))
+                        } else if ("status:toKey_incomplete".equalsIgnoreCase(assertionStatusReport.getAssertionStatusItem().get(i).getCompletionStatus())) {
                                 x.setCompletionStatus(CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
-                        else if (" status:fromKey_incomplete".equalsIgnoreCase(assertionStatusReport.getAssertionStatusItem().get(i).getCompletionStatus()))
+                        } else if ("status:fromKey_incomplete".equalsIgnoreCase(assertionStatusReport.getAssertionStatusItem().get(i).getCompletionStatus())) {
                                 x.setCompletionStatus(CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);
-                        else 
-                                        x.setCompletionStatus(CompletionStatus.STATUS_BOTH_INCOMPLETE);
+                        } else {
+                                x.setCompletionStatus(CompletionStatus.STATUS_BOTH_INCOMPLETE);
+                        }
                         x.setKeysOwned(MapKeysOwned(assertionStatusReport.getAssertionStatusItem().get(i).getKeysOwned()));
-                        if (assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference()!=null)
-                        x.setKeyedReference(new KeyedReference(assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getTModelKey(),
-                                assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getKeyName(),
-                                assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getKeyValue()));
+                        if (assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference() != null) {
+                                x.setKeyedReference(new KeyedReference(assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getTModelKey(),
+                                        assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getKeyName(),
+                                        assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getKeyValue()));
+                        }
                 }
                 return r;
         }
 
         private static KeysOwned MapKeysOwned(org.uddi.api_v2.KeysOwned keysOwned) {
-                if (keysOwned==null)return null;
+                if (keysOwned == null) {
+                        return null;
+                }
                 KeysOwned r = new KeysOwned();
                 r.setFromKey(keysOwned.getFromKey());
                 r.setToKey(keysOwned.getToKey());
+                return r;
+        }
+
+        private static Contacts MapContacts(org.uddi.api_v2.Contacts contacts) {
+                if (contacts == null) {
+                        return null;
+                }
+                Contacts c = new Contacts();
+                c.getContact().addAll(MapContactList(contacts.getContact()));
+                return c;
+
+        }
+
+        private static List<Contact> MapContactList(List<org.uddi.api_v2.Contact> contact) {
+                List<Contact> r = new ArrayList<Contact>();
+                if (contact == null) {
+                        return r;
+                }
+                for (int i = 0; i < contact.size(); i++) {
+                        Contact c = new Contact();
+                        c.setUseType(contact.get(i).getUseType());
+                        if (contact.get(i).getPersonName() != null) {
+                                c.getPersonName().add(new PersonName(contact.get(i).getPersonName(), null));
+                        }
+                        c.getAddress().addAll(MapAddress(contact.get(i).getAddress()));
+                        c.getDescription().addAll(MapDescription(contact.get(i).getDescription()));
+                        c.getEmail().addAll(MapEmail(contact.get(i).getEmail()));
+                        c.getPhone().addAll(MapPhone(contact.get(i).getPhone()));
+
+                        r.add(c);
+                }
+                return r;
+        }
+
+        private static Collection<? extends Address> MapAddress(List<org.uddi.api_v2.Address> address) {
+                List<Address> r = new ArrayList<Address>();
+                if (address == null) {
+                        return r;
+                }
+                for (int i = 0; i < address.size(); i++) {
+                        Address x = new Address();
+                        x.setSortCode(address.get(i).getSortCode());
+                        x.setTModelKey(address.get(i).getTModelKey());
+                        x.setUseType(address.get(i).getUseType());
+                        x.getAddressLine().addAll(MapAddressLine(address.get(i).getAddressLine()));
+                        r.add(x);
+                }
+                return r;
+
+        }
+
+        private static Collection<? extends Email> MapEmail(List<org.uddi.api_v2.Email> email) {
+                List<Email> r = new ArrayList<Email>();
+                if (email == null) {
+                        return r;
+                }
+                for (int i = 0; i < email.size(); i++) {
+                        Email x = new Email();
+                        x.setUseType(email.get(i).getUseType());
+                        x.setValue(email.get(i).getValue());
+                        r.add(x);
+                }
+
+                return r;
+        }
+
+        private static Collection<? extends Phone> MapPhone(List<org.uddi.api_v2.Phone> phone) {
+                List<Phone> r = new ArrayList<Phone>();
+                if (phone == null) {
+                        return r;
+                }
+                for (int i = 0; i < phone.size(); i++) {
+                        Phone x = new Phone();
+                        x.setUseType(phone.get(i).getUseType());
+                        x.setValue(phone.get(i).getValue());
+                        r.add(x);
+                }
+
+                return r;
+        }
+
+        private static List<org.uddi.api_v3.AddressLine> MapAddressLine(List<org.uddi.api_v2.AddressLine> addressLine) {
+                List<org.uddi.api_v3.AddressLine> r = new ArrayList<org.uddi.api_v3.AddressLine>();
+                if (addressLine == null) {
+                        return r;
+                }
+                for (int i = 0; i < addressLine.size(); i++) {
+                        org.uddi.api_v3.AddressLine x = new org.uddi.api_v3.AddressLine();
+                        x.setKeyName(addressLine.get(i).getKeyName());
+                        x.setKeyValue(addressLine.get(i).getKeyValue());
+                        x.setValue(addressLine.get(i).getValue());
+                        r.add(x);
+                }
+
                 return r;
         }
 

@@ -83,13 +83,7 @@ public class Inquiry3to2 implements UDDIInquiryPortType, BindingProvider {
         public BusinessList findBusiness(FindBusiness body) throws DispositionReportFaultMessage, RemoteException {
                 try {
                         org.uddi.api_v2.FindBusiness MapFindBusiness = MapUDDIv3Tov2.MapFindBusiness(body);
-                        StringWriter sw = new StringWriter();
-                        JAXB.marshal(MapFindBusiness, sw);
-                        logger.info(sw.toString());
                         org.uddi.api_v2.BusinessList s = inquiryService.findBusiness(MapFindBusiness);
-                        sw = new StringWriter();
-                        JAXB.marshal(s, sw);
-                        logger.info(sw.toString());
                         return MapUDDIv2Tov3.MapBusinessList(s);
                 } catch (DispositionReport ex) {
                         throw MapUDDIv2Tov3.MapException(ex);

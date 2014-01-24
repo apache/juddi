@@ -15,7 +15,9 @@
  */
 package org.apache.juddi.api.impl;
 
+import java.io.StringWriter;
 import javax.jws.WebService;
+import javax.xml.bind.JAXB;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -138,7 +140,11 @@ public class UDDIv2InquiryImpl implements Inquire {
         @Override
         public BusinessDetail getBusinessDetail(GetBusinessDetail body) throws DispositionReport {
                 try {
-                        return MapUDDIv3Tov2.MapBusinessDetail(inquiryService.getBusinessDetail(MapUDDIv2Tov3.MapGetBusinessDetail(body)), getNodeID());
+                        BusinessDetail MapBusinessDetail = MapUDDIv3Tov2.MapBusinessDetail(inquiryService.getBusinessDetail(MapUDDIv2Tov3.MapGetBusinessDetail(body)), getNodeID());
+                        StringWriter sw = new StringWriter();
+                        JAXB.marshal(MapBusinessDetail, sw);
+                        logger.info(sw.toString());
+                        return MapBusinessDetail;
                 } catch (DispositionReportFaultMessage ex) {
                         throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
