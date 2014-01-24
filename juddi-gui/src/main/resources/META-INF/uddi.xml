@@ -12,7 +12,7 @@ It currently does not use the ValueSet, jUDDI, Replication, or REST APIs
             <node>
                 <!-- required 'default' node -->
                 <name>default</name> 
-                <description>Main UDDI Node v3</description>
+                <description>UDDIv3 Node (localhost)</description>
                 <!-- JAX-WS Transport -->
                 <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
                 <custodyTransferUrl>http://localhost:8080/juddiv3/services/custody-transfer</custodyTransferUrl>
@@ -24,16 +24,16 @@ It currently does not use the ValueSet, jUDDI, Replication, or REST APIs
 			<node>
                 <!-- for jUDDI v0.9 to 2.0.1 -->
                 <name>juddiv2</name> 
-                <description>UDDIv2 Node</description>
+                <description>UDDIv2 Node (localhost)</description>
                 <!-- JAX-WS Transport -->
                 <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSv2TranslationTransport</proxyTransport>
-                <inquiryUrl>http://localhost:9080/juddiv3/services/inquiryv2</inquiryUrl>
-                <publishUrl>http://localhost:9080/juddiv3/services/publishv2</publishUrl>
+                <inquiryUrl>http://localhost:8080/juddiv3/services/inquiryv2</inquiryUrl>
+                <publishUrl>http://localhost:8080/juddiv3/services/publishv2</publishUrl>
                 
             </node>
              <node>
                 <name>default-ssl</name> 
-                <description>Main UDDI Node v3 using SSL</description>
+                <description>UDDIv3 Node using SSL (localhost)</description>
                 <!-- JAX-WS Transport -->
                 <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
                 <custodyTransferUrl>http://localhost:8443/juddiv3/services/custody-transfer</custodyTransferUrl>
@@ -66,9 +66,8 @@ It currently does not use the ValueSet, jUDDI, Replication, or REST APIs
                 <subscriptionUrl>https://localhost:8443/juddiv3/UDDISubscriptionService</subscriptionUrl>
             </node>
             <node>
-                <!-- required 'default' node -->
-                <name>cloud</name> 
-                <description>jUDDI Cloud Sandbox</description>
+                <name>jUDDI Cloud Sandbox</name> 
+                <description>This node is maintained by the jUDDI team for you to test and experiment with.</description>
                 <!-- JAX-WS Transport -->
                 <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
                 <custodyTransferUrl>http://uddi-jbossoverlord.rhcloud.com/services/custody-transfer</custodyTransferUrl>
