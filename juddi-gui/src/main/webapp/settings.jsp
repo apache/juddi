@@ -41,7 +41,7 @@
                                 Configuration cfg2 = cfg.getConfiguration();
                                 Iterator<String> it2 = cfg.getConfiguration().getKeys();
 
-                                String[] nodes = cfg2.getStringArray("client.nodes.node.name");
+                                String[] nodes2 = cfg2.getStringArray("client.nodes.node.name");
 
                                 while (it2.hasNext()) {
 
@@ -62,7 +62,7 @@
                                     }
                                 }
 
-                                for (int i = 0; i < nodes.length; i++) {
+                                for (int i = 0; i < nodes2.length; i++) {
 
                                     String key = "client.nodes.node(" + i + ").name";
                                     out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
