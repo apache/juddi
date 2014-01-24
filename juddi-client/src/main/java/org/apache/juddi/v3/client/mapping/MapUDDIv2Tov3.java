@@ -30,6 +30,7 @@ import org.uddi.api_v2.GetTModelDetail;
 import org.uddi.api_v2.SetPublisherAssertions;
 import org.uddi.api_v2.Truncated;
 import org.uddi.api_v3.AccessPoint;
+import org.uddi.api_v3.AddPublisherAssertions;
 import org.uddi.api_v3.Address;
 import org.uddi.api_v3.AssertionStatusItem;
 import org.uddi.api_v3.BindingTemplate;
@@ -168,7 +169,7 @@ public class MapUDDIv2Tov3 {
                 BindingTemplate item = new org.uddi.api_v3.BindingTemplate();
                 item.setBindingKey(be.getBindingKey());
                 item.setServiceKey(be.getServiceKey());
-                
+
                 item.setAccessPoint(MapAccessPoint(be.getAccessPoint()));
                 item.setHostingRedirector(MapHostingRedir(be.getHostingRedirector()));
                 item.getDescription().addAll(MapDescription(be.getDescription()));
@@ -1035,15 +1036,8 @@ public class MapUDDIv2Tov3 {
                         AssertionStatusItem x = new AssertionStatusItem();
                         x.setFromKey(assertionStatusReport.getAssertionStatusItem().get(i).getFromKey());
                         x.setToKey(assertionStatusReport.getAssertionStatusItem().get(i).getToKey());
-                        if ("status:complete".equalsIgnoreCase(assertionStatusReport.getAssertionStatusItem().get(i).getCompletionStatus())) {
-                                x.setCompletionStatus(CompletionStatus.STATUS_COMPLETE);
-                        } else if ("status:toKey_incomplete".equalsIgnoreCase(assertionStatusReport.getAssertionStatusItem().get(i).getCompletionStatus())) {
-                                x.setCompletionStatus(CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
-                        } else if ("status:fromKey_incomplete".equalsIgnoreCase(assertionStatusReport.getAssertionStatusItem().get(i).getCompletionStatus())) {
-                                x.setCompletionStatus(CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);
-                        } else {
-                                x.setCompletionStatus(CompletionStatus.STATUS_BOTH_INCOMPLETE);
-                        }
+                        x.setCompletionStatus(MapCompletionStatus(assertionStatusReport.getAssertionStatusItem().get(i).getCompletionStatus()));
+
                         x.setKeysOwned(MapKeysOwned(assertionStatusReport.getAssertionStatusItem().get(i).getKeysOwned()));
                         if (assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference() != null) {
                                 x.setKeyedReference(new KeyedReference(assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getTModelKey(),
@@ -1156,6 +1150,32 @@ public class MapUDDIv2Tov3 {
                 }
 
                 return r;
+        }
+
+        public static AddPublisherAssertions MapAddPublisherAssertions(org.uddi.api_v2.AddPublisherAssertions body) {
+
+                if (body == null) {
+                        return null;
+                }
+                AddPublisherAssertions r = new AddPublisherAssertions();
+                r.setAuthInfo(body.getAuthInfo());
+                r.getPublisherAssertion().addAll(MapListPublisherAssertion(body.getPublisherAssertion()));
+                return r;
+
+        }
+
+        public static CompletionStatus MapCompletionStatus(String completionStatus) {
+
+                if ("status:complete".equalsIgnoreCase(completionStatus)) {
+                        return (CompletionStatus.STATUS_COMPLETE);
+                } else if ("status:toKey_incomplete".equalsIgnoreCase(completionStatus)) {
+                        return (CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
+                } else if ("status:fromKey_incomplete".equalsIgnoreCase(completionStatus)) {
+                        return (CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);
+                } else {
+                        return (CompletionStatus.STATUS_BOTH_INCOMPLETE);
+                }
+
         }
 
 }

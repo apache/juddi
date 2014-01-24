@@ -23,6 +23,7 @@ import org.uddi.api_v2.AccessPoint;
 import org.uddi.api_v2.AddPublisherAssertions;
 import org.uddi.api_v2.Address;
 import org.uddi.api_v2.AddressLine;
+import org.uddi.api_v2.AssertionStatusReport;
 import org.uddi.api_v2.BindingDetail;
 import org.uddi.api_v2.BindingTemplate;
 import org.uddi.api_v2.BindingTemplates;
@@ -77,6 +78,7 @@ import org.uddi.api_v2.GetBusinessDetail;
 import org.uddi.api_v2.GetServiceDetail;
 import org.uddi.api_v2.GetTModelDetail;
 import org.uddi.api_v2.KeyType;
+import org.uddi.api_v2.KeysOwned;
 import org.uddi.api_v2.Phone;
 import org.uddi.api_v2.PublisherAssertion;
 import org.uddi.api_v2.PublisherAssertions;
@@ -94,6 +96,7 @@ import org.uddi.api_v2.TModelInfo;
 import org.uddi.api_v2.TModelInfos;
 import org.uddi.api_v2.TModelList;
 import org.uddi.api_v2.Truncated;
+import org.uddi.api_v3.AssertionStatusItem;
 import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.CompletionStatus;
 import org.uddi.v2_service.DispositionReport;
@@ -250,12 +253,12 @@ public class MapUDDIv3Tov2 {
                         return null;
                 }
                 OverviewDoc r = new OverviewDoc();
-                
+
                 r.getDescription().addAll(MapDescription(overviewDoc.get(0).getDescription()));
-                if (overviewDoc.get(0).getOverviewURL() != null && overviewDoc.get(0).getOverviewURL().getValue()!=null) {
+                if (overviewDoc.get(0).getOverviewURL() != null && overviewDoc.get(0).getOverviewURL().getValue() != null) {
                         r.setOverviewURL(overviewDoc.get(0).getOverviewURL().getValue());
                 }
-                
+
                 return r;
         }
 
@@ -786,19 +789,22 @@ public class MapUDDIv3Tov2 {
                 return r;
         }
 
-        public static RelatedBusinessesList MapRelatedBusinessList(org.uddi.api_v3.RelatedBusinessesList findRelatedBusinesses) {
+        public static RelatedBusinessesList MapRelatedBusinessList(org.uddi.api_v3.RelatedBusinessesList findRelatedBusinesses, String operator) {
                 if (findRelatedBusinesses == null) {
                         return null;
                 }
                 RelatedBusinessesList r = new RelatedBusinessesList();
+                r.setGeneric(VERSION);
+                r.setOperator(operator);
                 r.setBusinessKey(findRelatedBusinesses.getBusinessKey());
                 if (findRelatedBusinesses.isTruncated() != null && findRelatedBusinesses.isTruncated()) {
                         r.setTruncated(Truncated.TRUE);
                 } else {
                         r.setTruncated(Truncated.FALSE);
                 }
+                r.setRelatedBusinessInfos(new RelatedBusinessInfos());
                 if (findRelatedBusinesses.getRelatedBusinessInfos() != null) {
-                        r.setRelatedBusinessInfos(new RelatedBusinessInfos());
+                        
                         for (int i = 0; i < findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().size(); i++) {
                                 RelatedBusinessInfo x = new RelatedBusinessInfo();
                                 x.setBusinessKey(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getBusinessKey());
@@ -950,7 +956,7 @@ public class MapUDDIv3Tov2 {
                 }
                 for (int i = 0; i < tModelInfo.size(); i++) {
                         TModelInfo x = new TModelInfo();
-                        
+
                         x.setTModelKey(tModelInfo.get(i).getTModelKey());
                         x.setName(new Name(tModelInfo.get(i).getName().getValue(), tModelInfo.get(i).getName().getValue()));
                         r.add(x);
@@ -1152,6 +1158,50 @@ public class MapUDDIv3Tov2 {
                         x.setKeyValue(addressLine.get(i).getKeyValue());
                         x.setValue(addressLine.get(i).getValue());
                         r.add(x);
+                }
+
+                return r;
+        }
+
+        /**
+         * limitation, keys owned is not mapped
+         * @param assertionStatusReport
+         * @return 
+         */
+        public static AssertionStatusReport MapAssertionStatusReport(List<AssertionStatusItem> assertionStatusReport) {
+                if (assertionStatusReport == null) {
+                        return null;
+                }
+                AssertionStatusReport r = new AssertionStatusReport();
+                r.setGeneric(VERSION);
+                for (int i = 0; i < assertionStatusReport.size(); i++) {
+                        org.uddi.api_v2.AssertionStatusItem x = new org.uddi.api_v2.AssertionStatusItem();
+
+                        switch (assertionStatusReport.get(i).getCompletionStatus()) {
+                                case STATUS_BOTH_INCOMPLETE:
+                                        x.setCompletionStatus(null);
+                                        break;
+                                case STATUS_COMPLETE:
+                                        x.setCompletionStatus("status:complete");
+                                        break;
+                                case STATUS_FROM_KEY_INCOMPLETE:
+                                        x.setCompletionStatus("status:fromKey_incomplete");
+                                        break;
+                                case STATUS_TO_KEY_INCOMPLETE:
+                                        x.setCompletionStatus("status:toKey_incomplete");
+                                        break;
+                        }
+                        x.setFromKey(assertionStatusReport.get(i).getFromKey());
+                        x.setToKey(assertionStatusReport.get(i).getToKey());
+                        if (assertionStatusReport.get(i).getKeyedReference() != null) {
+                                x.setKeyedReference(new KeyedReference(assertionStatusReport.get(i).getKeyedReference().getTModelKey(),
+                                        assertionStatusReport.get(i).getKeyedReference().getKeyName(),
+                                        assertionStatusReport.get(i).getKeyedReference().getKeyValue()));
+                        }
+                        
+                        x.setKeysOwned(new KeysOwned());
+                        r.getAssertionStatusItem().add(x);
+                        // assertionStatusReport.get(i).
                 }
 
                 return r;

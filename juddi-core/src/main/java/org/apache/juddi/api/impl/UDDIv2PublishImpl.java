@@ -52,6 +52,7 @@ import org.uddi.api_v2.ServiceDetail;
 import org.uddi.api_v2.SetPublisherAssertions;
 import org.uddi.api_v2.TModelDetail;
 import org.uddi.api_v2.Truncated;
+import org.uddi.api_v3.CompletionStatus;
 import org.uddi.api_v3.PublisherAssertion;
 import org.uddi.v2_service.Publish;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -62,6 +63,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * request to our UDDIv3 Publish implementation<br><br>
  * This class is a BETA feature and is largely untested. Please report any
  * issues
+ *
  * @author <a href="mailto:alexoree.apache.org">Alex O'Ree</a>
  * @since 3.2
  */
@@ -69,20 +71,21 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         endpointInterface = "org.uddi.v2_service.Publish")
 public class UDDIv2PublishImpl implements Publish {
 
-         public UDDIv2PublishImpl(){
-                logger.warn("This implementation of UDDIv2 Inquire service " + UDDIv2PublishImpl.class.getCanonicalName() +" is considered BETA. Please"
+        public UDDIv2PublishImpl() {
+                logger.warn("This implementation of UDDIv2 Inquire service " + UDDIv2PublishImpl.class.getCanonicalName() + " is considered BETA. Please"
                         + " report any issues to https://issues.apache.org/jira/browse/JUDDI");
         }
 
-        static String nodeId=null;
-        private static String getNodeID(){
-                 try {
-                         nodeId=AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);
-                 } catch (ConfigurationException ex) {
-                         logger.warn(ex.getMessage());
-                         nodeId="JUDDI_v3";
-                 }
-                 return nodeId;
+        static String nodeId = null;
+
+        private static String getNodeID() {
+                try {
+                        nodeId = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);
+                } catch (ConfigurationException ex) {
+                        logger.warn(ex.getMessage());
+                        nodeId = "JUDDI_v3";
+                }
+                return nodeId;
         }
         private static Log logger = LogFactory.getLog(UDDIv2PublishImpl.class);
         static UDDIPublicationImpl publishService = new UDDIPublicationImpl();
@@ -90,7 +93,12 @@ public class UDDIv2PublishImpl implements Publish {
 
         @Override
         public DispositionReport addPublisherAssertions(AddPublisherAssertions body) throws org.uddi.v2_service.DispositionReport {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                try {
+                        publishService.addPublisherAssertions(MapUDDIv2Tov3.MapAddPublisherAssertions(body));
+                } catch (DispositionReportFaultMessage ex) {
+                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());
+                }
+                return getSuccessMessage();
         }
 
         @Override
@@ -98,7 +106,7 @@ public class UDDIv2PublishImpl implements Publish {
                 try {
                         publishService.deleteBinding(MapUDDIv2Tov3.MapDeleteBinding(body));
                 } catch (DispositionReportFaultMessage ex) {
-                        throw MapUDDIv3Tov2.MapException(ex,getNodeID());
+                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
                 return getSuccessMessage();
         }
@@ -108,7 +116,7 @@ public class UDDIv2PublishImpl implements Publish {
                 try {
                         publishService.deleteBusiness(MapUDDIv2Tov3.MapDeleteBusiness(body));
                 } catch (DispositionReportFaultMessage ex) {
-                        throw MapUDDIv3Tov2.MapException(ex,getNodeID());
+                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
                 return getSuccessMessage();
         }
@@ -118,7 +126,7 @@ public class UDDIv2PublishImpl implements Publish {
                 try {
                         publishService.deletePublisherAssertions(MapUDDIv2Tov3.MapDeletePublisherAssertion(body));
                 } catch (DispositionReportFaultMessage ex) {
-                        throw MapUDDIv3Tov2.MapException(ex,getNodeID());
+                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
                 return getSuccessMessage();
         }
@@ -128,7 +136,7 @@ public class UDDIv2PublishImpl implements Publish {
                 try {
                         publishService.deleteService(MapUDDIv2Tov3.MapDeleteService(body));
                 } catch (DispositionReportFaultMessage ex) {
-                        throw MapUDDIv3Tov2.MapException(ex,getNodeID());
+                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
                 return getSuccessMessage();
         }
@@ -138,7 +146,7 @@ public class UDDIv2PublishImpl implements Publish {
                 try {
                         publishService.deleteTModel(MapUDDIv2Tov3.MapDeleteTModel(body));
                 } catch (DispositionReportFaultMessage ex) {
-                        throw MapUDDIv3Tov2.MapException(ex,getNodeID());
+                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
                 return getSuccessMessage();
         }
@@ -148,14 +156,19 @@ public class UDDIv2PublishImpl implements Publish {
                 try {
                         securityService.discardAuthToken(new org.uddi.api_v3.DiscardAuthToken(body.getAuthInfo()));
                 } catch (DispositionReportFaultMessage ex) {
-                        throw MapUDDIv3Tov2.MapException(ex,getNodeID());
+                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
                 return getSuccessMessage();
         }
 
         @Override
         public AssertionStatusReport getAssertionStatusReport(GetAssertionStatusReport body) throws org.uddi.v2_service.DispositionReport {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                try {
+                        
+                       return MapUDDIv3Tov2.MapAssertionStatusReport( publishService.getAssertionStatusReport(body.getAuthInfo(), MapUDDIv2Tov3.MapCompletionStatus(body.getCompletionStatus())));
+                } catch (DispositionReportFaultMessage ex) {
+                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());
+                }
         }
 
         @Override
@@ -170,25 +183,25 @@ public class UDDIv2PublishImpl implements Publish {
                         ret.setGeneric("2.0");
                         return ret;
                 } catch (DispositionReportFaultMessage ex) {
-                        throw MapUDDIv3Tov2.MapException(ex,getNodeID());
+                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
         }
 
         @Override
         public PublisherAssertions getPublisherAssertions(GetPublisherAssertions body) throws org.uddi.v2_service.DispositionReport {
                 try {
-                        return MapUDDIv3Tov2.MapPublisherAssertions(publishService.getPublisherAssertions(body.getAuthInfo()),getNodeID());
+                        return MapUDDIv3Tov2.MapPublisherAssertions(publishService.getPublisherAssertions(body.getAuthInfo()), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
-                        throw MapUDDIv3Tov2.MapException(ex,getNodeID());
+                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
         }
 
         @Override
         public RegisteredInfo getRegisteredInfo(GetRegisteredInfo body) throws org.uddi.v2_service.DispositionReport {
                 try {
-                        return MapUDDIv3Tov2.MapRegisteredInfo(publishService.getRegisteredInfo(MapUDDIv2Tov3.MapGetRegisteredInfo(body)),getNodeID());
+                        return MapUDDIv3Tov2.MapRegisteredInfo(publishService.getRegisteredInfo(MapUDDIv2Tov3.MapGetRegisteredInfo(body)), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
-                        throw MapUDDIv3Tov2.MapException(ex,getNodeID());
+                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
 
         }
@@ -196,36 +209,36 @@ public class UDDIv2PublishImpl implements Publish {
         @Override
         public BindingDetail saveBinding(SaveBinding body) throws org.uddi.v2_service.DispositionReport {
                 try {
-                        return MapUDDIv3Tov2.MapBindingDetail(publishService.saveBinding(MapUDDIv2Tov3.MapSaveBinding(body)),getNodeID());
+                        return MapUDDIv3Tov2.MapBindingDetail(publishService.saveBinding(MapUDDIv2Tov3.MapSaveBinding(body)), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
-                        throw MapUDDIv3Tov2.MapException(ex,getNodeID());
+                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
         }
 
         @Override
         public BusinessDetail saveBusiness(SaveBusiness body) throws org.uddi.v2_service.DispositionReport {
                 try {
-                        return MapUDDIv3Tov2.MapBusinessDetail(publishService.saveBusiness(MapUDDIv2Tov3.MapSaveBusiness(body)),getNodeID());
+                        return MapUDDIv3Tov2.MapBusinessDetail(publishService.saveBusiness(MapUDDIv2Tov3.MapSaveBusiness(body)), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
-                        throw MapUDDIv3Tov2.MapException(ex,getNodeID());
+                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
         }
 
         @Override
         public ServiceDetail saveService(SaveService body) throws org.uddi.v2_service.DispositionReport {
                 try {
-                        return MapUDDIv3Tov2.MapServiceDetail(publishService.saveService(MapUDDIv2Tov3.MapSaveService(body)),getNodeID());
+                        return MapUDDIv3Tov2.MapServiceDetail(publishService.saveService(MapUDDIv2Tov3.MapSaveService(body)), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
-                        throw MapUDDIv3Tov2.MapException(ex,getNodeID());
+                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
         }
 
         @Override
         public TModelDetail saveTModel(SaveTModel body) throws org.uddi.v2_service.DispositionReport {
                 try {
-                        return MapUDDIv3Tov2.MapTModelDetail(publishService.saveTModel(MapUDDIv2Tov3.MapSaveTModel(body)),getNodeID());
+                        return MapUDDIv3Tov2.MapTModelDetail(publishService.saveTModel(MapUDDIv2Tov3.MapSaveTModel(body)), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
-                        throw MapUDDIv3Tov2.MapException(ex,getNodeID());
+                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
         }
 
@@ -235,9 +248,9 @@ public class UDDIv2PublishImpl implements Publish {
                         Holder<List<PublisherAssertion>> req = new Holder<List<PublisherAssertion>>();
                         req.value = MapUDDIv2Tov3.MapSetPublisherAssertions(body);
                         publishService.setPublisherAssertions(body.getAuthInfo(), req);
-                        return MapUDDIv3Tov2.MapPublisherAssertions(req.value,getNodeID());
+                        return MapUDDIv3Tov2.MapPublisherAssertions(req.value, getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
-                        throw MapUDDIv3Tov2.MapException(ex,getNodeID());
+                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
         }
 
@@ -250,6 +263,5 @@ public class UDDIv2PublishImpl implements Publish {
                 r.getResult().add(x);
                 return r;
         }
-
 
 }

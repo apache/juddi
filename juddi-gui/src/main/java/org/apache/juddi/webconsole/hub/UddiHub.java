@@ -1820,7 +1820,7 @@ public class UddiHub implements Serializable {
                                 case uid:
 
                                         findBusiness = new ServiceList();
-                                        
+
                                         BusinessService GetServiceDetail = GetServiceDetail(parameters);
                                         if (GetServiceDetail != null) {
                                                 findBusiness.setServiceInfos(new ServiceInfos());
@@ -1848,7 +1848,7 @@ public class UddiHub implements Serializable {
                                 }
 
                         }
-                        if (findBusiness!=null && findBusiness.getServiceInfos() != null) {
+                        if (findBusiness != null && findBusiness.getServiceInfos() != null) {
                                 StringBuilder sb = new StringBuilder();
                                 sb.append("<table class=\"table\">");
                                 for (int i = 0; i < findBusiness.getServiceInfos().getServiceInfo().size(); i++) {
@@ -2438,10 +2438,9 @@ public class UddiHub implements Serializable {
         public String GetOperationalInfo(List<OperationalInfo> info) {
                 StringBuilder sb = new StringBuilder();
 
-                if (info != null) {
+                if (info != null && !info.isEmpty()) {
                         sb.append("<table class=\"table table-hover\">");
-                        for (int i = 0; i < info.size(); i++) {
-                                sb.append("<tr><th>").
+                         sb.append("<tr><th>").
                                         append(ResourceLoader.GetResource(session, "items.nodeid")).
                                         append("</th><th>").
                                         append(ResourceLoader.GetResource(session, "items.authorizedname")).
@@ -2454,21 +2453,26 @@ public class UddiHub implements Serializable {
                                         append("</th><th>").
                                         append(ResourceLoader.GetResource(session, "items.modifiedwithchildren")).
                                         append("</th></tr>");
+                         
+                        for (int i = 0; i < info.size(); i++) {
+                               if (info.get(i)==null) continue;
                                 sb.append("<tr><td>");
-                                sb.append(StringEscapeUtils.escapeHtml(info.get(i).getNodeID()))
+                                sb.append((info.get(i).getNodeID()!=null ? StringEscapeUtils.escapeHtml(info.get(i).getNodeID()) : ""))
                                         .append("</td><td>")
-                                        .append(StringEscapeUtils.escapeHtml(info.get(i).getAuthorizedName()))
+                                        .append((info.get(i).getAuthorizedName()!=null ? StringEscapeUtils.escapeHtml(info.get(i).getAuthorizedName())  :""))
                                         .append("</td><td>")
-                                        .append(StringEscapeUtils.escapeHtml(info.get(i).getEntityKey()))
+                                        .append((info.get(i).getEntityKey()!=null ? StringEscapeUtils.escapeHtml(info.get(i).getEntityKey()):""))
                                         .append("</td><td>")
-                                        .append(StringEscapeUtils.escapeHtml(info.get(i).getCreated().toString()))
+                                        .append((info.get(i).getCreated()!=null ? StringEscapeUtils.escapeHtml(info.get(i).getCreated().toString()):""))
                                         .append("</td><td>")
-                                        .append(StringEscapeUtils.escapeHtml(info.get(i).getModified().toString()))
+                                        .append((info.get(i).getModified()!=null ? StringEscapeUtils.escapeHtml(info.get(i).getModified().toString()):""))
                                         .append("</td><td>")
-                                        .append(StringEscapeUtils.escapeHtml(info.get(i).getModifiedIncludingChildren().toString()))
+                                        .append((info.get(i).getModifiedIncludingChildren()!=null ? StringEscapeUtils.escapeHtml(info.get(i).getModifiedIncludingChildren().toString()):""))
                                         .append("</td></tr>");
                         }
                         sb.append("</table>");
+                } else {
+                        sb.append(ResourceLoader.GetResource(session, "errors.nooperationalinfo"));
                 }
                 return sb.toString();
         }
@@ -3305,13 +3309,13 @@ public class UddiHub implements Serializable {
                         }
                         if (method.equalsIgnoreCase("getOperationalInfo")) {
                                 ((GetOperationalInfo) request).setAuthInfo(GetToken());
-                                response = inquiry.getOperationalInfo((GetOperationalInfo) request);
+
                                 try {
-                                        response = inquiry.findBinding((FindBinding) request);
+                                        response = inquiry.getOperationalInfo((GetOperationalInfo) request);
                                 } catch (Exception ex) {
                                         if (isExceptionExpiration(ex)) {
                                                 token = null;
-                                                response = inquiry.findBinding((FindBinding) request);
+                                                response = inquiry.getOperationalInfo((GetOperationalInfo) request);
 
                                         } else {
                                                 throw ex;
@@ -3321,13 +3325,13 @@ public class UddiHub implements Serializable {
                         }
                         if (method.equalsIgnoreCase("getTModelDetail")) {
                                 ((GetTModelDetail) request).setAuthInfo(GetToken());
-                                response = inquiry.getTModelDetail((GetTModelDetail) request);
+
                                 try {
-                                        response = inquiry.findBinding((FindBinding) request);
+                                        response = inquiry.getTModelDetail((GetTModelDetail) request);
                                 } catch (Exception ex) {
                                         if (isExceptionExpiration(ex)) {
                                                 token = null;
-                                                response = inquiry.findBinding((FindBinding) request);
+                                                response = inquiry.getTModelDetail((GetTModelDetail) request);
 
                                         } else {
                                                 throw ex;

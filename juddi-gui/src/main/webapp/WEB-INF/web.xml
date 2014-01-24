@@ -5,7 +5,6 @@
         <description>This is an end user web application for an implementation of OASIS's UDDI v3 specification</description>
         <!--  This may cause issues in some containers, if it complains about a non serializable object, comment this out
         <distributable /> -->
-
         <filter>
                 <filter-name>noCacheFilter</filter-name>
                 <filter-class>org.apache.juddi.webconsole.NoCacheFilter</filter-class>
@@ -97,8 +96,12 @@
         <security-role>
                 <role-name>uddiadmin</role-name>
         </security-role>
-
-
+<!-- if deployment fails, try commenting this out -->
+        <init-param>
+          <param-name>trimSpaces</param-name>
+          <param-value>true</param-value>
+        </init-param>
+<!-- end -->
 
         
 </web-app>

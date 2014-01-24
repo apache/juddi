@@ -15,9 +15,7 @@
  */
 package org.apache.juddi.api.impl;
 
-import java.io.StringWriter;
 import javax.jws.WebService;
-import javax.xml.bind.JAXB;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,7 +23,6 @@ import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.v3.client.mapping.MapUDDIv2Tov3;
 import org.apache.juddi.v3.client.mapping.MapUDDIv3Tov2;
-import org.apache.juddi.v3.client.transport.wrapper.Inquiry3to2;
 import org.uddi.api_v2.BindingDetail;
 import org.uddi.api_v2.BusinessDetail;
 import org.uddi.api_v2.BusinessDetailExt;
@@ -104,7 +101,7 @@ public class UDDIv2InquiryImpl implements Inquire {
         @Override
         public RelatedBusinessesList findRelatedBusinesses(FindRelatedBusinesses body) throws DispositionReport {
                 try {
-                        return MapUDDIv3Tov2.MapRelatedBusinessList(inquiryService.findRelatedBusinesses(MapUDDIv2Tov3.MapFindRelatedBusiness(body)));
+                        return MapUDDIv3Tov2.MapRelatedBusinessList(inquiryService.findRelatedBusinesses(MapUDDIv2Tov3.MapFindRelatedBusiness(body)), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
                         throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
@@ -141,9 +138,9 @@ public class UDDIv2InquiryImpl implements Inquire {
         public BusinessDetail getBusinessDetail(GetBusinessDetail body) throws DispositionReport {
                 try {
                         BusinessDetail MapBusinessDetail = MapUDDIv3Tov2.MapBusinessDetail(inquiryService.getBusinessDetail(MapUDDIv2Tov3.MapGetBusinessDetail(body)), getNodeID());
-                        StringWriter sw = new StringWriter();
-                        JAXB.marshal(MapBusinessDetail, sw);
-                        logger.info(sw.toString());
+                       // StringWriter sw = new StringWriter();
+                       // JAXB.marshal(MapBusinessDetail, sw);
+                      //  logger.info(sw.toString());
                         return MapBusinessDetail;
                 } catch (DispositionReportFaultMessage ex) {
                         throw MapUDDIv3Tov2.MapException(ex, getNodeID());

@@ -15,10 +15,8 @@
  */
 package org.apache.juddi.v3.client.transport.wrapper;
 
-import java.io.StringWriter;
 import java.rmi.RemoteException;
 import java.util.Map;
-import javax.xml.bind.JAXB;
 import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.EndpointReference;
@@ -41,6 +39,7 @@ import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetOperationalInfo;
 import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.GetTModelDetail;
+import org.uddi.api_v3.OperationalInfo;
 import org.uddi.api_v3.OperationalInfos;
 import org.uddi.api_v3.RelatedBusinessesList;
 import org.uddi.api_v3.ServiceDetail;
@@ -147,9 +146,59 @@ public class Inquiry3to2 implements UDDIInquiryPortType, BindingProvider {
                 }
         }
 
+        public static final String VERSION = "2.0";
+
         @Override
         public OperationalInfos getOperationalInfo(GetOperationalInfo body) throws DispositionReportFaultMessage, RemoteException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                OperationalInfos ret = new OperationalInfos();
+
+                for (int i = 0; i < body.getEntityKey().size(); i++) {
+                        OperationalInfo oi = new OperationalInfo();
+                        oi.setEntityKey(body.getEntityKey().get(i));
+                        try {
+                                org.uddi.api_v2.GetBusinessDetail businessDetail = new org.uddi.api_v2.GetBusinessDetail();
+                                businessDetail.setGeneric(VERSION);
+                                businessDetail.getBusinessKey().add(body.getEntityKey().get(i));
+                                org.uddi.api_v2.BusinessDetail z = inquiryService.getBusinessDetail(businessDetail);
+                                oi.setNodeID(z.getOperator());
+                                oi.setAuthorizedName(z.getBusinessEntity().get(0).getAuthorizedName());
+                        } catch (Exception ex) {
+                        }
+                        if (oi.getAuthorizedName() != null) {
+                                continue;
+                        }
+                        try {
+                                org.uddi.api_v2.GetTModelDetail tModelDetail = new org.uddi.api_v2.GetTModelDetail();
+                                tModelDetail.setGeneric(VERSION);
+                                tModelDetail.getTModelKey().add(body.getEntityKey().get(i));
+                                org.uddi.api_v2.TModelDetail z = inquiryService.getTModelDetail(tModelDetail);
+                                oi.setNodeID(z.getOperator());
+                                oi.setAuthorizedName(z.getTModel().get(0).getAuthorizedName());
+                        } catch (Exception ex) {
+                        }
+                        if (oi.getAuthorizedName() != null) {
+                                continue;
+                        }
+                        try {
+                                //get the service
+                                org.uddi.api_v2.GetServiceDetail serviceDetail = new org.uddi.api_v2.GetServiceDetail();
+                                serviceDetail.setGeneric(VERSION);
+                                serviceDetail.getServiceKey().add(body.getEntityKey().get(i));
+                                org.uddi.api_v2.ServiceDetail z = inquiryService.getServiceDetail(serviceDetail);
+                                oi.setNodeID(z.getOperator());
+
+                                org.uddi.api_v2.GetBusinessDetail businessDetail = new org.uddi.api_v2.GetBusinessDetail();
+                                businessDetail.setGeneric(VERSION);
+                                //its owning business
+                                businessDetail.getBusinessKey().add(z.getBusinessService().get(0).getBusinessKey());
+                                org.uddi.api_v2.BusinessDetail z2 = inquiryService.getBusinessDetail(businessDetail);
+                                oi.setNodeID(z.getOperator());
+                                oi.setAuthorizedName(z2.getBusinessEntity().get(0).getAuthorizedName());
+                        } catch (Exception ex) {
+                        }
+                        ret.getOperationalInfo().add(oi);
+                }
+                return ret;
         }
 
         @Override
