@@ -42,11 +42,8 @@
             session.setAttribute("locale", lang);
             if (checked != null && checked.equalsIgnoreCase("on")) {
                 Cookie cookie = new Cookie("locale", lang);
-                //TODO this is for debugging purposes 
-                //this is in ms, Maxvalue represents something like 70 years
                 cookie.setMaxAge(Integer.MAX_VALUE);
-                //cookie.setDomain("/UDDIBrowser");
-                cookie.setPath("/juddi-gui");
+                cookie.setPath("/");
                 response.addCookie(cookie);
             }
             response.sendRedirect("home.jsp");

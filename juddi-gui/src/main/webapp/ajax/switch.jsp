@@ -37,7 +37,7 @@
                 out.write(ResourceLoader.GetResource(session, "items.description") + ": " + StringEscapeUtils.escapeHtml(description));
                 Cookie cookie = new Cookie("current_node", node);
                 cookie.setMaxAge(Integer.MAX_VALUE);
-                cookie.setPath("/juddi-gui");
+                cookie.setPath("/");
                 response.addCookie(cookie);
         }
 %>
