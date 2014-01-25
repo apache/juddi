@@ -17,6 +17,7 @@ function reloadTmodelModal()
  *first selected tModel
  */
 function tModelModal(div){
+    $(div).focus();
     //reset the form in case it was lanucheed more than once per page view
     reloadTmodelModal();
     

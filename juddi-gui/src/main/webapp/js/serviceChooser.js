@@ -7,8 +7,8 @@
 
 function reloadServiceModal()
 {
-    var name=$("#nameService").text();
-    RenderServiceListBySearchModal(name, offsetService, maxrecordsService, true);
+   // var name=$("#nameService").text();
+    RenderServiceListBySearchModal('%', offsetService, maxrecordsService, true);
                       
 }
 
@@ -57,8 +57,9 @@ function RenderServiceListBySearchModal(keyword1, offset1, maxrecords1, isForCho
         keyword1 = "%25";
     var lang = $("#langService").text();
     $("#servicelist").html("<img src=\"img/bigrollergreen.gif\" title=\"Loading\"/>");
+    var fq = "approximateMatch";
     var request=   $.ajax({
-        url: 'ajax/servicesearch.jsp?keyword=' + keyword1 + "&offset=" + offset1 + "&maxrecords=" + maxrecords1 + "&lang=" + lang + "&chooser=" + isForChooser,
+        url: 'ajax/servicesearch.jsp?keyword=' + keyword1 + "&offset=" + offset1 + "&maxrecords=" + maxrecords1 + "&lang=" + lang + "&chooser=" + isForChooser + "&findqualifier=" + fq,
         type:"GET",
         cache: false
     });
@@ -110,6 +111,7 @@ function refreshService()
  *first selected tModel
  */
 function serviceModal(div){
+   $(div).focus();
     //reset the form in case it was lanucheed more than once per page view
     reloadServiceModal();
     

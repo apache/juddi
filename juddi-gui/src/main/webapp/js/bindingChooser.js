@@ -101,6 +101,7 @@ function refreshBinding()
  *first selected tModel
  */
 function bindingModal(div, type){
+   $(div).focus();
     //reset the form in case it was lanucheed more than once per page view
     reloadBindingModal();
     

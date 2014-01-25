@@ -612,7 +612,7 @@ public class UddiHub implements Serializable {
                         fb.setAuthInfo(GetToken());
                         org.uddi.api_v3.FindQualifiers fq = new org.uddi.api_v3.FindQualifiers();
                         fq.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
-
+                        fq.getFindQualifier().add(UDDIConstants.SORT_BY_NAME_ASC);
                         fb.setFindQualifiers(fq);
                         Name searchname = new Name();
                         searchname.setLang(lang);
@@ -1186,6 +1186,7 @@ public class UddiHub implements Serializable {
                         fs.getName().add(n);
                         fs.setFindQualifiers(new org.uddi.api_v3.FindQualifiers());
                         fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                        fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.SORT_BY_NAME_ASC);
                         ServiceList findService = null;//inquiry.findService(fs);
                         try {
                                 findService = inquiry.findService(fs);
@@ -1348,6 +1349,7 @@ public class UddiHub implements Serializable {
                         fm.getName().setValue(keyword);
                         fm.setFindQualifiers(new org.uddi.api_v3.FindQualifiers());
                         fm.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                        fm.getFindQualifiers().getFindQualifier().add(UDDIConstants.SORT_BY_NAME_ASC);
                         TModelList findTModel = null;
                         try {
                                 findTModel = inquiry.findTModel(fm);
@@ -2936,6 +2938,7 @@ public class UddiHub implements Serializable {
                         fs.getName().add(n);
                         fs.setFindQualifiers(new org.uddi.api_v3.FindQualifiers());
                         fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                        fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.SORT_BY_NAME_ASC);
                         ServiceList findService = null;//inquiry.findService(fs);
                         try {
                                 findService = inquiry.findService(fs);
