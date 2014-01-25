@@ -194,6 +194,7 @@ public class MapUDDIv3Tov2 {
                         return null;
                 }
                 TModel item = new org.uddi.api_v2.TModel();
+                item.setTModelKey(be.getTModelKey());
                 item.setName(new Name(be.getName().getValue(), be.getName().getLang()));
                 item.setCategoryBag(MapCategoryBag(be.getCategoryBag()));
                 item.getDescription().addAll(MapDescription(be.getDescription()));
@@ -349,6 +350,8 @@ public class MapUDDIv3Tov2 {
                 r.setMaxRows(body.getMaxRows());
                 r.setTModelBag(MapTModelBag(body.getTModelBag()));
                 r.setServiceKey(body.getServiceKey());
+                if (r.getServiceKey()==null)
+                        r.setServiceKey("");
                 r.setGeneric(VERSION);
                 return r;
 

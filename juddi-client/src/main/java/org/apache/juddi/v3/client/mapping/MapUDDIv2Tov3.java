@@ -194,10 +194,11 @@ public class MapUDDIv2Tov3 {
                         return null;
                 }
                 TModel item = new org.uddi.api_v3.TModel();
+                item.setTModelKey(be.getTModelKey());
                 item.setName(new Name(be.getName().getValue(), be.getName().getLang()));
                 item.setCategoryBag(MapCategoryBag(be.getCategoryBag()));
-                item.getDescription().addAll(MapDescription(be.getDescription()));
                 item.setIdentifierBag(MapIdentBag(be.getIdentifierBag()));
+                item.getDescription().addAll(MapDescription(be.getDescription()));
                 item.getOverviewDoc().add(MapOverviewDoc(be.getOverviewDoc()));
                 return item;
         }
