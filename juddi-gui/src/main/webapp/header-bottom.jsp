@@ -4,6 +4,7 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="java.io.IOException"%>
 <%@page import="java.util.jar.Attributes"%>
@@ -22,7 +23,9 @@
      background-color: white; 
      "><center><footer>v<%
      out.write(StringEscapeUtils.escapeHtml(org.apache.juddi.v3.client.Release.getRegistryVersion()));
-     %> - <a href="http://www.apache.org"><%=ResourceLoader.GetResource(session, "footer.apachecopyright")%></a></footer></center></div>
+     %> - <a href="http://www.apache.org"><%=ResourceLoader.GetResource(session, "footer.apachecopyright")%></a>. 
+     <%=ResourceLoader.GetResource(session, "items.nowconnectedto")%>: 
+     <%=StringEscapeUtils.escapeHtml(UddiHub.getInstance(application, session).getNodeName()) %></footer></center></div>
 </body>
 </html>
 

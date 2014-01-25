@@ -11,12 +11,10 @@
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include  file="../csrf.jsp" %>
-<%
-
-        UddiHub x = UddiHub.getInstance(application, session);
+<%        UddiHub x = UddiHub.getInstance(application, session);
         String node = request.getParameter("node");
 
-        String description=null;
+        String description = null;
         List<Node> nodes = x.GetJuddiClientConfig().getUDDINodeList();
         boolean found = false;
         for (int i = 0; i < nodes.size(); i++) {
@@ -28,16 +26,21 @@
         }
         if (!found) {
                 response.setStatus(406);
-                out.write("Not found.");
+                out.write(ResourceLoader.GetResource(session, "error.nodeexists"));
         } else {
-                node=x.switchNodes(node);
-                out.write(ResourceLoader.GetResource(session, "items.nowconnectedto") +"<br>");
-                out.write(ResourceLoader.GetResource(session, "items.nodeid") + ": " + StringEscapeUtils.escapeHtml(node));
-                out.write("<br>");
-                out.write(ResourceLoader.GetResource(session, "items.description") + ": " + StringEscapeUtils.escapeHtml(description));
-                Cookie cookie = new Cookie("current_node", node);
-                cookie.setMaxAge(Integer.MAX_VALUE);
-                cookie.setPath("/");
-                response.addCookie(cookie);
+                node = x.switchNodes(node);
+                if (node == null) {
+                        response.setStatus(406);
+                        out.write(ResourceLoader.GetResource(session, "error.nodeexists"));
+                } else {
+                        out.write(ResourceLoader.GetResource(session, "items.nowconnectedto") + "<br>");
+                        out.write(ResourceLoader.GetResource(session, "items.nodeid") + ": " + StringEscapeUtils.escapeHtml(node));
+                        out.write("<br>");
+                        out.write(ResourceLoader.GetResource(session, "items.description") + ": " + StringEscapeUtils.escapeHtml(description));
+                        Cookie cookie = new Cookie("current_node", node);
+                        cookie.setMaxAge(Integer.MAX_VALUE);
+                        cookie.setPath("/");
+                        response.addCookie(cookie);
+                }
         }
 %>

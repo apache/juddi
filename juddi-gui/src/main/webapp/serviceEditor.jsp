@@ -29,699 +29,715 @@
 
 
 <%//@include file="csrf.jsp" 
-        boolean newitem = false;
-        String serviceid = request.getParameter("id");
-        String businessid = request.getParameter("bizid");
-        if (serviceid == null && businessid == null) {
-                response.sendRedirect("index.jsp");
-        }
-        if (serviceid == null || serviceid.length() == 0) {
-                //response.sendRedirect("browse.jsp");
-                if (businessid != null && businessid.length() > 0) {
-                        newitem = true;
-                } else {
-                        //no service id or business id
-                        response.sendRedirect("index.jsp");
-                }
+   boolean newitem = false;
+   String serviceid = request.getParameter("id");
+   String businessid = request.getParameter("bizid");
+   if (serviceid == null && businessid == null) {
+      response.sendRedirect("index.jsp");
+   }
+   if (serviceid == null || serviceid.length() == 0) {
+      //response.sendRedirect("browse.jsp");
+      if (businessid != null && businessid.length() > 0) {
+         newitem = true;
+      } else {
+         //no service id or business id
+         response.sendRedirect("index.jsp");
+      }
 
-        }
+   }
 
-        UddiHub x = UddiHub.getInstance(application, request.getSession());
+   UddiHub x = UddiHub.getInstance(application, request.getSession());
 
-        BusinessService bd = null;
-        if (!newitem) {
-                bd = x.GetServiceDetail(serviceid);
-        } else {
-                bd = new BusinessService();
-                bd.setBusinessKey(businessid);
-                BusinessEntity be = x.GetBusinessDetails(businessid);
-                if (be == null) {
-                        //incase an invalid business id was passed in
-                        response.sendRedirect("index.jsp");
-                } else {
-                        bd.setBusinessKey(be.getBusinessKey());
-                }
-        }
+   BusinessService bd = null;
+   if (!newitem) {
+      bd = x.GetServiceDetail(serviceid);
+   } else {
+      bd = new BusinessService();
+      bd.setBusinessKey(businessid);
+      BusinessEntity be = x.GetBusinessDetails(businessid);
+      if (be == null) {
+         //incase an invalid business id was passed in
+         response.sendRedirect("index.jsp");
+      } else {
+         bd.setBusinessKey(be.getBusinessKey());
+      }
+   }
 
-        if (bd == null) {
+   if (bd == null) {
 
-                //we can't make a new service without a business to reference
-                response.sendRedirect("error.jsp");
-        }
+      //we can't make a new service without a business to reference
+      response.sendRedirect("error.jsp");
+   }
 %>
 <%@include file="header-top.jsp" %>
 <div class="container">
 
-        <!-- Main hero unit for a primary marketing message or call to action -->
-        <div class="well" >
-                <h1><%=ResourceLoader.GetResource(session, "pages.serviceeditor.title")%></h1>
-        </div>
+   <!-- Main hero unit for a primary marketing message or call to action -->
+   <div class="well" >
+      <h1><%=ResourceLoader.GetResource(session, "pages.serviceeditor.title")%></h1>
+   </div>
 
-        <!-- Example row of columns -->
-        <div class="row">
-                <div class="span12" >
+   <!-- Example row of columns -->
+   <div class="row">
+      <div class="span12" >
 
-                        <div id="businesseditor">
-                                <%
+         <div id="businesseditor">
+            <%
 
-                                        int totalBTDescriptions = 0;
-                                %>
+               int totalBTDescriptions = 0;
+            %>
 
-                                <i class="icon-lock icon-large"></i>
+            <i class="icon-lock icon-large"></i>
 
-                                <b><%=ResourceLoader.GetResource(session, "pages.businesskey")%></b> -
-                                <%=ResourceLoader.GetResource(session, "pages.businesskey.description")%>
-                                <a href="javascript:ShowKeyHelp();"><i class="icon-question-sign icon-large"></i> <%=ResourceLoader.GetResource(session, "navbar.help")%></a>
-                                <br>
-                                <div style="border-width: 2px; border-style: solid;" class="noedit" id="<%=PostBackConstants.BUSINESSKEY%>">
-                                        <%
-                                                if (bd == null || bd.getBusinessKey() == null) {
-                                                        out.write("");
-                                                } else {
-                                                        out.write("<a href=\"businessEditor2.jsp?id=" + StringEscapeUtils.escapeHtml(bd.getBusinessKey()) + "\">");
-                                                        out.write(StringEscapeUtils.escapeHtml(bd.getBusinessKey()));
-                                                        out.write("</a>");
+            <b><%=ResourceLoader.GetResource(session, "pages.businesskey")%></b> -
+            <%=ResourceLoader.GetResource(session, "pages.businesskey.description")%>
+            <a href="javascript:ShowKeyHelp();"><i class="icon-question-sign icon-large"></i> <%=ResourceLoader.GetResource(session, "navbar.help")%></a>
+            <br>
+            <div style="border-width: 2px; border-style: solid;" class="noedit" id="<%=PostBackConstants.BUSINESSKEY%>">
+               <%
+                  if (bd == null || bd.getBusinessKey() == null) {
+                     out.write("");
+                  } else {
+                     out.write("<a href=\"businessEditor2.jsp?id=" + StringEscapeUtils.escapeHtml(bd.getBusinessKey()) + "\">");
+                     out.write(StringEscapeUtils.escapeHtml(bd.getBusinessKey()));
+                     out.write("</a>");
 
-                                                        if (bd.getCategoryBag() == null) {
-                                                                bd.setCategoryBag(new CategoryBag());
-                                                        }
-                                                }
-                                        %>
-                                </div>
-                                <br>
-                                <%
-                                        if (!newitem) {
-                                                out.write("<i class=\"icon-lock icon-large\"></i>");
-                                        }
-                                %>
-                                <b><%=ResourceLoader.GetResource(session, "items.service.key")%> </b>-
-                                <%=ResourceLoader.GetResource(session, "items.service.key.description")%><br>
-                                <div style="border-width: 2px; border-style: solid;" <%
-                                        if (!newitem) {
-                                                out.write("class=\"noedit\"");
-                                        } else {
-                                                out.write("class=\"edit\"");
-                                        }
-                                     %>
-                                     id="<%=PostBackConstants.SERVICEKEY%>">
-                                        <%
-                                                if (!newitem) {
-                                                        out.write(StringEscapeUtils.escapeHtml(bd.getServiceKey()));
-                                                }
+                     if (bd.getCategoryBag() == null) {
+                        bd.setCategoryBag(new CategoryBag());
+                     }
+                  }
+               %>
+            </div>
+            <br>
+            <%
+               if (!newitem) {
+                  out.write("<i class=\"icon-lock icon-large\"></i>");
+               }
+            %>
+            <b><%=ResourceLoader.GetResource(session, "items.service.key")%> </b>-
+            <%=ResourceLoader.GetResource(session, "items.service.key.description")%><br>
+            <div style="border-width: 2px; border-style: solid;" <%
+               if (!newitem) {
+                  out.write("class=\"noedit\"");
+               } else {
+                  out.write("class=\"edit\"");
+               }
+                 %>
+                 id="<%=PostBackConstants.SERVICEKEY%>">
+               <%
+                  if (!newitem) {
+                     out.write(StringEscapeUtils.escapeHtml(bd.getServiceKey()));
+                  }
 
-                                                if (bd.getCategoryBag() == null) {
-                                                        bd.setCategoryBag(new CategoryBag());
-                                                }
+                  if (bd.getCategoryBag() == null) {
+                     bd.setCategoryBag(new CategoryBag());
+                  }
 
-                                                if (bd.getBindingTemplates() == null) {
-                                                        bd.setBindingTemplates(new BindingTemplates());
-                                                }
-                                                int currentcatkeyrefBT = 0;
-                                                int currentcatkeyrefgrpBT = 0;
-                                                int currentbindingtemplatesInstance = 0;
-                                                int currentOverviewDocs = 0;
-                                                for (int i = 0; i < bd.getBindingTemplates().getBindingTemplate().size(); i++) {
-                                                        if (bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag() != null) {
-                                                                currentcatkeyrefBT += bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().size();
-                                                                currentcatkeyrefgrpBT += bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().size();
-                                                        }
+                  if (bd.getBindingTemplates() == null) {
+                     bd.setBindingTemplates(new BindingTemplates());
+                  }
+                  int currentcatkeyrefBT = 0;
+                  int currentcatkeyrefgrpBT = 0;
+                  int currentbindingtemplatesInstance = 0;
+                  int currentOverviewDocs = 0;
+                  for (int i = 0; i < bd.getBindingTemplates().getBindingTemplate().size(); i++) {
+                     if (bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag() != null) {
+                        currentcatkeyrefBT += bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().size();
+                        currentcatkeyrefgrpBT += bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().size();
+                     }
 
-                                                        if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails() != null) {
-                                                                currentbindingtemplatesInstance = bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().size();
-                                                        }
-                                                        if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails() != null) {
-                                                                for (int k = 0; k < bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {
-                                                                        if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null) {
-                                                                                currentOverviewDocs += bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().size();
-                                                                        }
-                                                                }
-                                                        }
-                                                }
-
-
-                                        %>
-                                </div>
-                                <br>
-
-                                <script type="text/javascript">
-                                        var currentNameEntries =<%= bd.getName().size() - 1%>;
-                                        var currentbindingtemplatesInstance =<%=currentbindingtemplatesInstance%>;
-                                        var currentDescriptionEntries =<%= bd.getDescription().size() - 1%>;
-                                        var currentcatkeyrefBT =<%=currentcatkeyrefBT%>;
-                                        var currentcatkeyref =<%=bd.getCategoryBag().getKeyedReference().size()%>;
-                                        var currentcatkeyrefgrpBT =<%=currentcatkeyrefgrpBT%>;
-                                        var currentcatkeyrefgrp =<%=bd.getCategoryBag().getKeyedReferenceGroup().size()%>;
-                                        var currentbindingtemplates = <%=bd.getBindingTemplates().getBindingTemplate().size()%>;
-                                        var currentOverviewDocs = <%=currentOverviewDocs%>;
-                                </script> 
-
-                                <ul class="nav nav-tabs" id="myTab">
-                                        <li class="active"><a  href="#general"><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.general")%></a></li>
-
-                                        <li><a href="#categories" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.categories")%></a></li>
-
-                                        <li><a href="#bindingtemplates" ><%=ResourceLoader.GetResource(session, "items.bindingtemplate")%></a></li>
-
-                                        <li><a href="#signatures"  id="sigtagheader"><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.signatures")%></a></li>
-
-                                        <li><a href="#opinfo" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.opinfo")%></a></li>
-                                </ul>
-                                <script>
-                                        $(function() {
-                                                $('#myTab').tab;//('show');
-                                        })
-                                        $('#myTab a[href=#general]').click(function(e) {
-                                                e.preventDefault();
-                                                $(this).tab('show');
-                                        });
-                                        $('#myTab a[href=#categories]').click(function(e) {
-                                                e.preventDefault();
-                                                $(this).tab('show');
-                                        });
-                                        $('#myTab a[href=#bindingtemplates]').click(function(e) {
-                                                e.preventDefault();
-                                                $(this).tab('show');
-                                        });
-                                        $('#myTab a[href=#signatures]').click(function(e) {
-                                                e.preventDefault();
-                                                $(this).tab('show');
-                                        });
-                                        $('#myTab a[href=#opinfo]').click(function(e) {
-                                                e.preventDefault();
-                                                $(this).tab('show');
-                                        });
-
-                                </script>
-                                <div class="tab-content">
-                                        <div class="tab-pane active" id="general">
+                     if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails() != null) {
+                        currentbindingtemplatesInstance = bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().size();
+                     }
+                     if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails() != null) {
+                        for (int k = 0; k < bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {
+                           if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null) {
+                              currentOverviewDocs += bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().size();
+                           }
+                        }
+                     }
+                  }
 
 
+               %>
+            </div>
+            <br>
+
+            <script type="text/javascript">
+               var currentNameEntries =<%= bd.getName().size() - 1%>;
+               var currentbindingtemplatesInstance =<%=currentbindingtemplatesInstance%>;
+               var currentDescriptionEntries =<%= bd.getDescription().size() - 1%>;
+               var currentcatkeyrefBT =<%=currentcatkeyrefBT%>;
+               var currentcatkeyref =<%=bd.getCategoryBag().getKeyedReference().size()%>;
+               var currentcatkeyrefgrpBT =<%=currentcatkeyrefgrpBT%>;
+               var currentcatkeyrefgrp =<%=bd.getCategoryBag().getKeyedReferenceGroup().size()%>;
+               var currentbindingtemplates = <%=bd.getBindingTemplates().getBindingTemplate().size()%>;
+               var currentOverviewDocs = <%=currentOverviewDocs%>;
+            </script> 
+
+            <ul class="nav nav-tabs" id="myTab">
+               <li class="active"><a  href="#general"><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.general")%></a></li>
+
+               <li><a href="#categories" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.categories")%></a></li>
+
+               <li><a href="#bindingtemplates" ><%=ResourceLoader.GetResource(session, "items.bindingtemplate")%></a></li>
+
+               <li><a href="#signatures"  id="sigtagheader"><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.signatures")%></a></li>
+
+               <li><a href="#opinfo" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.opinfo")%></a></li>
+            </ul>
+            <script>
+               $(function() {
+                  $('#myTab').tab;//('show');
+               })
+               $('#myTab a[href=#general]').click(function(e) {
+                  e.preventDefault();
+                  $(this).tab('show');
+               });
+               $('#myTab a[href=#categories]').click(function(e) {
+                  e.preventDefault();
+                  $(this).tab('show');
+               });
+               $('#myTab a[href=#bindingtemplates]').click(function(e) {
+                  e.preventDefault();
+                  $(this).tab('show');
+               });
+               $('#myTab a[href=#signatures]').click(function(e) {
+                  e.preventDefault();
+                  $(this).tab('show');
+               });
+               $('#myTab a[href=#opinfo]').click(function(e) {
+                  e.preventDefault();
+                  $(this).tab('show');
+               });
+
+            </script>
+            <div class="tab-content">
+               <div class="tab-pane active" id="general">
 
 
-                                                <b><%=ResourceLoader.GetResource(session, "items.name")%> </b>- 
-                                                <%=ResourceLoader.GetResource(session, "items.name.description")%><br>
-                                                <a href="javascript:AddName();"><i class="icon-plus-sign icon-large"></i></a><%=ResourceLoader.GetResource(session, "items.name.add")%>
-                                                <div id="nameContainer" style="border-width: 2px; border-style: solid;" >
-                                                        <%
-                                                                for (int i = 0; i < bd.getName().size(); i++) {
-                                                                        out.write("<div id=\"" + PostBackConstants.NAME + i + "\" style=\"border-width:1px; border-style:solid\" >");
-                                                                        out.write("<div style=\"float:left; height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.NAME + i + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
-                                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + ":&nbsp;</div>"
-                                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getName().get(i).getValue()) + "</div>");
-                                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
-                                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + i + PostBackConstants.LANG + "\">");
-                                                                        if (bd.getName().get(i).getLang() != null) {
-                                                                                out.write(StringEscapeUtils.escapeHtml(bd.getName().get(i).getLang()));
-                                                                        }
-                                                                        out.write("</div>");
-
-                                                                        out.write("</div>");
-                                                                        //confirmed one to one div tags
-                                                                }
-                                                        %></div>
-                                                <Br>
-                                                <b><%=ResourceLoader.GetResource(session, "items.description")%> </b>- 
-                                                <%=ResourceLoader.GetResource(session, "items.services.description")%><br>
-                                                <a href="javascript:AddDescription('Description');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.description.add")%>
-
-                                                <div id="Description" style="border-width: 2px; border-style: solid;" >
-                                                        <%
-                                                                for (int i = 0; i < bd.getDescription().size(); i++) {
-                                                                        out.write("<div id=\"" + PostBackConstants.DESCRIPTION + i + "\" style=\"border-width:1px; border-style:solid\">");
-                                                                        out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('Description" + i + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
-                                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + ":&nbsp;</div>"
-                                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.DESCRIPTION + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getDescription().get(i).getValue()) + "</div>");
-                                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
-                                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.DESCRIPTION + i + PostBackConstants.LANG + "\">"
-                                                                                + (bd.getDescription().get(i).getLang() == null ? "" : StringEscapeUtils.escapeHtml(bd.getDescription().get(i).getLang()))
-                                                                                + "</div>");
-
-                                                                        out.write("</div>");
-                                                                        //confirmed 1:1
-                                                                }
-
-                                                        %>
-                                                </div>
-                                                <br>
-                                        </div>
-                                        <div class="tab-pane" id="categories">
-
-                                                <b><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.categories")%> </b>- 
-                                                <%=ResourceLoader.GetResource(session, "items.categories.description")%>
-                                                <br><br>
-                                                <b><%=ResourceLoader.GetResource(session, "items.keyrefcats")%>:</b><br>
-                                                <a href="javascript:AddCategoryKeyReference();"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefcat.add")%> <Br>
-                                                <div id="catContainer" style="border-width: 2px; border-style: solid;" >
-                                                        <%
-                                                                if (bd.getCategoryBag() == null) {
-                                                                        bd.setCategoryBag(new CategoryBag());
-                                                                }
-                                                                //                        out.write("Keyed Reference Categories:");
-                                                                for (int i = 0; i < bd.getCategoryBag().getKeyedReference().size(); i++) {
-
-                                                                        out.write("<div id=\"" + PostBackConstants.CATBAG_KEY_REF + i + "\" style=\"border-width:2px; border-style:solid\">");
-                                                                        out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.CATBAG_KEY_REF + i + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
-                                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.VALUE + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>): &nbsp;</div>"
-                                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getTModelKey()) + "</div>");
-                                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ": &nbsp;</div>"
-                                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyName()) + "</div>");
-                                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
-                                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.KEYVALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyValue()) + "</div>");
-                                                                        out.write("</div>");
-                                                                }
-                                                        %>
-                                                </div>
-                                                <br>
-                                                <b><%=ResourceLoader.GetResource(session, "items.keyrefgroup")%></b><br>
-                                                <a href="javascript:AddCategoryKeyReferenceGroup();"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefgroup.add")%><br>
-                                                <div id="catContainerGrp" style="border-width: 2px; border-style: solid;" >
 
 
-                                                        <%
-                                                                //div count good so far
-                                                                for (int i = 0; i < bd.getCategoryBag().getKeyedReferenceGroup().size(); i++) {
+                  <b><%=ResourceLoader.GetResource(session, "items.name")%> </b>- 
+                  <%=ResourceLoader.GetResource(session, "items.name.description")%><br>
+                  <a href="javascript:AddName();"><i class="icon-plus-sign icon-large"></i></a><%=ResourceLoader.GetResource(session, "items.name.add")%>
+                  <div id="nameContainer" style="border-width: 2px; border-style: solid;" >
+                     <%
+                        for (int i = 0; i < bd.getName().size(); i++) {
+                           out.write("<div id=\"" + PostBackConstants.NAME + i + "\" style=\"border-width:1px; border-style:solid\" >");
+                           out.write("<div style=\"float:left; height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.NAME + i + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
+                           out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + ":&nbsp;</div>"
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getName().get(i).getValue()) + "</div>");
+                           out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + i + PostBackConstants.LANG + "\">");
+                           if (bd.getName().get(i).getLang() != null) {
+                              out.write(StringEscapeUtils.escapeHtml(bd.getName().get(i).getLang()));
+                           }
+                           out.write("</div>");
 
-                                                                        out.write("<div id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + "\" style=\"border-width:2px; border-style:solid\">"
-                                                                                + "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('catbaggrpkeyref" + i + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>"
-                                                                                + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.VALUE + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>): &nbsp;</div>"
-                                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.VALUE + "\">"
-                                                                                + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getTModelKey())
-                                                                                + "</div>"
-                                                                                + "<div id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + "\" style=\"border-width:1px; border-style:solid\">"
-                                                                                + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceGroupKeyRef('" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + "');\"><i class=\"icon-plus-sign icon-large\"></i></a></div>"
-                                                                                + ResourceLoader.GetResource(session, "items.keyrefcat.add")
-                                                                                + "</div>");
+                           out.write("</div>");
+                           //confirmed one to one div tags
+                        }
+                     %></div>
+                  <Br>
+                  <b><%=ResourceLoader.GetResource(session, "items.description")%> </b>- 
+                  <%=ResourceLoader.GetResource(session, "items.services.description")%><br>
+                  <a href="javascript:AddDescription('Description');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.description.add")%>
 
-                                                                        for (int k = 0; k < bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().size(); k++) {
+                  <div id="Description" style="border-width: 2px; border-style: solid;" >
+                     <%
+                        for (int i = 0; i < bd.getDescription().size(); i++) {
+                           out.write("<div id=\"" + PostBackConstants.DESCRIPTION + i + "\" style=\"border-width:1px; border-style:solid\">");
+                           out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('Description" + i + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
+                           out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + ":&nbsp;</div>"
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.DESCRIPTION + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getDescription().get(i).getValue()) + "</div>");
+                           out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.DESCRIPTION + i + PostBackConstants.LANG + "\">"
+                                   + (bd.getDescription().get(i).getLang() == null ? "" : StringEscapeUtils.escapeHtml(bd.getDescription().get(i).getLang()))
+                                   + "</div>");
 
-                                                                                out.write("<div id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + "keyref" + k + "\" style=\"border-width:1px; border-style:solid\">");
-                                                                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
-                                                                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + PostBackConstants.VALUE + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>): &nbsp;</div>"
-                                                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getTModelKey()) + "</div>");
-                                                                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ": &nbsp;</div>"
-                                                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getKeyName()) + "</div>");
-                                                                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
-                                                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + PostBackConstants.KEYVALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getKeyValue()) + "</div>");
-                                                                                out.write("</div>");
-                                                                        }
+                           out.write("</div>");
+                           //confirmed 1:1
+                        }
 
-                                                                        out.write("</div>"); //this ends the group container for key ref PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF
-                                                                }
+                     %>
+                  </div>
+                  <br>
+               </div>
+               <div class="tab-pane" id="categories">
+
+                  <b><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.categories")%> </b>- 
+                  <%=ResourceLoader.GetResource(session, "items.categories.description")%>
+                  <br><br>
+                  <b><%=ResourceLoader.GetResource(session, "items.keyrefcats")%>:</b><br>
+                  <a href="javascript:AddCategoryKeyReference();"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefcat.add")%> <Br>
+                  <div id="catContainer" style="border-width: 2px; border-style: solid;" >
+                     <%
+                        if (bd.getCategoryBag() == null) {
+                           bd.setCategoryBag(new CategoryBag());
+                        }
+                        //                        out.write("Keyed Reference Categories:");
+                        for (int i = 0; i < bd.getCategoryBag().getKeyedReference().size(); i++) {
+
+                           out.write("<div id=\"" + PostBackConstants.CATBAG_KEY_REF + i + "\" style=\"border-width:2px; border-style:solid\">");
+                           out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.CATBAG_KEY_REF + i + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
+                           out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.VALUE + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>) "
+                                   + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(bd.getCategoryBag().getKeyedReference().get(i).getTModelKey(), "UTF8") + "\"><i class=\"icon-zoom-in icon-large\"></i></a>"
+                                   + ": &nbsp;</div>"
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getTModelKey()) + "</div>");
+                           out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ": &nbsp;</div>"
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyName()) + "</div>");
+                           out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.KEYVALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyValue()) + "</div>");
+                           out.write("</div>");
+                        }
+                     %>
+                  </div>
+                  <br>
+                  <b><%=ResourceLoader.GetResource(session, "items.keyrefgroup")%></b><br>
+                  <a href="javascript:AddCategoryKeyReferenceGroup();"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefgroup.add")%><br>
+                  <div id="catContainerGrp" style="border-width: 2px; border-style: solid;" >
 
 
-                                                        %>
-                                                </div>
-                                                <br>
-                                        </div>
+                     <%
+                        //div count good so far
+                        for (int i = 0; i < bd.getCategoryBag().getKeyedReferenceGroup().size(); i++) {
 
-                                        <div class="tab-pane" id="bindingtemplates">
-                                                <b><%=ResourceLoader.GetResource(session, "items.bindingtemplate")%> </b>- <%=ResourceLoader.GetResource(session, "items.bindingtemplate.description")%> <br>
-                                                <a href="javascript:AddBindingTemplate();"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.bindingtemplate.add")%> <Br>
-                                                <div id="bindingTemplatesContainer" style="border-width: 2px; border-style: solid">
-                                                        <%
-                                                                for (int i = 0; i < bd.getBindingTemplates().getBindingTemplate().size(); i++) {
-                                                                        out.write("<div id=\"bindingTemplate" + i + "\"  style=\"border-width: 2px; border-style: dashed;; border-color: lightseagreen\" >");
-                                                                        out.write("<div style=\"float:left\">"
-                                                                                + "<a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a>"
-                                                                                + ResourceLoader.GetResource(session, "items.bindingtemplate.key") + ": &nbsp;</div>"
-                                                                                + "<div class=\"");
-                                                                        if (!newitem) {
-                                                                                out.write("no");
-                                                                        }
-                                                                        out.write("edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.VALUE + "\">");
-                                                                        if (!newitem) {
-                                                                                out.write(StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getBindingKey()));
-                                                                        }
-                                                                        out.write("</div>");    //end of binding template key section
+                           out.write("<div id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + "\" style=\"border-width:2px; border-style:solid\">"
+                                   + "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('catbaggrpkeyref" + i + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>"
+                                   + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.VALUE + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>) "
+                                   + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getTModelKey(), "UTF8") + "\"><i class=\"icon-zoom-in icon-large\"></i></a>"
+                                   + ": &nbsp;</div>"
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.VALUE + "\">"
+                                   + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getTModelKey())
+                                   + "</div>"
+                                   + "<div id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + "\" style=\"border-width:1px; border-style:solid\">"
+                                   + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceGroupKeyRef('" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + "');\"><i class=\"icon-plus-sign icon-large\"></i></a></div>"
+                                   + ResourceLoader.GetResource(session, "items.keyrefcat.add")
+                                   + "</div>");
+
+                           for (int k = 0; k < bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().size(); k++) {
+
+                              out.write("<div id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + "keyref" + k + "\" style=\"border-width:1px; border-style:solid\">");
+                              out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
+                              out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + PostBackConstants.VALUE + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>) "
+                                      + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getTModelKey(), "UTF8") + "\"><i class=\"icon-zoom-in icon-large\"></i></a>"
+                                      + ": &nbsp;</div>"
+                                      + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getTModelKey()) + "</div>");
+                              out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ": &nbsp;</div>"
+                                      + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getKeyName()) + "</div>");
+                              out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
+                                      + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + PostBackConstants.KEYVALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getKeyValue()) + "</div>");
+                              out.write("</div>");
+                           }
+
+                           out.write("</div>"); //this ends the group container for key ref PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF
+                        }
+
+
+                     %>
+                  </div>
+                  <br>
+               </div>
+
+               <div class="tab-pane" id="bindingtemplates">
+                  <b><%=ResourceLoader.GetResource(session, "items.bindingtemplate")%> </b>- <%=ResourceLoader.GetResource(session, "items.bindingtemplate.description")%> <br>
+                  <a href="javascript:AddBindingTemplate();"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.bindingtemplate.add")%> <Br>
+                  <div id="bindingTemplatesContainer" style="border-width: 2px; border-style: solid">
+                     <%
+                        for (int i = 0; i < bd.getBindingTemplates().getBindingTemplate().size(); i++) {
+                           out.write("<div id=\"bindingTemplate" + i + "\"  style=\"border-width: 2px; border-style: dashed;; border-color: lightseagreen\" >");
+                           out.write("<div style=\"float:left\">"
+                                   + "<a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a>"
+                                   + ResourceLoader.GetResource(session, "items.bindingtemplate.key") + ": &nbsp;</div>"
+                                   + "<div class=\"");
+                           if (!newitem) {
+                              out.write("no");
+                           }
+                           out.write("edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.VALUE + "\">");
+                           if (!newitem) {
+                              out.write(StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getBindingKey()));
+                           }
+                           out.write("</div>");    //end of binding template key section
 %>          
-                                                        <br>
-                                                        <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION%>');">
-                                                                <i class="icon-plus-sign icon-large"></i></a><%=ResourceLoader.GetResource(session, "items.bindingtemplate.description.add")%> <Br>
+                     <br>
+                     <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION%>');">
+                        <i class="icon-plus-sign icon-large"></i></a><%=ResourceLoader.GetResource(session, "items.bindingtemplate.description.add")%> <Br>
 
-                                                        <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION%>" style="border-width: 1px; border-style: dotted;" >
-                                                                <%
-                                                                        for (int k = 0; k < bd.getBindingTemplates().getBindingTemplate().get(i).getDescription().size(); k++) {
-                                                                                out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION + k + "\" style=\"border-width:1px; border-style:solid\">");
-                                                                                out.write("<div style=\"float:left;height:100%\">"
-                                                                                        + "<a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION + k + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
-                                                                                out.write("<div style=\"float:left\">Value:&nbsp;</div>"
-                                                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION + k + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getDescription().get(k).getValue()) + "</div>");
-                                                                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
-                                                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION + k + PostBackConstants.LANG + "\">"
-                                                                                        + (bd.getBindingTemplates().getBindingTemplate().get(i).getDescription().get(k).getLang() == null ? " " : StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getDescription().get(k).getLang()))
-                                                                                        + "</div>");
-                                                                                out.write("</div>");
-                                                                                totalBTDescriptions++;
+                     <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION%>" style="border-width: 1px; border-style: dotted;" >
+                        <%
+                           for (int k = 0; k < bd.getBindingTemplates().getBindingTemplate().get(i).getDescription().size(); k++) {
+                              out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION + k + "\" style=\"border-width:1px; border-style:solid\">");
+                              out.write("<div style=\"float:left;height:100%\">"
+                                      + "<a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION + k + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
+                              out.write("<div style=\"float:left\">Value:&nbsp;</div>"
+                                      + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION + k + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getDescription().get(k).getValue()) + "</div>");
+                              out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
+                                      + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION + k + PostBackConstants.LANG + "\">"
+                                      + (bd.getBindingTemplates().getBindingTemplate().get(i).getDescription().get(k).getLang() == null ? " " : StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getDescription().get(k).getLang()))
+                                      + "</div>");
+                              out.write("</div>");
+                              totalBTDescriptions++;
 
-                                                                        }
+                           }
 
-                                                                    //1:1
+                            //1:1
 %>
-                                                        </div>
-                                                        <b><%=ResourceLoader.GetResource(session, "items.accesspoint")%></b> - <%=ResourceLoader.GetResource(session, "items.accesspoint.description")%><br>
-                                                        <%
+                     </div>
+                     <b><%=ResourceLoader.GetResource(session, "items.accesspoint")%></b> - <%=ResourceLoader.GetResource(session, "items.accesspoint.description")%><br>
+                     <%
 
-                            //items.hostingredirector
-                                                                //TODO need an html select in here?
-                                                                if (bd.getBindingTemplates().getBindingTemplate().get(i).getHostingRedirector() != null) {
-                                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.hostingredirector") + ": &nbsp;</div>"
-                                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.HOSTINGREDIRECTOR + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getHostingRedirector().getBindingKey()) + "</div>");
-                                                                }
-                                                                if (bd.getBindingTemplates().getBindingTemplate().get(i).getAccessPoint() != null) {
+//items.hostingredirector
+                        //TODO need an html select in here?
+                        if (bd.getBindingTemplates().getBindingTemplate().get(i).getHostingRedirector() != null) {
+                           out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.hostingredirector") + ": &nbsp;</div>"
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.HOSTINGREDIRECTOR + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getHostingRedirector().getBindingKey()) + "</div>");
+                        }
+                        if (bd.getBindingTemplates().getBindingTemplate().get(i).getAccessPoint() != null) {
 
-                                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.accesspoint.type") + ": &nbsp;</div>"
-                                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.ACCESSPOINT_TYPE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getAccessPoint().getUseType()) + "</div>");
-                                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.accesspoint.value") + ": &nbsp;</div>"
-                                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.ACCESSPOINT_VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getAccessPoint().getValue()) + "</div>");
-                                                                        // this was an unbalanced divout.write("</div>");
-                                                                }
-                                                        %>
+                           out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.accesspoint.type") + ": &nbsp;</div>"
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.ACCESSPOINT_TYPE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getAccessPoint().getUseType()) + "</div>");
+                           out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.accesspoint.value") + ": &nbsp;</div>"
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.ACCESSPOINT_VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getAccessPoint().getValue()) + "</div>");
+                           // this was an unbalanced divout.write("</div>");
+                        }
+                     %>
 
-                                                        <br>
-                                                        <b><%=ResourceLoader.GetResource(session, "items.tmodelinstance.info")%></b> - <%=ResourceLoader.GetResource(session, "items.tmodelinstance.info.desc")%> <br>
-                                                        <a href="javascript:AddTmodelInstance('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE%>');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.tmodelinstance.add")%><br>
-                                                        <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE%>" style="border-width: 1px; border-style: solid; border-color: red" >        
-                                                                <%
-                                                                        if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails() != null) {
-                                                                                for (int k = 0; k < bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {
-                                                                %>
-                                                                <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k%>" style="border-width: 2px; border-style: dashed; border-color: red" >        
-                                                                        <%
-                                                                                out.write("<div style=\"float:left;height:100%\">"
-                                                                                        + "<a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
+                     <br>
+                     <b><%=ResourceLoader.GetResource(session, "items.tmodelinstance.info")%></b> - <%=ResourceLoader.GetResource(session, "items.tmodelinstance.info.desc")%> <br>
+                     <a href="javascript:AddTmodelInstance('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE%>');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.tmodelinstance.add")%><br>
+                     <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE%>" style="border-width: 1px; border-style: solid; border-color: red" >        
+                        <%
+                           if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails() != null) {
+                              for (int k = 0; k < bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {
+                        %>
+                        <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k%>" style="border-width: 2px; border-style: dashed; border-color: red" >        
+                           <%
+                              out.write("<div style=\"float:left;height:100%\">"
+                                      + "<a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
 
-                                                                                out.write("<div style=\"float:left\"><b>" + ResourceLoader.GetResource(session, "items.tmodel.key") + " </b> (<a href=\"javascript:tModelModal('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.KEYNAME + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>): &nbsp;</div>"
-                                                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey()) + "</div>");
-                                                                            //  out.write("<div style=\"float:left\"><span title=\"Instance Params\">Value</span>:&nbsp;</div>"
-                                                                                //          + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.VALUE + "\">" + ((bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null) ? StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms()) : "") + "</div>");
-                                                                        %>
-                                                                        <br>
-                                                                        <%
-                                                                                out.write("<div style=\"float:left\"><b>" + ResourceLoader.GetResource(session, "items.tmodelinstance.parameters") + ":</b> &nbsp;</div>"
-                                                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.VALUE + "\">");
-                                                                                if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null
-                                                                                        && bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms() != null) {
+                              out.write("<div style=\"float:left\"><b>" + ResourceLoader.GetResource(session, "items.tmodel.key") + " </b> (<a href=\"javascript:tModelModal('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.KEYNAME + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>) "
+                                      + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey(), "UTF8") + "\"><i class=\"icon-zoom-in icon-large\"></i></a>"
+                                      + ": &nbsp;</div>"
+                                      + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey()) + "</div>");
+                               //  out.write("<div style=\"float:left\"><span title=\"Instance Params\">Value</span>:&nbsp;</div>"
+                              //          + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.VALUE + "\">" + ((bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null) ? StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms()) : "") + "</div>");
+                           %>
+                           <br>
+                           <%
+                              out.write("<div style=\"float:left\"><b>" + ResourceLoader.GetResource(session, "items.tmodelinstance.parameters") + ":</b> &nbsp;</div>"
+                                      + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.VALUE + "\">");
+                              if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null
+                                      && bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms() != null) {
 
-                                                                                        out.write(StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms()));
-                                                                                }
-                                                                                out.write("</div>");
-                                                                        %>
-                                                                        <br>
+                                 out.write(StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms()));
+                              }
+                              out.write("</div>");
+                           %>
+                           <br>
 
-                                                                        <b>
-                                                                                <%=ResourceLoader.GetResource(session, "items.tmodelinstance.description")%>
-                                                                        </b> - <%=ResourceLoader.GetResource(session, "items.tmodelinstance.description2")%> <br>
-                                                                        <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION%>');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.tmodelinstance.description.add")%><br>
-                                                                        <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION%>" style="border-width: 1px; border-style: groove;" >
-                                                                                <%
-                                                                                        for (int j = 0; j < bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getDescription().size(); j++) {
-                                                                                                out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION + j + "\" style=\"border-width:1px; border-style:solid\">");
-                                                                                                out.write("<div style=\"float:left;height:100%\">"
-                                                                                                        + "<a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION + j + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
-                                                                                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ":&nbsp;</div>"
-                                                                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION + j + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getDescription().get(j).getValue()) + "</div>");
-                                                                                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
-                                                                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION + j + PostBackConstants.LANG + "\">"
-                                                                                                        + (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getDescription().get(j).getLang() == null ? " " : StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getDescription().get(j).getLang()))
-                                                                                                        + "</div>");
-                                                                                                out.write("</div>");
-                                                                                        }
+                           <b>
+                              <%=ResourceLoader.GetResource(session, "items.tmodelinstance.description")%>
+                           </b> - <%=ResourceLoader.GetResource(session, "items.tmodelinstance.description2")%> <br>
+                           <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION%>');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.tmodelinstance.description.add")%><br>
+                           <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION%>" style="border-width: 1px; border-style: groove;" >
+                              <%
+                                 for (int j = 0; j < bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getDescription().size(); j++) {
+                                    out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION + j + "\" style=\"border-width:1px; border-style:solid\">");
+                                    out.write("<div style=\"float:left;height:100%\">"
+                                            + "<a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION + j + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
+                                    out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ":&nbsp;</div>"
+                                            + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION + j + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getDescription().get(j).getValue()) + "</div>");
+                                    out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
+                                            + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION + j + PostBackConstants.LANG + "\">"
+                                            + (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getDescription().get(j).getLang() == null ? " " : StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getDescription().get(j).getLang()))
+                                            + "</div>");
+                                    out.write("</div>");
+                                 }
 
-                                                                                %>
-                                                                        </div>
+                              %>
+                           </div>
 
-                                                                        <div><br>
-                                                                                <b><%=ResourceLoader.GetResource(session, "items.overviewurl")%></b> - <%=ResourceLoader.GetResource(session, "items.overviewurl.description")%> <br>
-                                                                                <a href="javascript:AddOverviewDocumentSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW%>');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.overviewurl.add")%><br>
-                                                                                <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW%>" style="border-width: 1px; border-style: groove;" >
-                                                                                        <%
-                                                                                                //  out.write("<div id=\"" + PostBackConstants.OVERVIEW + "\" style=\"border-width:2px; border-style:solid\">");
-                                                                                                if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null)
-                                                                                                        for (int j = 0; j < bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().size(); j++) {
-                                                                                                                if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j)==null)continue;
-                                                                                                                out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + "\" style=\"border-width:1px; border-style:solid\">");
-                                                                                                                
-                                                                                                                if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getOverviewURL() != null) {
-                                                                                                                        out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
-                                                                                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
-                                                                                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.VALUE + "\">" + (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getOverviewURL().getValue()!=null ? StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getOverviewURL().getValue()) : "") + "</div>");
-                                                                                                                        out.write("<div style=\"float:left\">Use type:&nbsp;</div>"
-                                                                                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.TYPE + "\">" + (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getOverviewURL().getUseType()!=null ? StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getOverviewURL().getUseType()) : "") + "</div>");
-                                                                                                                }
+                           <div><br>
+                              <b><%=ResourceLoader.GetResource(session, "items.overviewurl")%></b> - <%=ResourceLoader.GetResource(session, "items.overviewurl.description")%> <br>
+                              <a href="javascript:AddOverviewDocumentSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW%>');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.overviewurl.add")%><br>
+                              <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW%>" style="border-width: 1px; border-style: groove;" >
+                                 <%
+                                    //  out.write("<div id=\"" + PostBackConstants.OVERVIEW + "\" style=\"border-width:2px; border-style:solid\">");
+                                    if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null)
+                                       for (int j = 0; j < bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().size(); j++) {
+                                          if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j) == null) {
+                                             continue;
+                                          }
+                                          out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + "\" style=\"border-width:1px; border-style:solid\">");
 
-                                                                                        %>
-                                                                                        <br><b><%=ResourceLoader.GetResource(session, "items.overviewdocument.description")%> </b><br>
-                                                                                        <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION%>');"><i class="icon-plus-sign icon-large"></i></a><%=ResourceLoader.GetResource(session, "items.overviewurl.description.add")%>
-                                                                                        <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION%>" style="border-width: 1px; border-style: groove;" >
-                                                                                                <%
-                                                                                                        //  out.write("<div id=\"" + PostBackConstants.OVERVIEW + "\" style=\"border-width:2px; border-style:solid\">");
-                                                                                                        for (int h = 0; h < bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getDescription().size(); h++) {
-                                                                                                                out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION + h + "\" style=\"border-width:1px; border-style:solid\">");
-                                                                                                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION + h + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
-                                                                                                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
-                                                                                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION + h + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getDescription().get(h).getValue()) + "</div>");
-                                                                                                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
-                                                                                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION + h + PostBackConstants.LANG + "\">"
-                                                                                                                        + (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getDescription().get(h).getLang() == null ? "" : StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getDescription().get(h).getLang())) + "</div>");
-                                                                                                                out.write("</div>");
-                                                                                                        }
-                                                                                                %>
-                                                                                        </div>
-                                                                                        <%
-                                                                                                        out.write("</div>");
-                                                                                                }
-                                                                                        %>
+                                          if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getOverviewURL() != null) {
+                                             out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
+                                             out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
+                                                     + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.VALUE + "\">" + (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getOverviewURL().getValue() != null ? StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getOverviewURL().getValue()) : "") + "</div>");
+                                             out.write("<div style=\"float:left\">Use type:&nbsp;</div>"
+                                                     + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.TYPE + "\">" + (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getOverviewURL().getUseType() != null ? StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getOverviewURL().getUseType()) : "") + "</div>");
+                                          }
 
-                                                                                </div>
+                                 %>
+                                 <br><b><%=ResourceLoader.GetResource(session, "items.overviewdocument.description")%> </b><br>
+                                 <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION%>');"><i class="icon-plus-sign icon-large"></i></a><%=ResourceLoader.GetResource(session, "items.overviewurl.description.add")%>
+                                 <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION%>" style="border-width: 1px; border-style: groove;" >
+                                    <%
+                                       //  out.write("<div id=\"" + PostBackConstants.OVERVIEW + "\" style=\"border-width:2px; border-style:solid\">");
+                                       for (int h = 0; h < bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getDescription().size(); h++) {
+                                          out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION + h + "\" style=\"border-width:1px; border-style:solid\">");
+                                          out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION + h + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
+                                          out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
+                                                  + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION + h + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getDescription().get(h).getValue()) + "</div>");
+                                          out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
+                                                  + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION + h + PostBackConstants.LANG + "\">"
+                                                  + (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getDescription().get(h).getLang() == null ? "" : StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getDescription().get(h).getLang())) + "</div>");
+                                          out.write("</div>");
+                                       }
+                                    %>
+                                 </div>
+                                 <%
+                                       out.write("</div>");
+                                    }
+                                 %>
 
-                                                                        </div>
+                              </div>
 
-                                                                </div>
+                           </div>
 
-                                                                <%    } //end of instance details
-                                                                %>
+                        </div>
 
-                                                                <%
-                                                                        }
-                                                                %>
-                                                        </div> <!-- tmodel instance info -->                                        
-                                                        <Br>
-                                                        <b><%=ResourceLoader.GetResource(session, "items.bindingtemplate.keyrefcat")%></b><Br>
+                        <%    } //end of instance details
+                        %>
 
-                                                        <a href="javascript:AddCategoryKeyReferenceSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF%>');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefcat.add")%> <Br>
-                                                        <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF%>" style="border-width: 1px; border-style: dotted;" >
-                                                                <%
-                                                                        if (bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag() == null) {
-                                                                                bd.getBindingTemplates().getBindingTemplate().get(i).setCategoryBag(new CategoryBag());
-                                                                        }
-                                                                        for (int k = 0; k < bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().size(); k++) {
-                                                                                out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + "\" style=\"border-width:2px; border-style:solid\">");
-                                                                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
-                                                                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + PostBackConstants.VALUE + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>): &nbsp;</div>"
-                                                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey()) + "</div>");
-                                                                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ": &nbsp;</div>"
-                                                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().get(k).getKeyName()) + "</div>");
-                                                                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
-                                                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + PostBackConstants.KEYVALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue()) + "</div>");
-                                                                                out.write("</div>");    //end key ref
-                                                                        }
+                        <%
+                           }
+                        %>
+                     </div> <!-- tmodel instance info -->                                        
+                     <Br>
+                     <b><%=ResourceLoader.GetResource(session, "items.bindingtemplate.keyrefcat")%></b><Br>
 
-                                                                %>
-                                                        </div>
-                                                        <br>    
-                                                        <b><%=ResourceLoader.GetResource(session, "items.bindingtemplate.keyrefgrp")%></b><br>
-                                                        <a href="javascript:AddCategoryKeyReferenceGroupSpecificBT('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP%>');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefgroup.add")%><br>
-                                                        <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP%>" style="border-width: 1px; border-style: dotted;" >
+                     <a href="javascript:AddCategoryKeyReferenceSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF%>');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefcat.add")%> <Br>
+                     <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF%>" style="border-width: 1px; border-style: dotted;" >
+                        <%
+                           if (bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag() == null) {
+                              bd.getBindingTemplates().getBindingTemplate().get(i).setCategoryBag(new CategoryBag());
+                           }
+                           for (int k = 0; k < bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().size(); k++) {
+                              out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + "\" style=\"border-width:2px; border-style:solid\">");
+                              out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
+                              out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + PostBackConstants.VALUE + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>) "
+                                      + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey(), "UTF8") + "\"><i class=\"icon-zoom-in icon-large\"></i></a>"
+                                      + ": &nbsp;</div>"
+                                      + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey()) + "</div>");
+                              out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ": &nbsp;</div>"
+                                      + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().get(k).getKeyName()) + "</div>");
+                              out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
+                                      + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + PostBackConstants.KEYVALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue()) + "</div>");
+                              out.write("</div>");    //end key ref
+                           }
 
-                                                                <%
-                                                                        for (int z = 0; z < bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().size(); z++) {
+                        %>
+                     </div>
+                     <br>    
+                     <b><%=ResourceLoader.GetResource(session, "items.bindingtemplate.keyrefgrp")%></b><br>
+                     <a href="javascript:AddCategoryKeyReferenceGroupSpecificBT('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP%>');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefgroup.add")%><br>
+                     <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP%>" style="border-width: 1px; border-style: dotted;" >
 
-                                                                                out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "\" style=\"border-width:2px; border-style:solid\">"
-                                                                                        + "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>"
-                                                                                        + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.VALUE + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>):  &nbsp;</div>"
-                                                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.VALUE + "\">"
-                                                                                        + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getTModelKey())
-                                                                                        + "</div>"
-                                                                                        + "<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.KEY_REF + "\" style=\"border-width:1px; border-style:solid\">"
-                                                                                        + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceSpecificBT('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "keyref');\"><i class=\"icon-plus-sign icon-large\"></i></a></div>"
-                                                                                        + ResourceLoader.GetResource(session, "items.keyrefcat.add")
-                                                                                        + "</div>");
-                                                                                for (int k = 0; k < bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().get(z).getKeyedReference().size(); k++) {
+                        <%
+                           for (int z = 0; z < bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().size(); z++) {
 
-                                                                                        out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.KEY_REF + k + "\" style=\"border-width:1px; border-style:solid\">");
-                                                                                        out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "keyref" + k + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
-                                                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.KEY_REF + k + PostBackConstants.VALUE + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>): &nbsp;</div>"
-                                                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.KEY_REF + k + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().get(z).getKeyedReference().get(k).getTModelKey()) + "</div>");
-                                                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ": &nbsp;</div>"
-                                                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.KEY_REF + k + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().get(z).getKeyedReference().get(k).getKeyName()) + "</div>");
-                                                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
-                                                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.KEY_REF + k + PostBackConstants.KEYVALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().get(z).getKeyedReference().get(k).getKeyValue()) + "</div>");
-                                                                                        out.write("</div>");
-                                                                                }
-                                                                                out.write("</div>");    //end key refer group
-                                                                        }
-                                                                %>
-                                                        </div><!-- catbag keyref group -->
-                                                </div><!-- end of a specific bt -->
-                                                <%
-                                } //end of binding templates loop
+                              out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "\" style=\"border-width:2px; border-style:solid\">"
+                                      + "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>"
+                                      + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.VALUE + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>) "
+                                      + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getTModelKey(), "UTF8") + "\"><i class=\"icon-zoom-in icon-large\"></i></a>"
+                                      + ":  &nbsp;</div>"
+                                      + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.VALUE + "\">"
+                                      + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getTModelKey())
+                                      + "</div>"
+                                      + "<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.KEY_REF + "\" style=\"border-width:1px; border-style:solid\">"
+                                      + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceSpecificBT('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "keyref');\"><i class=\"icon-plus-sign icon-large\"></i></a></div>"
+                                      + ResourceLoader.GetResource(session, "items.keyrefcat.add")
+                                      + "</div>");
+                              for (int k = 0; k < bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().get(z).getKeyedReference().size(); k++) {
+
+                                 out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.KEY_REF + k + "\" style=\"border-width:1px; border-style:solid\">");
+                                 out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "keyref" + k + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
+                                 out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.KEY_REF + k + PostBackConstants.VALUE + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>) "
+                                         + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().get(z).getKeyedReference().get(k).getTModelKey(), "UTF8") + "\"><i class=\"icon-zoom-in icon-large\"></i></a>"
+                                         + ": &nbsp;</div>"
+                                         + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.KEY_REF + k + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().get(z).getKeyedReference().get(k).getTModelKey()) + "</div>");
+                                 out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ": &nbsp;</div>"
+                                         + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.KEY_REF + k + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().get(z).getKeyedReference().get(k).getKeyName()) + "</div>");
+                                 out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
+                                         + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.KEY_REF + k + PostBackConstants.KEYVALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().get(z).getKeyedReference().get(k).getKeyValue()) + "</div>");
+                                 out.write("</div>");
+                              }
+                              out.write("</div>");    //end key refer group
+                           }
+                        %>
+                     </div><!-- catbag keyref group -->
+                  </div><!-- end of a specific bt -->
+                  <%
+                     } //end of binding templates loop
 %>
-                                        </div> <!-- binding template container-->
+               </div> <!-- binding template container-->
 
 
-                                        <br>
-                                </div><!-- binding template tab pane -->
-
-
-
+               <br>
+            </div><!-- binding template tab pane -->
 
 
 
-                                <div class="tab-pane" id="signatures"><b><%=ResourceLoader.GetResource(session, "items.dsigs")%></b>
-                                        <br>
-                                        <%
-                                                if (bd.getSignature().isEmpty()) {
-                                                        out.write(ResourceLoader.GetResource(session, "items.signed.not"));
-                                                } else {
-                                                        out.write(ResourceLoader.GetResource(session, "items.signed") + " " + bd.getSignature().size());
-                                        %>
-                                        <table class="table table-hover">
-                                                <tr><th>#</th>
-                                                        <th><%=ResourceLoader.GetResource(session, "pages.signatures.signedby")%></th>
-                                                        <th></th>
-                                                        <th><%=ResourceLoader.GetResource(session, "pages.signatures.status")%></th></tr>
-
-                                                <%
-                                                        for (int k = 0; k < bd.getSignature().size(); k++) {
-                                                                out.write("<tr><td>" + k + "</td><td>");
-                                                                out.write(x.SignatureToReadable(bd.getSignature().get(k)));
-                                                                out.write("</td><td>");
-                                                                out.write("<a href=\"ajax/getCert.jsp?type=service&id=" + URLEncoder.encode(bd.getServiceKey(), "UTF-8") + "&index=" + k + "\">" + ResourceLoader.GetResource(session, "items.signed.viewcert") + "</a>");
-                                                                out.write("</td><td><div id=\"digsig" + k + "\">" + ResourceLoader.GetResource(session, "items.loading") + "</div>");
-                                                %>
-                                                <script type="text/javascript">
-                                                        $.get("ajax/validateSignature.jsp?type=service&id=<%=StringEscapeUtils.escapeJavaScript(bd.getServiceKey())%>", function(data) {
-                                                                $("#digsig<%=k%>").html(data);
-                                                                if (data.indexOf("invalid") !== -1)
-                                                                {
-                                                                        $("#sigtagheader").html($("#sigtagheader").html() + "<i class=\"icon-thumbs-down icon-large\" style=\"color:red\"></i>");
-                                                                }
-                                                                else
-                                                                {
-                                                                        $("#sigtagheader").html($("#sigtagheader").html() + "<i class=\"icon-thumbs-up icon-large\" style=\"color:green\"></i>");
-                                                                }
-                                                        })
-                                                </script>
-                                                <%
-                                                                out.write("</td></tr>");
-                                                        }
-                                                %>
-                                        </table>
-                                        <%
-                                                }
-                                        %>
-                                        <br><Br>
-                                </div>
-
-                                <div class="tab-pane" id="opinfo">
-                                        <%
-                                                if (!newitem) {
-
-                                        %>
-                                        <script type="text/javascript">
-                                                $.get("ajax/opInfo.jsp?id=<%=StringEscapeUtils.escapeJavaScript(bd.getServiceKey())%>", function(data) {
-                                                        $("#opinfodiv").html(data);
-                                                })
-                                        </script>
-                                        <div id="opinfodiv"></div>
-                                        <%
-                                                }
-                                        %>
-                                        <Br>
-                                </div><!-- end opinfo-->
-                        </div><!-- tab content -->
-                </div><!-- end business editor -->
 
 
-                <script type="text/javascript">
-                        var currentDescriptionSpecific =<%=totalBTDescriptions%>;
-                </script>
-                <Br><br>
-                <%
-                        if (bd.getSignature().isEmpty()) {
-                %>
-                <a class="btn btn-primary " href="javascript:saveService();"><i class="icon-save icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.save")%></a>
 
+            <div class="tab-pane" id="signatures"><b><%=ResourceLoader.GetResource(session, "items.dsigs")%></b>
+               <br>
+               <%
+                  if (bd.getSignature().isEmpty()) {
+                     out.write(ResourceLoader.GetResource(session, "items.signed.not"));
+                  } else {
+                     out.write(ResourceLoader.GetResource(session, "items.signed") + " " + bd.getSignature().size());
+               %>
+               <table class="table table-hover">
+                  <tr><th>#</th>
+                     <th><%=ResourceLoader.GetResource(session, "pages.signatures.signedby")%></th>
+                     <th></th>
+                     <th><%=ResourceLoader.GetResource(session, "pages.signatures.status")%></th></tr>
 
-                <%  } else {
-                %>
-                <a href="#confirmDialog" role="button" class="btn btn-primary" data-toggle="modal"><i class="icon-save icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.save")%></a> |
-
-                <%        }
-                        if (!newitem) {
-                %>
-
-
-                <a class="btn btn-danger " href="javascript:deleteService();"><i class="icon-trash icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.delete")%></a> |
-                <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bd.getServiceKey(), "UTF-8")%>&type=service"><i class="icon-pencil icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
-                <a class="btn btn-info " href="editSubscription.jsp?svcid=<%=URLEncoder.encode(bd.getServiceKey(), "UTF-8")%>" title="<%=ResourceLoader.GetResource(session, "actions.subscribe.description")%>"><i class="icon-rss icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
-                <a class="btn btn-warning " href="transfer.jsp?biz=<%=URLEncoder.encode(bd.getBusinessKey(), "UTF-8")%>" title="<%=ResourceLoader.GetResource(session, "actions.transfer.description")%>"><i class="icon-exchange icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
-                <a class="btn "  href="javascript:ViewAsXML();"><i class="icon-screenshot icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.asxml")%></a>
-                <script type="text/javascript">
-                        function ViewAsXML()
+                  <%
+                     for (int k = 0; k < bd.getSignature().size(); k++) {
+                        out.write("<tr><td>" + k + "</td><td>");
+                        out.write(x.SignatureToReadable(bd.getSignature().get(k)));
+                        out.write("</td><td>");
+                        out.write("<a href=\"ajax/getCert.jsp?type=service&id=" + URLEncoder.encode(bd.getServiceKey(), "UTF-8") + "&index=" + k + "\">" + ResourceLoader.GetResource(session, "items.signed.viewcert") + "</a>");
+                        out.write("</td><td><div id=\"digsig" + k + "\">" + ResourceLoader.GetResource(session, "items.loading") + "</div>");
+                  %>
+                  <script type="text/javascript">
+                     $.get("ajax/validateSignature.jsp?type=service&id=<%=StringEscapeUtils.escapeJavaScript(bd.getServiceKey())%>", function(data) {
+                        $("#digsig<%=k%>").html(data);
+                        if (data.indexOf("invalid") !== -1)
                         {
-                                $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(serviceid, "UTF-8")%>&type=service", function(data) {
-                                        window.console && console.log('asXml success');
-                                        $("#viewAsXmlContent").html(safe_tags_replace(data));
-                                        $("#viewAsXml").modal('show');
-                                });
-
+                           $("#sigtagheader").html($("#sigtagheader").html() + "<i class=\"icon-thumbs-down icon-large\" style=\"color:red\"></i>");
                         }
-                </script>
-                <%
+                        else
+                        {
+                           $("#sigtagheader").html($("#sigtagheader").html() + "<i class=\"icon-thumbs-up icon-large\" style=\"color:green\"></i>");
                         }
-                %>
-        </div> <!-- end of the row -->
+                     })
+                  </script>
+                  <%
+                        out.write("</td></tr>");
+                     }
+                  %>
+               </table>
+               <%
+                  }
+               %>
+               <br><Br>
+            </div>
 
-        <script type="text/javascript" src="js/businessEditor.js"></script>
-        <script type="text/javascript" src="js/serviceEditor.js"></script>
+            <div class="tab-pane" id="opinfo">
+               <%
+                  if (!newitem) {
+
+               %>
+               <script type="text/javascript">
+                  $.get("ajax/opInfo.jsp?id=<%=StringEscapeUtils.escapeJavaScript(bd.getServiceKey())%>", function(data) {
+                     $("#opinfodiv").html(data);
+                  })
+               </script>
+               <div id="opinfodiv"></div>
+               <%
+                  }
+               %>
+               <Br>
+            </div><!-- end opinfo-->
+         </div><!-- tab content -->
+      </div><!-- end business editor -->
+
+
+      <script type="text/javascript">
+         var currentDescriptionSpecific =<%=totalBTDescriptions%>;
+      </script>
+      <Br><br>
+      <%
+         if (bd.getSignature().isEmpty()) {
+      %>
+      <a class="btn btn-primary " href="javascript:saveService();"><i class="icon-save icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.save")%></a>
+
+
+      <%  } else {
+      %>
+      <a href="#confirmDialog" role="button" class="btn btn-primary" data-toggle="modal"><i class="icon-save icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.save")%></a> |
+
+      <%        }
+         if (!newitem) {
+      %>
+
+
+      <a class="btn btn-danger " href="javascript:deleteService();"><i class="icon-trash icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.delete")%></a> |
+      <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bd.getServiceKey(), "UTF-8")%>&type=service"><i class="icon-pencil icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
+      <a class="btn btn-info " href="editSubscription.jsp?svcid=<%=URLEncoder.encode(bd.getServiceKey(), "UTF-8")%>" title="<%=ResourceLoader.GetResource(session, "actions.subscribe.description")%>"><i class="icon-rss icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
+      <a class="btn btn-warning " href="transfer.jsp?biz=<%=URLEncoder.encode(bd.getBusinessKey(), "UTF-8")%>" title="<%=ResourceLoader.GetResource(session, "actions.transfer.description")%>"><i class="icon-exchange icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
+      <a class="btn "  href="javascript:ViewAsXML();"><i class="icon-screenshot icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.asxml")%></a>
+      <script type="text/javascript">
+         function ViewAsXML()
+         {
+            $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(serviceid, "UTF-8")%>&type=service", function(data) {
+               window.console && console.log('asXml success');
+               $("#viewAsXmlContent").html(safe_tags_replace(data));
+               $("#viewAsXml").modal('show');
+            });
+
+         }
+      </script>
+      <%
+         }
+      %>
+   </div> <!-- end of the row -->
+
+   <script type="text/javascript" src="js/businessEditor.js"></script>
+   <script type="text/javascript" src="js/serviceEditor.js"></script>
 </div> <!-- span12-->
 
 <div class="modal hide fade container" id="confirmDialog">
-        <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3><%=ResourceLoader.GetResource(session, "modal.digitalsignaturewarning.title")%></h3>
-        </div>
-        <div class="modal-body">
-                <p><%=ResourceLoader.GetResource(session, "modal.digitalsignaturewarning.body")%></p>
-        </div>
-        <div class="modal-footer">
-                <a href="#" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
-                <a href="javascript:saveService();$('#confirmDialog').modal('hide');" class="btn btn-primary">
-                        <%=ResourceLoader.GetResource(session, "modal.savechanges")%></a>
-        </div>
+   <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3><%=ResourceLoader.GetResource(session, "modal.digitalsignaturewarning.title")%></h3>
+   </div>
+   <div class="modal-body">
+      <p><%=ResourceLoader.GetResource(session, "modal.digitalsignaturewarning.body")%></p>
+   </div>
+   <div class="modal-footer">
+      <a href="#" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+      <a href="javascript:saveService();$('#confirmDialog').modal('hide');" class="btn btn-primary">
+         <%=ResourceLoader.GetResource(session, "modal.savechanges")%></a>
+   </div>
 </div>
 <%
-        if (!newitem) {
+   if (!newitem) {
 
 %>
 <div class="modal hide fade container" id="viewAsXml">
-        <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3><%=ResourceLoader.GetResource(session, "actions.asxml")%> </h3>
-        </div>
+   <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3><%=ResourceLoader.GetResource(session, "actions.asxml")%> </h3>
+   </div>
 
-        <div class="modal-body" id="viewAsXmlContent">
+   <div class="modal-body" id="viewAsXmlContent">
 
 
-        </div>
-        <div class="modal-footer">
-                <a href="ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getServiceKey(), "UTF-8")%>&type=service" class="btn btn-primary" target="_blank">Popout</a> 
-                <a href="javascript:closeXmlPop('viewAsXml');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
-        </div>
+   </div>
+   <div class="modal-footer">
+      <a href="ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getServiceKey(), "UTF-8")%>&type=service" class="btn btn-primary" target="_blank">Popout</a> 
+      <a href="javascript:closeXmlPop('viewAsXml');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+   </div>
 </div>
 <%
-        }
+   }
 %>
 
 <%@include file="tmodelChooser.jsp" %>

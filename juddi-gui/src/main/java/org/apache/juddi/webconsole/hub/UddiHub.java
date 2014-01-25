@@ -270,7 +270,7 @@ public class UddiHub implements Serializable {
                 DiscardAuthToken da = new DiscardAuthToken();
                 da.setAuthInfo(token);
                 try {
-                        if (token != null) {
+                        if (token != null && security != null) {
                                 security.discardAuthToken(da);
                         }
                 } catch (Exception ex) {
@@ -284,8 +284,10 @@ public class UddiHub implements Serializable {
                 security = null;
                 //juddi = null;
                 subscription = null;
-                session.removeAttribute("username");
-                session.removeAttribute("password");
+                if (session != null) {
+                        session.removeAttribute("username");
+                        session.removeAttribute("password");
+                }
         }
 
         /**
@@ -397,7 +399,6 @@ public class UddiHub implements Serializable {
          * @return true if all coms are SSL based
          */
         public boolean isSecure() {
-
                 EnsureConfig();
                 return WS_securePorts;
         }
@@ -414,6 +415,12 @@ public class UddiHub implements Serializable {
                 return clientConfig;
         }
 
+        /**
+         * gets the configuration file's node name element of the currently
+         * connected node
+         *
+         * @return
+         */
         public String getNodeName() {
                 EnsureConfig();
                 return nodename;
@@ -434,13 +441,29 @@ public class UddiHub implements Serializable {
                 return false;
         }
 
+        /**
+         * attempts to switch the current context to the proposed node id. if
+         * the node does not exist in the config file, null is returned and no
+         * changes are made. if the node does exist in the config file, the
+         * current login token is discard, all web service client objects are
+         * destroyed, user credentials are removed from the session. The client
+         * objects are then recreated from the config using the new node name
+         * and transport
+         *
+         * @param newnode
+         * @return the new node name if successful, or null on failure
+         */
         public String switchNodes(String newnode) {
-                if (!this.nodename.equalsIgnoreCase(newnode) && NodeExists(newnode)) {
+                EnsureConfig();
+                if (this.nodename.equalsIgnoreCase(newnode)) {
+                        return newnode;
+                }
+                if (NodeExists(newnode)) {
                         this.die();
                         clientConfig = null;
                         this.nodename = newnode;
                 } else {
-                        return ResourceLoader.GetResource(session, "error.nodeexists");
+                        return null;
                 }
                 EnsureConfig();
                 return this.nodename;
@@ -1580,6 +1603,8 @@ public class UddiHub implements Serializable {
                                         fb.setCategoryBag(new CategoryBag());
                                         KeyedReference kr = new KeyedReference();
                                         kr.setTModelKey(parameters);
+                                        kr.setKeyName("%");
+                                        kr.setKeyValue("%");
                                         fb.getCategoryBag().getKeyedReference().add(kr);
                                         break;
                                 case Name:
@@ -1663,6 +1688,8 @@ public class UddiHub implements Serializable {
                                         fb.setCategoryBag(new CategoryBag());
                                         KeyedReference kr = new KeyedReference();
                                         kr.setTModelKey(parameters);
+                                        kr.setKeyName("%");
+                                        kr.setKeyValue("%");
                                         fb.getCategoryBag().getKeyedReference().add(kr);
                                         break;
                                 case Name:
@@ -1805,6 +1832,8 @@ public class UddiHub implements Serializable {
                                         fb.setCategoryBag(new CategoryBag());
                                         KeyedReference kr = new KeyedReference();
                                         kr.setTModelKey(parameters);
+                                        kr.setKeyName("%");
+                                        kr.setKeyValue("%");
                                         fb.getCategoryBag().getKeyedReference().add(kr);
                                         break;
                                 case Name:
@@ -1892,6 +1921,8 @@ public class UddiHub implements Serializable {
                                         fb.setCategoryBag(new CategoryBag());
                                         KeyedReference kr = new KeyedReference();
                                         kr.setTModelKey(parameters);
+                                        kr.setKeyName("%");
+                                        kr.setKeyValue("%");
                                         fb.getCategoryBag().getKeyedReference().add(kr);
                                         break;
                                 case Name:
@@ -1904,6 +1935,8 @@ public class UddiHub implements Serializable {
                                         fb.setCategoryBag(new CategoryBag());
                                         KeyedReference kr2 = new KeyedReference();
                                         kr2.setTModelKey(parameters);
+                                        kr2.setKeyName("%");
+                                        kr2.setKeyValue("%");
                                         fb.getCategoryBag().getKeyedReference().add(kr2);
                                         break;
                                 case uid:
@@ -2440,34 +2473,36 @@ public class UddiHub implements Serializable {
 
                 if (info != null && !info.isEmpty()) {
                         sb.append("<table class=\"table table-hover\">");
-                         sb.append("<tr><th>").
-                                        append(ResourceLoader.GetResource(session, "items.nodeid")).
-                                        append("</th><th>").
-                                        append(ResourceLoader.GetResource(session, "items.authorizedname")).
-                                        append("</th><th>").
-                                        append(ResourceLoader.GetResource(session, "items.key")).
-                                        append("</th><th>").
-                                        append(ResourceLoader.GetResource(session, "items.created")).
-                                        append("</th><th>").
-                                        append(ResourceLoader.GetResource(session, "items.modified")).
-                                        append("</th><th>").
-                                        append(ResourceLoader.GetResource(session, "items.modifiedwithchildren")).
-                                        append("</th></tr>");
-                         
+                        sb.append("<tr><th>").
+                                append(ResourceLoader.GetResource(session, "items.nodeid")).
+                                append("</th><th>").
+                                append(ResourceLoader.GetResource(session, "items.authorizedname")).
+                                append("</th><th>").
+                                append(ResourceLoader.GetResource(session, "items.key")).
+                                append("</th><th>").
+                                append(ResourceLoader.GetResource(session, "items.created")).
+                                append("</th><th>").
+                                append(ResourceLoader.GetResource(session, "items.modified")).
+                                append("</th><th>").
+                                append(ResourceLoader.GetResource(session, "items.modifiedwithchildren")).
+                                append("</th></tr>");
+
                         for (int i = 0; i < info.size(); i++) {
-                               if (info.get(i)==null) continue;
+                                if (info.get(i) == null) {
+                                        continue;
+                                }
                                 sb.append("<tr><td>");
-                                sb.append((info.get(i).getNodeID()!=null ? StringEscapeUtils.escapeHtml(info.get(i).getNodeID()) : ""))
+                                sb.append((info.get(i).getNodeID() != null ? StringEscapeUtils.escapeHtml(info.get(i).getNodeID()) : ""))
                                         .append("</td><td>")
-                                        .append((info.get(i).getAuthorizedName()!=null ? StringEscapeUtils.escapeHtml(info.get(i).getAuthorizedName())  :""))
+                                        .append((info.get(i).getAuthorizedName() != null ? StringEscapeUtils.escapeHtml(info.get(i).getAuthorizedName()) : ""))
                                         .append("</td><td>")
-                                        .append((info.get(i).getEntityKey()!=null ? StringEscapeUtils.escapeHtml(info.get(i).getEntityKey()):""))
+                                        .append((info.get(i).getEntityKey() != null ? StringEscapeUtils.escapeHtml(info.get(i).getEntityKey()) : ""))
                                         .append("</td><td>")
-                                        .append((info.get(i).getCreated()!=null ? StringEscapeUtils.escapeHtml(info.get(i).getCreated().toString()):""))
+                                        .append((info.get(i).getCreated() != null ? StringEscapeUtils.escapeHtml(info.get(i).getCreated().toString()) : ""))
                                         .append("</td><td>")
-                                        .append((info.get(i).getModified()!=null ? StringEscapeUtils.escapeHtml(info.get(i).getModified().toString()):""))
+                                        .append((info.get(i).getModified() != null ? StringEscapeUtils.escapeHtml(info.get(i).getModified().toString()) : ""))
                                         .append("</td><td>")
-                                        .append((info.get(i).getModifiedIncludingChildren()!=null ? StringEscapeUtils.escapeHtml(info.get(i).getModifiedIncludingChildren().toString()):""))
+                                        .append((info.get(i).getModifiedIncludingChildren() != null ? StringEscapeUtils.escapeHtml(info.get(i).getModifiedIncludingChildren().toString()) : ""))
                                         .append("</td></tr>");
                         }
                         sb.append("</table>");
