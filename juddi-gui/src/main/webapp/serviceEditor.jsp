@@ -66,7 +66,7 @@
    if (bd == null) {
 
       //we can't make a new service without a business to reference
-      response.sendRedirect("error.jsp");
+      response.sendRedirect("index.jsp");
    }
 %>
 <%@include file="header-top.jsp" %>
@@ -312,7 +312,7 @@
                                    + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getTModelKey())
                                    + "</div>"
                                    + "<div id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + "\" style=\"border-width:1px; border-style:solid\">"
-                                   + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceGroupKeyRef('" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + "');\"><i class=\"icon-plus-sign icon-large\"></i></a></div>"
+                                   + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceGroupKeyRef('" + PostBackConstants.CATBAG_KEY_REF_GRP + i + "');\"><i class=\"icon-plus-sign icon-large\"></i></a></div>"
                                    + ResourceLoader.GetResource(session, "items.keyrefcat.add")
                                    + "</div>");
 
@@ -514,11 +514,11 @@
                         <%
                            }
                         %>
-                     </div> <!-- tmodel instance info -->                                        
+                     </div> <!-- end of tmodel instance info -->                                        
                      <Br>
                      <b><%=ResourceLoader.GetResource(session, "items.bindingtemplate.keyrefcat")%></b><Br>
 
-                     <a href="javascript:AddCategoryKeyReferenceSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF%>');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefcat.add")%> <Br>
+                     <a href="javascript:AddCategoryKeyReferenceGroupKeyRef('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF%>');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefcat.add")%> <Br>
                      <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF%>" style="border-width: 1px; border-style: dotted;" >
                         <%
                            if (bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag() == null) {
@@ -551,10 +551,10 @@
                               out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "\" style=\"border-width:2px; border-style:solid\">"
                                       + "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>"
                                       + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.VALUE + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>) "
-                                      + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getTModelKey(), "UTF8") + "\"><i class=\"icon-zoom-in icon-large\"></i></a>"
+                                      + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().get(z).getTModelKey(), "UTF8") + "\"><i class=\"icon-zoom-in icon-large\"></i></a>"
                                       + ":  &nbsp;</div>"
                                       + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.VALUE + "\">"
-                                      + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getTModelKey())
+                                      + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().get(z).getTModelKey())
                                       + "</div>"
                                       + "<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.KEY_REF + "\" style=\"border-width:1px; border-style:solid\">"
                                       + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceSpecificBT('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "keyref');\"><i class=\"icon-plus-sign icon-large\"></i></a></div>"

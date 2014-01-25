@@ -49,7 +49,7 @@ function AddCategoryKeyReferenceGroupSpecificBT(div)
         
         + "<div id=\""+div + i + "keyref\" style=\"border-width:1px; border-style:solid\">"
         + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceGroupKeyRef('"+div + i
-        + "keyref');\"><i class=\"icon-plus-sign icon-large\"></i></a></div>"
+        + "');\"><i class=\"icon-plus-sign icon-large\"></i></a></div>"
         +i18n_addrefcat
         + "</div>"
     

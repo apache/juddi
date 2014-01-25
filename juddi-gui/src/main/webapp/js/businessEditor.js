@@ -277,7 +277,7 @@ function AddCategoryKeyReferenceGroup()
         + "<div class=\"edit\" id=\"catbaggrpkeyref" + i + "Value\"></div>"
         
         + "<div id=\"catbaggrpkeyref" + i + "keyref\" style=\"border-width:1px; border-style:solid\">"
-        + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceGroupKeyRef('catbaggrpkeyref" + i + "keyref');\"><i class=\"icon-plus-sign icon-large\"></i></a></div>"
+        + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceGroupKeyRef('catbaggrpkeyref" + i + "');\"><i class=\"icon-plus-sign icon-large\"></i></a></div>"
     
         +i18n_addrefcat
         + "</div>"

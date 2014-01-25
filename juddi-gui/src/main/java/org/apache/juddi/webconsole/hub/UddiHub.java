@@ -798,7 +798,9 @@ public class UddiHub implements Serializable {
                 }
                 if (ex instanceof DispositionReportFaultMessage) {
                         DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().toLowerCase().contains("expired")) {
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) 
+                                || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED) 
+                                || ex.getMessage().toLowerCase().contains("expire")) {
                                 return true;
                         }
                 }

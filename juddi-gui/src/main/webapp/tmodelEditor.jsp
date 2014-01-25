@@ -113,9 +113,12 @@
                }
 
                int currentcatkeyref = 0;
+               int currentcatkeyrefgrp=0;
                if (bd.getCategoryBag() != null) {
                   currentcatkeyref = bd.getCategoryBag().getKeyedReference().size();
+                  currentcatkeyrefgrp =bd.getCategoryBag().getKeyedReferenceGroup().size();
                }
+               
                int currentident = 0;
                if (bd.getIdentifierBag() != null) {
                   currentident = bd.getIdentifierBag().getKeyedReference().size();
@@ -124,7 +127,7 @@
             var currentcatkeyref =<%=currentcatkeyref%>;
             var currentDescriptionSpecific =<%=currentDescriptionSpecific%>;
             var currentident =<%=currentident%>;
-            var currentcatkeyrefgrp =<%=bd.getCategoryBag().getKeyedReferenceGroup().size()%>;
+            var currentcatkeyrefgrp =<%=currentcatkeyrefgrp%>;
          </script>
          <div class="tab-content">
             <div class="tab-pane active" id="general">

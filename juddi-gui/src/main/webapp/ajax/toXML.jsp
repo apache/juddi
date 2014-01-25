@@ -4,8 +4,8 @@
     Author     : Alex O'Ree
 --%><%@page import="javax.xml.bind.JAXB"%><%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%><%@page import="org.apache.juddi.jaxb.JAXBMarshaller"%><%@page import="org.apache.juddi.jaxb.EntityCreator"%><%@page import="org.apache.juddi.webconsole.hub.UddiHub"%><%@page import="org.apache.juddi.jaxb.PrintUDDI"%><%@page contentType="text/html" pageEncoding="UTF-8"%><%
 //<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-    //org.apache.juddi.jaxb.PrintUDDI p = new PrintUDDI();
-   response.setContentType("text/xml");
+//NO NOT UNCOMMENT  
+//   response.setContentType("text/xml");
     UddiHub x = UddiHub.getInstance(application, session);
 
     String type = request.getParameter("type");
