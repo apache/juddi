@@ -340,7 +340,7 @@ public class Install {
 				throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
 		}
 
-		ValidatePublish validatePublish = new ValidatePublish(rootPublisher);
+		ValidatePublish validatePublish = new ValidatePublish(rootPublisher, config.getString(Property.JUDDI_NODE_ID));
 		
 		validatePublish.validateNames(businessEntity.getName());
 		validatePublish.validateDiscoveryUrls(businessEntity.getDiscoveryURLs());
@@ -395,7 +395,7 @@ public class Install {
 				throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
 		}
 		
-		ValidatePublish validatePublish = new ValidatePublish(rootPublisher);
+		ValidatePublish validatePublish = new ValidatePublish(rootPublisher, config.getString(Property.JUDDI_NODE_ID));
 		
 		validatePublish.validateNames(businessService.getName());
 		validatePublish.validateCategoryBag(businessService.getCategoryBag(), config,true);
@@ -446,7 +446,7 @@ public class Install {
 				throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
 		}
 		
-		ValidatePublish validatePublish = new ValidatePublish(rootPublisher);
+		ValidatePublish validatePublish = new ValidatePublish(rootPublisher, config.getString(Property.JUDDI_NODE_ID));
 		
 		validatePublish.validateCategoryBag(bindingTemplate.getCategoryBag(), config,true);
 		validatePublish.validateTModelInstanceDetails(bindingTemplate.getTModelInstanceDetails(),config,true);

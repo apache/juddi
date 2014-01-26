@@ -320,8 +320,9 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
         /**
          * Completely deletes a tModel from the persistence layer.
          * Administrative privilege required. All entities that reference this tModel
-         * will no longer be able to use the tModel if jUDDI Option Enforce referential Integrity is enabled.
-         * @see Property.JUDDI_ENFORCE_REFERENTIAL_INTEGRITY
+         * will no longer be able to use the tModel if jUDDI Option Enforce referential Integrity is enabled.<br>
+         * Required permission, you must be am administrator
+         * {@link Property#JUDDI_ENFORCE_REFERENTIAL_INTEGRITY}
          * @param body
          * @throws DispositionReportFaultMessage 
          */

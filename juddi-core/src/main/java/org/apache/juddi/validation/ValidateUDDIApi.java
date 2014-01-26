@@ -18,7 +18,12 @@
 package org.apache.juddi.validation;
 
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
 
 import org.apache.juddi.model.Subscription;
 import org.apache.juddi.model.UddiEntity;
@@ -33,9 +38,26 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 public abstract class ValidateUDDIApi {
 
 	protected UddiEntityPublisher publisher;
+   protected String nodeID=null;
 		
-	public ValidateUDDIApi(UddiEntityPublisher publisher) {
+   /**
+    * This is used only during the install process to prevent infinite loops
+    * @param publisher
+    * @param nodeid 
+    */
+	public ValidateUDDIApi(UddiEntityPublisher publisher, String nodeid) {
 		this.publisher = publisher;
+      this.nodeID = nodeid;
+	}
+   
+   public ValidateUDDIApi(UddiEntityPublisher publisher) {
+		this.publisher = publisher;
+      try {
+         this.nodeID = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);
+      } catch (ConfigurationException ex) {
+         Logger.getLogger(ValidateUDDIApi.class.getName()).log(Level.SEVERE, "unable to get the current node id, this may cause access control problems"
+                 + " and must be fixed. set " + Property.JUDDI_NODE_ID + " in juddiv3.xml", ex);
+      }
 	}
 
 	public UddiEntityPublisher getPublisher() {
