@@ -24,7 +24,7 @@
 	</parent>
 	<artifactId>uddi-ws</artifactId>
 	<packaging>bundle</packaging>
-	<name>UDDI_v3 WS Stubs and Schema Bindings Generated from WSDL</name>
+	<name>UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</name>
 	<profiles>
         <profile>
             <id>regenerate-source</id>

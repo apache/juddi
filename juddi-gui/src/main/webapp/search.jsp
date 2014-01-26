@@ -61,10 +61,10 @@
                             <div style=" float:left; padding: 2px">
 
                             <div ><input type="checkbox" name="<%=UDDIConstants.AND_ALL_KEYS%>" value="<%=UDDIConstants.AND_ALL_KEYS%>"> <%=UDDIConstants.AND_ALL_KEYS%></div>
-                            <div ><input type="checkbox" name="<%=UDDIConstants.APPROXIMATE_MATCH%>" value="<%=UDDIConstants.APPROXIMATE_MATCH%>"> <%=UDDIConstants.APPROXIMATE_MATCH%></div>
+                            <div ><input type="checkbox" name="<%=UDDIConstants.APPROXIMATE_MATCH%>" value="<%=UDDIConstants.APPROXIMATE_MATCH%>" checked="checked"> <%=UDDIConstants.APPROXIMATE_MATCH%></div>
                             <div ><input type="checkbox" name="<%=UDDIConstants.BINARY_SORT%>" value="<%=UDDIConstants.BINARY_SORT%>"> <%=UDDIConstants.BINARY_SORT%></div>
                             <div ><input type="checkbox" name="<%=UDDIConstants.BINDING_SUBSET%>" value="<%=UDDIConstants.BINDING_SUBSET%>"> <%=UDDIConstants.BINDING_SUBSET%></div>
-                            <div ><input type="checkbox" name="<%=UDDIConstants.CASE_INSENSITIVE_MATCH%>" value="<%=UDDIConstants.CASE_INSENSITIVE_MATCH%>"> <%=UDDIConstants.CASE_INSENSITIVE_MATCH%></div>
+                            <div ><input type="checkbox" name="<%=UDDIConstants.CASE_INSENSITIVE_MATCH%>" value="<%=UDDIConstants.CASE_INSENSITIVE_MATCH%>"  checked="checked"> <%=UDDIConstants.CASE_INSENSITIVE_MATCH%></div>
                             </div>
                             <div style=" float:left; padding: 2px">
                             <div ><input type="checkbox" name="<%=UDDIConstants.CASE_INSENSITIVE_SORT%>" value="<%=UDDIConstants.CASE_INSENSITIVE_SORT%>"> <%=UDDIConstants.CASE_INSENSITIVE_SORT%></div>
