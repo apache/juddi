@@ -54,206 +54,208 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIPublicationPortType;
 
 /**
+ * This class provides a wrapper to enable UDDIv3 clients to talk to UDDIv2
+ * servers via JAXWS Transport. It handles all translations for Publish 
+ * service methods.
  *
- * @author Alex O'Ree
+ * @author <a href="alexoree@apache.org">Alex O'Ree</a>
+ * @since 3.2
  */
 public class Publish3to2 implements UDDIPublicationPortType, BindingProvider {
 
-        Publish publishService=null;
-        public Publish3to2(){
-                
-                UDDIServiceV2 service = new UDDIServiceV2();
-                publishService = service.getPublish();
+   Publish publishService = null;
 
-        }
-        @Override
-        public void addPublisherAssertions(AddPublisherAssertions body) throws DispositionReportFaultMessage, RemoteException {
-                try {
-                        publishService.addPublisherAssertions(MapUDDIv3Tov2.MapAddPublisherAssertions(body));
-                } catch (DispositionReport ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                } catch (SOAPFaultException ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
-        }
+   public Publish3to2() {
 
-        @Override
-        public void deleteBinding(DeleteBinding body) throws DispositionReportFaultMessage, RemoteException {
-                try {
-                        publishService.deleteBinding(MapUDDIv3Tov2.MapDeleteBinding(body));
-                } catch (DispositionReport ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                } catch (SOAPFaultException ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
-        }
+      UDDIServiceV2 service = new UDDIServiceV2();
+      publishService = service.getPublish();
 
-        @Override
-        public void deleteBusiness(DeleteBusiness body) throws DispositionReportFaultMessage, RemoteException {
-                try {
-                        publishService.deleteBusiness(MapUDDIv3Tov2.MapDeleteBusiness(body));
-                } catch (DispositionReport ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                } catch (SOAPFaultException ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
-        }
+   }
 
-        @Override
-        public void deletePublisherAssertions(DeletePublisherAssertions body) throws DispositionReportFaultMessage, RemoteException {
-                try {
-                        publishService.deletePublisherAssertions(MapUDDIv3Tov2.MapDeletePublisherAssertions(body));
-                } catch (DispositionReport ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                } catch (SOAPFaultException ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
-        }
+   @Override
+   public void addPublisherAssertions(AddPublisherAssertions body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+         publishService.addPublisherAssertions(MapUDDIv3Tov2.MapAddPublisherAssertions(body));
+      } catch (DispositionReport ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      } catch (SOAPFaultException ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      }
+   }
 
-        @Override
-        public void deleteService(DeleteService body) throws DispositionReportFaultMessage, RemoteException {
-                try {
-                        publishService.deleteService(MapUDDIv3Tov2.MapDeleteService(body));
-                } catch (DispositionReport ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                } catch (SOAPFaultException ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
-        }
+   @Override
+   public void deleteBinding(DeleteBinding body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+         publishService.deleteBinding(MapUDDIv3Tov2.MapDeleteBinding(body));
+      } catch (DispositionReport ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      } catch (SOAPFaultException ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      }
+   }
 
-        @Override
-        public void deleteTModel(DeleteTModel body) throws DispositionReportFaultMessage, RemoteException {
-                try {
-                        publishService.deleteTModel(MapUDDIv3Tov2.MapDeleteTModel(body));
-                } catch (DispositionReport ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                } catch (SOAPFaultException ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
-        }
+   @Override
+   public void deleteBusiness(DeleteBusiness body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+         publishService.deleteBusiness(MapUDDIv3Tov2.MapDeleteBusiness(body));
+      } catch (DispositionReport ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      } catch (SOAPFaultException ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      }
+   }
 
-        @Override
-        public List<AssertionStatusItem> getAssertionStatusReport(String authInfo, CompletionStatus completionStatus) throws DispositionReportFaultMessage, RemoteException {
-                try {
-                        AssertionStatusReport assertionStatusReport = publishService.getAssertionStatusReport(MapUDDIv3Tov2.MapGetAssertionStatusReport(authInfo, completionStatus));
-                        return MapUDDIv2Tov3.MapAssertionStatusItems(assertionStatusReport);
-                } catch (DispositionReport ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                } catch (SOAPFaultException ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
-        }
+   @Override
+   public void deletePublisherAssertions(DeletePublisherAssertions body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+         publishService.deletePublisherAssertions(MapUDDIv3Tov2.MapDeletePublisherAssertions(body));
+      } catch (DispositionReport ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      } catch (SOAPFaultException ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      }
+   }
 
-        @Override
-        public List<PublisherAssertion> getPublisherAssertions(String authInfo) throws DispositionReportFaultMessage, RemoteException {
-                try {
-                        return MapUDDIv2Tov3.MapListPublisherAssertion(publishService.getPublisherAssertions(MapUDDIv3Tov2.MapGetPublisherAssertions(authInfo)));
-                } catch (DispositionReport ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                } catch (SOAPFaultException ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
-        }
+   @Override
+   public void deleteService(DeleteService body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+         publishService.deleteService(MapUDDIv3Tov2.MapDeleteService(body));
+      } catch (DispositionReport ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      } catch (SOAPFaultException ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      }
+   }
 
-        @Override
-        public RegisteredInfo getRegisteredInfo(GetRegisteredInfo body) throws DispositionReportFaultMessage, RemoteException {
-                try {
-                        return MapUDDIv2Tov3.MapListRegisteredInfo(publishService.getRegisteredInfo(MapUDDIv3Tov2.MapGetRegisteredInfo(body)));
-                } catch (DispositionReport ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                } catch (SOAPFaultException ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
+   @Override
+   public void deleteTModel(DeleteTModel body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+         publishService.deleteTModel(MapUDDIv3Tov2.MapDeleteTModel(body));
+      } catch (DispositionReport ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      } catch (SOAPFaultException ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      }
+   }
 
-        }
+   @Override
+   public List<AssertionStatusItem> getAssertionStatusReport(String authInfo, CompletionStatus completionStatus) throws DispositionReportFaultMessage, RemoteException {
+      try {
+         AssertionStatusReport assertionStatusReport = publishService.getAssertionStatusReport(MapUDDIv3Tov2.MapGetAssertionStatusReport(authInfo, completionStatus));
+         return MapUDDIv2Tov3.MapAssertionStatusItems(assertionStatusReport);
+      } catch (DispositionReport ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      } catch (SOAPFaultException ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      }
+   }
 
-        @Override
-        public BindingDetail saveBinding(SaveBinding body) throws DispositionReportFaultMessage, RemoteException {
-                try {
-                        return MapUDDIv2Tov3.MapBindingDetail(publishService.saveBinding(MapUDDIv3Tov2.MapSaveBinding(body)));
-                } catch (DispositionReport ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
-                catch (SOAPFaultException ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
-        }
+   @Override
+   public List<PublisherAssertion> getPublisherAssertions(String authInfo) throws DispositionReportFaultMessage, RemoteException {
+      try {
+         return MapUDDIv2Tov3.MapListPublisherAssertion(publishService.getPublisherAssertions(MapUDDIv3Tov2.MapGetPublisherAssertions(authInfo)));
+      } catch (DispositionReport ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      } catch (SOAPFaultException ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      }
+   }
 
-        @Override
-        public BusinessDetail saveBusiness(SaveBusiness body) throws DispositionReportFaultMessage, RemoteException {
-                try {
-                        return MapUDDIv2Tov3.MapBusinessDetail(publishService.saveBusiness(MapUDDIv3Tov2.MapSaveBusiness(body)));
-                } catch (DispositionReport ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
-                 catch (SOAPFaultException ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
-        }
+   @Override
+   public RegisteredInfo getRegisteredInfo(GetRegisteredInfo body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+         return MapUDDIv2Tov3.MapListRegisteredInfo(publishService.getRegisteredInfo(MapUDDIv3Tov2.MapGetRegisteredInfo(body)));
+      } catch (DispositionReport ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      } catch (SOAPFaultException ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      }
 
-        @Override
-        public ServiceDetail saveService(SaveService body) throws DispositionReportFaultMessage, RemoteException {
-                try {
-                        return MapUDDIv2Tov3.MapServiceDetail(publishService.saveService(MapUDDIv3Tov2.MapSaveService(body)));
-                } catch (DispositionReport ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
-                 catch (SOAPFaultException ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
-        }
+   }
 
-        @Override
-        public TModelDetail saveTModel(SaveTModel body) throws DispositionReportFaultMessage, RemoteException {
-                try {
-                        return MapUDDIv2Tov3.MapTModelDetail(publishService.saveTModel(MapUDDIv3Tov2.MapSaveTModel(body)));
-                } catch (DispositionReport ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                } catch (SOAPFaultException ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
-                
-        }
+   @Override
+   public BindingDetail saveBinding(SaveBinding body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+         return MapUDDIv2Tov3.MapBindingDetail(publishService.saveBinding(MapUDDIv3Tov2.MapSaveBinding(body)));
+      } catch (DispositionReport ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      } catch (SOAPFaultException ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      }
+   }
 
-        @Override
-        public void setPublisherAssertions(String authInfo, Holder<List<PublisherAssertion>> publisherAssertion) throws DispositionReportFaultMessage, RemoteException {
-                try {
-                        SetPublisherAssertions req = MapUDDIv3Tov2.MapSetPublisherAssertions(publisherAssertion.value);
-                        req.setAuthInfo(authInfo);
-                        PublisherAssertions setPublisherAssertions = publishService.setPublisherAssertions(req);
-                        publisherAssertion.value = MapUDDIv2Tov3.MapListPublisherAssertion(setPublisherAssertions);
+   @Override
+   public BusinessDetail saveBusiness(SaveBusiness body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+         return MapUDDIv2Tov3.MapBusinessDetail(publishService.saveBusiness(MapUDDIv3Tov2.MapSaveBusiness(body)));
+      } catch (DispositionReport ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      } catch (SOAPFaultException ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      }
+   }
 
-                } catch (DispositionReport ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                } catch (SOAPFaultException ex) {
-                        throw MapUDDIv2Tov3.MapException(ex);
-                }
-        }
+   @Override
+   public ServiceDetail saveService(SaveService body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+         return MapUDDIv2Tov3.MapServiceDetail(publishService.saveService(MapUDDIv3Tov2.MapSaveService(body)));
+      } catch (DispositionReport ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      } catch (SOAPFaultException ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      }
+   }
 
+   @Override
+   public TModelDetail saveTModel(SaveTModel body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+         return MapUDDIv2Tov3.MapTModelDetail(publishService.saveTModel(MapUDDIv3Tov2.MapSaveTModel(body)));
+      } catch (DispositionReport ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      } catch (SOAPFaultException ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      }
 
-        @Override
-        public Map<String, Object> getRequestContext() {
-                return ((BindingProvider)publishService).getRequestContext();
-        }
+   }
 
-        @Override
-        public Map<String, Object> getResponseContext() {
-                return ((BindingProvider)publishService).getResponseContext();
-        }
+   @Override
+   public void setPublisherAssertions(String authInfo, Holder<List<PublisherAssertion>> publisherAssertion) throws DispositionReportFaultMessage, RemoteException {
+      try {
+         SetPublisherAssertions req = MapUDDIv3Tov2.MapSetPublisherAssertions(publisherAssertion.value);
+         req.setAuthInfo(authInfo);
+         PublisherAssertions setPublisherAssertions = publishService.setPublisherAssertions(req);
+         publisherAssertion.value = MapUDDIv2Tov3.MapListPublisherAssertion(setPublisherAssertions);
 
-        @Override
-        public Binding getBinding() {
-                return ((BindingProvider)publishService).getBinding();
-        }
+      } catch (DispositionReport ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      } catch (SOAPFaultException ex) {
+         throw MapUDDIv2Tov3.MapException(ex);
+      }
+   }
 
-        @Override
-        public EndpointReference getEndpointReference() {
-                return ((BindingProvider)publishService).getEndpointReference();
-        }
+   @Override
+   public Map<String, Object> getRequestContext() {
+      return ((BindingProvider) publishService).getRequestContext();
+   }
 
-        @Override
-        public <T extends EndpointReference> T getEndpointReference(Class<T> clazz) {
-                return ((BindingProvider)publishService).getEndpointReference(clazz);
-        }
+   @Override
+   public Map<String, Object> getResponseContext() {
+      return ((BindingProvider) publishService).getResponseContext();
+   }
+
+   @Override
+   public Binding getBinding() {
+      return ((BindingProvider) publishService).getBinding();
+   }
+
+   @Override
+   public EndpointReference getEndpointReference() {
+      return ((BindingProvider) publishService).getEndpointReference();
+   }
+
+   @Override
+   public <T extends EndpointReference> T getEndpointReference(Class<T> clazz) {
+      return ((BindingProvider) publishService).getEndpointReference(clazz);
+   }
 
 }

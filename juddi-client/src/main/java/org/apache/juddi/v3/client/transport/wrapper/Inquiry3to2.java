@@ -52,8 +52,10 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIInquiryPortType;
 
 /**
- *
- * @author Alex O'Ree
+ * This class provides a wrapper to enable UDDIv3 clients to talk to UDDIv2 servers
+ * via JAXWS Transport. It handles all translations for Inquiry service methods.
+ * @author <a href="alexoree@apache.org">Alex O'Ree</a>
+ * @since 3.2
  */
 public class Inquiry3to2 implements UDDIInquiryPortType, BindingProvider {
 

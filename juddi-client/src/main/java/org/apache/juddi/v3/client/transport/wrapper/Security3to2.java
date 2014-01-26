@@ -33,8 +33,12 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
+ * This class provides a wrapper to enable UDDIv3 clients to talk to UDDIv2
+ * servers via JAXWS Transport. It handles all translations for Security 
+ * service methods.
  *
- * @author Alex O'Ree
+ * @author <a href="alexoree@apache.org">Alex O'Ree</a>
+ * @since 3.2
  */
 public class Security3to2 implements UDDISecurityPortType, BindingProvider {
 
