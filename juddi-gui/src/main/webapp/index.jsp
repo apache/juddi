@@ -31,6 +31,7 @@
                 if (cookies[i].getValue() != null) {
                     session.setAttribute("locale", cookies[i].getValue());
                     response.sendRedirect("home.jsp");
+                    return;
                 }
             }
         }
