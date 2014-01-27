@@ -591,7 +591,7 @@ public class UDDIInquiryJAXRS {
          * @throws WebApplicationException
          */
         @GET
-        @Path("/JSON/tModelSearch")
+        @Path("/JSON/searchTModel")
         @Produces("application/json")
         @org.apache.cxf.jaxrs.model.wadl.Description("Returns the search results for registered tModel in JSON")
         public TModelList getTModelSearchJSON(@QueryParam("name") String name,
@@ -614,7 +614,7 @@ public class UDDIInquiryJAXRS {
          * @throws WebApplicationException
          */
         @GET
-        @Path("/XML/tModelSearch")
+        @Path("/XML/searchTModel")
         @Produces("application/json")
         @org.apache.cxf.jaxrs.model.wadl.Description("Returns the search results for registered tModel in XML")
         public TModelList getTModelSearchXML(@QueryParam("name") String name,
