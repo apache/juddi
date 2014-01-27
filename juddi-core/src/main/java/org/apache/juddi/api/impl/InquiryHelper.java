@@ -61,6 +61,7 @@ import org.uddi.api_v3.FindRelatedBusinesses;
 import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.ListDescription;
+import org.uddi.api_v3.Name;
 import org.uddi.api_v3.RelatedBusinessesList;
 import org.uddi.api_v3.ServiceList;
 import org.uddi.api_v3.TModelBag;
@@ -296,6 +297,14 @@ public class InquiryHelper {
 			keysFound = FindServiceByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey(), keysFound);
 		}
 		keysFound = FindServiceByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey(), keysFound);
+		
+		if (body.getFindTModel()==null && body.getCategoryBag()==null && 
+				( body.getTModelBag()==null || body.getTModelBag().getTModelKey().size() == 0) 
+				&& body.getName().size() == 0 && body.getBusinessKey() != null) {
+			//support searching for all services for a business
+			findQualifiers.setApproximateMatch(true);
+			body.getName().add(new Name("%", null));
+		}
 		keysFound = FindServiceByNameQuery.select(em, findQualifiers, body.getName(), body.getBusinessKey(), keysFound);
 		
 		if (body.getTModelBag().getTModelKey().size()==0) body.setTModelBag(null);

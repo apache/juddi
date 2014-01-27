@@ -235,7 +235,10 @@ public class ValidateInquiry extends ValidateUDDIApi {
                         throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
                 }
 
-                if (body.getCategoryBag() == null && body.getFindTModel() == null && body.getTModelBag() == null && body.getName().size() == 0) {
+                if (body.getCategoryBag() == null && body.getFindTModel() == null && 
+                		(body.getTModelBag() == null || body.getTModelBag().getTModelKey().size() == 0)
+                		&& body.getName().size() == 0 && body.getBusinessKey() == null) 
+                {
                         throw new FatalErrorException(new ErrorMessage("errors.findservice.NoInput"));
                 }
 
