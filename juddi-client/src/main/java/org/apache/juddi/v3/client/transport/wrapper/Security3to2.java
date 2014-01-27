@@ -57,7 +57,7 @@ public class Security3to2 implements UDDISecurityPortType, BindingProvider {
                         org.uddi.api_v2.DiscardAuthToken discardAuthToken = new org.uddi.api_v2.DiscardAuthToken();
                         discardAuthToken.setAuthInfo(body.getAuthInfo());
                         discardAuthToken.setGeneric(MapUDDIv3Tov2.VERSION);
-                        org.uddi.api_v2.DispositionReport discardAuthToken1 = publishService.discardAuthToken(discardAuthToken);
+                        publishService.discardAuthToken(discardAuthToken);
                 } catch (DispositionReport ex) {
                         throw MapUDDIv2Tov3.MapException(ex);
                 } catch (SOAPFaultException ex) {

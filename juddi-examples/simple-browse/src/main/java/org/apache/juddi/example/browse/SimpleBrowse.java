@@ -17,11 +17,9 @@
 package org.apache.juddi.example.browse;
 
 import java.util.List;
-import java.util.Properties;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.BindingTemplates;

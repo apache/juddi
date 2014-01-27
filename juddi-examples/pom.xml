@@ -38,5 +38,6 @@
 		<module>subscription-notification-amqp</module>
 		<module>more-uddi-samples</module>
 		<module>service-version</module>
-	</modules>
+    <module>uddiv2-api-bridge-example</module>
+  </modules>
 </project>

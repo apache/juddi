@@ -72,7 +72,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 public class UDDIv2PublishImpl implements Publish {
 
         public UDDIv2PublishImpl() {
-                logger.warn("This implementation of UDDIv2 Inquire service " + UDDIv2PublishImpl.class.getCanonicalName() + " is considered BETA. Please"
+                logger.warn("This implementation of UDDIv2 Publish service " + UDDIv2PublishImpl.class.getCanonicalName() + " is considered BETA. Please"
                         + " report any issues to https://issues.apache.org/jira/browse/JUDDI");
         }
 
@@ -181,6 +181,7 @@ public class UDDIv2PublishImpl implements Publish {
                         AuthToken ret = new AuthToken();
                         ret.setAuthInfo(authToken.getAuthInfo());
                         ret.setGeneric("2.0");
+                        ret.setOperator(getNodeID());
                         return ret;
                 } catch (DispositionReportFaultMessage ex) {
                         throw MapUDDIv3Tov2.MapException(ex, getNodeID());
@@ -259,7 +260,7 @@ public class UDDIv2PublishImpl implements Publish {
                 r.setGeneric("2.0");
                 r.setTruncated(Truncated.FALSE);
                 Result x = new Result();
-                r.setGeneric("2.0");
+                r.setOperator(getNodeID());
                 r.getResult().add(x);
                 return r;
         }
