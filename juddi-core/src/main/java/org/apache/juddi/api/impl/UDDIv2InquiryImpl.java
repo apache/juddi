@@ -15,7 +15,13 @@
  */
 package org.apache.juddi.api.impl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.jws.WebService;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -168,6 +174,10 @@ public class UDDIv2InquiryImpl implements Inquire {
         @Override
         public TModelDetail getTModelDetail(GetTModelDetail body) throws DispositionReport {
                 try {
+                	//remove duplicates using a set
+                	Set<String> keyList = new HashSet(body.getTModelKey());
+                	body.getTModelKey().clear();
+                	body.getTModelKey().addAll(keyList);
                         return MapUDDIv3Tov2.MapTModelDetail(inquiryService.getTModelDetail(MapUDDIv2Tov3.MapGetTModelDetail(body)), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
                         throw MapUDDIv3Tov2.MapException(ex, getNodeID());
