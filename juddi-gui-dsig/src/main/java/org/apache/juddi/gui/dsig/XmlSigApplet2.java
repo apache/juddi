@@ -95,7 +95,8 @@ public class XmlSigApplet2 extends java.applet.Applet {
             keyStore = KeyStore.getInstance("Windows-MY");
             keyStore.load(null, null);
         } catch (Exception ex) {
-            ex.printStackTrace();
+           System.out.println("Error loading Windows cert store " + ex.getMessage());
+            //ex.printStackTrace();
             //JOptionPane.showMessageDialog(this, ex.getMessage());
         }
         //firefox keystore
@@ -111,7 +112,8 @@ public class XmlSigApplet2 extends java.applet.Applet {
                 keyStore.load(null, "password".toCharArray());
             } catch (Exception ex) {
                 //JOptionPane.showMessageDialog(this, ex.getMessage());
-                ex.printStackTrace();
+               System.out.println("Error loading Firefox cert store " + ex.getMessage());
+                //ex.printStackTrace();
             }
         }
         //MacOS with Safari possibly others
@@ -122,29 +124,32 @@ public class XmlSigApplet2 extends java.applet.Applet {
 
             } catch (Exception ex) {
                 //JOptionPane.showMessageDialog(this, ex.getMessage());
-                ex.printStackTrace();
+                //ex.printStackTrace();
+               System.out.println("Error loading MACOS Key chain cert store " + ex.getMessage());
             }
         }
-        try {
-            Enumeration<String> aliases = keyStore.aliases();
+        if (keyStore!=null){
+            try {
+                Enumeration<String> aliases = keyStore.aliases();
 
-            while (aliases.hasMoreElements()) {
-                String a = aliases.nextElement();
-                X509Certificate certificate = (X509Certificate) keyStore.getCertificate(a);
-                //this is needed to test for access
-                
-                try {
-                    Key key = keyStore.getKey(a, null);
-                    certs.add(a);
+                while (aliases.hasMoreElements()) {
+                    String a = aliases.nextElement();
+                    X509Certificate certificate = (X509Certificate) keyStore.getCertificate(a);
+                    //this is needed to test for access
 
-                } catch (Exception x) {
-                    System.out.println("error loading certificate " + a + " " + x.getMessage());
+                    try {
+                        Key key = keyStore.getKey(a, null);
+                        certs.add(a);
+
+                    } catch (Exception x) {
+                        System.out.println("error loading certificate " + a + " " + x.getMessage());
+                    }
                 }
-            }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            }
         }
         jList1.setListData(certs);
         if (!certs.isEmpty()) {
