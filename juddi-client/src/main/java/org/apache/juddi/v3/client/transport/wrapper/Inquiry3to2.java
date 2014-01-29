@@ -199,6 +199,7 @@ public class Inquiry3to2 implements UDDIInquiryPortType, BindingProvider {
                         } catch (Exception ex) {
                         }
                         ret.getOperationalInfo().add(oi);
+                        ret.setTruncated(false);
                 }
                 return ret;
         }

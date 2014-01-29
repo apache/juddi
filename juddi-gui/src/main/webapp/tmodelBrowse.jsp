@@ -10,46 +10,57 @@
 <%@include file="header-top.jsp" %>
 <div class="container">
 
-    <!-- Main hero unit for a primary marketing message or call to action -->
-    <div class="well" >
-        <h2><%=ResourceLoader.GetResource(session, "items.tmodel.browser")%></h2>
-    </div>
+   <!-- Main hero unit for a primary marketing message or call to action -->
+   <div class="well" >
+      <h2><%=ResourceLoader.GetResource(session, "items.tmodel.browser")%></h2>
+   </div>
 
-    <!-- Example row of columns -->
-    <div class="row">
-        <div class="span12" >
-            <%=ResourceLoader.GetResource(session, "totals.records")%>: <span id="totalrecords"></span><br>
-            <%=ResourceLoader.GetResource(session, "totals.recordsreturned")%>: <span id="displayrecords"></span><br>
-            <%=ResourceLoader.GetResource(session, "totals.offset")%> : <span id="offset">0</span><br>
-            <%=ResourceLoader.GetResource(session, "items.lang")%>: <span id="lang" class="edit"></span><br>
+   <!-- Example row of columns -->
+   <div class="row">
+      <div class="span12" >
+         <table class="table-striped table-bordered">
+            <tr>
+               <td>
+                  <table>
+                     <tr><td><%=ResourceLoader.GetResource(session, "totals.records")%></td><td><span id="totalrecords"></span></td></tr>
+                     <tr><td><%=ResourceLoader.GetResource(session, "totals.recordsreturned")%></td><td><span id="displayrecords"></span></td></tr>
+                     <tr><td><%=ResourceLoader.GetResource(session, "totals.offset")%></td><td><span id="offset">0</span></td></tr>
+                  </table>
+               </td>
+               <td>
+                  <table>
+                     <tr><td><%=ResourceLoader.GetResource(session, "items.name")%></td><td><input type="text" id="name_tmodel" value="%"></td></tr>
+                     <tr><td><%=ResourceLoader.GetResource(session, "items.lang")%></td><td><input type="text" id="lang_tmodel" value=""></td></tr>
+                  </table>
+               </td>
+            </tr>
 
-            <a href="javascript:pagedown();"><i class="icon-circle-arrow-left icon-2x" id="pageup"></i></a>
-            <a href="javascript:reload();"><i class="icon-refresh icon-2x"></i></a>
-            <a href="javascript:pageup();"><i class="icon-circle-arrow-right icon-2x" id="pagedown"></i></a>
+         </table>
+         <a href="javascript:pagedown();"><i class="icon-circle-arrow-left icon-2x" id="pageup"></i></a>
+         <a href="javascript:reload();"><i class="icon-refresh icon-2x"></i></a>
+         <a href="javascript:pageup();"><i class="icon-circle-arrow-right icon-2x" id="pagedown"></i></a>
 
-            <div id="tmodellist">
-                <img src="img/bigrollergreen.gif" title="Loading"/>
-            </div>
-            <script src="js/tmodelsearch.js"></script>
-            <script type="text/javascript">
-                
-                function reload()
-                {
-                    RenderTmodelListBySearch('%', offset, maxrecords, false);
-                }
-                $('.edit').editable(function(value, settings) { 
-                    console.log(this);
-                    console.log(value);
-                    console.log(settings);
-                    reload();
-                    //  RenderTmodelListBySearch('%', offset, maxrecords);
-                    return(value);
-                }, { 
-                    type    : 'text',
-                    submit  : i18n_ok
-                });
-                reload();
-            </script>
-        </div>
-    </div>
-    <%@include file="header-bottom.jsp" %>
+         <div id="tmodellist">
+            <img src="img/bigrollergreen.gif" title="Loading"/>
+         </div>
+         <script src="js/tmodelsearch.js"></script>
+         <script type="text/javascript">
+
+            function reload()
+            {
+               RenderTmodelListBySearch('%', offset, maxrecords, false);
+            }
+            $('.edit').editable(function(value, settings) {
+              window.console && console.log(value + this + settings);
+               reload();
+               //  RenderTmodelListBySearch('%', offset, maxrecords);
+               return(value);
+            }, {
+               type: 'text',
+               submit: i18n_ok
+            });
+            reload();
+         </script>
+      </div>
+   </div>
+   <%@include file="header-bottom.jsp" %>

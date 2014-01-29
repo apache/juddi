@@ -26,7 +26,7 @@ function refreshServiceList()
 RenderServiceListBySearch('%', offsetService, maxrecordsService);
 //offset += maxrecords;
 function pagedownService()
-{
+{                                            
     offsetService = $("#offsetService").text();
     //alert(offset);
     var newoffset = offsetService - maxrecordsService;
@@ -53,12 +53,20 @@ function pageupService()
 
 function RenderServiceListBySearch(keyword, offset, maxrecords)
 {
-    if (keyword === "%")
-        keyword = "%25";
-    var lang = $("#lang").text();
+    var    keyword2 = $("#name_service_search").val();
+   
+    var lang = $("#lang_service_search").val();
+    if (lang==undefined)
+       lang="";
+     if (keyword2==undefined)
+       keyword2="";
+    lang = encodeURIComponent(lang);
+    offset = encodeURIComponent(offset);
+    maxrecords = encodeURIComponent(maxrecords);
+    keyword2 = encodeURIComponent(keyword2);
     $("#serviceBrowserListing").html("<img src=\"img/bigrollergreen.gif\" title=\"Loading\"/>");
     var request=   $.ajax({
-        url: 'ajax/servicesearch.jsp?keyword=' + keyword + "&offset=" + offset + "&maxrecords=" + maxrecords + "&lang=" + lang,
+        url: 'ajax/servicesearch.jsp?keyword=' + keyword2 + "&offset=" + offset + "&maxrecords=" + maxrecords + "&lang=" + lang,
         type:"GET",
         cache: false
     });

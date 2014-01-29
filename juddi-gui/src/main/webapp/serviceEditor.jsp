@@ -67,6 +67,7 @@
 
       //we can't make a new service without a business to reference
       response.sendRedirect("index.jsp");
+      return;
    }
 %>
 <%@include file="header-top.jsp" %>

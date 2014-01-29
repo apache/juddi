@@ -63,12 +63,21 @@ var selectedItem=null;
 //offset, maxrecords, keyword
 function RenderTmodelListBySearch(keyword1, offset1, maxrecords1, isForChooser)
 {
-    if (keyword1 === "%")
-        keyword1 = "%25";
-    var lang = $("#lang").text();
+    
+    var    keyword =$("#name_tmodel").val();
+    var lang = $("#lang_tmodel").val();
+    if (lang==undefined)
+       lang = "";
+    if (keyword==undefined)
+       keyword = "";
+    lang = encodeURIComponent(lang);
+    keyword = encodeURIComponent(keyword);
+    offset1 = encodeURIComponent(offset1);
+    maxrecords1 = encodeURIComponent(maxrecords1);
+    isForChooser = encodeURIComponent(isForChooser);
     $("#tmodellist").html("<img src=\"img/bigrollergreen.gif\" title=\"Loading\"/>");
     var request=   $.ajax({
-        url: 'ajax/tmodelsearch.jsp?keyword=' + keyword1 + "&offset=" + offset1 + "&maxrecords=" + maxrecords1 + "&lang=" + lang + "&chooser=" + isForChooser,
+        url: 'ajax/tmodelsearch.jsp?keyword=' + keyword + "&offset=" + offset1 + "&maxrecords=" + maxrecords1 + "&lang=" + lang + "&chooser=" + isForChooser,
         type:"GET",
         cache: false
     });

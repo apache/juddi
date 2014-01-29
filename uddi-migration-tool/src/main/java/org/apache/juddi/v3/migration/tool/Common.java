@@ -40,6 +40,8 @@ public class Common {
         OperationalInfos operationalInfo = null;
         try {
             operationalInfo = inquiry.getOperationalInfo(goi);
+            if (operationalInfo!=null && operationalInfo.getOperationalInfo()!=null &&
+                    !operationalInfo.getOperationalInfo().isEmpty())
             return operationalInfo.getOperationalInfo().get(0).getAuthorizedName();
         } catch (Exception ex) {
             ex.printStackTrace();

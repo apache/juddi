@@ -14,13 +14,27 @@ this page is meant to be included via jsp:include
    </div>
    <div class="modal-body">
 
-      <%=ResourceLoader.GetResource(session, "totals.records")%>: <span id="totalrecords"></span><br>
-      <%=ResourceLoader.GetResource(session, "totals.recordsreturned")%>: <span id="displayrecords"></span><br>
-      <%=ResourceLoader.GetResource(session, "totals.offset")%> : <span id="offset">0</span><br>
-      <%=ResourceLoader.GetResource(session, "items.lang")%>: <span id="lang" class="edit"></span><br>
+      <table class="table-bordered table-condensed">
+         <tr>
+            <td>
+               <table>
+                  <tr><td><%=ResourceLoader.GetResource(session, "totals.records")%></td><td><span id="totalrecords"></span></td></tr>
+                  <tr><td><%=ResourceLoader.GetResource(session, "totals.recordsreturned")%></td><td><span id="displayrecords"></span></td></tr>
+                  <tr><td><%=ResourceLoader.GetResource(session, "totals.offset")%></td><td><span id="offset">0</span></td></tr>
+               </table>
+            </td>
+            <td>
+               <table>
+                  <tr><td><%=ResourceLoader.GetResource(session, "items.name")%></td><td><input type="text" id="name_tmodel" value="%"></td></tr>
+                  <tr><td><%=ResourceLoader.GetResource(session, "items.lang")%></td><td><input type="text" id="lang_tmodel" value=""></td></tr>
+               </table>
+            </td>
+            
+         </tr>
+      </table>
 
       <a href="javascript:pagedownChooserTmodel();"><i class="icon-circle-arrow-left disabled icon-2x" id="pageup"></i></a>
-      <a href="javascript:reload();"><i class="icon-refresh icon-2x"></i></a>
+      <a href="javascript:reloadTmodelModal();"><i class="icon-refresh icon-2x"></i></a>
       <a href="javascript:pageupChooserTmodel();"><i class="icon-circle-arrow-right disabled icon-2x" id="pagedown"></i></a>
 
       <div id="tmodellist">
@@ -42,9 +56,7 @@ this page is meant to be included via jsp:include
             }
          });
          $('.edit').editable(function(value, settings) {
-            console.log(this);
-            console.log(value);
-            console.log(settings);
+            window.console && console.log(value + this + settings);
             reloadTmodelModal();
             //  RenderTmodelListBySearch('%', offset, maxrecords);
             return(value);

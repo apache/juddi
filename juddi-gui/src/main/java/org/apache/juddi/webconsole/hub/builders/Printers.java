@@ -103,7 +103,7 @@ public class Printers {
                                 append("<Br>");
                         sb.append(ResourceLoader.GetResource(locale, "items.description")).
                                 append(": ").
-                                append(ListToDescString(bindingTemplates.getBindingTemplate().get(i).getDescription())).
+                                append(trunc(ListToDescString(bindingTemplates.getBindingTemplate().get(i).getDescription()))).
                                 append("<Br>");
                         sb.append(ResourceLoader.GetResource(locale, "pages.editor.tabnav.categories")).
                                 append(": ").append(CatBagToString(bindingTemplates.getBindingTemplate().get(i).getCategoryBag(), locale)).
@@ -198,17 +198,25 @@ public class Printers {
                                 sb.append("</a>");
                         }
                         sb.append("</td><td>")
-                                .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getValue()));
+                                .append(StringEscapeUtils.escapeHtml(trunc(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getValue())));
                         if (findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang() != null) {
                                 sb.append(", ")
                                         .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang()));
                         }
                         sb.append("</td><td>")
-                                .append(StringEscapeUtils.escapeHtml(Printers.ListToDescString(findTModel.getTModelInfos().getTModelInfo().get(i).getDescription())))
+                                .append(StringEscapeUtils.escapeHtml(trunc(Printers.ListToDescString(findTModel.getTModelInfos().getTModelInfo().get(i).getDescription()))))
                                 .append("</td></tr>");
                 }
+                
                 sb.append("</table>");
                 return sb.toString();
+        }
+        
+        private static String trunc(String input){
+           if (input==null) return "";
+           if (input.length() > 60)
+            return input.substring(0, 60) + "...";
+           return input;
         }
 
         /**
@@ -241,9 +249,10 @@ public class Printers {
                                 append("\"  href=\"businessEditor2.jsp?id=").
                                 append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
                                 append("\">").
-                                append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getName()))).
+                                append(StringEscapeUtils.escapeHtml(trunc(Printers.ListNamesToString(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getName())))).
+                                append(" <i class=\"icon-edit\"></i>").
                                 append("</a></td><td>").
-                                append("<a class=\"btn btn-primary\" href=\"javascript:ShowServicesByBusinessKey('").
+                                append("<a class=\"btn\" href=\"javascript:ShowServicesByBusinessKey('").
                                 append(StringEscapeUtils.escapeJavaScript(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
                                 append("');\">");
 
@@ -254,9 +263,10 @@ public class Printers {
                         }
                         sb.append("</a>");
                         if (!isChooser) {
-                                sb.append("<a class=\"btn btn-primary\" href=\"serviceEditor.jsp?bizid=").
+                                sb.append(" <a class=\"btn btn-primary\" href=\"serviceEditor.jsp?bizid=").
                                         append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
-                                        append("\"><i class=\"icon-plus-sign icon-white  icon-large\"></i></a>");
+                                        append("\"><i class=\"icon-plus-sign icon-white  icon-large\"></i> ").
+                                        append(ResourceLoader.GetResource(session, "actions.add")).append("</a>");
                         }
                         sb.append("</td></tr>");
 
@@ -301,7 +311,7 @@ public class Printers {
                                 append("\" title=\"").
                                 append(StringEscapeUtils.escapeHtml(findService.getServiceInfos().getServiceInfo().get(i).getServiceKey()))
                                 .append("\">");
-                        sb.append(Printers.ListNamesToString(findService.getServiceInfos().getServiceInfo().get(i).getName())).append("<i class=\"icon-edit icon-large\"></i<</a></td><td>");
+                        sb.append(trunc(Printers.ListNamesToString(findService.getServiceInfos().getServiceInfo().get(i).getName()))).append("<i class=\"icon-edit icon-large\"></i<</a></td><td>");
 
                         sb.append((findService.getServiceInfos().getServiceInfo().get(i).getServiceKey())).append("</td><td>");
                         sb.append("<a href=\"businessEditor2.jsp?id=")

@@ -13,15 +13,26 @@
       <h3><%=ResourceLoader.GetResource(session, "items.service.chooser")%> </h3>
    </div>
    <div class="modal-body">
-
-      <%=ResourceLoader.GetResource(session, "totals.records")%>: <span id="totalrecordsService"></span><br>
-      <%=ResourceLoader.GetResource(session, "totals.recordsreturned")%>: <span id="displayrecordsService"></span><br>
-      <%=ResourceLoader.GetResource(session, "totals.offset")%> : <span id="offsetService">0</span><br>
-      <%=ResourceLoader.GetResource(session, "items.lang")%>: <span id="langService" class="edit"></span><br>
-      <% //=ResourceLoader.GetResource(session, "items.name"): <span id="nameService" class="edit">%</span><br>%>
+      <table class="table-bordered table-condensed">
+         <tr>
+            <td>
+               <table>
+                  <tr><td><%=ResourceLoader.GetResource(session, "totals.records")%></td><td><span id="totalrecordsService"></span></td></tr>
+                  <tr><td><%=ResourceLoader.GetResource(session, "totals.recordsreturned")%></td><td><span id="displayrecordsService"></span></td></tr>
+                  <tr><td><%=ResourceLoader.GetResource(session, "totals.offset")%></td><td><span id="offsetService">0</span></td></tr>
+               </table>
+            </td>
+            <td>
+               <table>
+                  <tr><td><%=ResourceLoader.GetResource(session, "items.name")%></td><td><input type="text" id="name_Service" value="%"></td></tr>
+                  <tr><td><%=ResourceLoader.GetResource(session, "items.lang")%></td><td><input type="text" id="lang_Service" ></td></tr>
+               </table>
+            </td>
+         </tr>
+      </table>
 
       <a href="javascript:pagedownChooserService();"><i class="icon-circle-arrow-left disabled icon-2x" id="pageupService"></i></a>
-      <a href="javascript:reloadService();"><i class="icon-refresh icon-2x"></i></a>
+      <a href="javascript:reloadServiceModal();"><i class="icon-refresh icon-2x"></i></a>
       <a href="javascript:pageupChooserService();"><i class="icon-circle-arrow-right disabled icon-2x" id="pagedownService"></i></a>
 
       <div id="servicelist">
@@ -38,9 +49,7 @@
             }
          });
          $('.edit').editable(function(value, settings) {
-            console.log(this);
-            console.log(value);
-            console.log(settings);
+            window.console && console.log(value + this + settings);
             reloadServiceModal();
             //  RenderTmodelListBySearch('%', offset, maxrecords);
             return(value);

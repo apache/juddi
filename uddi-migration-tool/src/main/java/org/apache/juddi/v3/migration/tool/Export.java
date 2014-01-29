@@ -111,15 +111,13 @@ public class Export {
                         username = clerk.getPublisher();
                         pass = clerk.getPassword();
                 }
-                if (username != null && pass != null
-                        || username.length() != 0 && pass.length() != 0) {
+                if (username == null || pass==null) {
+                   System.out.println("No credentials are available. This will probably fail spectacularly");
+                } else {
                         GetAuthToken getAuthTokenRoot = new GetAuthToken();
                         getAuthTokenRoot.setUserID(username);
                         getAuthTokenRoot.setCred(pass);
                         token = security.getAuthToken(getAuthTokenRoot).getAuthInfo();
-                } else {
-                        System.out.println("No credentials are available. This will probably fail spectacularly");
-
                 }
 
 
@@ -147,7 +145,7 @@ public class Export {
                 req.setFindQualifiers(new FindQualifiers());
                 req.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
                 int offset = 0;
-                int maxrows = 20;
+                int maxrows = 100;
 
                 req.setMaxRows(maxrows);
                 req.setListHead(offset);
@@ -159,7 +157,7 @@ public class Export {
                                 for (int i = 0; i < findTModel.getBusinessInfos().getBusinessInfo().size(); i++) {
                                         boolean go = true;
                                         String owner = Common.GetOwner(findTModel.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey(), token, inquiry);
-                                        if (!usernames.contains(owner)) {
+                                        if (owner!=null && !usernames.contains(owner)) {
                                                 usernames.add(owner);
                                         }
                                         if (myitemsonly) {
@@ -169,8 +167,9 @@ public class Export {
                                                 }
                                         }
                                         if (go) {
+                                           if (owner!=null)
                                                 mapping.setProperty(findTModel.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey(), owner);
-                                                System.out.println("Exporting " + findTModel.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey());
+                                                System.out.println("Exporting " + findTModel.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey() + " owner " + owner);
                                                 sb.getBusinessEntity().add(GetBusiness(findTModel.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey(), token));
                                         }
                                 }
@@ -179,7 +178,7 @@ public class Export {
                         offset = offset + maxrows;
                         req.setListHead(offset);
 
-                } while (findTModel.getListDescription().getIncludeCount() > 0);
+                } while (false);//findTModel.getListDescription().getIncludeCount() > 0 );
 
                 if (stripSig) {
                         int x=0;
@@ -207,7 +206,7 @@ public class Export {
                 System.out.println("Saving to disk");
                 JAXB.marshal(sb, fos);
                 fos.close();
-                System.out.println("Done with businesses");
+                System.out.println("Done with businesses. Export count: " + sb.getBusinessEntity().size());
         }
 
         private void ExportTmodels() throws Exception {
@@ -218,7 +217,7 @@ public class Export {
                 req.setFindQualifiers(new FindQualifiers());
                 req.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
                 int offset = 0;
-                int maxrows = 20;
+                int maxrows = 100;
 
                 req.setMaxRows(maxrows);
                 req.setListHead(offset);
@@ -230,7 +229,7 @@ public class Export {
                                 for (int i = 0; i < findTModel.getTModelInfos().getTModelInfo().size(); i++) {
                                         boolean go = true;
                                         String owner = Common.GetOwner(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey(), token, inquiry);
-                                        if (!usernames.contains(owner)) {
+                                        if (owner!=null && !usernames.contains(owner)) {
                                                 usernames.add(owner);
                                         }
                                         if (myitemsonly) {
@@ -239,15 +238,16 @@ public class Export {
                                                 }
                                         }
                                         if (go) {
-                                                mapping.setProperty(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey(), owner);
-                                                System.out.println("Exporting " + findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey());
+                                                if (owner!=null)
+                                                      mapping.setProperty(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey(), owner);
+                                                System.out.println("Exporting " + findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey() + " owner " + owner);
                                                 stm.getTModel().add(GetTmodel(findTModel.getTModelInfos().getTModelInfo().get(i), token));
                                         }
                                 }
                         }
                         offset = offset + maxrows;
                         req.setListHead(offset);
-                } while (findTModel.getListDescription().getIncludeCount() > 0);
+                } while (false);//findTModel.getListDescription().getIncludeCount() > 0);
                 
                 if (stripSig) {
                         int x=0;
@@ -261,7 +261,7 @@ public class Export {
                 System.out.println("Storing to disk ");
                 JAXB.marshal(stm, fos);
                 fos.close();
-                System.out.println("Done with tModels");
+                System.out.println("Done with tModels. Export count: " + stm.getTModel().size());
         }
 
         private TModel GetTmodel(TModelInfo get, String token) throws Exception {

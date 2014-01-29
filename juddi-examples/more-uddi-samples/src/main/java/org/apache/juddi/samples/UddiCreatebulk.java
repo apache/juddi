@@ -16,13 +16,13 @@
  */
 package org.apache.juddi.samples;
 
+import de.svenjacobs.loremipsum.LoremIpsum;
 import java.util.GregorianCalendar;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.api_v3.*;
 import org.uddi.v3_service.UDDIPublicationPortType;
@@ -70,6 +70,7 @@ public class UddiCreatebulk {
                                 token = rootAuthToken.getAuthInfo();
                         }
 
+                        LoremIpsum textgen = new LoremIpsum();
                         DatatypeFactory df = DatatypeFactory.newInstance();
                         GregorianCalendar gcal = new GregorianCalendar();
                         gcal.setTimeInMillis(System.currentTimeMillis());
@@ -79,7 +80,8 @@ public class UddiCreatebulk {
                                 BusinessEntity myBusEntity = new BusinessEntity();
                                 Name myBusName = new Name();
                                 myBusName.setLang("en");
-                                myBusName.setValue("My Business " + i + " " + xcal.toString());
+                                myBusName.setValue("My Business " + i + " " + xcal.toString() + " " + textgen.getWords(5, 2) );
+                                myBusEntity.getDescription().add(new Description( textgen.getWords(10, 2), null));
                                 myBusEntity.getName().add(myBusName);
 
                                 // Adding the business entity to the "save" structure, using our publisher's authentication info and saving away.
@@ -96,12 +98,10 @@ public class UddiCreatebulk {
                                         myService.setBusinessKey(myBusKey);
                                         Name myServName = new Name();
                                         myServName.setLang("en");
-                                        myServName.setValue("My Service " + i + " " + k + " " + xcal.toString());
+                                        myServName.setValue("My Service " + i + " " + k + " " + xcal.toString()+ " " + textgen.getWords(5, 2) );
                                         myService.getName().add(myServName);
-                                        Description d2 = new Description();
-                                        d2.setValue("my service description");
-                                        d2.setLang("en");
-                                        myService.getDescription().add(d2);
+                                        myService.getDescription().add(new Description( textgen.getWords(10, 2), null));
+                                        
                                         // Add binding templates, etc...
                                         BindingTemplate myBindingTemplate = new BindingTemplate();
                                         myBindingTemplate.setCategoryBag(new CategoryBag());
@@ -151,11 +151,11 @@ public class UddiCreatebulk {
                                         tii.getDescription().add(d);
                                         tii.setTModelKey(UDDIConstants.TRANSPORT_HTTP);
                                         tii.setInstanceDetails(new InstanceDetails());
-                                        tii.getInstanceDetails().setInstanceParms("heres some useful stuff describing this endpoint, up to 4KB of data");
+                                        tii.getInstanceDetails().setInstanceParms("heres some useful stuff describing this endpoint, up to 4KB of data"+ " " + textgen.getWords(20, 2) );
                                         tii.getInstanceDetails().getDescription().add(d);
                                         OverviewDoc od = new OverviewDoc();
                                         d = new Description();
-                                        d.setValue("ovweview doc description");
+                                        d.setValue("ovweview doc description"+ " " + textgen.getWords(5, 2) );
                                         od.getDescription().add(d);
                                         od.setOverviewURL(new OverviewURL());
                                         od.getOverviewURL().setUseType("www");

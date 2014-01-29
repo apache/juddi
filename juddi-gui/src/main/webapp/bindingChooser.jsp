@@ -13,14 +13,26 @@ this page is meant to be included via jsp:include
       <h3><%=ResourceLoader.GetResource(session, "items.binding.chooser")%> </h3>
    </div>
    <div class="modal-body">
+      <table class="table-bordered table-striped">
+         <tr>
+            <td>
+               <table>
+                  <tr><td><%=ResourceLoader.GetResource(session, "totals.records")%></td><td><span id="totalrecordsBinding"></span></td></tr>
+                  <tr><td><%=ResourceLoader.GetResource(session, "totals.recordsreturned")%></td><td><span id="displayrecordsBinding"></span></td></tr>
+                  <tr><td><%=ResourceLoader.GetResource(session, "totals.offset")%></td><td><span id="offsetBinding">0</span></td></tr>
+               </table>
+            </td>
+            <td>
+               <table>
 
-      <%=ResourceLoader.GetResource(session, "totals.records")%>: <span id="totalrecordsBinding"></span><br>
-      <%=ResourceLoader.GetResource(session, "totals.recordsreturned")%>: <span id="displayrecordsBinding"></span><br>
-      <%=ResourceLoader.GetResource(session, "totals.offset")%> : <span id="offsetBinding">0</span><br>
-      <%//ResourceLoader.GetResource(session, "items.lang")%> <span id="langBinding" class=""></span><br>
-
+                  <tr><td><%=ResourceLoader.GetResource(session, "items.name")%></td><td><input type="text" id="name_binding" value="%"></td></tr>
+                  <tr><td><%=ResourceLoader.GetResource(session, "items.lang")%></td><td><input type="text" id="lang_binding" value=""></td></tr>
+               </table>
+            </td>
+         </tr>
+      </table>
       <a href="javascript:pagedownChooserBinding();"><i class="icon-circle-arrow-left disabled icon-2x" id="pageupBinding"></i></a>
-      <a href="javascript:reloadBinding();"><i class="icon-refresh icon-2x"></i></a>
+      <a href="javascript:reloadBindingModal();"><i class="icon-refresh icon-2x"></i></a>
       <a href="javascript:pageupChooserBinding();"><i class="icon-circle-arrow-right disabled icon-2x" id="pagedownBinding"></i></a>
 
       <div id="bindinglist">
@@ -30,16 +42,14 @@ this page is meant to be included via jsp:include
       <script type="text/javascript">
          $("#bindingChooser").keydown(function(e) {
             if (e.which == 37) { // left
-               pagedownChooserService();
+               pagedownChooserBinding();
             }
             else if (e.which == 39) { // right
-               pageupChooserService();
+               pageupChooserBinding();
             }
          });
          $('.edit').editable(function(value, settings) {
-            console.log(this);
-            console.log(value);
-            console.log(settings);
+            window.console && console.log(value + this + settings);
             reloadBindingModal();
             //  RenderTmodelListBySearch('%', offset, maxrecords);
             return(value);

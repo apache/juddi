@@ -9,40 +9,64 @@
 <%@include file="header-top.jsp" %>
 <div class="container">
 
-    <!-- Main hero unit for a primary marketing message or call to action -->
-    <div class="well" >
-        <h1><%=ResourceLoader.GetResource(session, "navbar.businesses")%></h1>
-    </div>
+   <!-- Main hero unit for a primary marketing message or call to action -->
+   <div class="well" >
+      <h1><%=ResourceLoader.GetResource(session, "navbar.businesses")%></h1>
+   </div>
 
-    <!-- Example row of columns -->
-    <div class="row">
-        <div class="span12" >
-            <%=ResourceLoader.GetResource(session, "totals.records")%>: <span id="totalrecordsBusiness"></span><br>
-            <%=ResourceLoader.GetResource(session, "totals.recordsreturned")%>: <span id="displayrecordsBusiness"></span><br>
-            <%=ResourceLoader.GetResource(session, "totals.offset")%> : <span id="offsetBusiness">0</span><br>
-            <%=ResourceLoader.GetResource(session, "items.lang")%>: <span id="lang" class="edit"></span><br>
-            <a href="javascript:pagedownBusiness();"><i class="icon-circle-arrow-left disabled icon-2x" id="pageupBusiness"></i></a>
-            <a href="javascript:refreshBusinessList();"><i class="icon-refresh icon-2x" id="refresh"></i></a>
-            <a href="javascript:pageupBusiness();"><i class="icon-circle-arrow-right disabled icon-2x" id="pagedownBusiness"></i></a>
+   <!-- Example row of columns -->
+   <div class="row">
+      <div class="span12" >
+         <table class="table-bordered table-striped">
+            <tr>
+               <td>
+                  <table>
+                     <tr><td><%=ResourceLoader.GetResource(session, "totals.records")%></td><td><span id="totalrecordsBusiness"></span></td></tr>
+                     <tr><td><%=ResourceLoader.GetResource(session, "totals.recordsreturned")%></td><td><span id="displayrecordsBusiness"></span></td></tr>
+                     <tr><td><%=ResourceLoader.GetResource(session, "totals.offset")%></td><td><span id="offsetBusiness">0</span></td></tr>
+                  </table>
+               </td>
+               <td>
+                  <table>
+                     <tr><td><%=ResourceLoader.GetResource(session, "items.name")%></td><td><input type="text" id="name_business" value="%" tabindex="1"></td></tr>
+                     <tr><td><%=ResourceLoader.GetResource(session, "items.lang")%></td><td><input type="text" id="lang_business" tabindex="2"></td></tr>
+                  </table>
+               </td>
+            </tr>
+         </table>
+         <a href="javascript:pagedownBusiness();"><i class="icon-circle-arrow-left disabled icon-2x" id="pageupBusiness"></i></a>
+         <a href="javascript:refreshBusinessList();"><i class="icon-refresh icon-2x" id="refresh"></i></a>
+         <a href="javascript:pageupBusiness();"><i class="icon-circle-arrow-right disabled icon-2x" id="pagedownBusiness"></i></a>
 
-            <div id="businesslist">
-                <img src="img/bigrollergreen.gif" title="<%=ResourceLoader.GetResource(session, "items.loading")%>"/>
-            </div>
+         <div id="businesslist">
+            <img src="img/bigrollergreen.gif" title="<%=ResourceLoader.GetResource(session, "items.loading")%>"/>
+         </div>
 
-            <script src="js/businesssearch.js"></script>
-            <script type="text/javascript">
-                
-                $('.edit').editable(function(value, settings) { 
-                    console.log(this);
-                    console.log(value);
-                    console.log(settings);
-                    RenderBusinessListBySearch('%', offset, maxrecords);
-                    return(value);
-                }, { 
-                    type    : 'text',
-                    submit  : i18n_ok
-                });
-            </script>
-        </div>
-    </div>
-    <%@include file="header-bottom.jsp" %>
+         <script src="js/businesssearch.js"></script>
+         <script type="text/javascript">
+
+            $('.edit').editable(function(value, settings) {
+               window.console && console.log(value + this + settings);
+               RenderBusinessListBySearch('%', offset, maxrecords);
+               return(value);
+            }, {
+               type: 'text',
+               submit: i18n_ok
+            });
+            /*
+            var now=+new Date();
+            $("name_business").keydown(function(e) {
+               
+               var newnow = + new Date();
+               window.console && console.log(newnow + " " + now + " refreshing business list (search as you type)");
+               if (newnow-now > 500 )
+               {
+                  refreshBusinessList();
+                  window.console && console.log(newnow + " " + now + " refreshing business list (search as you type)");
+               }
+               return false;
+            });*/
+         </script>
+      </div>
+   </div>
+   <%@include file="header-bottom.jsp" %>

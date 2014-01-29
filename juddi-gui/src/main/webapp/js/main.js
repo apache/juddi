@@ -111,7 +111,8 @@ function RefreshLoginPage()
 //source http://totaldev.com/content/escaping-characters-get-valid-jquery-id
 function jqSelector(str)
 {
-    return str.replace(/([;&,\.\+\*\~':"\!\^#$%@\[\]\(\)=>\|])/g, '\\$1');
+    return str.replace(/([ #;?&,\.\+\*\~':"\!\^#$%@\[\]\(\)=>\|])/g, '\\$1');
+    //return str.replace(/([ #;?&,.+*~\':"!^$[\]()=>|\/@])/g,'\\$1');
 }
 
 function ShowServicesByBusinessKey(bizid)
@@ -124,7 +125,7 @@ function ShowServicesByBusinessKey(bizid)
     });
 
     request.done(function(msg) {
-        window.console && console.log(msg);
+//        window.console && console.log(msg);
         window.console && console.log('postback done to div ' + bizid);
         $("#" + jqSelector(bizid)).html(msg);
         //refresh();

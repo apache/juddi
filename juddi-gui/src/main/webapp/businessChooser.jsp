@@ -13,14 +13,25 @@ this page is meant to be included via jsp:include
       <h3><%=ResourceLoader.GetResource(session, "items.business.chooser")%> </h3>
    </div>
    <div class="modal-body">
-
-      <%=ResourceLoader.GetResource(session, "totals.records")%>: <span id="totalrecordsBusiness"></span><br>
-      <%=ResourceLoader.GetResource(session, "totals.recordsreturned")%>: <span id="displayrecordsBusiness"></span><br>
-      <%=ResourceLoader.GetResource(session, "totals.offset")%> : <span id="offsetBusiness">0</span><br>
-      <%//ResourceLoader.GetResource(session, "items.lang")%> <span id="langBusiness" class=""></span><br>
-
+      <table class="table-bordered table-striped">
+         <tr>
+            <td>
+               <table>
+                  <tr><td><%=ResourceLoader.GetResource(session, "totals.records")%></td><td><span id="totalrecordsBusiness"></span></td></tr>
+                  <tr><td><%=ResourceLoader.GetResource(session, "totals.recordsreturned")%></td><td><span id="displayrecordsBusiness"></span></td></tr>
+                  <tr><td><%=ResourceLoader.GetResource(session, "totals.offset")%></td><td><span id="offsetBusiness">0</span></td></tr>
+               </table>
+            </td>
+            <td>
+               <table>
+                  <tr><td><%=ResourceLoader.GetResource(session, "items.name")%></td><td><input type="text" id="name_business" value="%" ></td></tr>
+                  <tr><td><%=ResourceLoader.GetResource(session, "items.lang")%></td><td><input type="text" id="lang_business" ></td></tr>
+               </table>
+            </td>
+         </tr>
+      </table>
       <a href="javascript:pagedownChooserBusiness();"><i class="icon-circle-arrow-left disabled icon-2x" id="pageupBusiness"></i></a>
-      <a href="javascript:reloadBusiness();"><i class="icon-refresh icon-2x"></i></a>
+      <a href="javascript:reloadBusinessModal();"><i class="icon-refresh icon-2x"></i></a>
       <a href="javascript:pageupChooserBusiness();"><i class="icon-circle-arrow-right disabled icon-2x" id="pagedownBusiness"></i></a>
 
       <div id="businesslist">
@@ -39,9 +50,7 @@ this page is meant to be included via jsp:include
 
          });
          $('.edit').editable(function(value, settings) {
-            console.log(this);
-            console.log(value);
-            console.log(settings);
+            window.console && console.log(value + this + settings);
             reloadBusinessModal();
             //  RenderTmodelListBySearch('%', offset, maxrecords);
             return(value);

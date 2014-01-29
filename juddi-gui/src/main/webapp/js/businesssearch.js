@@ -55,12 +55,20 @@ function pageupBusiness()
 //offset, maxrecords, keyword
 function RenderBusinessListBySearch(keyword1, offset1, maxrecords1)
 {
-    if (keyword1 === "%")
-        keyword1 = "%25";
-    var lang = $("#lang").text();
+   var    keyword =$("#name_business").val();
+    var lang = $("#lang_business").text();
+    if (lang==undefined)
+       lang = "";
+    if (keyword==undefined)
+       keyword = "";
+    lang = encodeURIComponent(lang);
+    keyword = encodeURIComponent(keyword);
+    offset1 = encodeURIComponent(offset1);
+    maxrecords1 = encodeURIComponent(maxrecords1);
+    
     $("#businesslist").html("<img src=\"img/bigrollergreen.gif\" title=\"Loading\"/>");
     var request=   $.ajax({
-        url: 'ajax/businesssearch.jsp?keyword=' + keyword1 + "&offset=" + offset1 + "&maxrecords=" + maxrecords1 + "&lang=" + lang,
+        url: 'ajax/businesssearch.jsp?keyword=' + keyword + "&offset=" + offset1 + "&maxrecords=" + maxrecords1 + "&lang=" + lang,
         type:"GET",
         cache: false
     });
