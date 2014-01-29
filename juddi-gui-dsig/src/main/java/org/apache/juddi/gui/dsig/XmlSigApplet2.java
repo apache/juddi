@@ -90,17 +90,20 @@ public class XmlSigApplet2 extends java.applet.Applet {
         this.jList1.removeAll();
         Vector<String> certs = new Vector<String>();
 
+        String keyStoreError = "";
         //covers all modern browsers in windows
-        try {
-            keyStore = KeyStore.getInstance("Windows-MY");
-            keyStore.load(null, null);
-        } catch (Exception ex) {
-           System.out.println("Error loading Windows cert store " + ex.getMessage());
-            //ex.printStackTrace();
-            //JOptionPane.showMessageDialog(this, ex.getMessage());
+        if (System.getProperty("os.name").startsWith("Windows")) {
+	        try {
+	            keyStore = KeyStore.getInstance("Windows-MY");
+	            keyStore.load(null, null);
+	        } catch (Exception ex) {
+	        	keyStoreError += "Error loading Windows cert store " + ex.getMessage() + "\n";
+	            //ex.printStackTrace();
+	            //JOptionPane.showMessageDialog(this, ex.getMessage());
+	        }
         }
         //firefox keystore
-        if (keyStore != null) {
+        if (keyStore == null) {
 
             try {
 
@@ -112,12 +115,12 @@ public class XmlSigApplet2 extends java.applet.Applet {
                 keyStore.load(null, "password".toCharArray());
             } catch (Exception ex) {
                 //JOptionPane.showMessageDialog(this, ex.getMessage());
-               System.out.println("Error loading Firefox cert store " + ex.getMessage());
+            	keyStoreError += "Error loading Firefox cert store " + ex.getMessage() + "\n";
                 //ex.printStackTrace();
             }
         }
         //MacOS with Safari possibly others
-        if (keyStore != null) {
+        if (keyStore == null) {
             try {
                 keyStore = KeyStore.getInstance("KeychainStore");
                 keyStore.load(null, null);
@@ -125,10 +128,13 @@ public class XmlSigApplet2 extends java.applet.Applet {
             } catch (Exception ex) {
                 //JOptionPane.showMessageDialog(this, ex.getMessage());
                 //ex.printStackTrace();
-               System.out.println("Error loading MACOS Key chain cert store " + ex.getMessage());
+            	keyStoreError += "Error loading MACOS Key chain cert store " + ex.getMessage()+ "\n";
             }
         }
-        if (keyStore!=null){
+        
+        if (keyStore == null) {
+        	System.err.println(keyStoreError);
+        } else {
             try {
                 Enumeration<String> aliases = keyStore.aliases();
 
@@ -138,7 +144,7 @@ public class XmlSigApplet2 extends java.applet.Applet {
                     //this is needed to test for access
 
                     try {
-                        Key key = keyStore.getKey(a, null);
+                        Key key = keyStore.getKey(a, "MyPasswd".toCharArray());
                         certs.add(a);
 
                     } catch (Exception x) {
@@ -443,7 +449,7 @@ public class XmlSigApplet2 extends java.applet.Applet {
                 ds.put(DigSigUtil.SIGNATURE_OPTION_DIGEST_METHOD, jTextFieldDigestMethod.getText());
                 ds.put(DigSigUtil.CANONICALIZATIONMETHOD, jTextFieldc14n.getText());
                 
-                PrivateKey key = (PrivateKey) keyStore.getKey((String) jList1.getSelectedValue(), null);
+                PrivateKey key = (PrivateKey) keyStore.getKey((String) jList1.getSelectedValue(), "MyPasswd".toCharArray());
                 Certificate publickey = keyStore.getCertificate((String) jList1.getSelectedValue());
 
                 j = ds.signUddiEntity(j, publickey, key);
