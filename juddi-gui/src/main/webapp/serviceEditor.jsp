@@ -694,6 +694,10 @@
             });
 
          }
+         function saveAnyhow(){
+            saveService();
+            $('#confirmDialog').modal('hide');
+         }
       </script>
       <%
          }
@@ -713,8 +717,8 @@
       <p><%=ResourceLoader.GetResource(session, "modal.digitalsignaturewarning.body")%></p>
    </div>
    <div class="modal-footer">
-      <a href="#" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
-      <a href="javascript:saveService();$('#confirmDialog').modal('hide');" class="btn btn-primary">
+      <a href="javascript:closeXmlPop('confirmDialog');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+      <a href="javascript:saveAnyhow();" class="btn btn-primary">
          <%=ResourceLoader.GetResource(session, "modal.savechanges")%></a>
    </div>
 </div>
