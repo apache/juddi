@@ -597,7 +597,6 @@ public class MapUDDIv2Tov3 {
                 org.uddi.api_v3.DispositionReport r = new org.uddi.api_v3.DispositionReport();
                 r.setTruncated(false);
                 r.getResult().addAll(MapFault(ex.getFault()));
-
                 DispositionReportFaultMessage x = new DispositionReportFaultMessage(ex.getMessage(), r);
                 return x;
         }
@@ -629,6 +628,7 @@ public class MapUDDIv2Tov3 {
                         return null;
                 }
                 FindBinding r = new FindBinding();
+                r.setServiceKey(body.getServiceKey());
                 r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers()));
                 r.setMaxRows(body.getMaxRows());
                 r.setTModelBag(MapTModelBag(body.getTModelBag()));

@@ -156,7 +156,7 @@ public class UDDIv2InquiryImpl implements Inquire {
         @Override
         public BusinessDetailExt getBusinessDetailExt(GetBusinessDetailExt body) throws DispositionReport {
                 try {
-                        return MapUDDIv3Tov2.MapBusinessDetailExt(inquiryService.getBusinessDetail(MapUDDIv2Tov3.MapGetBusinessDetailExt(body)));
+                        return MapUDDIv3Tov2.MapBusinessDetailExt(inquiryService.getBusinessDetail(MapUDDIv2Tov3.MapGetBusinessDetailExt(body)), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
                         throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
