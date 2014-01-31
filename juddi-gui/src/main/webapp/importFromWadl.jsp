@@ -51,7 +51,7 @@
                                                         <%                                }
                                                         %>
                                                         <input type="text" id="wsdlusername" placeholder="<%=ResourceLoader.GetResource(session, "navbar.login.username")%> <%=ResourceLoader.GetResource(session, "items.optional")%>" ><br>
-                                                        <input type="text" id="wsdlpassword" placeholder="<%=ResourceLoader.GetResource(session, "navbar.login.password")%> <%=ResourceLoader.GetResource(session, "items.optional")%>" ><br>
+                                                        <input type="password" id="wsdlpassword" placeholder="<%=ResourceLoader.GetResource(session, "navbar.login.password")%> <%=ResourceLoader.GetResource(session, "items.optional")%>" ><br>
                                                         <input type="checkbox" id="wsdlignoressl" > <%=ResourceLoader.GetResource(session, "items.ignoresslerror")%><br>
                                                 </div>
                                         </div>
