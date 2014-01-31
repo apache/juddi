@@ -29,6 +29,7 @@ import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIKeyConvention;
+import org.apache.juddi.v3.client.subscription.SubscriptionCallbackListener;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.AccessPoint;
 import org.uddi.api_v3.BindingTemplate;
@@ -36,9 +37,11 @@ import org.uddi.api_v3.BindingTemplates;
 import org.uddi.api_v3.BusinessService;
 
 /**
- * The ServiceLocator contacts the UDDI registry to lookup an Endpoint given a UDDI ServiceKey.
- *
- * @see UDDIClerk.getEndpoints
+ * The ServiceLocator contacts the UDDI registry to lookup an Endpoint given a UDDI ServiceKey.<br>
+ * This class does NOT chase down WSDL, hosting redirectors or other binding references from
+ * access point useType values. See 
+ * {@link org.apache.juddi.v3.client.config.UDDIClerk#getEndpoints UDDIClerk.getEndpoints}
+ * @see SubscriptionCallbackListener
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class ServiceLocator {
@@ -137,6 +140,7 @@ public class ServiceLocator {
 		try {
 			if (selectionPolicy==null) {
 				if (policy==null) {
+                                        //TODO move this constant to Property.class
 					policy = properties.getProperty("juddi.client.selection.policy", "org.apache.juddi.v3.client.mapping.PolicyLocalFirst");
 				}
 				@SuppressWarnings("unchecked")

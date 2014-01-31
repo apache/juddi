@@ -64,14 +64,18 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
  * The Cache also registers an MBean which allows the 
  * 
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
- */
+ * @see UDDIClientSubscriptionListenerService
+ * @see UDDIServiceCacheMBean
+ * @see UDDISubscriptionListenerPortType
+ * @see ServiceLocator
+  */
 public class UDDIServiceCache implements UDDIServiceCacheMBean {
 	
-	public static String UDDI_ORG_NS                       = "urn:uddi-org:v3_service";
-	public static String UDDI_CLIENT_SUBSCRIPTION_LISTENER = "UDDIClientSubscriptionListenerService";
-	public static QName  SUBSCRIPTION_LISTENER_SERVICE_NAME= new QName(UDDI_ORG_NS, UDDI_CLIENT_SUBSCRIPTION_LISTENER);
-	public static String SUBSCRIPTION_LISTENER_PORT_NAME   = "UDDIClientSubscriptionListenerImplPort";
-	public static String DEFAULT_SUBSCRIPTION_LISTENER_URL = "http://localhost:8080/subscriptionlistener_uddi_client";
+	public static final String UDDI_ORG_NS                       = "urn:uddi-org:v3_service";
+	public static final String UDDI_CLIENT_SUBSCRIPTION_LISTENER = "UDDIClientSubscriptionListenerService";
+	public static final QName  SUBSCRIPTION_LISTENER_SERVICE_NAME= new QName(UDDI_ORG_NS, UDDI_CLIENT_SUBSCRIPTION_LISTENER);
+	public static final String SUBSCRIPTION_LISTENER_PORT_NAME   = "UDDIClientSubscriptionListenerImplPort";
+	public static final String DEFAULT_SUBSCRIPTION_LISTENER_URL = "http://localhost:8080/subscriptionlistener_uddi_client";
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	

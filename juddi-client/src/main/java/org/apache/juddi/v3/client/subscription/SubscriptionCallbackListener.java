@@ -82,7 +82,7 @@ import org.uddi.v3_service.UDDIPublicationPortType;
  * @since 3.2
  */
 
-@WebService(serviceName="UDDISubscriptionListenerService", 
+@WebService(serviceName="UDDISubscriptionListenerClientService", 
 			endpointInterface="org.uddi.v3_service.UDDISubscriptionListenerPortType",
 			targetNamespace = "urn:uddi-org:v3_service")
 public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISubscriptionListenerPortType, Runnable {

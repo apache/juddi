@@ -1,9 +1,15 @@
 package org.apache.juddi.v3.client;
 
+import org.apache.juddi.v3.client.config.Property;
+import org.apache.juddi.v3.client.ext.wsdm.WSDMQosConstants;
+
 /**
  * This file was borrowed from juddi-core's constants file with modifications
  *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
+ * @see WSDMQosConstants
+ * @see Property
+ * 
  */
 public interface UDDIConstants {
 
