@@ -27,7 +27,7 @@
 		<copy file="${basedir}/context.xml" todir="${webapps.dir}/juddiv3/META-INF" overwrite="true"/>
 		<copy file="${basedir}/server.xml" todir="${conf.dir}" overwrite="true"/>
 		<copy file="${basedir}/keystore.jks" todir="${conf.dir}" overwrite="true"/>
-		<copy file="${basedir}/web.xml" todir="${conf.dir}" overwrite="true"/>
+		
  		<copy file="${dependency.mysql.jar}" todir="${lib.dir}"/>
 		<copy file="${dependency.postgres.jar}" todir="${lib.dir}"/>
 		<copy file="${dependency.log4j.jar}" todir="${lib.dir}"/>
