@@ -72,6 +72,7 @@ import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
+import org.uddi.api_v3.ListDescription;
 
 /**
  * This class implements the UDDI Publication Service
@@ -525,7 +526,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			validator.validateSaveBinding(em, body, null);
 	
 			BindingDetail result = new BindingDetail();
-			
+                        result.setListDescription(new ListDescription());
 			List<org.uddi.api_v3.BindingTemplate> apiBindingTemplateList = body.getBindingTemplate();
 			for (org.uddi.api_v3.BindingTemplate apiBindingTemplate : apiBindingTemplateList) {
 				
@@ -541,7 +542,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 				em.persist(modelBindingTemplate);
 				
 				result.getBindingTemplate().add(apiBindingTemplate);
-				
+                                result.getListDescription().setActualCount(result.getListDescription().getActualCount()+1);
+                                result.getListDescription().setIncludeCount(result.getListDescription().getIncludeCount()+1);
 				validator.validateSaveBindingMax(em, modelBindingTemplate.getBusinessService().getEntityKey());
 			}
 	

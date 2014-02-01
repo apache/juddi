@@ -280,7 +280,7 @@ public class MapUDDIv2Tov3 {
         }
 
         private static TModelInstanceDetails MapTModelInstanceDetails(org.uddi.api_v2.TModelInstanceDetails tModelInstanceDetails) {
-                if (tModelInstanceDetails == null) {
+                if (tModelInstanceDetails == null | tModelInstanceDetails.getTModelInstanceInfo().isEmpty()) {
                         return null;
                 }
                 TModelInstanceDetails r = new TModelInstanceDetails();

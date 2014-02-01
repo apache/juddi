@@ -96,12 +96,4 @@
         <security-role>
                 <role-name>uddiadmin</role-name>
         </security-role>
-<!-- if deployment fails, try commenting this out -->
-        <init-param>
-          <param-name>trimSpaces</param-name>
-          <param-value>true</param-value>
-        </init-param>
-<!-- end -->
-
-        
 </web-app>
