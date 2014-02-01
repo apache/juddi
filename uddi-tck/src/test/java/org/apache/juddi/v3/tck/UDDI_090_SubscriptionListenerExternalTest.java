@@ -49,6 +49,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.GetBusinessDetail;
@@ -654,6 +655,7 @@ public class UDDI_090_SubscriptionListenerExternalTest {
          * @throws Exception 
          */
         @Test
+        @Ignore
         public void joePublisherUpdate_HTTP_GET_BUSINESS_DETAIL() throws Exception{
                 logger.info("joePublisherUpdate_HTTP_GET_BUSINESS_DETAIL");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
