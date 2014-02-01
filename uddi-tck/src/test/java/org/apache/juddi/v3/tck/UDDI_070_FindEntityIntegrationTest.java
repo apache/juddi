@@ -352,8 +352,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         //see JUDDI-785, jUDDI doesn't support it, and thus should throw.
         /**
          * Note that jUDDI ignores caseInsensiveSort.
-         *
-         * @see UDDIConstants.CASE_INSENSITIVE_SORT
+         * {@link org.apache.juddi.v3.client.UDDIConstants#CASE_INSENSITIVE_SORT CASE_INSENSITIVE_SORT}
          * @throws Exception
          */
         @Test
@@ -365,7 +364,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         /**
          * Note that jUDDI ignores caseInsensiveSort.
          *
-         * @see UDDIConstants.CASE_INSENSITIVE_SORT
+         * {@link org.apache.juddi.v3.client.UDDIConstants#CASE_INSENSITIVE_SORT CASE_INSENSITIVE_SORT}
          * @throws Exception
          */
         @Test
@@ -377,7 +376,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         /**
          * Note that jUDDI ignores caseInsensiveSort.
          *
-         * @see UDDIConstants.CASE_INSENSITIVE_SORT
+         * {@link org.apache.juddi.v3.client.UDDIConstants#CASE_INSENSITIVE_SORT CASE_INSENSITIVE_SORT}
          * @throws Exception
          */
         @Test
@@ -400,7 +399,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         /**
          * Note that jUDDI ignores caseInsensiveSort.
          *
-         * @see UDDIConstants.CASE_INSENSITIVE_SORT
+         * {@link org.apache.juddi.v3.client.UDDIConstants#CASE_INSENSITIVE_SORT CASE_INSENSITIVE_SORT}
          * @throws Exception
          */
         @Test

@@ -112,11 +112,11 @@ public interface UDDIConstants {
     /**
      * caseInsensitiveSort: signifies that the result set should be sorted
      * without regard to case. This overrides the default case sensitive sorting
-     * behavior. 
+     * behavior. <br><br>
      * 
      * WARNING: The current JPA specification does NOT support caseInsensitiveSort.
-     * jUDDI therefore *ignores* the caseInsensitive sort setting. 
-     * See also https://issues.apache.org/jira/browse/OPENJPA-1817
+     * jUDDI services therefore does not support the caseInsensitive sort setting. 
+     * See also https://issues.apache.org/jira/browse/JUDDI-785
      * A work around is to perform a caseInsensitiveMatch. 
      */
     public static final String CASE_INSENSITIVE_SORT = "caseInsensitiveSort";
