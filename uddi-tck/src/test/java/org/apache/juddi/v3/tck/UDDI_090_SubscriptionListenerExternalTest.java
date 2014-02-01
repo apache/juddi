@@ -49,7 +49,7 @@ import org.junit.Test;
 
 /**
  * Used only when running the TCK against a running UDDI server (could be something other than jUDDI)
- * from the juddi-tck-runner application. The 'external' part is really managing about managing
+ * from the juddi-tck-runner application. The 'external' part is really managing 
  * hostnames for callbacks, and for using an external smtp server for smtp based notifications
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
