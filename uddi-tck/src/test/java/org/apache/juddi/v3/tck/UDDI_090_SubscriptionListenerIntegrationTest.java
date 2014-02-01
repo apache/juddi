@@ -393,7 +393,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
          * @throws Exception 
          */
         @Test
-        @Ignore
+        //@Ignore
         public void joePublisherUpdate_HTTP_GET_BUSINESS_DETAIL() throws Exception{
                 logger.info("joePublisherUpdate_HTTP_GET_BUSINESS_DETAIL");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
@@ -401,7 +401,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                 try {
                         UDDISubscriptionListenerImpl.notifcationMap.clear();
                         UDDISubscriptionListenerImpl.notificationCount = 0;
-                        String before = TckCommon.DumpAllTModels(authInfoJoe, inquiryJoe);
+                        String before = TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe);
 
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckTModelJoe.saveTModels(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
@@ -446,13 +446,15 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         if (UDDISubscriptionListenerImpl.notificationCount == 0) {
                                 logger.warn("Test failed, dumping business list");
                                 logger.warn("BEFORE " + before);
-                                logger.warn("After " + TckCommon.DumpAllTModels(authInfoJoe, inquiryJoe));
+                                logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
                                 Assert.fail("No Notification was sent");
                         }
                         Iterator<String> it = UDDISubscriptionListenerImpl.notifcationMap.values().iterator();
+                         StringBuilder sb = new StringBuilder();
                         boolean found = false;
                         while (it.hasNext()) {
                                 String test = it.next();
+                                sb.append("Message: " + test + System.getProperty("line.separator"));
                                 if (test.contains("Updated Name")) {
                                         found = true;
                                         break;
@@ -461,8 +463,8 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         if (!found) {
                                 logger.warn("Test failed, dumping business list");
                                 logger.warn("BEFORE " + before);
-                                logger.warn("After " + TckCommon.DumpAllTModels(authInfoJoe, inquiryJoe));
-                                Assert.fail("Notification does not contain the correct service");
+                                logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                Assert.fail("Notification does not contain the correct service. Messages received: " + sb.toString());
                         }
 
                 } catch (Exception e) {
