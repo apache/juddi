@@ -199,7 +199,10 @@ public class MapUDDIv2Tov3 {
                 item.setCategoryBag(MapCategoryBag(be.getCategoryBag()));
                 item.setIdentifierBag(MapIdentBag(be.getIdentifierBag()));
                 item.getDescription().addAll(MapDescription(be.getDescription()));
-                item.getOverviewDoc().add(MapOverviewDoc(be.getOverviewDoc()));
+                OverviewDoc MapOverviewDoc = MapOverviewDoc(be.getOverviewDoc());
+                if (MapOverviewDoc != null) {
+                        item.getOverviewDoc().add(MapOverviewDoc);
+                }
                 return item;
         }
 
@@ -483,8 +486,8 @@ public class MapUDDIv2Tov3 {
                         x.setToKey(publisherAssertions.get(i).getToKey());
                         if (publisherAssertions.get(i).getKeyedReference() != null) {
                                 x.setKeyedReference(new KeyedReference(publisherAssertions.get(i).getKeyedReference().getTModelKey(),
-                                        publisherAssertions.get(i).getKeyedReference().getKeyName(),
-                                        publisherAssertions.get(i).getKeyedReference().getKeyValue()));
+                                     publisherAssertions.get(i).getKeyedReference().getKeyName(),
+                                     publisherAssertions.get(i).getKeyedReference().getKeyValue()));
                         }
                         r.add(x);
                 }
@@ -517,7 +520,7 @@ public class MapUDDIv2Tov3 {
                                 TModelInfo x = new TModelInfo();
                                 x.setTModelKey(registeredInfo.getTModelInfos().getTModelInfo().get(i).getTModelKey());
                                 x.setName(new Name(registeredInfo.getTModelInfos().getTModelInfo().get(i).getName().getValue(),
-                                        registeredInfo.getTModelInfos().getTModelInfo().get(i).getName().getValue()));
+                                     registeredInfo.getTModelInfos().getTModelInfo().get(i).getName().getValue()));
                                 r.getTModelInfos().getTModelInfo().add(x);
                         }
 
@@ -756,11 +759,11 @@ public class MapUDDIv2Tov3 {
                                 return true;
                         }
                         if (name.get(i).getLang() != null
-                                && name.get(i).getLang().contains(UDDIConstants.WILDCARD)) {
+                             && name.get(i).getLang().contains(UDDIConstants.WILDCARD)) {
                                 return true;
                         }
                         if (name.get(i).getLang() != null
-                                && name.get(i).getLang().contains(UDDIConstants.WILDCARD_CHAR)) {
+                             && name.get(i).getLang().contains(UDDIConstants.WILDCARD_CHAR)) {
                                 return true;
                         }
                 }
@@ -1042,8 +1045,8 @@ public class MapUDDIv2Tov3 {
                         x.setKeysOwned(MapKeysOwned(assertionStatusReport.getAssertionStatusItem().get(i).getKeysOwned()));
                         if (assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference() != null) {
                                 x.setKeyedReference(new KeyedReference(assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getTModelKey(),
-                                        assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getKeyName(),
-                                        assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getKeyValue()));
+                                     assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getKeyName(),
+                                     assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getKeyValue()));
                         }
                 }
                 return r;
