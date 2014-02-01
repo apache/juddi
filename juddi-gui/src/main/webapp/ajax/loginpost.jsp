@@ -66,7 +66,7 @@
                         out.write(StringEscapeUtils.escapeHtml(ex.getMessage()));
                 }
 
-                UddiHub.reset(request.getSession());
+               //fix for JUDDI-834, do not uncomment UddiHub.reset(request.getSession());
                 UddiHub x = UddiHub.getInstance(application, request.getSession());
 
                 String msg = x.verifyLogin();
