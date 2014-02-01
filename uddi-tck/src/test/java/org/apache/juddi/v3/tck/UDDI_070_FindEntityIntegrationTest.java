@@ -15,6 +15,7 @@
 package org.apache.juddi.v3.tck;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 import javax.xml.ws.BindingProvider;
 
@@ -26,6 +27,7 @@ import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -347,44 +349,43 @@ public class UDDI_070_FindEntityIntegrationTest {
 //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="CASE_INSENSITIVE_SORT">
+        //see JUDDI-785, jUDDI doesn't support it, and thus should throw.
         /**
-         * Note that jUDDI ignores caseInsensiveSort. 
-         * 
-         * @see UDDIConstants.CASE_INSENSITIVE_SORT 
+         * Note that jUDDI ignores caseInsensiveSort.
+         *
+         * @see UDDIConstants.CASE_INSENSITIVE_SORT
          * @throws Exception
          */
         @Test
         public void UDDI_764caseInsensitiveSortBusiness() throws Exception {
-				findbuinsess(UDDIConstants.CASE_INSENSITIVE_SORT);
+                Assume.assumeFalse(TckPublisher.isJUDDI());
+                findbuinsess(UDDIConstants.CASE_INSENSITIVE_SORT);
         }
 
-        
         /**
-         * Note that jUDDI ignores caseInsensiveSort. 
-         * 
-         * @see UDDIConstants.CASE_INSENSITIVE_SORT 
+         * Note that jUDDI ignores caseInsensiveSort.
+         *
+         * @see UDDIConstants.CASE_INSENSITIVE_SORT
          * @throws Exception
          */
         @Test
         public void UDDI_764caseInsensitiveSortService() throws Exception {
+                Assume.assumeFalse(TckPublisher.isJUDDI());
                 findservice(UDDIConstants.CASE_INSENSITIVE_SORT);
         }
+
         /**
-         * Note that jUDDI ignores caseInsensiveSort. 
-         * 
-         * @see UDDIConstants.CASE_INSENSITIVE_SORT 
+         * Note that jUDDI ignores caseInsensiveSort.
+         *
+         * @see UDDIConstants.CASE_INSENSITIVE_SORT
          * @throws Exception
          */
         @Test
         public void UDDI_764caseInsensitiveSortTModel() throws Exception {
+                Assume.assumeFalse(TckPublisher.isJUDDI());
                 findtmodel(UDDIConstants.CASE_INSENSITIVE_SORT);
         }
-        /**
-         * Note that jUDDI ignores caseInsensiveSort. 
-         * 
-         * @see UDDIConstants.CASE_INSENSITIVE_SORT 
-         * @throws Exception
-         */
+
         @Test
         public void UDDI_764caseInsensitiveSortBinding() throws Exception {
                 try {
@@ -395,38 +396,40 @@ public class UDDI_070_FindEntityIntegrationTest {
                         logger.debug("Expected failure: " + ex.getMessage(), ex);
                 }
         }
+
         /**
-         * Note that jUDDI ignores caseInsensiveSort. 
-         * 
-         * @see UDDIConstants.CASE_INSENSITIVE_SORT 
+         * Note that jUDDI ignores caseInsensiveSort.
+         *
+         * @see UDDIConstants.CASE_INSENSITIVE_SORT
          * @throws Exception
          */
         @Test
         public void UDDI_764caseInsensitiveSortRelatedBiz() throws Exception {
+                Assume.assumeFalse(TckPublisher.isJUDDI());
                 findrelated(UDDIConstants.CASE_INSENSITIVE_SORT);
         }
 
         @Test
-        @Ignore
         public void UDDI_764caseInsensitiveSortBusinessKey() throws Exception {
+                Assume.assumeFalse(TckPublisher.isJUDDI());
                 findbuinsess(UDDIConstants.CASE_INSENSITIVE_SORT_TMODEL);
         }
 
         @Test
-        @Ignore
         public void UDDI_764caseInsensitiveSortServiceKey() throws Exception {
+                Assume.assumeFalse(TckPublisher.isJUDDI());
                 findservice(UDDIConstants.CASE_INSENSITIVE_SORT_TMODEL);
         }
 
         @Test
-        @Ignore
         public void UDDI_764caseInsensitiveSortTModelKey() throws Exception {
+                Assume.assumeFalse(TckPublisher.isJUDDI());
                 findtmodel(UDDIConstants.CASE_INSENSITIVE_SORT_TMODEL);
         }
 
         @Test
-        @Ignore
         public void UDDI_764caseInsensitiveSortBindingKey() throws Exception {
+                Assume.assumeFalse(TckPublisher.isJUDDI());
                 try {
                         findbinding(UDDIConstants.CASE_INSENSITIVE_SORT_TMODEL);
                         Assert.fail("Unexpected success");
@@ -439,6 +442,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         @Test
         @Ignore
         public void UDDI_764caseInsensitiveSortRelatedBizKey() throws Exception {
+                Assume.assumeFalse(TckPublisher.isJUDDI());
                 findrelated(UDDIConstants.CASE_INSENSITIVE_SORT_TMODEL);
         }
 //</editor-fold>
@@ -526,10 +530,8 @@ public class UDDI_070_FindEntityIntegrationTest {
         @Test
         public void UDDI_764SORT_BY_DATE_ASCSortBinding() throws Exception {
                 findbinding(new String[]{UDDIConstants.SORT_BY_DATE_ASC},
-                        new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
-                
-                
-                
+                     new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
+
         }
 
         @Test
@@ -556,7 +558,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         public void UDDI_764SORT_BY_DATE_ASCSortBindingKey() throws Exception {
                 //  findbinding(UDDIConstants.SORT_BY_DATE_ASC_TMODEL);
                 findbinding(new String[]{UDDIConstants.SORT_BY_DATE_ASC_TMODEL},
-                        new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
+                     new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
 
         }
 
@@ -585,7 +587,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         @Test
         public void UDDI_764SORT_BY_DATE_DESCSortBinding() throws Exception {
                 findbinding(new String[]{UDDIConstants.SORT_BY_DATE_DESC},
-                        new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
+                     new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
                 //(UDDIConstants.SORT_BY_DATE_DESC);
         }
 
@@ -612,7 +614,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         @Test
         public void UDDI_764SORT_BY_DATE_DESCSortBindingKey() throws Exception {
                 findbinding(new String[]{UDDIConstants.SORT_BY_DATE_DESC_TMODEL},
-                        new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
+                     new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
         }
 
         @Test
@@ -769,7 +771,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         public void UDDI_764AND_ALL_KEYSSortBinding() throws Exception {
                 //findbinding(UDDIConstants.AND_ALL_KEYS);
                 findbinding(new String[]{UDDIConstants.AND_ALL_KEYS},
-                        new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
+                     new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
 
         }
 
@@ -804,7 +806,7 @@ public class UDDI_070_FindEntityIntegrationTest {
 
                 //findbinding(UDDIConstants.AND_ALL_KEYS_TMODEL);
                 findbinding(new String[]{UDDIConstants.AND_ALL_KEYS_TMODEL},
-                        new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
+                     new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
 
         }
 
@@ -840,7 +842,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         @Test
         public void UDDI_764BINDING_SUBSETBinding() throws Exception {
                 findbinding(new String[]{UDDIConstants.BINDING_SUBSET},
-                        new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
+                     new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
 
                 //        findbinding(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.BINDING_SUBSET});
         }
@@ -868,7 +870,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         @Test
         public void UDDI_764BINDING_SUBSETBindingKey() throws Exception {
                 findbinding(new String[]{UDDIConstants.BINDING_SUBSET_TMODEL},
-                        new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
+                     new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
         }
 
         @Test
@@ -897,7 +899,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         public void UDDI_764caseInsensitiveMatchBinding() throws Exception {
                 try {
                         findbinding(new String[]{UDDIConstants.CASE_INSENSITIVE_MATCH},
-                                new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
+                             new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
                         Assert.fail("unexpected success");
 
                 } catch (Exception ex) {
@@ -931,7 +933,7 @@ public class UDDI_070_FindEntityIntegrationTest {
                 //findbinding(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.CASE_INSENSITIVE_MATCH_TMODEL});
                 try {
                         findbinding(new String[]{UDDIConstants.CASE_INSENSITIVE_MATCH_TMODEL},
-                                new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
+                             new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
                         Assert.fail("unexpected success");
 
                 } catch (Exception ex) {
@@ -964,11 +966,11 @@ public class UDDI_070_FindEntityIntegrationTest {
 
         @Test
         public void UDDI_764CASE_SENSITIVE_MATCHBinding() throws Exception {
-                try{
-                findbinding(new String[]{UDDIConstants.CASE_SENSITIVE_MATCH},
-                        new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
-                                        Assert.fail("unexpected success");
-                }catch (Exception ex){
+                try {
+                        findbinding(new String[]{UDDIConstants.CASE_SENSITIVE_MATCH},
+                             new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
+                        Assert.fail("unexpected success");
+                } catch (Exception ex) {
                         logger.info("Expected failure: " + ex.getMessage());
                         logger.debug("Expected failure: " + ex.getMessage(), ex);
                 }
@@ -997,11 +999,11 @@ public class UDDI_070_FindEntityIntegrationTest {
         @Test
         public void UDDI_764CASE_SENSITIVE_MATCHBindingKey() throws Exception {
                 //findbinding(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.CASE_SENSITIVE_MATCH_TMODEL});
-                try{
-                findbinding(new String[]{UDDIConstants.CASE_SENSITIVE_MATCH_TMODEL},
-                        new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
-                                        Assert.fail("unexpected success");
-                }catch (Exception ex){
+                try {
+                        findbinding(new String[]{UDDIConstants.CASE_SENSITIVE_MATCH_TMODEL},
+                             new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
+                        Assert.fail("unexpected success");
+                } catch (Exception ex) {
                         logger.info("Expected failure: " + ex.getMessage());
                         logger.debug("Expected failure: " + ex.getMessage(), ex);
                 }
@@ -2265,4 +2267,65 @@ public class UDDI_070_FindEntityIntegrationTest {
 
         //</editor-fold>
         //
+       
+        //<editor-fold defaultstate="collapsed" desc="Find qualifiers not recognized by a node will return the error E_unsupported. ">
+        @Test
+        public void UDDI_785UNSUPPORTED_FIND_QUALIFIER_Business() {
+                try {
+                        findbuinsess(UUID.randomUUID().toString());
+                        Assert.fail("Unexpected success");
+                } catch (Exception ex) {
+                        logger.info("Expected failure: " + ex.getMessage());
+                        logger.debug("Expected failure: " + ex.getMessage(), ex);
+                }
+        }
+
+        @Test
+        public void UDDI_785UNSUPPORTED_FIND_QUALIFIER_Service() throws Exception {
+                try {
+                        findservice(UUID.randomUUID().toString());
+                        Assert.fail("Unexpected success");
+                } catch (Exception ex) {
+                        logger.info("Expected failure: " + ex.getMessage());
+                        logger.debug("Expected failure: " + ex.getMessage(), ex);
+                }
+        }
+
+        @Test
+        public void UDDI_785UNSUPPORTED_FIND_QUALIFIER_TModel() {
+                try {
+                        findtmodel(UUID.randomUUID().toString());
+                        Assert.fail("Unexpected success");
+                } catch (Exception ex) {
+                        logger.info("Expected failure: " + ex.getMessage());
+                        logger.debug("Expected failure: " + ex.getMessage(), ex);
+                }
+        }
+
+        @Test
+        public void UDDI_785UNSUPPORTED_FIND_QUALIFIER_Binding() {
+                try {
+                        findbinding(UUID.randomUUID().toString());
+                        Assert.fail("Unexpected success");
+                } catch (Exception ex) {
+                        logger.info("Expected failure: " + ex.getMessage());
+                        logger.debug("Expected failure: " + ex.getMessage(), ex);
+                }
+        }
+
+        @Test
+        public void UDDI_785UNSUPPORTED_FIND_QUALIFIER_RelatedBiz() {
+                try {
+                        findrelated(UUID.randomUUID().toString());
+                        Assert.fail("Unexpected success");
+                } catch (Exception ex) {
+                        logger.info("Expected failure: " + ex.getMessage());
+                        logger.debug("Expected failure: " + ex.getMessage(), ex);
+                }
+        }
+
+//</editor-fold>
+        
+         //TODO test cases for mixed case find qualifiers
+        //"Registries MUST support both forms, and MUST accept the find qualifiers case-insensitively. "
 }

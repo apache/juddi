@@ -16,9 +16,11 @@
  */
 package org.apache.juddi.validation;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetOperationalInfo;
@@ -39,11 +41,11 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.util.FindQualifiers;
-import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.InvalidCombinationException;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.UnsupportedException;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
 
 /**
@@ -214,7 +216,7 @@ public class ValidateInquiry extends ValidateUDDIApi {
                 }
 
                 if (body.getCategoryBag() == null && body.getFindTModel() == null && body.getTModelBag() == null && body.getName().size() == 0
-                        && body.getIdentifierBag() == null && body.getDiscoveryURLs() == null && body.getFindRelatedBusinesses() == null) {
+                     && body.getIdentifierBag() == null && body.getDiscoveryURLs() == null && body.getFindRelatedBusinesses() == null) {
                         throw new FatalErrorException(new ErrorMessage("errors.findbusiness.NoInput"));
                 }
 
@@ -235,10 +237,9 @@ public class ValidateInquiry extends ValidateUDDIApi {
                         throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
                 }
 
-                if (body.getCategoryBag() == null && body.getFindTModel() == null && 
-                		(body.getTModelBag() == null || body.getTModelBag().getTModelKey().size() == 0)
-                		&& body.getName().size() == 0 && body.getBusinessKey() == null) 
-                {
+                if (body.getCategoryBag() == null && body.getFindTModel() == null
+                     && (body.getTModelBag() == null || body.getTModelBag().getTModelKey().size() == 0)
+                     && body.getName().size() == 0 && body.getBusinessKey() == null) {
                         throw new FatalErrorException(new ErrorMessage("errors.findservice.NoInput"));
                 }
 
@@ -300,8 +301,8 @@ public class ValidateInquiry extends ValidateUDDIApi {
                 }
 
                 if ((body.getBusinessKey() == null || body.getBusinessKey().length() == 0)
-                        && (body.getFromKey() == null || body.getFromKey().length() == 0)
-                        && (body.getToKey() == null || body.getToKey().length() == 0)) {
+                     && (body.getFromKey() == null || body.getFromKey().length() == 0)
+                     && (body.getToKey() == null || body.getToKey().length() == 0)) {
                         throw new FatalErrorException(new ErrorMessage("errors.findrelatedbusiness.NoInput"));
                 }
 
@@ -334,8 +335,8 @@ public class ValidateInquiry extends ValidateUDDIApi {
                 KeyedReference keyedRef = body.getKeyedReference();
                 if (keyedRef != null) {
                         if (keyedRef.getTModelKey() == null || keyedRef.getTModelKey().length() == 0
-                                || keyedRef.getKeyName() == null || keyedRef.getKeyName().length() == 0
-                                || keyedRef.getKeyValue() == null || keyedRef.getKeyValue().length() == 0) {
+                             || keyedRef.getKeyName() == null || keyedRef.getKeyName().length() == 0
+                             || keyedRef.getKeyValue() == null || keyedRef.getKeyValue().length() == 0) {
                                 throw new ValueNotAllowedException(new ErrorMessage("errors.findrelatedbusiness.BlankKeyedRef"));
                         }
 
@@ -483,6 +484,8 @@ public class ValidateInquiry extends ValidateUDDIApi {
                         if (result != null) {
                                 throw new ValueNotAllowedException(new ErrorMessage("errors.findqualifiers.DuplicateValue", result));
                         }
+
+                        ValidateSupportedFindQualifier(fq);
 
                         // Invalid combo: andAllKeys, orAllKeys, and orLikeKeys
                         if (fq.equalsIgnoreCase(FindQualifiers.AND_ALL_KEYS) || fq.equalsIgnoreCase(FindQualifiers.AND_ALL_KEYS_TMODEL)) {
@@ -645,25 +648,25 @@ public class ValidateInquiry extends ValidateUDDIApi {
                         return;
                 }
                 for (int i = 0; i < findQualifiers.getFindQualifier().size(); i++) {
-                        if (findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.BINARY_SORT) || findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.BINARY_SORT_TMODEL)) {
+                        if (findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.BINARY_SORT) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.BINARY_SORT_TMODEL)) {
                                 throw new InvalidCombinationException(new ErrorMessage("errors.findqualifiers.InvalidCombo", FindQualifiers.BINARY_SORT));
                         }
-                        if (findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.CASE_INSENSITIVE_MATCH) || findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.CASE_INSENSITIVE_MATCH_TMODEL)) {
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.CASE_INSENSITIVE_MATCH) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.CASE_INSENSITIVE_MATCH_TMODEL)) {
                                 throw new InvalidCombinationException(new ErrorMessage("errors.findqualifiers.InvalidCombo", FindQualifiers.CASE_INSENSITIVE_MATCH));
                         }
-                        if (findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.CASE_SENSITIVE_MATCH) || findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.CASE_SENSITIVE_MATCH_TMODEL)) {
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.CASE_SENSITIVE_MATCH) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.CASE_SENSITIVE_MATCH_TMODEL)) {
                                 throw new InvalidCombinationException(new ErrorMessage("errors.findqualifiers.InvalidCombo", FindQualifiers.CASE_SENSITIVE_MATCH));
                         }
-                        if (findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.CASE_INSENSITIVE_SORT) || findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.CASE_INSENSITIVE_SORT_TMODEL)) {
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.CASE_INSENSITIVE_SORT) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.CASE_INSENSITIVE_SORT_TMODEL)) {
                                 throw new InvalidCombinationException(new ErrorMessage("errors.findqualifiers.InvalidCombo", FindQualifiers.CASE_INSENSITIVE_SORT));
                         }
-                        if (findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.CASE_SENSITIVE_SORT) || findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.CASE_SENSITIVE_SORT_TMODEL)) {
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.CASE_SENSITIVE_SORT) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.CASE_SENSITIVE_SORT_TMODEL)) {
                                 throw new InvalidCombinationException(new ErrorMessage("errors.findqualifiers.InvalidCombo", FindQualifiers.CASE_SENSITIVE_SORT_TMODEL));
                         }
-                        if (findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.SORT_BY_NAME_ASC) || findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.SORT_BY_NAME_ASC_TMODEL)) {
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.SORT_BY_NAME_ASC) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.SORT_BY_NAME_ASC_TMODEL)) {
                                 throw new InvalidCombinationException(new ErrorMessage("errors.findqualifiers.InvalidCombo", FindQualifiers.SORT_BY_NAME_ASC));
                         }
-                        if (findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.SORT_BY_NAME_DESC) || findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.SORT_BY_NAME_DESC_TMODEL)) {
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.SORT_BY_NAME_DESC) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.SORT_BY_NAME_DESC_TMODEL)) {
                                 throw new InvalidCombinationException(new ErrorMessage("errors.findqualifiers.InvalidCombo", FindQualifiers.SORT_BY_NAME_DESC));
                         }
                 }
@@ -674,7 +677,7 @@ public class ValidateInquiry extends ValidateUDDIApi {
                         return;
                 }
                 for (int i = 0; i < findQualifiers.getFindQualifier().size(); i++) {
-                        if (findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.AND_ALL_KEYS) || findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.AND_ALL_KEYS_TMODEL)) {
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.AND_ALL_KEYS) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.AND_ALL_KEYS_TMODEL)) {
                                 throw new InvalidCombinationException(new ErrorMessage("errors.findqualifiers.InvalidCombo", FindQualifiers.AND_ALL_KEYS));
                         }
                 }
@@ -687,10 +690,10 @@ public class ValidateInquiry extends ValidateUDDIApi {
                 boolean containsAPPROXIMATE_MATCH = false;
                 boolean containsCOMBINE_CATEGORY_BAGS = false;
                 for (int i = 0; i < findQualifiers.getFindQualifier().size(); i++) {
-                        if (findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.APPROXIMATE_MATCH) || findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.APPROXIMATE_MATCH_TMODEL)) {
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.APPROXIMATE_MATCH) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.APPROXIMATE_MATCH_TMODEL)) {
                                 containsAPPROXIMATE_MATCH = true;
                         }
-                        if (findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.COMBINE_CATEGORY_BAGS) || findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.COMBINE_CATEGORY_BAGS_TMODEL)) {
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.COMBINE_CATEGORY_BAGS) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.COMBINE_CATEGORY_BAGS_TMODEL)) {
                                 containsCOMBINE_CATEGORY_BAGS = true;
                         }
                 }
@@ -698,5 +701,63 @@ public class ValidateInquiry extends ValidateUDDIApi {
                         throw new InvalidCombinationException(new ErrorMessage("errors.findqualifiers.InvalidCombo", FindQualifiers.COMBINE_CATEGORY_BAGS + " & " + FindQualifiers.APPROXIMATE_MATCH_TMODEL));
                 }
 
+        }
+
+        static Map<String,Boolean> supportedFindqualifiers = null;
+        private void ValidateSupportedFindQualifier(String fq) throws UnsupportedException {
+                if (supportedFindqualifiers==null || supportedFindqualifiers.isEmpty())
+                        InitFindQualifierMap();
+                if (supportedFindqualifiers.get(fq.toLowerCase())==null)
+                        throw new UnsupportedException(new ErrorMessage("errors.Unsupported.findQualifier", fq));
+        }
+
+        private void InitFindQualifierMap() {
+                supportedFindqualifiers = new HashMap<String, Boolean>();
+                supportedFindqualifiers.put(FindQualifiers.AND_ALL_KEYS.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.AND_ALL_KEYS_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.APPROXIMATE_MATCH.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.APPROXIMATE_MATCH_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.BINARY_SORT.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.BINARY_SORT_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.BINDING_SUBSET.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.BINDING_SUBSET_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.CASE_INSENSITIVE_MATCH.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.CASE_INSENSITIVE_MATCH_TMODEL.toLowerCase(), true);
+                //these are NOT supported, see JUDDI-785
+                //supportedFindqualifiers.put(FindQualifiers.CASE_INSENSITIVE_SORT.toLowerCase(), true);
+                //supportedFindqualifiers.put(FindQualifiers.CASE_INSENSITIVE_SORT_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.CASE_SENSITIVE_MATCH.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.CASE_SENSITIVE_MATCH_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.CASE_SENSITIVE_SORT.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.CASE_SENSITIVE_SORT_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.COMBINE_CATEGORY_BAGS.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.COMBINE_CATEGORY_BAGS_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.DIACRITIC_INSENSITIVE_MATCH.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.DIACRITIC_INSENSITIVE_MATCH_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.DIACRITIC_SENSITIVE_MATCH.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.DIACRITIC_SENSITIVE_MATCH_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.EXACT_MATCH.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.EXACT_MATCH_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.OR_ALL_KEYS.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.OR_ALL_KEYS_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.OR_LIKE_KEYS.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.OR_LIKE_KEYS_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.SERVICE_SUBSET.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.SERVICE_SUBSET_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.SIGNATURE_PRESENT.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.SIGNATURE_PRESENT_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.SORT_BY_DATE_ASC.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.SORT_BY_DATE_ASC_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.SORT_BY_DATE_DESC.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.SORT_BY_DATE_DESC_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.SORT_BY_NAME_ASC.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.SORT_BY_NAME_ASC_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.SORT_BY_NAME_DESC.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.SORT_BY_NAME_DESC_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.SUPPRESS_PROJECTED_SERVICES.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.SUPPRESS_PROJECTED_SERVICES_TMODEL.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.UTS_10.toLowerCase(), true);
+                supportedFindqualifiers.put(FindQualifiers.UTS_10_TMODEL.toLowerCase(), true);
+                
         }
 }
