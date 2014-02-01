@@ -33,18 +33,29 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
-import com.dumbster.smtp.SimpleSmtpServer;
-import com.dumbster.smtp.SmtpMessage;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.ws.BindingProvider;
+import javax.xml.ws.Holder;
+import static org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerExternalTest.updatePublisherBusiness;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.GetBusinessDetail;
+import org.uddi.sub_v3.DeleteSubscription;
+import org.uddi.sub_v3.Subscription;
+import org.uddi.sub_v3.SubscriptionFilter;
 
 /**
- * Used during the Maven build process for testing against jUDDI
+ * Used during the Maven build process for testing against jUDDI for Subscription Callbacks
+ * via the Subscription Listener service. Covers HTTP transport tests only<br><br>
+ * WARNING, when adding changes to this class, you MUST always add the corresponding functions
+ * to UDDI_090_SubscriptionListenerExternalTest
  *
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
@@ -72,7 +83,6 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
         private static String authInfoJoe = null;
         private static String authInfoMary = null;
         private static UDDIClient manager;
-        private static SimpleSmtpServer mailServer;
         private static Integer smtpPort = 25;
         private static Integer httpPort = 80;
 
@@ -196,7 +206,6 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         //Saving the binding template that will be called by the server for a subscription event
                         tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
                         //Saving the HTTP Listener Service
-                        logger.info("sanity check, this shouldn't be the rmi file " + TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML);
                         tckSubscriptionListenerJoe.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, httpPort, hostname);
                         //Saving the HTTP Subscription
                         tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, "uddi_data/subscriptionnotifier/subscription1.xml");
@@ -257,7 +266,6 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
                         tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
                         //Saving the Listener Service
-                        logger.info("sanity check, this shouldn't be the rmi file " + TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML);
                         logger.info("Saving Joe's callback endpoint ********** ");
                         tckSubscriptionListenerJoe.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, httpPort, hostname);
                         //Saving the Subscription
@@ -335,7 +343,6 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
                         tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
                         //Saving the Listener Service
-                        logger.info("sanity check, this shouldn't be the rmi file " + TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML);
                         tckSubscriptionListenerJoe.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, httpPort, hostname);
                         //Saving the Subscription
                         tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION3_XML);
@@ -379,6 +386,106 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                 }
         }
 
+        /**
+         * getBusiness tests
+         * joe want's updates on mary's business
+         * @throws Exception 
+         */
+        @Test
+        public void joePublisherUpdate_HTTP_GET_BUSINESS_DETAIL() throws Exception{
+                logger.info("joePublisherUpdate_HTTP_GET_BUSINESS_DETAIL");
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                Holder<List<Subscription>> holder=null;
+                try {
+                        UDDISubscriptionListenerImpl.notifcationMap.clear();
+                        UDDISubscriptionListenerImpl.notificationCount = 0;
+                        String before = TckCommon.DumpAllTModels(authInfoJoe, inquiryJoe);
+
+                        tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.saveTModels(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+                        
+                        tckTModelMary.saveMaryPublisherTmodel(authInfoMary);
+                        BusinessEntity saveMaryPublisherBusiness = tckBusinessMary.saveMaryPublisherBusiness(authInfoMary);
+                        
+                        tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
+                        //Saving the Listener Service
+                        tckSubscriptionListenerJoe.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, httpPort, hostname);
+                        
+                        //Saving the Subscription
+                        holder = new Holder<List<Subscription>>();
+                        holder.value = new ArrayList<Subscription>();
+                        Subscription sub = new Subscription();
+                        sub.setBindingKey("uddi:uddi.joepublisher.com:bindinglistener");
+                        sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(5000));
+                        sub.setSubscriptionFilter(new SubscriptionFilter());
+                        sub.getSubscriptionFilter().setGetBusinessDetail(new GetBusinessDetail());
+                        sub.getSubscriptionFilter().getGetBusinessDetail().getBusinessKey().add(TckBusiness.MARY_BUSINESS_KEY);
+                        
+                        holder.value.add(sub);
+                        subscriptionJoe.saveSubscription(authInfoJoe, holder);
+                        //tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION3_XML);
+                        //Changing the service we subscribed to "JoePublisherService"
+                        Thread.sleep(1000);
+                        logger.info("updating Mary's business ********** ");
+                        updatePublisherBusiness(authInfoMary,saveMaryPublisherBusiness, publicationMary);
+                        
+                        logger.info("Waiting " + TckPublisher.getSubscriptionTimeout() + " seconds for delivery");
+                        //waiting up to 100 seconds for the listener to notice the change.
+                        for (int i = 0; i < TckPublisher.getSubscriptionTimeout(); i++) {
+                                Thread.sleep(1000);
+                                System.out.print(".");
+                                if (UDDISubscriptionListenerImpl.notificationCount > 0) {
+                                    //    logger.info("Received Notification");
+//                                        break;
+                                }
+                        }
+                        
+                        if (UDDISubscriptionListenerImpl.notificationCount == 0) {
+                                logger.warn("Test failed, dumping business list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllTModels(authInfoJoe, inquiryJoe));
+                                Assert.fail("No Notification was sent");
+                        }
+                        Iterator<String> it = UDDISubscriptionListenerImpl.notifcationMap.values().iterator();
+                        boolean found = false;
+                        while (it.hasNext()) {
+                                String test = it.next();
+                                if (test.contains("Updated Name")) {
+                                        found = true;
+                                        break;
+                                }
+                        }
+                        if (!found) {
+                                logger.warn("Test failed, dumping business list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllTModels(authInfoJoe, inquiryJoe));
+                                Assert.fail("Notification does not contain the correct service");
+                        }
+
+                } catch (Exception e) {
+                        logger.error("No exceptions please.");
+                        e.printStackTrace();
+
+                        Assert.fail();
+                } finally {
+                        //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
+                        DeleteSubscription ds = new DeleteSubscription();
+                        ds.setAuthInfo(authInfoJoe);
+                        ds.getSubscriptionKey().add(holder.value.get(0).getSubscriptionKey());
+                        subscriptionJoe.deleteSubscription(ds);
+                        tckBusinessMary.deleteMaryPublisherBusiness(authInfoMary);
+                        tckTModelMary.deleteMaryPublisherTmodel(authInfoMary);
+                        
+                        tckBusinessServiceJoe.deleteJoePublisherService(authInfoJoe);
+                        tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.deleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+                        
+                }
+        }
+
+       
         
         //TODO If a subscriber specifies a maximum number of entries to be returned with a subscription and the amount of data to be returned exceeds 
 //this limit, or if the node determines based on its policy that there are too many entries to be returned in a single group, 

@@ -72,25 +72,24 @@ public class TckBusiness {
         private Log logger = LogFactory.getLog(this.getClass());
         private UDDIPublicationPortType publication = null;
         private UDDIInquiryPortType inquiry = null;
-        
 
         public TckBusiness(UDDIPublicationPortType publication,
-                UDDIInquiryPortType inquiry) {
+             UDDIInquiryPortType inquiry) {
                 super();
                 this.publication = publication;
                 this.inquiry = inquiry;
         }
 
-        public void saveSamSyndicatorBusiness(String authInfoSam) {
-                saveBusiness(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY);
+        public BusinessEntity saveSamSyndicatorBusiness(String authInfoSam) {
+                return saveBusiness(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY);
         }
 
         public void saveSamSyndicatorBusinesses(String authInfoSam, int numberOfCopies) {
                 saveBusinesses(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY, numberOfCopies);
         }
 
-        public void saveSamSyndicatorBusinessWithProjection(String authInfoSam) {
-                saveBusiness(authInfoSam, SAM_BUSINESS_WITHPROJECTION_XML, SAM_BUSINESS_KEY);
+        public BusinessEntity saveSamSyndicatorBusinessWithProjection(String authInfoSam) {
+                return saveBusiness(authInfoSam, SAM_BUSINESS_WITHPROJECTION_XML, SAM_BUSINESS_KEY);
         }
 
         public void deleteSamSyndicatorBusiness(String authInfoSam) {
@@ -111,20 +110,20 @@ public class TckBusiness {
                 saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY, TckCommon.isDebug());
         }
 
-        public void saveCombineCatBagsPublisherBusiness(String authInfoJoe) {
-                saveBusiness(authInfoJoe, COMBINE_CATBAGS_BIZ_XML, COMBINE_CATBAGS_BIZ_KEY);
+        public BusinessEntity saveCombineCatBagsPublisherBusiness(String authInfoJoe) {
+                return saveBusiness(authInfoJoe, COMBINE_CATBAGS_BIZ_XML, COMBINE_CATBAGS_BIZ_KEY);
         }
 
-        public void saveJoePublisherBusiness3(String authInfoJoe) {
-                saveBusiness(authInfoJoe, JOE_BUSINESS3_XML, JOE_BUSINESS3_KEY);
+        public BusinessEntity saveJoePublisherBusiness3(String authInfoJoe) {
+                return saveBusiness(authInfoJoe, JOE_BUSINESS3_XML, JOE_BUSINESS3_KEY);
         }
 
-        public void saveJoePublisherBusiness1to3(String authInfoJoe) {
-                saveBusiness(authInfoJoe, JOE_BUSINESS_MOVE_XML, JOE_BUSINESS3_KEY);
+        public BusinessEntity saveJoePublisherBusiness1to3(String authInfoJoe) {
+                return saveBusiness(authInfoJoe, JOE_BUSINESS_MOVE_XML, JOE_BUSINESS3_KEY);
         }
 
-        public void saveMaryPublisherBusiness(String authInfoMary) {
-                saveBusiness(authInfoMary, MARY_BUSINESS_XML, MARY_BUSINESS_KEY);
+        public BusinessEntity saveMaryPublisherBusiness(String authInfoMary) {
+                return saveBusiness(authInfoMary, MARY_BUSINESS_XML, MARY_BUSINESS_KEY);
         }
 
         public void updateJoePublisherBusiness(String authInfoJoe) {
@@ -279,11 +278,11 @@ public class TckBusiness {
                 }
         }
 
-        public void saveBusiness(String authInfo, String businessXML, String businessKey) {
-                saveBusiness(authInfo, businessXML, businessKey, false);
+        public BusinessEntity saveBusiness(String authInfo, String businessXML, String businessKey) {
+                return saveBusiness(authInfo, businessXML, businessKey, false);
         }
 
-        public void saveBusiness(String authInfo, String businessXML, String businessKey, boolean serialize) {
+        public BusinessEntity saveBusiness(String authInfo, String businessXML, String businessKey, boolean serialize) {
                 logger.info("attempting to save business " + businessKey + " from " + businessXML);
                 try {
                         SaveBusiness sb = new SaveBusiness();
@@ -319,10 +318,12 @@ public class TckBusiness {
                         TckValidator.checkContacts(beIn.getContacts(), beOut.getContacts());
                         TckValidator.checkCategories(beIn.getCategoryBag(), beOut.getCategoryBag());
                         TckValidator.checkSignatures(beIn.getSignature(), beOut.getSignature());
+                        return beOut;
                 } catch (Throwable e) {
                         logger.error(e.getMessage(), e);
                         Assert.fail("No exception should be thrown");
                 }
+                return null;
 
         }
 
@@ -358,7 +359,6 @@ public class TckBusiness {
                         // After the update we still are supposed to see two services.
                         assertNotNull(beOutNew.getBusinessServices());
                         assertEquals(2, beOutNew.getBusinessServices().getBusinessService().size());
-
 
                 } catch (Throwable e) {
                         logger.error(e.getMessage(), e);
