@@ -93,7 +93,8 @@ public class UddiHub implements Serializable {
         public static final String LOGGER_NAME = "org.apache.juddi";
         private static final long serialVersionUID = 1L;
         AuthStyle style = null;
-        private String nodename = "default";
+        private String nodename = null;
+        private static final String DEFAULT_NODE_NAME = "default";
         private final String clientName = "juddigui";
         private boolean WS_Transport = false;
         private boolean WS_securePorts = false;
@@ -341,8 +342,8 @@ public class UddiHub implements Serializable {
                                         nodename = clientConfig.getConfiguration().getString(PROP_CONFIG_NODE);
                                 }
                                 if (nodename == null || nodename.equals("")) {
-                                        log.warn("'node' is not defined in the config! defaulting to 'default'");
-                                        nodename = "default";
+                                        log.warn("'node' is not defined in the config! defaulting to '" + DEFAULT_NODE_NAME +"'");
+                                        nodename = DEFAULT_NODE_NAME;
                                 }
                                 UDDINode uddiNode = clientConfig.getUDDINode(nodename);
 

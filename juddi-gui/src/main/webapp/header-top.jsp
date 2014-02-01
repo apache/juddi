@@ -19,7 +19,8 @@
     Created on : Feb 24, 2013, 9:08:12 AM
     Author     : Alex O'Ree
 --%>
-
+<%@page session="true"%>
+<%@page trimDirectiveWhitespaces="true" %>
 <%@page import="org.apache.juddi.api_v3.Node"%>
 <%@page import="java.util.List"%>
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
