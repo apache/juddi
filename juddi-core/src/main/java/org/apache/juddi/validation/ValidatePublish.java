@@ -1945,7 +1945,7 @@ public class ValidatePublish extends ValidateUDDIApi {
          * throws if it doesn't exist, returns it if it does
          *
          * @param tmodelKey
-         * @return
+         * @return null, or a TModel object
          * @throws ValueNotAllowedException
          * @since 3.3
          */

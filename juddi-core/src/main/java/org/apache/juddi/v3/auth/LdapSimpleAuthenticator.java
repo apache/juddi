@@ -57,19 +57,20 @@ import org.apache.commons.configuration.ConfigurationException;
  * This authenticator assumes that the publisher username is the same as the LDAP 
  * principal name, which may not be the case as the LDAP principal might be a bind name.
  * This class could easily be extended so that the uid of the LDAP authenticated user is
- * used, or to authenticate by group.
+ * used, or to authenticate by group.<br><br>
  *
- * This class was tested with OpenLDAP.
+ * This class was tested with OpenLDAP.<br>
+ * <br> See properties:
+ *  {@link org.apache.juddi.config.Property#JUDDI_AUTHENTICATOR_INITIAL_CONTEXT JUDDI_AUTHENTICATOR_INITIAL_CONTEXT}
+ *  {@link org.apache.juddi.config.Property#JUDDI_AUTHENTICATOR_STYLE JUDDI_AUTHENTICATOR_STYLE}
  *
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  * @author <a href="mailto:gunnlaugursig@gmail.com">Gunnlaugur Sigurðsson</a>
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  * 
- * 
  * @since 3.2, all values are now configurable
  * @see Property
- * @see Property.JUDDI_AUTHENTICATOR_INITIAL_CONTEXT
- * @see Property.JUDDI_AUTHENTICATOR_STYLE
+ * 
  */
 public class LdapSimpleAuthenticator implements Authenticator {
     private Log logger = LogFactory.getLog(this.getClass());

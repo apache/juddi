@@ -131,7 +131,7 @@ public class CryptedXMLDocAuthenticator extends XMLDocAuthenticator {
 	/**
 	 * @param userID
 	 * @param encryptedCredential
-	 * @return
+	 * @return user id
 	 * @throws AuthenticationException
 	 */
 	private String postProcess(String userID, String encryptedCredential)

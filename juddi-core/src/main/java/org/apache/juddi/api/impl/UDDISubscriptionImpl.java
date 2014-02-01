@@ -957,7 +957,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	 * 
 	 * @param subscriptionFilter
 	 * @param em
-	 * @return
+	 * @return a list of subscription matches
 	 * @throws DispositionReportFaultMessage
 	 */
 	private List<?> getSubscriptionMatches(SubscriptionFilter subscriptionFilter, EntityManager em) 
