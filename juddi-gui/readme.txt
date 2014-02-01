@@ -16,5 +16,5 @@ Build:
 3) Access
 	http://localhost:8080/juddi-gui
 4) Configure
-	Alter the contents of juddi-gui/META-INF/config.properties and juddi-gui/WEB-INF/classes/META-INF/uddi.xml as necessary.
+	Alter the contents of juddi-gui/WEB-INF/classes/META-INF/uddi.xml as necessary.
 	These can also be edited in browser via Settings > Config

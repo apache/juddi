@@ -16,11 +16,19 @@
 <%  URL prop = application.getResource("/WEB-INF/config.properties");
         boolean ok = true;
         if (prop == null) { 
-                prop = application.getResource("WEB-INF/config.properties");
+                try {
+                        prop = application.getResource("WEB-INF/config.properties");
+                } catch (Exception e) {
+                        // ignore
+                }
 
         }
         if (prop == null) {
+                try {
                 prop = application.getResource("META-INF/config.properties");
+                } catch (Exception e) {
+                        // ignore
+                }
 
         }
         if (prop == null) {

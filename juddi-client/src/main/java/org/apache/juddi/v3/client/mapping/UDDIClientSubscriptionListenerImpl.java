@@ -48,7 +48,11 @@ public class UDDIClientSubscriptionListenerImpl implements UDDISubscriptionListe
 	
 	private static final Log logger = LogFactory.getLog(UDDIClientSubscriptionListenerImpl.class);
 	private UDDIServiceCache serviceCache = null;
-	
+
+	public UDDIClientSubscriptionListenerImpl() {
+		super();
+	}	
+
 	public UDDIClientSubscriptionListenerImpl(String bindingKey, UDDIServiceCache serviceCache) {
 		super();
 		this.serviceCache = serviceCache;

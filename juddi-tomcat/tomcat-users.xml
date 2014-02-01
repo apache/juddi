@@ -39,6 +39,7 @@
     -   the juddi-gui configuration page http://localhost:8080/juddi-gui/settings.jsp
     
     -->
+	<role rolename="tomcat"/>
   <role rolename="uddiadmin"/>  
-  <user username="uddiadmin" password="da_password1" roles="uddiadmin" />
+  <user username="uddiadmin" password="da_password1" roles="uddiadmin,tomcat,manager" />
 </tomcat-users>

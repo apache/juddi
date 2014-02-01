@@ -350,7 +350,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         /**
          * Note that jUDDI ignores caseInsensiveSort. 
          * 
-         * @See UDDIConstants.CASE_INSENSITIVE_SORT 
+         * @see UDDIConstants.CASE_INSENSITIVE_SORT 
          * @throws Exception
          */
         @Test
@@ -362,7 +362,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         /**
          * Note that jUDDI ignores caseInsensiveSort. 
          * 
-         * @See UDDIConstants.CASE_INSENSITIVE_SORT 
+         * @see UDDIConstants.CASE_INSENSITIVE_SORT 
          * @throws Exception
          */
         @Test
@@ -372,7 +372,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         /**
          * Note that jUDDI ignores caseInsensiveSort. 
          * 
-         * @See UDDIConstants.CASE_INSENSITIVE_SORT 
+         * @see UDDIConstants.CASE_INSENSITIVE_SORT 
          * @throws Exception
          */
         @Test
@@ -382,7 +382,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         /**
          * Note that jUDDI ignores caseInsensiveSort. 
          * 
-         * @See UDDIConstants.CASE_INSENSITIVE_SORT 
+         * @see UDDIConstants.CASE_INSENSITIVE_SORT 
          * @throws Exception
          */
         @Test
@@ -398,7 +398,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         /**
          * Note that jUDDI ignores caseInsensiveSort. 
          * 
-         * @See UDDIConstants.CASE_INSENSITIVE_SORT 
+         * @see UDDIConstants.CASE_INSENSITIVE_SORT 
          * @throws Exception
          */
         @Test

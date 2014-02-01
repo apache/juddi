@@ -246,7 +246,7 @@ public class UddiHub implements Serializable {
                                 return HandleException(ex);
                         }
                         if (session.getAttribute("username") != null
-                                && session.getAttribute("password") != null) {
+                             && session.getAttribute("password") != null) {
                                 req.setUserID((String) session.getAttribute("username"));
                                 req.setCred(AES.Decrypt((String) session.getAttribute("password"), (String) properties.get("key")));
                                 log.info("AUDIT: fetching auth token for " + req.getUserID() + " Auth Mode is " + ((security == null) ? "HTTP" : "AUTH_TOKEN"));
@@ -333,6 +333,10 @@ public class UddiHub implements Serializable {
                                         log.warn("'UDDI_AUTH' is not defined in the config (" + PROP_AUTH_TYPE + ")! defaulting to UDDI_AUTH");
                                         style = AuthStyle.UDDI_AUTH;
                                 }
+//                                String newNodename = clientConfig.getConfiguration().getString(PROP_CONFIG_NODE);
+//                                if (newNodename != null && !newNodename.equals("")) {
+//                                        nodename = newNodename;
+//                                }
                                 if (nodename == null) {
                                         nodename = clientConfig.getConfiguration().getString(PROP_CONFIG_NODE);
                                 }
@@ -357,12 +361,14 @@ public class UddiHub implements Serializable {
 
                                 if (WS_Transport) {
                                         if (uddiNode.getPublishUrl().toLowerCase().startsWith("https://")
-                                                && (uddiNode.getSecurityUrl() != null && uddiNode.getSecurityUrl().toLowerCase().startsWith("https://"))
-                                                && uddiNode.getInquiryUrl().toLowerCase().startsWith("https://")
-                                                && (uddiNode.getCustodyTransferUrl() != null && uddiNode.getCustodyTransferUrl().toLowerCase().startsWith("https://"))
-                                                && (uddiNode.getSubscriptionUrl() != null && uddiNode.getSubscriptionUrl().toLowerCase().startsWith("https://"))) {
+                                             && (uddiNode.getSecurityUrl() != null && uddiNode.getSecurityUrl().toLowerCase().startsWith("https://"))
+                                             && uddiNode.getInquiryUrl().toLowerCase().startsWith("https://")
+                                             && (uddiNode.getCustodyTransferUrl() != null && uddiNode.getCustodyTransferUrl().toLowerCase().startsWith("https://"))
+                                             && (uddiNode.getSubscriptionUrl() != null && uddiNode.getSubscriptionUrl().toLowerCase().startsWith("https://"))) {
                                                 WS_securePorts = true;
                                         }
+                                        else
+                                                WS_securePorts=false;
                                 }
                         } catch (Exception ex) {
                                 HandleException(ex);
@@ -564,7 +570,7 @@ public class UddiHub implements Serializable {
                                 log.error(ex);
                         }
                         if (session != null && session.getAttribute("username") != null
-                                && session.getAttribute("password") != null) {
+                             && session.getAttribute("password") != null) {
                                 req.setUserID((String) session.getAttribute("username"));
                                 req.setCred(AES.Decrypt((String) session.getAttribute("password"), (String) properties.get("key")));
                                 log.info("AUDIT: fetching auth token for " + req.getUserID() + " Auth Mode is " + ((security == null) ? "HTTP" : "AUTH_TOKEN"));
@@ -706,12 +712,12 @@ public class UddiHub implements Serializable {
                                 sb.append("<select id=\"businesslist\" multiple=\"multiple\" size=\"10\">");
                                 for (int i = 0; i < findBusiness.getBusinessInfos().getBusinessInfo().size(); i++) {
                                         sb.append("<option class=\"transferable\" id=\"").
-                                                append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
-                                                append("\" title=\"").
-                                                append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
-                                                append("\">").
-                                                append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getName()))).
-                                                append("</option>");
+                                             append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
+                                             append("\" title=\"").
+                                             append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
+                                             append("\">").
+                                             append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getName()))).
+                                             append("</option>");
                                 }
                                 sb.append("</select>");
                         }
@@ -719,12 +725,12 @@ public class UddiHub implements Serializable {
                                 sb.append("<select id=\"tmodellist\" multiple=\"multiple\" size=\"10\">");
                                 for (int i = 0; i < findBusiness.getTModelInfos().getTModelInfo().size(); i++) {
                                         sb.append("<option  class=\"transferable\" id=\"").
-                                                append(StringEscapeUtils.escapeHtml(findBusiness.getTModelInfos().getTModelInfo().get(i).getTModelKey())).
-                                                append("\" title=\"").
-                                                append(StringEscapeUtils.escapeHtml(findBusiness.getTModelInfos().getTModelInfo().get(i).getTModelKey())).
-                                                append("\">").
-                                                append(StringEscapeUtils.escapeHtml((findBusiness.getTModelInfos().getTModelInfo().get(i).getName().getValue()))).
-                                                append("</option>");
+                                             append(StringEscapeUtils.escapeHtml(findBusiness.getTModelInfos().getTModelInfo().get(i).getTModelKey())).
+                                             append("\" title=\"").
+                                             append(StringEscapeUtils.escapeHtml(findBusiness.getTModelInfos().getTModelInfo().get(i).getTModelKey())).
+                                             append("\">").
+                                             append(StringEscapeUtils.escapeHtml((findBusiness.getTModelInfos().getTModelInfo().get(i).getName().getValue()))).
+                                             append("</option>");
                                 }
                                 sb.append("</select>");
                         }
@@ -799,9 +805,9 @@ public class UddiHub implements Serializable {
                 }
                 if (ex instanceof DispositionReportFaultMessage) {
                         DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) 
-                                || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED) 
-                                || ex.getMessage().toLowerCase().contains("expire")) {
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)
+                             || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)
+                             || ex.getMessage().toLowerCase().contains("expire")) {
                                 return true;
                         }
                 }
@@ -862,8 +868,8 @@ public class UddiHub implements Serializable {
                                         } else {
                                                 for (int k = 0; k < businessDetail.getBusinessEntity().get(i).getBusinessServices().getBusinessService().size(); k++) {
                                                         sb.append("<div><a href=\"serviceEditor.jsp?id=").
-                                                                append(StringEscapeUtils.escapeHtml(businessDetail.getBusinessEntity().get(i).getBusinessServices().getBusinessService().get(k).getServiceKey())).append("\">").
-                                                                append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(businessDetail.getBusinessEntity().get(i).getBusinessServices().getBusinessService().get(k).getName()))).append("</a></div>");
+                                                             append(StringEscapeUtils.escapeHtml(businessDetail.getBusinessEntity().get(i).getBusinessServices().getBusinessService().get(k).getServiceKey())).append("\">").
+                                                             append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(businessDetail.getBusinessEntity().get(i).getBusinessServices().getBusinessService().get(k).getName()))).append("</a></div>");
                                                 }
                                         }
                                 }
@@ -1010,8 +1016,8 @@ public class UddiHub implements Serializable {
                                 }
                         }
                         return ResourceLoader.GetResource(session, "actions.saved") + " "
-                                + "<a href=\"serviceEditor.jsp?id=" + URLEncoder.encode(saveService.getBusinessService().get(0).getServiceKey(), "UTF8")
-                                + "\">" + StringEscapeUtils.escapeHtml(saveService.getBusinessService().get(0).getServiceKey()) + "</a>";
+                             + "<a href=\"serviceEditor.jsp?id=" + URLEncoder.encode(saveService.getBusinessService().get(0).getServiceKey(), "UTF8")
+                             + "\">" + StringEscapeUtils.escapeHtml(saveService.getBusinessService().get(0).getServiceKey()) + "</a>";
                 } catch (Exception ex) {
                         return HandleException(ex);
                 }
@@ -1043,8 +1049,8 @@ public class UddiHub implements Serializable {
                         }
 
                         return ResourceLoader.GetResource(session, "actions.saved") + " "
-                                + "<a href=\"businessEditor2.jsp?id=" + URLEncoder.encode(saveBusiness.getBusinessEntity().get(0).getBusinessKey(), "UTF8")
-                                + "\">" + StringEscapeUtils.escapeHtml(saveBusiness.getBusinessEntity().get(0).getBusinessKey()) + "</a>";
+                             + "<a href=\"businessEditor2.jsp?id=" + URLEncoder.encode(saveBusiness.getBusinessEntity().get(0).getBusinessKey(), "UTF8")
+                             + "\">" + StringEscapeUtils.escapeHtml(saveBusiness.getBusinessEntity().get(0).getBusinessKey()) + "</a>";
                 } catch (Exception ex) {
                         return HandleException(ex);
                 }
@@ -1275,8 +1281,8 @@ public class UddiHub implements Serializable {
                         st.getTModel().add(tm);
                         TModelDetail saveTModel = publish.saveTModel(st);
                         return "<div class=\"alert alert-success\"><i class=\"icon-2x icon-thumbs-up\"></i> " + ResourceLoader.GetResource(session, "messages.success") + " <a href=\"tmodelEditor.jsp?id="
-                                + URLEncoder.encode(saveTModel.getTModel().get(0).getTModelKey(), "UTF8") + "\">"
-                                + StringEscapeUtils.escapeHtml(saveTModel.getTModel().get(0).getTModelKey()) + "</a></div>";
+                             + URLEncoder.encode(saveTModel.getTModel().get(0).getTModelKey(), "UTF8") + "\">"
+                             + StringEscapeUtils.escapeHtml(saveTModel.getTModel().get(0).getTModelKey()) + "</a></div>";
                         // "Success";
                 } catch (Exception ex) {
                         return ToErrorAlert(HandleException(ex));
@@ -1311,7 +1317,7 @@ public class UddiHub implements Serializable {
                         log.error("SOAP Fault returned: " + x.getMessage() + (x.getFault() != null ? x.getFault().getFaultString() : ""));
                         String err = null;
                         if (x.getFault() != null
-                                && x.getFault().getDetail() != null) {
+                             && x.getFault().getDetail() != null) {
                                 Iterator detailEntries = x.getFault().getDetail().getDetailEntries();
                                 while (detailEntries.hasNext()) {
                                         err += detailEntries.next().toString();
@@ -1652,8 +1658,8 @@ public class UddiHub implements Serializable {
                                 for (int i = 0; i < findBusiness.getBindingTemplate().size(); i++) {
                                         sb.append("<tr><td>");
                                         sb.append("<a href=\"serviceEditor.jsp?id=").
-                                                append(StringEscapeUtils.escapeHtml(findBusiness.getBindingTemplate().get(i).getServiceKey())).
-                                                append("\">");
+                                             append(StringEscapeUtils.escapeHtml(findBusiness.getBindingTemplate().get(i).getServiceKey())).
+                                             append("\">");
                                         if (findBusiness.getBindingTemplate().get(i).getDescription().isEmpty()) {
                                                 sb.append(StringEscapeUtils.escapeHtml(findBusiness.getBindingTemplate().get(i).getBindingKey()));
                                         } else {
@@ -1743,8 +1749,8 @@ public class UddiHub implements Serializable {
                                 for (int i = 0; i < findBusiness.getBusinessInfos().getBusinessInfo().size(); i++) {
                                         sb.append("<tr><td>");
                                         sb.append("<a href=\"businessEditor2.jsp?id=").
-                                                append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
-                                                append("\">");
+                                             append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
+                                             append("\">");
                                         if (findBusiness.getBusinessInfos().getBusinessInfo().get(i).getName().isEmpty()) {
                                                 sb.append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey()));
                                         } else {
@@ -1800,8 +1806,8 @@ public class UddiHub implements Serializable {
                                 for (int i = 0; i < findBusiness.getRelatedBusinessInfos().getRelatedBusinessInfo().size(); i++) {
                                         sb.append("<tr><td>");
                                         sb.append("<a href=\"businessEditor2.jsp?id=").
-                                                append(StringEscapeUtils.escapeHtml(findBusiness.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getBusinessKey())).
-                                                append("\">");
+                                             append(StringEscapeUtils.escapeHtml(findBusiness.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getBusinessKey())).
+                                             append("\">");
                                         if (findBusiness.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getName().isEmpty()) {
                                                 sb.append(StringEscapeUtils.escapeHtml(findBusiness.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getBusinessKey()));
                                         } else {
@@ -1890,8 +1896,8 @@ public class UddiHub implements Serializable {
                                 for (int i = 0; i < findBusiness.getServiceInfos().getServiceInfo().size(); i++) {
                                         sb.append("<tr><td>");
                                         sb.append("<a href=\"serviceEditor.jsp?id=").
-                                                append(StringEscapeUtils.escapeHtml(findBusiness.getServiceInfos().getServiceInfo().get(i).getServiceKey())).
-                                                append("\">");
+                                             append(StringEscapeUtils.escapeHtml(findBusiness.getServiceInfos().getServiceInfo().get(i).getServiceKey())).
+                                             append("\">");
                                         if (findBusiness.getServiceInfos().getServiceInfo().get(i).getName().isEmpty()) {
                                                 sb.append(StringEscapeUtils.escapeHtml(findBusiness.getServiceInfos().getServiceInfo().get(i).getServiceKey()));
                                         } else {
@@ -1981,8 +1987,8 @@ public class UddiHub implements Serializable {
                                 for (int i = 0; i < findBusiness.getTModelInfos().getTModelInfo().size(); i++) {
                                         sb.append("<tr><td>");
                                         sb.append("<a href=\"tmodelEditor.jsp?id=").
-                                                append(StringEscapeUtils.escapeHtml(findBusiness.getTModelInfos().getTModelInfo().get(i).getTModelKey())).
-                                                append("\">");
+                                             append(StringEscapeUtils.escapeHtml(findBusiness.getTModelInfos().getTModelInfo().get(i).getTModelKey())).
+                                             append("\">");
                                         if (findBusiness.getTModelInfos().getTModelInfo().get(i).getName() == null) {
                                                 sb.append(StringEscapeUtils.escapeHtml(findBusiness.getTModelInfos().getTModelInfo().get(i).getTModelKey()));
                                         } else {
@@ -2169,8 +2175,8 @@ public class UddiHub implements Serializable {
                         }
                         //return ResourceLoader.GetResource(session, "actions.saved");
                         return ResourceLoader.GetResource(session, "actions.saved") + " "
-                                + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(saveTModel.getTModel().get(0).getTModelKey(), "UTF8")
-                                + "\">" + StringEscapeUtils.escapeHtml(saveTModel.getTModel().get(0).getTModelKey()) + "</a>";
+                             + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(saveTModel.getTModel().get(0).getTModelKey(), "UTF8")
+                             + "\">" + StringEscapeUtils.escapeHtml(saveTModel.getTModel().get(0).getTModelKey()) + "</a>";
                 } catch (Exception ex) {
                         return HandleException(ex);
                 }
@@ -2188,7 +2194,7 @@ public class UddiHub implements Serializable {
                 TModel be = new TModel();
                 be.setTModelKey(request.getParameter(PostBackConstants.SERVICEKEY).trim());
                 if (be.getTModelKey() != null && (be.getTModelKey().equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit")))
-                        || be.getTModelKey().length() == 0) {
+                     || be.getTModelKey().length() == 0) {
                         be.setTModelKey(null);
                 }
                 be.setName(new Name());
@@ -2397,8 +2403,8 @@ public class UddiHub implements Serializable {
                                 }
                         }
                         return ResourceLoader.GetResource(session, "messages.success")
-                                + " <a href=\"editSubscription.jsp?id=" + URLEncoder.encode(data.value.get(0).getSubscriptionKey(), "UTF8")
-                                + "\">" + StringEscapeUtils.escapeHtml(data.value.get(0).getSubscriptionKey()) + "</a>";
+                             + " <a href=\"editSubscription.jsp?id=" + URLEncoder.encode(data.value.get(0).getSubscriptionKey(), "UTF8")
+                             + "\">" + StringEscapeUtils.escapeHtml(data.value.get(0).getSubscriptionKey()) + "</a>";
                 } catch (Exception ex) {
                         return HandleException(ex);
                 }
@@ -2481,18 +2487,18 @@ public class UddiHub implements Serializable {
                 if (info != null && !info.isEmpty()) {
                         sb.append("<table class=\"table table-hover\">");
                         sb.append("<tr><th>").
-                                append(ResourceLoader.GetResource(session, "items.nodeid")).
-                                append("</th><th>").
-                                append(ResourceLoader.GetResource(session, "items.authorizedname")).
-                                append("</th><th>").
-                                append(ResourceLoader.GetResource(session, "items.key")).
-                                append("</th><th>").
-                                append(ResourceLoader.GetResource(session, "items.created")).
-                                append("</th><th>").
-                                append(ResourceLoader.GetResource(session, "items.modified")).
-                                append("</th><th>").
-                                append(ResourceLoader.GetResource(session, "items.modifiedwithchildren")).
-                                append("</th></tr>");
+                             append(ResourceLoader.GetResource(session, "items.nodeid")).
+                             append("</th><th>").
+                             append(ResourceLoader.GetResource(session, "items.authorizedname")).
+                             append("</th><th>").
+                             append(ResourceLoader.GetResource(session, "items.key")).
+                             append("</th><th>").
+                             append(ResourceLoader.GetResource(session, "items.created")).
+                             append("</th><th>").
+                             append(ResourceLoader.GetResource(session, "items.modified")).
+                             append("</th><th>").
+                             append(ResourceLoader.GetResource(session, "items.modifiedwithchildren")).
+                             append("</th></tr>");
 
                         for (int i = 0; i < info.size(); i++) {
                                 if (info.get(i) == null) {
@@ -2500,17 +2506,17 @@ public class UddiHub implements Serializable {
                                 }
                                 sb.append("<tr><td>");
                                 sb.append((info.get(i).getNodeID() != null ? StringEscapeUtils.escapeHtml(info.get(i).getNodeID()) : ""))
-                                        .append("</td><td>")
-                                        .append((info.get(i).getAuthorizedName() != null ? StringEscapeUtils.escapeHtml(info.get(i).getAuthorizedName()) : ""))
-                                        .append("</td><td>")
-                                        .append((info.get(i).getEntityKey() != null ? StringEscapeUtils.escapeHtml(info.get(i).getEntityKey()) : ""))
-                                        .append("</td><td>")
-                                        .append((info.get(i).getCreated() != null ? StringEscapeUtils.escapeHtml(info.get(i).getCreated().toString()) : ""))
-                                        .append("</td><td>")
-                                        .append((info.get(i).getModified() != null ? StringEscapeUtils.escapeHtml(info.get(i).getModified().toString()) : ""))
-                                        .append("</td><td>")
-                                        .append((info.get(i).getModifiedIncludingChildren() != null ? StringEscapeUtils.escapeHtml(info.get(i).getModifiedIncludingChildren().toString()) : ""))
-                                        .append("</td></tr>");
+                                     .append("</td><td>")
+                                     .append((info.get(i).getAuthorizedName() != null ? StringEscapeUtils.escapeHtml(info.get(i).getAuthorizedName()) : ""))
+                                     .append("</td><td>")
+                                     .append((info.get(i).getEntityKey() != null ? StringEscapeUtils.escapeHtml(info.get(i).getEntityKey()) : ""))
+                                     .append("</td><td>")
+                                     .append((info.get(i).getCreated() != null ? StringEscapeUtils.escapeHtml(info.get(i).getCreated().toString()) : ""))
+                                     .append("</td><td>")
+                                     .append((info.get(i).getModified() != null ? StringEscapeUtils.escapeHtml(info.get(i).getModified().toString()) : ""))
+                                     .append("</td><td>")
+                                     .append((info.get(i).getModifiedIncludingChildren() != null ? StringEscapeUtils.escapeHtml(info.get(i).getModifiedIncludingChildren().toString()) : ""))
+                                     .append("</td></tr>");
                         }
                         sb.append("</table>");
                 } else {
@@ -2808,7 +2814,7 @@ public class UddiHub implements Serializable {
                                 //    subscriptionResults.getAssertionStatusReport().
                                 if (subscriptionResults.getAssertionStatusReport() != null) {
                                         sb.append(ResourceLoader.GetResource(session, "items.subscriptions.assertion")).
-                                                append("<table class=\"table table-hover\">");
+                                             append("<table class=\"table table-hover\">");
                                         for (int i = 0; i < subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().size(); i++) {
                                                 sb.append("<tr><td>");
                                                 sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(i).getFromKey()));
@@ -2822,7 +2828,7 @@ public class UddiHub implements Serializable {
                                 }
                                 if (subscriptionResults.getBindingDetail() != null) {
                                         sb.append(ResourceLoader.GetResource(session, "items.subscriptions.bindings")).
-                                                append("<table class=\"table table-hover\">");
+                                             append("<table class=\"table table-hover\">");
                                         for (int i = 0; i < subscriptionResults.getBindingDetail().getBindingTemplate().size(); i++) {
                                                 sb.append("<tr><td>");
                                                 sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getBindingDetail().getBindingTemplate().get(i).getServiceKey()));
@@ -2834,7 +2840,7 @@ public class UddiHub implements Serializable {
                                 }
                                 if (subscriptionResults.getBusinessDetail() != null) {
                                         sb.append(ResourceLoader.GetResource(session, "items.subscriptions.business")).
-                                                append("<table class=\"table table-hover\">");
+                                             append("<table class=\"table table-hover\">");
                                         for (int i = 0; i < subscriptionResults.getBusinessDetail().getBusinessEntity().size(); i++) {
                                                 sb.append("<tr><td><a href=\"businessEditor2.jsp?id=");
                                                 sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getBusinessDetail().getBusinessEntity().get(i).getBusinessKey()));
@@ -2846,7 +2852,7 @@ public class UddiHub implements Serializable {
                                 }
                                 if (subscriptionResults.getRelatedBusinessesList() != null) {
                                         sb.append(ResourceLoader.GetResource(session, "items.subscriptions.assertion2")).
-                                                append("<table class=\"table table-hover\">");
+                                             append("<table class=\"table table-hover\">");
                                         // for (int i = 0; i < subscriptionResults.getRelatedBusinessesList().getBusinessKey().size(); i++) {
                                         sb.append("<tr><td>");
                                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getRelatedBusinessesList().getBusinessKey()));
@@ -2856,7 +2862,7 @@ public class UddiHub implements Serializable {
                                 }
                                 if (subscriptionResults.getServiceDetail() != null) {
                                         sb.append(ResourceLoader.GetResource(session, "items.subscriptions.services")).
-                                                append("<table class=\"table table-hover\">");
+                                             append("<table class=\"table table-hover\">");
                                         for (int i = 0; i < subscriptionResults.getServiceDetail().getBusinessService().size(); i++) {
                                                 sb.append("<tr><td><a href=\"serviceEditor.jsp?id=");
                                                 sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getServiceDetail().getBusinessService().get(i).getServiceKey()));
@@ -2868,7 +2874,7 @@ public class UddiHub implements Serializable {
                                 }
                                 if (subscriptionResults.getServiceList() != null) {
                                         sb.append(ResourceLoader.GetResource(session, "items.subscriptions.servicelist")).
-                                                append("<table class=\"table table-hover\">");
+                                             append("<table class=\"table table-hover\">");
                                         for (int i = 0; i < subscriptionResults.getServiceList().getServiceInfos().getServiceInfo().size(); i++) {
                                                 sb.append("<tr><td>");
                                                 sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getServiceList().getServiceInfos().getServiceInfo().get(i).getServiceKey()));
@@ -2892,7 +2898,7 @@ public class UddiHub implements Serializable {
                                 }
                                 if (subscriptionResults.getTModelList() != null) {
                                         sb.append(ResourceLoader.GetResource(session, "items.subscriptions.tmodels2"))
-                                                .append("<table class=\"table table-hover\">");
+                                             .append("<table class=\"table table-hover\">");
                                         for (int i = 0; i < subscriptionResults.getTModelList().getTModelInfos().getTModelInfo().size(); i++) {
                                                 sb.append("<tr><td><a href=\"serviceEditor.jsp?id=");
                                                 sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getTModelList().getTModelInfos().getTModelInfo().get(i).getTModelKey()));
@@ -2990,15 +2996,15 @@ public class UddiHub implements Serializable {
 
                         StringBuilder sb = new StringBuilder();
                         sb.append("<table class=\"table\"><tr><th>").
-                                append("</th><th>").
-                                append(ResourceLoader.GetResource(session, "items.business")).
-                                append("</th><th>").
-                                append(ResourceLoader.GetResource(session, "items.service")).
-                                append("</th><th>").
-                                append(ResourceLoader.GetResource(session, "items.bindingtemplate.key")).
-                                append("</th><th>").
-                                append(ResourceLoader.GetResource(session, "items.accesspoint.value")).
-                                append("</th></tr>");
+                             append("</th><th>").
+                             append(ResourceLoader.GetResource(session, "items.business")).
+                             append("</th><th>").
+                             append(ResourceLoader.GetResource(session, "items.service")).
+                             append("</th><th>").
+                             append(ResourceLoader.GetResource(session, "items.bindingtemplate.key")).
+                             append("</th><th>").
+                             append(ResourceLoader.GetResource(session, "items.accesspoint.value")).
+                             append("</th></tr>");
 
                         for (int i = 0; i < serviceDetail.getBusinessService().size(); i++) {
                                 //   System.out.println(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size());
@@ -3006,24 +3012,24 @@ public class UddiHub implements Serializable {
                                         for (int k = 0; k < serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {
                                                 //System.out.println(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getAccessPoint().getValue());
                                                 sb.append("<tr><td><input type=\"checkbox\" class=\"modalableBinding\" id=\"").
-                                                        append(StringEscapeUtils.escapeHtml(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getBindingKey())).
-                                                        append("\">").
-                                                        append("</td><td>").
-                                                        append("<a href=\"businessEditor2.jsp?id=").
-                                                        append(StringEscapeUtils.escapeHtml(findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey())).
-                                                        append("\">").
-                                                        append(StringEscapeUtils.escapeHtml((findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey()))).
-                                                        append("</a>").
-                                                        append("</td><td>").append("<a href=\"serviceEditor.jsp?id=").
-                                                        append(StringEscapeUtils.escapeHtml(serviceDetail.getBusinessService().get(i).getServiceKey())).
-                                                        append("\" title=\"").
-                                                        append(StringEscapeUtils.escapeHtml(serviceDetail.getBusinessService().get(i).getServiceKey())).
-                                                        append("\">").
-                                                        append(Printers.ListNamesToString(serviceDetail.getBusinessService().get(i).getName())).
-                                                        append("</a>").
-                                                        append("</td><td>").
-                                                        append(StringEscapeUtils.escapeHtml(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getBindingKey())).
-                                                        append("</td><td>");
+                                                     append(StringEscapeUtils.escapeHtml(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getBindingKey())).
+                                                     append("\">").
+                                                     append("</td><td>").
+                                                     append("<a href=\"businessEditor2.jsp?id=").
+                                                     append(StringEscapeUtils.escapeHtml(findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey())).
+                                                     append("\">").
+                                                     append(StringEscapeUtils.escapeHtml((findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey()))).
+                                                     append("</a>").
+                                                     append("</td><td>").append("<a href=\"serviceEditor.jsp?id=").
+                                                     append(StringEscapeUtils.escapeHtml(serviceDetail.getBusinessService().get(i).getServiceKey())).
+                                                     append("\" title=\"").
+                                                     append(StringEscapeUtils.escapeHtml(serviceDetail.getBusinessService().get(i).getServiceKey())).
+                                                     append("\">").
+                                                     append(Printers.ListNamesToString(serviceDetail.getBusinessService().get(i).getName())).
+                                                     append("</a>").
+                                                     append("</td><td>").
+                                                     append(StringEscapeUtils.escapeHtml(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getBindingKey())).
+                                                     append("</td><td>");
                                                 if (serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getAccessPoint() != null) {
                                                         sb.append(StringEscapeUtils.escapeHtml(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getAccessPoint().getValue()));
                                                 }

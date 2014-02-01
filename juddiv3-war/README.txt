@@ -35,6 +35,10 @@ Both OpenJPA and Apache Axis2 are packaged up in the juddiv3.war.
 
 mvn clean package -P hibernate-jbossws-cxf
 
+6. Target platform JBoss EAP 6 or comminity 7 using OpenJPA and JbossWS-cxf
+
+mvn clean package -P openjpa-jboss7up
+
 
 KNOWN ISSUES
 
