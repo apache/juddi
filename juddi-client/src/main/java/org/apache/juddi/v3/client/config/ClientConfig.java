@@ -316,7 +316,7 @@ public class ClientConfig
          * gets the current configuration's node list
          * only the node name, client name, descriptions and transport class are returned, everything else is nulled out for
          * security reasons. Only a copy of these values are returned
-         * @return 
+         * @return a list of nodes representing the config file as described
          */
         public List<Node> getUDDINodeList(){
                 List<Node> ret = new ArrayList<Node>();

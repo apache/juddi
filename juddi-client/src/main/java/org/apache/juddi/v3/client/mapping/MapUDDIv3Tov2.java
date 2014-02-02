@@ -247,7 +247,7 @@ public class MapUDDIv3Tov2 {
          * limitation, only the first overview doc is mapped
          *
          * @param overviewDoc
-         * @return
+         * @return overviewDoc or null
          */
         private static OverviewDoc MapOverviewDoc(List<org.uddi.api_v3.OverviewDoc> overviewDoc) {
                 if (overviewDoc == null || overviewDoc.isEmpty()) {
@@ -1192,7 +1192,7 @@ public class MapUDDIv3Tov2 {
          * limitation, keys owned is not mapped
          *
          * @param assertionStatusReport
-         * @return
+         * @return AssertionStatusReport or null
          */
         public static AssertionStatusReport MapAssertionStatusReport(List<AssertionStatusItem> assertionStatusReport) {
                 if (assertionStatusReport == null) {

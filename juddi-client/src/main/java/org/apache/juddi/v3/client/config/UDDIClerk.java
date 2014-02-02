@@ -1617,8 +1617,8 @@ public class UDDIClerk implements Serializable {
          * Article source: <a
          * href="http://www.ibm.com/developerworks/webservices/library/ws-version/">http://www.ibm.com/developerworks/webservices/library/ws-version/</a>
          * <Br><Br>
-         *
-         * @see createServiceInterfaceVersion for more information<Br><br>
+         * see {@link #createServiceInterfaceVersion createServiceInterfaceVersion} 
+         *  for more information<Br><br>
          *
          * This function operates using tModelInstances that are used to
          * describe a version associated with either a service interface, a

@@ -64,7 +64,7 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
  * The Cache also registers an MBean which allows the 
  * 
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
- * @see UDDIClientSubscriptionListenerService
+ * @see UDDIClientSubscriptionListenerImpl
  * @see UDDIServiceCacheMBean
  * @see UDDISubscriptionListenerPortType
  * @see ServiceLocator

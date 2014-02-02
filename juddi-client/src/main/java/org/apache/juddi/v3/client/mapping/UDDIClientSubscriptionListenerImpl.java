@@ -25,6 +25,7 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.v3.client.subscription.SubscriptionCallbackListener;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.Result;
 import org.uddi.subr_v3.NotifySubscriptionListener;

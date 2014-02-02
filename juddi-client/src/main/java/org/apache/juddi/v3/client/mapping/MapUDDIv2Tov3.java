@@ -250,7 +250,7 @@ public class MapUDDIv2Tov3 {
          * limitation, only the first overview doc is mapped
          *
          * @param overviewDoc
-         * @return
+         * @return overdoc or null
          */
         private static OverviewDoc MapOverviewDoc(org.uddi.api_v2.OverviewDoc overviewDoc) {
                 if (overviewDoc == null) {

@@ -58,7 +58,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
 
     /**
      * Constructor taking the URI to the WSDL. This class implements the
-     * {@link WSDLLocatorImpl} Interface.
+     * {@link WSDLLocator} Interface.
      *
      * @param baseURI - URI of the WSDL
      */
@@ -69,7 +69,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
 
     /**
      * Constructor taking the URI to the WSDL. This class implements the
-     * {@link WSDLLocatorImpl} Interface and includes support for HTTP
+     * {@link WSDLLocator} Interface and includes support for HTTP
      * Authentication
      *
      * @param baseURI
@@ -85,7 +85,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
     }
 
     /**
-     * @see WSDLLocatorImpl.getBaseInputSource
+     * see  {@link #getBaseInputSource getBaseInputSource}  WSDLLocator.getBaseInputSource
      */
     public InputSource getBaseInputSource() {
         return getImportFromUrl(baseURI.toString());
@@ -192,7 +192,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
     }
 
    /**
-    * @see WSDLLocatorImpl.getImportInputSource
+    * see also {@link #getImportInputSource WSDLLocator.getImportInputSource} 
     * @param parentLocation
     * @param importLocation
     * @return input source
@@ -210,7 +210,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
     }
 
     /**
-     * @see WSDLLocatorImpl.getBaseURI
+     * see also {@link WSDLLocator#getBaseURI WSDLLocatorImpl.getBaseURI} 
      * @return string
      */
     public String getBaseURI() {
@@ -226,7 +226,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
     }
 
     /**
-     * @see WSDLLocatorImpl.getLatestImportURI
+     * {@link WSDLLocator#getLatestImportURI getLatestImportURI}
      * @return string
      */
     public String getLatestImportURI() {
@@ -234,7 +234,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
     }
 
     /**
-     * @see WSDLLocatorImpl.close
+     * {@link WSDLLocator#close close}
      */
     public void close() {
         if (inputStream != null) {

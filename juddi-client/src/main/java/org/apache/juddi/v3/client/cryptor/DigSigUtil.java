@@ -173,8 +173,7 @@ public class DigSigUtil {
          * Map map = new HashMap();
          * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, "true");</pre>
          * any value can be used.
-         *
-         * @see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
+         * see {@link #SIGNATURE_OPTION_CERT_INCLUSION_BASE64 SIGNATURE_OPTION_CERT_INCLUSION_BASE64} 
          */
         public final static String SIGNATURE_OPTION_CERT_INCLUSION_SERIAL = "SERIAL";
         /**
@@ -190,7 +189,7 @@ public class DigSigUtil {
          * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, "true");</pre>
          * any value can be used.
          *
-         * @see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
+         * see {@link #SIGNATURE_OPTION_CERT_INCLUSION_BASE64 SIGNATURE_OPTION_CERT_INCLUSION_BASE64} 
          */
         public final static String SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN = "SUBJECTDN";
         /*
