@@ -698,10 +698,6 @@ public class UDDI_090_SubscriptionListenerExternalTest {
                         for (int i = 0; i < TckPublisher.getSubscriptionTimeout(); i++) {
                                 Thread.sleep(1000);
                                 System.out.print(".");
-                                if (UDDISubscriptionListenerImpl.notificationCount > 0) {
-                                //        logger.info("Received Notification");
-                                       // break;
-                                }
                         }
                         
                         if (UDDISubscriptionListenerImpl.notificationCount == 0) {
@@ -751,6 +747,94 @@ public class UDDI_090_SubscriptionListenerExternalTest {
         }
 
        
+        
+                /**
+         * getBusiness tests
+         * joe want's updates on mary's business
+         * @throws Exception 
+         */
+        @Test
+        //@Ignore
+        public void joePublisherUpdate_SMTP_GET_BUSINESS_DETAIL() throws Exception{
+                logger.info("joePublisherUpdate_SMTP_GET_BUSINESS_DETAIL");
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                Holder<List<Subscription>> holder=null;
+                try {
+                        UDDISubscriptionListenerImpl.notifcationMap.clear();
+                        UDDISubscriptionListenerImpl.notificationCount = 0;
+                        String before = TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe);
+
+                        tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.saveTModels(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+                        
+                        tckTModelMary.saveMaryPublisherTmodel(authInfoMary);
+                        BusinessEntity saveMaryPublisherBusiness = tckBusinessMary.saveMaryPublisherBusiness(authInfoMary);
+                        
+                        tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
+                        //Saving the Listener Service
+                        tckSubscriptionListenerJoe.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_SMTP_SERVICE_EXTERNAL_XML, 0, email);
+                        //Saving the Subscription
+                        holder = new Holder<List<Subscription>>();
+                        holder.value = new ArrayList<Subscription>();
+                        Subscription sub = new Subscription();
+                        sub.setBindingKey("uddi:uddi.joepublisher.com:bindinglistenersmtp");
+                        sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(5000));
+                        sub.setSubscriptionFilter(new SubscriptionFilter());
+                        sub.getSubscriptionFilter().setGetBusinessDetail(new GetBusinessDetail());
+                        sub.getSubscriptionFilter().getGetBusinessDetail().getBusinessKey().add(TckBusiness.MARY_BUSINESS_KEY);
+                        
+                        holder.value.add(sub);
+                        subscriptionJoe.saveSubscription(authInfoJoe, holder);
+                        //tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION3_XML);
+                        //Changing the service we subscribed to "JoePublisherService"
+                        Thread.sleep(1000);
+                        logger.info("updating Mary's business ********** ");
+                        updatePublisherBusiness(authInfoMary,saveMaryPublisherBusiness, publicationMary);
+                        
+                        logger.info("Waiting " + TckPublisher.getSubscriptionTimeout() + " seconds for delivery");
+                        //waiting up to 100 seconds for the listener to notice the change.
+                        boolean received = false;
+                        for (int i = 0; i < TckPublisher.getSubscriptionTimeout(); i++) {
+                                Thread.sleep(1000);
+                                System.out.print(".");
+                                if (fetchMail("tModel One") > 0) {
+                                        logger.info("Received Email Notification");
+                                        received = true;
+                                        break;
+                                }
+                        }
+                        
+                        if (!received) {
+                                logger.warn("Test failed, dumping business list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                Assert.fail("No Notification was sent");
+                        }
+
+                } catch (Exception e) {
+                        logger.error("No exceptions please.");
+                        e.printStackTrace();
+
+                        Assert.fail();
+                } finally {
+                        //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
+                        DeleteSubscription ds = new DeleteSubscription();
+                        ds.setAuthInfo(authInfoJoe);
+                        ds.getSubscriptionKey().add(holder.value.get(0).getSubscriptionKey());
+                        subscriptionJoe.deleteSubscription(ds);
+                        tckBusinessMary.deleteMaryPublisherBusiness(authInfoMary);
+                        tckTModelMary.deleteMaryPublisherTmodel(authInfoMary);
+                        
+                        tckBusinessServiceJoe.deleteJoePublisherService(authInfoJoe);
+                        tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.deleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+                        
+                }
+        }
+
+
 
         /**
          * adds a new name to the business, then resaves it

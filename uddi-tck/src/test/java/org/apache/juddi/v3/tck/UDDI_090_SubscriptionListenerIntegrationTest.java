@@ -393,7 +393,6 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
          * @throws Exception 
          */
         @Test
-        //@Ignore
         public void joePublisherUpdate_HTTP_GET_BUSINESS_DETAIL() throws Exception{
                 logger.info("joePublisherUpdate_HTTP_GET_BUSINESS_DETAIL");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
