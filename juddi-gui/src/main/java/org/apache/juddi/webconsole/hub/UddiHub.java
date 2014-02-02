@@ -157,6 +157,7 @@ public class UddiHub implements Serializable {
 
         public String verifyLogin() {
                 EnsureConfig();
+                token=null;
                 if (style != AuthStyle.UDDI_AUTH) {
                         if (WS_Transport) {
                                 BindingProvider bp = null;
@@ -211,9 +212,7 @@ public class UddiHub implements Serializable {
                          context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));*/
                         return null;
                 } else {
-                        if (token != null) {
-                                return token;
-                        }
+                        
                         if (WS_Transport) {
                                 BindingProvider bp = null;
                                 Map<String, Object> context = null;
