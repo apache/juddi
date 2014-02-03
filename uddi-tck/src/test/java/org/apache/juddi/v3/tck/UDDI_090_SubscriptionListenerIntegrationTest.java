@@ -34,6 +34,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 import java.net.InetAddress;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.datatype.DatatypeFactory;
@@ -47,7 +48,11 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.Description;
 import org.uddi.api_v3.GetBusinessDetail;
+import org.uddi.api_v3.GetTModelDetail;
+import org.uddi.api_v3.SaveTModel;
+import org.uddi.api_v3.TModel;
 import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionFilter;
@@ -488,10 +493,120 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                 }
         }
 
-       
+
+        
+        
+                /**
+         * getBusiness tests
+         * joe want's updates on mary's business
+         * @throws Exception 
+         */
+        @Test
+        public void joePublisherUpdate_HTTP_GET_TMODEL_DETAIL() throws Exception{
+                logger.info("joePublisherUpdate_HTTP_GET_TMODEL_DETAIL");
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                Holder<List<Subscription>> holder=null;
+                try {
+                        UDDISubscriptionListenerImpl.notifcationMap.clear();
+                        UDDISubscriptionListenerImpl.notificationCount = 0;
+                        String before = TckCommon.DumpAllTModels(authInfoJoe, inquiryJoe);
+
+                        tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.saveTModels(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+                        TModel saveMaryPublisherTmodel = tckTModelMary.saveMaryPublisherTmodel(authInfoMary);
+                        
+                        tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
+                        //Saving the Listener Service
+                        tckSubscriptionListenerJoe.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, httpPort, hostname);
+                        
+                        //Saving the Subscription
+                        holder = new Holder<List<Subscription>>();
+                        holder.value = new ArrayList<Subscription>();
+                        Subscription sub = new Subscription();
+                        sub.setBindingKey("uddi:uddi.joepublisher.com:bindinglistener");
+                        sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(5000));
+                        sub.setSubscriptionFilter(new SubscriptionFilter());
+                        sub.getSubscriptionFilter().setGetTModelDetail(new GetTModelDetail());
+                        sub.getSubscriptionFilter().getGetTModelDetail().getTModelKey().add(TckTModel.MARY_PUBLISHER_TMODEL_KEY);
+                        
+                        holder.value.add(sub);
+                        subscriptionJoe.saveSubscription(authInfoJoe, holder);
+                        //tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION3_XML);
+                        //Changing the service we subscribed to "JoePublisherService"
+                        Thread.sleep(1000);
+                        logger.info("updating Mary's tModel ********** ");
+                        updateTModel(authInfoMary,saveMaryPublisherTmodel, publicationMary);
+                        
+                        logger.info("Waiting " + TckPublisher.getSubscriptionTimeout() + " seconds for delivery");
+                        //waiting up to 100 seconds for the listener to notice the change.
+                        for (int i = 0; i < TckPublisher.getSubscriptionTimeout(); i++) {
+                                Thread.sleep(1000);
+                                System.out.print(".");
+                                if (UDDISubscriptionListenerImpl.notificationCount > 0) {
+                                    //    logger.info("Received Notification");
+//                                        break;
+                                }
+                        }
+                        
+                        if (UDDISubscriptionListenerImpl.notificationCount == 0) {
+                                logger.warn("Test failed, dumping business list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllTModels(authInfoJoe, inquiryJoe));
+                                Assert.fail("No Notification was sent");
+                        }
+                        Iterator<String> it = UDDISubscriptionListenerImpl.notifcationMap.values().iterator();
+                         StringBuilder sb = new StringBuilder();
+                        boolean found = false;
+                        while (it.hasNext()) {
+                                String test = it.next();
+                                sb.append("Message: " + test + System.getProperty("line.separator"));
+                                if (test.contains("a new description")) {
+                                        found = true;
+                                        break;
+                                }
+                        }
+                        if (!found) {
+                                logger.warn("Test failed, dumping business list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                logger.warn("Messages RX " + sb.toString());
+                                Assert.fail("Notification does not contain the correct service. Messages received: " + sb.toString());
+                        }
+
+                } catch (Exception e) {
+                        logger.error("No exceptions please.");
+                        e.printStackTrace();
+
+                        Assert.fail();
+                } finally {
+                        //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
+                        DeleteSubscription ds = new DeleteSubscription();
+                        ds.setAuthInfo(authInfoJoe);
+                        ds.getSubscriptionKey().add(holder.value.get(0).getSubscriptionKey());
+                        subscriptionJoe.deleteSubscription(ds);
+                        //tckBusinessMary.deleteMaryPublisherBusiness(authInfoMary);
+                        tckTModelMary.deleteMaryPublisherTmodel(authInfoMary);
+                        
+                        tckBusinessServiceJoe.deleteJoePublisherService(authInfoJoe);
+                        tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.deleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+                        
+                }
+        }
+
         
         //TODO If a subscriber specifies a maximum number of entries to be returned with a subscription and the amount of data to be returned exceeds 
 //this limit, or if the node determines based on its policy that there are too many entries to be returned in a single group, 
         //then the node SHOULD provide a chunkToken with results.  
         //TODO  If no more results are pending, the value of the chunkToken MUST be "0".
+
+        public static void updateTModel(String authInfoMary, TModel saveMaryPublisherTmodel, UDDIPublicationPortType publicationMary) throws Exception {
+                saveMaryPublisherTmodel.getDescription().add(new Description("a new description",null));
+                SaveTModel stm = new SaveTModel();
+                stm.setAuthInfo(authInfoMary);
+                stm.getTModel().add(saveMaryPublisherTmodel);
+                publicationMary.saveTModel(stm);
+        }
 }

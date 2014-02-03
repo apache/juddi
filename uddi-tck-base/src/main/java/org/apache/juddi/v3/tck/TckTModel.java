@@ -74,7 +74,7 @@ public class TckTModel {
         private Set<String> keyscreated = new HashSet<String>();
 
         public TckTModel(UDDIPublicationPortType publication,
-                UDDIInquiryPortType inquiry) {
+             UDDIInquiryPortType inquiry) {
                 super();
                 this.publication = publication;
                 this.inquiry = inquiry;
@@ -93,7 +93,7 @@ public class TckTModel {
                         SaveTModel st = (org.uddi.api_v3.SaveTModel) EntityCreator.buildFromDoc(tModelXml, "org.uddi.api_v3");
 
                         for (int i = 0; i < st.getTModel().size(); i++) {
-                                saveTModel(authInfo, st.getTModel().get(i), false);
+                                 saveTModel(authInfo, st.getTModel().get(i), false);
                         }
                         //st.setAuthInfo(authInfo);
                         //publication.saveTModel(st);
@@ -104,7 +104,7 @@ public class TckTModel {
                 }
         }
 
-        private void saveTModel(String authInfo, TModel tmIn, boolean force) {
+        private TModel saveTModel(String authInfo, TModel tmIn, boolean force) {
                 boolean exists = false;
                 GetTModelDetail gt1 = new GetTModelDetail();
                 gt1.getTModelKey().add(tmIn.getTModelKey());
@@ -113,9 +113,7 @@ public class TckTModel {
                         if (td1 != null && !td1.getTModel().isEmpty()) {
                                 if (!td1.getTModel().get(0).isDeleted()) {
                                         exists = true;
-                                }
-                                else
-                                {
+                                } else {
                                         logger.info("The tModel with key " + tmIn.getTModelKey() + " exists already, but is flagged as deleted. Overwritting");
                                 }
                         }
@@ -152,6 +150,7 @@ public class TckTModel {
                                 if (TckCommon.isDebug()) {
                                         JAXB.marshal(tmOut, System.out);
                                 }
+                                return tmOut;
 
                         } catch (Exception e) {
                                 logger.error(e.getMessage(), e);
@@ -161,13 +160,14 @@ public class TckTModel {
                 } else {
                         logger.info("The TModel " + tmIn.getTModelKey() + " exists already, skipping");
                 }
+                return tmIn;
         }
 
-        public void saveTModel(String authInfo, String tModelXml, String tModelKey) {
-                saveTModel(authInfo, tModelXml, tModelKey, false);
+        public TModel saveTModel(String authInfo, String tModelXml, String tModelKey) {
+                return saveTModel(authInfo, tModelXml, tModelKey, false);
         }
 
-        public void saveTModel(String authInfo, String tModelXml, String tModelKey, boolean force) {
+        public TModel saveTModel(String authInfo, String tModelXml, String tModelKey, boolean force) {
                 logger.info("Loading tModel from " + tModelXml);
                 org.uddi.api_v3.TModel tmIn = null;
                 try {
@@ -178,7 +178,7 @@ public class TckTModel {
                 if (tmIn == null) {
                         Assert.fail("unable to load tmodel from file!");
                 }
-                saveTModel(authInfo, tmIn, force);
+                return saveTModel(authInfo, tmIn, force);
         }
 
         public synchronized void deleteTModel(String authInfo, String tModelXml, String tModelKey, boolean force) {
@@ -257,12 +257,12 @@ public class TckTModel {
                 return null;
         }
 
-        public void saveJoePublisherTmodel(String authInfoJoe) {
-                saveTModel(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY, false);
+        public TModel saveJoePublisherTmodel(String authInfoJoe) {
+                return saveTModel(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY, false);
         }
 
-        public void saveJoePublisherTmodel(String authInfoJoe, boolean force) {
-                saveTModel(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY, force);
+        public TModel saveJoePublisherTmodel(String authInfoJoe, boolean force) {
+                return saveTModel(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY, force);
         }
 
         public void saveUDDIPublisherTmodel(String authInfoTM) {
@@ -285,16 +285,16 @@ public class TckTModel {
                 return findJoeTModelDetail();
         }
 
-        public void saveMaryPublisherTmodel(String authInfoMary) {
-                saveTModel(authInfoMary, MARY_PUBLISHER_TMODEL_XML, MARY_PUBLISHER_TMODEL_KEY, false);
+        public TModel saveMaryPublisherTmodel(String authInfoMary) {
+                return saveTModel(authInfoMary, MARY_PUBLISHER_TMODEL_XML, MARY_PUBLISHER_TMODEL_KEY, false);
         }
 
         public void deleteMaryPublisherTmodel(String authInfoMary) {
                 deleteTModel(authInfoMary, MARY_PUBLISHER_TMODEL_XML, MARY_PUBLISHER_TMODEL_KEY);
         }
 
-        public void saveSamSyndicatorTmodel(String authInfoSam) {
-                saveTModel(authInfoSam, SAM_SYNDICATOR_TMODEL_XML, SAM_SYNDICATOR_TMODEL_KEY, false);
+        public TModel saveSamSyndicatorTmodel(String authInfoSam) {
+                return saveTModel(authInfoSam, SAM_SYNDICATOR_TMODEL_XML, SAM_SYNDICATOR_TMODEL_KEY, false);
         }
 
         public void deleteSamSyndicatorTmodel(String authInfoSam) {
@@ -328,3 +328,4 @@ public class TckTModel {
 
         }
 }
+	
