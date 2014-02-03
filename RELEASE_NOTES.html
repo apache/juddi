@@ -15,6 +15,445 @@
  *
  * -->
  
+        <h1>Release Notes - jUDDI - Version 3.2</h1>
+    
+<h2>        Sub-task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-782'>JUDDI-782</a>] -         Add v2 API
+</li>
+</ul>
+            
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-405'>JUDDI-405</a>] -         Improve LDAP integration
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-581'>JUDDI-581</a>] -         Client side digital signature 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-590'>JUDDI-590</a>] -         getAssertionStatusReport does not return incomplete assertions
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-593'>JUDDI-593</a>] -         Upgrade to the latest CXF version
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-595'>JUDDI-595</a>] -         Subscription API NPE, Validation required
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-596'>JUDDI-596</a>] -         Subscription callback without a transport type is not delivered
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-597'>JUDDI-597</a>] -         Binding template access point value is converted toLowerCase()
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-603'>JUDDI-603</a>] -         Subscription email notifier shouldn&#39;t require mailto: prefix
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-606'>JUDDI-606</a>] -         Subscription API does not validate on saveSubscription
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-610'>JUDDI-610</a>] -         add canned query support in the console
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-615'>JUDDI-615</a>] -         NPE when trying to sign an artifact
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-616'>JUDDI-616</a>] -         Build fails on during JAR signing of DigSig Applet
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-619'>JUDDI-619</a>] -         jUDDI API wsdl is not synchronized to the code base
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-620'>JUDDI-620</a>] -         uddi-tck-test.jar is missing from the bundle
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-622'>JUDDI-622</a>] -         no stack traces should be thrown in the console during test
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-623'>JUDDI-623</a>] -         WSDL files are not syncronized with JUDDI API ws
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-626'>JUDDI-626</a>] -         Create verbiage for WSDL/WADL import with for Juddi-gui
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-630'>JUDDI-630</a>] -         Implement Inquiry tmodel uddi:uddi.org:findqualifier:orallkeys
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-631'>JUDDI-631</a>] -         Add JAVA_OPTs memory settings for Windows catalina.bat
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-632'>JUDDI-632</a>] -         New juddi user console does not display correctly in IE8
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-634'>JUDDI-634</a>] -         juddi client&#39;s xsd is invalid
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-637'>JUDDI-637</a>] -         Add source code documentation to UDDIClerk, UDDIClient, UDDIService and more
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-643'>JUDDI-643</a>] -         Documentation pom fails
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-645'>JUDDI-645</a>] -         NodeId config setting is not honored
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-646'>JUDDI-646</a>] -         Configuring the node id causes the splash page to fail to render
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-649'>JUDDI-649</a>] -         Error importing WSDL from juddi-gui
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-653'>JUDDI-653</a>] -         Build fails on Ubuntu using OpenJDK
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-654'>JUDDI-654</a>] -         Max Tries delivery count for subscription notification is not honored
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-655'>JUDDI-655</a>] -         Maximum subscription results count is not honored for asynch notifications
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-662'>JUDDI-662</a>] -         Name length of j3_signature_transform_data_value too long
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-663'>JUDDI-663</a>] -         juddi-gui-disg jar signer is signing the wrong jar file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-664'>JUDDI-664</a>] -         Remove dependency on sun/oracle jdk
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-666'>JUDDI-666</a>] -         revise documentation for ddl generation
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-667'>JUDDI-667</a>] -         jUDDI should be able to run on a server not connected to the www
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-669'>JUDDI-669</a>] -         Fix juddi-gui settings page
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-671'>JUDDI-671</a>] -         Convert the uddi-samples projects maven
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-675'>JUDDI-675</a>] -         exception throw when UDDIClient.stop is called more than once
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-676'>JUDDI-676</a>] -         juddi-gui business editor page may not render
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-677'>JUDDI-677</a>] -         save business does not validate business key for UDDI key rules
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-678'>JUDDI-678</a>] -         juddi-gui does not trap expired auth tokens correctly
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-679'>JUDDI-679</a>] -         juddi-gui NPE performing find service by id
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-681'>JUDDI-681</a>] -         When saving a new business, the business key is not casted correctly
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-682'>JUDDI-682</a>] -         fix uddi root business entity install file, invalid discovery url and type
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-685'>JUDDI-685</a>] -         Asciidoc generation fails
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-690'>JUDDI-690</a>] -         juddi-client java wsdl2uddi may not include uddi-org:protocol:http for all bindings/ports using soap 1.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-691'>JUDDI-691</a>] -         NPE querying for Publisher Assertions 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-696'>JUDDI-696</a>] -         juddi-gui may not generate aes keys using oracle jre without jce
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-698'>JUDDI-698</a>] -         juddi-gui edit subscription page date picker doesn&#39;t work
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-700'>JUDDI-700</a>] -         juddi-client add find_endpoints functionality
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-704'>JUDDI-704</a>] -         jUDDI API Wsdl in source trunk is not synced with code base
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-705'>JUDDI-705</a>] -         SaveNode crashes
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-709'>JUDDI-709</a>] -         juddi-gui only the first node is listed in the config settings pages
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-711'>JUDDI-711</a>] -         digital signature util - add support for trust store validation via system properties
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-712'>JUDDI-712</a>] -         Add validation for saving projected entities when a signature is present
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-715'>JUDDI-715</a>] -         Java Annotations Example cleanup
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-716'>JUDDI-716</a>] -         Unrecognized Value for Element: X509IssuerSerial
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-718'>JUDDI-718</a>] -         juddi-client UDDIClerkServlet does not register annotated services on startup
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-721'>JUDDI-721</a>] -         juddi-gui edit subscription page incomplete
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-722'>JUDDI-722</a>] -         juddi-client does not parse or serialize exception correctly
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-727'>JUDDI-727</a>] -         Publish validation does not validate node ownership
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-730'>JUDDI-730</a>] -         juddi-gui operational status missing from tmodels
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-732'>JUDDI-732</a>] -         Append juddi-migration tool with dependencies to uddi client distribution
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-735'>JUDDI-735</a>] -         juddi api wsdls do not have fault information listed
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-739'>JUDDI-739</a>] -         juddi-gui businessEditor throws up
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-740'>JUDDI-740</a>] -         juddi REST services do not function for JSON encoded responses
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-746'>JUDDI-746</a>] -         Remove test code from SMTP Notifier
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-749'>JUDDI-749</a>] -         juddi-gui may throw NPE on redeploy
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-752'>JUDDI-752</a>] -         UDDI_040_BusinessServiceLoadTest fails to run
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-759'>JUDDI-759</a>] -         fix typo on juddi-gui service editor page
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-761'>JUDDI-761</a>] -         juddi distribution is missing context.xml
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-762'>JUDDI-762</a>] -         deleting a publisher should also delete their content, auth tokens
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-763'>JUDDI-763</a>] -         juddi-gui wadl importer fails to run (no feedback)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-771'>JUDDI-771</a>] -         fix juddi admin console status page &quot;happy juddi&quot;
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-772'>JUDDI-772</a>] -         revise uddi migration tool to support importing from version 2 api
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-775'>JUDDI-775</a>] -         juddi-gui last minute enhancements
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-776'>JUDDI-776</a>] -         WSDL/WADL2UDDI truncate or split up long descriptions
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-777'>JUDDI-777</a>] -         mvn build process is broken in windows
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-785'>JUDDI-785</a>] -         find with CASE_INSENSITIVE_SORT throws JPA exception
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-787'>JUDDI-787</a>] -         SORT_BY_NAME_DESC find qualifier for find Binding is an invalid combo, not flagged by juddi
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-790'>JUDDI-790</a>] -         admin console transport broken
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-791'>JUDDI-791</a>] -         Login/Logout in admin and juddi-gui
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-792'>JUDDI-792</a>] -         Add_Publisher
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-794'>JUDDI-794</a>] -         &#39;admin&#39; users cannot delete items not owned by them
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-795'>JUDDI-795</a>] -         juddi-gui settings config page logic issue
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-801'>JUDDI-801</a>] -         The UDDIv3 field IsTruncated() is never populated from Find APIs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-802'>JUDDI-802</a>] -         publisher defaults to admin
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-803'>JUDDI-803</a>] -         keyGenerator not valid
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-804'>JUDDI-804</a>] -         find tModel NPE
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-805'>JUDDI-805</a>] -         service edit may fail to render correctly under certain conditions
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-809'>JUDDI-809</a>] -         find service&#39;s minimum elements is incorrect
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-813'>JUDDI-813</a>] -         find business by tmodel key bag, no result returned
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-816'>JUDDI-816</a>] -         business and service editor krgrp kr&#39;s are not saved
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-822'>JUDDI-822</a>] -         Defaults when saving a publisher are null
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-826'>JUDDI-826</a>] -         saveBusiness on an existing business fails no browsers other than chrome
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-827'>JUDDI-827</a>] -         misc usability enhancements
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-828'>JUDDI-828</a>] -         JUDDI fails to deploy on EAP6.x
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-829'>JUDDI-829</a>] -         adjust validation rules for bindingTemplate/tModelInstanceInfo
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-830'>JUDDI-830</a>] -         importFromWSDL password field should be of type password
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-834'>JUDDI-834</a>] -         login always uses the &#39;default&#39; nodename
+</li>
+</ul>
+                
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-237'>JUDDI-237</a>] -         Extra select queries are run, one for each search result related to category bag
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-260'>JUDDI-260</a>] -         package console using InVM transport
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-331'>JUDDI-331</a>] -         Try adding error msg in the console
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-455'>JUDDI-455</a>] -         Add some UI to JUDDI console to display the management beans/monitoring
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-556'>JUDDI-556</a>] -         Improvements for the UDDI Portal/Administrative web console
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-575'>JUDDI-575</a>] -         Referential Integrity Check 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-583'>JUDDI-583</a>] -         Productize the TCK test suite
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-594'>JUDDI-594</a>] -         Reconfigure jUDDI so that multiple instances can be run from the same container with different databases
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-598'>JUDDI-598</a>] -         Add additional transports to the base install data 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-599'>JUDDI-599</a>] -         Add REST style bindings for Inquiry get_XXX APIs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-601'>JUDDI-601</a>] -         Add more constant fields and documentation to juddi-client
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-602'>JUDDI-602</a>] -         Support encrypted values in our config
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-614'>JUDDI-614</a>] -         Add additional configuration options juddi-client uddi.xml
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-618'>JUDDI-618</a>] -         Encryption enhancements 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-625'>JUDDI-625</a>] -         Add REST style bindings for inquiry find_XXX
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-627'>JUDDI-627</a>] -         Switch the juddi server to xml configuration file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-628'>JUDDI-628</a>] -         Refactor all configuration settings logically
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-629'>JUDDI-629</a>] -         Create unit tests for Cryptor functions, Add Decrypt functionality
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-642'>JUDDI-642</a>] -         Convert all existing documentation from docbook(xml) to asciidoc
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-670'>JUDDI-670</a>] -         Document the correct usage of UDDIClientContainer
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-674'>JUDDI-674</a>] -         create unit tests for Wadl2Uddi
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-686'>JUDDI-686</a>] -         track and map requestors IP address to auth token
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-687'>JUDDI-687</a>] -         update business editor to have warning when using v2 keys
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-702'>JUDDI-702</a>] -         reduce code duplication for CryptorFactory
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-710'>JUDDI-710</a>] -         juddi-gui consolidate all config settings
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-720'>JUDDI-720</a>] -         juddi-gui and juddiv3/admin add the ability to insert new config elements via browser
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-731'>JUDDI-731</a>] -         add constant values for EntityCreator packages and refactor
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-737'>JUDDI-737</a>] -         Alter Inquiry API REST endpoints to conform to the recommended uri pattern
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-774'>JUDDI-774</a>] -         juddi-client refactor confusing method names, add javadoc
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-780'>JUDDI-780</a>] -         Add uddiv2 support for the client and server side
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-788'>JUDDI-788</a>] -         revise simple publish example
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-793'>JUDDI-793</a>] -         i18n juddiv3 admin console
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-796'>JUDDI-796</a>] -         refactor admin console class paths to prevent collisions with juddi-gui
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-797'>JUDDI-797</a>] -         reduce javadoc warnings, format any source code files that need it
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-810'>JUDDI-810</a>] -         clarify amqp demo instructions
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-811'>JUDDI-811</a>] -         use keyboard left and right to page on browse pages
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-815'>JUDDI-815</a>] -         cross link all tmodel key references to the tmodel editor page
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-818'>JUDDI-818</a>] -         add sort by name for all pickers
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-819'>JUDDI-819</a>] -         add package-info.java to all packages for clearer javadoc
+</li>
+</ul>
+    
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-314'>JUDDI-314</a>] -         Create a juddi-client-bundle-3.0.0 with jar, source and javadocs for juddi-client and uddi-ws
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-509'>JUDDI-509</a>] -         Support Service Versioning in the jUDDI client
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-546'>JUDDI-546</a>] -         After deployed juddiv3-war-3.1.3 on WebSphere 7 default AXIS Transport URL&#39;s are not working
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-564'>JUDDI-564</a>] -         Advanced Browser Example
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-567'>JUDDI-567</a>] -         Port the client library to .NET
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-577'>JUDDI-577</a>] -         Additional Inquiry/Publish Sample - Advanced
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-578'>JUDDI-578</a>] -         Add a client side API for supporting XML Digital Signatures
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-579'>JUDDI-579</a>] -         Make a new end user web interface
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-600'>JUDDI-600</a>] -         WADL2UDDI Basic Mapping of WADL to UDDI entries
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-607'>JUDDI-607</a>] -         Administrative user interface
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-609'>JUDDI-609</a>] -         Timeline in console
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-621'>JUDDI-621</a>] -         Create documentation and examples for running juddi-client in embedded mode
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-633'>JUDDI-633</a>] -         Building a Find Qualifiers for comparison operator such as &quot;greater then&quot; and &quot;less than&quot; for QoS queries
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-635'>JUDDI-635</a>] -         Added encryptable credentials for juddi-client config files
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-636'>JUDDI-636</a>] -         Add Subscription callback implementation for the juddi-client api
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-638'>JUDDI-638</a>] -         Configure buildbot for Juddi-client.net
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-639'>JUDDI-639</a>] -         Create batch and shell scripts for encryption credentials
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-656'>JUDDI-656</a>] -         Add config setting to enable/disable sending auth tokens with subscription result list
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-668'>JUDDI-668</a>] -         Add programmatic access to save the juddi client config file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-672'>JUDDI-672</a>] -         create example notifier implementation
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-673'>JUDDI-673</a>] -         Add unit tests for SubscriptionCallbackTests 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-683'>JUDDI-683</a>] -         Implement configurable warning banner
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-703'>JUDDI-703</a>] -         Adding audit logging for authToken request&#39;s and discards
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-713'>JUDDI-713</a>] -         Add togglable serialization of uddi entities from the tck tests
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-714'>JUDDI-714</a>] -         Adding juddi-client.net to client distribution package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-719'>JUDDI-719</a>] -         Add more end user options for the digital signature applet
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-724'>JUDDI-724</a>] -         example on exporting data from one registry and importing into another
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-729'>JUDDI-729</a>] -         Create a UDDI migration tool
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-755'>JUDDI-755</a>] -         juddi-client add tModel helper functions
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-800'>JUDDI-800</a>] -         add per user/session node switcher
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-820'>JUDDI-820</a>] -         add an example for using juddiclient with uddiv2 endpoints
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-824'>JUDDI-824</a>] -         create dist profile for jboss7/eap6 with hibernate
+</li>
+</ul>
+                            
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-246'>JUDDI-246</a>] -         Complete documentation of the 3.2.0 release functionality
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-283'>JUDDI-283</a>] -         Document how to deploy jUDDI using Axis2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-497'>JUDDI-497</a>] -         Create MBean for the UDDIServiceCache
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-613'>JUDDI-613</a>] -         Convert the new GUI build to maven
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-617'>JUDDI-617</a>] -         Deploy jUDDI in the cloud
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-641'>JUDDI-641</a>] -         Add example which uses the ServiceLocator
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-647'>JUDDI-647</a>] -         Add a default user account for tomcat to access the admin ui pages
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-657'>JUDDI-657</a>] -         documentation - rectify &quot;GuideJuddi Configuration&quot; and &quot;GuideConfigurationServer&quot;
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-658'>JUDDI-658</a>] -         Document how to set logging to debug for jUDDI services
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-659'>JUDDI-659</a>] -         remove portal and portlets in favor of the gui
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-660'>JUDDI-660</a>] -         create profile for EAP 6.1.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-661'>JUDDI-661</a>] -         remove endpoint config from the gui&#39;s config.xml (since that is already defined in the uddi.xml)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-665'>JUDDI-665</a>] -         document how to resign the applet jars for production environments
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-688'>JUDDI-688</a>] -         package juddi ascii documentation within juddi distro
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-692'>JUDDI-692</a>] -         juddi-gui confirm all end user verbiage is i18n-ized
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-693'>JUDDI-693</a>] -         juddi-gui setup automatic logouts
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-694'>JUDDI-694</a>] -         juddi-gui enable jsp precompiling (build time)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-697'>JUDDI-697</a>] -         juddi-gui complete edit subscription page
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-701'>JUDDI-701</a>] -         Run findbugs before release
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-717'>JUDDI-717</a>] -         Ensure all sample programs compile and function
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-733'>JUDDI-733</a>] -         Remove juddi-console project
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-738'>JUDDI-738</a>] -         add REST url into the default install data
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-742'>JUDDI-742</a>] -         Add test cases for inquiry REST API
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-756'>JUDDI-756</a>] -         Create new JIRA components
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-760'>JUDDI-760</a>] -         correct links for mailing list
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-765'>JUDDI-765</a>] -         refactoring the juddi-client packages.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-767'>JUDDI-767</a>] -         add maven version information to manifest for juddi-tck-runner and juddi-migration-tool
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-768'>JUDDI-768</a>] -         Confirm juddi smtp notifier can deliver to authenticated mail servers
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-769'>JUDDI-769</a>] -         juddi-gui all gui functions are broken due to UDDIClient change
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-770'>JUDDI-770</a>] -         add juddi-tck-runner to client distribution
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-778'>JUDDI-778</a>] -         Update buildbot config for the new maven profiles
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-779'>JUDDI-779</a>] -         remove access control interfaces/plugins from juddi-core
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-807'>JUDDI-807</a>] -         Test juddi-gui-disg applet on MacOS
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-814'>JUDDI-814</a>] -         update install data to reflect wsdl/wadl to uddi mappings
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-817'>JUDDI-817</a>] -         confirm that we can&#39;t reference a &#39;marked as deleted&#39; tmodel
+</li>
+</ul>
+ 
  
         <h1>Release Notes - jUDDI - Version 3.1.5
                 </h1>
