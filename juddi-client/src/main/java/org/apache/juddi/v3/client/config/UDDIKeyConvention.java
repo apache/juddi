@@ -64,7 +64,7 @@ public class UDDIKeyConvention
 	 */
 	public static String getServiceKey(Properties properties, String serviceName) {
 		Properties tempProperties = new Properties();
-		tempProperties.putAll(properties);
+		if (properties!=null) tempProperties.putAll(properties);
 		tempProperties.put("serviceName", serviceName);
 		//Constructing the serviceKey
 		String keyFormat = tempProperties.getProperty(Property.SERVICE_KEY_FORMAT, DEFAULT_SERVICE_KEY_FORMAT);
@@ -95,7 +95,7 @@ public class UDDIKeyConvention
 	 */
 	public static String getBindingKey(Properties properties, QName serviceName, String portName, URI bindingUrl) {
 		Properties tempProperties = new Properties();
-		tempProperties.putAll(properties);
+		if (properties!=null) tempProperties.putAll(properties);
 		tempProperties.put("serviceName", serviceName.getLocalPart());
 		tempProperties.put("portName", portName);
 		int port = bindingUrl.getPort();
