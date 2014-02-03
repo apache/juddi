@@ -140,8 +140,8 @@ public class SMTPNotifier implements Notifier {
 				message.setFrom(new InternetAddress(getEMailProperties().getProperty("mail.smtp.from", "jUDDI")));
 				//maybe nice to use a template rather then sending raw xml.
 				String subscriptionResultXML = JAXBMarshaller.marshallToString(body, JAXBMarshaller.PACKAGE_SUBSCR_RES);
-				//message.setText(subscriptionResultXML, "UTF-8");
-                                message.setContent(subscriptionResultXML, "text/xml; charset=UTF-8;");
+				message.setText(subscriptionResultXML, "UTF-8");
+                                //message.setContent(subscriptionResultXML, "text/xml; charset=UTF-8;");
 				message.setSubject("UDDI Subscription Notification for subscription " 
 						+ body.getSubscriptionResultsList().getSubscription().getSubscriptionKey());
 				Transport.send(message);
