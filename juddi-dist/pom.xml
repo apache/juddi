@@ -157,8 +157,8 @@
         
 		<!--  documentation -->
 		<dependency>
-			<groupId>org.apache.juddi</groupId>
-			<artifactId>juddi-docs</artifactId>
+			<groupId>org.apache.juddi.juddi-docs</groupId>
+			<artifactId>juddi-docs-dist</artifactId>
 			<version>${project.parent.version}</version>
 			<classifier>docs</classifier>
 			<type>zip</type>

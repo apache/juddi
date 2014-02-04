@@ -102,7 +102,7 @@
 		<dependencySet>
             <outputDirectory>docs</outputDirectory>
             <includes>
-                <include>org.apache.juddi:juddi-docs:zip</include>
+                <include>org.apache.juddi.juddi-docs:juddi-docs-dist:zip</include>
             </includes>
             <unpack>true</unpack>
             <useProjectArtifact>false</useProjectArtifact>
