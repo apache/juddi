@@ -18,13 +18,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
         <groupId>org.apache.juddi</groupId>
-        <artifactId>juddi-parent</artifactId>
+        <artifactId>jjuddi-docs</artifactId>
         <version>3.2.0-SNAPSHOT</version>
     </parent>
 	<packaging>pom</packaging>
 	<groupId>org.apache.juddi.juddi-docs</groupId>
 	<artifactId>juddi-guide-parent</artifactId>
-	<version>3.2.1-SNAPSHOT</version>
 	<name>jUDDI Guide Parent</name>
 	<description>jUDDI (pronounced "Judy") is an open source Java
 		implementation of the Universal Description, Discovery, and
