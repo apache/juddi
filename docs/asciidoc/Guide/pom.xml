@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.apache.juddi.juddi-docs</groupId>
         <artifactId>juddi-guide-parent</artifactId>
-        <version>3.2.0</version>
+        <version>3.2.1-SNAPSHOT</version>
     </parent>
     <artifactId>juddi-guide</artifactId>
     <packaging>jdocbook</packaging>
