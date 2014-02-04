@@ -1,0 +1,81 @@
+== jUDDI Client for NET
+
+Since 3.2, the majority of the functions in the jUDDI Client for Java have been ported to .NET. This guide will show you how to use it and integrate it with your own .NET based applications.
+
+=== Procedure
+. Add a reference to jUDDI-Client.NET.dll
+. Add a reference to System.Web.Services
+. Add a reference to System.ServiceModel
+. Add a reference to System.Xml
+. Add a reference to System.Runtime.Serialization
+. Add a reference to System.Configuration
+. Add a reference to System.Security
+. Add a copy of the sample uddi.xml file. Modify it to meet your environment and operational needs.
+. Note, many of the settings are identical to the Java jUDDI-client. The APIs are also nearly identical, so example code should be easily portable from one language to another.
+
+Sample Code
+
+----
+
+/*
+ * Copyright 2001-2013 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+using org.apache.juddi.v3.client;
+using org.apache.juddi.v3.client.config;
+using org.apache.juddi.v3.client.transport;
+using org.uddi.apiv3;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+
+namespace juddi_client.net_sample
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            UDDIClient clerkManager = new UDDIClient("uddi.xml");
+            UDDIClientContainer.addClient(clerkManager);
+            Transport transport = clerkManager.getTransport("default");
+
+            org.uddi.apiv3.UDDI_Security_SoapBinding security = transport.getUDDISecurityService();
+            org.uddi.apiv3.UDDI_Inquiry_SoapBinding inquiry = transport.getUDDIInquiryService();
+
+            UDDIClerk clerk = clerkManager.getClerk("default");
+            
+           
+            find_business fb = new find_business();
+            fb.authInfo = clerk.getAuthToken(security.Url);
+            fb.findQualifiers = new string[] { UDDIConstants.APPROXIMATE_MATCH };
+            fb.name = new name[1];
+            fb.name[0] = new name(UDDIConstants.WILDCARD, "en");
+            businessList bl = inquiry.find_business(fb);
+            for (int i = 0; i < bl.businessInfos.Length; i++)
+            {
+                Console.WriteLine(bl.businessInfos[i].name[0].Value);
+            }
+            Console.Read();
+
+        }
+    }
+}
+
+----
+
+The sample code above should print out a list of all businesses currently registered in the registry. If credentials are stored in the uddi.xml file and are encrypted, they will be decrypted automatically for you.
+
+Within the jUDDI Source Tree, there are many different examples of how to use the jUDDI Client for .NET. They are available here: http://svn.apache.org/repos/asf/juddi/trunk/juddi-client.net/juddi-client.net-sample/

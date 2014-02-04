@@ -1,0 +1,15 @@
+.Contents
+****
+link:ClientGuideSimplePublishingUsingthejUDDIAPI[Simple Publishing] +
+link:ClientGuidejUDDIClientConfigurationGuide[Configuration] +
+link:ClientGuideKeyFormatTemplates[Key Format] +
+link:ClientGuideUsingthejUDDIGUI[Using the jUDDI GUI] +
+link:ClientGuideMappingWADLandWSDLtoUDDI[WSDL to UDDI] +
+link:ClientGuideUsingUDDIAnnotationstoAutomateRegistration[UDDI Annotations] +
+link:ClientGuideUDDIv2Services[UDDI v2] +
+link:ClientGuideUDDIMigrationTool[UDDI Migration Tool] +
+link:ClientGuideUsingjUDDIRestServices[REST Services] +
+link:ClientGuidejUDDIClientforNET[.NET Client] +
+link:ClientGuideTCKRunner[TCK]
+****
+link:GuideReadme[Readme] +
