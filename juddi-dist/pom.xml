@@ -67,6 +67,13 @@
 		<!--  source archives -->
 		<dependency>
             <groupId>org.apache.juddi</groupId>
+            <artifactId>juddi-parent</artifactId>
+            <version>${project.parent.version}</version>
+            <classifier>source-release</classifier>
+            <type>zip</type>
+        </dependency>
+		<dependency>
+            <groupId>org.apache.juddi</groupId>
             <artifactId>juddi-client</artifactId>
             <version>${project.parent.version}</version>
             <classifier>sources</classifier>
@@ -100,15 +107,13 @@
             <groupId>org.apache.juddi</groupId>
             <artifactId>juddiv3-war</artifactId>
             <version>${project.parent.version}</version>
-            <classifier>source-release</classifier>
-            <type>zip</type>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.juddi</groupId>
             <artifactId>juddi-gui-war</artifactId>
             <version>${project.parent.version}</version>
-            <classifier>source-release</classifier>
-            <type>zip</type>
+            <classifier>sources</classifier>
         </dependency>
     	<!--  javadoc archives -->
         <dependency>

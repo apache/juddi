@@ -83,10 +83,11 @@
 		<dependencySet>
 			<outputDirectory>src</outputDirectory>
 			<includes>
+			    <include>org.apache.juddi:juddi-parent:zip:source-release</include>
 				<include>org.apache.juddi:juddi-client:jar:sources</include>
 				<include>org.apache.juddi:juddi-core:jar:sources</include>
-				<include>org.apache.juddi:juddiv3-war:zip:source-release</include>
-				<include>org.apache.juddi:juddi-gui-war:zip:source-release</include>
+				<include>org.apache.juddi:juddiv3-war:jar:sources</include>
+				<include>org.apache.juddi:juddi-gui-war:jar:sources</include>
 				<include>org.apache.juddi:uddi-tck-base:jar:sources</include>
 				<include>org.apache.juddi:uddi-ws:jar:sources</include>
 				<include>org.apache.juddi:juddi-gui-dsig:jar:sources</include>

@@ -106,7 +106,7 @@
 				<include>org.apache.juddi:uddi-tck-base:jar:sources</include>
 				<include>org.apache.juddi:uddi-ws:jar:sources</include>
 				<include>org.apache.juddi:juddi-gui-dsig:jar:sources</include>
-				<include>org.apache.juddi:juddi-gui-war:zip:source-release</include>
+				<include>org.apache.juddi:juddi-gui-war:jar:sources</include>
 			</includes>
 			<useProjectArtifact>false</useProjectArtifact>
 			<useProjectAttachments>false</useProjectAttachments>

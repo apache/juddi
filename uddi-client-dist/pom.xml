@@ -134,8 +134,7 @@
             <groupId>org.apache.juddi</groupId>
             <artifactId>juddi-gui-war</artifactId>
             <version>${project.parent.version}</version>
-            <classifier>source-release</classifier>
-            <type>zip</type>
+            <classifier>sources</classifier>
         </dependency>
 		<!-- javadoc archives -->
 		<dependency>
