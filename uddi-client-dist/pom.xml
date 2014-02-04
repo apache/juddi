@@ -57,6 +57,11 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>juddi-gui-dsig</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-migration-tool</artifactId>
 			<version>${project.parent.version}</version>
@@ -118,6 +123,20 @@
 			<type>jar</type>
 			<classifier>test-sources</classifier>
 		</dependency>
+		<dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>juddi-gui-dsig</artifactId>
+            <version>${project.parent.version}</version>
+            <type>jar</type>
+            <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>juddi-gui-war</artifactId>
+            <version>${project.parent.version}</version>
+            <classifier>source-release</classifier>
+            <type>zip</type>
+        </dependency>
 		<!-- javadoc archives -->
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
@@ -162,6 +181,19 @@
 			<classifier>test-javadoc</classifier>
 			<type>jar</type>
 		</dependency>
+		<dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>juddi-gui-dsig</artifactId>
+            <version>${project.parent.version}</version>
+            <type>jar</type>
+            <classifier>javadoc</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>juddi-gui-war</artifactId>
+            <version>${project.parent.version}</version>
+            <classifier>javadoc</classifier>
+        </dependency>
 		<!-- documentation -->
         <dependency>
             <groupId>org.apache.juddi.juddi-docs</groupId>

@@ -29,16 +29,19 @@
                 <include>org.apache.juddi:juddi-core:jar</include>
                 <include>org.apache.juddi:uddi-tck-base:jar</include>
                 <include>org.apache.juddi:uddi-ws:jar</include>
+                <include>org.apache.juddi:juddi-gui-dsig:jar</include>
             </includes>
             <excludes>
                 <exclude>org.apache.juddi:juddi-client:jar:sources</exclude>
                 <exclude>org.apache.juddi:juddi-core:jar:sources</exclude>
                 <exclude>org.apache.juddi:uddi-tck-base:jar:sources</exclude>
                 <exclude>org.apache.juddi:uddi-ws:jar:sources</exclude>
+                <exclude>org.apache.juddi:juddi-gui-dsig:jar:sources</exclude>
                 <exclude>org.apache.juddi:juddi-client:jar:javadoc</exclude>
                 <exclude>org.apache.juddi:juddi-core:jar:javadoc</exclude>
                 <exclude>org.apache.juddi:uddi-tck-base:jar:javadoc</exclude>
                 <exclude>org.apache.juddi:uddi-ws:jar:javadoc</exclude>
+                <exclude>org.apache.juddi:juddi-gui-dsig:jar:javadoc</exclude>
             </excludes>
             
             <useProjectArtifact>false</useProjectArtifact>
@@ -63,16 +66,30 @@
             <directoryMode>0755</directoryMode>
             <fileMode>0755</fileMode>
         </dependencySet>
-       
+       <dependencySet>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>org.apache.juddi:juddi-gui-war:war</include>
+            </includes>
+            <outputFileNameMapping>juddi-gui.war</outputFileNameMapping>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+        </dependencySet>
 		<!-- The source archives JARs -->
 		<dependencySet>
 			<outputDirectory>src</outputDirectory>
 			<includes>
 				<include>org.apache.juddi:juddi-client:jar:sources</include>
 				<include>org.apache.juddi:juddi-core:jar:sources</include>
-				<include>org.apache.juddi:juddiv3-war:jar:sources</include>
+				<include>org.apache.juddi:juddiv3-war:zip:source-release</include>
+				<include>org.apache.juddi:juddi-gui-war:zip:source-release</include>
 				<include>org.apache.juddi:uddi-tck-base:jar:sources</include>
 				<include>org.apache.juddi:uddi-ws:jar:sources</include>
+				<include>org.apache.juddi:juddi-gui-dsig:jar:sources</include>
 			</includes>
 			<useProjectArtifact>false</useProjectArtifact>
 			<useProjectAttachments>false</useProjectAttachments>
@@ -102,8 +119,10 @@
                 <include>org.apache.juddi:juddi-client:jar:javadoc</include>
                 <include>org.apache.juddi:juddi-core:jar:javadoc</include>
                 <include>org.apache.juddi:juddiv3-war:jar:javadoc</include>
+                <include>org.apache.juddi:juddi-gui-war:jar:javadoc</include>
                 <include>org.apache.juddi:uddi-tck-base:jar:javadoc</include>
                 <include>org.apache.juddi:uddi-ws:jar:javadoc</include>
+                <include>org.apache.juddi:juddi-gui-dsig:jar:javadoc</include>
             </includes>
             <useProjectArtifact>false</useProjectArtifact>
             <useProjectAttachments>false</useProjectAttachments>
