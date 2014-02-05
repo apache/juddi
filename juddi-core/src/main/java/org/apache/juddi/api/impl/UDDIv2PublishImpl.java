@@ -67,7 +67,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * @author <a href="mailto:alexoree.apache.org">Alex O'Ree</a>
  * @since 3.2
  */
-@WebService(serviceName = "Publish", targetNamespace = "urn:uddi-org:inquiry_v2",
+@WebService(serviceName = "Publish", targetNamespace = "urn:uddi-org:publication_v2",
         endpointInterface = "org.uddi.v2_service.Publish")
 public class UDDIv2PublishImpl implements Publish {
 
