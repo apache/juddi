@@ -15,9 +15,9 @@
  */
 package org.apache.juddi.v3.migration.tool;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.security.AuthProvider;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
@@ -29,7 +29,6 @@ import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.BusinessEntity;
@@ -140,6 +139,11 @@ public class Export {
         }
 
         private void ExportBusiness() throws Exception {
+                if (new File(businessfile).exists())
+                {
+                        System.err.println(businessfile + " already exists!");
+                        System.exit(1);
+                }
                 FileOutputStream fos = new FileOutputStream(businessfile);
                 FindBusiness req = new FindBusiness();
                 req.setAuthInfo(token);
@@ -212,6 +216,11 @@ public class Export {
         }
 
         private void ExportTmodels() throws Exception {
+                 if (new File(tmodelfile).exists())
+                {
+                        System.err.println(tmodelfile + " already exists!");
+                        System.exit(1);
+                }
                 FileOutputStream fos = new FileOutputStream(tmodelfile);
                 FindTModel req = new FindTModel();
                 req.setName(new Name(UDDIConstants.WILDCARD, null));
@@ -289,6 +298,11 @@ public class Export {
         }
 
         private void ExportPublishers() throws Exception {
+                 if (new File(publishersfile).exists())
+                {
+                        System.err.println(publishersfile + " already exists!");
+                        System.exit(1);
+                }
                 FileOutputStream fos = new FileOutputStream(publishersfile);
 
                 GetAllPublisherDetail r = new GetAllPublisherDetail();
@@ -317,6 +331,11 @@ public class Export {
                         }
                 }
                 mapping.put("usernames", sb.toString());
+                if (new File(mappingsfile).exists())
+                {
+                        System.err.println(mappingsfile + " already exists!");
+                        System.exit(1);
+                }
                 try {
                         FileOutputStream fos = new FileOutputStream(mappingsfile);
                         mapping.store(fos, "no comments");
@@ -332,6 +351,11 @@ public class Export {
                 while (it.hasNext()) {
                         String s = it.next();
                         p.setProperty(s, s);
+                }
+                if (new File(credFile).exists())
+                {
+                        System.err.println(credFile + " already exists!");
+                        System.exit(1);
                 }
                 try {
                         FileOutputStream fos = new FileOutputStream(credFile);

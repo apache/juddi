@@ -80,6 +80,7 @@ public class Import {
                 boolean preserveOwnership,
                 String mappingsfile, String credFile, boolean stripSig) throws Exception {
 
+                this.safemode = safe;
                 this.credFile = credFile;
                 this.stripSig = stripSig;
                 this.publishersfile = publishersFile;
@@ -102,7 +103,7 @@ public class Import {
                 publish = transport.getUDDIPublishService();
                 inquiry = transport.getUDDIInquiryService();
                 juddi = transport.getJUDDIApiService();
-                String token = null;
+                token = null;
                 if (username == null || pass == null) {
                         username = clerk.getPublisher();
                         pass = clerk.getPassword();

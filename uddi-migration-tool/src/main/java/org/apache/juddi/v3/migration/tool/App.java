@@ -96,7 +96,7 @@ public class App {
                 System.out.println();
                 if (preserveOwnership) {
                     System.out.println("Next step(s), Edit the " + credFile + " and make any adjustments that are necessary.");
-                    System.out.println("TIP: if you're using juddi, you temporarily switch to the 'JuddiAuthenticator' which doesn't validate passwords.");
+                    System.out.println("TIP: if you're using juddi, you can temporarily switch to the 'JuddiAuthenticator' which doesn't validate passwords.");
                 }
                 System.out.println("Next step(s), Edit " + config + " to point to the next registry. Then try -import. You can also specify a different node.");
             }
