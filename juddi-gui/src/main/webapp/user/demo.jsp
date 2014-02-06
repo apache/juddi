@@ -63,7 +63,7 @@ This is used for the jUDDI demo instance
                 {
                         $('#banner').modal();
 
-                        setCookieBanner("username", username, 365);
+                        setCookieBanner("bannerseen", "true", 1);
 
                 }
         }

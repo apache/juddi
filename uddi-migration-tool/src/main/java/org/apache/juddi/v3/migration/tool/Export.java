@@ -131,7 +131,9 @@ public class Export {
                         ExportPublishers();
                 }
                 if (preserveOwnership) {
+                        System.out.println("Saving user mappings file to " + mappingsfile);
                         SaveProperties();
+                        System.out.println("Saving user credentials template to " + credFile);
                         SaveCredFileTemplate();
                 }
                 clerkManager.stop();
@@ -145,7 +147,7 @@ public class Export {
                 req.setFindQualifiers(new FindQualifiers());
                 req.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
                 int offset = 0;
-                int maxrows = 100;
+                int maxrows = 200;
 
                 req.setMaxRows(maxrows);
                 req.setListHead(offset);
@@ -217,7 +219,7 @@ public class Export {
                 req.setFindQualifiers(new FindQualifiers());
                 req.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
                 int offset = 0;
-                int maxrows = 100;
+                int maxrows = 200;
 
                 req.setMaxRows(maxrows);
                 req.setListHead(offset);
@@ -333,7 +335,7 @@ public class Export {
                 }
                 try {
                         FileOutputStream fos = new FileOutputStream(credFile);
-                        mapping.store(fos, "no comments");
+                        p.store(fos, "no comments");
                         fos.close();
                 } catch (Exception ex) {
                         ex.printStackTrace();

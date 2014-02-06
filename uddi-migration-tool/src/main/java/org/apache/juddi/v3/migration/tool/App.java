@@ -85,7 +85,7 @@ public class App {
             String credFile = line.getOptionValue("credFile", "credentials.properties");
             //key to username
             String mappings = line.getOptionValue("mappings", "entityusermappings.properties");
-            boolean preserveOwnership = false;//line.hasOption("preserveOwnership");
+            boolean preserveOwnership = line.hasOption("preserveOwnership");
             boolean juddi = line.hasOption("isJuddi");
             boolean myItemsOnly = line.hasOption("myItemsOnly");
             boolean safe = true;//line.hasOption("safeMode");
