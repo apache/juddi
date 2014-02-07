@@ -56,6 +56,7 @@ public class Import {
         private JUDDIApiPortType juddi;
         String token = null;
         String username = null;
+        String pass=null;
         String tmodelfile = null;
         String businessfile = null;
         String publishersfile = null;
@@ -105,12 +106,16 @@ public class Import {
                 juddi = transport.getJUDDIApiService();
                 token = null;
                 if (username == null || pass == null) {
-                        username = clerk.getPublisher();
-                        pass = clerk.getPassword();
+                        this.username = clerk.getPublisher();
+                        this.pass = clerk.getPassword();
                 }
-                if (username != null && pass != null) {
+                else
+                {
+                        this.username=username;
+                        this.pass=pass;
                 }
-
+                token = Common.GetAuthToken(username, pass, security);
+                
 
                 //load mapping files
                 //prompt for credentials
@@ -143,7 +148,10 @@ public class Import {
         }
 
         private void ImportTmodels() throws Exception {
+                
                 SaveTModel stm = JAXB.unmarshal(new File(tmodelfile), SaveTModel.class);
+                System.out.println();
+                System.out.println("Attempting to save " + stm.getTModel().size() + " tModels");
                 if (stripSig) {
                         int x=0;
                         for (int i = 0; i < stm.getTModel().size(); i++) {
@@ -269,7 +277,7 @@ public class Import {
                         for (int i = 0; i < stm.getPublisher().size(); i++) {
                                 if (!PublisherExists(stm.getPublisher().get(i).getAuthorizedName(), token)) {
                                         SavePublisher stm2 = new SavePublisher();
-                                        stm2.setAuthInfo(token);
+                                        stm2.setAuthInfo(Common.GetAuthToken(username, pass, security));
                                         stm2.getPublisher().add(stm.getPublisher().get(i));
                                         try {
                                                 juddi.savePublisher(stm2);
@@ -308,6 +316,7 @@ public class Import {
                 try {
                         FileInputStream fos = new FileInputStream(mappingsfile);
                         mapping.load(fos);
+                        System.out.println(mapping.size() + " entity to user mappings loaded");
                         fos.close();
                 } catch (Exception ex) {
                         ex.printStackTrace();
@@ -318,6 +327,7 @@ public class Import {
                 try {
                         FileInputStream fos = new FileInputStream(credFile);
                         userpwd.load(fos);
+                        System.out.println(userpwd.size() + " user credentials loaded");
                         fos.close();
                 } catch (Exception ex) {
                         ex.printStackTrace();

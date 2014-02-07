@@ -33,31 +33,35 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class Common {
 
-    public static String GetOwner(String key, String token, UDDIInquiryPortType inquiry) {
-        GetOperationalInfo goi = new GetOperationalInfo();
-        goi.setAuthInfo(token);
-        goi.getEntityKey().add(key);
-        OperationalInfos operationalInfo = null;
-        try {
-            operationalInfo = inquiry.getOperationalInfo(goi);
-            if (operationalInfo!=null && operationalInfo.getOperationalInfo()!=null &&
-                    !operationalInfo.getOperationalInfo().isEmpty())
-            return operationalInfo.getOperationalInfo().get(0).getAuthorizedName();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        public static String GetOwner(String key, String token, UDDIInquiryPortType inquiry) {
+                GetOperationalInfo goi = new GetOperationalInfo();
+                goi.setAuthInfo(token);
+                goi.getEntityKey().add(key);
+                OperationalInfos operationalInfo = null;
+                try {
+                        operationalInfo = inquiry.getOperationalInfo(goi);
+                        if (operationalInfo != null && operationalInfo.getOperationalInfo() != null
+                             && !operationalInfo.getOperationalInfo().isEmpty()) {
+                                return operationalInfo.getOperationalInfo().get(0).getAuthorizedName();
+                        }
+                } catch (Exception ex) {
+                        ex.printStackTrace();
+                }
+                return null;
         }
-        return null;
-    }
 
-    public static String GetAuthToken(String username, String password, UDDISecurityPortType sec) {
-        try {
-            GetAuthToken getAuthTokenRoot = new GetAuthToken();
-            getAuthTokenRoot.setUserID(username);
-            getAuthTokenRoot.setCred(password);
-            return sec.getAuthToken(getAuthTokenRoot).getAuthInfo();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        public static String GetAuthToken(String username, String password, UDDISecurityPortType sec) {
+                try {
+                        System.out.println(username + " logging in");
+                        GetAuthToken getAuthTokenRoot = new GetAuthToken();
+                        getAuthTokenRoot.setUserID(username);
+                        getAuthTokenRoot.setCred(password);
+                        String authInfo = sec.getAuthToken(getAuthTokenRoot).getAuthInfo();
+                        System.out.println(username + " login success");
+                        return authInfo;
+                } catch (Exception ex) {
+                        ex.printStackTrace();
+                }
+                return null;
         }
-        return null;
-    }
 }
