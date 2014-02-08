@@ -734,7 +734,7 @@ public class Builders {
                 try {
                         String alertType = ((String[]) map.get("alertType"))[0];
                         if (alertType == null) {
-                                outmsg.set("alertType not defined");
+                                outmsg.set(ResourceLoader.GetResource(session, "errors.subscription.alerttypeinvalid"));
                                 return null;
                         }
                         if (alertType.equalsIgnoreCase("specificItem")) {
@@ -742,7 +742,7 @@ public class Builders {
                         } else if (alertType.equalsIgnoreCase("searchResults")) {
                                 sub = BuildClientSubscriptionSearchResults(map, outmsg);
                         } else {
-                                outmsg.set("alertType invalid");
+                                outmsg.set(ResourceLoader.GetResource(session, "errors.subscription.alerttypeinvalid"));
                                 return null;
                         }
                         if (sub == null) {
