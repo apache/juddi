@@ -4,6 +4,7 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include  file="../csrf.jsp" %>
@@ -12,9 +13,12 @@
                 if (request.getParameter("action") != null) {
                         String action = request.getParameter("action");
                         if (action.equalsIgnoreCase("createKeyGen")) {
-                                out.write(hub.AddTmodelKenGenerator(request.getParameter("keygen"), 
+                               String msg=(hub.AddTmodelKenGenerator(request.getParameter("keygen"), 
                                         request.getParameter("keyname"), 
                                         request.getParameter("keylang")));
+                               if (msg.contains(ResourceLoader.GetResource(session, "errors.generic")))
+                                        response.setStatus(406);
+                                out.write(msg);
                         } else {
                                 response.sendRedirect("/index.jsp");
                         }

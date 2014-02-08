@@ -34,7 +34,10 @@
                 }
             } else if (action.equalsIgnoreCase("senddata")) {
                 Object j=UDDIRequestsAsXML.getObject(service, method, request.getParameter("content"));
-                out.write(x.SendAdvancedQuery(j, service, method));
+                String msg=(x.SendAdvancedQuery(j, service, method));
+                if (msg.contains(ResourceLoader.GetResource(session, "errors.generic")))
+                        response.setStatus(406);
+                out.write(msg);
             }
         }
 

@@ -10,7 +10,9 @@
 <jsp:include page="../csrf.jsp" />
 <%
     UddiHub x = UddiHub.getInstance(application, session);
- 
-    out.write(x.GetMyTransferableKeys(true, true));
+    String msg2 = x.GetMyTransferableKeys(true, true);
+    if (msg2.contains(ResourceLoader.GetResource(session, "errors.generic")))
+            response.setStatus(406);
+    out.write(msg2);
 
 %>

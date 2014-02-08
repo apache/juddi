@@ -58,10 +58,8 @@
                 } else {
                     msg = (ResourceLoader.GetResource(session, "errors.unknownentity"));
                 }
-
-                if (!msg.equalsIgnoreCase(ResourceLoader.GetResource(session, "actions.saved"))) {
-                    //response.setStatus(500);
-                }
+                if (msg.contains(ResourceLoader.GetResource(session, "errors.generic")))
+                        response.setStatus(406);
                 out.write(msg);
             }
         }

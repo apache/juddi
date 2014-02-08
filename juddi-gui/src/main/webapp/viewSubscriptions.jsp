@@ -139,20 +139,17 @@
 
 
                     request.done(function(msg) {
-                        window.console && console.log('postback done ' + url);
+        window.console && console.log('postback done '  + url);                
+        
+        $("#alert_results").html('<i class="icon-2x icon-thumbs-up"></i><br>'  + msg);
+        $("#alert").modal();
+    });
 
-                        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' + msg);
-                        $("#resultBar").show();
-                        $("#" + escapeJquerySelector(key)).remove();
-
-                    });
-
-                    request.fail(function(jqXHR, textStatus) {
-                        window.console && console.log('postback failed ' + url);
-                        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' + jqXHR.responseText + textStatus);
-                        $("#resultBar").show();
-
-                    });
+    request.fail(function(jqXHR, textStatus) {
+        window.console && console.log('postback failed ' + url);                                
+        $("#alert_results").html('<i class="icon-2x icon-thumbs-down"></i><br>'  + jqXHR.responseText + textStatus);
+        $("#alert").modal();
+    });         
                 }
             </script>
         </div>

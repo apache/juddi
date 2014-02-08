@@ -25,14 +25,14 @@
             if (action.equalsIgnoreCase("delete")) {
                 String msg = x.DeletePublisherAssertion(request.getParameter("tokey"), request.getParameter("fromkey"), request.getParameter("tmodelkey"), request.getParameter("keyname"), request.getParameter("keyvalue"));
                 if (!msg.equals(ResourceLoader.GetResource(session, "actions.saved"))) {
-                    response.setStatus(500);
+                    response.setStatus(406);
                 }
                 out.write(msg);
             }
         } else {
             String msg = x.AddPublisherAssertion(request.getParameter("tokey"), request.getParameter("fromkey"), request.getParameter("tmodelkey"), request.getParameter("keyname"), request.getParameter("keyvalue"));
             if (!msg.equals(ResourceLoader.GetResource(session, "actions.saved"))) {
-                response.setStatus(500);
+                response.setStatus(406);
             }
             out.write(msg);
         }
@@ -44,6 +44,7 @@
         if (msg != null && msg.get() != null) {
             out.write(UddiHub.ToErrorAlert(msg.get()));
         } else if (data == null || data.isEmpty())
+                //TODO revise this
             out.write(UddiHub.ToErrorAlert(ResourceLoader.GetResource(session, "errors.nodatareturned")));
         else {
 

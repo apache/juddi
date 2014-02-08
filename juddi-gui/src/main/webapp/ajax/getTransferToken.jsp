@@ -73,7 +73,7 @@
 
 
                 } catch (Exception ex) {
-                    response.setStatus(400);
+                    response.setStatus(406);
                     out.write(ex.getMessage());
                 }
 

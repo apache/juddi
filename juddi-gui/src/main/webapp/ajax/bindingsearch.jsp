@@ -47,7 +47,8 @@
     } catch (Exception ex) {
     }
     PagableContainer ret = (x.SearchForBinding(keyword, lang, offset, maxrecords, isChooser));
-
+     if (ret.renderedHtml.contains(ResourceLoader.GetResource(session, "errors.generic")))
+             response.setStatus(406);
     out.write(ret.renderedHtml);
 %>
 <script type="text/javascript">

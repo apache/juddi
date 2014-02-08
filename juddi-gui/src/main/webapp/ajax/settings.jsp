@@ -23,6 +23,7 @@
                 request.getRemoteHost() + " " + 
                 request.getRemoteUser());
         response.setStatus(403);
+        return;
     } else {
          
         
@@ -50,10 +51,11 @@
             }
             try {
                 x.GetJuddiClientConfig().saveConfig();
-                out.write("Saved!");
+                out.write(ResourceLoader.GetResource(session, "actions.saved"));
             } catch (Exception ex) {
-                response.setStatus(500);
-                out.write("Error saving Juddi Client Config" + ex.getMessage());
+                response.setStatus(406);
+                
+                out.write(x.HandleException(ex));
             }
         }
     }

@@ -45,7 +45,7 @@
                 out.write("<span class=\"label label-success\">" + ResourceLoader.GetResource(session, "items.signatures.valid") + "</span>");
             }
         } else {
-            response.setStatus(500);
+            //response.setStatus(500);
             out.write(ResourceLoader.GetResource(session, "items.unknown"));
         }
     }

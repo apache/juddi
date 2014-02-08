@@ -49,6 +49,9 @@
     }
 
     PagableContainer ret = (x.SearchForServices(keyword, lang, maxrecords, offset, isChooser));
+    
+    if (ret.renderedHtml.contains(ResourceLoader.GetResource(session, "errors.generic")))
+                response.setStatus(406);
     out.write(ret.renderedHtml);
 
 %>

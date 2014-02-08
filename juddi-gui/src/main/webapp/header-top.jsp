@@ -96,8 +96,22 @@
                 <form id="uddiform">
                         <%@include  file="csrf.jsp" %>
                         <input type="hidden" name="nonce" id="nonce" value="<%=StringEscapeUtils.escapeHtml((String) session.getAttribute("nonce"))%>" />
-                        <div class="alert" style="display:none; position: fixed; top:45px; width:80%; left: 10%; z-index: 1000; opacity: 1.0; background-color: #FFD530; color:black " id="resultBar">
+                        
+                        
+                        <div class="modal hide fade container" id="alert">
+                                <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h3><%=ResourceLoader.GetResource(session, "actions.result")%></h3>
+                                </div>
+                                <div class="modal-body">
+                                        <div id="alert_results"><i class="icon-2x icon-thumbs-up"></i></div>
+                                </div>
+                                <div class="modal-footer">
+
+                                        <button type="button" class="close" data-dismiss="modal"><%=ResourceLoader.GetResource(session, "modal.close")%></button>
+                                </div>
                         </div>
+    
                         <%
                                 UddiHub hub = UddiHub.getInstance(application, session);
                                 Cookie[] cs = request.getCookies();
@@ -228,9 +242,7 @@
 
                                                                 <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><i class="icon-question-sign icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.help")%> <b class="caret"></b></a>
                                                                         <ul class="dropdown-menu">
-                                                                                <li><a href="http://juddi.apache.org/docs/3.x/userguide/html/index.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.userguide")%>"><%=ResourceLoader.GetResource(session, "navbar.help.userguide")%></a></li>
-                                                                                <li><a href="http://juddi.apache.org/docs/3.x/devguide/html/index.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.devguide")%>"><%=ResourceLoader.GetResource(session, "navbar.help.devguide")%></a></li>
-                                                                                <li><a href="http://juddi.apache.org/docs.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.api")%>"><%=ResourceLoader.GetResource(session, "navbar.help.api")%></a></li>
+                                                                                <li><a href="http://juddi.apache.org/docs.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.userguide")%>"><%=ResourceLoader.GetResource(session, "navbar.help.userguide")%></a></li>
                                                                                 <li><a href="http://wiki.apache.org/juddi" title="<%=ResourceLoader.GetResource(session, "navbar.help.wiki")%>"><%=ResourceLoader.GetResource(session, "navbar.help.wiki")%></a></li>
                                                                                 <li><a href="http://juddi.apache.org/issue-tracking.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.bugreport")%>"><%=ResourceLoader.GetResource(session, "navbar.help.bugreport")%></a></li>
                                                                                 <li><a href="http://juddi.apache.org/" title="<%=ResourceLoader.GetResource(session, "navbar.help.website")%>"><%=ResourceLoader.GetResource(session, "navbar.help.website")%></a></li>

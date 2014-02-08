@@ -26,6 +26,8 @@
 
         String msg = x.DiscardToken(tokenxml);
         if (msg != null) {
+            if (msg.contains(ResourceLoader.GetResource(session, "errors.generic")))
+                response.setStatus(406);
             out.write(msg);
         } else {
             out.write(ResourceLoader.GetResource(session, "actions.canceled"));

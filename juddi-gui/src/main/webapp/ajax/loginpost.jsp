@@ -73,9 +73,8 @@
                 if (msg != null) {
                         session.removeAttribute("username");
                         session.removeAttribute("password");
-                        response.setStatus(406);
-
                         out.write(msg);
+                                                response.setStatus(406);
                 }
         }
 

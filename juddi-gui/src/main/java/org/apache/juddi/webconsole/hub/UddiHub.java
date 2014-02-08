@@ -701,7 +701,7 @@ public class UddiHub implements Serializable {
                         }
 
                 } catch (Exception ex) {
-                        return ToErrorAlert(HandleException(ex));
+                        return (HandleException(ex));
                 }
 
                 if (findBusiness == null || findBusiness.getBusinessInfos() == null) {
@@ -1297,12 +1297,12 @@ public class UddiHub implements Serializable {
          * @param ex
          * @return string
          */
-        private String HandleException(Exception ex) {
+        public String HandleException(Exception ex) {
                 if (ex instanceof DispositionReportFaultMessage) {
                         DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                         log.error(ex.getMessage() + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : ""));
                         log.debug(ex.getMessage(), ex);
-                        return ResourceLoader.GetResource(session, "errors.uddi") + " " + StringEscapeUtils.escapeHtml(ex.getMessage()) + " " + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : "") + " " + ex.getClass().getCanonicalName();
+                        return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage()) + " " + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : "") + " " + ex.getClass().getCanonicalName();
                 } else if (ex instanceof RemoteException) {
                         RemoteException f = (RemoteException) ex;
                         log.error("RemoteException " + ex.getMessage());
@@ -2414,7 +2414,7 @@ public class UddiHub implements Serializable {
          * Removes/deletes a subscription
          *
          * @param key
-         * @return sucess or failure message
+         * @return success or failure message
          */
         public String RemoveSubscription(String key) {
                 DeleteSubscription ds = new DeleteSubscription();
@@ -2706,7 +2706,7 @@ public class UddiHub implements Serializable {
          * @param fromkey
          * @param keyname
          * @param keyvalue
-         * @return status msg
+         * @return status msg, expected value is actions.saved
          */
         public String AddPublisherAssertion(String tokey, String fromkey, String tmodelkey, String keyname, String keyvalue) {
                 // List<PublisherAssertion> x = GetPublisherAssertions();

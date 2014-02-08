@@ -3,6 +3,7 @@
     Created on : May 11, 2013, 3:26:42 PM
     Author     : Alex O'Ree
 --%>
+<%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page import="org.apache.juddi.v3.client.config.TokenResolver"%>
 <%@page import="org.uddi.api_v3.Name"%>
 <%@page import="org.uddi.api_v3.BusinessEntity"%>
@@ -149,16 +150,23 @@
                     }
 
                 } catch (Exception ex) {
-                    out.write("<i class=\"icon-thumbs-down icon-large\"></i> Error! " + ex.getClass().getCanonicalName() + " " + ex.getMessage());
+                     response.setStatus(406);
+                        String msg = x.HandleException(ex);
+                        if (msg.contains(ResourceLoader.GetResource(session, "errors.generic")))
+                                response.setStatus(406);
+                        out.write(msg);
                 }
             } else {
-                out.write("bad request");
+                  response.setStatus(406);
+                out.write(ResourceLoader.GetResource(session, "errors.generic"));
             }
         } else {
-            out.write("bad request");
+              response.setStatus(406);
+                out.write(ResourceLoader.GetResource(session, "errors.generic"));
         }
     } else {
-        out.write("bad request");
+          response.setStatus(406);
+                out.write(ResourceLoader.GetResource(session, "errors.generic"));
     }
 
 

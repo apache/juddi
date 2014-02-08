@@ -4,6 +4,7 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 
 <%@include  file="../csrf.jsp" %>
@@ -11,7 +12,10 @@
 <%
     if (request.getMethod().equalsIgnoreCase("POST")) { 
         UddiHub x = UddiHub.getInstance(application, request.getSession());
-        out.write(x.SaveServiceDetails(request));
+        String msg=(x.SaveServiceDetails(request));
+        if (msg.contains(ResourceLoader.GetResource(session, "errors.generic")))
+                response.setStatus(406);
+        out.write(msg);
     }
 
 

@@ -131,9 +131,7 @@
                             request.done(function(msg) {
                                 window.console && console.log('postback done '  + url);                
         
-                                //$("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' +
-                               //     safe_tags_replace(msg));
-                                //$("#resultBar").show();
+                                
                                 $("#transfercontent").html(UndoBreaks(safe_tags_replace(msg)));
                                 $("#tranfermodal").modal("show");
         
@@ -141,9 +139,8 @@
 
                             request.fail(function(jqXHR, textStatus) {
                                 window.console && console.log('postback failed ' + url);                                
-                                $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' +jqXHR.responseText + " " + textStatus );
-                                //$(".alert").alert();
-                                $("#resultBar").show();
+                                  $("#alert_results").html('<i class="icon-2x icon-thumbs-down"></i><br>'  + jqXHR.responseText + textStatus);
+                                        $("#alert").modal();
         
                             });
                         }
@@ -182,20 +179,17 @@
                 
                 
                             request.done(function(msg) {
-                                window.console && console.log('postback done '  + url);                
+        window.console && console.log('postback done '  + url);                
         
-                                $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' + msg);
-                                $("#resultBar").show();
-        
-                            });
+        $("#alert_results").html('<i class="icon-2x icon-thumbs-up"></i><br>'  + msg);
+        $("#alert").modal();
+    });
 
-                            request.fail(function(jqXHR, textStatus) {
-                                window.console && console.log('postback failed ' + url);                                
-                                $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' +jqXHR.responseText + textStatus );
-                                //$(".alert").alert();
-                                $("#resultBar").show();
-        
-                            });
+    request.fail(function(jqXHR, textStatus) {
+        window.console && console.log('postback failed ' + url);                                
+        $("#alert_results").html('<i class="icon-2x icon-thumbs-down"></i><br>'  + jqXHR.responseText + textStatus);
+        $("#alert").modal();
+    });         
                         }
                         
                         
@@ -235,20 +229,17 @@
                 
                 
                             request.done(function(msg) {
-                                window.console && console.log('postback done '  + url);                
-                                
-                                $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' + msg);
-                                $("#resultBar").show();
+        window.console && console.log('postback done '  + url);                
         
-                            });
+        $("#alert_results").html('<i class="icon-2x icon-thumbs-up"></i><br>'  + msg);
+        $("#alert").modal();
+    });
 
-                            request.fail(function(jqXHR, textStatus) {
-                                window.console && console.log('postback failed ' + url);                                
-                                $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' +jqXHR.responseText + " " + textStatus );
-                                //$(".alert").alert();
-                                $("#resultBar").show();
-        
-                            });
+    request.fail(function(jqXHR, textStatus) {
+        window.console && console.log('postback failed ' + url);                                
+        $("#alert_results").html('<i class="icon-2x icon-thumbs-down"></i><br>'  + jqXHR.responseText + textStatus);
+        $("#alert").modal();
+    });         
                         }
                     </script>
                 </div>

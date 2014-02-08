@@ -13,7 +13,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="header-top.jsp" %>
 <div class="container">
-
+ 
         <!-- Main hero unit for a primary marketing message or call to action -->
         <div class="well" >
                 <h1><%=ResourceLoader.GetResource(session, "navbar.create.serviceimport.wadl")%></h1>

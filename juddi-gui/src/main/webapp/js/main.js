@@ -157,7 +157,7 @@ function GetServiceDetails(svcid)
 
 function hideAlert()
 {
-    $("#resultBar").hide();
+    $("#alert").modal('hide');
 }
 
 function closeXmlPop(modaldiv)

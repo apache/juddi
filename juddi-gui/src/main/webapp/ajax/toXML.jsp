@@ -30,6 +30,7 @@
             // out.write(EntityCreator.outputEntityToString(j, "org.apache.juddi.api_v3"));
         } else {
             out.write(ResourceLoader.GetResource(session, "items.unknown"));
+            response.setStatus(406);
         }
     }
 

@@ -58,8 +58,8 @@
                   
                     request.done(function(msg) {
                         window.console && console.log('postback done ');                
-                        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' + msg);
-                        $("#resultBar").show();
+                        $("#alert_results").html('<i class="icon-2x icon-thumbs-up"></i><br>' + msg);
+                        $("#alert").modal();
                         //TODO timer to auto redirect to the
                         window.setTimeout(function(){
                 <%
@@ -79,8 +79,8 @@
 
                         request.fail(function(jqXHR, textStatus) {
                             window.console && console.log('postback failed ');                                
-                            $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' +jqXHR.responseText + textStatus);
-                            $("#resultBar").show();
+                            $("#alert_results").html('<i class="icon-2x icon-thumbs-down"></i><br>' +jqXHR.responseText + textStatus);
+                            $("#alert").modal();
                         });
                     }
 				 

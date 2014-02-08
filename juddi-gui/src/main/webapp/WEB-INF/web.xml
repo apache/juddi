@@ -60,13 +60,11 @@
                 <error-code>403</error-code>
                 <location>/error.jsp</location>
         </error-page>
-        <error-page>
-                <!-- <description>Uncaught exception</description> -->
+<!--        <error-page>
                 <error-code>500</error-code>
                 <location>/error.jsp</location>
-        </error-page>
+        </error-page>-->
         <error-page>
-                <!-- <description>Unsupported servlet method</description> -->
                 <error-code>503</error-code>
                 <location>/error.jsp</location>
         </error-page>

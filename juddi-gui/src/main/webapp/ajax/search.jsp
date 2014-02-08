@@ -4,6 +4,7 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub.FindType"%>
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub.CriteriaType"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -73,7 +74,10 @@
         }
 
         UddiHub x = UddiHub.getInstance(application, session);
-        out.write(x.Search(type, criteria, searchcontent, lang, findqualifier));
+        String msg=(x.Search(type, criteria, searchcontent, lang, findqualifier));
+        if (msg.contains(ResourceLoader.GetResource(session, "errors.generic")))
+                response.setStatus(406);
+        out.write(msg);
     } else {
         response.sendRedirect("../index.jsp");
     }

@@ -260,7 +260,7 @@
                                 <a href="#step4anchor" class="uddi_tooltips" data-toggle="tooltip" data-container="body" title="<%=ResourceLoader.GetResource(session, "items.maxrecords.callback.tooltip")%>"><i class="icon-question-sign"></i></a>: &nbsp;</div>
                             <div class="edit" id="maxRecords"><%
                                 if (sub.getMaxEntities() != null) {
-                                    sub.getMaxEntities().toString();
+                                    out.write(sub.getMaxEntities().toString());
                                 }
                                 %></div>
                             <div style="float:left"><%=ResourceLoader.GetResource(session, "items.subscriptionbrief")%>
@@ -342,6 +342,35 @@
             </div>
 
             <a  class="btn btn-primary" href="javascript:saveSubscription();"><i class="icon-save icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.save")%></a>
+            <% if (!newitem){%>
+            <a  class="btn " href="javascript:ViewAsXML();"><i class="icon-screenshot icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.asxml")%></a>
+                <div class="modal hide fade container" id="viewAsXml">
+                   <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h3><%=ResourceLoader.GetResource(session, "actions.asxml")%> </h3>
+                   </div>
+
+                   <div class="modal-body" id="viewAsXmlContent">
+
+
+                   </div>
+                   <div class="modal-footer">
+                      <a href="ajax/toXML.jsp?id=<%=URLEncoder.encode(sub.getSubscriptionKey(), "UTF-8")%>&type=subscription" class="btn btn-primary" target="_blank">Popout</a> 
+                      <a href="javascript:closeXmlPop('viewAsXml');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+                   </div>
+                </div>   
+                   <script type="text/javascript">
+         function ViewAsXML()
+         {
+            $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(sub.getSubscriptionKey(), "UTF-8")%>&type=subscription", function(data) {
+               window.console && console.log('asXml success');
+               $("#viewAsXmlContent").html(safe_tags_replace(data));
+               $("#viewAsXml").modal('show');
+            });
+
+         }
+         </script>
+            <% }%>
         </div>
     </div>
 
@@ -373,7 +402,7 @@
 
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal"><%=ResourceLoader.GetResource(session, "actions.cancel")%></a>
+            <a href="#" class="btn" data-dismiss="modal"><%=ResourceLoader.GetResource(session, "actions.cancel")%></a> | 
             <a href="javascript:assertionSuccess();" class="btn btn-primary" ><%=ResourceLoader.GetResource(session, "actions.select")%></a>
             <script type="text/javascript">
                 function assertionSuccess()

@@ -185,23 +185,19 @@ function saveService()
         //  processData: false,f
         data: postbackdata
     });
-                
-                
-    request.done(function(msg) {
+       request.done(function(msg) {
         window.console && console.log('postback done '  + url);                
         
-        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' + msg);
-        $("#resultBar").show();
-        
+        $("#alert_results").html('<i class="icon-2x icon-thumbs-up"></i><br>'  + msg);
+        $("#alert").modal();
     });
 
     request.fail(function(jqXHR, textStatus) {
         window.console && console.log('postback failed ' + url);                                
-        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' +jqXHR.responseText + textStatus );
-        //$(".alert").alert();
-        $("#resultBar").show();
-        
-    });
+        $("#alert_results").html('<i class="icon-2x icon-thumbs-down"></i><br>'  + jqXHR.responseText + textStatus);
+        $("#alert").modal();
+    });          
+       
 }
 function deleteService()
 {
@@ -220,20 +216,16 @@ function deleteService()
         //  processData: false,f
         data: postbackdata
     });
-
-    request.done(function(msg) {
+     request.done(function(msg) {
         window.console && console.log('postback done '  + url);                
         
-        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' + msg);
-        $("#resultBar").show();
-        
+        $("#alert_results").html('<i class="icon-2x icon-thumbs-up"></i><br>'  + msg);
+        $("#alert").modal();
     });
 
     request.fail(function(jqXHR, textStatus) {
         window.console && console.log('postback failed ' + url);                                
-        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' + jqXHR.responseText + textStatus );
-        //$(".alert").alert();
-        $("#resultBar").show();
-        
-    });
+        $("#alert_results").html('<i class="icon-2x icon-thumbs-down"></i><br>'  + jqXHR.responseText + textStatus);
+        $("#alert").modal();
+    });         
 }
