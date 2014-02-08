@@ -48,6 +48,7 @@
     <Compile Include="bindings\events.cs" />
     <Compile Include="bindings\ext.cs" />
     <Compile Include="bindings\JUDDIApiService.cs" />
+    <Compile Include="bindings\UDDIv2_Service.cs" />
     <Compile Include="org.apache.juddi.jaxb\PrintJUDDI.cs" />
     <Compile Include="org.apache.juddi.jaxb\PrintUDDI.cs" />
     <Compile Include="org.apache.juddi.v3.client.annotations\AnnotationProcessor.cs" />
@@ -75,6 +76,8 @@
     <Compile Include="org.apache.juddi.v3.client.ext.wsdm\WSDMQosConstants.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\Common2UDDI.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\easyWsdl.cs" />
+    <Compile Include="org.apache.juddi.v3.client.mapping\MapUDDIv2to3.cs" />
+    <Compile Include="org.apache.juddi.v3.client.mapping\MapUDDIv3to2.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\ServiceRegistrationResponse.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\URLLocalizer.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\wadl.cs" />
@@ -89,7 +92,13 @@
     <Compile Include="org.apache.juddi.v3.client.subscription\UDDISubscriptionListenerService.cs" />
     <Compile Include="org.apache.juddi.v3.client.subscription\UnableToSignException.cs" />
     <Compile Include="org.apache.juddi.v3.client.subscription\UnexpectedResponseException.cs" />
+    <Compile Include="org.apache.juddi.v3.client.transport.wrapper\Inquiry3to2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="org.apache.juddi.v3.client.transport.wrapper\Publish3to2.cs" />
+    <Compile Include="org.apache.juddi.v3.client.transport.wrapper\Security3to2.cs" />
     <Compile Include="org.apache.juddi.v3.client.transport\AspNetTransport.cs" />
+    <Compile Include="org.apache.juddi.v3.client.transport\AspNetv2TranslationTransport.cs" />
     <Compile Include="org.apache.juddi.v3.client.util\TModelInstanceDetailsComparator.cs" />
     <Compile Include="org.apache.juddi.v3.client\ConsoleLogger.cs" />
     <Compile Include="org.apache.juddi.v3.client\EventLogger.cs" />

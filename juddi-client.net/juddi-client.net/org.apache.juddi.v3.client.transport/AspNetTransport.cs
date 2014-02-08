@@ -73,9 +73,9 @@ namespace org.apache.juddi.v3.client.transport
             this.subscriptionListenerService.Url = clientConfig.getUDDINode(nodeName).getSubscriptionListenerUrl();
         }
 
-        public override JUDDIApiService getJUDDIApiService(string enpointURL)
+        public override JUDDIApiService getJUDDIApiService(string endpointURL)
         {
-            this.publisherService.Url = enpointURL;
+            this.publisherService.Url = endpointURL;
             return this.publisherService;
         }
 
@@ -84,39 +84,39 @@ namespace org.apache.juddi.v3.client.transport
             return this.publisherService;
         }
 
-        public override UDDI_Inquiry_SoapBinding getUDDIInquiryService(string enpointURL)
+        public override UDDI_Inquiry_SoapBinding getUDDIInquiryService(string endpointURL)
         {
-            this.inquiryService.Url = enpointURL;
+            this.inquiryService.Url = endpointURL;
             return this.inquiryService;
         }
 
-        public override UDDI_Security_SoapBinding getUDDISecurityService(string enpointURL)
+        public override UDDI_Security_SoapBinding getUDDISecurityService(string endpointURL)
         {
-            this.securityService.Url = enpointURL;
+            this.securityService.Url = endpointURL;
             return this.securityService;
         }
 
-        public override UDDI_Publication_SoapBinding getUDDIPublishService(string enpointURL)
+        public override UDDI_Publication_SoapBinding getUDDIPublishService(string endpointURL)
         {
-            this.publishService.Url = enpointURL;
+            this.publishService.Url = endpointURL;
             return this.publishService;
         }
 
-        public override UDDI_Subscription_SoapBinding getUDDISubscriptionService(string enpointURL)
+        public override UDDI_Subscription_SoapBinding getUDDISubscriptionService(string endpointURL)
         {
-            this.subscriptionService.Url = enpointURL;
+            this.subscriptionService.Url = endpointURL;
             return this.subscriptionService;
         }
 
-        public override UDDI_CustodyTransfer_SoapBinding getUDDICustodyTransferService(string enpointURL)
+        public override UDDI_CustodyTransfer_SoapBinding getUDDICustodyTransferService(string endpointURL)
         {
-            this.custodyTransferService.Url = enpointURL;
+            this.custodyTransferService.Url = endpointURL;
             return this.custodyTransferService;
         }
 
-        public override UDDI_SubscriptionListener_SoapBinding getUDDISubscriptionListenerService(string enpointURL)
+        public override UDDI_SubscriptionListener_SoapBinding getUDDISubscriptionListenerService(string endpointURL)
         {
-            this.subscriptionListenerService.Url = enpointURL;
+            this.subscriptionListenerService.Url = endpointURL;
             return this.subscriptionListenerService;
         }
 

@@ -364,9 +364,13 @@ namespace org.apache.juddi.v3.client
         {
             try
             {
-                String clazz = clientConfig.getHomeNode().getProxyTransport();
+                String clazz = clientConfig.getUDDINode(nodeName).getProxyTransport();
                 String managerName = clientConfig.getClientName();
-                return new AspNetTransport(managerName, nodeName, this.getClientConfig());
+                if (clazz.Equals("org.apache.juddi.v3.client.transport.AspNetTransport"))
+                    return new AspNetTransport(managerName, nodeName, this.getClientConfig());
+                if (clazz.Equals("org.apache.juddi.v3.client.transport.AspNetv2TranslationTransport"))
+                    return new AspNetv2TranslationTransport(managerName, nodeName, this.getClientConfig());
+                throw new Exception("Unknown transport: " + clazz);
             }
             catch (Exception e)
             {

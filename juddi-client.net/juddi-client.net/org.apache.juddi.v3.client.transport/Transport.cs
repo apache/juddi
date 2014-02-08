@@ -26,13 +26,13 @@ namespace org.apache.juddi.v3.client.transport
        	
 	public readonly static String DEFAULT_NODE_NAME             = "default";
 	
-	public abstract UDDI_Inquiry_SoapBinding getUDDIInquiryService(String enpointURL);//           throws TransportException;
-	public abstract UDDI_Security_SoapBinding getUDDISecurityService(String enpointURL);//         throws TransportException;
-	public abstract UDDI_Publication_SoapBinding getUDDIPublishService(String enpointURL);//       throws TransportException;
-	public abstract UDDI_Subscription_SoapBinding getUDDISubscriptionService(String enpointURL);// throws TransportException;
-	public abstract UDDI_CustodyTransfer_SoapBinding getUDDICustodyTransferService(String enpointURL);// throws TransportException;
-	public abstract UDDI_SubscriptionListener_SoapBinding getUDDISubscriptionListenerService(String enpointURL);// throws TransportException;
-	public abstract JUDDIApiService getJUDDIApiService(String enpointURL);// throws TransportException;
+	public abstract UDDI_Inquiry_SoapBinding getUDDIInquiryService(String endpointURL);//           throws TransportException;
+	public abstract UDDI_Security_SoapBinding getUDDISecurityService(String endpointURL);//         throws TransportException;
+	public abstract UDDI_Publication_SoapBinding getUDDIPublishService(String endpointURL);//       throws TransportException;
+	public abstract UDDI_Subscription_SoapBinding getUDDISubscriptionService(String endpointURL);// throws TransportException;
+	public abstract UDDI_CustodyTransfer_SoapBinding getUDDICustodyTransferService(String endpointURL);// throws TransportException;
+	public abstract UDDI_SubscriptionListener_SoapBinding getUDDISubscriptionListenerService(String endpointURL);// throws TransportException;
+	public abstract JUDDIApiService getJUDDIApiService(String endpointURL);// throws TransportException;
 	
 	public abstract UDDI_Inquiry_SoapBinding getUDDIInquiryService();// throws TransportException {
 		

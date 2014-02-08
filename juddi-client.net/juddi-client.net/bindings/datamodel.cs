@@ -1949,6 +1949,7 @@ namespace org.uddi.apiv3
 
         private ItemsChoiceType3[] itemsElementNameField;
 
+        ///
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("fromKey", typeof(string), DataType = "anyURI")]
         [System.Xml.Serialization.XmlElementAttribute("toKey", typeof(string), DataType = "anyURI")]

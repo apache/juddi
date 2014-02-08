@@ -90,7 +90,7 @@ namespace org.uddi.apiv3
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("find_binding", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("bindingDetail", Namespace = "urn:uddi-org:api_v3")]
-        public bindingDetail find_binding([System.Xml.Serialization.XmlElementAttribute("find_binding", Namespace = "urn:uddi-org:api_v3")] find_binding find_binding1)
+        public virtual bindingDetail find_binding([System.Xml.Serialization.XmlElementAttribute("find_binding", Namespace = "urn:uddi-org:api_v3")] find_binding find_binding1)
         {
             object[] results = this.Invoke("find_binding", new object[] {
                     find_binding1});
@@ -140,7 +140,7 @@ namespace org.uddi.apiv3
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("find_business", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("businessList", Namespace = "urn:uddi-org:api_v3")]
-        public businessList find_business([System.Xml.Serialization.XmlElementAttribute("find_business", Namespace = "urn:uddi-org:api_v3")] find_business find_business1)
+        public virtual businessList find_business([System.Xml.Serialization.XmlElementAttribute("find_business", Namespace = "urn:uddi-org:api_v3")] find_business find_business1)
         {
             object[] results = this.Invoke("find_business", new object[] {
                     find_business1});
@@ -190,7 +190,7 @@ namespace org.uddi.apiv3
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("find_relatedBusinesses", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("relatedBusinessesList", Namespace = "urn:uddi-org:api_v3")]
-        public relatedBusinessesList find_relatedBusinesses([System.Xml.Serialization.XmlElementAttribute("find_relatedBusinesses", Namespace = "urn:uddi-org:api_v3")] find_relatedBusinesses find_relatedBusinesses1)
+        public virtual relatedBusinessesList find_relatedBusinesses([System.Xml.Serialization.XmlElementAttribute("find_relatedBusinesses", Namespace = "urn:uddi-org:api_v3")] find_relatedBusinesses find_relatedBusinesses1)
         {
             object[] results = this.Invoke("find_relatedBusinesses", new object[] {
                     find_relatedBusinesses1});
@@ -240,7 +240,7 @@ namespace org.uddi.apiv3
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("find_service", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("serviceList", Namespace = "urn:uddi-org:api_v3")]
-        public serviceList find_service([System.Xml.Serialization.XmlElementAttribute("find_service", Namespace = "urn:uddi-org:api_v3")] find_service find_service1)
+        public virtual serviceList find_service([System.Xml.Serialization.XmlElementAttribute("find_service", Namespace = "urn:uddi-org:api_v3")] find_service find_service1)
         {
             object[] results = this.Invoke("find_service", new object[] {
                     find_service1});
@@ -290,7 +290,7 @@ namespace org.uddi.apiv3
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("find_tModel", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("tModelList", Namespace = "urn:uddi-org:api_v3")]
-        public tModelList find_tModel([System.Xml.Serialization.XmlElementAttribute("find_tModel", Namespace = "urn:uddi-org:api_v3")] find_tModel find_tModel1)
+        public virtual tModelList find_tModel([System.Xml.Serialization.XmlElementAttribute("find_tModel", Namespace = "urn:uddi-org:api_v3")] find_tModel find_tModel1)
         {
             object[] results = this.Invoke("find_tModel", new object[] {
                     find_tModel1});
@@ -340,7 +340,7 @@ namespace org.uddi.apiv3
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_bindingDetail", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("bindingDetail", Namespace = "urn:uddi-org:api_v3")]
-        public bindingDetail get_bindingDetail([System.Xml.Serialization.XmlElementAttribute("get_bindingDetail", Namespace = "urn:uddi-org:api_v3")] get_bindingDetail get_bindingDetail1)
+        public virtual bindingDetail get_bindingDetail([System.Xml.Serialization.XmlElementAttribute("get_bindingDetail", Namespace = "urn:uddi-org:api_v3")] get_bindingDetail get_bindingDetail1)
         {
             object[] results = this.Invoke("get_bindingDetail", new object[] {
                     get_bindingDetail1});
@@ -390,7 +390,7 @@ namespace org.uddi.apiv3
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_businessDetail", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("businessDetail", Namespace = "urn:uddi-org:api_v3")]
-        public businessDetail get_businessDetail([System.Xml.Serialization.XmlElementAttribute("get_businessDetail", Namespace = "urn:uddi-org:api_v3")] get_businessDetail get_businessDetail1)
+        public virtual businessDetail get_businessDetail([System.Xml.Serialization.XmlElementAttribute("get_businessDetail", Namespace = "urn:uddi-org:api_v3")] get_businessDetail get_businessDetail1)
         {
             object[] results = this.Invoke("get_businessDetail", new object[] {
                     get_businessDetail1});
@@ -440,7 +440,7 @@ namespace org.uddi.apiv3
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_operationalInfo", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("operationalInfos", Namespace = "urn:uddi-org:api_v3")]
-        public operationalInfos get_operationalInfo([System.Xml.Serialization.XmlElementAttribute("get_operationalInfo", Namespace = "urn:uddi-org:api_v3")] get_operationalInfo get_operationalInfo1)
+        public virtual operationalInfos get_operationalInfo([System.Xml.Serialization.XmlElementAttribute("get_operationalInfo", Namespace = "urn:uddi-org:api_v3")] get_operationalInfo get_operationalInfo1)
         {
             object[] results = this.Invoke("get_operationalInfo", new object[] {
                     get_operationalInfo1});
@@ -490,7 +490,7 @@ namespace org.uddi.apiv3
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_serviceDetail", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("serviceDetail", Namespace = "urn:uddi-org:api_v3")]
-        public serviceDetail get_serviceDetail([System.Xml.Serialization.XmlElementAttribute("get_serviceDetail", Namespace = "urn:uddi-org:api_v3")] get_serviceDetail get_serviceDetail1)
+        public virtual serviceDetail get_serviceDetail([System.Xml.Serialization.XmlElementAttribute("get_serviceDetail", Namespace = "urn:uddi-org:api_v3")] get_serviceDetail get_serviceDetail1)
         {
             object[] results = this.Invoke("get_serviceDetail", new object[] {
                     get_serviceDetail1});
@@ -540,7 +540,7 @@ namespace org.uddi.apiv3
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_tModelDetail", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("tModelDetail", Namespace = "urn:uddi-org:api_v3")]
-        public tModelDetail get_tModelDetail([System.Xml.Serialization.XmlElementAttribute("get_tModelDetail", Namespace = "urn:uddi-org:api_v3")] get_tModelDetail get_tModelDetail1)
+        public virtual tModelDetail get_tModelDetail([System.Xml.Serialization.XmlElementAttribute("get_tModelDetail", Namespace = "urn:uddi-org:api_v3")] get_tModelDetail get_tModelDetail1)
         {
             object[] results = this.Invoke("get_tModelDetail", new object[] {
                     get_tModelDetail1});
@@ -777,7 +777,7 @@ namespace org.uddi.apiv3
 
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("delete_business", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        public void delete_business([System.Xml.Serialization.XmlElementAttribute("delete_business", Namespace = "urn:uddi-org:api_v3")] delete_business delete_business1)
+        public virtual void delete_business([System.Xml.Serialization.XmlElementAttribute("delete_business", Namespace = "urn:uddi-org:api_v3")] delete_business delete_business1)
         {
             this.Invoke("delete_business", new object[] {
                     delete_business1});
@@ -824,7 +824,7 @@ namespace org.uddi.apiv3
 
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("delete_publisherAssertions", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        public void delete_publisherAssertions([System.Xml.Serialization.XmlElementAttribute("delete_publisherAssertions", Namespace = "urn:uddi-org:api_v3")] delete_publisherAssertions delete_publisherAssertions1)
+        public virtual void delete_publisherAssertions([System.Xml.Serialization.XmlElementAttribute("delete_publisherAssertions", Namespace = "urn:uddi-org:api_v3")] delete_publisherAssertions delete_publisherAssertions1)
         {
             this.Invoke("delete_publisherAssertions", new object[] {
                     delete_publisherAssertions1});
@@ -871,7 +871,7 @@ namespace org.uddi.apiv3
 
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("delete_service", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        public void delete_service([System.Xml.Serialization.XmlElementAttribute("delete_service", Namespace = "urn:uddi-org:api_v3")] delete_service delete_service1)
+        public virtual void delete_service([System.Xml.Serialization.XmlElementAttribute("delete_service", Namespace = "urn:uddi-org:api_v3")] delete_service delete_service1)
         {
             this.Invoke("delete_service", new object[] {
                     delete_service1});
@@ -918,7 +918,7 @@ namespace org.uddi.apiv3
 
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("delete_tModel", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        public void delete_tModel([System.Xml.Serialization.XmlElementAttribute("delete_tModel", Namespace = "urn:uddi-org:api_v3")] delete_tModel delete_tModel1)
+        public virtual void delete_tModel([System.Xml.Serialization.XmlElementAttribute("delete_tModel", Namespace = "urn:uddi-org:api_v3")] delete_tModel delete_tModel1)
         {
             this.Invoke("delete_tModel", new object[] {
                     delete_tModel1});
@@ -967,7 +967,7 @@ namespace org.uddi.apiv3
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_assertionStatusReport", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlArrayAttribute("assertionStatusReport", Namespace = "urn:uddi-org:api_v3")]
         [return: System.Xml.Serialization.XmlArrayItemAttribute(IsNullable = false)]
-        public assertionStatusItem[] get_assertionStatusReport([System.Xml.Serialization.XmlElementAttribute("get_assertionStatusReport", Namespace = "urn:uddi-org:api_v3")] get_assertionStatusReport get_assertionStatusReport1)
+        public virtual assertionStatusItem[] get_assertionStatusReport([System.Xml.Serialization.XmlElementAttribute("get_assertionStatusReport", Namespace = "urn:uddi-org:api_v3")] get_assertionStatusReport get_assertionStatusReport1)
         {
             object[] results = this.Invoke("get_assertionStatusReport", new object[] {
                     get_assertionStatusReport1});
@@ -1018,7 +1018,7 @@ namespace org.uddi.apiv3
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_publisherAssertions", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlArrayAttribute("publisherAssertionsResponse", Namespace = "urn:uddi-org:api_v3")]
         [return: System.Xml.Serialization.XmlArrayItemAttribute(IsNullable = false)]
-        public publisherAssertion[] get_publisherAssertions([System.Xml.Serialization.XmlElementAttribute("get_publisherAssertions", Namespace = "urn:uddi-org:api_v3")] get_publisherAssertions get_publisherAssertions1)
+        public virtual publisherAssertion[] get_publisherAssertions([System.Xml.Serialization.XmlElementAttribute("get_publisherAssertions", Namespace = "urn:uddi-org:api_v3")] get_publisherAssertions get_publisherAssertions1)
         {
             object[] results = this.Invoke("get_publisherAssertions", new object[] {
                     get_publisherAssertions1});
@@ -1068,7 +1068,7 @@ namespace org.uddi.apiv3
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_registeredInfo", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("registeredInfo", Namespace = "urn:uddi-org:api_v3")]
-        public registeredInfo get_registeredInfo([System.Xml.Serialization.XmlElementAttribute("get_registeredInfo", Namespace = "urn:uddi-org:api_v3")] get_registeredInfo get_registeredInfo1)
+        public virtual registeredInfo get_registeredInfo([System.Xml.Serialization.XmlElementAttribute("get_registeredInfo", Namespace = "urn:uddi-org:api_v3")] get_registeredInfo get_registeredInfo1)
         {
             object[] results = this.Invoke("get_registeredInfo", new object[] {
                     get_registeredInfo1});
@@ -1118,7 +1118,7 @@ namespace org.uddi.apiv3
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("save_binding", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("bindingDetail", Namespace = "urn:uddi-org:api_v3")]
-        public bindingDetail save_binding([System.Xml.Serialization.XmlElementAttribute("save_binding", Namespace = "urn:uddi-org:api_v3")] save_binding save_binding1)
+        public virtual bindingDetail save_binding([System.Xml.Serialization.XmlElementAttribute("save_binding", Namespace = "urn:uddi-org:api_v3")] save_binding save_binding1)
         {
             object[] results = this.Invoke("save_binding", new object[] {
                     save_binding1});
@@ -1168,7 +1168,7 @@ namespace org.uddi.apiv3
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("save_business", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("businessDetail", Namespace = "urn:uddi-org:api_v3")]
-        public businessDetail save_business([System.Xml.Serialization.XmlElementAttribute("save_business", Namespace = "urn:uddi-org:api_v3")] save_business save_business1)
+        public virtual businessDetail save_business([System.Xml.Serialization.XmlElementAttribute("save_business", Namespace = "urn:uddi-org:api_v3")] save_business save_business1)
         {
             object[] results = this.Invoke("save_business", new object[] {
                     save_business1});
@@ -1218,7 +1218,7 @@ namespace org.uddi.apiv3
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("save_service", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("serviceDetail", Namespace = "urn:uddi-org:api_v3")]
-        public serviceDetail save_service([System.Xml.Serialization.XmlElementAttribute("save_service", Namespace = "urn:uddi-org:api_v3")] save_service save_service1)
+        public virtual serviceDetail save_service([System.Xml.Serialization.XmlElementAttribute("save_service", Namespace = "urn:uddi-org:api_v3")] save_service save_service1)
         {
             object[] results = this.Invoke("save_service", new object[] {
                     save_service1});
@@ -1268,7 +1268,7 @@ namespace org.uddi.apiv3
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("save_tModel", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("tModelDetail", Namespace = "urn:uddi-org:api_v3")]
-        public tModelDetail save_tModel([System.Xml.Serialization.XmlElementAttribute("save_tModel", Namespace = "urn:uddi-org:api_v3")] save_tModel save_tModel1)
+        public virtual tModelDetail save_tModel([System.Xml.Serialization.XmlElementAttribute("save_tModel", Namespace = "urn:uddi-org:api_v3")] save_tModel save_tModel1)
         {
             object[] results = this.Invoke("save_tModel", new object[] {
                     save_tModel1});
@@ -1319,7 +1319,7 @@ namespace org.uddi.apiv3
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("set_publisherAssertions", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlArrayAttribute("publisherAssertions", Namespace = "urn:uddi-org:api_v3")]
         [return: System.Xml.Serialization.XmlArrayItemAttribute(IsNullable = false)]
-        public publisherAssertion[] set_publisherAssertions([System.Xml.Serialization.XmlElementAttribute("set_publisherAssertions", Namespace = "urn:uddi-org:api_v3")] set_publisherAssertions set_publisherAssertions1)
+        public virtual publisherAssertion[] set_publisherAssertions([System.Xml.Serialization.XmlElementAttribute("set_publisherAssertions", Namespace = "urn:uddi-org:api_v3")] set_publisherAssertions set_publisherAssertions1)
         {
             object[] results = this.Invoke("set_publisherAssertions", new object[] {
                     set_publisherAssertions1});
@@ -1402,7 +1402,7 @@ namespace org.uddi.apiv3
 
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("discard_authToken", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        public void discard_authToken([System.Xml.Serialization.XmlElementAttribute("discard_authToken", Namespace = "urn:uddi-org:api_v3")] discard_authToken discard_authToken1)
+        public virtual void discard_authToken([System.Xml.Serialization.XmlElementAttribute("discard_authToken", Namespace = "urn:uddi-org:api_v3")] discard_authToken discard_authToken1)
         {
             this.Invoke("discard_authToken", new object[] {
                     discard_authToken1});
@@ -1450,7 +1450,7 @@ namespace org.uddi.apiv3
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_authToken", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
         [return: System.Xml.Serialization.XmlElementAttribute("authToken", Namespace = "urn:uddi-org:api_v3")]
-        public authToken get_authToken([System.Xml.Serialization.XmlElementAttribute("get_authToken", Namespace = "urn:uddi-org:api_v3")] get_authToken get_authToken1)
+        public virtual authToken get_authToken([System.Xml.Serialization.XmlElementAttribute("get_authToken", Namespace = "urn:uddi-org:api_v3")] get_authToken get_authToken1)
         {
             object[] results = this.Invoke("get_authToken", new object[] {
                     get_authToken1});

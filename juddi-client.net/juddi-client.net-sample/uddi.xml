@@ -3,7 +3,7 @@
   <reloadDelay>5000</reloadDelay>
   <client name="test-client">
     <nodes>
-        <!-- hint, there can be more than one "node"-->
+      <!-- hint, there can be more than one "node"-->
       <node isHomeJUDDI="true">
         <!-- required 'default' node -->
         <name>default</name>
@@ -16,28 +16,28 @@
           <!-- for a dev instance of jUDDI, use this url -->
           <property name="serverName" value="localhost" />
           <property name="serverPort" value="8080" />
-          
-		  <!-- for UDDI nodes that use HTTP u/p, using the following 
+
+          <!-- for UDDI nodes that use HTTP u/p, using the following 
 					<property name="basicAuthUsername" value="root" />
 					<property name="basicAuthPassword" value="password" />
 					<property name="basicAuthPasswordIsEncrypted" value="false" />
 					<property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
         </properties>
         <proxyTransport>org.apache.juddi.v3.client.transport.AspNetTransport</proxyTransport>
-        <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
-        <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry?wsdl</inquiryUrl>
-		<inquiryRESTUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiryRest</inquiryRESTUrl>
-        <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish?wsdl</publishUrl>
-        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security?wsdl</securityUrl>
-        <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription?wsdl</subscriptionUrl>
-        <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
-        <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
+        <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer</custodyTransferUrl>
+        <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry</inquiryUrl>
+        <inquiryRESTUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiryRest</inquiryRESTUrl>
+        <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish</publishUrl>
+        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security</securityUrl>
+        <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription</subscriptionUrl>
+        <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener</subscriptionListenerUrl>
+        <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api</juddiApiUrl>
         <factoryInitial>not used</factoryInitial>
         <factoryURLPkgs>not used</factoryURLPkgs>
         <factoryNamingProvider>not used</factoryNamingProvider>
       </node>
 
-      <node isHomeJUDDI="true">
+      <node>
         <!-- required 'default' node -->
         <name>default_non_root</name>
         <description>Main jUDDI node</description>
@@ -57,28 +57,70 @@
 					<property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
         </properties>
         <proxyTransport>org.apache.juddi.v3.client.transport.AspNetTransport</proxyTransport>
-        <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
-        <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry?wsdl</inquiryUrl>
-        <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish?wsdl</publishUrl>
-        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security?wsdl</securityUrl>
-        <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription?wsdl</subscriptionUrl>
-        <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
-        <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
+        <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer</custodyTransferUrl>
+        <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry</inquiryUrl>
+        <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish</publishUrl>
+        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security</securityUrl>
+        <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription</subscriptionUrl>
+        <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener</subscriptionListenerUrl>
+        <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api</juddiApiUrl>
         <factoryInitial>not used</factoryInitial>
         <factoryURLPkgs>not used</factoryURLPkgs>
         <factoryNamingProvider>not used</factoryNamingProvider>
       </node>
+
+
+
+      <node>
+        <!-- required 'default' node -->
+        <name>uddiv2</name>
+        <description>Main jUDDI node</description>
+        <properties>
+          <!-- for a live instance of jUDDI, use this url
+          <property name="serverName" value="uddi-jbossoverlord.rhcloud.com" />
+          <property name="serverPort" value="80" />-->
+
+          <!-- for a dev instance of jUDDI, use this url -->
+          <property name="serverName" value="localhost" />
+          <property name="serverPort" value="8080" />
+
+          <!-- for UDDI nodes that use HTTP u/p, using the following 
+					<property name="basicAuthUsername" value="root" />
+					<property name="basicAuthPassword" value="password" />
+					<property name="basicAuthPasswordIsEncrypted" value="false" />
+					<property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
+        </properties>
+        <proxyTransport>org.apache.juddi.v3.client.transport.AspNetv2TranslationTransport</proxyTransport>
+        <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer</custodyTransferUrl>
+        
+        <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiryv2</inquiryUrl>
+        
+        <inquiryRESTUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiryRest</inquiryRESTUrl>
+        <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publishv2</publishUrl>
+        
+        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security</securityUrl>
+        <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription</subscriptionUrl>
+        <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener</subscriptionListenerUrl>
+        <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api</juddiApiUrl>
+        <factoryInitial>not used</factoryInitial>
+        <factoryURLPkgs>not used</factoryURLPkgs>
+        <factoryNamingProvider>not used</factoryNamingProvider>
+      </node>
+
+      
+      
     </nodes>
 
     <clerks registerOnStartup="false">
       <!-- one clerk for each node is required-->
       <clerk name="default" node="default" publisher="root" password="root"  isPasswordEncrypted="false" cryptoProvider=""/>
       <clerk name="default_non_root" node="default_non_root"     publisher="uddi" password="uddi"  isPasswordEncrypted="false" cryptoProvider=""/>
+      <clerk name="uddiv2" node="default_non_root"     publisher="uddi" password="uddi"  isPasswordEncrypted="false" cryptoProvider=""/>
       <xregister>
         <!-- automatic registration on start. this only triggers when registerOnStartup=true-->
         <servicebinding bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="default_non_root"/>
       </xregister>
-      
+
     </clerks>
     <signature>
       <!-- the store name, 
@@ -91,18 +133,18 @@
         TrustedPeople
         TrustedPublisher-->
       <signingKeyStorePath>My</signingKeyStorePath>
-      
+
       <!-- storelocation, this can either be CurrentUser or LocalMachine using the Windows certificate store OR
         the value "PFX" to load the certificate from a PFX file
       -->
       <signingKeyStoreType>CurrentUser</signingKeyStoreType>
-      
+
       <!-- only used when signingKeyStoreType is "PFX-->
       <signingKeyStoreFilePassword cryptoProvider="" isPasswordEncrypted="false">ignored</signingKeyStoreFilePassword>
-      
+
       <!-- not used-->
       <signingKeyPassword>ignored</signingKeyPassword>
-      
+
       <!-- serial number or friendly name/alias, subject or thumbprint-->
       <signingKeyAlias>‎514a6615</signingKeyAlias>
       <canonicalizationMethod>http://www.w3.org/2001/10/xml-exc-c14n#</canonicalizationMethod>
@@ -112,7 +154,7 @@
       <trustStorePath>ignored</trustStorePath>
       <trustStoreType>ignored</trustStoreType>
       <trustStorePassword>ignored</trustStorePassword>
-      
+
       <checkTimestamps>true</checkTimestamps>
       <checkTrust>true</checkTrust>
       <checkRevocationCRL>true</checkRevocationCRL>
