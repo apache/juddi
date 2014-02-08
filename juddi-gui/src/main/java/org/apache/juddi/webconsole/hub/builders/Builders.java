@@ -740,12 +740,12 @@ public class Builders {
                         if (alertType.equalsIgnoreCase("specificItem")) {
                                 sub = BuildClientSubscriptionSpecificItem(map, outmsg, (String) session.getAttribute("locale"));
                         } else if (alertType.equalsIgnoreCase("searchResults")) {
-                                sub = BuildClientSubscriptionSearchResults(map, outmsg);
+                                sub = BuildClientSubscriptionSearchResults(map, outmsg, session);
                         } else {
                                 outmsg.set(ResourceLoader.GetResource(session, "errors.subscription.alerttypeinvalid"));
                                 return null;
                         }
-                        if (sub == null) {
+                        if (sub == null) { 
                                 return null;
                         }
 
@@ -819,17 +819,17 @@ public class Builders {
                                         sub.getSubscriptionFilter().setGetAssertionStatusReport(new GetAssertionStatusReport());
                                         sub.getSubscriptionFilter().getGetAssertionStatusReport().setCompletionStatus(CompletionStatus.valueOf(((String[]) map.get("assertionStatus"))[0]));
                                 } else if (alertCritera.equalsIgnoreCase("relatedBusiness")) {
-                                        outmsg.set("relatedBusiness is not supported for single item subscriptions");
+                                        outmsg.set(ResourceLoader.GetResource(locale, "errors.subscription.relatedbiz"));
                                         return null;
                                 } else if (alertCritera.equalsIgnoreCase("tmodel")) {
                                         sub.getSubscriptionFilter().setGetTModelDetail(new GetTModelDetail());
                                         sub.getSubscriptionFilter().getGetTModelDetail().getTModelKey().addAll(keys);
                                 } else {
-                                        outmsg.set("alert critera invalid");
+                                        outmsg.set(ResourceLoader.GetResource(locale, "errors.subscription.alertcriteriainvalid"));
                                         return null;
                                 }
                         } else {
-                                outmsg.set("alert critera not defined");
+                                outmsg.set(ResourceLoader.GetResource(locale, "errors.subscription.alertcriteriainvalid"));
                                 return null;
                         }
                         return sub;
@@ -840,7 +840,7 @@ public class Builders {
                 }
         }
 
-        private static Subscription BuildClientSubscriptionSearchResults(Map map, AtomicReference<String> outmsg) {
+        private static Subscription BuildClientSubscriptionSearchResults(Map map, AtomicReference<String> outmsg, HttpSession session) {
                 try {
                         Subscription sub = new Subscription();
                         String alertCritera = ((String[]) map.get("alertCriteraMultipleItem"))[0];
@@ -885,11 +885,11 @@ public class Builders {
                                         sub.getSubscriptionFilter().getFindTModel().setFindQualifiers(fq);
                                         sub.getSubscriptionFilter().getFindTModel().setName(name);
                                 } else {
-                                        outmsg.set("alert critera invalid");
+                                        outmsg.set(ResourceLoader.GetResource(session, "errors.subscription.alertcriteriainvalid"));
                                         return null;
                                 }
                         } else {
-                                outmsg.set("alert critera not defined");
+                                outmsg.set(ResourceLoader.GetResource(session, "errors.subscription.alertcriteriainvalid"));
                                 return null;
                         }
                         return sub;
