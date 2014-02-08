@@ -31,90 +31,129 @@ import org.apache.juddi.v3.tck.TckTModel;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.Name;
+import org.uddi.api_v3.SaveTModel;
+import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelList;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class API_070_FindEntityTest 
-{
-	private static Log logger = LogFactory.getLog(API_070_FindEntityTest.class);
-	
-	private static API_010_PublisherTest api010       = new API_010_PublisherTest();
-	private static TckTModel tckTModel                    = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-	private static TckBusiness tckBusiness                = new TckBusiness(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-	private static TckBusinessService tckBusinessService  = new TckBusinessService(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-	private static TckBindingTemplate tckBindingTemplate  = new TckBindingTemplate(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-	private static TckFindEntity tckFindEntity            = new TckFindEntity(new UDDIInquiryImpl());
-	
-	private static String authInfoJoe                 = null;
-	
-	@BeforeClass
-	public static void setup() throws ConfigurationException {
-		Registry.start();
-		logger.debug("Getting auth token..");
-		try {
-			api010.saveJoePublisher();
-			authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
-		} catch (RemoteException e) {
-			logger.error(e.getMessage(), e);
-			Assert.fail("Could not obtain authInfo token.");
-		}
-	}
+public class API_070_FindEntityTest {
 
-	@AfterClass
-	public static void stopRegistry() throws ConfigurationException {
-		Registry.stop();
-	}
-	
-	@Test
-	public void findEntities() {
-		try {
-			tckTModel.saveJoePublisherTmodel(authInfoJoe, true);
-			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
-			tckBusinessService.saveJoePublisherService(authInfoJoe);
-			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
-			tckFindEntity.findBusiness();
-			tckFindEntity.findService(null);
-			tckFindEntity.findBinding(null);
-			tckFindEntity.findTModel(null);
-			tckFindEntity.findAllBusiness();
-			tckFindEntity.getNonExitingBusiness();
-		} finally {
-			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
-			tckBusinessService.deleteJoePublisherService(authInfoJoe);
-			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
-			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
-		}
-		
-	}
-	
-	@Test
-	public void findSignedEntities() {
-		try {
-			tckTModel.saveJoePublisherTmodel(authInfoJoe, true);
-			tckBusiness.saveJoePublisherBusinessX509Signature(authInfoJoe);
-			tckBusinessService.saveJoePublisherService(authInfoJoe);
-			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
-			
-			tckFindEntity.findAllSignedBusiness();
-			tckFindEntity.findService(UDDIConstants.SIGNATURE_PRESENT);
-			tckFindEntity.findBinding(UDDIConstants.SIGNATURE_PRESENT);
+        private static Log logger = LogFactory.getLog(API_070_FindEntityTest.class);
+
+        private static API_010_PublisherTest api010 = new API_010_PublisherTest();
+        private static TckTModel tckTModel = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+        private static TckBusiness tckBusiness = new TckBusiness(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+        private static TckBusinessService tckBusinessService = new TckBusinessService(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+        private static TckBindingTemplate tckBindingTemplate = new TckBindingTemplate(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+        private static TckFindEntity tckFindEntity = new TckFindEntity(new UDDIInquiryImpl());
+
+        private static String authInfoJoe = null;
+
+        @BeforeClass
+        public static void setup() throws ConfigurationException {
+                Registry.start();
+                logger.debug("Getting auth token..");
+                try {
+                        api010.saveJoePublisher();
+                        authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                } catch (RemoteException e) {
+                        logger.error(e.getMessage(), e);
+                        Assert.fail("Could not obtain authInfo token.");
+                }
+        }
+
+        @AfterClass
+        public static void stopRegistry() throws ConfigurationException {
+                Registry.stop();
+        }
+
+        @Test
+        public void findEntities() {
+                try {
+                        tckTModel.saveJoePublisherTmodel(authInfoJoe, true);
+                        tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessService.saveJoePublisherService(authInfoJoe);
+                        tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
+                        tckFindEntity.findBusiness();
+                        tckFindEntity.findService(null);
+                        tckFindEntity.findBinding(null);
+                        tckFindEntity.findTModel(null);
+                        tckFindEntity.findAllBusiness();
+                        tckFindEntity.getNonExitingBusiness();
+                } finally {
+                        tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
+                        tckBusinessService.deleteJoePublisherService(authInfoJoe);
+                        tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+                }
+
+        }
+
+        @Test
+        public void findSignedEntities() {
+                try {
+                        tckTModel.saveJoePublisherTmodel(authInfoJoe, true);
+                        tckBusiness.saveJoePublisherBusinessX509Signature(authInfoJoe);
+                        tckBusinessService.saveJoePublisherService(authInfoJoe);
+                        tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
+
+                        tckFindEntity.findAllSignedBusiness();
+                        tckFindEntity.findService(UDDIConstants.SIGNATURE_PRESENT);
+                        tckFindEntity.findBinding(UDDIConstants.SIGNATURE_PRESENT);
 			//tckFindEntity.findTModel(UDDIConstants.SIGNATURE_PRESENT);
-			
-			tckFindEntity.findAllBusiness();
-			tckFindEntity.getNonExitingBusiness();
-		} finally {
-			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
-			tckBusinessService.deleteJoePublisherService(authInfoJoe);
-			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
-			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
-		}
-		
-	}
 
-	
+                        tckFindEntity.findAllBusiness();
+                        tckFindEntity.getNonExitingBusiness();
+                } finally {
+                        tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
+                        tckBusinessService.deleteJoePublisherService(authInfoJoe);
+                        tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+                }
+
+        }
+
+        @Test
+        @Ignore
+        public void JUDDI_843_tModel() throws Exception {
+
+                UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
+
+                UDDIPublicationImpl pub = new UDDIPublicationImpl();
+                SaveTModel stm = new SaveTModel();
+                stm.setAuthInfo(authInfoJoe);
+                TModel tm = new TModel();
+                tm.setName(new Name("Buenos Dias", "es-US"));
+                stm.getTModel().add(tm);
+                pub.saveTModel(stm);
+
+                FindTModel ftm = new FindTModel();
+                ftm.setAuthInfo(authInfoJoe);
+                ftm.setName(new Name("%", "es-US"));
+                ftm.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                ftm.getFindQualifiers().getFindQualifier().add(UDDIConstants.SORT_BY_NAME_ASC);
+                ftm.getFindQualifiers().getFindQualifier().add(UDDIConstants.CASE_INSENSITIVE_MATCH);
+                TModelList findTModel = inquiry.findTModel(ftm);
+                Assert.assertNotNull(findTModel);
+                Assert.assertNotNull(findTModel.getTModelInfos());
+                Assert.assertNotNull(findTModel.getTModelInfos().getTModelInfo());
+                boolean found = false;
+                for (int i = 0; i < findTModel.getTModelInfos().getTModelInfo().size(); i++) {
+                        if (findTModel.getTModelInfos().getTModelInfo().get(i).getName().getValue().equalsIgnoreCase("Buenos Dias")
+                             && findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang().equalsIgnoreCase("es-US")) {
+                                found = true;
+                                break;
+                        }
+                }
+                Assert.assertTrue("tMdoel search by name with language defined failed, item not found", found);
+
+        }
 
 }
