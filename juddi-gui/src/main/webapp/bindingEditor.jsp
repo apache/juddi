@@ -72,7 +72,7 @@
 %>
 <%@include file="header-top.jsp" %>
 <div class="container">
-
+        <script type="text/javascript" src="js/bindingeditor.js"></script>
         <!-- Main hero unit for a primary marketing message or call to action -->
         <div class="well" >
                 <h1><%=ResourceLoader.GetResource(session, "pages.bindingeditor.title")%></h1>
@@ -246,6 +246,9 @@
                                                 <br><br>
                                                 <b><%=ResourceLoader.GetResource(session, "items.keyrefcats")%>:</b><br>
                                                 <a href="javascript:AddCategoryKeyReference();"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefcat.add")%> <Br>
+                                                
+                                                <%@include  file="quickref_catbag.jsp" %>        
+                                                
                                                 <div id="catContainer" style="border-width: 2px; border-style: solid;" >
                                                         <%
                                                                 if (bd.getCategoryBag() == null) {
@@ -271,8 +274,9 @@
                                                 <br>
                                                 <b><%=ResourceLoader.GetResource(session, "items.keyrefgroup")%></b><br>
                                                 <a href="javascript:AddCategoryKeyReferenceGroup();"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefgroup.add")%><br>
+                                                <%@include file="quickref_krgrp.jsp" %>
                                                 <div id="catContainerGrp" style="border-width: 2px; border-style: solid;" >
-
+                                                        
 
                                                         <%
                                                                 //div count good so far
@@ -349,6 +353,9 @@
                                         <div class="tab-pane" id="instanceinfo">   
                                                 <b><%=ResourceLoader.GetResource(session, "items.tmodelinstance.info")%></b> - <%=ResourceLoader.GetResource(session, "items.tmodelinstance.info.desc")%> <br>
                                                 <a href="javascript:AddTmodelInstance('<%=PostBackConstants.TMODELINSTANCE%>');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.tmodelinstance.add")%><br>
+        
+                                                <%@include file="quickref_tmodelinstance.jsp" %>
+                                                
                                                 <div id="<%=PostBackConstants.TMODELINSTANCE%>" >        
                                                         <%
                                                                 if (bd.getTModelInstanceDetails() != null) {
@@ -549,7 +556,7 @@
                                 if (!newitem) {
                         %>
 
-
+| 
                         <a class="btn btn-danger " href="javascript:deleteBinding();"><i class="icon-trash icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.delete")%></a> |
                         <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bd.getBindingKey(), "UTF-8")%>&type=bindingTemplate"><i class="icon-pencil icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
                         <a class="btn btn-info " href="editSubscription.jsp?bindingTemplate=<%=URLEncoder.encode(bd.getBindingKey(), "UTF-8")%>" title="<%=ResourceLoader.GetResource(session, "actions.subscribe.description")%>"><i class="icon-rss icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
@@ -671,6 +678,38 @@
 
                       }
                       function deleteBinding() {
+                              var url = 'ajax/deletebinding.jsp';
+                              var postbackdata = new Array();
+                                      postbackdata.push({
+                                              name: "id",
+                                              value: $("#" + "<%=PostBackConstants.BINDINGKEY%>").text()
+                                      });
+                              
+                              postbackdata.push({
+                                      name: "nonce",
+                                      value: $("#nonce").val()
+                              });
+                              
+                              var request = $.ajax({
+                                      url: url,
+                                      type: "POST",
+                                      //  data" + i18n_type + ": "html", 
+                                      cache: false,
+                                      //  processData: false,f
+                                      data: postbackdata
+                              });
+                              request.done(function(msg) {
+                                      window.console && console.log('postback done ' + url);
+
+                                      $("#alert_results").html('<i class="icon-2x icon-thumbs-up"></i><br>' + msg);
+                                      $("#alert").modal();
+                              });
+
+                              request.fail(function(jqXHR, textStatus) {
+                                      window.console && console.log('postback failed ' + url);
+                                      $("#alert_results").html('<i class="icon-2x icon-thumbs-down"></i><br>' + jqXHR.responseText + textStatus);
+                                      $("#alert").modal();
+                              });
                       }
         </script>
 

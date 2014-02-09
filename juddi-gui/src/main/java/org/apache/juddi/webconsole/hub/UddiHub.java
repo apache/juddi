@@ -947,7 +947,7 @@ public class UddiHub implements Serializable {
                                 if (isExceptionExpiration(ex)) {
                                         token = null;
                                         sb.setAuthInfo(GetToken());
-                                        publish.saveBinding(sb);
+                                        saveBinding =  publish.saveBinding(sb);
 
                                 } else {
                                         throw ex;
@@ -1163,6 +1163,34 @@ public class UddiHub implements Serializable {
          */
         public static String ToErrorAlert(String HandleException) {
                 return "<div class=\"alert alert-error\"><i class=\"icon-warning-sign icon-large\"></i>&nbsp;" + HandleException + "</div>";
+        }
+
+        private String deleteBinding(List<String> serviceId) {
+                
+                if (serviceId == null || serviceId.isEmpty()) {
+                        return ResourceLoader.GetResource(session, "errors.noinput");
+                }
+                DeleteBinding db = new DeleteBinding();
+                db.setAuthInfo(GetToken());
+                db.getBindingKey().addAll(serviceId);
+                try {
+                        try {
+                                publish.deleteBinding(db);
+                        } catch (Exception ex) {
+                                if (isExceptionExpiration(ex)) {
+                                        token = null;
+                                        db.setAuthInfo(GetToken());
+                                        publish.deleteBinding(db);
+
+                                } else {
+                                        throw ex;
+                                }
+                        }
+                } catch (Exception ex) {
+                        return HandleException(ex);
+                }
+                return ResourceLoader.GetResource(session, "actions.delete.binding");
+                
         }
 
         /**
@@ -3881,5 +3909,15 @@ public class UddiHub implements Serializable {
 
                 //JAXB.marshal(be, System.out);
                 return SaveBindingTemplate(be);
+        }
+        
+        public String deleteBinding(String id){
+
+                 if (id == null || id.length() == 0) {
+                        return ResourceLoader.GetResource(session, "errors.noinput");
+                }
+                List<String> x = new ArrayList<String>();
+                x.add(id.trim());
+                return deleteBinding(x);
         }
 }

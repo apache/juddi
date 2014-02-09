@@ -273,6 +273,7 @@
                                                 <br><br>
                                                 <b><%=ResourceLoader.GetResource(session, "items.keyrefcats")%>:</b><br>
                                                 <a href="javascript:AddCategoryKeyReference();"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefcat.add")%> <Br>
+                                                <%@include file="quickref_catbag.jsp" %>
                                                 <div id="catContainer" style="border-width: 2px; border-style: solid;" >
                                                         <%
                                                                 if (bd.getCategoryBag() == null) {
@@ -298,6 +299,7 @@
                                                 <br>
                                                 <b><%=ResourceLoader.GetResource(session, "items.keyrefgroup")%></b><br>
                                                 <a href="javascript:AddCategoryKeyReferenceGroup();"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefgroup.add")%><br>
+                                                <%@include file="quickref_krgrp.jsp" %>
                                                 <div id="catContainerGrp" style="border-width: 2px; border-style: solid;" >
 
 

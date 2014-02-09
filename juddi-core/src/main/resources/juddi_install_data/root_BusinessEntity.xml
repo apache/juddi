@@ -48,7 +48,7 @@ See below for other fields that you may want to edit...
       <discoveryURL useType="homepage">${juddi.server.baseurl}</discoveryURL>
    </discoveryURLs>
    <categoryBag>
-      <keyedReference tModelKey="uddi:uddi.org:categorization:nodes" keyValue="node" />
+      <keyedReference tModelKey="uddi:uddi.org:categorization:nodes" keyValue="node"  keyName="uddi.org:categorization:nodes"/>
    </categoryBag>
    <businessServices>
       <!-- As mentioned above, you may want to provide user-defined keys for these (and the services/bindingTemplates below.  Services that you

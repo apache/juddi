@@ -66,6 +66,9 @@
                                 padding-top: 60px;
                                 padding-bottom: 40px;
                         }
+                        .tab-content {
+                                overflow: visible;
+                            }
                 </style>
                 <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
                 <link href="css/bootstrap-modal.css" rel="stylesheet">

@@ -246,6 +246,25 @@ function AddContactAddressLine(contactid)
 }
 
 
+function AddCategoryKeyReferenceParam(tmodelkey, keyname, keyvalue)
+{
+    currentcatkeyref++;
+    var i=currentcatkeyref;
+    
+    $("<div id=\"catbagkeyref" + i + "\" style=\"border-width:1px; border-style:solid\">"+
+        "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('catbagkeyref" + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div>"+
+        "<div style=\"float:left\">" + i18n_key +" (<a href=\"javascript:tModelModal('catbagkeyref" + i + "Value')\" ><i class=\"icon-list-alt icon-large\"></i>" + il8n_picker + "</a>): &nbsp;</div>"
+        + "<div class=\"edit\" id=\"catbagkeyref" + i + "Value\">" + tmodelkey + "</div>"
+        +"<div style=\"float:left\">" + i18n_name + ": &nbsp;</div>"
+        + "<div class=\"edit\" id=\"catbagkeyref" + i + "KeyName\">" + keyname + "</div>"
+        +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
+        + "<div class=\"edit\" id=\"catbagkeyref" + i + "KeyValue\">" + keyvalue + "</div>"
+        +"</div>").appendTo("#catContainer");
+    Reedit();
+}
+
+
+
 function AddCategoryKeyReference()
 {
     currentcatkeyref++;
@@ -283,6 +302,49 @@ function AddCategoryKeyReferenceGroup()
         +"</div>").appendTo("#catContainerGrp");
     Reedit();
 }
+
+
+function AddCategoryKeyReferenceGroupParam(tmodelkey)
+{
+    currentcatkeyrefgrp++;
+    var i=currentcatkeyrefgrp;
+    
+    $("<div id=\"catbaggrpkeyref" + i + "\" style=\"border-width:2px; border-style:solid\">"+
+        "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('catbaggrpkeyref" + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div>"+
+        "<div style=\"float:left\">" + i18n_key + " (<a href=\"javascript:tModelModal('catbaggrpkeyref" + i + "Value')\"><i class=\"icon-list-alt icon-large\"></i>" + il8n_picker + "</a>): &nbsp;</div>"
+        + "<div class=\"edit\" id=\"catbaggrpkeyref" + i + "Value\">" + tmodelkey + "</div>"
+        
+        + "<div id=\"catbaggrpkeyref" + i + "keyref\" style=\"border-width:1px; border-style:solid\">"
+        + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceGroupKeyRef('catbaggrpkeyref" + i + "');\"><i class=\"icon-plus-sign icon-large\"></i></a></div>"
+    
+        +i18n_addrefcat
+        + "</div>"
+    
+        +"</div>").appendTo("#catContainerGrp");
+    Reedit();
+    return "catbaggrpkeyref"+i;
+}
+
+function AddWGS1894(){
+        var div=AddCategoryKeyReferenceGroupParam("uddi:uddi.org:ubr:categorizationGroup:wgs84");
+        AddCategoryKeyReferenceGroupKeyRef(div, "uddi:uddi.org:ubr:categorizationGroup:wgs84:latitude",
+         "WGS 84 Latitude", "0.0");
+         AddCategoryKeyReferenceGroupKeyRef(div, "uddi:uddi.org:ubr:categorizationGroup:wgs84:longitude",
+         "WGS 84 Longitude", "0.0");
+         AddCategoryKeyReferenceGroupKeyRef(div, "uddi:uddi.org:ubr:categorization:geo_precision",
+         "Center of Street", "0900");
+}
+
+function AddISO3166UNSPSC(){
+        var div=AddCategoryKeyReferenceGroupParam("uddi:uddi.org:ubr:categorizationgroup:unspsc_geo3166");
+        AddCategoryKeyReferenceGroupKeyRef(div, "uddi:uddi.org:ubr:categorization:unspsc",
+         "UNSPSC:", "0.0");
+         AddCategoryKeyReferenceGroupKeyRef(div, "uddi:uddi.org:ubr:categorization:iso3166",
+         "GEO:United States", "US");
+}
+
+
+
 var currentcatkeyrefgrpitems=0;
 function AddCategoryKeyReferenceGroupKeyRef(div)
 {
@@ -302,6 +364,28 @@ function AddCategoryKeyReferenceGroupKeyRef(div)
         +"</div>").appendTo("#" + div);
     Reedit();
 }
+
+
+function AddCategoryKeyReferenceGroupKeyRef(div, tmodelkey, keyname, keyval)
+{
+    var i=currentcatkeyrefgrp;
+    currentcatkeyrefgrpitems++;
+    var k=currentcatkeyrefgrpitems;
+    
+    $("<div id=\"" + div + "keyref" + k + "\" style=\"border-width:1px; border-style:solid\">"+
+        "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + div  + "keyref" + k+  
+        "');\"><i class=\"icon-trash icon-large\"></i></a></div>"+
+        "<div style=\"float:left\">" + i18n_key + " (<a href=\"javascript:tModelModal('" + div  +"keyref" + k+ "Value')\"><i class=\"icon-list-alt icon-large\"></i>" + il8n_picker + "</a>): &nbsp;</div>"
+        + "<div class=\"edit\" id=\"" + div  +"keyref" + k+ "Value\">" + tmodelkey + "</div>"
+        +"<div style=\"float:left\">" + i18n_name + ": &nbsp;</div>"
+        + "<div class=\"edit\" id=\"" + div  +"keyref" + k+ "KeyName\">" + keyname + "</div>"
+        +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
+        + "<div class=\"edit\" id=\""+ div  +"keyref" + k+ "KeyValue\">" + keyval + "</div>"
+        +"</div>").appendTo("#" + div);
+    Reedit();
+}
+
+
 function AddIdentKeyReference()
 {
     currentident++;
@@ -315,6 +399,23 @@ function AddIdentKeyReference()
         + "<div class=\"edit\" id=\"identbagkeyref" + i + "KeyName\"></div>"
         +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         + "<div class=\"edit\" id=\"identbagkeyref" + i + "KeyValue\"></div>"
+        +"</div>").insertAfter("#identContainer");
+    Reedit();
+}
+
+function AddIdentKeyReferenceParam(tmodelkey, keyname, keyvalue)
+{
+    currentident++;
+    var i=currentident;
+    
+    $("<div id=\"identbagkeyref" + i + "\" style=\"border-width:1px; border-style:solid\">"+
+        "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('identbagkeyref" + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div>"+
+        "<div style=\"float:left\">" + i18n_key + " (<a href=\"javascript:tModelModal('identbagkeyref" + i + "Value')\"><i class=\"icon-list-alt icon-large\"></i>" + il8n_picker + "</a>): &nbsp;</div>"
+        + "<div class=\"edit\" id=\"identbagkeyref" + i + "Value\">" + tmodelkey + "</div>"
+        +"<div style=\"float:left\">" + i18n_name + ": &nbsp;</div>"
+        + "<div class=\"edit\" id=\"identbagkeyref" + i + "KeyName\">" + keyname + "</div>"
+        +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
+        + "<div class=\"edit\" id=\"identbagkeyref" + i + "KeyValue\">"+keyvalue+"</div>"
         +"</div>").insertAfter("#identContainer");
     Reedit();
 }

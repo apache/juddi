@@ -254,12 +254,37 @@
             <keyedReference keyName="entityKeyValues" keyValue="tModelKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
         </categoryBag>
     </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:identifier:taxid">
+        <name>Tax ID</name>
+        <description>The Tax Identifier for this business
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+               http://uddi.org/pubs/uddi-v3.0.2-20041019.htm#_Toc515847032
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:identifier" keyValue="identifier" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:uncacheable" keyValue="uncacheable" tModelKey="uddi:uddi.org:categorization:types" />
+
+            <keyedReference keyName="entityKeyValues" keyValue="businessKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
+
+            <keyedReference keyName="entityKeyValues" keyValue="tModelKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
+        </categoryBag>
+    </tModel>
+	
+	
     <tModel tModelKey="uddi:uddi.org:categorization:validatedby">
         <name>uddi-org:validatedBy</name>
-        <description>Category system used to point a value set or
+        <description xml:lang="en">Category system used to point a value set or
             category
             group system tModel to associated value set Web service
             implementations.
+        </description>
+		<description xml:lang="en">This is typically used on tModels to validate tModel Instances via the Value Set Validation service. The keyValue
+		should be an existing binding key pointing to that service.
         </description>
         <overviewDoc>
             <overviewURL useType="text">
@@ -1371,7 +1396,47 @@
         </categoryBag>
     </tModel>
 	
-	<tModel tModelKey="uddi:uddi.org:ubr:categorizationGroup:wgs84">
+	<tModel tModelKey="uddi:uddi.org:ubr:categorizationgroup:unspsc_geo3166">
+        <name>United Nations Standard Products and Services Code with ISO 3166 Grouping</name>
+        <description xml:lang="en">Grouping of the category systems for UNSPSC and ISO 3166. As a consequence, keyedReferenceGroups that reference this tModel describe countries or regions where a product category is offered.</description>
+       <overviewDoc>
+            <overviewURL>
+               http://uddi.org/pubs/uddi-v3.0.2-20041019.htm#_Toc535251470
+            </overviewURL>
+        </overviewDoc>
+		<overviewDoc>
+            <overviewURL>
+               http://www.unspsc.org/
+            </overviewURL>
+        </overviewDoc>
+		
+		<categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+			<keyedReference keyName="uddi-org:types:categorization"      keyValue="categorization"       tModelKey="uddi:uddi.org:categorization:types"/> 
+		</categoryBag>
+    </tModel>
+	
+	
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorizationgroup:wgs84:keygenerator">
+        <name>World Geodetic System Key Generator</name>
+        <description xml:lang="en">Key Generator for Standard for use in cartography, geodesy, and navigation. </description>
+       <overviewDoc>
+            <overviewURL>
+               http://www.ngs.noaa.gov/PUBS_LIB/Geodesy4Layman/TR80003E.HTM#ZZ11
+            </overviewURL>
+        </overviewDoc>
+		<overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#protocolKeyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+			<keyedReference keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" tModelKey="uddi:uddi.org:categorization:types" />
+         </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorizationgroup:wgs84">
         <name>World Geodetic System</name>
         <description xml:lang="en">Standard for use in cartography, geodesy, and navigation. </description>
        <overviewDoc>
@@ -1383,6 +1448,49 @@
             <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
         </categoryBag>
     </tModel>
+	
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorizationgroup:wgs84:latitude">
+        <name>WGS Latitude</name>
+        <description xml:lang="en">Standard for use in cartography, geodesy, and navigation. </description>
+       <overviewDoc>
+            <overviewURL>
+               http://www.ngs.noaa.gov/PUBS_LIB/Geodesy4Layman/TR80003E.HTM#ZZ11
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorizationgroup:wgs84:longitude">
+        <name>WGS Longitude</name>
+        <description xml:lang="en">Standard for use in cartography, geodesy, and navigation. </description>
+       <overviewDoc>
+            <overviewURL>
+               http://www.ngs.noaa.gov/PUBS_LIB/Geodesy4Layman/TR80003E.HTM#ZZ11
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="org:ubr:categorization:geo_precision">
+        <name xml:lang="en">WGS Geographic Precision</name>
+        <description xml:lang="en">Standard for use in cartography, geodesy, and navigation. </description>
+       <overviewDoc>
+            <overviewURL>
+               http://www.ngs.noaa.gov/PUBS_LIB/Geodesy4Layman/TR80003E.HTM#ZZ11
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	
+	
 	
 	<tModel tModelKey="uddi:uddi.org:ubr:keygenerator">
         <name>Universal Business Registry Key Generator</name>
@@ -1485,13 +1593,19 @@
 	</tModel>
 	
 	<tModel tModelKey="uddi:uddi.org:ubr:categorization:unspsc">
-	  <name>UBR Categorization Unspecified</name>
-	  <description xml:lang="en">Unspecified Categorization in a UBR</description>
+	  <name>UBR Categorization United Nations Standard Products and Services Code</name>
+	  <description xml:lang="en">UNSPSC Categorization in a UBR</description>
 	  <overviewDoc>
 	    <overviewURL useType="text">
 	      http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm
 	    </overviewURL>
 	  </overviewDoc>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      http://www.unspsc.org/
+	    </overviewURL>
+	  </overviewDoc>
+	  
 	  <categoryBag>
 	    <!--<keyedReference keyName="uddi-org:types:unchecked"	      keyValue="unchecked"	      tModelKey="uddi:uddi.org:categorization:types"/>-->
 		  <keyedReference keyName="uddi-org:types:categorization"      keyValue="categorization"       tModelKey="uddi:uddi.org:categorization:types"/> 

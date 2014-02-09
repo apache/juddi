@@ -501,7 +501,7 @@ public class XmlSigApplet2 extends java.applet.Applet {
           } catch (Exception ex) {
           }
        }
-       if (objecttype.equalsIgnoreCase("binding")) {
+       if (objecttype.equalsIgnoreCase("bindingTemplate")) {
           try {
              StringReader sr = new StringReader(xml.trim());
              j = (BindingTemplate) JAXB.unmarshal(sr, BindingTemplate.class);
@@ -558,6 +558,7 @@ public class XmlSigApplet2 extends java.applet.Applet {
              signedXml = "Sorry I couldn't sign the data. " + ex.getMessage();
           }
        } else {
+          error=true;
           signedXml = "Unable to determine which type of object that we're signing";
        }
 

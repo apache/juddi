@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
+import org.apache.juddi.api_v3.AccessPointType;
 
 
 /**
@@ -365,7 +366,7 @@ public class AccessPoint implements Serializable {
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *     @see AccessPointType for spec defined values
      */
     public void setValue(String value) {
         this.value = value;
@@ -378,6 +379,7 @@ public class AccessPoint implements Serializable {
      *     possible object is
      *     {@link String }
      *     
+     * @see AccessPointType for spec defined values
      */
     public String getUseType() {
         if (useType == null) {
