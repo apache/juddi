@@ -940,8 +940,9 @@ public class UddiHub implements Serializable {
                         SaveBinding sb = new SaveBinding();
                         sb.setAuthInfo(GetToken());
                         sb.getBindingTemplate().add(be);
+                        BindingDetail saveBinding=null;
                         try {
-                                publish.saveBinding(sb);
+                                 saveBinding = publish.saveBinding(sb);
                         } catch (Exception ex) {
                                 if (isExceptionExpiration(ex)) {
                                         token = null;
@@ -952,7 +953,9 @@ public class UddiHub implements Serializable {
                                         throw ex;
                                 }
                         }
-                        return ResourceLoader.GetResource(session, "actions.save.bindingtemplate");
+                                        return ResourceLoader.GetResource(session, "actions.saved") + " "
+                             + "<a href=\"bindingEditor.jsp?id=" + URLEncoder.encode(saveBinding.getBindingTemplate().get(0).getBindingKey(), "UTF8")
+                             + "\">" + StringEscapeUtils.escapeHtml(saveBinding.getBindingTemplate().get(0).getBindingKey()) + "</a>";
                 } catch (Exception ex) {
                         return HandleException(ex);
                 }
@@ -979,11 +982,17 @@ public class UddiHub implements Serializable {
                 }
 
                 be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
+                //JUDDI-806get existing service details and copy over binding templates
+                BusinessService GetServiceDetail = GetServiceDetail(request.getParameter(PostBackConstants.SERVICEKEY).trim());
+                if (GetServiceDetail!=null){
+                        be.setBindingTemplates(GetServiceDetail.getBindingTemplates());
+                }
+                /*JUDDI-806
                 BindingTemplates bt = new BindingTemplates();
                 bt.getBindingTemplate().addAll(Builders.BuildBindingTemplates(Builders.MapFilter(request.getParameterMap(), PostBackConstants.BINDINGTEMPLATE), PostBackConstants.BINDINGTEMPLATE, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
                 if (!bt.getBindingTemplate().isEmpty()) {
                         be.setBindingTemplates(bt);
-                }
+                }*/
 
                 be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
 

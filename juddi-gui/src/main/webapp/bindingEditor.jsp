@@ -59,7 +59,7 @@
                         //incase an invalid business id was passed in
                         response.sendRedirect("index.jsp");
                 } else {
-                        bd.setServiceKey(be.getBusinessKey());
+                        bd.setServiceKey(be.getServiceKey());
                 }
         }
 
@@ -322,18 +322,27 @@
 
                            //items.hostingredirector
                                                         //TODO need an html select in here?
-                                                        if (bd.getHostingRedirector() != null) {
-                                                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.hostingredirector") + ": &nbsp;</div>"
-                                                                     + "<div class=\"edit\" id=\"" + PostBackConstants.HOSTINGREDIRECTOR + "\">" + StringEscapeUtils.escapeHtml(bd.getHostingRedirector().getBindingKey()) + "</div>");
-                                                        }
-                                                        if (bd.getAccessPoint() != null) {
+                                                
+                                                if (bd.getHostingRedirector() == null && 
+                                                     bd.getAccessPoint()==null)
+                                                {
+                                                        bd.setAccessPoint(new AccessPoint());
+                                                }
+                                                if (bd.getHostingRedirector() != null) {
+                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.hostingredirector") + ": &nbsp;</div>"
+                                                             + "<div class=\"edit\" id=\"" + PostBackConstants.HOSTINGREDIRECTOR + "\">" + 
+                                                            (bd.getHostingRedirector().getBindingKey()==null ? "" :StringEscapeUtils.escapeHtml(bd.getHostingRedirector().getBindingKey())) + "</div>");
+                                                }
+                                                if (bd.getAccessPoint() != null) {
 
-                                                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.accesspoint.type") + ": &nbsp;</div>"
-                                                                     + "<div class=\"edit\" id=\"" + PostBackConstants.ACCESSPOINT_TYPE + "\">" + StringEscapeUtils.escapeHtml(bd.getAccessPoint().getUseType()) + "</div>");
-                                                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.accesspoint.value") + ": &nbsp;</div>"
-                                                                     + "<div class=\"edit\" id=\"" + PostBackConstants.ACCESSPOINT_VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getAccessPoint().getValue()) + "</div>");
-                                                                // this was an unbalanced divout.write("</div>");
-                                                        }
+                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.accesspoint.type") + ": &nbsp;</div>"
+                                                             + "<div class=\"edit\" id=\"" + PostBackConstants.ACCESSPOINT_TYPE + "\">" + 
+                                                             (bd.getAccessPoint().getUseType()==null?"":StringEscapeUtils.escapeHtml(bd.getAccessPoint().getUseType())) + "</div>");
+                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.accesspoint.value") + ": &nbsp;</div>"
+                                                             + "<div class=\"edit\" id=\"" + PostBackConstants.ACCESSPOINT_VALUE + "\">" + 
+                                                             (bd.getAccessPoint().getValue()==null?"":StringEscapeUtils.escapeHtml(bd.getAccessPoint().getValue())) + "</div>");
+                                                        // this was an unbalanced divout.write("</div>");
+                                                }
                                                 %>
 
                                         </div>
