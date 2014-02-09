@@ -72,6 +72,9 @@
                     if (itemtype == "tmodel") {
                         out.write("window.location=\"tmodelEditor.jsp?id=" + StringEscapeUtils.escapeJavaScript(id) + "\";");
                     }
+                    if (itemtype == "bindingTemplate") {
+                        out.write("window.location=\"bindingEditor.jsp?id=" + StringEscapeUtils.escapeJavaScript(id) + "\";");
+                    }
                  
                 %>
                             }, 5000);
@@ -91,28 +94,31 @@
                     {
                         $("#data").val(data);
                         //post back to the publishing thread
-                        
+                        var url='ajax/saveFromXML.jsp?id=<%=id%>&type=<%=itemtype%>'
                         var form = $("#uddiform");
                         var d = form.serializeArray();
                         var request=   $.ajax({
-                            url: 'ajax/saveFromXML.jsp?id=<%=id%>&type=<%=itemtype%>',
+                            url: url,
                             type:"POST",
                             cache: false, 
 
                             data: d
                         });
                   
-                        request.done(function(msg) {
-                            window.console && console.log('postback done ');                
-                            $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' + msg);
-                            $("#resultBar").show();
-                        });
+                       request.done(function(msg) {
+                        window.console && console.log('postback done '  + url);                
 
-                        request.fail(function(jqXHR, textStatus) {
-                            window.console && console.log('postback failed ');                                
-                            $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' +jqXHR.responseText + textStatus);
-                            $("#resultBar").show();
-                        });
+                        $("#alert_results").html('<i class="icon-2x icon-thumbs-up"></i><br>'  + msg);
+                        $("#alert").modal();
+
+                    });
+
+                    request.fail(function(jqXHR, textStatus) {
+                        window.console && console.log('postback failed ' + url);                                
+                        $("#alert_results").html('<i class="icon-2x icon-thumbs-down"></i><br>'  + jqXHR.responseText + textStatus);
+                        $("#alert").modal();
+                    });
+                    
                     }
 				
                     function getBrowserName()

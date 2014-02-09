@@ -450,7 +450,7 @@ public class Builders {
          * email
          *
          * @param map
-         * @param prefix 
+         * @param prefix
          * @return list
          */
         public static List<Email> BuildEmail(Map map, String prefix, String locale) {
@@ -484,10 +484,10 @@ public class Builders {
          *
          * @param map
          * @param prefix
-         * @param cte
+         * @param cte click to edit constant
          * @param locale
          * @return list
-         */ 
+         */
         public static List<Description> BuildDescription(Map map, String prefix, String cte, String locale) {
                 List<Description> ret = new ArrayList();
                 Iterator it = map.keySet().iterator();
@@ -595,7 +595,7 @@ public class Builders {
          *
          * @param map
          * @param prefix
-         * @param cte
+         * @param cte click to edit constant
          * @return list
          */
         public static List<BindingTemplate> BuildBindingTemplates(Map map, String prefix, String cte, String locale) {
@@ -657,7 +657,7 @@ public class Builders {
                 return ret;
         }
 
-        private static TModelInstanceDetails BuildTmodelInstanceDetails(Map map, String prefix, String cte, String locale) {
+        public static TModelInstanceDetails BuildTmodelInstanceDetails(Map map, String prefix, String cte, String locale) {
                 TModelInstanceDetails ret = new TModelInstanceDetails();
 
                 Iterator it = map.keySet().iterator();
@@ -671,7 +671,9 @@ public class Builders {
                                 if (!processedIndexes.contains(index)) {
                                         TModelInstanceInfo tmi = new TModelInstanceInfo();
                                         String[] t = (String[]) map.get(prefix + index + PostBackConstants.KEYNAME);
-                                        tmi.setTModelKey(t[0]);
+                                        if (t != null && t.length > 0) {
+                                                tmi.setTModelKey(t[0]);
+                                        }
 
                                         tmi.setInstanceDetails(BuildInstanceDetails(MapFilter(map, prefix + index + PostBackConstants.INSTANCE), prefix + index + PostBackConstants.INSTANCE, cte, locale));
 
@@ -704,15 +706,26 @@ public class Builders {
 
                                         String[] t = (String[]) map.get(prefix + index + PostBackConstants.VALUE);
                                         //pn.setValue(t[0]);
-                                        ret.setInstanceParms(t[0]);
+                                        if (t != null && t.length > 0) {
+                                                ret.setInstanceParms(t[0]);
+                                        }
+                                        if (cte.equalsIgnoreCase(ret.getInstanceParms())) {
+                                                ret.setInstanceParms(null);
+                                        }
 
                                         ret.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION, cte, locale));
                                         ret.getOverviewDoc().addAll(BuildOverviewDocs(MapFilter(map, prefix + index + PostBackConstants.OVERVIEW), prefix + index + PostBackConstants.OVERVIEW, cte, locale));
+
                                         processedIndexes.add(index);
                                 }
                         } else {
                                 throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
                         }
+                }
+                if (ret.getInstanceParms() == null
+                     && ret.getDescription().isEmpty()
+                     && ret.getOverviewDoc().isEmpty()) {
+                        return null;
                 }
                 return ret;
         }
@@ -745,7 +758,7 @@ public class Builders {
                                 outmsg.set(ResourceLoader.GetResource(session, "errors.subscription.alerttypeinvalid"));
                                 return null;
                         }
-                        if (sub == null) { 
+                        if (sub == null) {
                                 return null;
                         }
 
@@ -861,7 +874,7 @@ public class Builders {
                         }
                         if (alertCritera != null) {
                                 if (alertCritera.equalsIgnoreCase("binding")) {
-                    //sub.getSubscriptionFilter().setFindBinding(new FindBinding());
+                                        //sub.getSubscriptionFilter().setFindBinding(new FindBinding());
                                         //sub.getSubscriptionFilter().getFindBinding().
                                 } else if (alertCritera.equalsIgnoreCase("service")) {
                                         sub.getSubscriptionFilter().setFindService(new FindService());

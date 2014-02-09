@@ -307,8 +307,9 @@ public class UddiHub implements Serializable {
                         hub.locale = (String) _session.getAttribute("locale");
                         return hub;
                 }
-
-                return (UddiHub) j;
+                UddiHub hub=(UddiHub) j;
+                hub.locale = (String) _session.getAttribute("locale");
+                return  hub;
         }
         String locale = "en";
 
@@ -318,6 +319,12 @@ public class UddiHub implements Serializable {
          * @return something like "en" or "es"
          */
         public String getLocale() {
+                if (session!=null){
+                        if (session.getAttribute("locale")!=null)
+                                locale = (String)session.getAttribute("locale");
+                }
+                if (locale==null)
+                        locale="en";
                 return locale;
         }
 
@@ -774,14 +781,14 @@ public class UddiHub implements Serializable {
                                         sb.append("<b>").append(ResourceLoader.GetResource(session, "items.name")).append(":</b><div class=\"editable\" id=\"ServiceName\">").append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(get.getBusinessService().get(i).getName()))).append("</div><Br>");
                                         sb.append("<b>").append(ResourceLoader.GetResource(session, "items.description")).append(":</b><div class=\"editable\" id=\"ServiceDescription\">").append(StringEscapeUtils.escapeHtml((Printers.ListToDescString(get.getBusinessService().get(i).getDescription())))).append("</div><Br>");
                                         sb.append("<b>").append(ResourceLoader.GetResource(session, "items.key")).append(":</b><div class=\"editable\" id=\"ServiceKey\">").append(StringEscapeUtils.escapeHtml((get.getBusinessService().get(i).getServiceKey()))).append("</div><Br>");
-                                        sb.append("<b>").append(ResourceLoader.GetResource(session, "items.keyrefcat")).append(":</b> ").append(Printers.CatBagToString(get.getBusinessService().get(i).getCategoryBag(), (String) session.getAttribute("locale"))).append("<Br>");
+                                        sb.append("<b>").append(ResourceLoader.GetResource(session, "items.keyrefcat")).append(":</b> ").append(Printers.CatBagToString(get.getBusinessService().get(i).getCategoryBag(), getLocale())).append("<Br>");
                                         if (!get.getBusinessService().get(i).getSignature().isEmpty()) {
                                                 sb.append(ResourceLoader.GetResource(session, "items.signed")).append("<Br>");
                                         } else {
                                                 sb.append(ResourceLoader.GetResource(session, "items.signed.not")).append("<Br>");
                                         }
 
-                                        sb.append(Printers.PrintBindingTemplates(get.getBusinessService().get(i).getBindingTemplates(), locale)).append("<Br>");
+                                        sb.append(Printers.PrintBindingTemplates(get.getBusinessService().get(i).getBindingTemplates(), getLocale())).append("<Br>");
                                 }
                         } else {
                                 sb.append(ResourceLoader.GetResource(session, "errors.nodatareturned"));
@@ -971,18 +978,18 @@ public class UddiHub implements Serializable {
                         return ResourceLoader.GetResource(session, "errors.noinput.businesskey");
                 }
 
-                be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit"), locale));
+                be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
                 BindingTemplates bt = new BindingTemplates();
-                bt.getBindingTemplate().addAll(Builders.BuildBindingTemplates(Builders.MapFilter(request.getParameterMap(), PostBackConstants.BINDINGTEMPLATE), PostBackConstants.BINDINGTEMPLATE, ResourceLoader.GetResource(session, "items.clicktoedit"), locale));
+                bt.getBindingTemplate().addAll(Builders.BuildBindingTemplates(Builders.MapFilter(request.getParameterMap(), PostBackConstants.BINDINGTEMPLATE), PostBackConstants.BINDINGTEMPLATE, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
                 if (!bt.getBindingTemplate().isEmpty()) {
                         be.setBindingTemplates(bt);
                 }
 
-                be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"), locale));
+                be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
 
                 CategoryBag cb = new CategoryBag();
-                cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF, locale));
-                cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP, locale));
+                cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF, getLocale()));
+                cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP, getLocale()));
 
                 if (!cb.getKeyedReference().isEmpty() || !cb.getKeyedReferenceGroup().isEmpty()) {
                         be.setCategoryBag(cb);
@@ -1081,20 +1088,20 @@ public class UddiHub implements Serializable {
                                 be.setBusinessServices(GetBusinessDetails.getBusinessServices());
                         }
                 }
-                be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit"), locale));
+                be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
 
-                be.setContacts(Builders.BuildContacts(request.getParameterMap(), ResourceLoader.GetResource(session, "items.clicktoedit"), locale));
+                be.setContacts(Builders.BuildContacts(request.getParameterMap(), ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
 
-                be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"), locale));
-                be.setDiscoveryURLs(Builders.BuildDisco(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DISCOVERYURL), PostBackConstants.DISCOVERYURL, locale));
+                be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
+                be.setDiscoveryURLs(Builders.BuildDisco(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DISCOVERYURL), PostBackConstants.DISCOVERYURL, getLocale()));
                 CategoryBag cb = new CategoryBag();
-                cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF, locale));
-                cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP, locale));
+                cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF, getLocale()));
+                cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP, getLocale()));
 
                 if (!cb.getKeyedReference().isEmpty() || !cb.getKeyedReferenceGroup().isEmpty()) {
                         be.setCategoryBag(cb);
                 }
-                be.setIdentifierBag(Builders.BuildIdentBag(Builders.MapFilter(request.getParameterMap(), PostBackConstants.IDENT_KEY_REF), PostBackConstants.IDENT_KEY_REF, locale));
+                be.setIdentifierBag(Builders.BuildIdentBag(Builders.MapFilter(request.getParameterMap(), PostBackConstants.IDENT_KEY_REF), PostBackConstants.IDENT_KEY_REF, getLocale()));
                 return SaveBusinessDetails(be);
         }
 
@@ -1816,7 +1823,7 @@ public class UddiHub implements Serializable {
                                         sb.append("</a>");
 
                                         sb.append("</td><td>");
-                                        sb.append(Printers.PrintPublisherAssertion(findBusiness.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getSharedRelationships(), locale));
+                                        sb.append(Printers.PrintPublisherAssertion(findBusiness.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getSharedRelationships(), getLocale()));
                                         sb.append("</td></tr>");
                                 }
                                 sb.append("</table>");
@@ -2217,17 +2224,17 @@ public class UddiHub implements Serializable {
                         be.setDeleted(Boolean.FALSE);
                 }
 
-                be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"), locale));
-                be.getOverviewDoc().addAll(Builders.BuildOverviewDocs(Builders.MapFilter(request.getParameterMap(), PostBackConstants.OVERVIEW), PostBackConstants.OVERVIEW, ResourceLoader.GetResource(session, "items.clicktoedit"), locale));
+                be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
+                be.getOverviewDoc().addAll(Builders.BuildOverviewDocs(Builders.MapFilter(request.getParameterMap(), PostBackConstants.OVERVIEW), PostBackConstants.OVERVIEW, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
 
                 CategoryBag cb = new CategoryBag();
-                cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF, locale));
-                cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP, locale));
+                cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF, getLocale()));
+                cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP, getLocale()));
 
                 if (!cb.getKeyedReference().isEmpty() || !cb.getKeyedReferenceGroup().isEmpty()) {
                         be.setCategoryBag(cb);
                 }
-                be.setIdentifierBag(Builders.BuildIdentBag(Builders.MapFilter(request.getParameterMap(), PostBackConstants.IDENT_KEY_REF), PostBackConstants.IDENT_KEY_REF, locale));
+                be.setIdentifierBag(Builders.BuildIdentBag(Builders.MapFilter(request.getParameterMap(), PostBackConstants.IDENT_KEY_REF), PostBackConstants.IDENT_KEY_REF, getLocale()));
 
                 return SaveTModel(be);
 
@@ -3822,5 +3829,48 @@ public class UddiHub implements Serializable {
          */
         public boolean isAdminLocalhostOnly() {
                 return clientConfig.getConfiguration().getBoolean(PROP_ADMIN_LOCALHOST_ONLY, true);
+        }
+        
+        public String SaveBindingTemplate(HttpServletRequest request) {
+
+                BindingTemplate be = new BindingTemplate();
+                be.setServiceKey(request.getParameter(PostBackConstants.SERVICEKEY).trim());
+                be.setBindingKey(request.getParameter(PostBackConstants.BINDINGKEY).trim());
+                if (be.getBindingKey().equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
+                        be.setBindingKey(null);
+                }
+                be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
+                CategoryBag cb = new CategoryBag();
+                cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF, getLocale()));
+                cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP, getLocale()));
+
+                if (!cb.getKeyedReference().isEmpty() || !cb.getKeyedReferenceGroup().isEmpty()) {
+                        be.setCategoryBag(cb);
+                }
+                Map map = request.getParameterMap();
+                String[] t = (String[]) map.get(PostBackConstants.HOSTINGREDIRECTOR);
+                if (t != null && t.length > 0) {
+                        be.setHostingRedirector(new HostingRedirector());
+                        be.getHostingRedirector().setBindingKey(t[0]);
+                }
+                AccessPoint ap = new AccessPoint();
+                t = (String[]) map.get(PostBackConstants.ACCESSPOINT_TYPE);
+                if (t != null && t.length > 0) {
+                        ap.setUseType(t[0]);
+                }
+                t = (String[]) map.get(PostBackConstants.ACCESSPOINT_VALUE);
+                if (t != null && t.length > 0) {
+                        ap.setValue(t[0]);
+                }
+                if (ap.getValue() != null) {
+                        be.setAccessPoint(ap);
+                }
+                
+                be.setTModelInstanceDetails(Builders.BuildTmodelInstanceDetails(
+                     Builders.MapFilter(map, PostBackConstants.TMODELINSTANCE), 
+                     PostBackConstants.TMODELINSTANCE, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
+
+                //JAXB.marshal(be, System.out);
+                return SaveBindingTemplate(be);
         }
 }

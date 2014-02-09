@@ -76,6 +76,10 @@
                 sub.getSubscriptionFilter().setGetTModelDetail(new GetTModelDetail());
                 sub.getSubscriptionFilter().getGetTModelDetail().getTModelKey().add(request.getParameter("tid"));
             }
+            if (request.getParameter("bindingTemplate") != null) {
+                sub.getSubscriptionFilter().setGetBindingDetail(new GetBindingDetail());
+                sub.getSubscriptionFilter().getGetBindingDetail().getBindingKey().add(request.getParameter("bindingTemplate"));
+            }
 
         }
 
