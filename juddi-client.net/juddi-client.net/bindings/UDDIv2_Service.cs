@@ -2299,7 +2299,9 @@ namespace org.uddi.apiv2
             }
         }
 
-        /// <remarks/>
+        /// <summary>
+        /// accessPoint or hostingRedirector
+        /// </summary>
         [System.Xml.Serialization.XmlElementAttribute("accessPoint", typeof(accessPoint))]
         [System.Xml.Serialization.XmlElementAttribute("hostingRedirector", typeof(hostingRedirector))]
         public object Item

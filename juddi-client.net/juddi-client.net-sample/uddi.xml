@@ -91,14 +91,14 @@
 					<property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
         </properties>
         <proxyTransport>org.apache.juddi.v3.client.transport.AspNetv2TranslationTransport</proxyTransport>
-        <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer</custodyTransferUrl>
+        <custodyTransferUrl>not used</custodyTransferUrl>
         
         <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiryv2</inquiryUrl>
         
-        <inquiryRESTUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiryRest</inquiryRESTUrl>
+        <inquiryRESTUrl>not used</inquiryRESTUrl>
         <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publishv2</publishUrl>
         
-        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security</securityUrl>
+        <securityUrl>not used</securityUrl>
         <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription</subscriptionUrl>
         <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener</subscriptionListenerUrl>
         <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api</juddiApiUrl>

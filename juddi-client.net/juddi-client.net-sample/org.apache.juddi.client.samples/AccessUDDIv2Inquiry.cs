@@ -23,7 +23,7 @@ using System;
 
 namespace org.apache.juddi.client.samples
 {
-    class AccessUDDIv2
+    class AccessUDDIv2Inquiry
     {
         internal static void Run(string[] args)
         {
@@ -53,6 +53,27 @@ namespace org.apache.juddi.client.samples
                 for (int i = 0; i < bl.businessInfos.Length; i++)
                 {
                     Console.WriteLine(bl.businessInfos[i].name[0].Value);
+
+                }
+
+                find_service fs = new find_service();
+                fs.findQualifiers = new string[] { UDDIConstants.APPROXIMATE_MATCH };
+                fs.name = new name[1];
+                fs.name[0] = new name("%", null);
+                serviceList sl=inquiry.find_service(fs);
+                for (int i = 0; i < sl.serviceInfos.Length; i++)
+                {
+                    Console.WriteLine(sl.serviceInfos[i].name[0].Value);
+
+                }
+
+                find_tModel ft = new find_tModel();
+                ft.findQualifiers = new string[] { UDDIConstants.APPROXIMATE_MATCH };
+                ft.name = new name("%", null);
+                tModelList tl = inquiry.find_tModel(ft);
+                for (int i = 0; i < tl.tModelInfos.Length; i++)
+                {
+                    Console.WriteLine(tl.tModelInfos[i].name.Value);
 
                 }
                 //  serviceDetail s= clerk.getServiceDetail("uddi:mydomain.com:zerocoolsvc");

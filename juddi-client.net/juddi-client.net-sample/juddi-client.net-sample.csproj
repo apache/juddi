@@ -42,7 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="org.apache.juddi.client.samples\AccessUDDIv2.cs" />
+    <Compile Include="org.apache.juddi.client.samples\AccessUDDIv2Inquiry.cs" />
+    <Compile Include="org.apache.juddi.client.samples\AccessUDDIv2Publish.cs" />
     <Compile Include="org.apache.juddi.client.samples\DigitalSignaturesExample.cs" />
     <Compile Include="org.apache.juddi.client.samples\Encryption.cs" />
     <Compile Include="org.apache.juddi.client.samples\findendpoints.cs" />

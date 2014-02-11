@@ -36,7 +36,8 @@ namespace org.apache.juddi.client.sample
             Console.Out.WriteLine("8) jUDDI specific - Save Clerk");
             Console.Out.WriteLine("9) Subscription callbacks");
             Console.Out.WriteLine("10) Digital Signatures");
-            Console.Out.WriteLine("11) Access UDDIv2 using UDDIv3 APIs");
+            Console.Out.WriteLine("11) Access UDDIv2 using UDDIv3 APIs Inquiry");
+            Console.Out.WriteLine("12) Access UDDIv2 using UDDIv3 APIs Publish");
             Console.Out.Write("Enter selection> ");
             String selection = Console.In.ReadLine();
             selection = selection.Trim();
@@ -61,7 +62,9 @@ namespace org.apache.juddi.client.sample
             else if (selection.Equals("10"))
                 DigitalSignaturesExample.Run(args);
             else if (selection.Equals("11"))
-                AccessUDDIv2.Run(args);
+                AccessUDDIv2Inquiry.Run(args);
+            else if (selection.Equals("12"))
+                AccessUDDIv2Publish.Run(args);
             Console.WriteLine("Press any key to exit");
             Console.Read();
 

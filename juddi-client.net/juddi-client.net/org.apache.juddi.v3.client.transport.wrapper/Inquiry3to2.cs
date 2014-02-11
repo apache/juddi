@@ -15,7 +15,7 @@ namespace org.apache.juddi.v3.client.transport.wrapper
     ///  @author <a href="alexoree@apache.org">Alex O'Ree</a>
     ///  @since 3.2.1
     /// </summary>
-    public class Inquiry3to2 : UDDI_Inquiry_SoapBinding
+    public class Inquiry3to2 : UDDI_Inquiry_SoapBinding, IDisposable
     {
 
         private InquireSoap inquiry = new InquireSoap();
@@ -28,6 +28,15 @@ namespace org.apache.juddi.v3.client.transport.wrapper
         public Inquiry3to2()
         {
 
+        }
+
+        public  void Dispose()
+        {
+            if (inquiry != null)
+            {
+                inquiry.Dispose();
+                inquiry = null;
+            }
         }
 
         private void Init()

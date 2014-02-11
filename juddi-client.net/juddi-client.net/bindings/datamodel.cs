@@ -2309,7 +2309,9 @@ namespace org.uddi.apiv3
             this.useTypeField = "";
         }
 
-        /// <remarks/>
+        /// <summary>
+        /// endPoint, wsdlDeployment, bindingTemplate, hostingRedirector or something else
+        /// </summary>
         [System.Xml.Serialization.XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("")]
         public string useType
@@ -2454,7 +2456,6 @@ namespace org.uddi.apiv3
         /// <summary>
         /// overviewDoc
         /// </summary>
-
         [System.Xml.Serialization.XmlElementAttribute("overviewDoc", typeof(overviewDoc))]
         public overviewDoc[] Items
         {

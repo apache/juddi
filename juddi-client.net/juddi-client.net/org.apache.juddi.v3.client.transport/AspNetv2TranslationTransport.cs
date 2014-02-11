@@ -7,7 +7,7 @@ using System.Text;
 
 namespace org.apache.juddi.v3.client.transport
 {
-    public class AspNetv2TranslationTransport : AspNetTransport
+    public class AspNetv2TranslationTransport : AspNetTransport, IDisposable
     {
 
         String nodeName = null;
@@ -29,17 +29,27 @@ namespace org.apache.juddi.v3.client.transport
             this.inquiryService.Url = clientConfig.getUDDINode(nodeName).getInquiryUrl();
             this.publisherService.Url = clientConfig.getUDDINode(nodeName).getJuddiApiUrl();
             this.publishService.Url = clientConfig.getUDDINode(nodeName).getPublishUrl();
-            this.securityService.Url = clientConfig.getUDDINode(nodeName).getSecurityUrl();
+            this.securityService.Url = clientConfig.getUDDINode(nodeName).getPublishUrl();
            
         }
         public override uddi.apiv3.UDDI_Inquiry_SoapBinding getUDDIInquiryService()
         {
             return inquiryService;
         }
+        /// <summary>
+        /// callers must call .Dispose of returned objects
+        /// </summary>
+        /// <param name="endpointURL"></param>
+        /// <returns></returns>
         public override uddi.apiv3.UDDI_Inquiry_SoapBinding getUDDIInquiryService(string endpointURL)
         {
             return new Inquiry3to2(endpointURL);
         }
+        /// <summary>
+        /// callers must call .Dispose of returned objects
+        /// </summary>
+        /// <param name="endpointURL"></param>
+        /// <returns></returns>
         public override uddi.apiv3.UDDI_Publication_SoapBinding getUDDIPublishService(string endpointURL)
         {
             return new Publish3to2(endpointURL);
@@ -52,11 +62,24 @@ namespace org.apache.juddi.v3.client.transport
         {
             return this.securityService;
         }
-
+        /// <summary>
+        /// callers must call .Dispose of returned objects
+        /// </summary>
+        /// <param name="endpointURL"></param>
+        /// <returns></returns>
         public override uddi.apiv3.UDDI_Security_SoapBinding getUDDISecurityService(string endpointURL)
         {
             return new Security3to2(endpointURL);
         }
 
+        public void Dispose()
+        {
+            inquiryService.Dispose();
+            publishService.Dispose();
+            publisherService.Dispose();
+            securityService.Dispose();
+            base.Dispose();
+        }
+        
     }
 }

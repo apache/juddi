@@ -263,20 +263,20 @@ namespace org.apache.juddi.v3.client.mapping
             uddi.apiv2.get_assertionStatusReport r = new uddi.apiv2.get_assertionStatusReport();
             r.authInfo = get_assertionStatusReport1.authInfo;
             r.generic = VERSION;
-            if (get_assertionStatusReport1.completionStatus!=null);
+            if (get_assertionStatusReport1.completionStatus != null) ;
             switch (get_assertionStatusReport1.completionStatus)
             {
                 case uddi.apiv3.completionStatus.statusboth_incomplete:
-                    r.completionStatus=(null);
+                    r.completionStatus = (null);
                     break;
                 case uddi.apiv3.completionStatus.statuscomplete:
-                    r.completionStatus=("status:complete");
+                    r.completionStatus = ("status:complete");
                     break;
                 case uddi.apiv3.completionStatus.statusfromKey_incomplete:
-                    r.completionStatus=("status:fromKey_incomplete");
+                    r.completionStatus = ("status:fromKey_incomplete");
                     break;
                 case uddi.apiv3.completionStatus.statustoKey_incomplete:
-                    r.completionStatus=("status:toKey_incomplete");
+                    r.completionStatus = ("status:toKey_incomplete");
                     break;
             }
 
@@ -392,6 +392,307 @@ namespace org.apache.juddi.v3.client.mapping
             uddi.apiv2.get_registeredInfo r = new uddi.apiv2.get_registeredInfo();
             r.generic = VERSION;
             r.authInfo = get_registeredInfo1.authInfo;
+            return r;
+        }
+
+        public static uddi.apiv2.save_binding MapSaveBinding(uddi.apiv3.save_binding save_binding1)
+        {
+            if (save_binding1 == null) return null;
+            uddi.apiv2.save_binding r = new uddi.apiv2.save_binding();
+            r.authInfo = save_binding1.authInfo;
+            r.generic = VERSION;
+            r.bindingTemplate = MapBindingTemplates(save_binding1.bindingTemplate);
+            return r;
+        }
+
+        private static uddi.apiv2.bindingTemplate[] MapBindingTemplates(uddi.apiv3.bindingTemplate[] bindingTemplate)
+        {
+            if (bindingTemplate == null) return null;
+            List<uddi.apiv2.bindingTemplate> r = new List<uddi.apiv2.bindingTemplate>();
+            for (int i = 0; i < bindingTemplate.Length; i++)
+            {
+                uddi.apiv2.bindingTemplate x = new uddi.apiv2.bindingTemplate();
+                x.bindingKey = bindingTemplate[i].bindingKey;
+                if (x.bindingKey == null)
+                    x.bindingKey = "";
+                x.description = MapDescription(bindingTemplate[i].description);
+                x.Item = MapAccessPointHostRedir(bindingTemplate[i].Item);
+                x.serviceKey = bindingTemplate[i].serviceKey;
+                x.tModelInstanceDetails = MapTModelInstanceDetails(bindingTemplate[i].tModelInstanceDetails);
+                if (x.tModelInstanceDetails == null)
+                    x.tModelInstanceDetails = new uddi.apiv2.tModelInstanceInfo[0];
+                r.Add(x);
+            }
+
+            return r.ToArray();
+        }
+
+        private static object MapAccessPointHostRedir(object p)
+        {
+            if (p is uddi.apiv3.accessPoint)
+            {
+                uddi.apiv3.accessPoint ap = p as uddi.apiv3.accessPoint;
+                uddi.apiv2.accessPoint r = new uddi.apiv2.accessPoint();
+                r.Value = ap.Value;
+                if (ap.useType != null)
+                {
+                    if (ap.useType.StartsWith("http:", StringComparison.CurrentCultureIgnoreCase))
+                        r.URLType = uddi.apiv2.URLType.http;
+                    else if (ap.useType.StartsWith("https:", StringComparison.CurrentCultureIgnoreCase))
+                        r.URLType = uddi.apiv2.URLType.https;
+                    else if (ap.useType.StartsWith("ftp:", StringComparison.CurrentCultureIgnoreCase))
+                        r.URLType = uddi.apiv2.URLType.ftp;
+                    else if (ap.useType.StartsWith("mailto:", StringComparison.CurrentCultureIgnoreCase))
+                        r.URLType = uddi.apiv2.URLType.mailto;
+                    else if (ap.useType.StartsWith("fax:", StringComparison.CurrentCultureIgnoreCase))
+                        r.URLType = uddi.apiv2.URLType.fax;
+                    else if (ap.useType.StartsWith("phone:", StringComparison.CurrentCultureIgnoreCase))
+                        r.URLType = uddi.apiv2.URLType.phone;
+                    else r.URLType = uddi.apiv2.URLType.other;
+                }
+                return r;
+            }
+            if (p is uddi.apiv3.hostingRedirector)
+            {
+                uddi.apiv3.hostingRedirector ap = p as uddi.apiv3.hostingRedirector;
+                uddi.apiv2.hostingRedirector r = new uddi.apiv2.hostingRedirector();
+                r.bindingKey = ap.bindingKey;
+                return r;
+            }
+            return null;
+        }
+
+        private static uddi.apiv2.tModelInstanceInfo[] MapTModelInstanceDetails(uddi.apiv3.tModelInstanceInfo[] tModelInstanceInfo)
+        {
+            if (tModelInstanceInfo == null) return null;
+            List<uddi.apiv2.tModelInstanceInfo> r = new List<uddi.apiv2.tModelInstanceInfo>();
+            for (int i = 0; i < tModelInstanceInfo.Length; i++)
+            {
+                uddi.apiv2.tModelInstanceInfo x = new uddi.apiv2.tModelInstanceInfo();
+                x.description = MapDescription(tModelInstanceInfo[i].description);
+                x.instanceDetails = MapInstanceDetails(tModelInstanceInfo[i].instanceDetails);
+                x.tModelKey = tModelInstanceInfo[i].tModelKey;
+                r.Add(x);
+            }
+
+            return r.ToArray();
+        }
+
+        private static uddi.apiv2.instanceDetails MapInstanceDetails(uddi.apiv3.instanceDetails instanceDetails)
+        {
+            if (instanceDetails == null) return null;
+            uddi.apiv2.instanceDetails r = new uddi.apiv2.instanceDetails();
+            r.description = MapDescription(instanceDetails.description);
+            r.instanceParms = instanceDetails.instanceParms;
+            r.overviewDoc = MapOverviewDoc(instanceDetails.Items);
+            return r;
+        }
+
+        private static uddi.apiv2.overviewDoc MapOverviewDoc(uddi.apiv3.overviewDoc[] overviewDoc)
+        {
+            if (overviewDoc == null || overviewDoc.Length == 0) return null;
+            uddi.apiv2.overviewDoc r = new uddi.apiv2.overviewDoc();
+            r.description = MapDescription(overviewDoc[0].descriptions);
+            if (overviewDoc[0].overviewURLs != null &&
+                overviewDoc[0].overviewURLs.Length > 0)
+                r.overviewURL = overviewDoc[0].overviewURLs[0].Value;
+            return r;
+        }
+
+        private static uddi.apiv2.description[] MapDescription(uddi.apiv3.description[] description)
+        {
+            if (description == null) return null;
+            List<uddi.apiv2.description> r = new List<uddi.apiv2.description>();
+            for (int i = 0; i < description.Length; i++)
+            {
+                uddi.apiv2.description x = new uddi.apiv2.description();
+                x.lang = description[i].lang;
+                x.Value = description[i].Value;
+                r.Add(x);
+            }
+            return r.ToArray();
+        }
+
+        public static uddi.apiv2.save_service MapSaveService(uddi.apiv3.save_service save_service1)
+        {
+            if (save_service1 == null) return null;
+            uddi.apiv2.save_service r = new uddi.apiv2.save_service();
+            r.authInfo = save_service1.authInfo;
+            r.generic = VERSION;
+            r.businessService = MapServices(save_service1.businessService);
+            return r;
+        }
+
+        private static uddi.apiv2.businessService[] MapServices(uddi.apiv3.businessService[] businessService)
+        {
+            if (businessService == null)
+                return null;
+            List<uddi.apiv2.businessService> r = new List<uddi.apiv2.businessService>();
+            for (int i = 0; i < businessService.Length; i++)
+            {
+                uddi.apiv2.businessService x = new uddi.apiv2.businessService();
+                x.bindingTemplates = MapBindingTemplates(businessService[i].bindingTemplates);
+                x.businessKey = businessService[i].businessKey;
+                x.categoryBag = MapCategoryBag(businessService[i].categoryBag);
+                x.description = MapDescription(businessService[i].description);
+                x.name = MapName(businessService[i].name);
+                x.serviceKey = businessService[i].serviceKey;
+                if (x.serviceKey == null)
+                    x.serviceKey = "";
+                r.Add(x);
+            }
+            return r.ToArray();
+        }
+
+        public static uddi.apiv2.save_business MapSaveBusiness(uddi.apiv3.save_business save_business1)
+        {
+            if (save_business1 == null) return null;
+            uddi.apiv2.save_business r = new uddi.apiv2.save_business();
+            r.authInfo = save_business1.authInfo;
+            r.generic = VERSION;
+            r.businessEntity = MapBusinesss(save_business1.businessEntity);
+            return r;
+        }
+
+        private static uddi.apiv2.businessEntity[] MapBusinesss(uddi.apiv3.businessEntity[] businessEntity)
+        {
+            if (businessEntity == null) return null;
+            List<uddi.apiv2.businessEntity> r = new List<uddi.apiv2.businessEntity>();
+            for (int i = 0; i < businessEntity.Length; i++)
+            {
+                uddi.apiv2.businessEntity x = new uddi.apiv2.businessEntity();
+                x.businessKey = businessEntity[i].businessKey;
+                if (x.businessKey == null)
+                    x.businessKey = "";
+                x.businessServices = MapServices(businessEntity[i].businessServices);
+                x.categoryBag = MapCategoryBag(businessEntity[i].categoryBag);
+                x.contacts = MapContacts(businessEntity[i].contacts);
+                x.description = MapDescription(businessEntity[i].description);
+                x.discoveryURLs = MapDiscoURL(businessEntity[i].discoveryURLs);
+                x.identifierBag = MapIdentBag(businessEntity[i].identifierBag);
+                x.name = MapName(businessEntity[i].name);
+                
+                r.Add(x);
+            }
+            return r.ToArray();
+        }
+
+        private static uddi.apiv2.contact[] MapContacts(uddi.apiv3.contact[] contact)
+        {
+            if (contact == null) return null;
+            List<uddi.apiv2.contact> r = new List<uddi.apiv2.contact>();
+            for (int i = 0; i < contact.Length; i++)
+            {
+                uddi.apiv2.contact x = new uddi.apiv2.contact();
+                x.address = MapAddress(contact[i].address);
+                x.description = MapDescription(contact[i].description);
+                x.email = MapEmail(contact[i].email);
+                if (contact[i].personName != null && contact[i].personName.Length > 0)
+                    x.personName = contact[i].personName[0].Value;
+                x.phone = MapPhone(contact[i].phone);
+                x.useType = contact[i].useType;
+                r.Add(x);
+            }
+            return r.ToArray();
+        }
+
+        private static uddi.apiv2.phone[] MapPhone(uddi.apiv3.phone[] phone)
+        {
+            if (phone == null) return null;
+            List<uddi.apiv2.phone> r = new List<uddi.apiv2.phone>();
+            for (int i = 0; i < phone.Length; i++)
+            {
+                uddi.apiv2.phone x = new uddi.apiv2.phone();
+                x.useType = phone[i].useType;
+                x.Value = phone[i].Value;
+                r.Add(x);
+            }
+            return r.ToArray();
+        }
+
+        private static uddi.apiv2.email[] MapEmail(uddi.apiv3.email[] email)
+        {
+            if (email == null) return null;
+            List<uddi.apiv2.email> r = new List<uddi.apiv2.email>();
+            for (int i = 0; i < email.Length; i++)
+            {
+                uddi.apiv2.email x = new uddi.apiv2.email();
+                x.useType = email[i].useType;
+                x.Value = email[i].Value;
+                r.Add(x);
+            }
+            return r.ToArray();
+        }
+
+        private static uddi.apiv2.address[] MapAddress(uddi.apiv3.address[] address)
+        {
+            if (address == null) return null;
+            List<uddi.apiv2.address> r = new List<uddi.apiv2.address>();
+            for (int i = 0; i < address.Length; i++)
+            {
+                uddi.apiv2.address x = new uddi.apiv2.address();
+                x.useType = address[i].useType;
+                x.sortCode = address[i].sortCode;
+                x.tModelKey = address[i].tModelKey;
+                x.addressLine = MapAddressLine(address[i].addressLine);
+                r.Add(x);
+            }
+            return r.ToArray();
+        }
+
+        private static uddi.apiv2.addressLine[] MapAddressLine(uddi.apiv3.addressLine[] addressLine)
+        {
+            if (addressLine == null) return null;
+            List<uddi.apiv2.addressLine> r = new List<uddi.apiv2.addressLine>();
+            for (int i = 0; i < addressLine.Length; i++)
+            {
+                uddi.apiv2.addressLine x = new uddi.apiv2.addressLine();
+                x.keyName = addressLine[i].keyName;
+                x.keyValue= addressLine[i].keyValue;
+                x.Value= addressLine[i].Value;
+                r.Add(x);
+            }
+            return r.ToArray();
+        }
+
+        public static uddi.apiv2.save_tModel MapSaveTModel(uddi.apiv3.save_tModel save_tModel1)
+        {
+            if (save_tModel1 == null) return null;
+            uddi.apiv2.save_tModel r = new uddi.apiv2.save_tModel();
+            r.authInfo = save_tModel1.authInfo;
+            r.tModel = MapTModels(save_tModel1.tModel);
+            r.generic = VERSION;
+            return r;
+        }
+
+        private static uddi.apiv2.tModel[] MapTModels(uddi.apiv3.tModel[] tModel)
+        {
+            if (tModel == null) return null;
+            List<uddi.apiv2.tModel> r = new List<uddi.apiv2.tModel>();
+            for (int i = 0; i < tModel.Length; i++)
+            {
+                uddi.apiv2.tModel x = new uddi.apiv2.tModel();
+                x.categoryBag = MapCategoryBag(tModel[i].categoryBag);
+                x.description =MapDescription( tModel[i].description);
+                x.identifierBag = MapIdentBag(tModel[i].identifierBag);
+                x.name = MapName(new org.uddi.apiv3.name[]{tModel[i].name})[0];
+                x.overviewDoc = MapOverviewDoc(tModel[i].overviewDoc);
+                x.tModelKey = tModel[i].tModelKey;
+                if (x.tModelKey == null)
+                    x.tModelKey = "";
+                r.Add(x);
+            }
+            return r.ToArray();
+        }
+
+        public static uddi.apiv2.set_publisherAssertions MapSetPublisherAssertions(uddi.apiv3.set_publisherAssertions set_publisherAssertions1)
+        {
+            if (set_publisherAssertions1 == null) return null;
+            uddi.apiv2.set_publisherAssertions r = new uddi.apiv2.set_publisherAssertions();
+            r.authInfo = set_publisherAssertions1.authInfo;
+            r.generic = VERSION;
+            r.publisherAssertion = MapPublisherAssertions(set_publisherAssertions1.publisherAssertion);
+
             return r;
         }
     }
