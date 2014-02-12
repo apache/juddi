@@ -71,6 +71,10 @@ public class Publish3to2 implements UDDIPublicationPortType, BindingProvider {
       publishService = service.getPublish();
 
    }
+   
+   public Publish getUDDIv2PublishWebServiceClient(){
+        return publishService;
+   }
 
    @Override
    public void addPublisherAssertions(AddPublisherAssertions body) throws DispositionReportFaultMessage, RemoteException {

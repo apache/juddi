@@ -627,6 +627,9 @@ public class MapUDDIv3Tov2 {
                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.COMBINE_CATEGORY_BAGS)
                              || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.COMBINE_CATEGORY_BAGS_TMODEL)) {
                                 r.getFindQualifier().add(UDDIConstants.COMBINE_CATEGORY_BAGS);
+                        } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.APPROXIMATE_MATCH)
+                             || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.APPROXIMATE_MATCH_TMODEL)) {
+                                //ignore it, not supported by UDDI v2
                         } else {
                                 r.getFindQualifier().add(findQualifiers.getFindQualifier().get(i));
                         }

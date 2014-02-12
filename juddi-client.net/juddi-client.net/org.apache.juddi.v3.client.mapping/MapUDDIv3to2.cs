@@ -130,6 +130,11 @@ namespace org.apache.juddi.v3.client.mapping
                 {
                     r.Add(UDDIConstants.COMBINE_CATEGORY_BAGS);
                 }
+                else if (findQualifiers[i].Equals(UDDIConstants.APPROXIMATE_MATCH, StringComparison.CurrentCultureIgnoreCase)
+               || findQualifiers[i].Equals(UDDIConstants.APPROXIMATE_MATCH_TMODEL, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    //ignore
+                }
                 else
                 {
                     r.Add(findQualifiers[i]);

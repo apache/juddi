@@ -31,6 +31,8 @@ import org.apache.juddi.v3.client.cryptor.CryptorFactory;
 import org.apache.juddi.v3.client.transport.wrapper.Inquiry3to2;
 import org.apache.juddi.v3.client.transport.wrapper.Publish3to2;
 import org.apache.juddi.v3.client.transport.wrapper.Security3to2;
+import org.uddi.v2_service.Inquire;
+import org.uddi.v2_service.Publish;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
@@ -181,4 +183,51 @@ public class JAXWSv2TranslationTransport extends JAXWSTransport {
                 return publishv2;
         }
 
+        
+        
+        
+        
+        
+        
+        public Inquire getUDDIv2InquiryService(String endpointURL) throws TransportException {
+                try {
+                        if (inquiryv2 == null) {
+                                inquiryv2 = new Inquiry3to2();
+
+                        }
+                        if (endpointURL == null) {
+                                UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
+                                endpointURL = client.getClientConfig().getUDDINode(nodeName).getInquiryUrl();
+                        }
+                        Map<String, Object> requestContext = ((BindingProvider) inquiryv2).getRequestContext();
+                        requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+                        setCredentials(requestContext);
+                } catch (Exception e) {
+                        throw new TransportException(e.getMessage(), e);
+                }
+                return inquiryv2.getUDDIv2WebServiceClient();
+
+        }
+
+        
+        
+        public Publish getUDDIv2PublishService(String endpointURL) throws TransportException {
+                try {
+                        if (publishv2 == null) {
+                                publishv2 = new Publish3to2();
+
+                        }
+                        if (endpointURL == null) {
+                                UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
+                                endpointURL = client.getClientConfig().getUDDINode(nodeName).getPublishUrl();
+                        }
+
+                        Map<String, Object> requestContext = ((BindingProvider) publishv2).getRequestContext();
+                        requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+                        setCredentials(requestContext);
+                } catch (Exception e) {
+                        throw new TransportException(e.getMessage(), e);
+                }
+                return publishv2.getUDDIv2PublishWebServiceClient();
+        }
 }

@@ -68,6 +68,10 @@ public class Inquiry3to2 implements UDDIInquiryPortType, BindingProvider {
                 inquiryService = service.getInquire();
 
         }
+        
+        public Inquire getUDDIv2WebServiceClient(){
+             return inquiryService;
+        }
 
         @Override
         public BindingDetail findBinding(FindBinding body) throws DispositionReportFaultMessage, RemoteException {
