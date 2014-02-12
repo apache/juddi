@@ -346,8 +346,14 @@
 
                                         <div class="tab-pane" id="bindingtemplates">
                                                 <b><%=ResourceLoader.GetResource(session, "items.bindingtemplate")%> </b>- <%=ResourceLoader.GetResource(session, "items.bindingtemplate.description")%> <br>
+                                                <% if (!newitem) {
+                                                %>
                                                 <a href="bindingEditor.jsp?svcid=<%=URLEncoder.encode(bd.getServiceKey(), "UTF8")%>"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.bindingtemplate.add")%> <Br>
+                                                
                                                         <%
+                                                }
+                                                else
+                                                     out.write("<br><div class=\"alert alert-error\">" + ResourceLoader.GetResource(session, "items.service.nobinding") + "</div><br>");
                                                                 if (bd.getBindingTemplates() != null && !bd.getBindingTemplates().getBindingTemplate().isEmpty()) {
                                                         %>
                                                 <table class="table table-hover">

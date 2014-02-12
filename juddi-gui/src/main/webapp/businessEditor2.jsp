@@ -472,21 +472,18 @@
                   <br><br>
                </div>
                <div class="tab-pane " id="services">
-                  <b><%=ResourceLoader.GetResource(session, "pages.businesseditor.businesslist")%> </b>- 
+                  <b><%=ResourceLoader.GetResource(session, "pages.businesseditor.businesslist")%> </b> - 
                   <%
                      if (bd.getBusinessServices() != null) {
                         out.write(Integer.toString(bd.getBusinessServices().getBusinessService().size()));
                      } else {
-                        out.write("0");
+                        out.write("0 ");
                      }
                   %> <%=ResourceLoader.GetResource(session, "pages.businesseditor.businesslist2")%>
                   <%if (!newitem) {
                   %>
                   <br>
                   <a href="serviceEditor.jsp?bizid=<%=URLEncoder.encode(bd.getBusinessKey(), "UTF-8")%>"><i class="icon-plus-sign icon-large"></i> <%=ResourceLoader.GetResource(session, "items.service.add")%> </a>
-                  <%
-                     }
-                  %>
                   <br>
                   <table class="table table-hover"><tr>
                         <th><%=ResourceLoader.GetResource(session, "items.name")%> </th>
@@ -521,6 +518,14 @@
                         }
                      %>
                   </table>
+                                    <%
+                     }
+                  else
+                  {
+                       out.write("<br><div class=\"alert alert-error\">" + ResourceLoader.GetResource(session, "items.business.noservice") + "</div>");
+                  }
+                  %>
+
 
                </div>
                <div class="tab-pane" id="signatures"><b><%=ResourceLoader.GetResource(session, "items.dsigs")%></b>
