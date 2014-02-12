@@ -30,6 +30,113 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * <h4 style="margin-left:0in;text-indent:0in">3.3.2.6 contact</h4>
+
+<p class="MsoBodyText">The contact structure records contact information for a
+person or a job role within the businessEntity so that someone who finds the
+information can make human contact for any purpose. This information consists
+of one or more optional elements, along with a person’s name. Contact
+information exists by containment relationship alone; the contact structure
+does not provide keys for tracking individual contact instances.</p>
+
+<p class="MsoBodyText"><img src="http://uddi.org/pubs/uddi-v3.0.2-20041019_files/image012.jpg" border="0" width="508" height="330"></p>
+
+<p class="MsoBodyText"><b>Attributes</b></p>
+
+<table class="MsoNormalTable" style="margin-left:.5in;border-collapse:collapse;border:none" border="1" cellpadding="0" cellspacing="0">
+ <tbody><tr>
+  <td style="border:solid black 1.0pt;background:#FFFFCA;padding:
+  0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal"><b>Name&nbsp; </b></p>
+  </td>
+  <td style="border:solid black 1.0pt;border-left:none;background:
+  #FFFFCA;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal"><b>Use&nbsp; </b></p>
+  </td>
+ </tr>
+ <tr>
+  <td style="border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal">useType&nbsp; </p>
+  </td>
+  <td style="border-top:none;border-left:none;border-bottom:solid black 1.0pt;
+  border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal">optional&nbsp; </p>
+  </td>
+ </tr>
+</tbody></table>
+
+<p class="MsoBodyText">&nbsp;</p>
+
+<p class="MsoBodyText">The <b>useType</b> attribute is used to describe the type
+of contact in unstructured text. Suggested examples include "technical
+questions", "technical contact", "establish account", "sales
+contact", etc.</p>
+
+<p class="MsoBodyText"><b>description</b> is used to describe how the contact
+information should be used. Publishing several descriptions, e.g. in different
+languages, is supported. To signify the language in which the descriptions are
+expressed, they MAY carry <b>xml:lang</b> values.</p>
+
+<p class="MsoBodyText"><b>personName</b> is the name of the person or name of the
+job role supporting the contact. Publishing several names, e.g. for
+romanization purposes, is supported.</p>
+
+<p class="MsoBodyText">&nbsp;</p>
+
+<p class="MsoBodyText">&nbsp;</p>
+
+<p class="MsoBodyText"><b>Attributes</b></p>
+
+<table class="specTable" style="margin-left:
+ .5in;border-collapse:collapse;border:none" border="1" cellpadding="0" cellspacing="0">
+ <tbody><tr>
+  <td style="border:solid black 1.0pt;background:#FFFFCA;padding:
+  0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal"><b>Name&nbsp; </b></p>
+  </td>
+  <td style="border:solid black 1.0pt;border-left:none;background:
+  #FFFFCA;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal"><b>Use&nbsp; </b></p>
+  </td>
+ </tr>
+ <tr>
+  <td style="border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal">xml:lang&nbsp; </p>
+  </td>
+  <td style="border-top:none;border-left:none;border-bottom:solid black 1.0pt;
+  border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal">optional&nbsp; </p>
+  </td>
+ </tr>
+</tbody></table>
+
+<p class="MsoBodyText">&nbsp;</p>
+
+<p class="MsoBodyText">In order to signify the contextual language (if any) in
+which a given name is expressed in (such as the language into which a name has
+been romanized), it SHOULD carry the <b>xml:lang</b> attribute See Section <a href="#_Ref8977786 ">3.3.2.3</a> <i>name</i> for details on using xml:lang
+values in name elements. There is no restriction on the number of personNames
+or what xml:lang value each may have. An example for a role might be:</p>
+
+<p class="codeSample">&lt;contact useType="Technical support"&gt;</p>
+
+<p class="codeSample">&nbsp;&nbsp;&nbsp; &lt;personName&gt;Administrator&lt;/personName&gt;</p>
+
+<p class="codeSample">&nbsp;&nbsp;&nbsp; …</p>
+
+<p class="codeSample">&lt;/contact&gt;</p>
+
+<p class="MsoBodyText"><b>&nbsp;</b></p>
+
+<p class="MsoBodyText"><b>phone</b> is used to hold telephone numbers for the
+contact. This element MAY be adorned with an optional <b>useType</b> attribute
+for descriptive purposes.</p>
+
+<p class="MsoBodyText"><b>email</b> is the email address for the contact. This
+element MAY be adorned with an optional <b>useType</b> attribute for
+descriptive purposes.</p>
+
+<p class="MsoBodyText"><b>address</b> is the postal address for the contact. </p>
  * <p>Java class for contact complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.

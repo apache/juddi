@@ -614,7 +614,7 @@
 
                 </div>
                 <div class="modal-footer">
-                        <a href="ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getBindingKey(), "UTF-8")%>&type=bindingTemplate" class="btn btn-primary" target="_blank">Popout</a> 
+                        <a href="ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getBindingKey(), "UTF-8")%>&type=bindingTemplate" class="btn btn-primary" target="_blank"><%=ResourceLoader.GetResource(session, "actions.popout")%></a> 
                         <a href="javascript:closeXmlPop('viewAsXml');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
                 </div>
         </div>

@@ -29,6 +29,51 @@ import javax.xml.bind.annotation.XmlValue;
 
 
 /**
+ * <h4 style="margin-left:0in;text-indent:0in">3.3.2.8 addressLine</h4>
+
+<p class="MsoBodyText"><b>addressLine</b> contains a part of the actual address
+in text form.</p>
+
+<p class="MsoBodyText"><b>Attributes</b></p>
+
+<table class="MsoNormalTable" style="margin-left:.5in;border-collapse:collapse;border:none" border="1" cellpadding="0" cellspacing="0">
+ <tbody><tr>
+  <td style="border:solid black 1.0pt;background:#FFFFCA;padding:
+  0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal"><b>Name&nbsp; </b></p>
+  </td>
+  <td style="border:solid black 1.0pt;border-left:none;background:
+  #FFFFCA;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal"><b>Use&nbsp; </b></p>
+  </td>
+ </tr>
+ <tr>
+  <td style="border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal">keyName&nbsp; </p>
+  </td>
+  <td style="border-top:none;border-left:none;border-bottom:solid black 1.0pt;
+  border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal">optional&nbsp; </p>
+  </td>
+ </tr>
+ <tr>
+  <td style="border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal">keyValue</p>
+  </td>
+  <td style="border-top:none;border-left:none;border-bottom:solid black 1.0pt;
+  border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal">optional</p>
+  </td>
+ </tr>
+</tbody></table>
+
+<p class="MsoBodyText">&nbsp;</p>
+
+<p class="MsoBodyText">Each addressLine element MAY be adorned with two optional
+descriptive attributes, <b>keyName</b> and <b>keyValue</b>. Both attributes
+MUST be present in each address line if a tModelKey is specified in the address
+structure. When no tModelKey is provided for the address structure, the keyName
+and keyValue attributes have no defined meaning.</p>
  * <p>Java class for addressLine complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.

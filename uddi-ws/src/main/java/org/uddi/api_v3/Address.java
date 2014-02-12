@@ -30,6 +30,88 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * <h4 style="margin-left:0in;text-indent:0in"><a name="_Ref8977291">3.3.2.7 address</a></h4>
+
+<p class="MsoBodyText"><b>address</b> represents the contact’s postal address, in
+a form suitable for addressing an envelope. The address structure is a simple
+list of address lines.</p>
+
+<p class="MsoBodyText"><b>Attributes</b></p>
+
+<table class="MsoNormalTable" style="margin-left:.5in;border-collapse:collapse;border:none" border="1" cellpadding="0" cellspacing="0">
+ <tbody><tr>
+  <td style="border:solid black 1.0pt;background:#FFFFCA;padding:
+  0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal"><b>Name&nbsp; </b></p>
+  </td>
+  <td style="border:solid black 1.0pt;border-left:none;background:
+  #FFFFCA;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal"><b>Use&nbsp; </b></p>
+  </td>
+ </tr>
+ <tr>
+  <td style="border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal">xml:lang&nbsp; </p>
+  </td>
+  <td style="border-top:none;border-left:none;border-bottom:solid black 1.0pt;
+  border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal">optional&nbsp; </p>
+  </td>
+ </tr>
+ <tr>
+  <td style="border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal">useType</p>
+  </td>
+  <td style="border-top:none;border-left:none;border-bottom:solid black 1.0pt;
+  border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal">optional</p>
+  </td>
+ </tr>
+ <tr>
+  <td style="border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal">sortCode</p>
+  </td>
+  <td style="border-top:none;border-left:none;border-bottom:solid black 1.0pt;
+  border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal">optional</p>
+  </td>
+ </tr>
+ <tr>
+  <td style="border:solid black 1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal">tModelKey</p>
+  </td>
+  <td style="border-top:none;border-left:none;border-bottom:solid black 1.0pt;
+  border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt" valign="top">
+  <p class="MsoNormal">optional</p>
+  </td>
+ </tr>
+</tbody></table>
+
+<p class="MsoBodyText">&nbsp;</p>
+
+<p class="MsoBodyText">Address structures have four optional attributes.</p>
+
+<p class="MsoBodyText">The <b>xml:lang</b> value describes the language the
+address is expressed in. There is no restriction on the number of addresses or
+what xml:lang value they may have. Publication of addresses in several
+languages, e.g. for use in multilingual countries, is supported. See Appendix D
+<i>Internationalization</i> for an example.</p>
+
+<p class="MsoBodyText">The <b>useType</b> describes the address’ type in
+unstructured text. Suggested examples include "headquarters", "sales
+office", "billing department", etc.</p>
+
+<p class="MsoBodyText">The <b>sortCode</b> attribute is deprecated because of the
+guarantee of preserving the document order (see Section <a href="#_Ref8978002 ">4.5.3</a>
+<i>Preservation of Document Order</i>). In order to achieve this behavior, the
+data has just to be published in the desired order.</p>
+
+<p class="MsoBodyText">The <b>tModelKey</b> is a tModel reference that specifies
+that keyName keyValue pairs given by subsequent addressLine elements, if
+addressLine elements are present at all, are to be interpreted by the address
+structure associated with the tModel that is referenced. For a description of
+how to use tModels in order to give the addressLine list structure and meaning,
+see Appendix D<i> Internationalization</i>.</p>
  * <p>Java class for address complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
@@ -153,7 +235,7 @@ public class Address implements Serializable{
 
     /**
      * Gets the value of the sortCode property.
-     * 
+     * The sortCode attribute is deprecated because of the guarantee of preserving the document order (see Section 4.5.3 Preservation of Document Order). In order to achieve this behavior, the data has just to be published in the desired order.
      * @return
      *     possible object is
      *     {@link String }
@@ -169,7 +251,7 @@ public class Address implements Serializable{
 
     /**
      * Sets the value of the sortCode property.
-     * 
+     * The sortCode attribute is deprecated because of the guarantee of preserving the document order (see Section 4.5.3 Preservation of Document Order). In order to achieve this behavior, the data has just to be published in the desired order.
      * @param value
      *     allowed object is
      *     {@link String }

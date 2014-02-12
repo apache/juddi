@@ -11,7 +11,8 @@
                 <li><a href="javascript:AddIdentKeyReferenceParam('uddi:uddi.org:ubr:identifier:dnb.com:d-u-n-s','D-U-N-S:My Company','12-345-6789');">D-U-N-S</a></li>
                 <li><a href="javascript:AddIdentKeyReferenceParam('uddi:uddi.org:ubr:identifier:owningbusiness','uddi-org:owningBusiness','key');">Owning Business</a></li>
                 <li><a href="javascript:AddIdentKeyReferenceParam('uddi:uddi.org:identifier:taxid','uddi-org:taxid','');">Tax ID</a></li>
-
+                <li><a href="javascript:AddIdentKeyReferenceParam('uddi:uddi.org:ubr:identifier:thomasregister.com:supplierid','thomasregister-com:supplierID:My Business','01234567');">Thomas Registry Supplier ID</a></li>
+                <li><a href="javascript:AddIdentKeyReferenceParam('uddi:uddi.org:ubr:identifier:iso6523icd','','');">ISO 6523 ICD</a></li>
         </ul>
 </div>
 

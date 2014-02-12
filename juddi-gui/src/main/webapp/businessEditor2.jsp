@@ -647,6 +647,7 @@
             <a class="btn "  href="javascript:ViewAsXML();"><i class="icon-screenshot icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.asxml")%></a>
 
             <%
+            //            <a class="btn "  href="javascript:showAddress();"><i class="icon-screenshot icon-large"></i> Address</a>
                   //TODO for 3.2.1 <a class="btn "  href="javascript:Copy();"><i class="icon-copy icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.copy")% ></a>
                }
             %>
@@ -657,6 +658,9 @@
                    if (!newitem) {
 
                %>
+                    function showAddress(){
+                         $("#addressInputModal").modal('show');
+                    }
                function ViewAsXML()
                {
                   $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(bizid, "UTF-8")%>&type=business", function(data) {
@@ -707,21 +711,37 @@
          <h3><%=ResourceLoader.GetResource(session, "actions.asxml")%></h3>
       </div>
       <div class="modal-body" id="viewAsXmlContent">
-
-
       </div>
       <div class="modal-footer">
-         <a href="ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getBusinessKey(), "UTF-8")%>&type=business" class="btn btn-primary" target="_blank">Popout</a> 
+         <a href="ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getBusinessKey(), "UTF-8")%>&type=business" class="btn btn-primary" target="_blank">
+              <%=ResourceLoader.GetResource(session, "actions.popout")%></a> 
          <a href="javascript:closeXmlPop('viewAsXml');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
       </div>
    </div>
-   <script type="text/javascript">
-
-   </script>
-
    <%
       }
+      /*
+      <div class="modal hide fade container" id="addressInputModal">
+      <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+         <h3>Business Contact Address</h3>
+      </div>
+      <div class="modal-body" id="addressInputModalBody">
+           <input type="text" id="addressinput_tmodelkey" value="uddi:uddi.org:ubr:postaladdress">
+           
+      </div>
+      <div class="modal-footer">
+         <a href="#" class="btn btn-primary" target="_blank"><%=ResourceLoader.GetResource(session, "actions.popout")%></a> 
+         <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+   </div>
+   
+      */
    %>
+   
+   
+      
+      
    <%@include file="keyHelpModal.jsp" %>
    <%@include file="tmodelChooser.jsp" %>
    <!-- container div is in header bottom-->

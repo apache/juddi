@@ -1811,6 +1811,12 @@
 		<overviewURL useType="text">
 		  http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#ISO6523Code
 		</overviewURL> 
+		http://metadata-stds.org/Document-library/Draft-standards/6523-Identification-of-Organizations/ICD_list.htm
+	  </overviewDoc> 
+	  <overviewDoc>
+		<overviewURL useType="text">
+		http://metadata-stds.org/Document-library/Draft-standards/6523-Identification-of-Organizations/ICD_list.htm  
+		</overviewURL> 
 	  </overviewDoc> 
 	  <categoryBag>
 		<keyedReference keyName="uddi-org:types:identifier"      keyValue="identifier"       tModelKey="uddi:uddi.org:categorization:types"/> 
@@ -2176,4 +2182,43 @@
   </categoryBag>
 </tModel> 
 
+
+
+
+
+
+	<tModel tModelKey="uddi:uddi.org:ubr:identifier:thomasregister.com:keygenerator">
+	  <name>thomasregister-com:key generator</name>
+	  <description> Thomas Registry Suppliers key generator</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+	</tModel>
+
+	<tModel tModelKey="uddi:uddi.org:ubr:identifier:thomasregister.com:supplierid">
+	  <name>Thomas Registry</name>
+	  <name>thomasregister-com:supplierID</name>
+	  <description xml:lang="en">This tModel is used for the Thomas Register supplier identifier codes.</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://www.uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#Thomas
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:identifier"
+			  keyValue="identifier" 
+			  tModelKey="uddi:uddi.org:categorization:types"/> 
+			<keyedReference keyName="uddi-org:types:unchecked"
+			  keyValue="unchecked" 
+			  tModelKey="uddi:uddi.org:categorization:types"/> 
+        </categoryBag>
+	</tModel>
+	
+ 
 </save_tModel>
