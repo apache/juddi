@@ -325,7 +325,7 @@ function AddCategoryKeyReferenceGroupParam(tmodelkey)
     return "catbaggrpkeyref"+i;
 }
 
-function AddWGS1894(){
+function AddWGS1984(){
         var div=AddCategoryKeyReferenceGroupParam("uddi:uddi.org:ubr:categorizationGroup:wgs84");
         AddCategoryKeyReferenceGroupKeyRef(div, "uddi:uddi.org:ubr:categorizationGroup:wgs84:latitude",
          "WGS 84 Latitude", "0.0");

@@ -31,7 +31,7 @@ namespace org.apache.juddi.v3.client.mapping
             List<String> r = new List<string>();
             for (int i = 0; i < findQualifiers.Length; i++)
             {
-                if (findQualifiers[i].Equals(UDDIConstants.TRANSPORT_HTTP, StringComparison.CurrentCultureIgnoreCase))
+                /*if (findQualifiers[i].Equals(UDDIConstants.TRANSPORT_HTTP, StringComparison.CurrentCultureIgnoreCase))
                 {
                     r.Add("uuid:68DE9E80-AD09-469D-8A37-088422BFBC36");
                 }
@@ -74,8 +74,8 @@ namespace org.apache.juddi.v3.client.mapping
                 else if (findQualifiers[i].Equals("uddi:uddi.org:categorization:types", StringComparison.CurrentCultureIgnoreCase))
                 {
                     r.Add("uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4");
-                }
-                else if (findQualifiers[i].Equals(UDDIConstants.EXACT_MATCH, StringComparison.CurrentCultureIgnoreCase)
+                }*/
+                if (findQualifiers[i].Equals(UDDIConstants.EXACT_MATCH, StringComparison.CurrentCultureIgnoreCase)
                    || findQualifiers[i].Equals(UDDIConstants.EXACT_MATCH_TMODEL, StringComparison.CurrentCultureIgnoreCase))
                 {
                     r.Add("exactNameMatch");
@@ -137,7 +137,7 @@ namespace org.apache.juddi.v3.client.mapping
                 }
                 else
                 {
-                    r.Add(findQualifiers[i]);
+                    //r.Add(findQualifiers[i]);
                 }
             }
             return r.ToArray();

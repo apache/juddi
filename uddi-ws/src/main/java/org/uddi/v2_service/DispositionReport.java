@@ -16,7 +16,14 @@
  */
 package org.uddi.v2_service;
 
+import java.lang.reflect.UndeclaredThrowableException;
+import javax.xml.bind.JAXBException;
+import javax.xml.soap.Detail;
 import javax.xml.ws.WebFault;
+import javax.xml.ws.soap.SOAPFaultException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 
 
 /**
@@ -35,6 +42,7 @@ public class DispositionReport
      * 
      */
     private org.uddi.api_v2.DispositionReport faultInfo;
+    private static transient Log log = LogFactory.getLog(DispositionReport.class);
 
     /**
      * 
@@ -66,4 +74,40 @@ public class DispositionReport
         return faultInfo;
     }
 
+    
+    
+    /** 
+     * Convenience method to figure out if the Exception at hand contains a
+     * DispositionReport. Disposition report will be null if none can be found.
+     * 
+     * @param e the Exception at hang
+     * @return DispositionReport if one can be found, or null if it is not.
+     */
+    public static org.uddi.api_v2.DispositionReport getDispositionReport(Exception e) {
+    	org.uddi.api_v2.DispositionReport report = null;
+    	if (e instanceof DispositionReport) {
+    		DispositionReport faultMsg = (DispositionReport) e;
+    		report = faultMsg.faultInfo;
+    	} else if (e instanceof SOAPFaultException) {
+    		SOAPFaultException soapFault = (SOAPFaultException) e;
+    		Detail detail = soapFault.getFault().getDetail();
+    		if (detail != null && detail.getFirstChild()!=null) {
+    			try {
+    				report =  new org.uddi.api_v2.DispositionReport(detail.getFirstChild());
+    			} catch (JAXBException je) {
+    				log.error("Could not unmarshall detail to a DispositionReport");
+    			}
+    		}
+    	} else if (e instanceof UndeclaredThrowableException) {
+    		UndeclaredThrowableException ute =(UndeclaredThrowableException) e;
+    		if (ute.getUndeclaredThrowable()!=null && ute.getUndeclaredThrowable().getCause()!=null
+    		    && ute.getUndeclaredThrowable().getCause().getCause() instanceof DispositionReport) {
+    			DispositionReport faultMsg = (DispositionReport) ute.getUndeclaredThrowable().getCause().getCause();
+	    		report = faultMsg.getFaultInfo();
+    		}
+    	} else {
+    		log.error("Unsupported Exception: " + e.getClass());
+    	}
+    	return report;
+    }
 }

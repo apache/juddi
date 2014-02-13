@@ -376,7 +376,7 @@ public class MapUDDIv3Tov2 {
                 r.setIdentifierBag(MapIdentBag(body.getIdentifierBag()));
                 r.getName().addAll(MapName(body.getName()));
                 if (ContainsWildCard(r.getName())) {
-                        r.setFindQualifiers(AddApproximateMatch(r.getFindQualifiers()));
+                        //r.setFindQualifiers(AddApproximateMatch(r.getFindQualifiers()));
                 }
                 return r;
         }
@@ -572,7 +572,7 @@ public class MapUDDIv3Tov2 {
                 }
                 FindQualifiers r = new FindQualifiers();
                 for (int i = 0; i < findQualifiers.getFindQualifier().size(); i++) {
-                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.TRANSPORT_HTTP)) {
+                        /*if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.TRANSPORT_HTTP)) {
                                 r.getFindQualifier().add("uuid:68DE9E80-AD09-469D-8A37-088422BFBC36");
                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.TRANSPORT_EMAIL)) {
                                 r.getFindQualifier().add("uuid:93335D49-3EFB-48A0-ACEA-EA102B60DDC6");
@@ -594,7 +594,8 @@ public class MapUDDIv3Tov2 {
                                 r.getFindQualifier().add("uuid:A035A07C-F362-44dd-8F95-E2B134BF43B4");
                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uddi:uddi.org:categorization:types")) {
                                 r.getFindQualifier().add("uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4");
-                        } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.EXACT_MATCH)
+                        }*/
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.EXACT_MATCH)
                              || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.EXACT_MATCH_TMODEL)) {
                                 r.getFindQualifier().add("exactNameMatch");
                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.CASE_SENSITIVE_MATCH)
@@ -608,7 +609,7 @@ public class MapUDDIv3Tov2 {
                                 r.getFindQualifier().add("orLikeKeys");
                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.AND_ALL_KEYS)
                              || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.AND_ALL_KEYS_TMODEL)) {
-                                r.getFindQualifier().add("andAllKeys");
+                                r.getFindQualifier().add(UDDIConstants.AND_ALL_KEYS);
                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_DATE_ASC)
                              || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_DATE_ASC_TMODEL)) {
                                 r.getFindQualifier().add(UDDIConstants.SORT_BY_DATE_ASC);
@@ -630,8 +631,13 @@ public class MapUDDIv3Tov2 {
                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.APPROXIMATE_MATCH)
                              || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.APPROXIMATE_MATCH_TMODEL)) {
                                 //ignore it, not supported by UDDI v2
+                        
+                        } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.CASE_INSENSITIVE_MATCH)
+                             || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.CASE_INSENSITIVE_MATCH_TMODEL)) {
+                                //ignore it, not supported by UDDI v2
                         } else {
-                                r.getFindQualifier().add(findQualifiers.getFindQualifier().get(i));
+                             //ignore it
+                                //r.getFindQualifier().add(findQualifiers.getFindQualifier().get(i));
                         }
                 }
                 return r;
@@ -1031,14 +1037,7 @@ public class MapUDDIv3Tov2 {
                 return r;
         }
 
-        private static FindQualifiers AddApproximateMatch(FindQualifiers findQualifiers) {
-                if (findQualifiers == null) {
-                        findQualifiers = new FindQualifiers();
-                }
-                findQualifiers.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
-                return findQualifiers;
-        }
-
+        
         private static boolean ContainsWildCard(List<Name> name) {
                 for (int i = 0; i < name.size(); i++) {
                         if (name.get(i).getValue() != null && name.get(i).getValue().contains(UDDIConstants.WILDCARD)) {

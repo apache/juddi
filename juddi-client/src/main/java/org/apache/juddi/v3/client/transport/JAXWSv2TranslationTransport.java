@@ -188,7 +188,9 @@ public class JAXWSv2TranslationTransport extends JAXWSTransport {
         
         
         
-        
+        public Inquire getUDDIv2InquiryService() throws TransportException {
+             return getUDDIv2InquiryService(null);
+        }
         public Inquire getUDDIv2InquiryService(String endpointURL) throws TransportException {
                 try {
                         if (inquiryv2 == null) {
@@ -229,5 +231,9 @@ public class JAXWSv2TranslationTransport extends JAXWSTransport {
                         throw new TransportException(e.getMessage(), e);
                 }
                 return publishv2.getUDDIv2PublishWebServiceClient();
+        }
+        
+        public Publish getUDDIv2PublishService() throws TransportException {
+                return getUDDIv2PublishService(null);
         }
 }
