@@ -63,7 +63,7 @@ public class FindService {
     protected CategoryBag categoryBag;
     protected TModelBag tModelBag;
     @XmlAttribute(name = "generic", required = true)
-    protected String generic;
+    protected String generic="2.0";
     @XmlAttribute(name = "maxRows")
     protected Integer maxRows;
     @XmlAttribute(name = "businessKey")

@@ -29,6 +29,7 @@ import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.v3.client.mapping.MapUDDIv2Tov3;
 import org.apache.juddi.v3.client.mapping.MapUDDIv3Tov2;
+import org.apache.juddi.validation.ValidateUDDIv2Inquiry;
 import org.uddi.api_v2.BindingDetail;
 import org.uddi.api_v2.BusinessDetail;
 import org.uddi.api_v2.BusinessDetailExt;
@@ -75,7 +76,7 @@ public class UDDIv2InquiryImpl implements Inquire {
         }
 
         static String nodeId=null;
-        private static String getNodeID(){
+        public static String getNodeID(){
                  try {
                          nodeId=AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);
                  } catch (ConfigurationException ex) {
@@ -87,6 +88,7 @@ public class UDDIv2InquiryImpl implements Inquire {
         
         @Override
         public BindingDetail findBinding(FindBinding body) throws DispositionReport {
+                ValidateUDDIv2Inquiry.validateFindBinding(body);
                 try {
                         return MapUDDIv3Tov2.MapBindingDetail(inquiryService.findBinding(MapUDDIv2Tov3.MapFindBinding(body)), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
@@ -96,6 +98,7 @@ public class UDDIv2InquiryImpl implements Inquire {
 
         @Override
         public BusinessList findBusiness(FindBusiness body) throws DispositionReport {
+                ValidateUDDIv2Inquiry.validateFindBusiness(body);
                 try {
                         return MapUDDIv3Tov2.MapBusinessListEntity(inquiryService.findBusiness(MapUDDIv2Tov3.MapFindBusiness(body)), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
@@ -106,6 +109,7 @@ public class UDDIv2InquiryImpl implements Inquire {
 
         @Override
         public RelatedBusinessesList findRelatedBusinesses(FindRelatedBusinesses body) throws DispositionReport {
+                ValidateUDDIv2Inquiry.validateFindRelatedBusinesses(body);
                 try {
                         return MapUDDIv3Tov2.MapRelatedBusinessList(inquiryService.findRelatedBusinesses(MapUDDIv2Tov3.MapFindRelatedBusiness(body)), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
@@ -115,6 +119,7 @@ public class UDDIv2InquiryImpl implements Inquire {
 
         @Override
         public ServiceList findService(FindService body) throws DispositionReport {
+                ValidateUDDIv2Inquiry.validateFindService(body);
                 try {
                         return MapUDDIv3Tov2.MapServiceList(inquiryService.findService(MapUDDIv2Tov3.MapFindService(body)), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
@@ -124,6 +129,7 @@ public class UDDIv2InquiryImpl implements Inquire {
 
         @Override
         public TModelList findTModel(FindTModel body) throws DispositionReport {
+                ValidateUDDIv2Inquiry.validateFindTModel(body);
                 try {
                         return MapUDDIv3Tov2.MapTModelListElement(inquiryService.findTModel(MapUDDIv2Tov3.MapFindTModel(body)), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
@@ -133,6 +139,7 @@ public class UDDIv2InquiryImpl implements Inquire {
 
         @Override
         public BindingDetail getBindingDetail(GetBindingDetail body) throws DispositionReport {
+                ValidateUDDIv2Inquiry.validateGetBindingDetail(body);
                 try {
                         return MapUDDIv3Tov2.MapBindingDetail(inquiryService.getBindingDetail(MapUDDIv2Tov3.MapGetBindingDetail(body)), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
@@ -142,6 +149,7 @@ public class UDDIv2InquiryImpl implements Inquire {
 
         @Override
         public BusinessDetail getBusinessDetail(GetBusinessDetail body) throws DispositionReport {
+                ValidateUDDIv2Inquiry.validateGetBusinessDetail(body);
                 try {
                         BusinessDetail MapBusinessDetail = MapUDDIv3Tov2.MapBusinessDetail(inquiryService.getBusinessDetail(MapUDDIv2Tov3.MapGetBusinessDetail(body)), getNodeID());
                        // StringWriter sw = new StringWriter();
@@ -155,6 +163,7 @@ public class UDDIv2InquiryImpl implements Inquire {
 
         @Override
         public BusinessDetailExt getBusinessDetailExt(GetBusinessDetailExt body) throws DispositionReport {
+                ValidateUDDIv2Inquiry.validateBusinessDetailExt(body);
                 try {
                         return MapUDDIv3Tov2.MapBusinessDetailExt(inquiryService.getBusinessDetail(MapUDDIv2Tov3.MapGetBusinessDetailExt(body)), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
@@ -164,6 +173,7 @@ public class UDDIv2InquiryImpl implements Inquire {
 
         @Override
         public ServiceDetail getServiceDetail(GetServiceDetail body) throws DispositionReport {
+                ValidateUDDIv2Inquiry.validateGetServiceDetail(body);
                 try {
                         return MapUDDIv3Tov2.MapServiceDetail(inquiryService.getServiceDetail(MapUDDIv2Tov3.MapGetServiceDetail(body)), getNodeID());
                 } catch (DispositionReportFaultMessage ex) {
@@ -173,6 +183,7 @@ public class UDDIv2InquiryImpl implements Inquire {
 
         @Override
         public TModelDetail getTModelDetail(GetTModelDetail body) throws DispositionReport {
+                ValidateUDDIv2Inquiry.validateGetTModelDetail(body);
                 try {
                 	//remove duplicates using a set
                 	Set<String> keyList = new HashSet(body.getTModelKey());

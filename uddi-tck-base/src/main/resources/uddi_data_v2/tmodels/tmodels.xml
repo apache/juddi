@@ -1,0 +1,54 @@
+<!--
+ * Copyright 2001-2009 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */ -->
+ <save_tModel xmlns="urn:uddi-org:api_v2">
+
+	<tModel tModelKey="uuid:df75f8de-0c60-4954-95c6-496ca230f382" xmlns="urn:uddi-org:api_v2">
+	  <name>fruit categories</name>
+	  <description>For testing purposes</description>
+	  <categoryBag>
+	     <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+	  </categoryBag>
+	</tModel>
+	<tModel tModelKey="uuid:10d13a57-0566-475b-af7f-f3648832db6b" xmlns="urn:uddi-org:api_v2">
+      <name>fruit categories</name>
+      <description>For testing purposes</description>
+      <categoryBag>
+          <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+      </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:e458d1f4-5a5b-4b72-aebd-e6ea68c616e2" xmlns="urn:uddi-org:api_v2">
+      <name>fruit categories</name>
+      <description>For testing purposes</description>
+      <categoryBag>
+          <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+      </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:3b5865bb-d057-4ba6-8868-4062b64eb569" xmlns="urn:uddi-org:api_v2">
+      <name>fruit categories</name>
+      <description>For testing purposes</description>
+      <categoryBag>
+          <keyedReference keyName="uddi-org:types:identifier" keyValue="identifier" tModelKey="uddi:uddi.org:categorization:types" />
+      </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:f85a1fb1-2be1-4197-9a3f-fc310222cd34" xmlns="urn:uddi-org:api_v2">
+      <name>fruit categories</name>
+      <description>For testing purposes</description>
+      <categoryBag>
+          <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+      </categoryBag>
+    </tModel>
+</save_tModel>

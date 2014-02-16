@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Copyright 2001-2009 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */ -->
+<businessEntity xmlns="urn:uddi-org:api_v2" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="49417f41-d2b5-4749-b459-55bd785a00d2">
+  <discoveryURLs>
+    <discoveryURL useType="home">http://www.samco.com</discoveryURL>
+    <discoveryURL useType="serviceList">http://www.samco.com/services</discoveryURL>
+  </discoveryURLs>
+  <name xml:lang="en">SamCo, Inc.</name>
+  <description xml:lang="en">SamCo provides a suite of digital assets.</description>
+  <contacts>
+    <contact useType="administrator">
+      <personName xml:lang="en">Sam Syndicator</personName>
+      <description xml:lang="en">This is the administrator of the service offerings.</description>
+      <phtwo useType="office">123-456-7890</phtwo>
+      <phtwo useType="mobile">987-654-3210</phtwo>
+      <email useType="work">ssyndicator@samco.com</email>
+      <address xml:lang="en" useType="headquarters" sortCode="1" tModelKey="uddi:tmodelkey:address">
+        <addressLine keyName="street" keyValue="street">1515 Main St</addressLine>
+        <addressLine keyName="citystatezip" keyValue="citystatezip">Ann Arbor, MI 41804</addressLine>
+        <addressLine keyName="country" keyValue="country">USA</addressLine>
+      </address>
+    </contact>
+  </contacts>
+  <categoryBag>
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="bananas" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="kiwi" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="progressive-rock" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="country" />
+    <keyedReferenceGroup tModelKey="uddi:uddi.org:categorization:types">
+      <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="blank" keyValue="blank" />
+    </keyedReferenceGroup>
+  </categoryBag>
+  <identifierBag>
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="identify" keyValue="identity" />
+  </identifierBag>
+  <businessServices>
+    <businessService xmlns="urn:uddi-org:api_v2" xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+         businessKey="920465ac-07dd-4756-8212-5c4c300faf36" serviceKey="b82739a9-f35c-4331-999a-6bfb2968ca5e">
+      <name xml:lang="en">Service One</name>
+      <name xml:lang="es">Servicio Uno</name>
+      <description xml:lang="en">This is the description of service one.</description>
+      <description xml:lang="es">Ésta es la descripción del servicio uno.</description>
+      <bindingTemplates>
+        <bindingTemplate bindingKey="c0af9342-f4f1-4625-b1f4-810fa35ae346">
+          <description xml:lang="en">This is the access point for service one.</description>
+          <accessPoint URLType="http">http://businessone.com/services/serviceone</accessPoint>
+          <tModelInstanceDetails>
+            <tModelInstanceInfo tModelKey="uddi:uddi.org:transport:telephone">
+              <description xml:lang="en">The wsdl for this service: service one</description>
+              <instanceDetails>
+                <overviewDoc>
+                  <description xml:lang="en">Help document to describe the WSDL</description>
+                  <overviewURL useType="text">http://www.w3.org/TR/wsdl</overviewURL>
+                </overviewDoc>
+                <instanceParms>instanceParms</instanceParms>
+              </instanceDetails>
+            </tModelInstanceInfo>
+          </tModelInstanceDetails>
+        <categoryBag>
+          <keyedReference tModelKey="uddi:uddi.org:transport:telephone" keyName="category" keyValue="accesspoint" />
+        </categoryBag>
+        </bindingTemplate>
+      </bindingTemplates>
+      <categoryBag>
+        <keyedReference tModelKey="uddi:uddi.org:transport:telephone" keyName="category" keyValue="peaches" />
+        <keyedReference tModelKey="uddi:uddi.org:transport:telephone" keyName="category" keyValue="plums" />
+        <keyedReferenceGroup tModelKey="uddi:uddi.org:transport:telephone">
+          <keyedReference tModelKey="uddi:uddi.org:transport:telephone" keyName="blank" keyValue="blank" />
+        </keyedReferenceGroup>
+      </categoryBag>
+    </businessService>
+  </businessServices>
+</businessEntity>

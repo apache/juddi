@@ -59,7 +59,7 @@ public class FindRelatedBusinesses {
     protected String businessKey;
     protected KeyedReference keyedReference;
     @XmlAttribute(name = "generic", required = true)
-    protected String generic;
+    protected String generic="2.0";
     @XmlAttribute(name = "maxRows")
     protected Integer maxRows;
 

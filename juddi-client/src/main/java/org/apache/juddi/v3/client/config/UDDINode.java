@@ -107,12 +107,13 @@ public class UDDINode implements Serializable {
 	
 	public Transport getTransport() throws TransportException {
 		if (transport==null) {
+                        String clazz = getProxyTransport();
 			try {
-				String clazz = getProxyTransport();
+				
 				Class<?> transportClass = ClassUtil.forName(clazz,this.getClass());
 				transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(clientName,name);
 			} catch (Exception e) {
-				throw new TransportException(e.getMessage(),e);
+				throw new TransportException(e.getMessage() + " node " + name + " transport class: " + clazz,e);
 			}
 		}
 		return transport;

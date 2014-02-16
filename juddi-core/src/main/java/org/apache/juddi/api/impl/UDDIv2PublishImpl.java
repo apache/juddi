@@ -17,11 +17,14 @@ package org.apache.juddi.api.impl;
 
 import java.util.List;
 import javax.jws.WebService;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.xml.ws.Holder;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.v3.client.mapping.MapUDDIv2Tov3;
 import org.apache.juddi.v3.client.mapping.MapUDDIv3Tov2;
@@ -68,12 +71,12 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * @since 3.2
  */
 @WebService(serviceName = "Publish", targetNamespace = "urn:uddi-org:publication_v2",
-        endpointInterface = "org.uddi.v2_service.Publish")
+     endpointInterface = "org.uddi.v2_service.Publish")
 public class UDDIv2PublishImpl implements Publish {
 
         public UDDIv2PublishImpl() {
                 logger.warn("This implementation of UDDIv2 Publish service " + UDDIv2PublishImpl.class.getCanonicalName() + " is considered BETA. Please"
-                        + " report any issues to https://issues.apache.org/jira/browse/JUDDI");
+                     + " report any issues to https://issues.apache.org/jira/browse/JUDDI");
         }
 
         static String nodeId = null;
@@ -164,8 +167,8 @@ public class UDDIv2PublishImpl implements Publish {
         @Override
         public AssertionStatusReport getAssertionStatusReport(GetAssertionStatusReport body) throws org.uddi.v2_service.DispositionReport {
                 try {
-                        
-                       return MapUDDIv3Tov2.MapAssertionStatusReport( publishService.getAssertionStatusReport(body.getAuthInfo(), MapUDDIv2Tov3.MapCompletionStatus(body.getCompletionStatus())));
+
+                        return MapUDDIv3Tov2.MapAssertionStatusReport(publishService.getAssertionStatusReport(body.getAuthInfo(), MapUDDIv2Tov3.MapCompletionStatus(body.getCompletionStatus())));
                 } catch (DispositionReportFaultMessage ex) {
                         throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
@@ -191,7 +194,7 @@ public class UDDIv2PublishImpl implements Publish {
         @Override
         public PublisherAssertions getPublisherAssertions(GetPublisherAssertions body) throws org.uddi.v2_service.DispositionReport {
                 try {
-                        return MapUDDIv3Tov2.MapPublisherAssertions(publishService.getPublisherAssertions(body.getAuthInfo()), getNodeID());
+                        return MapUDDIv3Tov2.MapPublisherAssertions(publishService.getPublisherAssertions(body.getAuthInfo()), getNodeID(),getUsername(body.getAuthInfo()));
                 } catch (DispositionReportFaultMessage ex) {
                         throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }
@@ -243,13 +246,35 @@ public class UDDIv2PublishImpl implements Publish {
                 }
         }
 
+        private String getUsername(String authinfo) {
+                String user = "N/A";
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+
+                        tx.begin();
+                        user = publishService.getEntityPublisher(em, authinfo).getAuthorizedName();
+                        tx.commit();
+                } catch (Exception ex) {
+                        logger.error(ex);
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+                return user;
+        }
+
         @Override
         public PublisherAssertions setPublisherAssertions(SetPublisherAssertions body) throws org.uddi.v2_service.DispositionReport {
                 try {
                         Holder<List<PublisherAssertion>> req = new Holder<List<PublisherAssertion>>();
                         req.value = MapUDDIv2Tov3.MapSetPublisherAssertions(body);
                         publishService.setPublisherAssertions(body.getAuthInfo(), req);
-                        return MapUDDIv3Tov2.MapPublisherAssertions(req.value, getNodeID());
+
+                        return MapUDDIv3Tov2.MapPublisherAssertions(req.value, getNodeID(), getUsername(body.getAuthInfo()));
                 } catch (DispositionReportFaultMessage ex) {
                         throw MapUDDIv3Tov2.MapException(ex, getNodeID());
                 }

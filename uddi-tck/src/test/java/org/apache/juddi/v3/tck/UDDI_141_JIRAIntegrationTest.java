@@ -16,13 +16,11 @@ package org.apache.juddi.v3.tck;
 
 import java.net.InetAddress;
 import java.rmi.RemoteException;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 import javax.xml.bind.JAXB;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.soap.SOAPFault;
@@ -33,10 +31,8 @@ import javax.xml.ws.soap.SOAPFaultException;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -44,7 +40,6 @@ import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.*;
-import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionFilter;
 import org.uddi.v3_service.UDDIInquiryPortType;
@@ -98,6 +93,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 tckTModelSam.deleteCreatedTModels(authInfoSam);
                 manager.stop();
@@ -105,13 +101,14 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 logger.info("UDDI_141_JIRAIntegrationTest");
                 manager = new UDDIClient();
                 manager.start();
 
                 logger.debug("Getting auth tokens..");
                 try {
-                        Transport transport = manager.getTransport();
+                        Transport transport = manager.getTransport("uddiv3");
                         security = transport.getUDDISecurityService();
 
                         publicationJoe = transport.getUDDIPublishService();
@@ -133,7 +130,7 @@ public class UDDI_141_JIRAIntegrationTest {
                         tckBusinessJoe = new TckBusiness(publicationJoe, inquiryJoe);
 
 
-                        transport = manager.getTransport();
+                        transport = manager.getTransport("uddiv3");
 
                         publicationSam = transport.getUDDIPublishService();
                         inquiryJoeSam = transport.getUDDIInquiryService();
@@ -171,6 +168,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @Test
         public void JUDDI_JIRA_571_Part1_Test() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 //add a business
                 //add a business with lang defined
                 //find business with lang defined, expecting one result
@@ -266,6 +264,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @Test
         public void JUDDI_JIRA_571_Part2_Test() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 //add a service
                 //add a service with lang defined
                 //find service with lang defined, expecting one result
@@ -373,6 +372,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @Test
         public void JUDDI_571_Part3_Test() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 //add a tmodel
                 //add a tmodel with lang defined
                 //find tmodel with lang defined, expecting one result
@@ -471,6 +471,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @Test
         public void JUDDI_574() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 //make a test model with a lang
 
                 //search for it by name
@@ -545,6 +546,7 @@ public class UDDI_141_JIRAIntegrationTest {
          */
         @Test
         public void JUDDI_590() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 //create two businesses
                 System.out.println("JUDDI_590");
 
@@ -701,6 +703,7 @@ public class UDDI_141_JIRAIntegrationTest {
          */
         @Test
         public void JUDDI_590_1() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 //create two businesses
                 System.out.println("JUDDI_590_1");
 
@@ -769,7 +772,8 @@ public class UDDI_141_JIRAIntegrationTest {
                                 ok = false;
                         }
                         for (int i = 0; i < assertionStatusReport.size(); i++) {
-                                JAXB.marshal(assertionStatusReport.get(i), System.out);
+                                if (TckCommon.isDebug())
+                                        JAXB.marshal(assertionStatusReport.get(i), System.out);
                                 if (assertionStatusReport.get(i).getToKey().equals(samBiz)) {
                                         if (!assertionStatusReport.get(i).getCompletionStatus().equals(CompletionStatus.STATUS_TO_KEY_INCOMPLETE)) {
                                                 ok = false;
@@ -790,7 +794,8 @@ public class UDDI_141_JIRAIntegrationTest {
                                 ok = false;
                         }
                         for (int i = 0; i < assertionStatusReport.size(); i++) {
-                                JAXB.marshal(assertionStatusReport.get(i), System.out);
+                                if (TckCommon.isDebug())
+                                        JAXB.marshal(assertionStatusReport.get(i), System.out);
                                 if (assertionStatusReport.get(i).getToKey().equals(samBiz)) {
                                         if (!assertionStatusReport.get(i).getCompletionStatus().equals(CompletionStatus.STATUS_TO_KEY_INCOMPLETE)) {
                                                 ok = false;
@@ -823,7 +828,7 @@ public class UDDI_141_JIRAIntegrationTest {
          */
         @Test
         public void JIRA_597() throws Exception {
-
+Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_597");
 
                 int port = 7000;
@@ -945,6 +950,7 @@ public class UDDI_141_JIRAIntegrationTest {
          */
         @Test
         public void JIRA_596() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_596");
                 int port = 9000;
 
@@ -1065,6 +1071,7 @@ public class UDDI_141_JIRAIntegrationTest {
         //binding template tmodel instance info
         @Test
         public void JIRA_575_BT() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_BT");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1113,6 +1120,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @Test
         public void JIRA_575_KR_Biz() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_KR_Biz");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1146,6 +1154,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @Test
         public void JIRA_575_IDENT_Biz() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_IDENT_Biz");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1179,6 +1188,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @Test
         public void JIRA_575_KR_TMODEL() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_KR_TMODEL");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1208,6 +1218,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @Test
         public void JIRA_575_KRGRP_TMODEL() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_KRGRP_TMODEL");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1238,6 +1249,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @Test
         public void JIRA_575_KRGRP_Biz() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_KRGRP_Biz");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1274,6 +1286,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @Test
         public void JIRA_575_KRGRP_PA() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_KRGRP_PA");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1315,6 +1328,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @Test
         public void JIRA_575_SVC_KR() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_SVC_KR");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1353,6 +1367,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @Test
         public void JIRA_575_SVC_KRGRP() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_SVC_KRGRP");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();

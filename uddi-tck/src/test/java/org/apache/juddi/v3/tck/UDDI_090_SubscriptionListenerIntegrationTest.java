@@ -44,6 +44,7 @@ import static org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerExternalTest.
 
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -94,6 +95,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 tckTModelMary.deleteCreatedTModels(authInfoMary);
                 manager.stop();
@@ -104,6 +106,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         smtpPort = 9700 + new Random().nextInt(99);
                         httpPort = 9600 + new Random().nextInt(99);
@@ -149,7 +152,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         logger.debug("Getting auth tokens..");
 
 
-                        Transport transport = manager.getTransport();
+                        Transport transport = manager.getTransport("uddiv3");
                         UDDISecurityPortType security = transport.getUDDISecurityService();
                         authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                         authInfoMary = TckSecurity.getAuthToken(security, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
@@ -175,7 +178,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
 
 
 
-                        transport = manager.getTransport();
+                        transport = manager.getTransport("uddiv3");
                         publicationMary = transport.getUDDIPublishService();
                         inquiryMary = transport.getUDDIInquiryService();
                         subscriptionMary = transport.getUDDISubscriptionService();
@@ -201,6 +204,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
 
         @Test
         public void joePublisherUpdate_HTTP_FIND_SERVICE() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 logger.info("joePublisherUpdate_HTTP_FIND_SERVICE");
                 try {
                         TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
@@ -260,6 +264,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
         
         @Test
         public void joePublisherUpdate_HTTP_FIND_BUSINESS() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 logger.info("joePublisherUpdate_HTTP_FIND_BUSINESS");
                 try {
                         TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
@@ -338,6 +343,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
         //tmodel tests
         @Test
         public void joePublisherUpdate_HTTP_FIND_TMODEL() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 logger.info("joePublisherUpdate_HTTP_FIND_TMODEL");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 try {
@@ -399,6 +405,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
          */
         @Test
         public void joePublisherUpdate_HTTP_GET_BUSINESS_DETAIL() throws Exception{
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 logger.info("joePublisherUpdate_HTTP_GET_BUSINESS_DETAIL");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 Holder<List<Subscription>> holder=null;
@@ -503,6 +510,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
          */
         @Test
         public void joePublisherUpdate_HTTP_GET_TMODEL_DETAIL() throws Exception{
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 logger.info("joePublisherUpdate_HTTP_GET_TMODEL_DETAIL");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 Holder<List<Subscription>> holder=null;

@@ -68,6 +68,14 @@ public class TckPublisher {
                         }
                 }
         }
+        
+        /**
+         * is enabled for UDDI v3 tests
+         * @return 
+         */
+        public final static boolean isEnabled(){
+             return Boolean.parseBoolean(tckProperties.getProperty("uddiv3.enabled", "false"));
+        }
 
         public final static String getRootPublisherId() {
                 return tckProperties.getProperty(Property.ROOT_PUBLISHER);

@@ -52,7 +52,7 @@ public class GetPublisherAssertions {
     @XmlElement(required = true)
     protected String authInfo;
     @XmlAttribute(name = "generic", required = true)
-    protected String generic;
+    protected String generic="2.0";
 
     /**
      * Gets the value of the authInfo property.

@@ -24,6 +24,7 @@ import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.BusinessInfo;
@@ -64,6 +65,7 @@ public class UDDI_110_FindBusinessIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 tckTModel.deleteCreatedTModels(authInfoJoe);
                 tckTModel01.deleteCreatedTModels(authInfoJoe);
                 tckTModel02.deleteCreatedTModels(authInfoJoe);
@@ -72,12 +74,13 @@ public class UDDI_110_FindBusinessIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 manager = new UDDIClient();
                 manager.start();
 
                 logger.debug("Getting auth tokens..");
                 try {
-                        Transport transport = manager.getTransport();
+                        Transport transport = manager.getTransport("uddiv3");
                         UDDISecurityPortType security = transport.getUDDISecurityService();
                         authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                         //Assert.assertNotNull(authInfoJoe);
@@ -102,6 +105,7 @@ public class UDDI_110_FindBusinessIntegrationTest {
 
         @Test
         public void findBusinessByTModelBag() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
                         tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);

@@ -39,7 +39,7 @@ public class GetBindingDetail {
     @XmlElement(required = true)
     protected List<String> bindingKey;
     @XmlAttribute(name = "generic", required = true)
-    protected String generic;
+    protected String generic="2.0";
 
     /**
      * Gets the value of the bindingKey property.

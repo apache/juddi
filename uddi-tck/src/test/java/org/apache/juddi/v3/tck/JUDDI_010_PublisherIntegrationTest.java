@@ -59,13 +59,14 @@ public class JUDDI_010_PublisherIntegrationTest {
         @BeforeClass
         public static void startManager() throws ConfigurationException {
                 Assume.assumeTrue(TckPublisher.isJUDDI());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 manager = new UDDIClient();
                 manager.start();
 
 
                 logger.debug("Getting auth tokens..");
                 try {
-                        Transport transport = manager.getTransport();
+                        Transport transport = manager.getTransport("uddiv3");
 
                         security = transport.getUDDISecurityService();
                         GetAuthToken getAuthToken = new GetAuthToken();
@@ -88,8 +89,9 @@ public class JUDDI_010_PublisherIntegrationTest {
         @Test
         public void testAuthToken() {
                 Assume.assumeTrue(TckPublisher.isUDDIAuthMode());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
-                        Transport transport = manager.getTransport();
+                        Transport transport = manager.getTransport("uddiv3");
 
                         UDDISecurityPortType securityService = transport.getUDDISecurityService();
                         GetAuthToken getAuthToken = new GetAuthToken();
@@ -107,6 +109,7 @@ public class JUDDI_010_PublisherIntegrationTest {
         @Test
         public void testJoePublisher() {
                 Assume.assumeTrue(TckPublisher.isJUDDI());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 //We can only test this if the publisher is not there already.
                 //If it already there is probably has foreign key relationships.
                 //This test should really only run on an empty database. Seed
@@ -120,6 +123,7 @@ public class JUDDI_010_PublisherIntegrationTest {
         @Test
         public void testSamSyndicator() {
                 Assume.assumeTrue(TckPublisher.isJUDDI());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 //We can only test this if the publisher is not there already.
                 if (!isExistPublisher(TckPublisher.getSamPublisherId())) {
                         saveSamSyndicator();
@@ -130,6 +134,7 @@ public class JUDDI_010_PublisherIntegrationTest {
         @Test
         public void testGetAllPublishers() {
                 Assume.assumeTrue(TckPublisher.isJUDDI());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 GetAllPublisherDetail gp = new GetAllPublisherDetail();
                 gp.setAuthInfo(authInfo);
                 try {
@@ -149,6 +154,7 @@ public class JUDDI_010_PublisherIntegrationTest {
          */
         public boolean saveJoePublisher() {
                 Assume.assumeTrue(TckPublisher.isJUDDI());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 if (!isExistPublisher(TckPublisher.getJoePublisherId())) {
                         savePublisher(TckPublisher.getJoePublisherId(), TckPublisher.JOE_PUBLISHER_XML);
                         return true;
@@ -163,6 +169,7 @@ public class JUDDI_010_PublisherIntegrationTest {
          */
         public void deleteJoePublisher() {
                 Assume.assumeTrue(TckPublisher.isJUDDI());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 deletePublisher(TckPublisher.getJoePublisherId());
         }
 
@@ -173,6 +180,7 @@ public class JUDDI_010_PublisherIntegrationTest {
          */
         public String saveSamSyndicator() {
                 Assume.assumeTrue(TckPublisher.isJUDDI());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 if (!isExistPublisher(TckPublisher.getSamPublisherId())) {
                         savePublisher(TckPublisher.getSamPublisherId(), TckPublisher.SAM_SYNDICATOR_XML);
                 }
@@ -185,6 +193,7 @@ public class JUDDI_010_PublisherIntegrationTest {
          */
         public void deleteSamSyndicator() {
                 Assume.assumeTrue(TckPublisher.isJUDDI());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 deletePublisher(TckPublisher.getSamPublisherId());
         }
 

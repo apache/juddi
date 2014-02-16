@@ -65,6 +65,12 @@ public class App {
                 } else {
                         cs = new Class[]{
                                 //the bpel tests really only test wsdl to uddi
+                                org.apache.juddi.v2.tck.UDDI_020_TmodelIntegrationTest.class,
+                                org.apache.juddi.v2.tck.UDDI_030_BusinessEntityIntegrationTest.class,
+                                org.apache.juddi.v2.tck.UDDI_040_BusinessServiceIntegrationTest.class,
+                                org.apache.juddi.v2.tck.UDDI_050_BindingTemplateIntegrationTest.class,
+                                org.apache.juddi.v2.tck.UDDI_060_PublisherAssertionIntegrationTest.class,
+                                org.apache.juddi.v2.tck.UDDI_070_FindEntityIntegrationTest.class,
                                 org.apache.juddi.v3.bpel.BPEL_010_IntegrationTest.class,
                                 org.apache.juddi.v3.bpel.BPEL_020_IntegrationTest.class,
                                 org.apache.juddi.v3.tck.JUDDI_010_PublisherIntegrationTest.class,

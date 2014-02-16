@@ -60,7 +60,7 @@ public class FindTModel {
     protected IdentifierBag identifierBag;
     protected CategoryBag categoryBag;
     @XmlAttribute(name = "generic", required = true)
-    protected String generic;
+    protected String generic="2.0";
     @XmlAttribute(name = "maxRows")
     protected Integer maxRows;
 

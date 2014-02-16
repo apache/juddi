@@ -30,6 +30,7 @@ import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.AccessPoint;
@@ -78,18 +79,20 @@ public class UDDI_150_CustodyTransferIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 manager.stop();
         }
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 manager = new UDDIClient();
                 manager.start();
 
                 logger.debug("Getting auth tokens..");
                 try {
-                        Transport transport = manager.getTransport();
+                        Transport transport = manager.getTransport("uddiv3");
                         security = transport.getUDDISecurityService();
                         authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                         authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
@@ -109,7 +112,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
 
                         tckTModelJoe = new TckTModel(publishJoe, inquiryJoe);
 
-                        transport = manager.getTransport();
+                        transport = manager.getTransport("uddiv3");
                         publishSam = transport.getUDDIPublishService();
                         inquirySam = transport.getUDDIInquiryService();
                         custodyTransferPortTypeSam = transport.getUDDICustodyTransferService();
@@ -119,7 +122,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
                                 TckSecurity.setCredentials((BindingProvider) custodyTransferPortTypeJoe, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
                         }
 
-                        transport = manager.getTransport();
+                        transport = manager.getTransport("uddiv3");
                         UDDIPublicationPortType uddiPublishService = transport.getUDDIPublishService();
                         UDDIInquiryPortType uddiInquiryService = transport.getUDDIInquiryService();
                         if (!TckPublisher.isUDDIAuthMode()) {
@@ -162,6 +165,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
          */
         @Test
         public void ValidTransfer() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("ValidTransfer");
                 DatatypeFactory df = DatatypeFactory.newInstance();
                 GregorianCalendar gcal = new GregorianCalendar();
@@ -259,6 +263,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
 
         @Test
         public void InvalidTransferTokenNullKeybag() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         //transfers from Joe to Sam
                         KeyBag kb = null;
@@ -276,6 +281,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
 
         @Test
         public void InvalidTransferTokenEmptyKeybag() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         //transfers from Joe to Sam
                         KeyBag kb = new KeyBag();
@@ -295,6 +301,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
 
         @Test
         public void InvalidTransferTokenEmptyNullAuthToken() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 String keyJoeBiz = null;
                 try {
                         DatatypeFactory df = DatatypeFactory.newInstance();
@@ -343,6 +350,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
          */
         @Test
         public void InvalidTransferTokenModified() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 String keySamBiz = null;
                 String keyJoeBiz = null;
                 try {
@@ -418,6 +426,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
 
         @Test
         public void InvalidTransferTokenServiceDoesntExist() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         //transfers from Joe to Sam
                         KeyBag kb = new KeyBag();

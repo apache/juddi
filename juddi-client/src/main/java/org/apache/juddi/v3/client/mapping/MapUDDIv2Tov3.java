@@ -17,13 +17,16 @@ package org.apache.juddi.v3.client.mapping;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.xml.soap.SOAPFault;
 import javax.xml.ws.soap.SOAPFaultException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.v3.client.UDDIConstants;
+import org.apache.juddi.v3.client.UDDIv2Constants;
 import org.uddi.api_v2.AssertionStatusReport;
 import org.uddi.api_v2.GetBusinessDetailExt;
 import org.uddi.api_v2.GetTModelDetail;
@@ -458,7 +461,7 @@ public class MapUDDIv2Tov3 {
                 r.getListDescription().setIncludeCount(0);
                 r.getListDescription().setListHead(0);
 
-                if (findTModel.getTModelInfos() != null) {
+                if (findTModel.getTModelInfos() != null && !findTModel.getTModelInfos().getTModelInfo().isEmpty()) {
                         r.setTModelInfos(new TModelInfos());
                         r.getListDescription().setIncludeCount(findTModel.getTModelInfos().getTModelInfo().size());
                         r.getListDescription().setActualCount(findTModel.getTModelInfos().getTModelInfo().size());
@@ -632,7 +635,7 @@ public class MapUDDIv2Tov3 {
                 }
                 FindBinding r = new FindBinding();
                 r.setServiceKey(body.getServiceKey());
-                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers()));
+                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers(), true));
                 r.setMaxRows(body.getMaxRows());
                 r.setTModelBag(MapTModelBag(body.getTModelBag()));
                 return r;
@@ -648,7 +651,7 @@ public class MapUDDIv2Tov3 {
                 return r;
         }
 
-        private static FindQualifiers MapFindQualifiers(org.uddi.api_v2.FindQualifiers findQualifiers) {
+        private static FindQualifiers MapFindQualifiers(org.uddi.api_v2.FindQualifiers findQualifiers, boolean isBinding) {
                 if (findQualifiers == null || findQualifiers.getFindQualifier().isEmpty()) {
                         return null;
                 }
@@ -687,8 +690,11 @@ public class MapUDDIv2Tov3 {
                         if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4")) {
                                 r.getFindQualifier().add("uddi:uddi.org:categorization:types");
                         }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("exactNameMatch")) {
+                                r.getFindQualifier().add(UDDIConstants.EXACT_MATCH);
+                        }
                         if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.EXACT_MATCH)) {
-                                r.getFindQualifier().add("exactNameMatch");
+                                r.getFindQualifier().add(UDDIConstants.EXACT_MATCH);
                         }
                         if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.CASE_SENSITIVE_MATCH)) {
                                 r.getFindQualifier().add("caseSensitiveMatch");
@@ -721,7 +727,35 @@ public class MapUDDIv2Tov3 {
                         if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.COMBINE_CATEGORY_BAGS)) {
                                 r.getFindQualifier().add(UDDIConstants.COMBINE_CATEGORY_BAGS);
                         }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIv2Constants.exactNameMatch)) {
+                                r.getFindQualifier().add(UDDIConstants.EXACT_MATCH);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.APPROXIMATE_MATCH)) {
+                                r.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                        }
+                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.APPROXIMATE_MATCH_TMODEL)) {
+                                r.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                        }
+                        
                 }
+                //default behavior of v2, caseInsensitive, sortByNameAsc or sortByDateAsc, approximateMatch
+                if (!r.getFindQualifier().contains(UDDIConstants.CASE_INSENSITIVE_MATCH) &&
+                     !r.getFindQualifier().contains(UDDIConstants.CASE_INSENSITIVE_MATCH_TMODEL) &&
+                     !r.getFindQualifier().contains(UDDIConstants.CASE_SENSITIVE_MATCH) && 
+                     !r.getFindQualifier().contains(UDDIConstants.EXACT_MATCH) &&
+                     !isBinding)
+                        
+                     r.getFindQualifier().add(UDDIConstants.CASE_INSENSITIVE_MATCH);
+                
+                if (!r.getFindQualifier().contains(UDDIConstants.APPROXIMATE_MATCH) &&
+                     !r.getFindQualifier().contains(UDDIConstants.APPROXIMATE_MATCH_TMODEL) &&
+                     !r.getFindQualifier().contains(UDDIConstants.EXACT_MATCH) &&
+                     !isBinding)
+                     r.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                //dedup
+                HashSet<String> s = new HashSet<String>(r.getFindQualifier());
+                r.getFindQualifier().clear();
+                r.getFindQualifier().addAll(s);
                 return r;
         }
 
@@ -732,7 +766,7 @@ public class MapUDDIv2Tov3 {
                 FindBusiness r = new FindBusiness();
                 r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));
                 r.setDiscoveryURLs(MapDiscoveryURLs(body.getDiscoveryURLs()));
-                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers()));
+                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers(), false));
                 r.setTModelBag(MapTModelBag(body.getTModelBag()));
                 r.setMaxRows(body.getMaxRows());
                 r.getName().addAll(MapName(body.getName()));
@@ -746,7 +780,10 @@ public class MapUDDIv2Tov3 {
                 if (findQualifiers == null) {
                         findQualifiers = new org.uddi.api_v3.FindQualifiers();
                 }
-                findQualifiers.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                Set<String> s = new HashSet<String>(findQualifiers.getFindQualifier());
+                s.add(UDDIConstants.APPROXIMATE_MATCH);
+                findQualifiers.getFindQualifier().clear();
+                findQualifiers.getFindQualifier().addAll(s);
                 return findQualifiers;
         }
 
@@ -788,7 +825,7 @@ public class MapUDDIv2Tov3 {
                 }
                 FindRelatedBusinesses r = new FindRelatedBusinesses();
                 r.setBusinessKey(body.getBusinessKey());
-                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers()));
+                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers(),false));
                 if (body.getKeyedReference() != null) {
                         r.setKeyedReference(new KeyedReference(body.getKeyedReference().getTModelKey(), body.getKeyedReference().getKeyName(), body.getKeyedReference().getKeyValue()));
                 }
@@ -803,7 +840,7 @@ public class MapUDDIv2Tov3 {
                 FindService r = new FindService();
                 r.setBusinessKey(body.getBusinessKey());
                 r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));
-                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers()));
+                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers(),false));
                 r.setMaxRows(body.getMaxRows());
                 r.setTModelBag(MapTModelBag(body.getTModelBag()));
                 r.getName().addAll(MapName(body.getName()));
@@ -820,7 +857,7 @@ public class MapUDDIv2Tov3 {
                 }
                 FindTModel r = new FindTModel();
                 r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));
-                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers()));
+                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers(),false));
                 r.setMaxRows(body.getMaxRows());
                 if (body.getName() != null) {
                         r.setName(new Name(body.getName().getValue(), body.getName().getLang()));
@@ -924,7 +961,7 @@ public class MapUDDIv2Tov3 {
                 }
                 DeletePublisherAssertions r = new DeletePublisherAssertions();
                 r.setAuthInfo(body.getAuthInfo());
-                //r.getPublisherAssertion().addAll(Map));
+                r.getPublisherAssertion().addAll(MapListPublisherAssertion(body.getPublisherAssertion()));
                 return r;
         }
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Copyright 2001-2009 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */ -->
+<bindingTemplate xmlns="urn:uddi-org:api_v2" serviceKey="b82739a9-f35c-4331-999a-6bfb2968ca5e" bindingKey="afc4954d-3f0e-4e33-a1c2-30bd6bb04175">
+  <description xml:lang="en">This is the secure access point for service one</description>
+  <accessPoint URLType="http">https://businessone.com/services/serviceone</accessPoint>
+  <tModelInstanceDetails>
+    <tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
+  </tModelInstanceDetails>
+  <categoryBag>
+    <keyedReference tModelKey="uuid:f85a1fb1-2be1-4197-9a3f-fc310222cd34" keyName="category" keyValue="secure" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types"
+    	keyName="HTTP protocol" keyValue="uddi:uddi.org:protocol:http"/>
+  </categoryBag>
+</bindingTemplate>

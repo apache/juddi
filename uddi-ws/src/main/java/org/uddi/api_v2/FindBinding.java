@@ -57,7 +57,7 @@ public class FindBinding {
     @XmlElement(required = true)
     protected TModelBag tModelBag;
     @XmlAttribute(name = "generic", required = true)
-    protected String generic;
+    protected String generic="2.0";
     @XmlAttribute(name = "maxRows")
     protected Integer maxRows;
     @XmlAttribute(name = "serviceKey", required = true)

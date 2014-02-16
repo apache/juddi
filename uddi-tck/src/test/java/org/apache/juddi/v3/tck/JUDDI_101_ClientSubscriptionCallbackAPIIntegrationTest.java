@@ -16,11 +16,14 @@
 package org.apache.juddi.v3.tck;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import javax.xml.datatype.DatatypeFactory;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClerk;
@@ -30,6 +33,7 @@ import org.apache.juddi.v3.client.subscription.SubscriptionCallbackListener;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.BindingTemplate;
@@ -66,10 +70,20 @@ public class JUDDI_101_ClientSubscriptionCallbackAPIIntegrationTest implements I
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
-
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 manager = new UDDIClient();
                 manager.start();
-                clerk=manager.getClerk("default");
+                Iterator<Node> iterator = manager.getClientConfig().getUDDINodeList().iterator();
+                while (iterator.hasNext()){
+                        Node next = iterator.next();
+                        logger.info("NODE " + next.getClientName() + " " + next.getName() + " " + next.getProxyTransport());
+                }
+                Iterator<Map.Entry<String, UDDIClerk>> iterator1 = manager.getClientConfig().getUDDIClerks().entrySet().iterator();
+                while (iterator1.hasNext()){
+                        Map.Entry<String, UDDIClerk> next = iterator1.next();
+                        logger.info("CLERK " + next.getKey() + " " + next.getValue().getName());
+                }
+                clerk = manager.getClerk("uddiv3");
                 clerk.setPassword(TckPublisher.getJoePassword());
                 clerk.setPublisher(TckPublisher.getJoePublisherId());
                 clerk.setIsPasswordEncrypted(false);
@@ -84,10 +98,9 @@ public class JUDDI_101_ClientSubscriptionCallbackAPIIntegrationTest implements I
         @Test
         public void SubscriptionCallbackTest1() throws Exception {
                 //first some setup
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 reset();
-                
-                
-                
+
                 TModel createKeyGenator = UDDIClerk.createKeyGenator("somebusiness", "A test key domain SubscriptionCallbackTest1", "SubscriptionCallbackTest1");
                 Assert.assertNotNull(createKeyGenator);
                 clerk.register(createKeyGenator);
@@ -107,7 +120,7 @@ public class JUDDI_101_ClientSubscriptionCallbackAPIIntegrationTest implements I
                 logger.info("Registered business keygen: " + register.getBusinessKey());
 
                 //start up our listener
-                BindingTemplate start = SubscriptionCallbackListener.start(manager, "default");
+                BindingTemplate start = SubscriptionCallbackListener.start(manager, "uddiv3");
                 Assert.assertNotNull(start);
 
                 if (TckCommon.isDebug()) {
@@ -128,7 +141,7 @@ public class JUDDI_101_ClientSubscriptionCallbackAPIIntegrationTest implements I
                 sub.getSubscriptionFilter().getFindBusiness().getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
                 sub.getSubscriptionFilter().getFindBusiness().getName().add(new Name(UDDIConstants.WILDCARD, null));
 
-                Subscription subscription = clerk.register(sub, clerk.getUDDINode().getApiNode());
+                Subscription subscription = clerk.register(sub);
                 if (TckCommon.isDebug()) {
                         PrintUDDI<Subscription> p2 = new PrintUDDI<Subscription>();
                         logger.info(p2.print(subscription));
@@ -165,7 +178,7 @@ public class JUDDI_101_ClientSubscriptionCallbackAPIIntegrationTest implements I
 
                 logger.info("Callback check." + notifications);
                 //Thread.sleep(2000);
-                SubscriptionCallbackListener.stop(manager, "default", start.getBindingKey());
+                SubscriptionCallbackListener.stop(manager, "uddiv3", start.getBindingKey());
                 clerk.unRegisterSubscription(subscription.getSubscriptionKey());
                 clerk.unRegisterTModel(createKeyGenator.getTModelKey());
 
@@ -187,8 +200,7 @@ public class JUDDI_101_ClientSubscriptionCallbackAPIIntegrationTest implements I
 
         @Override
         public void HandleCallback(SubscriptionResultsList body) {
-                if (TckCommon.isDebug()) 
-                {
+                if (TckCommon.isDebug()) {
                         PrintUDDI<SubscriptionResultsList> p2 = new PrintUDDI<SubscriptionResultsList>();
                         logger.info(p2.print(body));
                 }

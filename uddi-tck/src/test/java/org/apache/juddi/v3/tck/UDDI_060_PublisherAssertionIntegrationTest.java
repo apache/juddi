@@ -27,6 +27,7 @@ import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.v3_service.UDDIInquiryPortType;
@@ -55,6 +56,7 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 tckTModelSam.deleteCreatedTModels(authInfoSam);
                 tckTModelMary.deleteCreatedTModels(authInfoMary);
@@ -63,12 +65,13 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 manager = new UDDIClient();
                 manager.start();
 
                 logger.debug("Getting auth tokens..");
                 try {
-                        Transport transport = manager.getTransport();
+                        Transport transport = manager.getTransport("uddiv3");
                         UDDISecurityPortType security = transport.getUDDISecurityService();
                         authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                         authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
@@ -86,7 +89,7 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
                         tckAssertionJoe = new TckPublisherAssertion(publication);
                         tckFindEntityJoe = new TckFindEntity(inquiry);
 
-                        transport = manager.getTransport();
+                        transport = manager.getTransport("uddiv3");
                         publication = transport.getUDDIPublishService();
                         inquiry = transport.getUDDIInquiryService();
                         if (!TckPublisher.isUDDIAuthMode()) {
@@ -99,7 +102,7 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
                         tckFindEntitySam = new TckFindEntity(inquiry);
                         
                         
-                        transport = manager.getTransport();
+                        transport = manager.getTransport("uddiv3");
                         publication = transport.getUDDIPublishService();
                         inquiry = transport.getUDDIInquiryService();
                         if (!TckPublisher.isUDDIAuthMode()) {
@@ -110,6 +113,7 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
                         tckBusinessMary = new TckBusiness(publication, inquiry);
                         tckAssertionMary = new TckPublisherAssertion(publication);
                         tckFindEntityMary = new TckFindEntity(inquiry);
+                        tckTModelJoe.saveTmodels(authInfoJoe);
 
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
@@ -119,6 +123,7 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
 
         @Test
         public void testJoepublisherToSamSyndicator() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);
@@ -140,6 +145,7 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
          */
         @Test
         public void testFindNoAssertions() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);
@@ -171,6 +177,7 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
          */
         @Test
         public void testFindAssertions() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);

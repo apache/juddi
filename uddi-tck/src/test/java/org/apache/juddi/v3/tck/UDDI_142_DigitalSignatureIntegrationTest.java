@@ -28,6 +28,7 @@ import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.AccessPoint;
@@ -76,6 +77,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 tckTModelSam.deleteCreatedTModels(authInfoSam);
                 manager.stop();
@@ -83,13 +85,14 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 logger.info("UDDI_142_DigitalSignatureIntegrationTests");
                 manager = new UDDIClient();
                 manager.start();
 
                 logger.debug("Getting auth tokens..");
                 try {
-                        Transport transport = manager.getTransport();
+                        Transport transport = manager.getTransport("uddiv3");
                         security = transport.getUDDISecurityService();
 
                         publicationJoe = transport.getUDDIPublishService();
@@ -110,7 +113,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
                         tckTModelJoe = new TckTModel(publicationJoe, inquiryJoe);
                         tckBusinessJoe = new TckBusiness(publicationJoe, inquiryJoe);
 
-                        transport = manager.getTransport();
+                        transport = manager.getTransport("uddiv3");
 
                         publicationSam = transport.getUDDIPublishService();
                         inquiryJoeSam = transport.getUDDIInquiryService();
@@ -156,6 +159,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @Test()
         public void JUDDI_712_SaveBusinessProjectionWithSignature() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -175,6 +179,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @Test()
         public void JUDDI_712_SaveBusinessProjectionNoServiceKeyWithSignature() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -202,6 +207,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @Test()
         public void JUDDI_712_SaveBusinessProjectionNoServiceKey2WithSignature() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -230,6 +236,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @Test()
         public void JUDDI_712_SaveBusinessProjectionNoServiceKey3WithSignature() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -259,6 +266,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @Test()
         public void JUDDI_712_SaveServiceProjectionNoServiceKey3WithSignature() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -288,6 +296,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @Test()
         public void JUDDI_712_SaveServiceProjectionNoServiceKey1WithSignature() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -317,6 +326,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @Test()
         public void JUDDI_712_SaveServiceProjectionNoServiceKey2WithSignature() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -345,6 +355,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
         }
 
         public void JUDDI_712_SaveBusinessNoneDefined() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -364,6 +375,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @Test()
         public void JUDDI_712_SaveServiceWithSignature() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -402,6 +414,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @Test()
         public void JUDDI_712_SaveService1WithSignature() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -449,6 +462,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @Test()
         public void JUDDI_712_SaveService2WithSignature() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -497,6 +511,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @Test()
         public void JUDDI_712_SaveService3WithSignature() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -544,6 +559,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @Test()
         public void JUDDI_712_SaveTModelWithSignature() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveTModel sb = new SaveTModel();
                 sb.setAuthInfo(authInfoJoe);
                 DigSigUtil ds = GetDigSig();
@@ -562,6 +578,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @Test()
         public void JUDDI_712_SaveService4BTWithSignature() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -609,6 +626,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @Test()
         public void JUDDI_712_SaveService5BTWithSignature() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -656,6 +674,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @Test()
         public void JUDDI_712_SaveService6BTWithSignature() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -703,6 +722,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @Test()
         public void JUDDI_712_SaveBusinessWithSignature() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -767,6 +787,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
         //JUDDI-716
         @Test()
         public void JUDDI_716_SaveBusinessWithSignatureX509IssuerSerial() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -787,7 +808,8 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
                         gsb.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
                         BusinessDetail businessDetail = inquiryJoe.getBusinessDetail(gsb);
                         PrintUDDI<BusinessEntity> printer = new PrintUDDI<BusinessEntity>();
-                        System.out.println(printer.print(businessDetail.getBusinessEntity().get(0)));
+                        if (TckCommon.isDebug())
+                              System.out.println(printer.print(businessDetail.getBusinessEntity().get(0)));
                         AtomicReference<String> msg = new AtomicReference<String>();
                         boolean b = ds.verifySignedUddiEntity(businessDetail.getBusinessEntity().get(0), msg);
                         Assert.assertTrue(msg.get(), b);
@@ -804,6 +826,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
         //JUDDI-716 
         @Test()
         public void JUDDI_716_SaveBusinessAllOptions() throws CertificateException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -825,7 +848,8 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
                         gsb.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
                         BusinessDetail businessDetail = inquiryJoe.getBusinessDetail(gsb);
                         PrintUDDI<BusinessEntity> printer = new PrintUDDI<BusinessEntity>();
-                        System.out.println(printer.print(businessDetail.getBusinessEntity().get(0)));
+                        if (TckCommon.isDebug())
+                              System.out.println(printer.print(businessDetail.getBusinessEntity().get(0)));
                         AtomicReference<String> msg = new AtomicReference<String>();
                         boolean b = ds.verifySignedUddiEntity(businessDetail.getBusinessEntity().get(0), msg);
                         Assert.assertTrue(msg.get(), b);

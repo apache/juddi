@@ -67,6 +67,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
         @BeforeClass
         public static void startManager() throws ConfigurationException {
 
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         //bring up the RMISubscriptionListener
                         //random port
@@ -99,7 +100,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
                 logger.debug("Getting auth tokens..");
                 try {
 
-                        Transport transport = manager.getTransport();
+                        Transport transport = manager.getTransport("uddiv3");
                         UDDISecurityPortType security = transport.getUDDISecurityService();
                         authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
 
@@ -127,6 +128,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
 
         @Test
         public void joePublisher() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isRMI());
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
                 try {

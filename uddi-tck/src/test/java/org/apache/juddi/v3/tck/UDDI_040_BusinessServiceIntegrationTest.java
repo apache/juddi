@@ -22,6 +22,7 @@ import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.v3_service.UDDIInquiryPortType;
@@ -50,6 +51,7 @@ public class UDDI_040_BusinessServiceIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 tckTModelSam.deleteCreatedTModels(authInfoSam);
                 manager.stop();
@@ -57,12 +59,13 @@ public class UDDI_040_BusinessServiceIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 manager = new UDDIClient();
                 manager.start();
 
                 logger.debug("Getting auth tokens..");
                 try {
-                        Transport transport = manager.getTransport();
+                        Transport transport = manager.getTransport("uddiv3");
                         UDDISecurityPortType security = transport.getUDDISecurityService();
                         authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                         authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
@@ -81,7 +84,7 @@ public class UDDI_040_BusinessServiceIntegrationTest {
                         tckBusinessServiceJoe = new TckBusinessService(publication, inquiry);
                         inquiryJoe = inquiry;
 
-                        transport = manager.getTransport();
+                        transport = manager.getTransport("uddiv3");
                         publication = transport.getUDDIPublishService();
                         inquiry = transport.getUDDIInquiryService();
                         if (!TckPublisher.isUDDIAuthMode()) {
@@ -93,7 +96,7 @@ public class UDDI_040_BusinessServiceIntegrationTest {
                         tckBusinessServiceSam = new TckBusinessService(publication, inquiry);
                         inquirySam = inquiry;
                         
-                        transport = manager.getTransport();
+                        transport = manager.getTransport("uddiv3");
                         publication = transport.getUDDIPublishService();
                         inquiry = transport.getUDDIInquiryService();
                         String authInfoUDDI = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
@@ -113,6 +116,7 @@ public class UDDI_040_BusinessServiceIntegrationTest {
 
         @Test
         public void joepublisher() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
@@ -126,6 +130,7 @@ public class UDDI_040_BusinessServiceIntegrationTest {
 
         @Test
         public void samsyndicator() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
 
                         tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);
@@ -154,6 +159,7 @@ public class UDDI_040_BusinessServiceIntegrationTest {
          */
         @Test
         public void joepublisherMoveBusinessService() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);

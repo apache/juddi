@@ -68,7 +68,7 @@ public class FindBusiness {
     protected TModelBag tModelBag;
     protected DiscoveryURLs discoveryURLs;
     @XmlAttribute(name = "generic", required = true)
-    protected String generic;
+    protected String generic="2.0";
     @XmlAttribute(name = "maxRows")
     protected Integer maxRows;
 

@@ -82,12 +82,12 @@ public class UDDI_170_ValueSetValidation implements UDDIValueSetValidationPortTy
 
         @BeforeClass
         public static void startRegistry() throws ConfigurationException {
-                
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 manager = new UDDIClient();
                 manager.start();
                 
                 try {
-                        Transport transport = manager.getTransport();
+                        Transport transport = manager.getTransport("uddiv3");
                         inquiry = transport.getUDDIInquiryService();
                         publication = transport.getUDDIPublishService();
                         security = transport.getUDDISecurityService();
@@ -105,6 +105,7 @@ public class UDDI_170_ValueSetValidation implements UDDIValueSetValidationPortTy
         
         @AfterClass
         public static void stopRegistry() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 manager.stop();
         }
         final static String VSV_KEY = "uddi:juddi.apache.org:businesses-asf";
@@ -119,6 +120,7 @@ public class UDDI_170_ValueSetValidation implements UDDIValueSetValidationPortTy
          */
         @Test
         public void testVSV() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("testVSV");
                 BusinessEntity SaveBusiness = null;
@@ -150,6 +152,7 @@ public class UDDI_170_ValueSetValidation implements UDDIValueSetValidationPortTy
         @Test
         public void testVSVInvalid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("testVSVInvalid");
                 BusinessEntity SaveBusiness = null;
                 BusinessEntity SaveVSVCallbackService = null;

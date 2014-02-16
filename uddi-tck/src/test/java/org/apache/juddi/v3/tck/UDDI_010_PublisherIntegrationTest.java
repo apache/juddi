@@ -47,9 +47,10 @@ public class UDDI_010_PublisherIntegrationTest {
 	
      @Test
      public void testAuthToken() {
+          Assume.assumeTrue(TckPublisher.isEnabled());
              Assume.assumeTrue(TckPublisher.isUDDIAuthMode());
 	     try {
-	    	 Transport transport = manager.getTransport();
+	    	 Transport transport = manager.getTransport("uddiv3");
         	 UDDISecurityPortType securityService = transport.getUDDISecurityService();
         	 GetAuthToken getAuthToken = new GetAuthToken();
         	 getAuthToken.setUserID(TckPublisher.getRootPublisherId());

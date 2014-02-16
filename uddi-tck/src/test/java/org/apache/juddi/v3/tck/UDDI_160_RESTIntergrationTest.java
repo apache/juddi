@@ -66,11 +66,12 @@ public class UDDI_160_RESTIntergrationTest {
         @BeforeClass
         public static void startRegistry() throws ConfigurationException {
 
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 manager = new UDDIClient();
                 manager.start();
 
                 try {
-                        Transport transport = manager.getTransport();
+                        Transport transport = manager.getTransport("uddiv3");
                         inquiry = transport.getUDDIInquiryService();
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
@@ -80,6 +81,7 @@ public class UDDI_160_RESTIntergrationTest {
 
         @AfterClass
         public static void stopRegistry() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 manager.stop();
         }
 
@@ -97,6 +99,7 @@ public class UDDI_160_RESTIntergrationTest {
          }*/
         @Test
         public void InquiryREST_GET_Business() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isInquiryRestEnabled());
                 FindBusiness fb = new FindBusiness();
                 fb.setMaxRows(1);
@@ -128,6 +131,7 @@ public class UDDI_160_RESTIntergrationTest {
 
         @Test
         public void InquiryREST_GET_TModel() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isInquiryRestEnabled());
                 FindTModel fb = new FindTModel();
                 fb.setMaxRows(1);
@@ -161,6 +165,7 @@ public class UDDI_160_RESTIntergrationTest {
 
         @Test
         public void InquiryREST_GET_Service() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isInquiryRestEnabled());
                 //find the first service via inquriy soap
                 FindService fb = new FindService();
@@ -239,6 +244,7 @@ public class UDDI_160_RESTIntergrationTest {
 
         @Test
         public void InquiryREST_GET_Binding() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isInquiryRestEnabled());
                 
                 BindingTemplate bt = getFirstBindingTemplate();

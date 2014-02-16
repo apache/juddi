@@ -20,9 +20,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
-import static org.apache.juddi.v3.tck.UDDI_040_BusinessServiceIntegrationTest.tckTModelJoe;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.TModelDetail;
@@ -48,12 +48,12 @@ public class UDDI_020_TmodelIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
-
+Assume.assumeTrue(TckPublisher.isEnabled());
                 manager = new UDDIClient();
                 manager.start();
                 logger.debug("Getting auth tokens..");
                 try {
-                        Transport transport = manager.getTransport();
+                        Transport transport = manager.getTransport("uddiv3");
 
                         UDDISecurityPortType security = transport.getUDDISecurityService();
                         authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
@@ -70,7 +70,7 @@ public class UDDI_020_TmodelIntegrationTest {
                         }
                         tckTModelJoe = new TckTModel(publication, inquiry);
 
-                        transport = manager.getTransport();
+                        transport = manager.getTransport("uddiv3");
                         publication = transport.getUDDIPublishService();
                         inquiry = transport.getUDDIInquiryService();
                         if (!TckPublisher.isUDDIAuthMode()) {
@@ -87,6 +87,7 @@ public class UDDI_020_TmodelIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 tckTModelSam.deleteCreatedTModels(authInfoSam);
                 manager.stop();
@@ -94,6 +95,7 @@ public class UDDI_020_TmodelIntegrationTest {
 
         @Test
         public void testJoePublisherTmodel() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 tckTModelJoe.saveJoePublisherTmodel(authInfoJoe, true);
 
                 //Now if we use a finder it should be found.
@@ -119,6 +121,7 @@ public class UDDI_020_TmodelIntegrationTest {
 
         @Test
         public void testSamSyndicatorTmodelTest() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);
                 tckTModelSam.deleteSamSyndicatorTmodel(authInfoSam);
         }

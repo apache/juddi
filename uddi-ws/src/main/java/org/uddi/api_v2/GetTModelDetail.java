@@ -54,7 +54,7 @@ public class GetTModelDetail {
     @XmlElement(required = true)
     protected List<String> tModelKey;
     @XmlAttribute(name = "generic", required = true)
-    protected String generic;
+    protected String generic="2.0";
 
     /**
      * Gets the value of the tModelKey property.

@@ -22,6 +22,7 @@ import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.v3_service.UDDIInquiryPortType;
@@ -46,6 +47,7 @@ public class UDDI_050_BindingTemplateIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 tckTModel.deleteCreatedTModels(authInfoJoe);
                 
                 manager.stop();
@@ -53,12 +55,13 @@ public class UDDI_050_BindingTemplateIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 manager = new UDDIClient();
                 manager.start();
 
                 logger.debug("Getting auth tokens..");
                 try {
-                        Transport transport = manager.getTransport();
+                        Transport transport = manager.getTransport("uddiv3");
                         UDDISecurityPortType security = transport.getUDDISecurityService();
                         UDDIPublicationPortType publication = transport.getUDDIPublishService();
                         UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
@@ -77,7 +80,7 @@ public class UDDI_050_BindingTemplateIntegrationTest {
                         tckFindEntity = new TckFindEntity(inquiry);
 
 
-                        transport = manager.getTransport();
+                        transport = manager.getTransport("uddiv3");
                         security = transport.getUDDISecurityService();
                         publication = transport.getUDDIPublishService();
                         inquiry = transport.getUDDIInquiryService();
@@ -99,6 +102,7 @@ public class UDDI_050_BindingTemplateIntegrationTest {
 
         @Test
         public void joepublisher() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
@@ -114,6 +118,7 @@ public class UDDI_050_BindingTemplateIntegrationTest {
 
         @Test
         public void findService() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);

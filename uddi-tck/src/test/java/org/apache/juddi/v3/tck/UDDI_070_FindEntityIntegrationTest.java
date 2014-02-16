@@ -72,18 +72,20 @@ public class UDDI_070_FindEntityIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 tckTModel.deleteCreatedTModels(authInfoJoe);
                 manager.stop();
         }
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 manager = new UDDIClient();
                 manager.start();
 
                 logger.debug("Getting auth tokens..");
                 try {
-                        Transport transport = manager.getTransport();
+                        Transport transport = manager.getTransport("uddiv3");
                         UDDISecurityPortType security = transport.getUDDISecurityService();
                         authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                         //Assert.assertNotNull(authInfoJoe);
@@ -110,6 +112,7 @@ public class UDDI_070_FindEntityIntegrationTest {
 
         @Test
         public void findEntities() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModel.saveJoePublisherTmodel(authInfoJoe, true);
                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
@@ -136,6 +139,7 @@ public class UDDI_070_FindEntityIntegrationTest {
 
         @Test
         public void findSignedEntities() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
                         tckBusiness.saveJoePublisherBusinessX509Signature(authInfoJoe);
@@ -287,21 +291,25 @@ public class UDDI_070_FindEntityIntegrationTest {
         //<editor-fold defaultstate="collapsed" desc="binarySort">
         @Test
         public void UDDI_764binarySortBusiness() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(UDDIConstants.BINARY_SORT);
         }
 
         @Test
         public void UDDI_764binarySortService() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(UDDIConstants.BINARY_SORT);
         }
 
         @Test
         public void UDDI_764binarySortTModel() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(UDDIConstants.BINARY_SORT);
         }
 
         @Test
         public void UDDI_764binarySortBinding() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(UDDIConstants.BINARY_SORT);
                         Assert.fail("Unexpected success");
@@ -313,26 +321,31 @@ public class UDDI_070_FindEntityIntegrationTest {
 
         @Test
         public void UDDI_764binarySortRelatedBiz() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(UDDIConstants.BINARY_SORT);
         }
 
         @Test
         public void UDDI_764binarySortBusinessKey() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(UDDIConstants.BINARY_SORT_TMODEL);
         }
 
         @Test
         public void UDDI_764binarySortServicev() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(UDDIConstants.BINARY_SORT_TMODEL);
         }
 
         @Test
         public void UDDI_764binarySortTModelKey() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(UDDIConstants.BINARY_SORT_TMODEL);
         }
 
         @Test
         public void UDDI_764binarySortBindingKey() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(UDDIConstants.BINARY_SORT_TMODEL);
                         Assert.fail("Unexpected success");
@@ -344,6 +357,7 @@ public class UDDI_070_FindEntityIntegrationTest {
 
         @Test
         public void UDDI_764binarySortRelatedBizKey() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(UDDIConstants.BINARY_SORT_TMODEL);
         }
 //</editor-fold>
@@ -387,6 +401,7 @@ public class UDDI_070_FindEntityIntegrationTest {
 
         @Test
         public void UDDI_764caseInsensitiveSortBinding() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(UDDIConstants.CASE_INSENSITIVE_SORT);
                         Assert.fail("Unexpected success");
@@ -404,30 +419,35 @@ public class UDDI_070_FindEntityIntegrationTest {
          */
         @Test
         public void UDDI_764caseInsensitiveSortRelatedBiz() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeFalse(TckPublisher.isJUDDI());
                 findrelated(UDDIConstants.CASE_INSENSITIVE_SORT);
         }
 
         @Test
         public void UDDI_764caseInsensitiveSortBusinessKey() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeFalse(TckPublisher.isJUDDI());
                 findbuinsess(UDDIConstants.CASE_INSENSITIVE_SORT_TMODEL);
         }
 
         @Test
         public void UDDI_764caseInsensitiveSortServiceKey() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeFalse(TckPublisher.isJUDDI());
                 findservice(UDDIConstants.CASE_INSENSITIVE_SORT_TMODEL);
         }
 
         @Test
         public void UDDI_764caseInsensitiveSortTModelKey() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeFalse(TckPublisher.isJUDDI());
                 findtmodel(UDDIConstants.CASE_INSENSITIVE_SORT_TMODEL);
         }
 
         @Test
         public void UDDI_764caseInsensitiveSortBindingKey() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeFalse(TckPublisher.isJUDDI());
                 try {
                         findbinding(UDDIConstants.CASE_INSENSITIVE_SORT_TMODEL);
@@ -442,6 +462,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         @Ignore
         public void UDDI_764caseInsensitiveSortRelatedBizKey() throws Exception {
                 Assume.assumeFalse(TckPublisher.isJUDDI());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(UDDIConstants.CASE_INSENSITIVE_SORT_TMODEL);
         }
 //</editor-fold>
@@ -449,21 +470,25 @@ public class UDDI_070_FindEntityIntegrationTest {
         //<editor-fold defaultstate="collapsed" desc="caseSensitiveSort">
         @Test
         public void UDDI_764CASE_SENSITIVE_SORTSortBusiness() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(UDDIConstants.CASE_SENSITIVE_SORT);
         }
 
         @Test
         public void UDDI_764CASE_SENSITIVE_SORTSortService() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(UDDIConstants.CASE_SENSITIVE_SORT);
         }
 
         @Test
         public void UDDI_764CASE_SENSITIVE_SORTSortTModel() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(UDDIConstants.CASE_SENSITIVE_SORT);
         }
 
         @Test
         public void UDDI_764CASE_SENSITIVE_SORTSortBinding() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(UDDIConstants.CASE_SENSITIVE_SORT);
                         Assert.fail("Unexpected success");
@@ -475,26 +500,31 @@ public class UDDI_070_FindEntityIntegrationTest {
 
         @Test
         public void UDDI_764CASE_SENSITIVE_SORTSortRelatedBiz() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(UDDIConstants.CASE_SENSITIVE_SORT);
         }
 
         @Test
         public void UDDI_764CASE_SENSITIVE_SORTSortBusinessKey() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(UDDIConstants.CASE_SENSITIVE_SORT_TMODEL);
         }
 
         @Test
         public void UDDI_764CASE_SENSITIVE_SORTSortServicev() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(UDDIConstants.CASE_SENSITIVE_SORT_TMODEL);
         }
 
         @Test
         public void UDDI_764CASE_SENSITIVE_SORTSortTModelKey() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(UDDIConstants.CASE_SENSITIVE_SORT_TMODEL);
         }
 
         @Test
         public void UDDI_764CASE_SENSITIVE_SORTSortBindingKey() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(UDDIConstants.CASE_SENSITIVE_SORT_TMODEL);
                         Assert.fail("Unexpected success");
@@ -506,6 +536,7 @@ public class UDDI_070_FindEntityIntegrationTest {
 
         @Test
         public void UDDI_764CASE_SENSITIVE_SORTSortRelatedBizKey() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(UDDIConstants.CASE_SENSITIVE_SORT_TMODEL);
         }
 //</editor-fold>
@@ -513,48 +544,50 @@ public class UDDI_070_FindEntityIntegrationTest {
         //<editor-fold defaultstate="collapsed" desc="SORT_BY_DATE_ASC">
         @Test
         public void UDDI_764SORT_BY_DATE_ASCSortBusiness() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(UDDIConstants.SORT_BY_DATE_ASC);
         }
 
         @Test
         public void UDDI_764SORT_BY_DATE_ASCSortService() throws Exception {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(UDDIConstants.SORT_BY_DATE_ASC);
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_ASCSortTModel() throws Exception {
+        public void UDDI_764SORT_BY_DATE_ASCSortTModel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(UDDIConstants.SORT_BY_DATE_ASC);
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_ASCSortBinding() throws Exception {
+        public void UDDI_764SORT_BY_DATE_ASCSortBinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbinding(new String[]{UDDIConstants.SORT_BY_DATE_ASC},
                      new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
 
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_ASCSortRelatedBiz() throws Exception {
+        public void UDDI_764SORT_BY_DATE_ASCSortRelatedBiz() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(UDDIConstants.SORT_BY_DATE_ASC);
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_ASCSortBusinessKey() throws Exception {
+        public void UDDI_764SORT_BY_DATE_ASCSortBusinessKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(UDDIConstants.SORT_BY_DATE_ASC_TMODEL);
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_ASCSortServicev() throws Exception {
+        public void UDDI_764SORT_BY_DATE_ASCSortServicev() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(UDDIConstants.SORT_BY_DATE_ASC_TMODEL);
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_ASCSortTModelKey() throws Exception {
+        public void UDDI_764SORT_BY_DATE_ASCSortTModelKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(UDDIConstants.SORT_BY_DATE_ASC_TMODEL);
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_ASCSortBindingKey() throws Exception {
+        public void UDDI_764SORT_BY_DATE_ASCSortBindingKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 //  findbinding(UDDIConstants.SORT_BY_DATE_ASC_TMODEL);
                 findbinding(new String[]{UDDIConstants.SORT_BY_DATE_ASC_TMODEL},
                      new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
@@ -562,84 +595,84 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_ASCSortRelatedBizKey() throws Exception {
+        public void UDDI_764SORT_BY_DATE_ASCSortRelatedBizKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(UDDIConstants.SORT_BY_DATE_ASC_TMODEL);
         }
 //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="SORT_BY_DATE_DESC">
         @Test
-        public void UDDI_764SORT_BY_DATE_DESCSortBusiness() throws Exception {
+        public void UDDI_764SORT_BY_DATE_DESCSortBusiness() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(UDDIConstants.SORT_BY_DATE_DESC);
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_DESCSortService() throws Exception {
+        public void UDDI_764SORT_BY_DATE_DESCSortService() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(UDDIConstants.SORT_BY_DATE_DESC);
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_DESCSortTModel() throws Exception {
+        public void UDDI_764SORT_BY_DATE_DESCSortTModel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(UDDIConstants.SORT_BY_DATE_DESC);
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_DESCSortBinding() throws Exception {
+        public void UDDI_764SORT_BY_DATE_DESCSortBinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbinding(new String[]{UDDIConstants.SORT_BY_DATE_DESC},
                      new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
                 //(UDDIConstants.SORT_BY_DATE_DESC);
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_DESCSortRelatedBiz() throws Exception {
+        public void UDDI_764SORT_BY_DATE_DESCSortRelatedBiz() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(UDDIConstants.SORT_BY_DATE_DESC);
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_DESCSortBusinessKey() throws Exception {
+        public void UDDI_764SORT_BY_DATE_DESCSortBusinessKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(UDDIConstants.SORT_BY_DATE_DESC_TMODEL);
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_DESCSortServicev() throws Exception {
+        public void UDDI_764SORT_BY_DATE_DESCSortServicev() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(UDDIConstants.SORT_BY_DATE_DESC_TMODEL);
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_DESCSortTModelKey() throws Exception {
+        public void UDDI_764SORT_BY_DATE_DESCSortTModelKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(UDDIConstants.SORT_BY_DATE_DESC_TMODEL);
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_DESCSortBindingKey() throws Exception {
+        public void UDDI_764SORT_BY_DATE_DESCSortBindingKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbinding(new String[]{UDDIConstants.SORT_BY_DATE_DESC_TMODEL},
                      new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
         }
 
         @Test
-        public void UDDI_764SORT_BY_DATE_DESCSortRelatedBizKey() throws Exception {
+        public void UDDI_764SORT_BY_DATE_DESCSortRelatedBizKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(UDDIConstants.SORT_BY_DATE_DESC_TMODEL);
         }
 //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="SORT_BY_NAME_ASC">
         @Test
-        public void UDDI_764SORT_BY_NAME_ASCSortBusiness() throws Exception {
+        public void UDDI_764SORT_BY_NAME_ASCSortBusiness() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(UDDIConstants.SORT_BY_NAME_ASC);
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_ASCSortService() throws Exception {
+        public void UDDI_764SORT_BY_NAME_ASCSortService() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(UDDIConstants.SORT_BY_NAME_ASC);
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_ASCSortTModel() throws Exception {
+        public void UDDI_764SORT_BY_NAME_ASCSortTModel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(UDDIConstants.SORT_BY_NAME_ASC);
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_ASCSortBinding() throws Exception {
+        public void UDDI_764SORT_BY_NAME_ASCSortBinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(UDDIConstants.SORT_BY_NAME_ASC);
                         Assert.fail("Unexpected success");
@@ -650,27 +683,27 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_ASCSortRelatedBiz() throws Exception {
+        public void UDDI_764SORT_BY_NAME_ASCSortRelatedBiz() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(UDDIConstants.SORT_BY_NAME_ASC);
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_ASCSortBusinessKey() throws Exception {
+        public void UDDI_764SORT_BY_NAME_ASCSortBusinessKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(UDDIConstants.SORT_BY_NAME_ASC_TMODEL);
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_ASCSortServicev() throws Exception {
+        public void UDDI_764SORT_BY_NAME_ASCSortServicev() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(UDDIConstants.SORT_BY_NAME_ASC_TMODEL);
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_ASCSortTModelKey() throws Exception {
+        public void UDDI_764SORT_BY_NAME_ASCSortTModelKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(UDDIConstants.SORT_BY_NAME_ASC_TMODEL);
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_ASCSortBindingKey() throws Exception {
+        public void UDDI_764SORT_BY_NAME_ASCSortBindingKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(UDDIConstants.SORT_BY_NAME_ASC_TMODEL);
                         Assert.fail("Unexpected success");
@@ -681,29 +714,29 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_ASCSortRelatedBizKey() throws Exception {
+        public void UDDI_764SORT_BY_NAME_ASCSortRelatedBizKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(UDDIConstants.SORT_BY_NAME_ASC_TMODEL);
         }
 //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="SORT_BY_NAME_DESC">
         @Test
-        public void UDDI_764SORT_BY_NAME_DESCSortBusiness() throws Exception {
+        public void UDDI_764SORT_BY_NAME_DESCSortBusiness() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(UDDIConstants.SORT_BY_NAME_DESC);
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_DESCSortService() throws Exception {
+        public void UDDI_764SORT_BY_NAME_DESCSortService() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(UDDIConstants.SORT_BY_NAME_DESC);
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_DESCSortTModel() throws Exception {
+        public void UDDI_764SORT_BY_NAME_DESCSortTModel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(UDDIConstants.SORT_BY_NAME_DESC);
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_DESCSortBinding() throws Exception {
+        public void UDDI_764SORT_BY_NAME_DESCSortBinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(UDDIConstants.SORT_BY_NAME_DESC);
                         Assert.fail("Unexpected success");
@@ -713,27 +746,27 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_DESCSortRelatedBiz() throws Exception {
+        public void UDDI_764SORT_BY_NAME_DESCSortRelatedBiz() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(UDDIConstants.SORT_BY_NAME_DESC);
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_DESCSortBusinessKey() throws Exception {
+        public void UDDI_764SORT_BY_NAME_DESCSortBusinessKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(UDDIConstants.SORT_BY_NAME_DESC_TMODEL);
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_DESCSortServicev() throws Exception {
+        public void UDDI_764SORT_BY_NAME_DESCSortServicev() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(UDDIConstants.SORT_BY_NAME_DESC_TMODEL);
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_DESCSortTModelKey() throws Exception {
+        public void UDDI_764SORT_BY_NAME_DESCSortTModelKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(UDDIConstants.SORT_BY_NAME_DESC_TMODEL);
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_DESCSortBindingKey() throws Exception {
+        public void UDDI_764SORT_BY_NAME_DESCSortBindingKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(UDDIConstants.SORT_BY_NAME_DESC_TMODEL);
                         Assert.fail("Unexpected success");
@@ -744,7 +777,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764SORT_BY_NAME_DESCSortRelatedBizKey() throws Exception {
+        public void UDDI_764SORT_BY_NAME_DESCSortRelatedBizKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(UDDIConstants.SORT_BY_NAME_DESC_TMODEL);
         }
 //</editor-fold>
@@ -752,22 +785,22 @@ public class UDDI_070_FindEntityIntegrationTest {
         //JIS-X4061 OPTIONAL
         //<editor-fold defaultstate="collapsed" desc="andAllKeys">
         @Test
-        public void UDDI_764AND_ALL_KEYSSortBusiness() throws Exception {
+        public void UDDI_764AND_ALL_KEYSSortBusiness() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(UDDIConstants.AND_ALL_KEYS);
         }
 
         @Test
-        public void UDDI_764AND_ALL_KEYSSortService() throws Exception {
+        public void UDDI_764AND_ALL_KEYSSortService() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(UDDIConstants.AND_ALL_KEYS);
         }
 
         @Test
-        public void UDDI_764AND_ALL_KEYSSortTModel() throws Exception {
+        public void UDDI_764AND_ALL_KEYSSortTModel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(UDDIConstants.AND_ALL_KEYS);
         }
 
         @Test
-        public void UDDI_764AND_ALL_KEYSSortBinding() throws Exception {
+        public void UDDI_764AND_ALL_KEYSSortBinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 //findbinding(UDDIConstants.AND_ALL_KEYS);
                 findbinding(new String[]{UDDIConstants.AND_ALL_KEYS},
                      new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
@@ -775,7 +808,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764AND_ALL_KEYSSortRelatedBiz() throws Exception {
+        public void UDDI_764AND_ALL_KEYSSortRelatedBiz() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(UDDIConstants.AND_ALL_KEYS);
                         Assert.fail("Unexpected success");
@@ -786,22 +819,22 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764AND_ALL_KEYSSortBusinessKey() throws Exception {
+        public void UDDI_764AND_ALL_KEYSSortBusinessKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(UDDIConstants.AND_ALL_KEYS_TMODEL);
         }
 
         @Test
-        public void UDDI_764AND_ALL_KEYSSortServicev() throws Exception {
+        public void UDDI_764AND_ALL_KEYSSortServicev() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(UDDIConstants.AND_ALL_KEYS_TMODEL);
         }
 
         @Test
-        public void UDDI_764AND_ALL_KEYSSortTModelKey() throws Exception {
+        public void UDDI_764AND_ALL_KEYSSortTModelKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(UDDIConstants.AND_ALL_KEYS_TMODEL);
         }
 
         @Test
-        public void UDDI_764AND_ALL_KEYSSortBindingKey() throws Exception {
+        public void UDDI_764AND_ALL_KEYSSortBindingKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
 
                 //findbinding(UDDIConstants.AND_ALL_KEYS_TMODEL);
                 findbinding(new String[]{UDDIConstants.AND_ALL_KEYS_TMODEL},
@@ -810,7 +843,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764AND_ALL_KEYSSortRelatedBizKey() throws Exception {
+        public void UDDI_764AND_ALL_KEYSSortRelatedBizKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(UDDIConstants.AND_ALL_KEYS_TMODEL);
                         Assert.fail("Unexpected success");
@@ -824,22 +857,22 @@ public class UDDI_070_FindEntityIntegrationTest {
         //
         //<editor-fold defaultstate="collapsed" desc="bindingSubset">
         @Test
-        public void UDDI_764BINDING_SUBSETBusiness() throws Exception {
+        public void UDDI_764BINDING_SUBSETBusiness() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.BINDING_SUBSET});
         }
 
         @Test
-        public void UDDI_764BINDING_SUBSETService() throws Exception {
+        public void UDDI_764BINDING_SUBSETService() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.BINDING_SUBSET});
         }
 
         @Test
-        public void UDDI_764BINDING_SUBSETTModel() throws Exception {
+        public void UDDI_764BINDING_SUBSETTModel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.BINDING_SUBSET});
         }
 
         @Test
-        public void UDDI_764BINDING_SUBSETBinding() throws Exception {
+        public void UDDI_764BINDING_SUBSETBinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbinding(new String[]{UDDIConstants.BINDING_SUBSET},
                      new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
 
@@ -847,55 +880,55 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764BINDING_SUBSETRelatedBiz() throws Exception {
+        public void UDDI_764BINDING_SUBSETRelatedBiz() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.BINDING_SUBSET});
         }
 
         @Test
-        public void UDDI_764BINDING_SUBSETBusinessKey() throws Exception {
+        public void UDDI_764BINDING_SUBSETBusinessKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.BINDING_SUBSET_TMODEL});
         }
 
         @Test
-        public void UDDI_764BINDING_SUBSETServiceKey() throws Exception {
+        public void UDDI_764BINDING_SUBSETServiceKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.BINDING_SUBSET_TMODEL});
         }
 
         @Test
-        public void UDDI_764BINDING_SUBSETTModelKey() throws Exception {
+        public void UDDI_764BINDING_SUBSETTModelKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.BINDING_SUBSET_TMODEL});
         }
 
         @Test
-        public void UDDI_764BINDING_SUBSETBindingKey() throws Exception {
+        public void UDDI_764BINDING_SUBSETBindingKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbinding(new String[]{UDDIConstants.BINDING_SUBSET_TMODEL},
                      new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
         }
 
         @Test
-        public void UDDI_764BINDING_SUBSETRelatedBizKey() throws Exception {
+        public void UDDI_764BINDING_SUBSETRelatedBizKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.BINDING_SUBSET_TMODEL});
         }
 //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="caseInsensitiveMatch">
         @Test
-        public void UDDI_764caseInsensitiveMatchBusiness() throws Exception {
+        public void UDDI_764caseInsensitiveMatchBusiness() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.CASE_INSENSITIVE_MATCH});
         }
 
         @Test
-        public void UDDI_764caseInsensitiveMatchService() throws Exception {
+        public void UDDI_764caseInsensitiveMatchService() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.CASE_INSENSITIVE_MATCH});
         }
 
         @Test
-        public void UDDI_764caseInsensitiveMatchTModel() throws Exception {
+        public void UDDI_764caseInsensitiveMatchTModel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.CASE_INSENSITIVE_MATCH});
         }
 
         @Test
-        public void UDDI_764caseInsensitiveMatchBinding() throws Exception {
+        public void UDDI_764caseInsensitiveMatchBinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{UDDIConstants.CASE_INSENSITIVE_MATCH},
                              new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
@@ -908,27 +941,27 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764caseInsensitiveMatchRelatedBiz() throws Exception {
+        public void UDDI_764caseInsensitiveMatchRelatedBiz() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.CASE_INSENSITIVE_MATCH});
         }
 
         @Test
-        public void UDDI_764caseInsensitiveMatchBusinessKey() throws Exception {
+        public void UDDI_764caseInsensitiveMatchBusinessKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.CASE_INSENSITIVE_MATCH_TMODEL});
         }
 
         @Test
-        public void UDDI_764caseInsensitiveMatchServiceKey() throws Exception {
+        public void UDDI_764caseInsensitiveMatchServiceKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.CASE_INSENSITIVE_MATCH_TMODEL});
         }
 
         @Test
-        public void UDDI_764caseInsensitiveMatchTModelKey() throws Exception {
+        public void UDDI_764caseInsensitiveMatchTModelKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.CASE_INSENSITIVE_MATCH_TMODEL});
         }
 
         @Test
-        public void UDDI_764caseInsensitiveMatchBindingKey() throws Exception {
+        public void UDDI_764caseInsensitiveMatchBindingKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 //findbinding(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.CASE_INSENSITIVE_MATCH_TMODEL});
                 try {
                         findbinding(new String[]{UDDIConstants.CASE_INSENSITIVE_MATCH_TMODEL},
@@ -942,29 +975,29 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764caseInsensitiveMatchRelatedBizKey() throws Exception {
+        public void UDDI_764caseInsensitiveMatchRelatedBizKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.CASE_INSENSITIVE_MATCH_TMODEL});
         }
 //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="caseSensitiveMatch">
         @Test
-        public void UDDI_764CASE_SENSITIVE_MATCHBusiness() throws Exception {
+        public void UDDI_764CASE_SENSITIVE_MATCHBusiness() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.CASE_SENSITIVE_MATCH});
         }
 
         @Test
-        public void UDDI_764CASE_SENSITIVE_MATCHService() throws Exception {
+        public void UDDI_764CASE_SENSITIVE_MATCHService() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.CASE_SENSITIVE_MATCH});
         }
 
         @Test
-        public void UDDI_764CASE_SENSITIVE_MATCHTModel() throws Exception {
+        public void UDDI_764CASE_SENSITIVE_MATCHTModel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.CASE_SENSITIVE_MATCH});
         }
 
         @Test
-        public void UDDI_764CASE_SENSITIVE_MATCHBinding() throws Exception {
+        public void UDDI_764CASE_SENSITIVE_MATCHBinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{UDDIConstants.CASE_SENSITIVE_MATCH},
                              new KeyedReference[]{new KeyedReference(UDDIConstants.TRANSPORT_HTTP, "test", "test")});
@@ -976,27 +1009,27 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764CASE_SENSITIVE_MATCHRelatedBiz() throws Exception {
+        public void UDDI_764CASE_SENSITIVE_MATCHRelatedBiz() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.CASE_SENSITIVE_MATCH});
         }
 
         @Test
-        public void UDDI_764CASE_SENSITIVE_MATCHBusinessKey() throws Exception {
+        public void UDDI_764CASE_SENSITIVE_MATCHBusinessKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.CASE_SENSITIVE_MATCH_TMODEL});
         }
 
         @Test
-        public void UDDI_764CASE_SENSITIVE_MATCHServiceKey() throws Exception {
+        public void UDDI_764CASE_SENSITIVE_MATCHServiceKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.CASE_SENSITIVE_MATCH_TMODEL});
         }
 
         @Test
-        public void UDDI_764CASE_SENSITIVE_MATCHTModelKey() throws Exception {
+        public void UDDI_764CASE_SENSITIVE_MATCHTModelKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findtmodel(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.CASE_SENSITIVE_MATCH_TMODEL});
         }
 
         @Test
-        public void UDDI_764CASE_SENSITIVE_MATCHBindingKey() throws Exception {
+        public void UDDI_764CASE_SENSITIVE_MATCHBindingKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 //findbinding(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.CASE_SENSITIVE_MATCH_TMODEL});
                 try {
                         findbinding(new String[]{UDDIConstants.CASE_SENSITIVE_MATCH_TMODEL},
@@ -1009,7 +1042,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764CASE_SENSITIVE_MATCHRelatedBizKey() throws Exception {
+        public void UDDI_764CASE_SENSITIVE_MATCHRelatedBizKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findrelated(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.CASE_SENSITIVE_MATCH_TMODEL});
         }
 //</editor-fold>
@@ -1018,17 +1051,17 @@ public class UDDI_070_FindEntityIntegrationTest {
         //
         //<editor-fold defaultstate="collapsed" desc="combineCategoryBags">
         @Test
-        public void UDDI_764COMBINE_CATEGORY_BAGSBusiness() throws Exception {
+        public void UDDI_764COMBINE_CATEGORY_BAGSBusiness() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findbuinsess(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.COMBINE_CATEGORY_BAGS});
         }
 
         @Test
-        public void UDDI_764COMBINE_CATEGORY_BAGSService() throws Exception {
+        public void UDDI_764COMBINE_CATEGORY_BAGSService() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.COMBINE_CATEGORY_BAGS});
         }
 
         @Test
-        public void UDDI_764COMBINE_CATEGORY_BAGSTModel() throws Exception {
+        public void UDDI_764COMBINE_CATEGORY_BAGSTModel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.COMBINE_CATEGORY_BAGS});
                         Assert.fail("unexpected success");
@@ -1039,7 +1072,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764COMBINE_CATEGORY_BAGSBinding() throws Exception {
+        public void UDDI_764COMBINE_CATEGORY_BAGSBinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.COMBINE_CATEGORY_BAGS});
                         Assert.fail("unexpected success");
@@ -1050,7 +1083,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764COMBINE_CATEGORY_BAGSRelatedBiz() throws Exception {
+        public void UDDI_764COMBINE_CATEGORY_BAGSRelatedBiz() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{UDDIConstants.APPROXIMATE_MATCH, UDDIConstants.COMBINE_CATEGORY_BAGS});
                         Assert.fail("unexpected success");
@@ -1061,18 +1094,18 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764COMBINE_CATEGORY_BAGSBusinessKey() throws Exception {
+        public void UDDI_764COMBINE_CATEGORY_BAGSBusinessKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
 
                 findbuinsess(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.COMBINE_CATEGORY_BAGS_TMODEL});
         }
 
         @Test
-        public void UDDI_764COMBINE_CATEGORY_BAGSServiceKey() throws Exception {
+        public void UDDI_764COMBINE_CATEGORY_BAGSServiceKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 findservice(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.COMBINE_CATEGORY_BAGS_TMODEL});
         }
 
         @Test
-        public void UDDI_764COMBINE_CATEGORY_BAGSTModelKey() throws Exception {
+        public void UDDI_764COMBINE_CATEGORY_BAGSTModelKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.COMBINE_CATEGORY_BAGS_TMODEL});
                         Assert.fail("unexpected success");
@@ -1083,7 +1116,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764COMBINE_CATEGORY_BAGSBindingKey() throws Exception {
+        public void UDDI_764COMBINE_CATEGORY_BAGSBindingKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.COMBINE_CATEGORY_BAGS_TMODEL});
                         Assert.fail("unexpected success");
@@ -1094,7 +1127,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764COMBINE_CATEGORY_BAGSRelatedBizKey() throws Exception {
+        public void UDDI_764COMBINE_CATEGORY_BAGSRelatedBizKey() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{UDDIConstants.APPROXIMATE_MATCH_TMODEL, UDDIConstants.COMBINE_CATEGORY_BAGS_TMODEL});
                         Assert.fail("unexpected success");
@@ -1115,7 +1148,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         //suppressProjectedServices
         //<editor-fold defaultstate="collapsed" desc="invalid combos andAllKeys, orAllKeys, and orLikeKeys are mutually exclusive">
         @Test
-        public void UDDI_764InvalidCombo1Business() throws Exception {
+        public void UDDI_764InvalidCombo1Business() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 UDDIConstants.AND_ALL_KEYS, UDDIConstants.OR_ALL_KEYS, UDDIConstants.OR_LIKE_KEYS
@@ -1128,7 +1161,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1Business1() throws Exception {
+        public void UDDI_764InvalidCombo1Business1() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 UDDIConstants.AND_ALL_KEYS //, UDDIConstants.OR_ALL_KEYS
@@ -1142,7 +1175,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1Business2() throws Exception {
+        public void UDDI_764InvalidCombo1Business2() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 UDDIConstants.AND_ALL_KEYS, UDDIConstants.OR_ALL_KEYS
@@ -1156,7 +1189,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1Business3() throws Exception {
+        public void UDDI_764InvalidCombo1Business3() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 //  UDDIConstants.AND_ALL_KEYS
@@ -1170,7 +1203,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1Service() throws Exception {
+        public void UDDI_764InvalidCombo1Service() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 UDDIConstants.AND_ALL_KEYS, UDDIConstants.OR_ALL_KEYS, UDDIConstants.OR_LIKE_KEYS
@@ -1183,7 +1216,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1Service1() throws Exception {
+        public void UDDI_764InvalidCombo1Service1() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 UDDIConstants.AND_ALL_KEYS //, UDDIConstants.OR_ALL_KEYS
@@ -1197,7 +1230,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1Service2() throws Exception {
+        public void UDDI_764InvalidCombo1Service2() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 UDDIConstants.AND_ALL_KEYS, UDDIConstants.OR_ALL_KEYS
@@ -1211,7 +1244,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1Service3() throws Exception {
+        public void UDDI_764InvalidCombo1Service3() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 //  UDDIConstants.AND_ALL_KEYS
@@ -1225,7 +1258,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1findtmodel() throws Exception {
+        public void UDDI_764InvalidCombo1findtmodel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 UDDIConstants.AND_ALL_KEYS, UDDIConstants.OR_ALL_KEYS, UDDIConstants.OR_LIKE_KEYS
@@ -1238,7 +1271,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1findtmodel1() throws Exception {
+        public void UDDI_764InvalidCombo1findtmodel1() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 UDDIConstants.AND_ALL_KEYS //, UDDIConstants.OR_ALL_KEYS
@@ -1252,7 +1285,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1findtmodel2() throws Exception {
+        public void UDDI_764InvalidCombo1findtmodel2() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 UDDIConstants.AND_ALL_KEYS, UDDIConstants.OR_ALL_KEYS
@@ -1266,7 +1299,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1findtmodel3() throws Exception {
+        public void UDDI_764InvalidCombo1findtmodel3() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 //  UDDIConstants.AND_ALL_KEYS
@@ -1280,7 +1313,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1findbinding() throws Exception {
+        public void UDDI_764InvalidCombo1findbinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 UDDIConstants.AND_ALL_KEYS, UDDIConstants.OR_ALL_KEYS, UDDIConstants.OR_LIKE_KEYS
@@ -1293,7 +1326,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1findbinding1() throws Exception {
+        public void UDDI_764InvalidCombo1findbinding1() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 UDDIConstants.AND_ALL_KEYS //, UDDIConstants.OR_ALL_KEYS
@@ -1307,7 +1340,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1findbinding2() throws Exception {
+        public void UDDI_764InvalidCombo1findbinding2() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 UDDIConstants.AND_ALL_KEYS, UDDIConstants.OR_ALL_KEYS
@@ -1321,7 +1354,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1findbinding3() throws Exception {
+        public void UDDI_764InvalidCombo1findbinding3() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 //  UDDIConstants.AND_ALL_KEYS
@@ -1335,7 +1368,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1findrelated() throws Exception {
+        public void UDDI_764InvalidCombo1findrelated() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 UDDIConstants.AND_ALL_KEYS, UDDIConstants.OR_ALL_KEYS, UDDIConstants.OR_LIKE_KEYS
@@ -1348,7 +1381,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1findrelated1() throws Exception {
+        public void UDDI_764InvalidCombo1findrelated1() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 UDDIConstants.AND_ALL_KEYS //, UDDIConstants.OR_ALL_KEYS
@@ -1362,7 +1395,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1findrelated2() throws Exception {
+        public void UDDI_764InvalidCombo1findrelated2() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 UDDIConstants.AND_ALL_KEYS, UDDIConstants.OR_ALL_KEYS
@@ -1376,7 +1409,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo1findrelated3() throws Exception {
+        public void UDDI_764InvalidCombo1findrelated3() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 //  UDDIConstants.AND_ALL_KEYS
@@ -1393,7 +1426,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         //
         //<editor-fold defaultstate="collapsed" desc="invalid combos sortByNameAsc and sortByNameDesc are mutually exclusive">
         @Test
-        public void UDDI_764InvalidCombo2Business() throws Exception {
+        public void UDDI_764InvalidCombo2Business() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 UDDIConstants.SORT_BY_NAME_ASC, UDDIConstants.SORT_BY_NAME_DESC
@@ -1406,7 +1439,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo2Service() throws Exception {
+        public void UDDI_764InvalidCombo2Service() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 UDDIConstants.SORT_BY_NAME_ASC, UDDIConstants.SORT_BY_NAME_DESC
@@ -1419,7 +1452,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo2findtmodel() throws Exception {
+        public void UDDI_764InvalidCombo2findtmodel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 UDDIConstants.SORT_BY_NAME_ASC, UDDIConstants.SORT_BY_NAME_DESC
@@ -1432,7 +1465,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo2findbinding() throws Exception {
+        public void UDDI_764InvalidCombo2findbinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 UDDIConstants.SORT_BY_NAME_ASC, UDDIConstants.SORT_BY_NAME_DESC
@@ -1445,7 +1478,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo2findrelated() throws Exception {
+        public void UDDI_764InvalidCombo2findrelated() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 UDDIConstants.SORT_BY_NAME_ASC, UDDIConstants.SORT_BY_NAME_DESC
@@ -1461,7 +1494,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         //
         //<editor-fold defaultstate="collapsed" desc="invalid combos sortByDateAsc and sortByDateDesc are mutually exclusive">
         @Test
-        public void UDDI_764InvalidCombo3Business() throws Exception {
+        public void UDDI_764InvalidCombo3Business() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 UDDIConstants.SORT_BY_DATE_ASC, UDDIConstants.SORT_BY_DATE_DESC
@@ -1474,7 +1507,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo3Service() throws Exception {
+        public void UDDI_764InvalidCombo3Service() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 UDDIConstants.SORT_BY_DATE_ASC, UDDIConstants.SORT_BY_DATE_DESC
@@ -1487,7 +1520,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo3findtmodel() throws Exception {
+        public void UDDI_764InvalidCombo3findtmodel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 UDDIConstants.SORT_BY_DATE_ASC, UDDIConstants.SORT_BY_DATE_DESC
@@ -1500,7 +1533,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo3findbinding() throws Exception {
+        public void UDDI_764InvalidCombo3findbinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 UDDIConstants.SORT_BY_DATE_ASC, UDDIConstants.SORT_BY_DATE_DESC
@@ -1513,7 +1546,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo3findrelated() throws Exception {
+        public void UDDI_764InvalidCombo3findrelated() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 UDDIConstants.SORT_BY_DATE_ASC, UDDIConstants.SORT_BY_DATE_DESC
@@ -1528,7 +1561,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc="combineCategoryBags, serviceSubset and bindingSubset are mutually exclusive">
         @Test
-        public void UDDI_764InvalidCombo4Business() throws Exception {
+        public void UDDI_764InvalidCombo4Business() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 UDDIConstants.COMBINE_CATEGORY_BAGS, UDDIConstants.SERVICE_SUBSET, UDDIConstants.BINDING_SUBSET
@@ -1541,7 +1574,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4Business1() throws Exception {
+        public void UDDI_764InvalidCombo4Business1() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 UDDIConstants.COMBINE_CATEGORY_BAGS, UDDIConstants.BINDING_SUBSET
@@ -1554,7 +1587,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4Business2() throws Exception {
+        public void UDDI_764InvalidCombo4Business2() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 UDDIConstants.COMBINE_CATEGORY_BAGS, UDDIConstants.SERVICE_SUBSET
@@ -1568,7 +1601,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4Business3() throws Exception {
+        public void UDDI_764InvalidCombo4Business3() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 UDDIConstants.SERVICE_SUBSET, UDDIConstants.BINDING_SUBSET
@@ -1581,7 +1614,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4Service() throws Exception {
+        public void UDDI_764InvalidCombo4Service() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 UDDIConstants.COMBINE_CATEGORY_BAGS, UDDIConstants.SERVICE_SUBSET, UDDIConstants.BINDING_SUBSET
@@ -1594,7 +1627,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4Service1() throws Exception {
+        public void UDDI_764InvalidCombo4Service1() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 UDDIConstants.COMBINE_CATEGORY_BAGS, UDDIConstants.BINDING_SUBSET
@@ -1607,7 +1640,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4Service2() throws Exception {
+        public void UDDI_764InvalidCombo4Service2() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 UDDIConstants.COMBINE_CATEGORY_BAGS, UDDIConstants.SERVICE_SUBSET
@@ -1620,7 +1653,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4Service3() throws Exception {
+        public void UDDI_764InvalidCombo4Service3() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 UDDIConstants.SERVICE_SUBSET, UDDIConstants.BINDING_SUBSET
@@ -1633,7 +1666,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4findtmodel() throws Exception {
+        public void UDDI_764InvalidCombo4findtmodel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 UDDIConstants.COMBINE_CATEGORY_BAGS, UDDIConstants.SERVICE_SUBSET, UDDIConstants.BINDING_SUBSET
@@ -1646,7 +1679,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4findtmodel1() throws Exception {
+        public void UDDI_764InvalidCombo4findtmodel1() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 UDDIConstants.COMBINE_CATEGORY_BAGS, UDDIConstants.BINDING_SUBSET
@@ -1659,7 +1692,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4findtmodel2() throws Exception {
+        public void UDDI_764InvalidCombo4findtmodel2() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 UDDIConstants.COMBINE_CATEGORY_BAGS, UDDIConstants.SERVICE_SUBSET
@@ -1673,7 +1706,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4findtmodel3() throws Exception {
+        public void UDDI_764InvalidCombo4findtmodel3() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 UDDIConstants.SERVICE_SUBSET, UDDIConstants.BINDING_SUBSET
@@ -1686,7 +1719,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4findbinding() throws Exception {
+        public void UDDI_764InvalidCombo4findbinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 UDDIConstants.COMBINE_CATEGORY_BAGS, UDDIConstants.SERVICE_SUBSET, UDDIConstants.BINDING_SUBSET
@@ -1699,7 +1732,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4findbinding1() throws Exception {
+        public void UDDI_764InvalidCombo4findbinding1() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 UDDIConstants.COMBINE_CATEGORY_BAGS, UDDIConstants.BINDING_SUBSET
@@ -1712,7 +1745,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4findbinding2() throws Exception {
+        public void UDDI_764InvalidCombo4findbinding2() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 UDDIConstants.COMBINE_CATEGORY_BAGS, UDDIConstants.SERVICE_SUBSET
@@ -1726,7 +1759,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4findbinding3() throws Exception {
+        public void UDDI_764InvalidCombo4findbinding3() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 UDDIConstants.SERVICE_SUBSET, UDDIConstants.BINDING_SUBSET
@@ -1739,7 +1772,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4findrelated() throws Exception {
+        public void UDDI_764InvalidCombo4findrelated() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 UDDIConstants.COMBINE_CATEGORY_BAGS, UDDIConstants.SERVICE_SUBSET, UDDIConstants.BINDING_SUBSET
@@ -1752,7 +1785,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4findrelated1() throws Exception {
+        public void UDDI_764InvalidCombo4findrelated1() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 UDDIConstants.COMBINE_CATEGORY_BAGS, UDDIConstants.BINDING_SUBSET
@@ -1765,7 +1798,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4findrelated2() throws Exception {
+        public void UDDI_764InvalidCombo4findrelated2() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 UDDIConstants.COMBINE_CATEGORY_BAGS, UDDIConstants.SERVICE_SUBSET
@@ -1779,7 +1812,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo4findrelated3() throws Exception {
+        public void UDDI_764InvalidCombo4findrelated3() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 UDDIConstants.SERVICE_SUBSET, UDDIConstants.BINDING_SUBSET
@@ -1797,7 +1830,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         //
         //<editor-fold defaultstate="collapsed" desc="exactMatch and approximateMatch are mutually exclusive">
         @Test
-        public void UDDI_764InvalidCombo5Business() throws Exception {
+        public void UDDI_764InvalidCombo5Business() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 UDDIConstants.EXACT_MATCH, UDDIConstants.APPROXIMATE_MATCH
@@ -1810,7 +1843,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo5Service() throws Exception {
+        public void UDDI_764InvalidCombo5Service() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 UDDIConstants.EXACT_MATCH, UDDIConstants.APPROXIMATE_MATCH
@@ -1823,7 +1856,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo5findtmodel() throws Exception {
+        public void UDDI_764InvalidCombo5findtmodel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 UDDIConstants.EXACT_MATCH, UDDIConstants.APPROXIMATE_MATCH
@@ -1836,7 +1869,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo5findbinding() throws Exception {
+        public void UDDI_764InvalidCombo5findbinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 UDDIConstants.EXACT_MATCH, UDDIConstants.APPROXIMATE_MATCH
@@ -1849,7 +1882,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo5findrelated() throws Exception {
+        public void UDDI_764InvalidCombo5findrelated() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 UDDIConstants.EXACT_MATCH, UDDIConstants.APPROXIMATE_MATCH
@@ -1865,7 +1898,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         //
         //<editor-fold defaultstate="collapsed" desc="exactMatch and caseInsensitiveMatch are mutually exclusive">
         @Test
-        public void UDDI_764InvalidCombo6Business() throws Exception {
+        public void UDDI_764InvalidCombo6Business() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 UDDIConstants.EXACT_MATCH, UDDIConstants.CASE_INSENSITIVE_MATCH
@@ -1878,7 +1911,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo6Service() throws Exception {
+        public void UDDI_764InvalidCombo6Service() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 UDDIConstants.EXACT_MATCH, UDDIConstants.CASE_INSENSITIVE_MATCH
@@ -1891,7 +1924,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo6findtmodel() throws Exception {
+        public void UDDI_764InvalidCombo6findtmodel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 UDDIConstants.EXACT_MATCH, UDDIConstants.CASE_INSENSITIVE_MATCH
@@ -1904,7 +1937,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo6findbinding() throws Exception {
+        public void UDDI_764InvalidCombo6findbinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 UDDIConstants.EXACT_MATCH, UDDIConstants.CASE_INSENSITIVE_MATCH
@@ -1917,7 +1950,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo6findrelated() throws Exception {
+        public void UDDI_764InvalidCombo6findrelated() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 UDDIConstants.EXACT_MATCH, UDDIConstants.CASE_INSENSITIVE_MATCH
@@ -1932,7 +1965,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc="binarySort and UTS-10 are mutually exclusive, as are all collation algorithm tModels with each other">
         @Test
-        public void UDDI_764InvalidCombo7Business() throws Exception {
+        public void UDDI_764InvalidCombo7Business() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 UDDIConstants.BINARY_SORT, UDDIConstants.UTS_10
@@ -1945,7 +1978,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo7Service() throws Exception {
+        public void UDDI_764InvalidCombo7Service() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 UDDIConstants.BINARY_SORT, UDDIConstants.UTS_10
@@ -1958,7 +1991,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo7findtmodel() throws Exception {
+        public void UDDI_764InvalidCombo7findtmodel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 UDDIConstants.BINARY_SORT, UDDIConstants.UTS_10
@@ -1971,7 +2004,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo7findbinding() throws Exception {
+        public void UDDI_764InvalidCombo7findbinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 UDDIConstants.BINARY_SORT, UDDIConstants.UTS_10
@@ -1984,7 +2017,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo7findrelated() throws Exception {
+        public void UDDI_764InvalidCombo7findrelated() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 UDDIConstants.BINARY_SORT, UDDIConstants.UTS_10
@@ -1999,7 +2032,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc="diacriticSensitiveMatch and diacriticInsensitiveMatch are mutually exclusive">
         @Test
-        public void UDDI_764InvalidCombo8Business() throws Exception {
+        public void UDDI_764InvalidCombo8Business() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 UDDIConstants.DIACRITIC_SENSITIVE_MATCH, UDDIConstants.DIACRITIC_INSENSITIVE_MATCH
@@ -2012,7 +2045,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo8Service() throws Exception {
+        public void UDDI_764InvalidCombo8Service() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 UDDIConstants.DIACRITIC_SENSITIVE_MATCH, UDDIConstants.DIACRITIC_INSENSITIVE_MATCH
@@ -2025,7 +2058,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo8findtmodel() throws Exception {
+        public void UDDI_764InvalidCombo8findtmodel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 UDDIConstants.DIACRITIC_SENSITIVE_MATCH, UDDIConstants.DIACRITIC_INSENSITIVE_MATCH
@@ -2038,7 +2071,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo8findbinding() throws Exception {
+        public void UDDI_764InvalidCombo8findbinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 UDDIConstants.DIACRITIC_SENSITIVE_MATCH, UDDIConstants.DIACRITIC_INSENSITIVE_MATCH
@@ -2051,7 +2084,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo8findrelated() throws Exception {
+        public void UDDI_764InvalidCombo8findrelated() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 UDDIConstants.DIACRITIC_SENSITIVE_MATCH, UDDIConstants.DIACRITIC_INSENSITIVE_MATCH
@@ -2066,7 +2099,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc="exactMatch and diacriticInsensitiveMatch are mutually exclusive">
         @Test
-        public void UDDI_764InvalidCombo9Business() throws Exception {
+        public void UDDI_764InvalidCombo9Business() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 UDDIConstants.EXACT_MATCH, UDDIConstants.DIACRITIC_INSENSITIVE_MATCH
@@ -2079,7 +2112,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo9Service() throws Exception {
+        public void UDDI_764InvalidCombo9Service() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 UDDIConstants.EXACT_MATCH, UDDIConstants.DIACRITIC_INSENSITIVE_MATCH
@@ -2092,7 +2125,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo9findtmodel() throws Exception {
+        public void UDDI_764InvalidCombo9findtmodel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 UDDIConstants.EXACT_MATCH, UDDIConstants.DIACRITIC_INSENSITIVE_MATCH
@@ -2105,7 +2138,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo9findbinding() throws Exception {
+        public void UDDI_764InvalidCombo9findbinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 UDDIConstants.EXACT_MATCH, UDDIConstants.DIACRITIC_INSENSITIVE_MATCH
@@ -2118,7 +2151,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo9findrelated() throws Exception {
+        public void UDDI_764InvalidCombo9findrelated() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 UDDIConstants.EXACT_MATCH, UDDIConstants.DIACRITIC_INSENSITIVE_MATCH
@@ -2133,7 +2166,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc="caseSensitiveSort and caseInsensitiveSort are mutually exclusive">
         @Test
-        public void UDDI_764InvalidCombo10Business() throws Exception {
+        public void UDDI_764InvalidCombo10Business() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 UDDIConstants.CASE_INSENSITIVE_SORT, UDDIConstants.CASE_SENSITIVE_SORT
@@ -2146,7 +2179,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo10Service() throws Exception {
+        public void UDDI_764InvalidCombo10Service() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 UDDIConstants.CASE_INSENSITIVE_SORT, UDDIConstants.CASE_SENSITIVE_SORT
@@ -2159,7 +2192,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo10findtmodel() throws Exception {
+        public void UDDI_764InvalidCombo10findtmodel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 UDDIConstants.CASE_INSENSITIVE_SORT, UDDIConstants.CASE_SENSITIVE_SORT
@@ -2172,7 +2205,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo10findbinding() throws Exception {
+        public void UDDI_764InvalidCombo10findbinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 UDDIConstants.CASE_INSENSITIVE_SORT, UDDIConstants.CASE_SENSITIVE_SORT
@@ -2185,7 +2218,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo10findrelated() throws Exception {
+        public void UDDI_764InvalidCombo10findrelated() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 UDDIConstants.CASE_INSENSITIVE_SORT, UDDIConstants.CASE_SENSITIVE_SORT
@@ -2200,7 +2233,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc="caseSensitiveMatch and caseInsensitiveMatch are mutually exclusive">
         @Test
-        public void UDDI_764InvalidCombo11Business() throws Exception {
+        public void UDDI_764InvalidCombo11Business() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(new String[]{
                                 UDDIConstants.CASE_SENSITIVE_MATCH, UDDIConstants.CASE_INSENSITIVE_MATCH
@@ -2213,7 +2246,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo11Service() throws Exception {
+        public void UDDI_764InvalidCombo11Service() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(new String[]{
                                 UDDIConstants.CASE_SENSITIVE_MATCH, UDDIConstants.CASE_INSENSITIVE_MATCH
@@ -2226,7 +2259,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo11findtmodel() throws Exception {
+        public void UDDI_764InvalidCombo11findtmodel() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(new String[]{
                                 UDDIConstants.CASE_SENSITIVE_MATCH, UDDIConstants.CASE_INSENSITIVE_MATCH
@@ -2239,7 +2272,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo11findbinding() throws Exception {
+        public void UDDI_764InvalidCombo11findbinding() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(new String[]{
                                 UDDIConstants.CASE_SENSITIVE_MATCH, UDDIConstants.CASE_INSENSITIVE_MATCH
@@ -2252,7 +2285,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_764InvalidCombo11findrelated() throws Exception {
+        public void UDDI_764InvalidCombo11findrelated() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(new String[]{
                                 UDDIConstants.CASE_SENSITIVE_MATCH, UDDIConstants.CASE_INSENSITIVE_MATCH
@@ -2270,6 +2303,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         //<editor-fold defaultstate="collapsed" desc="Find qualifiers not recognized by a node will return the error E_unsupported. ">
         @Test
         public void UDDI_785UNSUPPORTED_FIND_QUALIFIER_Business() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbuinsess(UUID.randomUUID().toString());
                         Assert.fail("Unexpected success");
@@ -2280,7 +2314,8 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void UDDI_785UNSUPPORTED_FIND_QUALIFIER_Service() throws Exception {
+        public void UDDI_785UNSUPPORTED_FIND_QUALIFIER_Service() throws Exception { Assume.assumeTrue(TckPublisher.isEnabled());
+        Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findservice(UUID.randomUUID().toString());
                         Assert.fail("Unexpected success");
@@ -2292,6 +2327,7 @@ public class UDDI_070_FindEntityIntegrationTest {
 
         @Test
         public void UDDI_785UNSUPPORTED_FIND_QUALIFIER_TModel() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findtmodel(UUID.randomUUID().toString());
                         Assert.fail("Unexpected success");
@@ -2303,6 +2339,7 @@ public class UDDI_070_FindEntityIntegrationTest {
 
         @Test
         public void UDDI_785UNSUPPORTED_FIND_QUALIFIER_Binding() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findbinding(UUID.randomUUID().toString());
                         Assert.fail("Unexpected success");
@@ -2314,6 +2351,7 @@ public class UDDI_070_FindEntityIntegrationTest {
 
         @Test
         public void UDDI_785UNSUPPORTED_FIND_QUALIFIER_RelatedBiz() {
+             Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         findrelated(UUID.randomUUID().toString());
                         Assert.fail("Unexpected success");

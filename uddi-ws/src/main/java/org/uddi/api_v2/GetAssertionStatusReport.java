@@ -55,7 +55,7 @@ public class GetAssertionStatusReport {
     protected String authInfo;
     protected String completionStatus;
     @XmlAttribute(name = "generic", required = true)
-    protected String generic;
+    protected String generic="2.0";
 
     /**
      * Gets the value of the authInfo property.

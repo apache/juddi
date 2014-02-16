@@ -46,7 +46,7 @@ import javax.xml.bind.annotation.XmlType;
 public class GetAuthToken {
 
     @XmlAttribute(name = "generic", required = true)
-    protected String generic;
+    protected String generic="2.0";
     @XmlAttribute(name = "userID", required = true)
     protected String userID;
     @XmlAttribute(name = "cred", required = true)

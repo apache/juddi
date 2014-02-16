@@ -52,14 +52,14 @@ public class JUDDI_100_ClientSubscriptionInfoIntegrationTest {
 
         @BeforeClass
         public static void startRegistry() throws ConfigurationException {
-
+Assume.assumeTrue(TckPublisher.isEnabled());
                 manager = new UDDIClient();
                 manager.start();
 
 
                 logger.debug("Getting auth tokens..");
                 try {
-                        Transport transport = manager.getTransport();
+                        Transport transport = manager.getTransport("uddiv3");
 
                         security = transport.getUDDISecurityService();
                         authInfo = TckSecurity.getAuthToken(security, TckPublisher.getRootPublisherId(), TckPublisher.getRootPassword());
@@ -81,7 +81,8 @@ public class JUDDI_100_ClientSubscriptionInfoIntegrationTest {
 
         @Test
         public void addClientSubscriptionInfo() throws Exception {
-                Assume.assumeTrue(TckPublisher.isJUDDI());
+Assume.assumeTrue(TckPublisher.isEnabled());
+             Assume.assumeTrue(TckPublisher.isJUDDI());
 
                 ClientSubscriptionInfo clientSubscriptionInfo = new ClientSubscriptionInfo();
 

@@ -16,6 +16,7 @@
 package org.apache.juddi.v3.client.mapping;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.juddi.v3.client.UDDIConstants;
@@ -44,6 +45,7 @@ import org.uddi.api_v2.DeletePublisherAssertions;
 import org.uddi.api_v2.DeleteService;
 import org.uddi.api_v2.DeleteTModel;
 import org.uddi.api_v2.Description;
+import org.uddi.api_v2.Direction;
 import org.uddi.api_v2.DiscoveryURL;
 import org.uddi.api_v2.DiscoveryURLs;
 import org.uddi.api_v2.Email;
@@ -91,6 +93,7 @@ import org.uddi.api_v2.ServiceDetail;
 import org.uddi.api_v2.ServiceInfo;
 import org.uddi.api_v2.ServiceInfos;
 import org.uddi.api_v2.ServiceList;
+import org.uddi.api_v2.SharedRelationships;
 import org.uddi.api_v2.TModelDetail;
 import org.uddi.api_v2.TModelInfo;
 import org.uddi.api_v2.TModelInfos;
@@ -493,6 +496,7 @@ public class MapUDDIv3Tov2 {
                 }
                 DeletePublisherAssertions r = new DeletePublisherAssertions();
                 r.setAuthInfo(body.getAuthInfo());
+                r.setGeneric(VERSION);
                 r.getPublisherAssertion().addAll(MapPublisherAssertion(body.getPublisherAssertion()));
                 return r;
         }
@@ -573,28 +577,28 @@ public class MapUDDIv3Tov2 {
                 FindQualifiers r = new FindQualifiers();
                 for (int i = 0; i < findQualifiers.getFindQualifier().size(); i++) {
                         /*if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.TRANSPORT_HTTP)) {
-                                r.getFindQualifier().add("uuid:68DE9E80-AD09-469D-8A37-088422BFBC36");
-                        } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.TRANSPORT_EMAIL)) {
-                                r.getFindQualifier().add("uuid:93335D49-3EFB-48A0-ACEA-EA102B60DDC6");
-                        } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.TRANSPORT_FTP)) {
-                                r.getFindQualifier().add("uuid:5FCF5CD0-629A-4C50-8B16-F94E9CF2A674");
-                        } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.TRANSPORT_FAX)) {
-                                r.getFindQualifier().add("uuid:1A2B00BE-6E2C-42F5-875B-56F32686E0E7");
-                        } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.TRANSPORT_POTS)) {
-                                r.getFindQualifier().add("uuid:38E12427-5536-4260-A6F9-B5B530E63A07");
-                        } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.IS_REPLACED_BY)) {
-                                r.getFindQualifier().add("uuid:E59AE320-77A5-11D5-B898-0004AC49CC1E");
-                        } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.OWNING_BUSINESS)) {
-                                r.getFindQualifier().add("uuid:4064C064-6D14-4F35-8953-9652106476A9");
-                        } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.RELATIONSHIPS)) {
-                                r.getFindQualifier().add("uuid:807A2C6A-EE22-470D-ADC7-E0424A337C03");
-                        } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uddi:uddi.org:categorization:nodes")) {
-                                r.getFindQualifier().add("uuid:327A56F0-3299-4461-BC23-5CD513E95C55");
-                        } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uddi:uddi.org:categorization:general_keywords")) {
-                                r.getFindQualifier().add("uuid:A035A07C-F362-44dd-8F95-E2B134BF43B4");
-                        } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uddi:uddi.org:categorization:types")) {
-                                r.getFindQualifier().add("uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4");
-                        }*/
+                         r.getFindQualifier().add("uuid:68DE9E80-AD09-469D-8A37-088422BFBC36");
+                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.TRANSPORT_EMAIL)) {
+                         r.getFindQualifier().add("uuid:93335D49-3EFB-48A0-ACEA-EA102B60DDC6");
+                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.TRANSPORT_FTP)) {
+                         r.getFindQualifier().add("uuid:5FCF5CD0-629A-4C50-8B16-F94E9CF2A674");
+                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.TRANSPORT_FAX)) {
+                         r.getFindQualifier().add("uuid:1A2B00BE-6E2C-42F5-875B-56F32686E0E7");
+                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.TRANSPORT_POTS)) {
+                         r.getFindQualifier().add("uuid:38E12427-5536-4260-A6F9-B5B530E63A07");
+                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.IS_REPLACED_BY)) {
+                         r.getFindQualifier().add("uuid:E59AE320-77A5-11D5-B898-0004AC49CC1E");
+                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.OWNING_BUSINESS)) {
+                         r.getFindQualifier().add("uuid:4064C064-6D14-4F35-8953-9652106476A9");
+                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.RELATIONSHIPS)) {
+                         r.getFindQualifier().add("uuid:807A2C6A-EE22-470D-ADC7-E0424A337C03");
+                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uddi:uddi.org:categorization:nodes")) {
+                         r.getFindQualifier().add("uuid:327A56F0-3299-4461-BC23-5CD513E95C55");
+                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uddi:uddi.org:categorization:general_keywords")) {
+                         r.getFindQualifier().add("uuid:A035A07C-F362-44dd-8F95-E2B134BF43B4");
+                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase("uddi:uddi.org:categorization:types")) {
+                         r.getFindQualifier().add("uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4");
+                         }*/
                         if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.EXACT_MATCH)
                              || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.EXACT_MATCH_TMODEL)) {
                                 r.getFindQualifier().add("exactNameMatch");
@@ -631,7 +635,7 @@ public class MapUDDIv3Tov2 {
                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.APPROXIMATE_MATCH)
                              || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.APPROXIMATE_MATCH_TMODEL)) {
                                 //ignore it, not supported by UDDI v2
-                        
+
                         } else if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.CASE_INSENSITIVE_MATCH)
                              || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.CASE_INSENSITIVE_MATCH_TMODEL)) {
                                 //ignore it, not supported by UDDI v2
@@ -697,7 +701,6 @@ public class MapUDDIv3Tov2 {
                 }
                 SetPublisherAssertions r = new SetPublisherAssertions();
                 r.setGeneric(VERSION);
-
                 r.getPublisherAssertion().addAll(MapPublisherAssertion(value));
                 return r;
 
@@ -710,10 +713,14 @@ public class MapUDDIv3Tov2 {
                 BindingDetail r = new BindingDetail();
                 r.setGeneric(VERSION);
                 r.setOperator(operator);
-                if (findBinding.getListDescription().getActualCount() == findBinding.getListDescription().getIncludeCount()) {
-                        r.setTruncated(Truncated.FALSE);
-                } else {
+                if (findBinding.getListDescription() == null) {
                         r.setTruncated(Truncated.TRUE);
+                } else {
+                        if (findBinding.getListDescription().getActualCount() == findBinding.getListDescription().getIncludeCount()) {
+                                r.setTruncated(Truncated.FALSE);
+                        } else {
+                                r.setTruncated(Truncated.TRUE);
+                        }
                 }
                 r.getBindingTemplate().addAll(MapBinding(findBinding.getBindingTemplate()));
                 return r;
@@ -811,6 +818,7 @@ public class MapUDDIv3Tov2 {
                                 x.setBusinessKey(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getBusinessKey());
                                 x.getDescription().addAll(MapDescription(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getDescription()));
                                 x.getName().addAll(MapName(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getName()));
+                                x.getSharedRelationships().addAll(MapSharedRelationships(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getSharedRelationships()));
                                 r.getRelatedBusinessInfos().getRelatedBusinessInfo().add(x);
                         }
                 }
@@ -972,7 +980,7 @@ public class MapUDDIv3Tov2 {
                         TModelInfo x = new TModelInfo();
 
                         x.setTModelKey(tModelInfo.get(i).getTModelKey());
-                        x.setName(new Name(tModelInfo.get(i).getName().getValue(), tModelInfo.get(i).getName().getValue()));
+                        x.setName(new Name(tModelInfo.get(i).getName().getValue(), tModelInfo.get(i).getName().getLang()));
                         r.add(x);
                 }
                 return r;
@@ -1009,13 +1017,14 @@ public class MapUDDIv3Tov2 {
 
         }
 
-        public static PublisherAssertions MapPublisherAssertions(List<org.uddi.api_v3.PublisherAssertion> publisherAssertions, String operator) {
+        public static PublisherAssertions MapPublisherAssertions(List<org.uddi.api_v3.PublisherAssertion> publisherAssertions, String operator, String user) {
                 if (publisherAssertions == null) {
                         return null;
                 }
                 PublisherAssertions r = new PublisherAssertions();
                 r.getPublisherAssertion().addAll(MapPublisherAssertion(publisherAssertions));
                 r.setGeneric(VERSION);
+                r.setAuthorizedName(user);
                 r.setOperator(operator);
                 return r;
         }
@@ -1037,7 +1046,6 @@ public class MapUDDIv3Tov2 {
                 return r;
         }
 
-        
         private static boolean ContainsWildCard(List<Name> name) {
                 for (int i = 0; i < name.size(); i++) {
                         if (name.get(i).getValue() != null && name.get(i).getValue().contains(UDDIConstants.WILDCARD)) {
@@ -1212,6 +1220,26 @@ public class MapUDDIv3Tov2 {
                         // assertionStatusReport.get(i).
                 }
 
+                return r;
+        }
+
+        private static List<SharedRelationships> MapSharedRelationships(List<org.uddi.api_v3.SharedRelationships> sharedRelationships) {
+                List<SharedRelationships> r = new ArrayList<SharedRelationships>();
+                if (sharedRelationships==null) return r;
+                for (int i=0; i < sharedRelationships.size(); i++){
+                        SharedRelationships x = new SharedRelationships();
+                        x.getKeyedReference().addAll(MapKeyedReference(sharedRelationships.get(i).getKeyedReference()));
+                        if (sharedRelationships.get(i).getDirection()!=null)
+                        switch (sharedRelationships.get(i).getDirection()){
+                                case FROM_KEY:
+                                        x.setDirection(Direction.FROM_KEY);
+                                     break;
+                                case TO_KEY:
+                                        x.setDirection(Direction.TO_KEY);
+                                     break;
+                        }
+                        r.add(x);
+                }
                 return r;
         }
 
