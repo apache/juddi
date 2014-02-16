@@ -157,7 +157,9 @@ public class InquiryHelper {
 				subscriptionStartIndex.value = null;
 			result.setTruncated(Boolean.FALSE);
 		}
-		
+		result.getListDescription().setListHead(currentIndex);
+                result.getListDescription().setActualCount(result.getBindingTemplate().size());
+                result.getListDescription().setIncludeCount(returnedRowCount);
 		return result;
 	}	
 	
