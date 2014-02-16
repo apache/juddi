@@ -210,10 +210,31 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
 
         /**
          * Starts a subscription callback service using the juddi client config
-         * file's settings
+         * file's settings. This will use the config setting PROPERTY_NODE, or default if not defined
          *
          * @param client
-         * @param cfg_node_name - this is the uddi/client@name
+         * @return a bindingtemplate populated with the relevant information for
+         * most UDDI servers for asynchronous callbacks.
+         * @throws ServiceAlreadyStartedException
+         * @throws SecurityException
+         * @throws ConfigurationException
+         * @throws TransportException
+         * @throws DispositionReportFaultMessage
+         * @throws UnexpectedException
+         * @throws RemoteException
+         * @throws org.apache.juddi.v3.client.subscription.RegistrationAbortedException
+         * @throws org.apache.juddi.v3.client.subscription.UnableToSignException
+         * @throws java.net.MalformedURLException
+         */
+        public static synchronized BindingTemplate start(UDDIClient client) throws ServiceAlreadyStartedException, SecurityException, ConfigurationException, TransportException, DispositionReportFaultMessage, UnexpectedException, RemoteException, RegistrationAbortedException, UnableToSignException, MalformedURLException {
+                return start(client, client.getClientConfig().getConfiguration().getString(PROPERTY_NODE,"default"));
+        }
+        /**
+         * Starts a subscription callback service using the juddi client config
+         * file's settings. This will use the specified node
+         *
+         * @param client
+         * @param cfg_node_name the node to connect to and perform all operations on
          * @return a bindingtemplate populated with the relevant information for
          * most UDDI servers for asynchronous callbacks.
          * @throws ServiceAlreadyStartedException
@@ -287,6 +308,10 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
          * config parameter
          */
         public static final String PROPERTY_LISTENURL = "client.subscriptionCallbacks.listenUrl";
+                /**
+         * config parameter, if not defined, default will be used
+         */
+        public static final String PROPERTY_NODE = "client.subscriptionCallbacks.node";
         /**
          * config parameter
          */
