@@ -1244,6 +1244,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                         // Per section 4.4: keys must be case-folded
                                         if (address.getTModelKey() != null) {
                                                 address.setTModelKey(address.getTModelKey().toLowerCase());
+                                                validatedAddressLinesIfKeyDefined(address.getAddressLine());
 
                                                 checked = verifyTModelKeyExistsAndChecked(address.getTModelKey(), config);
 
@@ -2127,6 +2128,34 @@ public class ValidatePublish extends ValidateUDDIApi {
                         }
                 }
                 return ret;
+        }
+
+        /**
+         * JUDDI-849 Each addressLine element MAY be adorned with two optional
+         * descriptive attributes, keyName and keyValue. Both attributes MUST be
+         * present in each address line if a tModelKey is specified in the
+         * address structure. When no tModelKey is provided for the address
+         * structure, the keyName and keyValue attributes have no defined
+         * meaning.
+         *
+         * @param addressLine
+         */
+        private void validatedAddressLinesIfKeyDefined(List<AddressLine> addressLine) throws ValueNotAllowedException {
+                String err="";
+                for (int i=0; i < addressLine.size(); i++){
+                        
+                        if (addressLine.get(i).getKeyName()==null||
+                             addressLine.get(i).getKeyName().trim().length()==0)
+                                err+= "addressLine(" +i + ").keyName,";
+                        if (addressLine.get(i).getKeyValue()==null||
+                             addressLine.get(i).getKeyValue().trim().length()==0)
+                                err+= "addressLine(" +i + ").keyValue,";
+                        if (addressLine.get(i).getValue()==null||
+                             addressLine.get(i).getValue().trim().length()==0)
+                                err+= "addressLine(" +i + ").value,";
+                }
+                if (err.length() > 0)
+                        throw new ValueNotAllowedException(new ErrorMessage("E_invalidValueAddressLine", err));
         }
 
 

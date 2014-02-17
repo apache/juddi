@@ -93,7 +93,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 tckTModelSam.deleteCreatedTModels(authInfoSam);
                 manager.stop();
@@ -101,7 +101,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 logger.info("UDDI_141_JIRAIntegrationTest");
                 manager = new UDDIClient();
                 manager.start();
@@ -129,7 +129,6 @@ public class UDDI_141_JIRAIntegrationTest {
                         tckTModelJoe = new TckTModel(publicationJoe, inquiryJoe);
                         tckBusinessJoe = new TckBusiness(publicationJoe, inquiryJoe);
 
-
                         transport = manager.getTransport("uddiv3");
 
                         publicationSam = transport.getUDDIPublishService();
@@ -142,8 +141,6 @@ public class UDDI_141_JIRAIntegrationTest {
                         subscriptionSam = transport.getUDDISubscriptionService();
                         tckTModelSam = new TckTModel(publicationSam, inquiryJoeSam);
                         tckBusinessSam = new TckBusiness(publicationSam, inquiryJoeSam);
-
-
 
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
@@ -168,7 +165,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @Test
         public void JUDDI_JIRA_571_Part1_Test() {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 //add a business
                 //add a business with lang defined
                 //find business with lang defined, expecting one result
@@ -225,8 +222,6 @@ public class UDDI_141_JIRAIntegrationTest {
                         failuremsg += "No lang defined, " + found1 + " records found instead of 2";
                 }
 
-
-
                 found1 = 0;
                 fb = new FindBusiness();
                 fb.setAuthInfo(authInfoJoe);
@@ -253,7 +248,6 @@ public class UDDI_141_JIRAIntegrationTest {
                         failuremsg += "Lang defined, " + found1 + " records found instead of 1";
                 }
 
-
                 DeleteBusinesses(businesskeysToDelete, authInfoJoe, publicationJoe);
                 if (failuremsg.length() > 0) {
                         Assert.fail(failuremsg);
@@ -264,13 +258,11 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @Test
         public void JUDDI_JIRA_571_Part2_Test() {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 //add a service
                 //add a service with lang defined
                 //find service with lang defined, expecting one result
                 //find service without lang defined, expecting 2 results
-
-
 
                 List<String> businesskeysToDelete = new ArrayList<String>();
                 List<String> targetServiceKeys = new ArrayList<String>();
@@ -333,8 +325,6 @@ public class UDDI_141_JIRAIntegrationTest {
                         failuremsg += "No lang defined, " + found1 + " records found instead of 2";
                 }
 
-
-
                 found1 = 0;
                 fb = new FindService();
                 fb.setAuthInfo(authInfoJoe);
@@ -361,7 +351,6 @@ public class UDDI_141_JIRAIntegrationTest {
                         failuremsg += "Lang defined, " + found1 + " records found instead of 1";
                 }
 
-
                 DeleteBusinesses(businesskeysToDelete, authInfoJoe, publicationJoe);
                 if (failuremsg.length() > 0) {
                         Assert.fail(failuremsg);
@@ -372,12 +361,11 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @Test
         public void JUDDI_571_Part3_Test() {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 //add a tmodel
                 //add a tmodel with lang defined
                 //find tmodel with lang defined, expecting one result
                 //find tmodel without lang defined, expecting 2 results
-
 
                 List<String> businesskeysToDelete = new ArrayList<String>();
 
@@ -432,8 +420,6 @@ public class UDDI_141_JIRAIntegrationTest {
                         failuremsg += "No lang defined, " + found1 + " records found instead of 2";
                 }
 
-
-
                 found1 = 0;
                 fb = new FindTModel();
                 fb.setAuthInfo(authInfoJoe);
@@ -460,7 +446,6 @@ public class UDDI_141_JIRAIntegrationTest {
                         failuremsg += "Lang defined, " + found1 + " records found instead of 1";
                 }
 
-
                 DeleteTModels(businesskeysToDelete);
                 if (failuremsg.length() > 0) {
                         Assert.fail(failuremsg);
@@ -471,13 +456,11 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @Test
         public void JUDDI_574() {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 //make a test model with a lang
 
                 //search for it by name
-
                 //confirm that the lang is present
-
                 List<String> businesskeysToDelete = new ArrayList<String>();
 
                 String failuremsg = "";
@@ -514,10 +497,10 @@ public class UDDI_141_JIRAIntegrationTest {
                                         if (businesskeysToDelete.contains(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey())) {
                                                 found1++;
                                                 if (findTModel.getTModelInfos().getTModelInfo().get(i).getName() == null
-                                                        || findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang() == null
-                                                        || findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang().length() == 0) {
+                                                     || findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang() == null
+                                                     || findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang().length() == 0) {
                                                         failuremsg += "Tmodel key " + findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey()
-                                                                + " has a null or empty lang";
+                                                             + " has a null or empty lang";
                                                 }
                                         }
 
@@ -546,7 +529,7 @@ public class UDDI_141_JIRAIntegrationTest {
          */
         @Test
         public void JUDDI_590() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 //create two businesses
                 System.out.println("JUDDI_590");
 
@@ -590,7 +573,6 @@ public class UDDI_141_JIRAIntegrationTest {
                         HandleException(ex);
                 }
 
-
                 //create an assertion on one end
                 AddPublisherAssertions apa = new AddPublisherAssertions();
                 apa.setAuthInfo(authInfoJoe);
@@ -625,7 +607,6 @@ public class UDDI_141_JIRAIntegrationTest {
                         ok = false;
                         ex.printStackTrace();
                 }
-
 
                 //aprove the assertion from sam
                 apa = new AddPublisherAssertions();
@@ -693,7 +674,6 @@ public class UDDI_141_JIRAIntegrationTest {
                 DeleteBusinesses(biz, authInfoJoe, publicationJoe);
                 Assert.assertTrue(msg, ok);
 
-
         }
 
         /**
@@ -703,7 +683,7 @@ public class UDDI_141_JIRAIntegrationTest {
          */
         @Test
         public void JUDDI_590_1() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 //create two businesses
                 System.out.println("JUDDI_590_1");
 
@@ -747,7 +727,6 @@ public class UDDI_141_JIRAIntegrationTest {
                         HandleException(ex);
                 }
 
-
                 //create an assertion on one end
                 AddPublisherAssertions apa = new AddPublisherAssertions();
                 apa.setAuthInfo(authInfoJoe);
@@ -772,8 +751,9 @@ public class UDDI_141_JIRAIntegrationTest {
                                 ok = false;
                         }
                         for (int i = 0; i < assertionStatusReport.size(); i++) {
-                                if (TckCommon.isDebug())
+                                if (TckCommon.isDebug()) {
                                         JAXB.marshal(assertionStatusReport.get(i), System.out);
+                                }
                                 if (assertionStatusReport.get(i).getToKey().equals(samBiz)) {
                                         if (!assertionStatusReport.get(i).getCompletionStatus().equals(CompletionStatus.STATUS_TO_KEY_INCOMPLETE)) {
                                                 ok = false;
@@ -794,8 +774,9 @@ public class UDDI_141_JIRAIntegrationTest {
                                 ok = false;
                         }
                         for (int i = 0; i < assertionStatusReport.size(); i++) {
-                                if (TckCommon.isDebug())
+                                if (TckCommon.isDebug()) {
                                         JAXB.marshal(assertionStatusReport.get(i), System.out);
+                                }
                                 if (assertionStatusReport.get(i).getToKey().equals(samBiz)) {
                                         if (!assertionStatusReport.get(i).getCompletionStatus().equals(CompletionStatus.STATUS_TO_KEY_INCOMPLETE)) {
                                                 ok = false;
@@ -817,7 +798,6 @@ public class UDDI_141_JIRAIntegrationTest {
                 DeleteBusinesses(biz, authInfoJoe, publicationJoe);
                 Assert.assertTrue(msg, ok);
 
-
         }
         UDDISubscriptionListenerImpl impl = new UDDISubscriptionListenerImpl();
 
@@ -828,7 +808,7 @@ public class UDDI_141_JIRAIntegrationTest {
          */
         @Test
         public void JIRA_597() throws Exception {
-Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_597");
 
                 int port = 7000;
@@ -837,8 +817,7 @@ Assume.assumeTrue(TckPublisher.isEnabled());
                         hostname = InetAddress.getLocalHost().getHostName();
                 }
 
-
-                TckCommon.removeAllExistingSubscriptions(authInfoJoe,subscriptionJoe);
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 UDDISubscriptionListenerImpl.notifcationMap.clear();
                 UDDISubscriptionListenerImpl.notificationCount = 0;
                 Endpoint ep = null;
@@ -893,7 +872,6 @@ Assume.assumeTrue(TckPublisher.isEnabled());
                 sb.getBusinessEntity().add(be);
                 BusinessDetail saveBusiness1 = publicationSam.saveBusiness(sb);
 
-
                 //ok Joe now needs to subscribe for Sam's business
                 Holder<List<Subscription>> list = new Holder<List<Subscription>>();
                 list.value = new ArrayList<Subscription>();
@@ -928,7 +906,7 @@ Assume.assumeTrue(TckPublisher.isEnabled());
                         Thread.sleep(1000);
                         maxwait = maxwait - 1000;
                 }
-                TckCommon.removeAllExistingSubscriptions(authInfoJoe,subscriptionJoe);
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 this.DeleteBusinesses(deleteme, authInfoJoe, publicationJoe);
                 deleteme.clear();
                 deleteme.add(saveBusiness1.getBusinessEntity().get(0).getBusinessKey());
@@ -937,7 +915,6 @@ Assume.assumeTrue(TckPublisher.isEnabled());
                 if (UDDISubscriptionListenerImpl.notifcationMap.isEmpty()) {
                         Assert.fail("no callbacks were recieved.");
                 }
-
 
         }
 
@@ -950,7 +927,7 @@ Assume.assumeTrue(TckPublisher.isEnabled());
          */
         @Test
         public void JIRA_596() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_596");
                 int port = 9000;
 
@@ -959,9 +936,8 @@ Assume.assumeTrue(TckPublisher.isEnabled());
                         hostname = InetAddress.getLocalHost().getHostName();
                 }
 
-
                 // String localhostname = "localhost";//java.net.InetAddress.getLocalHost().getHostName();
-                TckCommon.removeAllExistingSubscriptions(authInfoJoe,subscriptionJoe);
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 //UDDISubscriptionListenerImpl impl = new UDDISubscriptionListenerImpl();
                 UDDISubscriptionListenerImpl.notifcationMap.clear();
                 UDDISubscriptionListenerImpl.notificationCount = 0;
@@ -1052,7 +1028,7 @@ Assume.assumeTrue(TckPublisher.isEnabled());
                         Thread.sleep(1000);
                         maxwait = maxwait - 1000;
                 }
-                TckCommon.removeAllExistingSubscriptions(authInfoJoe,subscriptionJoe);
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 DeleteBusinesses(deleteme, authInfoJoe, publicationJoe);
                 deleteme.clear();
                 deleteme.add(saveBusiness1.getBusinessEntity().get(0).getBusinessKey());
@@ -1071,7 +1047,7 @@ Assume.assumeTrue(TckPublisher.isEnabled());
         //binding template tmodel instance info
         @Test
         public void JIRA_575_BT() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_BT");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1115,12 +1091,11 @@ Assume.assumeTrue(TckPublisher.isEnabled());
                         logger.error(ex.getMessage());
                 }
 
-
         }
 
         @Test
         public void JIRA_575_KR_Biz() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_KR_Biz");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1154,7 +1129,7 @@ Assume.assumeTrue(TckPublisher.isEnabled());
 
         @Test
         public void JIRA_575_IDENT_Biz() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_IDENT_Biz");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1188,7 +1163,7 @@ Assume.assumeTrue(TckPublisher.isEnabled());
 
         @Test
         public void JIRA_575_KR_TMODEL() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_KR_TMODEL");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1218,7 +1193,7 @@ Assume.assumeTrue(TckPublisher.isEnabled());
 
         @Test
         public void JIRA_575_KRGRP_TMODEL() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_KRGRP_TMODEL");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1249,7 +1224,7 @@ Assume.assumeTrue(TckPublisher.isEnabled());
 
         @Test
         public void JIRA_575_KRGRP_Biz() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_KRGRP_Biz");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1286,7 +1261,7 @@ Assume.assumeTrue(TckPublisher.isEnabled());
 
         @Test
         public void JIRA_575_KRGRP_PA() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_KRGRP_PA");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1298,7 +1273,6 @@ Assume.assumeTrue(TckPublisher.isEnabled());
                 } catch (Exception ex) {
                 }
                 Assume.assumeTrue(tModelDetail == null);
-
 
                 tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                 tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);
@@ -1328,7 +1302,7 @@ Assume.assumeTrue(TckPublisher.isEnabled());
 
         @Test
         public void JIRA_575_SVC_KR() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_SVC_KR");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1367,7 +1341,7 @@ Assume.assumeTrue(TckPublisher.isEnabled());
 
         @Test
         public void JIRA_575_SVC_KRGRP() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 System.out.println("JIRA_575_SVC_KRGRP");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
@@ -1394,7 +1368,6 @@ Assume.assumeTrue(TckPublisher.isEnabled());
                 bs.getCategoryBag().getKeyedReferenceGroup().add(new KeyedReferenceGroup());
                 bs.getCategoryBag().getKeyedReferenceGroup().get(0).setTModelKey(madeupTmodel);
 
-
                 be.getBusinessServices().getBusinessService().add(bs);
                 sb.getBusinessEntity().add(be);
 
@@ -1406,7 +1379,6 @@ Assume.assumeTrue(TckPublisher.isEnabled());
                 }
         }
 
-        
         private void DeleteBusinesses(List<String> businesskeysToDelete, String authinfo, UDDIPublicationPortType pub) {
                 //cleanup
                 try {
@@ -1418,6 +1390,7 @@ Assume.assumeTrue(TckPublisher.isEnabled());
                         ex.printStackTrace();
                 }
         }
+
         private void DeleteBusinesses(String businesskeysToDelete, String authinfo, UDDIPublicationPortType pub) {
                 //cleanup
                 try {
@@ -1442,6 +1415,39 @@ Assume.assumeTrue(TckPublisher.isEnabled());
                         ex.printStackTrace();
                 }
         }
-        
+
+        /**
+         * Each addressLine element MAY be adorned with two optional descriptive
+         * attributes, keyName and keyValue. Both attributes MUST be present in
+         * each address line if a tModelKey is specified in the address
+         * structure. When no tModelKey is provided for the address structure,
+         * the keyName and keyValue attributes have no defined meaning.
+         * http://uddi.org/pubs/uddi-v3.0.2-20041019.htm#_Toc515847027
+         */
+        @Test
+        public void JUDDI_849_AddressLineAttributeTest() throws Exception {
+                BusinessEntity be = new BusinessEntity();
+                be.setContacts(new Contacts());
+                Contact c = new Contact();
+                c.getPersonName().add(new PersonName("bob", null));
+                Address addr = new Address();
+                addr.setTModelKey("uddi:tmodelkey:address");
+                addr.getAddressLine().add(new AddressLine(null, null, "1313 mockingbird lane"));
+                c.getAddress().add(addr);
+                be.getContacts().getContact().add(c);
+                be.getName().add(new Name("test JUDDI849", null));
+                
+                SaveBusiness sb = new SaveBusiness();
+                sb.getBusinessEntity().add(be);
+                sb.setAuthInfo(authInfoJoe);
+                try {
+                        publicationJoe.saveBusiness(sb);
+                        Assert.fail("unexpected success");
+                } catch (Exception ex) {
+                        logger.info("Expected failure: " + ex.getMessage());
+                        logger.debug("Expected failure: " + ex.getMessage(), ex);
+                }
+
+        }
 
 }
