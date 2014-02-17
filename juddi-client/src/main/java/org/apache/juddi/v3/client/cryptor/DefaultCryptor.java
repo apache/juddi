@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.juddi.v3.client.cryptor;
 
 import java.security.InvalidAlgorithmParameterException;
@@ -36,89 +35,85 @@ import org.apache.commons.codec.binary.Base64;
 /**
  * @author Anou Manavalan
  */
-public class DefaultCryptor implements Cryptor
-{
-  private PBEKeySpec pbeKeySpec = null;
-  private PBEParameterSpec pbeParamSpec = null;
-  private SecretKeyFactory keyFac = null;
-  private SecretKey pbeKey = null;
+public class DefaultCryptor implements Cryptor {
 
-  // Salt
-  private byte[] salt = {
-    (byte)0xc7, (byte)0x73, (byte)0x21, (byte)0x8c,
-    (byte)0x7e, (byte)0xc8, (byte)0xee, (byte)0x99
-  };
+        private PBEKeySpec pbeKeySpec = null;
+        private PBEParameterSpec pbeParamSpec = null;
+        private SecretKeyFactory keyFac = null;
+        private SecretKey pbeKey = null;
 
-  // Iteration count
-  private int count = 20;
+        // Salt
+        private byte[] salt = {
+                (byte) 0xc7, (byte) 0x73, (byte) 0x21, (byte) 0x8c,
+                (byte) 0x7e, (byte) 0xc8, (byte) 0xee, (byte) 0x99
+        };
 
-  /**
-   * Constructor for DefaultCryptor.
-   */
-  public DefaultCryptor()
-    throws NoSuchAlgorithmException,InvalidKeySpecException
-  {
-    // Create PBE parameter set
-    pbeParamSpec = new PBEParameterSpec(salt,count);
-    pbeKeySpec = new PBEKeySpec("saagar".toCharArray());
-    keyFac = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
-    pbeKey = keyFac.generateSecret(pbeKeySpec);
-  }
+        // Iteration count
+        private int count = 20;
 
-  /**
-   * Encrypt the string
-   */
-  private byte[] crypt(int cipherMode,byte[] text)
-    throws  NoSuchPaddingException,
-            NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException,
-            InvalidKeyException,
-            IllegalBlockSizeException,
-            BadPaddingException
+        /**
+         * Constructor for DefaultCryptor.
+         */
+        public DefaultCryptor()
+             throws NoSuchAlgorithmException, InvalidKeySpecException {
+                // Create PBE parameter set
+                pbeParamSpec = new PBEParameterSpec(salt, count);
+                pbeKeySpec = new PBEKeySpec("saagar".toCharArray());
+                keyFac = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
+                pbeKey = keyFac.generateSecret(pbeKeySpec);
+        }
 
-  {
-    // Create PBE Cipher
-    Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
+        /**
+         * Encrypt the string
+         */
+        private byte[] crypt(int cipherMode, byte[] text)
+             throws NoSuchPaddingException,
+             NoSuchAlgorithmException,
+             InvalidAlgorithmParameterException,
+             InvalidKeyException,
+             IllegalBlockSizeException,
+             BadPaddingException {
+                // Create PBE Cipher
+                Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
 
-    // Initialize PBE Cipher with key and parameters
-    pbeCipher.init(cipherMode,pbeKey,pbeParamSpec);
+                // Initialize PBE Cipher with key and parameters
+                pbeCipher.init(cipherMode, pbeKey, pbeParamSpec);
 
     //byte[] text = str.getBytes();
+                // Encrypt/Decrypt the string
+                byte[] cryptext = pbeCipher.doFinal(text);
 
-    // Encrypt/Decrypt the string
-    byte[] cryptext = pbeCipher.doFinal(text);
+                return cryptext;
+        }
 
-    return cryptext;
-  }
+        /**
+         * Encrypt the string
+         */
+        public String encrypt(String str)
+             throws NoSuchPaddingException,
+             NoSuchAlgorithmException,
+             InvalidAlgorithmParameterException,
+             InvalidKeyException,
+             IllegalBlockSizeException,
+             BadPaddingException {
+                byte[] encs = crypt(Cipher.ENCRYPT_MODE, str.getBytes());
+                encs = Base64.encodeBase64(encs);
+                return new String(encs);
+        }
 
-  /**
-   * Encrypt the string
-   */
-  public String encrypt(String str)
-    throws  NoSuchPaddingException,
-            NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException,
-            InvalidKeyException,
-            IllegalBlockSizeException,
-            BadPaddingException
-  {
-    byte[] encs = crypt(Cipher.ENCRYPT_MODE,str.getBytes());
-    encs = Base64.encodeBase64(encs);
-    return new String(encs);
-  }
+        public String decrypt(String str) throws NoSuchPaddingException,
+             NoSuchAlgorithmException,
+             InvalidAlgorithmParameterException,
+             InvalidKeyException,
+             IllegalBlockSizeException,
+             BadPaddingException {
+                byte[] encs = crypt(Cipher.DECRYPT_MODE, Base64.decodeBase64(str.getBytes()));
+                return new String(encs);
+        }
 
-  
-    public String decrypt(String str)   throws  NoSuchPaddingException,
-            NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException,
-            InvalidKeyException,
-            IllegalBlockSizeException,
-            BadPaddingException{
-         byte[] encs = crypt(Cipher.DECRYPT_MODE,Base64.decodeBase64(str.getBytes()));
-        return new String(encs);
-    }
-    
-    
-    
-  
+        @Override
+        public String newKey() {
+                throw new UnsupportedOperationException("Not supported yet."); 
+        }
+
 }

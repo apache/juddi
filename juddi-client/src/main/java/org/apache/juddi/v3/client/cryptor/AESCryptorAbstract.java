@@ -24,7 +24,9 @@ import java.security.spec.InvalidKeySpecException;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -125,5 +127,18 @@ public abstract class AESCryptorAbstract implements Cryptor {
         }
 
         return strbuf.toString();
+    }
+    
+    public static String GEN(int keysize) {
+        KeyGenerator kgen;
+        try {
+            kgen = KeyGenerator.getInstance("AES");
+            kgen.init(keysize);
+            SecretKey skey = kgen.generateKey();
+            byte[] raw = skey.getEncoded();
+            return asHex(raw);
+        } catch (Exception ex) {
+        }
+        return null;
     }
 }

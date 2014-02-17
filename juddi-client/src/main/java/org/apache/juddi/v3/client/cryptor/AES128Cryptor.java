@@ -27,35 +27,45 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
-
-/** AES 128 bit encryption
+/**
+ * AES 128 bit encryption
+ *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
-public class AES128Cryptor extends  AESCryptorAbstract {
-  
-    /**
-     * Constructor for DefaultCryptor.
-     */
-    public AES128Cryptor()
-            throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException {
-        super();
-    }
-    
-    @Override
-    protected String getKey()
-    {
-        return "72d93747ba0162f2f2985f5cb3e24b30";
-    }
+public class AES128Cryptor extends AESCryptorAbstract {
 
-    @Override
-    public String encrypt(String str) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        return super.encrypt(str);
-    }
+        /**
+         * Constructor for DefaultCryptor.
+         */
+        public AES128Cryptor()
+             throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException {
+                super();
+        }
 
-    @Override
-    public String decrypt(String str) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        return super.decrypt(str);
-    }
+        @Override
+        protected String getKey() {
+                //JUDDI-808
+                String key = CryptorFactory.loadKeyFromFile("AES128Cryptor");
+                if (key != null) {
+                        return key;
+                } else {
+                        return "72d93747ba0162f2f2985f5cb3e24b30";
+                }
+        }
 
+        @Override
+        public String encrypt(String str) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+                return super.encrypt(str);
+        }
+
+        @Override
+        public String decrypt(String str) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+                return super.decrypt(str);
+        }
+
+        @Override
+        public String newKey() {
+                return GEN(128);
+        }
 
 }

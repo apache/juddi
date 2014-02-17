@@ -44,13 +44,17 @@ public class TripleDESCrytor implements Cryptor {
     private String myEncryptionKey;
     private String myEncryptionScheme;
     SecretKey key;
-
+    
     /**
      *default constructor
      * @throws Exception
      */
     public TripleDESCrytor() throws Exception {
-        myEncryptionKey = "rioTEBCe/RAHRs6tTyYxDqettnVbZA6z";
+        String keyfromfile = CryptorFactory.loadKeyFromFile("TripleDESCrytor");
+        if (keyfromfile!=null)
+                    myEncryptionKey=keyfromfile;
+        else
+                myEncryptionKey = "rioTEBCe/RAHRs6tTyYxDqettnVbZA6z";
         myEncryptionScheme = DESEDE_ENCRYPTION_SCHEME;
         arrayBytes = myEncryptionKey.getBytes(UNICODE_FORMAT);
         ks = new DESedeKeySpec(arrayBytes);
@@ -104,4 +108,9 @@ public class TripleDESCrytor implements Cryptor {
         }
         return encryptedString;
     }
+
+        @Override
+        public String newKey() {
+                return GEN();
+        }
 }

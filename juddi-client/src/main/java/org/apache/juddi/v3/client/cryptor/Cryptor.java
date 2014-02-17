@@ -70,4 +70,5 @@ public interface Cryptor {
                 IllegalBlockSizeException,
                 BadPaddingException;
 
+        public String newKey();
 }

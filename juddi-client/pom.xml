@@ -74,6 +74,15 @@
          <showDeprecation>true</showDeprecation>
      </configuration>
  </plugin>
+  <plugin>
+      <artifactId>maven-assembly-plugin</artifactId>
+      <configuration>
+       
+        <descriptorRefs>
+          <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+      </configuration>
+    </plugin>
  </plugins>
  </build>
 </project>
