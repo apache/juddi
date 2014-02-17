@@ -89,6 +89,40 @@
                var currentcatkeyref =<%=bd.getCategoryBag().getKeyedReference().size()%>;
                var currentcatkeyrefgrp =<%=bd.getCategoryBag().getKeyedReferenceGroup().size()%>;
                var currentident =<%=bd.getIdentifierBag().getKeyedReference().size()%>;
+               <%
+                int contactnames=0;
+                int contactemails=0;
+                int contactdescriptions=0;
+                int contactphones=0;
+                int contactaddresses=0;
+                int contactaddressLines=0;
+                if (bd.getContacts()!=null){
+                        for (int i=0; i < bd.getContacts().getContact().size(); i++){
+                                contactnames += bd.getContacts().getContact().get(i).getPersonName().size();
+                                contactemails+= bd.getContacts().getContact().get(i).getEmail().size();
+                                contactdescriptions +=bd.getContacts().getContact().get(i).getDescription().size();
+                                contactphones+=bd.getContacts().getContact().get(i).getPhone().size();
+                                contactaddresses+=bd.getContacts().getContact().get(i).getAddress().size();
+                                for (int k=0; k < bd.getContacts().getContact().get(i).getAddress().size(); k++){
+                                        contactaddressLines +=bd.getContacts().getContact().get(i).getAddress().get(k).getAddressLine().size();
+                                }
+                        }
+                }
+                int currentcatkeyrefgrpitems=0;
+               if (bd.getCategoryBag()!=null){
+                       for (int i=0; i < bd.getCategoryBag().getKeyedReferenceGroup().size(); i++){
+                               currentcatkeyrefgrpitems+=bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().size();
+                       }
+               }
+               %>
+               var contactname=<%=contactnames%>;
+               var contactemail=<%=contactemails%>;
+               var contactdescription=<%=contactdescriptions%>;
+               var contactphone=<%=contactphones%>;
+               var contactaddress=<%=contactaddresses%>;
+               var contactaddresslines=<%=contactaddressLines%>;
+               var currentcatkeyrefgrpitems=<%=currentcatkeyrefgrpitems%>;
+
             </script>
 
             <ul class="nav nav-tabs" id="myTab">
@@ -230,7 +264,7 @@
                                    + "');\"><i class=\"icon-trash icon-large\"></i></a></div>"
                                    + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.contact.type") + ": &nbsp;</div>"
                                    + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + i + PostBackConstants.TYPE + "\">"
-                                   + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getUseType())
+                                   + (bd.getContacts().getContact().get(i).getUseType()!=null?StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getUseType()):"")
                                    + "</div>"
                                    + "<a href=\"javascript:AddContactName('" + i + "');\"><i class=\"icon-plus-sign icon-large\"></i></a>" + ResourceLoader.GetResource(session, "items.name") + " &nbsp"
                                    + "<a href=\"javascript:AddContactEmail('" + i + "');\"><i class=\"icon-plus-sign icon-large\"></i></a>" + ResourceLoader.GetResource(session, "items.email") + " &nbsp"
@@ -247,7 +281,8 @@
                                       + "');\"><i class=\"icon-trash icon-large\"></i></a></div>"
                                       + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ": &nbsp;</div>"
                                       + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.NAME + contactname + PostBackConstants.VALUE + "\">"
-                                      + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getPersonName().get(k).getValue()) + "</div>"
+                                      + (bd.getContacts().getContact().get(i).getPersonName().get(k).getValue()!=null?StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getPersonName().get(k).getValue()) :"")
+                                   + "</div>"
                                       + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ": &nbsp;</div>"
                                       + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.NAME + contactname + PostBackConstants.LANG + "\">"
                                       + (bd.getContacts().getContact().get(i).getPersonName().get(k).getLang() == null ? ""
@@ -263,11 +298,12 @@
                                       + "');\"><i class=\"icon-trash icon-large\"></i></a></div>"
                                       + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.type") + ": &nbsp;</div>"
                                       + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.EMAIL + contactemail + PostBackConstants.TYPE + "\">"
-                                      + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getEmail().get(k).getUseType())
+                                      + (bd.getContacts().getContact().get(i).getEmail().get(k).getUseType()!=null?StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getEmail().get(k).getUseType()):"")
                                       + "</div>"
                                       + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
                                       + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.EMAIL + contactemail + PostBackConstants.VALUE + "\">"
-                                      + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getEmail().get(k).getValue()) + "</div>"
+                                      + (bd.getContacts().getContact().get(i).getEmail().get(k).getValue()!=null?StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getEmail().get(k).getValue()) :"")
+                                      + "</div>"
                                       + "</div>");
                            }
                              //out.write("</div>");
@@ -279,11 +315,11 @@
                                       + "');\"><i class=\"icon-trash icon-large\"></i></a></div>"
                                       + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.description") + ": &nbsp;</div>"
                                       + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.DESCRIPTION + contactdescription + PostBackConstants.VALUE + "\">"
-                                      + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getDescription().get(k).getValue())
+                                      + (bd.getContacts().getContact().get(i).getDescription().get(k).getValue()!=null?StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getDescription().get(k).getValue()):"")
                                       + "</div>"
                                       + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ": &nbsp;</div>"
                                       + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.DESCRIPTION + contactdescription + PostBackConstants.LANG + "\">"
-                                      + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getDescription().get(k).getLang())
+                                      + (bd.getContacts().getContact().get(i).getDescription().get(k).getLang()!=null?StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getDescription().get(k).getLang()):"")
                                       + "</div>" //keep it
                                       + "</div>");
                            }
@@ -301,11 +337,11 @@
                                       + "');\"><i class=\"icon-trash icon-large\"></i></a></div>"
                                       + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.phone") + ": &nbsp;</div>"
                                       + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.PHONE + contactphone + PostBackConstants.VALUE + "\">"
-                                      + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getPhone().get(k).getValue())
+                                      + (bd.getContacts().getContact().get(i).getPhone().get(k).getValue()!=null?StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getPhone().get(k).getValue()):"")
                                       + "</div>"
                                       + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.type") + ": &nbsp;</div>"
                                       + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.PHONE + contactphone + PostBackConstants.TYPE + "\">"
-                                      + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getPhone().get(k).getUseType())
+                                      + (bd.getContacts().getContact().get(i).getPhone().get(k).getUseType()!=null?StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getPhone().get(k).getUseType()):"")
                                       + "</div>"
                                       + "</div>");
 
@@ -319,19 +355,19 @@
                                       + "');\"><i class=\"icon-trash icon-large\"></i></a>" + ResourceLoader.GetResource(session, "items.address") + "</div><br>"
                                       + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ": &nbsp;</div>"
                                       + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.ADDRESS + contactaddress + PostBackConstants.LANG + "\">"
-                                      + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getAddress().get(k).getLang())
+                                      + (bd.getContacts().getContact().get(i).getAddress().get(k).getLang()!=null ? StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getAddress().get(k).getLang()):"")
                                       + "</div>"
                                       + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.sortcode") + ": &nbsp;</div>"
                                       + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.ADDRESS + contactaddress + PostBackConstants.SORTCODE + "\">"
-                                      + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getAddress().get(k).getSortCode())
+                                      + (bd.getContacts().getContact().get(i).getAddress().get(k).getSortCode()!=null ? StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getAddress().get(k).getSortCode()) : "" )
                                       + "</div>"
                                       + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.type") + ": &nbsp;</div>"
                                       + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.ADDRESS + contactaddress + PostBackConstants.TYPE + "\">"
-                                      + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getAddress().get(k).getUseType())
+                                      + (bd.getContacts().getContact().get(i).getAddress().get(k).getUseType()!=null ? StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getAddress().get(k).getUseType()) : "")
                                       + "</div>"
                                       + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.tmodel.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.ADDRESS + contactaddress + PostBackConstants.KEYNAME + "')\" >" + "<i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>): &nbsp;</div>"
                                       + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.ADDRESS + contactaddress + PostBackConstants.KEYNAME + "\">"
-                                      + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getAddress().get(k).getTModelKey())
+                                      + (bd.getContacts().getContact().get(i).getAddress().get(k).getTModelKey()!=null ? StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getAddress().get(k).getTModelKey()) : "" )
                                       + "</div>"
                                       + "<div><br><a href=\"javascript:AddContactAddressLine('" + contactid + PostBackConstants.ADDRESS + contactaddress + "');\">"
                                       + "<i class=\"icon-plus-sign icon-large\"></i></a> " + ResourceLoader.GetResource(session, "items.addressline.add") + "</div>");
@@ -340,19 +376,19 @@
                                  int contactaddresslines = j;
                                  out.write("<div id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.ADDRESS + k + PostBackConstants.ADDRESSLINE + contactaddresslines
                                          + "\" style=\"border-width:1px; border-style:solid\" >"
-                                         + "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.ADDRESSLINE + contactaddresslines
+                                         + "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.ADDRESS + k + PostBackConstants.ADDRESSLINE + contactaddresslines
                                          + "');\"><i class=\"icon-trash icon-large\"></i></a></div>"
                                          + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.addressvalue") + ": &nbsp;</div>"
                                          + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.ADDRESS + k + PostBackConstants.ADDRESSLINE + contactaddresslines + PostBackConstants.VALUE + "\">"
-                                         + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getAddress().get(k).getAddressLine().get(k).getValue())
+                                         + (bd.getContacts().getContact().get(i).getAddress().get(k).getAddressLine().get(j).getValue()!=null ? StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getAddress().get(k).getAddressLine().get(j).getValue()):"")
                                          + "</div>"
                                          + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.keyname.optional") + ": &nbsp;</div>"
                                          + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.ADDRESS + k + PostBackConstants.ADDRESSLINE + contactaddresslines + PostBackConstants.KEYNAME + "\">"
-                                         + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getAddress().get(k).getAddressLine().get(k).getKeyName())
+                                         + (bd.getContacts().getContact().get(i).getAddress().get(k).getAddressLine().get(j).getKeyName()!=null ? StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getAddress().get(k).getAddressLine().get(j).getKeyName()) : "")
                                          + "</div>"
                                          + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.keyvalue.optional") + ": &nbsp;</div>"
                                          + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.ADDRESS + k + PostBackConstants.ADDRESSLINE + contactaddresslines + PostBackConstants.KEYVALUE + "\">"
-                                         + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getAddress().get(k).getAddressLine().get(k).getKeyValue())
+                                         + (bd.getContacts().getContact().get(i).getAddress().get(k).getAddressLine().get(j).getKeyValue()!=null ? StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getAddress().get(k).getAddressLine().get(j).getKeyValue()) :"")
                                          + "</div>"
                                          + "</div>");
                               }   //address line loop
@@ -391,11 +427,17 @@
                                    + "<i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>) "
                                    + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(bd.getCategoryBag().getKeyedReference().get(i).getTModelKey(), "UTF8") + "\"><i class=\"icon-zoom-in icon-large\"></i></a>"
                                    + ": &nbsp;</div>"
-                                   + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getTModelKey()) + "</div>");
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.VALUE + "\">" + 
+                                (bd.getCategoryBag().getKeyedReference().get(i).getTModelKey()!=null?StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getTModelKey()):"")
+                                + "</div>");
                            out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ": &nbsp;</div>"
-                                   + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyName()) + "</div>");
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.KEYNAME + "\">" + 
+                                (bd.getCategoryBag().getKeyedReference().get(i).getKeyName()!=null?StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyName()):"")
+                                + "</div>");
                            out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
-                                   + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.KEYVALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyValue()) + "</div>");
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.KEYVALUE + "\">" + 
+                                (bd.getCategoryBag().getKeyedReference().get(i).getKeyValue()!=null?StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyValue()) :"")
+                                + "</div>");
                            out.write("</div>");
                         }
                      %>
@@ -429,11 +471,17 @@
                               out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + PostBackConstants.VALUE + "')\" >" + "<i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>) "
                                       + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getTModelKey(), "UTF8") + "\"><i class=\"icon-zoom-in icon-large\"></i></a>"
                                       + ": &nbsp;</div>"
-                                      + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getTModelKey()) + "</div>");
+                                      + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + PostBackConstants.VALUE + "\">" + 
+                                   (bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getTModelKey()!=null?StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getTModelKey()):"")
+                                   + "</div>");
                               out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ":  &nbsp;</div>"
-                                      + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getKeyName()) + "</div>");
+                                      + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + PostBackConstants.KEYNAME + "\">" + 
+                                   (bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getKeyName()!=null?StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getKeyName()):"")
+                                   + "</div>");
                               out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
-                                      + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + PostBackConstants.KEYVALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getKeyValue()) + "</div>");
+                                      + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.KEY_REF + k + PostBackConstants.KEYVALUE + "\">" + 
+                                   (bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getKeyValue()!=null?StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getKeyValue()):"")
+                                   + "</div>");
                               out.write("</div>");
                            }
 
@@ -459,11 +507,18 @@
                            out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.IDENT_KEY_REF + i + PostBackConstants.VALUE + "')\" >" + "<i class=\"icon-list-alt icon-large\"></i> " + ResourceLoader.GetResource(session, "items.picker") + "</a>) "
                                    + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(bd.getIdentifierBag().getKeyedReference().get(i).getTModelKey(), "UTF8") + "\"><i class=\"icon-zoom-in icon-large\"></i></a>"
                                    + ":  &nbsp;</div>"
-                                   + "<div class=\"edit\" id=\"" + PostBackConstants.IDENT_KEY_REF + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getIdentifierBag().getKeyedReference().get(i).getTModelKey()) + "</div>");
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.IDENT_KEY_REF + i + PostBackConstants.VALUE + "\">" + 
+                                (bd.getIdentifierBag().getKeyedReference().get(i).getTModelKey()!=null?
+                                     StringEscapeUtils.escapeHtml(bd.getIdentifierBag().getKeyedReference().get(i).getTModelKey()):"")
+                                + "</div>");
                            out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ":  &nbsp;</div>"
-                                   + "<div class=\"edit\" id=\"" + PostBackConstants.IDENT_KEY_REF + i + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getIdentifierBag().getKeyedReference().get(i).getKeyName()) + "</div>");
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.IDENT_KEY_REF + i + PostBackConstants.KEYNAME + "\">" + 
+                                (bd.getIdentifierBag().getKeyedReference().get(i).getKeyName()!=null?StringEscapeUtils.escapeHtml(bd.getIdentifierBag().getKeyedReference().get(i).getKeyName()) :"")
+                                + "</div>");
                            out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
-                                   + "<div class=\"edit\" id=\"" + PostBackConstants.IDENT_KEY_REF + i + PostBackConstants.KEYVALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getIdentifierBag().getKeyedReference().get(i).getKeyValue()) + "</div>");
+                                   + "<div class=\"edit\" id=\"" + PostBackConstants.IDENT_KEY_REF + i + PostBackConstants.KEYVALUE + "\">" + 
+                                (bd.getIdentifierBag().getKeyedReference().get(i).getKeyValue()!=null?StringEscapeUtils.escapeHtml(bd.getIdentifierBag().getKeyedReference().get(i).getKeyValue()):"")
+                                + "</div>");
                            out.write("</div>");
                         }
                      %>
@@ -495,12 +550,12 @@
                            %><tr>
                         <td><%
                            if (!bd.getBusinessServices().getBusinessService().get(i).getName().isEmpty()) {
-                              out.write(bd.getBusinessServices().getBusinessService().get(i).getName().get(0).getValue());
+                              out.write(StringEscapeUtils.escapeHtml(bd.getBusinessServices().getBusinessService().get(i).getName().get(0).getValue()));
                            }
                            %>
-                        </td><td><a href="serviceEditor.jsp?id=<%=StringEscapeUtils.escapeHtml(bd.getBusinessServices().getBusinessService().get(i).getServiceKey())%>">
+                        </td><td><a href="serviceEditor.jsp?id=<%=URLEncoder.encode(bd.getBusinessServices().getBusinessService().get(i).getServiceKey(),"UTF8")%>">
                               <%
-                                 out.write(bd.getBusinessServices().getBusinessService().get(i).getServiceKey());
+                                 out.write(StringEscapeUtils.escapeHtml(bd.getBusinessServices().getBusinessService().get(i).getServiceKey()));
                               %>
                               <i class="icon-edit icon-large"></i></a>
                         </td><td>

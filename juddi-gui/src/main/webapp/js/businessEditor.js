@@ -143,7 +143,7 @@ function AddContact()
     
     Reedit();
 }
-var contactname=0;
+
 function AddContactName(contactid)
 {
     $("<div id=\"contact" + contactid + "Name" + contactname + "\" style=\"border-width:1px; border-style:solid\" >" 
@@ -158,7 +158,6 @@ function AddContactName(contactid)
     contactname++;
 }
 
-var contactemail=0;
 function AddContactEmail(contactid)
 {
     $("<div id=\"contact" + contactid + "Email" + contactemail + "\" style=\"border-width:1px; border-style:solid\" >" 
@@ -172,8 +171,6 @@ function AddContactEmail(contactid)
     Reedit();
     contactemail++;
 }
-
-var contactdescription=0;
 function AddContactDescription(contactid)
 {
     $("<div id=\"contact" + contactid + "Description" + contactdescription + "\" style=\"border-width:1px; border-style:solid\" >" 
@@ -187,7 +184,7 @@ function AddContactDescription(contactid)
     Reedit();
     contactdescription++;
 }
-var contactphone=0;
+
 function AddContactPhone(contactid)
 {
     $("<div id=\"contact" + contactid + "Phone" + contactphone + "\" style=\"border-width:1px; border-style:solid\" >" 
@@ -202,7 +199,6 @@ function AddContactPhone(contactid)
     contactphone++;
 }
 
-var contactaddress=0;
 function AddContactAddress(contactid)
 {
     $("<div id=\"contact" + contactid + "Address" + contactaddress + "\" style=\"border-width:1px; border-style:solid\" >" 
@@ -225,9 +221,9 @@ function AddContactAddress(contactid)
     contactaddress++;
 }
 
-var contactaddresslines=0;
 function AddContactAddressLine(contactid)
 {
+    contactaddresslines++;
     $("<div id=\"contact" + contactid +  "addressLine" +contactaddresslines + 
         "\" style=\"border-width:1px; border-style:solid\" >" 
         
@@ -242,7 +238,7 @@ function AddContactAddressLine(contactid)
     
         +"</div>").appendTo("#contact" + contactid);
     Reedit();
-    contactaddress++;
+    
 }
 
 
@@ -344,8 +340,6 @@ function AddISO3166UNSPSC(){
 }
 
 
-
-var currentcatkeyrefgrpitems=0;
 function AddCategoryKeyReferenceGroupKeyRef(div)
 {
     var i=currentcatkeyrefgrp;

@@ -329,7 +329,7 @@ public class Builders {
          *
          * @param map
          * @param prefix
-         * @param cte
+         * @param cte Localized "Click to edit"
          * @return list
          */
         public static List<Address> BuildAddress(Map map, String prefix, String cte, String locale) {
@@ -368,7 +368,7 @@ public class Builders {
                                         } else {
                                                 pn.setTModelKey(t[0]);
                                         }
-                                        pn.getAddressLine().addAll(BuildAddressLine(MapFilter(map, prefix + index + PostBackConstants.ADDRESSLINE), prefix + index + PostBackConstants.ADDRESSLINE, locale));
+                                        pn.getAddressLine().addAll(BuildAddressLine(MapFilter(map, prefix + index + PostBackConstants.ADDRESSLINE), prefix + index + PostBackConstants.ADDRESSLINE, cte,locale));
                                         ret.add(pn);
                                         processedIndexes.add(index);
                                 }
@@ -560,9 +560,11 @@ public class Builders {
          *
          * @param map
          * @param prefix
+         * @param cte localized Click to edit
+         * @param locale
          * @return list
          */
-        public static List<AddressLine> BuildAddressLine(Map map, String prefix, String locale) {
+        public static List<AddressLine> BuildAddressLine(Map map, String prefix, String cte, String locale) {
                 List<AddressLine> ret = new ArrayList();
                 Iterator it = map.keySet().iterator();
                 List<String> processedIndexes = new ArrayList<String>();
@@ -577,9 +579,13 @@ public class Builders {
                                         String[] t = (String[]) map.get(prefix + index + PostBackConstants.VALUE);
                                         pn.setValue(t[0]);
                                         t = (String[]) map.get(prefix + index + PostBackConstants.KEYNAME);
-                                        pn.setKeyName(t[0]);
+                                        if (t != null && t.length > 0 && !cte.equalsIgnoreCase(t[0])) {
+                                                pn.setKeyName(t[0]);
+                                        }
                                         t = (String[]) map.get(prefix + index + PostBackConstants.KEYVALUE);
-                                        pn.setKeyValue(t[0]);
+                                        if (t != null && t.length > 0 && !cte.equalsIgnoreCase(t[0])) {
+                                                pn.setKeyValue(t[0]);
+                                        }
                                         ret.add(pn);
                                         processedIndexes.add(index);
                                 }

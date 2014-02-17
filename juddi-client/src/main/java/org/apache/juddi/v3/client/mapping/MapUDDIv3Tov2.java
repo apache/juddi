@@ -121,6 +121,8 @@ public class MapUDDIv3Tov2 {
                 }
                 BusinessEntity item = new org.uddi.api_v2.BusinessEntity();
                 item.setBusinessKey(be.getBusinessKey());
+                if (item.getBusinessKey()==null)
+                        item.setBusinessKey("");
                 item.setCategoryBag(MapCategoryBag(be.getCategoryBag()));
                 item.setContacts(MapContacts(be.getContacts()));
                 item.setDiscoveryURLs(MapDiscoveryURLs(be.getDiscoveryURLs()));
