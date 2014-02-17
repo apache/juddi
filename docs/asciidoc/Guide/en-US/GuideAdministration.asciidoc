@@ -90,6 +90,8 @@ In addition, an MD5 hashing program is included to assist with setting users pas
 {tomcat_home}/bin/juddi-md5.bat/sh
 ----
 
+TIP: You can generate new encryption keys using this utility by specifying the System Property -Dgenerate=true option. You can then use them using the System Property -Djuddi.encryptionKeyFile.TripleDESCrytor=path/to/key
+
 ===== jUDDI Authentication
 
 The default authentication mechanism provided by jUDDI is the JUDDIAuthenticator. The authenticate phase of the JUDDIAuthenticator simply checks to see if the user id passed in has an associated record in the Publisher table. No credentials checks are made. If, during authentication, the publisher does not exist, it the publisher is added on the fly.

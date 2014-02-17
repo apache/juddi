@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Daddy
+ * @author Alex O'Ree
  */
 public class DefaultCryptorTest {
         
