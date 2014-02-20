@@ -384,6 +384,17 @@
             <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
         </categoryBag>
     </tModel>
+    
+    <tModel tModelKey="uddi:uddi.org:transport:userfriendlysmtp">
+        <name>Human Readable SMTP Email Deliveries</name>
+        <description>This is a jUDDI extension for providing SMTP based subscription alerts in a human readable fashion.</description>
+        
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    
+    
     <tModel tModelKey="uddi:uddi.org:transport:ftp">
         <name>uddi-org:ftp</name>
         <description>File Transfer Protocol (FTP) based Web service
