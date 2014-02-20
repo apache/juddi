@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
+import org.apache.juddi.config.ResourceConfig;
 import org.apache.juddi.cryptor.CryptorFactory;
 import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.apache.juddi.model.BindingTemplate;
@@ -142,7 +143,7 @@ public class SMTPNotifier implements Notifier {
 				String subscriptionResultXML = JAXBMarshaller.marshallToString(body, JAXBMarshaller.PACKAGE_SUBSCR_RES);
 				message.setText(subscriptionResultXML, "UTF-8");
                                 //message.setContent(subscriptionResultXML, "text/xml; charset=UTF-8;");
-				message.setSubject("UDDI Subscription Notification for subscription " 
+				message.setSubject(ResourceConfig.getGlobalMessage("notifications.smtp.default.subject") + " " 
 						+ body.getSubscriptionResultsList().getSubscription().getSubscriptionKey());
 				Transport.send(message);
 			}

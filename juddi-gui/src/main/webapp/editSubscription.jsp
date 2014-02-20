@@ -238,7 +238,7 @@
                             <div class="<%=((sub.getBindingKey() != null && sub.getBindingKey().trim().length()>0) ? "" : " hide ")%>" id="bindingKeyDiv">
                                 <%=ResourceLoader.GetResource(session, "pages.subscription.step3.content")%>
                                 <b><%=UDDIConstants.TRANSPORT_HTTP%></b>.
-                                <input type="text" id="bindingKey" placeholder="<%=ResourceLoader.GetResource(session, "items.bindingtemplate.key")%>" style="width:360px">
+                                <input type="text" id="bindingKey" placeholder="<%=ResourceLoader.GetResource(session, "items.bindingtemplate.key")%>" style="width:360px" value="<%=(sub.getBindingKey() != null ? StringEscapeUtils.escapeHtml(sub.getBindingKey()):"")%>">
                                 <button onClick="javascript:bindingModal('bindingKey', 'val');
                                         return false;" class="btn "><%=ResourceLoader.GetResource(session, "actions.select")%></button>
                             </div>

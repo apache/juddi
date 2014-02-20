@@ -24,6 +24,7 @@
                 <li><a href="javascript:AddTmodelInstanceParam('uddi:uddi.org:transport:jms');">JMS</a></li>
                 <li><a href="javascript:AddTmodelInstanceParam('uddi:uddi.org:transport:ftp');">FTP</a></li>
                 <li><a href="javascript:AddTmodelInstanceParam('uddi:uddi.org:transport:smtp');">SMTP</a></li>
+                <li><a href="javascript:AddTmodelInstanceParam('uddi:uddi.org:transport:userfriendlysmtp');">User Friendly SMTP</a></li>
                 <li><a href="javascript:AddTmodelInstanceParam('uddi:uddi.org:transport:jndi-rmi');">JNDI-RMI</a></li>
                 <li><a href="javascript:AddTmodelInstanceParam('uddi:uddi.org:transport:rmi');">RMI</a></li>
                 <li><a href="javascript:AddTmodelInstanceParam('uddi:uddi.org:transport:omgdds');">OMG DDS</a></li>

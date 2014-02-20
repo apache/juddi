@@ -900,6 +900,8 @@ public class UddiHub implements Serializable {
                         return null;
                 }
 
+                if (serviceid.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit")))
+                        return null;
                 try {
                         GetServiceDetail gbd = new GetServiceDetail();
                         gbd.setAuthInfo(GetToken());
@@ -1124,6 +1126,8 @@ public class UddiHub implements Serializable {
                 if (bizid == null || bizid.isEmpty()) {
                         return null;
                 }
+                if (bizid.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit")))
+                        return null;
 
                 try {
                         GetBusinessDetail gbd = new GetBusinessDetail();
