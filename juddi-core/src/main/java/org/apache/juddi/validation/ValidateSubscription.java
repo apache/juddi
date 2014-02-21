@@ -20,8 +20,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -56,7 +54,7 @@ public class ValidateSubscription extends ValidateUDDIApi {
     }
     private DatatypeFactory df = null;
 
-    public void validateSubscriptions(EntityManager em, List<org.uddi.sub_v3.Subscription> entityList) throws DispositionReportFaultMessage {
+    public void validateSubscriptions(EntityManager em, List<org.uddi.sub_v3.Subscription> entityList, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
 
         // No null or empty list
         if (entityList == null || entityList.size() == 0) {
@@ -64,11 +62,11 @@ public class ValidateSubscription extends ValidateUDDIApi {
         }
 
         for (org.uddi.sub_v3.Subscription entity : entityList) {
-            validateSubscription(em, entity);
+            validateSubscription(em, entity, publisher);
         }
     }
 
-    private void validateSubscription(EntityManager em, org.uddi.sub_v3.Subscription subscription) throws DispositionReportFaultMessage {
+    private void validateSubscription(EntityManager em, org.uddi.sub_v3.Subscription subscription, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
 
         // A supplied subscription can't be null
         if (subscription == null) {
@@ -86,7 +84,7 @@ public class ValidateSubscription extends ValidateUDDIApi {
         //no key specified, make a new one
         if (entityKey == null || entityKey.length() == 0) {
             KeyGenerator keyGen = KeyGeneratorFactory.getKeyGenerator();
-            entityKey = keyGen.generate();
+            entityKey = keyGen.generate(publisher);
             subscription.setSubscriptionKey(entityKey);
         } else {
             //key specified, validate it

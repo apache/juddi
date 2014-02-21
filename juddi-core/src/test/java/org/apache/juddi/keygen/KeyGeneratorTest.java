@@ -14,10 +14,14 @@
  */
 package org.apache.juddi.keygen;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.Property;
+import org.apache.juddi.model.UddiEntityPublisher;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -70,8 +74,18 @@ public class KeyGeneratorTest
 		try {
 			KeyGenerator keyGenerator = KeyGeneratorFactory.forceNewKeyGenerator();
 			Assert.assertEquals(org.apache.juddi.keygen.DefaultKeyGenerator.class, keyGenerator.getClass());
-			String key = keyGenerator.generate();
+			String key = keyGenerator.generate(null);
 			Assert.assertNotNull(key);
+			Assert.assertTrue(key.startsWith("uddi:juddi.apache.org"));
+			UddiEntityPublisher publisher = new UddiEntityPublisher();
+			
+			List<String> keyGeneratorKeys = new ArrayList<String>();
+			keyGeneratorKeys.add("uddi:mydomain.org:keyGenerator");
+			publisher.setKeyGeneratorKeys(keyGeneratorKeys);
+			String key2 = keyGenerator.generate(publisher);
+			Assert.assertNotNull(key2);
+			Assert.assertTrue(key2.startsWith("uddi:mydomain.org"));
+			
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 			Assert.fail("unexpected");
