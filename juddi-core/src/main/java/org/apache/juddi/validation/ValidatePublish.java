@@ -992,6 +992,9 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 Object parentTemp = em.find(org.apache.juddi.model.BusinessService.class, parentKey);
                                 if (parentTemp == null) {
                                         throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ParentBusinessNotFound", parentKey));
+                                } else if (!(parentTemp instanceof org.apache.juddi.model.BusinessService)){
+                                        //JUDDI-848
+                                        throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ParentBusinessNotFound", parentKey));
                                 }
 
                                 // Make sure publisher owns this parent entity.
