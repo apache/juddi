@@ -1,3 +1,6 @@
 target
-*/target/*
-*/derby.log
+**/target/*
+**/derby.log
+**/.project
+**/.classpath
+**/.settings/*
