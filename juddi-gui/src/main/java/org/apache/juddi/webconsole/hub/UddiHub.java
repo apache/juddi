@@ -157,7 +157,7 @@ public class UddiHub implements Serializable {
 
         public String verifyLogin() {
                 EnsureConfig();
-                token=null;
+                token = null;
                 if (style != AuthStyle.UDDI_AUTH) {
                         if (WS_Transport) {
                                 BindingProvider bp = null;
@@ -212,7 +212,7 @@ public class UddiHub implements Serializable {
                          context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));*/
                         return null;
                 } else {
-                        
+
                         if (WS_Transport) {
                                 BindingProvider bp = null;
                                 Map<String, Object> context = null;
@@ -307,9 +307,9 @@ public class UddiHub implements Serializable {
                         hub.locale = (String) _session.getAttribute("locale");
                         return hub;
                 }
-                UddiHub hub=(UddiHub) j;
+                UddiHub hub = (UddiHub) j;
                 hub.locale = (String) _session.getAttribute("locale");
-                return  hub;
+                return hub;
         }
         String locale = "en";
 
@@ -319,12 +319,14 @@ public class UddiHub implements Serializable {
          * @return something like "en" or "es"
          */
         public String getLocale() {
-                if (session!=null){
-                        if (session.getAttribute("locale")!=null)
-                                locale = (String)session.getAttribute("locale");
+                if (session != null) {
+                        if (session.getAttribute("locale") != null) {
+                                locale = (String) session.getAttribute("locale");
+                        }
                 }
-                if (locale==null)
-                        locale="en";
+                if (locale == null) {
+                        locale = "en";
+                }
                 return locale;
         }
 
@@ -348,7 +350,7 @@ public class UddiHub implements Serializable {
                                         nodename = clientConfig.getConfiguration().getString(PROP_CONFIG_NODE);
                                 }
                                 if (nodename == null || nodename.equals("")) {
-                                        log.warn("'node' is not defined in the config! defaulting to '" + DEFAULT_NODE_NAME +"'");
+                                        log.warn("'node' is not defined in the config! defaulting to '" + DEFAULT_NODE_NAME + "'");
                                         nodename = DEFAULT_NODE_NAME;
                                 }
                                 UDDINode uddiNode = clientConfig.getUDDINode(nodename);
@@ -373,9 +375,9 @@ public class UddiHub implements Serializable {
                                              && (uddiNode.getCustodyTransferUrl() != null && uddiNode.getCustodyTransferUrl().toLowerCase().startsWith("https://"))
                                              && (uddiNode.getSubscriptionUrl() != null && uddiNode.getSubscriptionUrl().toLowerCase().startsWith("https://"))) {
                                                 WS_securePorts = true;
+                                        } else {
+                                                WS_securePorts = false;
                                         }
-                                        else
-                                                WS_securePorts=false;
                                 }
                         } catch (Exception ex) {
                                 HandleException(ex);
@@ -900,8 +902,9 @@ public class UddiHub implements Serializable {
                         return null;
                 }
 
-                if (serviceid.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit")))
+                if (serviceid.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
                         return null;
+                }
                 try {
                         GetServiceDetail gbd = new GetServiceDetail();
                         gbd.setAuthInfo(GetToken());
@@ -942,20 +945,20 @@ public class UddiHub implements Serializable {
                         SaveBinding sb = new SaveBinding();
                         sb.setAuthInfo(GetToken());
                         sb.getBindingTemplate().add(be);
-                        BindingDetail saveBinding=null;
+                        BindingDetail saveBinding = null;
                         try {
-                                 saveBinding = publish.saveBinding(sb);
+                                saveBinding = publish.saveBinding(sb);
                         } catch (Exception ex) {
                                 if (isExceptionExpiration(ex)) {
                                         token = null;
                                         sb.setAuthInfo(GetToken());
-                                        saveBinding =  publish.saveBinding(sb);
+                                        saveBinding = publish.saveBinding(sb);
 
                                 } else {
                                         throw ex;
                                 }
                         }
-                                        return ResourceLoader.GetResource(session, "actions.saved") + " "
+                        return ResourceLoader.GetResource(session, "actions.saved") + " "
                              + "<a href=\"bindingEditor.jsp?id=" + URLEncoder.encode(saveBinding.getBindingTemplate().get(0).getBindingKey(), "UTF8")
                              + "\">" + StringEscapeUtils.escapeHtml(saveBinding.getBindingTemplate().get(0).getBindingKey()) + "</a>";
                 } catch (Exception ex) {
@@ -986,15 +989,15 @@ public class UddiHub implements Serializable {
                 be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
                 //JUDDI-806get existing service details and copy over binding templates
                 BusinessService GetServiceDetail = GetServiceDetail(request.getParameter(PostBackConstants.SERVICEKEY).trim());
-                if (GetServiceDetail!=null){
+                if (GetServiceDetail != null) {
                         be.setBindingTemplates(GetServiceDetail.getBindingTemplates());
                 }
                 /*JUDDI-806
-                BindingTemplates bt = new BindingTemplates();
-                bt.getBindingTemplate().addAll(Builders.BuildBindingTemplates(Builders.MapFilter(request.getParameterMap(), PostBackConstants.BINDINGTEMPLATE), PostBackConstants.BINDINGTEMPLATE, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
-                if (!bt.getBindingTemplate().isEmpty()) {
-                        be.setBindingTemplates(bt);
-                }*/
+                 BindingTemplates bt = new BindingTemplates();
+                 bt.getBindingTemplate().addAll(Builders.BuildBindingTemplates(Builders.MapFilter(request.getParameterMap(), PostBackConstants.BINDINGTEMPLATE), PostBackConstants.BINDINGTEMPLATE, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
+                 if (!bt.getBindingTemplate().isEmpty()) {
+                 be.setBindingTemplates(bt);
+                 }*/
 
                 be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
 
@@ -1126,8 +1129,9 @@ public class UddiHub implements Serializable {
                 if (bizid == null || bizid.isEmpty()) {
                         return null;
                 }
-                if (bizid.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit")))
+                if (bizid.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
                         return null;
+                }
 
                 try {
                         GetBusinessDetail gbd = new GetBusinessDetail();
@@ -1170,7 +1174,7 @@ public class UddiHub implements Serializable {
         }
 
         private String deleteBinding(List<String> serviceId) {
-                
+
                 if (serviceId == null || serviceId.isEmpty()) {
                         return ResourceLoader.GetResource(session, "errors.noinput");
                 }
@@ -1194,7 +1198,7 @@ public class UddiHub implements Serializable {
                         return HandleException(ex);
                 }
                 return ResourceLoader.GetResource(session, "actions.delete.binding");
-                
+
         }
 
         /**
@@ -1263,8 +1267,13 @@ public class UddiHub implements Serializable {
                                 ret.renderedHtml = ResourceLoader.GetResource(session, "errors.norecordsfound");
                                 return ret;
                         }
-                        ret.displaycount = findService.getListDescription().getIncludeCount();
-                        ret.totalrecords = findService.getListDescription().getActualCount();
+                        if (findService.getListDescription() != null) {
+                                ret.displaycount = findService.getListDescription().getIncludeCount();
+                                ret.totalrecords = findService.getListDescription().getActualCount();
+                        } else {
+                                ret.displaycount = findService.getServiceInfos().getServiceInfo().size();
+                                ret.totalrecords = findService.getServiceInfos().getServiceInfo().size();
+                        }
                         ret.renderedHtml = Printers.ServiceListAsHtml(findService, isChooser, session);
 
                         //  ret.renderedHtml = sb.toString();
@@ -1428,15 +1437,15 @@ public class UddiHub implements Serializable {
                                 ret.displaycount = findTModel.getListDescription().getIncludeCount();
                                 ret.totalrecords = findTModel.getListDescription().getActualCount();
                         }
+                        else
+                        {
+                                ret.displaycount = findTModel.getTModelInfos().getTModelInfo().size();
+                                ret.totalrecords = findTModel.getTModelInfos().getTModelInfo().size();
+                        }
                         if (findTModel.getTModelInfos() == null || findTModel.getTModelInfos().getTModelInfo().isEmpty()) {
                                 ret.renderedHtml = ResourceLoader.GetResource(session, "errors.norecordsfound");//"No tModels are defined";
                         } else {
-                                // if (!isChooser) {
                                 ret.renderedHtml = Printers.PrintTModelListAsHtml(findTModel, session, isChooser);
-                                // } else {
-                                //     ret.renderedHtml = Printers.PrintTModelListAsHtmlModel(findTModel, session);
-                                // }
-
                         }
                 } catch (Exception ex) {
                         ret.renderedHtml = HandleException(ex);
@@ -3016,9 +3025,13 @@ public class UddiHub implements Serializable {
                                 ret.renderedHtml = ResourceLoader.GetResource(session, "errors.norecordsfound");
                                 return ret;
                         }
-                        ret.displaycount = findService.getListDescription().getIncludeCount();
-                        ret.totalrecords = findService.getListDescription().getActualCount();
-
+                        if (findService.getListDescription() != null) {
+                                ret.displaycount = findService.getListDescription().getIncludeCount();
+                                ret.totalrecords = findService.getListDescription().getActualCount();
+                        } else {
+                                ret.displaycount = findService.getServiceInfos().getServiceInfo().size();
+                                ret.totalrecords = findService.getServiceInfos().getServiceInfo().size();
+                        }
                         GetServiceDetail gs = new GetServiceDetail();
                         gs.setAuthInfo(GetToken());
                         for (int i = 0; i < findService.getServiceInfos().getServiceInfo().size(); i++) {
@@ -3871,7 +3884,7 @@ public class UddiHub implements Serializable {
         public boolean isAdminLocalhostOnly() {
                 return clientConfig.getConfiguration().getBoolean(PROP_ADMIN_LOCALHOST_ONLY, true);
         }
-        
+
         public String SaveBindingTemplate(HttpServletRequest request) {
 
                 BindingTemplate be = new BindingTemplate();
@@ -3906,18 +3919,18 @@ public class UddiHub implements Serializable {
                 if (ap.getValue() != null) {
                         be.setAccessPoint(ap);
                 }
-                
+
                 be.setTModelInstanceDetails(Builders.BuildTmodelInstanceDetails(
-                     Builders.MapFilter(map, PostBackConstants.TMODELINSTANCE), 
+                     Builders.MapFilter(map, PostBackConstants.TMODELINSTANCE),
                      PostBackConstants.TMODELINSTANCE, ResourceLoader.GetResource(session, "items.clicktoedit"), getLocale()));
 
                 //JAXB.marshal(be, System.out);
                 return SaveBindingTemplate(be);
         }
-        
-        public String deleteBinding(String id){
 
-                 if (id == null || id.length() == 0) {
+        public String deleteBinding(String id) {
+
+                if (id == null || id.length() == 0) {
                         return ResourceLoader.GetResource(session, "errors.noinput");
                 }
                 List<String> x = new ArrayList<String>();
