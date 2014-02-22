@@ -17,6 +17,7 @@
 
 package org.apache.juddi.keygen;
 
+import org.apache.juddi.model.UddiEntityPublisher;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
@@ -30,5 +31,5 @@ public interface KeyGenerator {
 	/*
 	 * Generates a key that is used to save a UDDI entity.
 	 */
-	public String generate() throws DispositionReportFaultMessage;
+	public String generate(UddiEntityPublisher publisher) throws DispositionReportFaultMessage;
 }

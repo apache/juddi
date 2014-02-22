@@ -18,6 +18,7 @@
 package org.apache.juddi.api.impl;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -48,7 +49,6 @@ import org.uddi.api_v3.ServiceDetail;
 import org.uddi.api_v3.TModelDetail;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIPublicationPortType;
-
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -521,9 +521,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			tx.begin();
 			
 			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-			
+			publisher.populateKeyGeneratorKeys(em);
 			ValidatePublish validator = new ValidatePublish(publisher);
-			validator.validateSaveBinding(em, body, null);
+			validator.validateSaveBinding(em, body, null, publisher);
 	
 			BindingDetail result = new BindingDetail();
                         result.setListDescription(new ListDescription());
@@ -579,9 +579,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			tx.begin();
 			
 			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-			
+			publisher.populateKeyGeneratorKeys(em);
 			ValidatePublish validator = new ValidatePublish(publisher);
-			validator.validateSaveBusiness(em, body, null);
+			validator.validateSaveBusiness(em, body, null, publisher);
 	
 			BusinessDetail result = new BusinessDetail();
 			
@@ -632,9 +632,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			tx.begin();
 	
 			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-			
+			publisher.populateKeyGeneratorKeys(em);
 			ValidatePublish validator = new ValidatePublish(publisher);
-			validator.validateSaveService(em, body, null);
+			validator.validateSaveService(em, body, null, publisher);
 			
 			ServiceDetail result = new ServiceDetail();
 	
@@ -687,8 +687,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			tx.begin();
 	
 			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-	
-			new ValidatePublish(publisher).validateSaveTModel(em, body, null);
+			publisher.populateKeyGeneratorKeys(em);
+			new ValidatePublish(publisher).validateSaveTModel(em, body, null, publisher);
 	
 			TModelDetail result = new TModelDetail();
 	
@@ -920,6 +920,5 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			em.remove(existingUddiEntity);
 		
 	}
-
 	
 }

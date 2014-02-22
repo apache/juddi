@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
+
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -29,6 +30,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.ws.Holder;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -838,7 +840,8 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			tx.begin();
 	
 			UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
-			new ValidateSubscription(publisher).validateSubscriptions(em, subscription.value);
+			publisher.populateKeyGeneratorKeys(em);
+			new ValidateSubscription(publisher).validateSubscriptions(em, subscription.value, publisher);
 			
 			List<org.uddi.sub_v3.Subscription> apiSubscriptionList = subscription.value;
 			for (org.uddi.sub_v3.Subscription apiSubscription : apiSubscriptionList) {

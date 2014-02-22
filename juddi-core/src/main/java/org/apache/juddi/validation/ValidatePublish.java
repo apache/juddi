@@ -326,7 +326,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
         }
 
-        public void validateSaveBusiness(EntityManager em, SaveBusiness body, Configuration config) throws DispositionReportFaultMessage {
+        public void validateSaveBusiness(EntityManager em, SaveBusiness body, Configuration config, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
 
                 if (config == null) {
                         try {
@@ -347,7 +347,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
 
                 for (org.uddi.api_v3.BusinessEntity entity : entityList) {
-                        validateBusinessEntity(em, entity, config);
+                        validateBusinessEntity(em, entity, config, publisher);
                 }
         }
 
@@ -379,7 +379,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
         }
 
-        public void validateSaveService(EntityManager em, SaveService body, Configuration config) throws DispositionReportFaultMessage {
+        public void validateSaveService(EntityManager em, SaveService body, Configuration config, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
 
                 if (config == null) {
                         try {
@@ -401,7 +401,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
                 for (org.uddi.api_v3.BusinessService entity : entityList) {
                         // Entity specific data validation
-                        validateBusinessService(em, entity, null, config);
+                        validateBusinessService(em, entity, null, config, publisher);
                 }
         }
 
@@ -432,7 +432,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
         }
 
-        public void validateSaveBinding(EntityManager em, SaveBinding body, Configuration config) throws DispositionReportFaultMessage {
+        public void validateSaveBinding(EntityManager em, SaveBinding body, Configuration config, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
 
                 if (config == null) {
                         try {
@@ -453,7 +453,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
 
                 for (org.uddi.api_v3.BindingTemplate entity : entityList) {
-                        validateBindingTemplate(em, entity, null, config);
+                        validateBindingTemplate(em, entity, null, config, publisher);
                 }
         }
 
@@ -484,7 +484,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
         }
 
-        public void validateSaveTModel(EntityManager em, SaveTModel body, Configuration config) throws DispositionReportFaultMessage {
+        public void validateSaveTModel(EntityManager em, SaveTModel body, Configuration config, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
 
                 if (config == null) {
                         try {
@@ -505,7 +505,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
 
                 for (org.uddi.api_v3.TModel entity : entityList) {
-                        validateTModel(em, entity, config);
+                        validateTModel(em, entity, config, publisher);
                 }
         }
 
@@ -642,7 +642,8 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
         }
 
-        public void validateBusinessEntity(EntityManager em, org.uddi.api_v3.BusinessEntity businessEntity, Configuration config) throws DispositionReportFaultMessage {
+        public void validateBusinessEntity(EntityManager em, org.uddi.api_v3.BusinessEntity businessEntity, 
+        		Configuration config, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
 
                 // A supplied businessEntity can't be null
                 if (businessEntity == null) {
@@ -654,7 +655,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 String entityKey = businessEntity.getBusinessKey();
                 if (entityKey == null || entityKey.length() == 0) {
                         KeyGenerator keyGen = KeyGeneratorFactory.getKeyGenerator();
-                        entityKey = keyGen.generate();
+                        entityKey = keyGen.generate(publisher);
                         businessEntity.setBusinessKey(entityKey);
                 } else {
                         // Per section 4.4: keys must be case-folded
@@ -696,11 +697,12 @@ public class ValidatePublish extends ValidateUDDIApi {
                 validateCategoryBag(businessEntity.getCategoryBag(), config, false);
                 validateIdentifierBag(businessEntity.getIdentifierBag(), config, false);
                 validateDescriptions(businessEntity.getDescription());
-                validateBusinessServices(em, businessEntity.getBusinessServices(), businessEntity, config);
+                validateBusinessServices(em, businessEntity.getBusinessServices(), businessEntity, config, publisher);
 
         }
 
-        public void validateBusinessServices(EntityManager em, org.uddi.api_v3.BusinessServices businessServices, org.uddi.api_v3.BusinessEntity parent, Configuration config)
+        public void validateBusinessServices(EntityManager em, org.uddi.api_v3.BusinessServices businessServices, 
+        		org.uddi.api_v3.BusinessEntity parent, Configuration config, UddiEntityPublisher publisher)
                 throws DispositionReportFaultMessage {
                 // Business services is optional
                 if (businessServices == null) {
@@ -712,12 +714,13 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
 
                 for (org.uddi.api_v3.BusinessService businessService : businessServiceList) {
-                        validateBusinessService(em, businessService, parent, config);
+                        validateBusinessService(em, businessService, parent, config, publisher);
                 }
 
         }
 
-        public void validateBusinessService(EntityManager em, org.uddi.api_v3.BusinessService businessService, org.uddi.api_v3.BusinessEntity parent, Configuration config)
+        public void validateBusinessService(EntityManager em, org.uddi.api_v3.BusinessService businessService, 
+        		org.uddi.api_v3.BusinessEntity parent, Configuration config, UddiEntityPublisher publisher)
                 throws DispositionReportFaultMessage {
 
                 // A supplied businessService can't be null
@@ -781,7 +784,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                         boolean entityExists = false;
                         if (entityKey == null || entityKey.length() == 0) {
                                 KeyGenerator keyGen = KeyGeneratorFactory.getKeyGenerator();
-                                entityKey = keyGen.generate();
+                                entityKey = keyGen.generate(publisher);
                                 businessService.setServiceKey(entityKey);
                         } else {
 
@@ -866,12 +869,13 @@ public class ValidatePublish extends ValidateUDDIApi {
                         validateNames(businessService.getName());
                         validateCategoryBag(businessService.getCategoryBag(), config, false);
                         validateDescriptions(businessService.getDescription());
-                        validateBindingTemplates(em, businessService.getBindingTemplates(), businessService, config);
+                        validateBindingTemplates(em, businessService.getBindingTemplates(), businessService, config, publisher);
                 }
 
         }
 
-        public void validateBindingTemplates(EntityManager em, org.uddi.api_v3.BindingTemplates bindingTemplates, org.uddi.api_v3.BusinessService parent, Configuration config)
+        public void validateBindingTemplates(EntityManager em, org.uddi.api_v3.BindingTemplates bindingTemplates, 
+        		org.uddi.api_v3.BusinessService parent, Configuration config, UddiEntityPublisher publisher)
                 throws DispositionReportFaultMessage {
                 // Binding templates is optional
                 if (bindingTemplates == null) {
@@ -884,13 +888,13 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
 
                 for (org.uddi.api_v3.BindingTemplate bindingTemplate : bindingTemplateList) {
-                        validateBindingTemplate(em, bindingTemplate, parent, config);
+                        validateBindingTemplate(em, bindingTemplate, parent, config, publisher);
                 }
 
         }
 
         public void validateBindingTemplate(EntityManager em, org.uddi.api_v3.BindingTemplate bindingTemplate,
-                org.uddi.api_v3.BusinessService parent, Configuration config)
+                org.uddi.api_v3.BusinessService parent, Configuration config, UddiEntityPublisher publisher)
                 throws DispositionReportFaultMessage {
 
                 // A supplied bindingTemplate can't be null
@@ -930,7 +934,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 if (entityKey == null || entityKey.length() == 0) {
                         validateNotSigned(bindingTemplate);
                         KeyGenerator keyGen = KeyGeneratorFactory.getKeyGenerator();
-                        entityKey = keyGen.generate();
+                        entityKey = keyGen.generate(publisher);
                         bindingTemplate.setBindingKey(entityKey);
                 } else {
 
@@ -1027,7 +1031,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
         }
 
-        public void validateTModel(EntityManager em, org.uddi.api_v3.TModel tModel, Configuration config) throws DispositionReportFaultMessage {
+        public void validateTModel(EntityManager em, org.uddi.api_v3.TModel tModel, Configuration config, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
                 // A supplied tModel can't be null
                 if (tModel == null) {
                         throw new ValueNotAllowedException(new ErrorMessage("errors.tmodel.NullInput"));
@@ -1037,7 +1041,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 String entityKey = tModel.getTModelKey();
                 if (entityKey == null || entityKey.length() == 0) {
                         KeyGenerator keyGen = KeyGeneratorFactory.getKeyGenerator();
-                        entityKey = keyGen.generate();
+                        entityKey = keyGen.generate(publisher);
                         validateNotSigned(tModel);
                         tModel.setTModelKey(entityKey);
                 } else {

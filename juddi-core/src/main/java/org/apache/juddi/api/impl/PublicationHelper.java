@@ -17,6 +17,7 @@
 package org.apache.juddi.api.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -55,5 +56,7 @@ public class PublicationHelper {
 		
 		return result;
 	}
+	
+
 
 }
