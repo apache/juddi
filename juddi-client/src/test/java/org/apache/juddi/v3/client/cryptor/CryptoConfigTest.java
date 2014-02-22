@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.juddi.v3.client.config;
+package org.apache.juddi.v3.client.cryptor;
 
+import org.apache.juddi.v3.client.config.UDDIClerk;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.cryptor.CryptorFactory;
 import org.junit.Assert;
 import org.junit.Test;
