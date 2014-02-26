@@ -59,6 +59,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+                if (!TckPublisher.isEnabled()) return;
                 manager.stop();
                 //shutting down the TCK SubscriptionListener
                 //re
@@ -67,7 +68,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
         @BeforeClass
         public static void startManager() throws ConfigurationException {
 
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 try {
                         //bring up the RMISubscriptionListener
                         //random port

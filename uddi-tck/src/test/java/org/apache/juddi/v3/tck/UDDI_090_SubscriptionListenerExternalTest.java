@@ -115,7 +115,7 @@ public class UDDI_090_SubscriptionListenerExternalTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 tckTModelMary.deleteCreatedTModels(authInfoMary);
                 manager.stop();
@@ -126,7 +126,7 @@ public class UDDI_090_SubscriptionListenerExternalTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 try {
                         httpPort = 9600 + new Random().nextInt(99);
 

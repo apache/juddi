@@ -137,7 +137,7 @@ public abstract class AuthenticatedService {
                     
                 }
 		Authenticator authenticator = AuthenticatorFactory.getAuthenticator();
-		UddiEntityPublisher entityPublisher = authenticator.identify(authInfo, modelAuthToken.getAuthorizedName());
+		UddiEntityPublisher entityPublisher = authenticator.identify(authInfo, modelAuthToken.getAuthorizedName(), ctx);
 		
 		// Must make sure the returned publisher has all the necessary fields filled
 		if (entityPublisher == null) {

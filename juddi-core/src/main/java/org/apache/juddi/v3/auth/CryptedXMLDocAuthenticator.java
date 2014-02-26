@@ -65,6 +65,9 @@ public class CryptedXMLDocAuthenticator extends XMLDocAuthenticator {
 	}
 	/**
 	 *
+         * @return user id
+         * @throws org.apache.juddi.v3.error.AuthenticationException 
+         * @throws org.apache.juddi.v3.error.FatalErrorException 
 	 */
 	public String authenticate(String userID, String credential)
 	throws AuthenticationException, FatalErrorException {

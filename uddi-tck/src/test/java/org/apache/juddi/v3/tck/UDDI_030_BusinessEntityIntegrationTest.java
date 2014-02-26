@@ -51,7 +51,9 @@ public class UDDI_030_BusinessEntityIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                if (!TckPublisher.isEnabled()) {
+                        return;
+                }
                 tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 tckTModelSam.deleteCreatedTModels(authInfoSam);
                 manager.stop();
@@ -59,7 +61,7 @@ public class UDDI_030_BusinessEntityIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                if (!TckPublisher.isEnabled()) return;
                 manager = new UDDIClient();
                 manager.start();
                 logger.info("UDDI_030_BusinessEntityIntegrationTest");
@@ -108,7 +110,6 @@ public class UDDI_030_BusinessEntityIntegrationTest {
                         tckTModelUddi.saveUDDIPublisherTmodel(authInfoUDDI);
                         tckTModelUddi.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
 
-
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
                         Assert.fail("Could not obtain authInfo token.");
@@ -117,7 +118,7 @@ public class UDDI_030_BusinessEntityIntegrationTest {
 
         @Test
         public void testJoePublisherBusinessEntitySignature() {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckBusinessJoe.saveJoePublisherBusinessX509Signature(authInfoJoe);
@@ -129,8 +130,8 @@ public class UDDI_030_BusinessEntityIntegrationTest {
         }
 
         @Test
-        public void testJoePublisherBusinessEntity() throws Exception{
-             Assume.assumeTrue(TckPublisher.isEnabled());
+        public void testJoePublisherBusinessEntity() throws Exception {
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
@@ -142,8 +143,8 @@ public class UDDI_030_BusinessEntityIntegrationTest {
         }
 
         @Test
-        public void testSamSyndicatorBusiness() throws Exception{
-             Assume.assumeTrue(TckPublisher.isEnabled());
+        public void testSamSyndicatorBusiness() throws Exception {
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);
                         tckBusinessSam.saveSamSyndicatorBusiness(authInfoSam);

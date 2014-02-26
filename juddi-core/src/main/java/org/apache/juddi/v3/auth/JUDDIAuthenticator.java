@@ -18,6 +18,7 @@ package org.apache.juddi.v3.auth;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.xml.ws.WebServiceContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -100,7 +101,7 @@ public class JUDDIAuthenticator implements Authenticator {
                 }
         }
 
-        public UddiEntityPublisher identify(String authInfo, String authorizedName) throws AuthenticationException {
+        public UddiEntityPublisher identify(String authInfo, String authorizedName, WebServiceContext ctx) throws AuthenticationException {
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
                 try {

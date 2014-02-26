@@ -52,7 +52,7 @@ public class JUDDI_100_ClientSubscriptionInfoIntegrationTest {
 
         @BeforeClass
         public static void startRegistry() throws ConfigurationException {
-Assume.assumeTrue(TckPublisher.isEnabled());
+                if (!TckPublisher.isEnabled()) return;
                 manager = new UDDIClient();
                 manager.start();
 
@@ -81,7 +81,7 @@ Assume.assumeTrue(TckPublisher.isEnabled());
 
         @Test
         public void addClientSubscriptionInfo() throws Exception {
-Assume.assumeTrue(TckPublisher.isEnabled());
+                if (!TckPublisher.isEnabled()) return;
              Assume.assumeTrue(TckPublisher.isJUDDI());
 
                 ClientSubscriptionInfo clientSubscriptionInfo = new ClientSubscriptionInfo();

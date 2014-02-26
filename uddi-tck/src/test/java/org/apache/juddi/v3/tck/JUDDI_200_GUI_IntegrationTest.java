@@ -53,6 +53,7 @@ public class JUDDI_200_GUI_IntegrationTest {
         @BeforeClass
         public static void startManager() throws ConfigurationException {
 
+                 if (!TckPublisher.isEnabled()) return;
                 manager = new UDDIClient();
                 baseurl = manager.getClientConfig().getConfiguration().getString("client.nodes.node(0).juddigui");
                 if (baseurl != null) {

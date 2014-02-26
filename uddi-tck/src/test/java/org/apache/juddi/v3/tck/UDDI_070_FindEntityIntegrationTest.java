@@ -72,14 +72,14 @@ public class UDDI_070_FindEntityIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 tckTModel.deleteCreatedTModels(authInfoJoe);
                 manager.stop();
         }
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 manager = new UDDIClient();
                 manager.start();
 

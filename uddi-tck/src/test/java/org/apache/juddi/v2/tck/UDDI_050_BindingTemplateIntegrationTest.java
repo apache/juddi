@@ -46,7 +46,7 @@ public class UDDI_050_BindingTemplateIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 tckTModel.deleteCreatedTModels(authInfoJoe);
                 
                 manager.stop();
@@ -54,7 +54,7 @@ public class UDDI_050_BindingTemplateIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 manager = new UDDIClient();
                 manager.start();
 

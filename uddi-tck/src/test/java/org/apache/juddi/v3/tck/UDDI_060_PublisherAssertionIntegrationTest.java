@@ -56,7 +56,7 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 tckTModelSam.deleteCreatedTModels(authInfoSam);
                 tckTModelMary.deleteCreatedTModels(authInfoMary);
@@ -65,7 +65,7 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 manager = new UDDIClient();
                 manager.start();
 

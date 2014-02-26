@@ -36,12 +36,16 @@ public class UDDI_010_PublisherIntegrationTest {
 
 	@BeforeClass
 	public static void startRegistry() throws ConfigurationException {
+                if (!TckPublisher.isEnabled()) return;
+                if (!TckPublisher.isJUDDI()) return;
 		manager  = new UDDIClient();
 		manager.start();
 	}
 	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
+                if (!TckPublisher.isEnabled()) return;
+                if (!TckPublisher.isJUDDI()) return;
 		manager.stop();
 	}
 	

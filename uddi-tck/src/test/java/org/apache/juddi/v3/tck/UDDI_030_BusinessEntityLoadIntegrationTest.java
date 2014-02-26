@@ -34,14 +34,14 @@ public class UDDI_030_BusinessEntityLoadIntegrationTest extends UDDI_030_Busines
 
         @BeforeClass
         public static void setup() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 UDDI_030_BusinessEntityIntegrationTest.startManager();
         }
 
         @Test
         @Override
         public void testJoePublisherBusinessEntity() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 Assume.assumeTrue(TckPublisher.isLoadTest());
 
                 numberOfBusinesses = TckPublisher.getMaxLoadServices();

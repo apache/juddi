@@ -68,6 +68,9 @@ public interface Property {
      */
     public final static String JUDDI_AUTH_TOKEN_ENFORCE_SAME_IP = "juddi.auth.token.enforceSameIPRule";
     
+    /**
+     * This points to the class of the authenticator
+     */
     public final static String JUDDI_AUTHENTICATOR = "juddi.auth.authenticator.class";
     /**
      * @see LdapSimpleAuthenticator
@@ -175,4 +178,10 @@ public interface Property {
      * @since 3.2, used for Apache Commons Configuration XML config file
      */
     public static final String ENCRYPTED_ATTRIBUTE="[@encrypted]";
+    
+    /**
+     * Used for HTTP Header based authentication for web proxies
+     * @since 3.2.1
+     */
+    public static final String JUDDI_AUTHENTICATOR_HTTP_HEADER_NAME="juddi.auth.authenticator.header";
 }

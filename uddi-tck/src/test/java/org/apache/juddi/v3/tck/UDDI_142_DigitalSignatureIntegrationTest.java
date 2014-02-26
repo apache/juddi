@@ -77,7 +77,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 tckTModelSam.deleteCreatedTModels(authInfoSam);
                 manager.stop();
@@ -85,7 +85,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 logger.info("UDDI_142_DigitalSignatureIntegrationTests");
                 manager = new UDDIClient();
                 manager.start();

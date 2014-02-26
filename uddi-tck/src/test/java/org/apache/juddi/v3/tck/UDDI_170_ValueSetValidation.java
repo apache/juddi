@@ -82,7 +82,7 @@ public class UDDI_170_ValueSetValidation implements UDDIValueSetValidationPortTy
 
         @BeforeClass
         public static void startRegistry() throws ConfigurationException {
-                Assume.assumeTrue(TckPublisher.isEnabled());
+                if (!TckPublisher.isEnabled()) return;
                 manager = new UDDIClient();
                 manager.start();
                 
@@ -105,7 +105,7 @@ public class UDDI_170_ValueSetValidation implements UDDIValueSetValidationPortTy
         
         @AfterClass
         public static void stopRegistry() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 manager.stop();
         }
         final static String VSV_KEY = "uddi:juddi.apache.org:businesses-asf";

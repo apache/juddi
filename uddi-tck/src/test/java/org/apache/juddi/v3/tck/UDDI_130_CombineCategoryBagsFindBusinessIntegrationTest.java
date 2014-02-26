@@ -80,14 +80,14 @@ public class UDDI_130_CombineCategoryBagsFindBusinessIntegrationTest
 
 	@AfterClass
 	public static void stopManager() throws ConfigurationException {
-          Assume.assumeTrue(TckPublisher.isEnabled());
+          if (!TckPublisher.isEnabled()) return;
                 tckTModel.deleteCreatedTModels(authInfoJoe);
 		manager.stop();
 	}
 
 	@BeforeClass
 	public static void startManager() throws ConfigurationException {
-          Assume.assumeTrue(TckPublisher.isEnabled());
+          if (!TckPublisher.isEnabled()) return;
 		manager  = new UDDIClient();
 		manager.start();
 

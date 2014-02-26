@@ -70,7 +70,7 @@ public class JUDDI_101_ClientSubscriptionCallbackAPIIntegrationTest implements I
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
-                Assume.assumeTrue(TckPublisher.isEnabled());
+                if (!TckPublisher.isEnabled()) return;
                 manager = new UDDIClient();
                 manager.start();
                 Iterator<Node> iterator = manager.getClientConfig().getUDDINodeList().iterator();
@@ -98,7 +98,7 @@ public class JUDDI_101_ClientSubscriptionCallbackAPIIntegrationTest implements I
         @Test
         public void SubscriptionCallbackTest1() throws Exception {
                 //first some setup
-                Assume.assumeTrue(TckPublisher.isEnabled());
+                if (!TckPublisher.isEnabled()) return;
                 reset();
 
                 TModel createKeyGenator = UDDIClerk.createKeyGenator("somebusiness", "A test key domain SubscriptionCallbackTest1", "SubscriptionCallbackTest1");

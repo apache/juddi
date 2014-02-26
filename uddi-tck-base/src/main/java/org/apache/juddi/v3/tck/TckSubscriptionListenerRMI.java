@@ -29,6 +29,8 @@ public class TckSubscriptionListenerRMI extends TckSubscriptionListener
 
 	/** note that the subscription1.xml contains the binding template for the UDDI server to call back into */
 	public final static String SUBSCRIPTION_XML_RMI = "uddi_data/subscriptionnotifier/subscription1RMI.xml";
+        public final static String SUBSCRIPTION_XML2_RMI = "uddi_data/subscriptionnotifier/subscription2RMI.xml";
+        public final static String SUBSCRIPTION_XML3_RMI = "uddi_data/subscriptionnotifier/subscription3RMI.xml";
     public final static String SUBSCRIPTION_KEY_RMI = "uddi:uddi.joepublisher.com:subscriptiononermi";
     
     public TckSubscriptionListenerRMI(

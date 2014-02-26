@@ -66,7 +66,7 @@ public class UDDI_160_RESTIntergrationTest {
         @BeforeClass
         public static void startRegistry() throws ConfigurationException {
 
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 manager = new UDDIClient();
                 manager.start();
 
@@ -81,7 +81,7 @@ public class UDDI_160_RESTIntergrationTest {
 
         @AfterClass
         public static void stopRegistry() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 manager.stop();
         }
 

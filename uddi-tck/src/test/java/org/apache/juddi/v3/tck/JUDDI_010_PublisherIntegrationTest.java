@@ -59,7 +59,7 @@ public class JUDDI_010_PublisherIntegrationTest {
         @BeforeClass
         public static void startManager() throws ConfigurationException {
                 Assume.assumeTrue(TckPublisher.isJUDDI());
-                Assume.assumeTrue(TckPublisher.isEnabled());
+                if (!TckPublisher.isEnabled()) return;
                 manager = new UDDIClient();
                 manager.start();
 
@@ -83,6 +83,7 @@ public class JUDDI_010_PublisherIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+                if (!TckPublisher.isEnabled()) return;
                 manager.stop();
         }
 

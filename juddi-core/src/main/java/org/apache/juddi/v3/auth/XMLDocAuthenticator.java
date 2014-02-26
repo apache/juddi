@@ -31,6 +31,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.ws.WebServiceContext;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
@@ -121,6 +122,8 @@ public class XMLDocAuthenticator implements Authenticator
 
 	/**
 	 *
+         * @param userID
+         * @param credential
 	 */
 	public String authenticate(String userID,String credential)
 	throws AuthenticationException, FatalErrorException
@@ -145,7 +148,7 @@ public class XMLDocAuthenticator implements Authenticator
 		return userID;
 	}
 	
-	public UddiEntityPublisher identify(String authInfo, String authorizedName) throws AuthenticationException {
+	public UddiEntityPublisher identify(String authInfo, String authorizedName, WebServiceContext ctx) throws AuthenticationException {
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();

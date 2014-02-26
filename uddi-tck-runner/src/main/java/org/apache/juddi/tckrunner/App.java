@@ -87,6 +87,8 @@ public class App {
                                 //note that this is different, there is an IntegrationTest version
                                 //however it's for hosting our own mail server and reconfiguring juddi
                                 org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerExternalTest.class,
+                                org.apache.juddi.v3.tck.UDDI_090_HttpExternalTest.class,
+                                org.apache.juddi.v3.tck.UDDI_090_Smtp_ExternalTest.class,
                                 org.apache.juddi.v3.tck.JUDDI_091_RMISubscriptionListenerIntegrationTest.class,
                                 org.apache.juddi.v3.tck.JUDDI_100_ClientSubscriptionInfoIntegrationTest.class,
                                 org.apache.juddi.v3.tck.UDDI_110_FindBusinessIntegrationTest.class,
@@ -138,17 +140,37 @@ public class App {
 
                 for (int i = 0; i < result.getFailures().size(); i++) {
                         try {
-                                bw.write(result.getFailures().get(i).getTestHeader());
+                                try {
+                                        bw.write(result.getFailures().get(i).getTestHeader());
+                                } catch (Exception ex) {
+                                        bw.write(ex.getMessage());
+                                }
                                 bw.newLine();
-                                bw.write(result.getFailures().get(i).getDescription().getClassName());
+                                try {
+                                        bw.write(result.getFailures().get(i).getDescription().getClassName());
+                                }
+                                catch (Exception ex) {
+                                        bw.write(ex.getMessage());
+                                }
                                 bw.newLine();
-                                bw.write(result.getFailures().get(i).getDescription().getMethodName());
+                                try {
+                                        bw.write(result.getFailures().get(i).getDescription().getMethodName() == null ? "null method!" : result.getFailures().get(i).getDescription().getMethodName());
+                                } catch (Exception ex) {
+                                        bw.write(ex.getMessage());
+                                }
                                 bw.newLine();
-                                bw.write(result.getFailures().get(i).getMessage());
+                                try {
+                                        bw.write(result.getFailures().get(i).getMessage() == null ? "no message" : result.getFailures().get(i).getMessage());
+                                } catch (Exception ex) {
+                                        bw.write(ex.getMessage());
+                                }
                                 bw.newLine();
                                 //result.getFailures().get(i).getException().printStackTrace();
-
-                                bw.write(result.getFailures().get(i).getTrace());
+                                try {
+                                        bw.write(result.getFailures().get(i).getTrace());
+                                } catch (Exception ex) {
+                                        bw.write(ex.getMessage());
+                                }
                                 bw.newLine();
                                 bw.write("____________________________________________");
                                 bw.newLine();

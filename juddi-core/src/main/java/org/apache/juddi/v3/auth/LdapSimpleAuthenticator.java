@@ -23,6 +23,7 @@ import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.xml.ws.WebServiceContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -194,7 +195,7 @@ public class LdapSimpleAuthenticator implements Authenticator {
         return authorizedName;
     }
 
-    public UddiEntityPublisher identify(String authInfo, String authorizedName) throws AuthenticationException, FatalErrorException {
+    public UddiEntityPublisher identify(String authInfo, String authorizedName, WebServiceContext ctx) throws AuthenticationException, FatalErrorException {
         EntityManager em = PersistenceManager.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {

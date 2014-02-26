@@ -65,7 +65,7 @@ public class UDDI_110_FindBusinessIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 tckTModel.deleteCreatedTModels(authInfoJoe);
                 tckTModel01.deleteCreatedTModels(authInfoJoe);
                 tckTModel02.deleteCreatedTModels(authInfoJoe);
@@ -74,7 +74,7 @@ public class UDDI_110_FindBusinessIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 manager = new UDDIClient();
                 manager.start();
 

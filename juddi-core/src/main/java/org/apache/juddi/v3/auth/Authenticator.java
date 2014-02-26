@@ -17,6 +17,7 @@
 
 package org.apache.juddi.v3.auth;
 
+import javax.xml.ws.WebServiceContext;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.v3.error.AuthenticationException;
 import org.apache.juddi.v3.error.FatalErrorException;
@@ -36,13 +37,15 @@ import org.apache.juddi.v3.error.FatalErrorException;
 public interface Authenticator {
 
 	/**
-	 * 
+	 * This function is called from the Security API's GetAuthToken().
+         * 
 	 * @param authorizedName - userId of the user making the registry request
 	 * @param cred   - some authentical creditial (i.e. a password) which can be used to 
 	 * 		           authenticate the user.
 	 * 
 	 * @return The publisherID for this user
-	 * @throws {@link AuthenticationException}, {@link FatalErrorException}
+         * @throws org.apache.juddi.v3.error.AuthenticationException
+         * @throws org.apache.juddi.v3.error.FatalErrorException
 	 */
 	String authenticate(String authorizedName, String cred) throws AuthenticationException, FatalErrorException;
 	
@@ -51,8 +54,8 @@ public interface Authenticator {
 	 * 
 	 * @param authInfo - the authorization token
 	 * @param authorizedName - the authorized Name
-	 * 
+	 * @param ctx - WebServiceContext, used for HTTP based authentication if desired (since 3.2.1)
 	 * @return - The entity publisher
 	 */
-	UddiEntityPublisher identify(String authInfo, String authorizedName) throws AuthenticationException, FatalErrorException;
+	UddiEntityPublisher identify(String authInfo, String authorizedName, WebServiceContext ctx) throws AuthenticationException, FatalErrorException;
 }

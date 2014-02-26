@@ -48,7 +48,7 @@ public class UDDI_020_TmodelIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
-Assume.assumeTrue(TckPublisher.isEnabled());
+if (!TckPublisher.isEnabled()) return;
                 manager = new UDDIClient();
                 manager.start();
                 logger.debug("Getting auth tokens..");
@@ -87,7 +87,7 @@ Assume.assumeTrue(TckPublisher.isEnabled());
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+             if (!TckPublisher.isEnabled()) return;
                 tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 tckTModelSam.deleteCreatedTModels(authInfoSam);
                 manager.stop();
