@@ -1660,7 +1660,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
         }
 
-        private static void validateKeyLength(String value) throws ValueNotAllowedException {
+        public static void validateKeyLength(String value) throws ValueNotAllowedException {
                 if (value != null && value.length() > ValidationConstants.MAX_Key) {
                         throw new ValueNotAllowedException(new ErrorMessage("errors.keys.TooLong"));
                 }

@@ -86,10 +86,11 @@ public class App {
                                 org.apache.juddi.v3.tck.UDDI_080_SubscriptionIntegrationTest.class,
                                 //note that this is different, there is an IntegrationTest version
                                 //however it's for hosting our own mail server and reconfiguring juddi
-                                org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerExternalTest.class,
+                                //org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerExternalTest.class,
                                 org.apache.juddi.v3.tck.UDDI_090_HttpExternalTest.class,
                                 org.apache.juddi.v3.tck.UDDI_090_Smtp_ExternalTest.class,
-                                org.apache.juddi.v3.tck.JUDDI_091_RMISubscriptionListenerIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_090_RMIIntegrationTest.class,
+                                //org.apache.juddi.v3.tck.JUDDI_091_RMISubscriptionListenerIntegrationTest.class,
                                 org.apache.juddi.v3.tck.JUDDI_100_ClientSubscriptionInfoIntegrationTest.class,
                                 org.apache.juddi.v3.tck.UDDI_110_FindBusinessIntegrationTest.class,
                                 org.apache.juddi.v3.tck.UDDI_120_CombineCategoryBagsFindServiceIntegrationTest.class,
@@ -137,7 +138,7 @@ public class App {
                 bw.write("Failed Test cases");
                 bw.newLine();
                 bw.write("____________________________________________");
-
+                bw.newLine();
                 for (int i = 0; i < result.getFailures().size(); i++) {
                         try {
                                 try {

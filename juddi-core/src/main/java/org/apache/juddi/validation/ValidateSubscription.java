@@ -91,7 +91,7 @@ public class ValidateSubscription extends ValidateUDDIApi {
             // Per section 4.4: keys must be case-folded
             entityKey = entityKey.toLowerCase();
             subscription.setSubscriptionKey(entityKey);
-
+            ValidatePublish.validateKeyLength(entityKey);
             Object obj = em.find(org.apache.juddi.model.Subscription.class, entityKey);
             if (obj != null) {
                 entityExists = true;
@@ -106,6 +106,7 @@ public class ValidateSubscription extends ValidateUDDIApi {
 
                 // Validate key and then check to see that the proposed key is valid for this publisher
                 ValidateUDDIKey.validateUDDIv3Key(entityKey);
+                
                 if (!publisher.isValidPublisherKey(em, entityKey)) {
                     throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
                 }
