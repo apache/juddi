@@ -17,6 +17,7 @@ package org.apache.juddi.v3.tck;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Holder;
@@ -25,18 +26,20 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Assume;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.Description;
 import org.uddi.api_v3.GetBusinessDetail;
+import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.GetTModelDetail;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.SaveBusiness;
+import org.uddi.api_v3.SaveService;
 import org.uddi.api_v3.SaveTModel;
+import org.uddi.api_v3.ServiceDetail;
 import org.uddi.api_v3.TModel;
 import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.Subscription;
@@ -491,11 +494,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                 }
         }
 
-        //get service detail
-        //get binding detail
-        //get pub assertion
-        //find publisher assertions
-        //find binding
+        
         //TODO If a subscriber specifies a maximum number of entries to be returned with a subscription and the amount of data to be returned exceeds 
 //this limit, or if the node determines based on its policy that there are too many entries to be returned in a single group, 
         //then the node SHOULD provide a chunkToken with results.  
@@ -522,4 +521,109 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                 pub.saveBusiness(sb);
         }
 
+
+        /**
+         * getService tests joe want's updates on mary's service
+         *
+         * @throws Exception
+         */
+        @Test
+        public void joePublisherUpdate_GET_SERVICE_DETAIL() throws Exception {
+                Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeNotNull(getHostame());
+                logger.info("joePublisherUpdate_" + getTransport() + "_GET_SERVICE_DETAIL");
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                Holder<List<Subscription>> holder = null;
+                try {
+                        reset();
+
+                        String before = TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe);
+
+                        tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.saveTModels(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+
+                        tckTModelMary.saveMaryPublisherTmodel(authInfoMary);
+                        BusinessEntity saveMaryPublisherBusiness = tckBusinessMary.saveMaryPublisherBusiness(authInfoMary);
+                        
+                        BusinessService bs = new BusinessService();
+                        bs.setBusinessKey(saveMaryPublisherBusiness.getBusinessKey());
+                        bs.setServiceKey(TckTModel.MARY_KEY_PREFIX + UUID.randomUUID().toString());
+                        bs.getName().add(new Name("Mary's service for " + getTransport(),null));
+                        SaveService ss = new SaveService();
+                        ss.getBusinessService().add(bs);
+                        ss.setAuthInfo(authInfoMary);
+                        bs= publicationMary.saveService(ss).getBusinessService().get(0);
+                        
+
+                        tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
+                        //Saving the Listener Service
+                        String bindingkey = tckSubscriptionListenerJoe.saveService(authInfoJoe, getXMLLocationOfServiceForDelivery(), getPort(), getHostame());
+
+                        //Saving the Subscription
+                        holder = new Holder<List<Subscription>>();
+                        holder.value = new ArrayList<Subscription>();
+                        Subscription sub = new Subscription();
+                        sub.setBindingKey(bindingkey);
+                        sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(5000));
+                        sub.setSubscriptionFilter(new SubscriptionFilter());
+                        sub.getSubscriptionFilter().setGetServiceDetail(new GetServiceDetail());
+                        sub.getSubscriptionFilter().getGetServiceDetail().getServiceKey().add(bs.getServiceKey());
+
+                        holder.value.add(sub);
+                        subscriptionJoe.saveSubscription(authInfoJoe, holder);
+                        logger.info("subscription saved for " + holder.value.get(0).getSubscriptionKey());
+                        //tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION3_XML);
+                        //Changing the service we subscribed to "JoePublisherService"
+                        Thread.sleep(1000);
+                        logger.info("updating Mary's business ********** ");
+                        updatePublisherService(authInfoMary, bs, publicationMary);
+
+                        boolean found = verifyDelivery("Updated Name");
+
+                        if (!found) {
+                                logger.warn("Test failed, dumping business list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                Assert.fail("Notification does not contain the correct service.");
+                        }
+
+                } catch (Exception e) {
+                        logger.error("No exceptions please.");
+                        e.printStackTrace();
+
+                        Assert.fail();
+                } finally {
+                        //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
+                        DeleteSubscription ds = new DeleteSubscription();
+                        ds.setAuthInfo(authInfoJoe);
+                        ds.getSubscriptionKey().add(holder.value.get(0).getSubscriptionKey());
+                        subscriptionJoe.deleteSubscription(ds);
+                        tckBusinessMary.deleteMaryPublisherBusiness(authInfoMary);
+                        tckTModelMary.deleteMaryPublisherTmodel(authInfoMary);
+
+                        tckBusinessServiceJoe.deleteJoePublisherService(authInfoJoe);
+                        tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.deleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+
+                }
+        }
+        
+        //get binding detail
+        //get pub assertion
+        //get publisher assertion status
+        //find publisher assertions
+        //find binding
+
+        private void updatePublisherService(String authInfo, BusinessService bs, UDDIPublicationPortType pub) throws Exception{
+                bs.getName().add(new Name("Updated name", null));
+                SaveService ss = new SaveService();
+                ss.getBusinessService().add(bs);
+                ss.setAuthInfo(authInfo);
+                pub.saveService(ss);
+        }
+
+        
+        
 }

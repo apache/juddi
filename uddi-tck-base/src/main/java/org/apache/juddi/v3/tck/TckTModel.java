@@ -53,6 +53,7 @@ public class TckTModel {
         final static String JOE_PUBLISHER_TMODEL_KEY = "uddi:uddi.joepublisher.com:keygenerator";
         final static String MARY_PUBLISHER_TMODEL_XML = "uddi_data/marypublisher/tModelKeyGen.xml";
         final static String MARY_PUBLISHER_TMODEL_KEY = "uddi:uddi.marypublisher.com:keygenerator";
+        public final static String MARY_KEY_PREFIX="uddi:uddi.marypublisher.com:";
         final static String SAM_SYNDICATOR_TMODEL_XML = "uddi_data/samsyndicator/tModelKeyGen.xml";
         final static String SAM_SYNDICATOR_TMODEL_KEY = "uddi:www.samco.com:keygenerator";
         final static String TMODEL_PUBLISHER_TMODEL_XML = "uddi_data/tmodels/tModelKeyGen.xml";
