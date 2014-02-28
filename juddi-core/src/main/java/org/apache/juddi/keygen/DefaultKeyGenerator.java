@@ -25,6 +25,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -69,7 +70,7 @@ public class DefaultKeyGenerator implements KeyGenerator {
 			while (iter.hasNext()) {
 				String thisDomain = iter.next();
 				String[] parts = thisDomain.split(":");
-				if (domain == null || (2 <= parts.length && parts.length < partsMax)) {
+				if ((domain == null || (2 <= parts.length && parts.length < partsMax)) && thisDomain.length() + 37 < 255) {
 					partsMax = parts.length;
 					domain = thisDomain;
 				}

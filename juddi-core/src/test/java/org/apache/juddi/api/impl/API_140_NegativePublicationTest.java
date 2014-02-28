@@ -362,7 +362,7 @@ public class API_140_NegativePublicationTest {
         sb.setAuthInfo(authInfoJoe);
         BusinessEntity be = new BusinessEntity();
         Name n = new Name();
-        be.setBusinessKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
+
         n.setValue("A Test business");
         Description d = new Description();
         d.setValue(str255);
@@ -440,7 +440,6 @@ public class API_140_NegativePublicationTest {
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
         BusinessEntity be = new BusinessEntity();
-        be.setBusinessKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
         Name n = new Name();
 
         n.setValue("A Test business");
@@ -909,7 +908,6 @@ public class API_140_NegativePublicationTest {
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
         BusinessEntity be = new BusinessEntity();
-        be.setBusinessKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
         Name n = new Name();
         n.setValue("A Test business");
         be.getName().add(n);
@@ -928,7 +926,6 @@ public class API_140_NegativePublicationTest {
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
         BusinessEntity be = new BusinessEntity();
-        be.setBusinessKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
         Name n = new Name();
         n.setValue("A Test business");
         be.getName().add(n);
@@ -1311,14 +1308,11 @@ public class API_140_NegativePublicationTest {
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
         BusinessEntity be = new BusinessEntity();
-        be.setBusinessKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
         Name n = new Name();
         n.setValue("A Test business");
         be.getName().add(n);
         be.setBusinessServices(new BusinessServices());
         BusinessService bs = new BusinessService();
-        bs.setBusinessKey(be.getBusinessKey());
-        bs.setServiceKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
         n = new Name();
         n.setValue(str255);
         bs.getName().add(n);
@@ -2041,19 +2035,16 @@ public class API_140_NegativePublicationTest {
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
         BusinessEntity be = new BusinessEntity();
-        be.setBusinessKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
         Name n = new Name();
         n.setValue("A Test business");
         be.getName().add(n);
         be.setBusinessServices(new BusinessServices());
         BusinessService bs = new BusinessService();
-        bs.setServiceKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
-        bs.setBusinessKey(be.getBusinessKey());
+
         n = new Name();
         n.setValue(str255);
         bs.getName().add(n);
         BindingTemplate bt = new BindingTemplate();
-        bt.setBindingKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
         bs.setBindingTemplates(new BindingTemplates());
         bt.setAccessPoint(new AccessPoint());
         bt.getAccessPoint().setValue(str4096);
