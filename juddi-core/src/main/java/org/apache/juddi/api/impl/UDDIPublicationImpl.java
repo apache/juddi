@@ -17,6 +17,7 @@
 
 package org.apache.juddi.api.impl;
 
+import java.io.StringWriter;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.xml.bind.JAXB;
 import javax.xml.ws.Holder;
 
 import org.uddi.api_v3.AddPublisherAssertions;
@@ -593,6 +595,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 				MappingApiToModel.mapBusinessEntity(apiBusinessEntity, modelBusinessEntity);
 
 				setOperationalInfo(em, modelBusinessEntity, publisher);
+                                log.debug("Saving business " + modelBusinessEntity.getEntityKey());
 	
 				em.persist(modelBusinessEntity);
 	
@@ -613,7 +616,13 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                     serviceCounter.update(PublicationQuery.SAVE_BUSINESS, 
                             QueryStatus.FAILED, procTime);                      
                     throw drfm;                                                                 	
-		} finally {
+		} catch (Exception ex){
+                        StringWriter sw = new StringWriter();
+                        if (body!=null)
+                        JAXB.marshal(body, sw);
+                  log.fatal("unexpected error!" + sw.toString(), ex);
+                  throw new FatalErrorException(new ErrorMessage("E_fatalError", ex.getMessage()));
+                } finally {
 			if (tx.isActive()) {
 				tx.rollback();
 			}

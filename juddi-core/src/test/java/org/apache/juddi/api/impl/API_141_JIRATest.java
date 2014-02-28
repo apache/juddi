@@ -17,6 +17,7 @@ package org.apache.juddi.api.impl;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.xml.soap.SOAPFault;
@@ -161,12 +162,14 @@ public class API_141_JIRATest {
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
         BusinessEntity be = new BusinessEntity();
+        be.setBusinessKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
         Name n = new Name();
         n.setValue("JUDDI_JIRA_571_Part1_Test no lang");
         be.getName().add(n);
         sb.getBusinessEntity().add(be);
 
         be = new BusinessEntity();
+        be.setBusinessKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
         n = new Name();
         n.setValue("JUDDI_JIRA_571_Part1_Test with lang");
         n.setLang("en");
@@ -260,6 +263,7 @@ public class API_141_JIRATest {
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
         BusinessEntity be = new BusinessEntity();
+        be.setBusinessKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
         Name n = new Name();
         n.setValue("JUDDI_JIRA_571_Part2_Test no lang");
         be.getName().add(n);
@@ -267,12 +271,16 @@ public class API_141_JIRATest {
 
         BusinessService bs = new BusinessService();
         n = new Name();
+        bs.setServiceKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
+        bs.setBusinessKey(be.getBusinessKey());
         n.setValue("Service1 No Lang");
         bs.getName().add(n);
         be.setBusinessServices(new BusinessServices());
         be.getBusinessServices().getBusinessService().add(bs);
 
         bs = new BusinessService();
+        bs.setServiceKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
+        bs.setBusinessKey(be.getBusinessKey());
         n = new Name();
         n.setValue("Service2 Lang");
         n.setLang("en");
@@ -366,12 +374,14 @@ public class API_141_JIRATest {
         SaveTModel sb = new SaveTModel();
         sb.setAuthInfo(authInfoJoe);
         TModel be = new TModel();
+        be.setTModelKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
         Name n = new Name();
         n.setValue("JUDDI_571_Part3_Test no lang");
         be.setName(n);
         sb.getTModel().add(be);
 
         be = new TModel();
+        be.setTModelKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
         n = new Name();
         n.setValue("JUDDI_571_Part3_Test lang");
         n.setLang("en");
@@ -464,6 +474,7 @@ public class API_141_JIRATest {
         SaveTModel sb = new SaveTModel();
         sb.setAuthInfo(authInfoJoe);
         TModel be = new TModel();
+        be.setTModelKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + UUID.randomUUID().toString());
         Name n = new Name();
         n.setValue("JUDDI_574");
         n.setLang("en");

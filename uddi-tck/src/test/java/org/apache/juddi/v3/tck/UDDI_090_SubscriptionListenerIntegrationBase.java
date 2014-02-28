@@ -25,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
-import static org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerExternalTest.updatePublisherBusiness;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -35,6 +34,8 @@ import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.Description;
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetTModelDetail;
+import org.uddi.api_v3.Name;
+import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModel;
 import org.uddi.sub_v3.DeleteSubscription;
@@ -506,4 +507,19 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                 stm.getTModel().add(saveMaryPublisherTmodel);
                 publicationMary.saveTModel(stm);
         }
+                /**
+         * adds a new name to the business, then resaves it
+         *
+         * @param auth
+         * @param biz
+         * @param pub
+         */
+        public static void updatePublisherBusiness(String auth, BusinessEntity biz, UDDIPublicationPortType pub) throws Exception {
+                biz.getName().add(new Name("Updated Name", "en"));
+                SaveBusiness sb = new SaveBusiness();
+                sb.setAuthInfo(auth);
+                sb.getBusinessEntity().add(biz);
+                pub.saveBusiness(sb);
+        }
+
 }
