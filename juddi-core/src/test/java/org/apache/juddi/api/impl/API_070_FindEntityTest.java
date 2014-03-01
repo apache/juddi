@@ -33,6 +33,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.SaveTModel;
@@ -121,7 +122,6 @@ public class API_070_FindEntityTest {
         }
 
         @Test
-        @Ignore
         public void JUDDI_843_tModel() throws Exception {
 
                 UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
@@ -137,6 +137,7 @@ public class API_070_FindEntityTest {
                 FindTModel ftm = new FindTModel();
                 ftm.setAuthInfo(authInfoJoe);
                 ftm.setName(new Name("%", "es-US"));
+                ftm.setFindQualifiers(new FindQualifiers());
                 ftm.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
                 ftm.getFindQualifiers().getFindQualifier().add(UDDIConstants.SORT_BY_NAME_ASC);
                 ftm.getFindQualifiers().getFindQualifier().add(UDDIConstants.CASE_INSENSITIVE_MATCH);
