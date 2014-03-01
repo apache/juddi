@@ -306,6 +306,8 @@ image::images/juddi-gui-subscription4.png[Create a Subscription, Item added]
 
 Next is the delivery mechanism. The UDDI node can deliver the notifications to you if you have your own implementation of the UDDI Subscription Listener service. (The juddi-client contains this for you if you were looking to develop a solution). In addition, the UDDI node can email the results to you (in XML format).
 
+TIP: Since jUDDI 3.2.1, you can also configure jUDDI to send you a more human readable version of the subscription notification. To configure, all that is needed is to add a special transport tModel instance to your subscription binding, uddi:uddi.org:transport:userfriendlysmtp.
+
 The other option is to periodically poll the UDDI server and get your subscription results (see the News Feed). 
 
 Here, we've selected the, I'll pick them up, option.
