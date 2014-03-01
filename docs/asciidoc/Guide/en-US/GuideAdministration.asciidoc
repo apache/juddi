@@ -184,7 +184,7 @@ juddi/auth/authenticator/ldapexp=CN=%s, OU=Users,DC=Domain, etc
 
 ===== JBoss Authentication
 
-Finally is it possible to hook up to third party credential stores. If for example jUDDI is deployed to the JBoss Application server it is possible to hook up to it's authentication machinery. The JBossAuthenticator class is provided in the docs/examples/auth directory. This class enables jUDDI deployments on JBoss use a server security domain to authenticate users.
+Is it possible to hook up to third party credential stores. If for example jUDDI is deployed to the JBoss Application server it is possible to hook up to it's authentication machinery. The JBossAuthenticator class is provided in the docs/examples/auth directory. This class enables jUDDI deployments on JBoss use a server security domain to authenticate users.
 
 TIP: The JBoss authentication is not distributed with jUDDI. It can be found here: http://svn.apache.org/viewvc/juddi/extras/jbossauthenticator/src/org/apache/juddi/auth/JBossAuthenticator.java?view=markup
 
@@ -194,6 +194,22 @@ juddi/auth/authenticator/class=org.apache.juddi.auth.JBossAuthenticator
 juddi/auth/securityDomain=java:/jaas/other
 ----
 The juddi/auth/authenticator/class property plugs the JbossAuthenticator class into the jUDDI the Authenticator framework. The juddi/sercuityDomain, configures the JBossAuthenticator class where it can lookup the application server's security domain, which it will use to perform the authentication. Note that JBoss creates one security domain for each application policy element on the `$JBOSS_HOME/server/default/conf/login-config.xml` file, which gets bound to the server JNDI tree with name java:/jaas/<application-policy-name></application-policy-name>. If a lookup refers to a non existent application policy it defaults to a policy named other.
+
+===== Contained Based Authentication
+
+Certain security configurations may use HTTP based authentication. In this scenario, jUDDI simply trust's that the container will authenticate the user via some mechanism and uses that username for interactions with jUDDI.  To configure this setup, use the following configuration settings in juddiv3.xml:
+----
+juddi/auth/authenticator/class=org.apache.juddi.auth.HTTPContainerAuthenticator
+----
+
+
+===== Authentication by Proxy
+
+Certain security configurations that enforce authentication before requests come to the web application, such as via Apache HTTPD or a reverse SSL proxy. In these cases, the proxy provide authenticates the user, then passes along the user's identity via a HTTP header. To configure this setup, use the following configuration settings in juddiv3.xml:
+----
+juddi/auth/authenticator/class=org.apache.juddi.auth.HTTPHeaderAuthenticator
+juddi/auth/authenticator/header=(Some HTTP Header)
+----
 
 [[ConfiguringDatabaseConnections]]
 === Configuration Database Connections
