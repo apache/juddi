@@ -262,6 +262,7 @@ public class ClientConfig
 			uddiNode.setPublishUrl(             TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").publishUrl"),properties));
 			uddiNode.setCustodyTransferUrl(     TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").custodyTransferUrl"),properties));
 			uddiNode.setSecurityUrl(            TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").securityUrl"),properties));
+                        uddiNode.setReplicationUrl(         TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").replicationUrl"),properties));
 			uddiNode.setSubscriptionUrl(        TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").subscriptionUrl"),properties));
 			uddiNode.setSubscriptionListenerUrl(TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").subscriptionListenerUrl"),properties));
 			uddiNode.setJuddiApiUrl(            TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").juddiApiUrl"),properties));

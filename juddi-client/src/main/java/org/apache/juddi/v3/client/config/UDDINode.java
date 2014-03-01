@@ -45,6 +45,7 @@ public class UDDINode implements Serializable {
 	private String inquiryRESTUrl;
 	private String publishUrl;
 	private String securityUrl;
+        private String replicationUrl;
 	private String subscriptionUrl;
 	private String subscriptionListenerUrl;
 	private String juddiApiUrl;
@@ -70,6 +71,7 @@ public class UDDINode implements Serializable {
 		securityUrl = node.getSecurityUrl();
 		subscriptionUrl = node.getSubscriptionUrl();
 		subscriptionListenerUrl = node.getSubscriptionListenerUrl();
+                replicationUrl=node.getReplicationUrl();
 		juddiApiUrl = node.getJuddiApiUrl();
 		proxyTransport = node.getProxyTransport();
 		factoryInitial = node.getFactoryInitial();
@@ -87,20 +89,23 @@ public class UDDINode implements Serializable {
 	
 	public Node getApiNode() {
 		Node apiNode = new Node();
-		apiNode.setCustodyTransferUrl(custodyTransferUrl);
+		apiNode.setClientName(clientName);
+                apiNode.setCustodyTransferUrl(custodyTransferUrl);
 		apiNode.setDescription(description);
 		apiNode.setFactoryInitial(factoryInitial);
 		apiNode.setFactoryNamingProvider(factoryNamingProvider);
 		apiNode.setFactoryURLPkgs(factoryURLPkgs);
 		apiNode.setInquiryUrl(inquiryUrl);
-                //apiNode.setInquiryRESTUrl(name);
+                //no mapping for this apiNode.setInquiryRESTUrl(name);
 		apiNode.setJuddiApiUrl(juddiApiUrl);
-		apiNode.setClientName(clientName);
+		
 		apiNode.setName(name);
 		apiNode.setProxyTransport(proxyTransport);
 		apiNode.setPublishUrl(publishUrl);
+                apiNode.setReplicationUrl(replicationUrl);
 		apiNode.setSecurityUrl(securityUrl);
 		apiNode.setSubscriptionUrl(subscriptionUrl);
+                apiNode.setSubscriptionListenerUrl(subscriptionListenerUrl);
 		return apiNode;
 	}
 	
@@ -153,6 +158,20 @@ public class UDDINode implements Serializable {
 
 	public String getInquiryUrl() {
 		return inquiryUrl;
+	}
+        /**
+         * @since 3.2.1
+         * @return 
+         */
+        public String getReplicationUrl() {
+		return replicationUrl;
+	}
+        /**
+         * @since 3.2.1
+         * @param value 
+         */
+        public void setReplicationUrl(String value) {
+		replicationUrl=value;
 	}
         
         /**
