@@ -24,23 +24,39 @@ import javax.xml.ws.Holder;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.uddi.api_v3.AccessPoint;
+import org.uddi.api_v3.AddPublisherAssertions;
+import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BindingTemplates;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.CompletionStatus;
+import org.uddi.api_v3.DeletePublisherAssertions;
 import org.uddi.api_v3.Description;
+import org.uddi.api_v3.FindBinding;
+import org.uddi.api_v3.FindQualifiers;
+import org.uddi.api_v3.FindRelatedBusinesses;
+import org.uddi.api_v3.GetAssertionStatusReport;
+import org.uddi.api_v3.GetBindingDetail;
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.GetTModelDetail;
+import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.Name;
+import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.api_v3.SaveBinding;
 import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveService;
 import org.uddi.api_v3.SaveTModel;
-import org.uddi.api_v3.ServiceDetail;
 import org.uddi.api_v3.TModel;
+import org.uddi.api_v3.TModelBag;
 import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionFilter;
@@ -77,7 +93,9 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         private static UDDIClient manager;
 
         public static void stopManager() throws ConfigurationException {
-                if (!TckPublisher.isEnabled()) return;
+                if (!TckPublisher.isEnabled()) {
+                        return;
+                }
                 tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 tckTModelMary.deleteCreatedTModels(authInfoMary);
                 manager.stop();
@@ -86,7 +104,9 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         }
 
         public static void startManager() throws ConfigurationException {
-                if (!TckPublisher.isEnabled()) return;
+                if (!TckPublisher.isEnabled()) {
+                        return;
+                }
                 try {
                         /*                 smtpPort = 9700 + new Random().nextInt(99);
                          httpPort = 9600 + new Random().nextInt(99);
@@ -176,19 +196,22 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
 
         /**
          * used for logging purposes
-         * @return 
+         *
+         * @return
          */
         public abstract String getTransport();
 
         /**
          * listener port
-         * @return 
+         *
+         * @return
          */
         public abstract int getPort();
 
         /**
          * either returns localhost hostname or an email or delivery address
-         * @return 
+         *
+         * @return
          */
         public abstract String getHostame();
 
@@ -209,7 +232,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         //Saving the HTTP Listener Service
                         tckSubscriptionListenerJoe.saveService(authInfoJoe, getXMLLocationOfServiceForDelivery(), getPort(), getHostame());
                         //Saving the HTTP Subscription
-                        String saveNotifierSubscription = tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe,getSubscription1XML());
+                        String saveNotifierSubscription = tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, getSubscription1XML());
                         //Changing the service we subscribed to "JoePublisherService"
                         Thread.sleep(1000);
                         logger.info("Updating Service ********** ");
@@ -286,11 +309,17 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         }
 
         public abstract String getSubscription1XML();
+
         public abstract String getSubscription2XML();
+
         public abstract String getSubscription3XML();
+
         public abstract String getSubscriptionKey1();
+
         public abstract String getSubscriptionKey2();
+
         public abstract String getSubscriptionKey3();
+
         //tmodel tests
         @Test
         public void joePublisherUpdate_FIND_TMODEL() {
@@ -494,7 +523,6 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                 }
         }
 
-        
         //TODO If a subscriber specifies a maximum number of entries to be returned with a subscription and the amount of data to be returned exceeds 
 //this limit, or if the node determines based on its policy that there are too many entries to be returned in a single group, 
         //then the node SHOULD provide a chunkToken with results.  
@@ -506,7 +534,8 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                 stm.getTModel().add(saveMaryPublisherTmodel);
                 publicationMary.saveTModel(stm);
         }
-                /**
+
+        /**
          * adds a new name to the business, then resaves it
          *
          * @param auth
@@ -520,7 +549,6 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                 sb.getBusinessEntity().add(biz);
                 pub.saveBusiness(sb);
         }
-
 
         /**
          * getService tests joe want's updates on mary's service
@@ -544,16 +572,15 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
 
                         tckTModelMary.saveMaryPublisherTmodel(authInfoMary);
                         BusinessEntity saveMaryPublisherBusiness = tckBusinessMary.saveMaryPublisherBusiness(authInfoMary);
-                        
+
                         BusinessService bs = new BusinessService();
                         bs.setBusinessKey(saveMaryPublisherBusiness.getBusinessKey());
                         bs.setServiceKey(TckTModel.MARY_KEY_PREFIX + UUID.randomUUID().toString());
-                        bs.getName().add(new Name("Mary's service for " + getTransport(),null));
+                        bs.getName().add(new Name("Mary's service for " + getTransport(), null));
                         SaveService ss = new SaveService();
                         ss.getBusinessService().add(bs);
                         ss.setAuthInfo(authInfoMary);
-                        bs= publicationMary.saveService(ss).getBusinessService().get(0);
-                        
+                        bs = publicationMary.saveService(ss).getBusinessService().get(0);
 
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
                         tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
@@ -576,7 +603,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         //tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION3_XML);
                         //Changing the service we subscribed to "JoePublisherService"
                         Thread.sleep(1000);
-                        logger.info("updating Mary's business ********** ");
+                        logger.info("updating Mary's service ********** ");
                         updatePublisherService(authInfoMary, bs, publicationMary);
 
                         boolean found = verifyDelivery("Updated Name");
@@ -609,14 +636,572 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
 
                 }
         }
-        
-        //get binding detail
-        //get pub assertion
-        //get publisher assertion status
-        //find publisher assertions
-        //find binding
 
-        private void updatePublisherService(String authInfo, BusinessService bs, UDDIPublicationPortType pub) throws Exception{
+        /**
+         * getBinding tests joe want's updates on mary's binding
+         *
+         * @throws Exception
+         */
+        @Test
+        public void joePublisherUpdate_GET_BINDING_DETAIL() throws Exception {
+                Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeNotNull(getHostame());
+                logger.info("joePublisherUpdate_" + getTransport() + "_GET_BINDING_DETAIL");
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                Holder<List<Subscription>> holder = null;
+                try {
+                        reset();
+
+                        String before = TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe);
+
+                        tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.saveTModels(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+
+                        tckTModelMary.saveMaryPublisherTmodel(authInfoMary);
+                        BusinessEntity saveMaryPublisherBusiness = tckBusinessMary.saveMaryPublisherBusiness(authInfoMary);
+
+                        BusinessService bs = new BusinessService();
+                        bs.setBusinessKey(saveMaryPublisherBusiness.getBusinessKey());
+                        bs.setServiceKey(TckTModel.MARY_KEY_PREFIX + UUID.randomUUID().toString());
+                        bs.getName().add(new Name("Mary's service for " + getTransport(), null));
+                        bs.setBindingTemplates(new BindingTemplates());
+                        BindingTemplate bt = new BindingTemplate();
+                        bt.setAccessPoint(new AccessPoint("http://localhost", "endPoint"));
+                        bt.setBindingKey(TckTModel.MARY_KEY_PREFIX + UUID.randomUUID().toString());
+                        bt.setServiceKey(bs.getServiceKey());
+                        bt = UDDIClient.addSOAPtModels(bt);
+
+                        bs.getBindingTemplates().getBindingTemplate().add(bt);
+                        SaveService ss = new SaveService();
+                        ss.getBusinessService().add(bs);
+                        ss.setAuthInfo(authInfoMary);
+                        bs = publicationMary.saveService(ss).getBusinessService().get(0);
+
+                        tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
+                        //Saving the Listener Service
+                        String bindingkey = tckSubscriptionListenerJoe.saveService(authInfoJoe, getXMLLocationOfServiceForDelivery(), getPort(), getHostame());
+
+                        //Saving the Subscription
+                        holder = new Holder<List<Subscription>>();
+                        holder.value = new ArrayList<Subscription>();
+                        Subscription sub = new Subscription();
+                        sub.setBindingKey(bindingkey);
+                        sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(5000));
+                        sub.setSubscriptionFilter(new SubscriptionFilter());
+                        sub.getSubscriptionFilter().setGetBindingDetail(new GetBindingDetail());
+                        sub.getSubscriptionFilter().getGetBindingDetail().getBindingKey().add(bt.getBindingKey());
+
+                        holder.value.add(sub);
+                        subscriptionJoe.saveSubscription(authInfoJoe, holder);
+                        logger.info("subscription saved for " + holder.value.get(0).getSubscriptionKey());
+                        //tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION3_XML);
+                        //Changing the service we subscribed to "JoePublisherService"
+                        Thread.sleep(1000);
+                        logger.info("updating Mary's binding ********** ");
+                        updatePublisherBinding(authInfoMary, bt, publicationMary);
+
+                        boolean found = verifyDelivery("wsdlDeployment");
+
+                        if (!found) {
+                                logger.warn("Test failed, dumping business list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                Assert.fail("Notification does not contain the correct service.");
+                        }
+
+                } catch (Exception e) {
+                        logger.error("No exceptions please.");
+                        e.printStackTrace();
+
+                        Assert.fail();
+                } finally {
+                        //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
+                        DeleteSubscription ds = new DeleteSubscription();
+                        ds.setAuthInfo(authInfoJoe);
+                        ds.getSubscriptionKey().add(holder.value.get(0).getSubscriptionKey());
+                        subscriptionJoe.deleteSubscription(ds);
+                        tckBusinessMary.deleteMaryPublisherBusiness(authInfoMary);
+                        tckTModelMary.deleteMaryPublisherTmodel(authInfoMary);
+
+                        tckBusinessServiceJoe.deleteJoePublisherService(authInfoJoe);
+                        tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.deleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+
+                }
+        }
+
+        /**
+         * PUBLISHERASSERTION tests joe want's updates on mary's binding
+         *
+         * @throws Exception
+         */
+        @Test
+        @Ignore
+        public void joePublisherUpdate_PUBLISHERASSERTION_DETAIL_TO() throws Exception {
+                Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeNotNull(getHostame());
+                logger.info("joePublisherUpdate_" + getTransport() + "_PUBLISHERASSERTION_DETAIL_TO");
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                Holder<List<Subscription>> holder = null;
+                try {
+                        reset();
+
+                        String before = TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe);
+
+                        tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                        //tckTModelJoe.saveTModels(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+
+                        tckTModelMary.saveMaryPublisherTmodel(authInfoMary);
+                        BusinessEntity saveMaryPublisherBusiness = tckBusinessMary.saveMaryPublisherBusiness(authInfoMary);
+
+                        tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
+                        //Saving the Listener Service
+                        String bindingkey = tckSubscriptionListenerJoe.saveService(authInfoJoe, getXMLLocationOfServiceForDelivery(), getPort(), getHostame());
+
+                        //Saving the Subscription
+                        holder = new Holder<List<Subscription>>();
+                        holder.value = new ArrayList<Subscription>();
+                        Subscription sub = new Subscription();
+                        sub.setBindingKey(bindingkey);
+                        sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(5000));
+                        sub.setSubscriptionFilter(new SubscriptionFilter());
+                        sub.getSubscriptionFilter().setGetAssertionStatusReport(new GetAssertionStatusReport());
+                        sub.getSubscriptionFilter().getGetAssertionStatusReport().setCompletionStatus(CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
+
+                        holder.value.add(sub);
+                        subscriptionJoe.saveSubscription(authInfoJoe, holder);
+                        logger.info("subscription saved for " + holder.value.get(0).getSubscriptionKey());
+                        //tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION3_XML);
+                        //Changing the service we subscribed to "JoePublisherService"
+                        Thread.sleep(1000);
+                        logger.info("saving Mary's publisher assertion********** ");
+                        AddPublisherAssertions pa = new AddPublisherAssertions();
+                        pa.setAuthInfo(authInfoMary);
+                        PublisherAssertion pas = new PublisherAssertion();
+                        pas.setToKey(TckBusiness.JOE_BUSINESS_KEY);
+                        pas.setFromKey(TckBusiness.MARY_BUSINESS_KEY);
+                        pas.setKeyedReference(new KeyedReference(UDDIConstants.RELATIONSHIPS, "parent", "parent-child"));
+                        pa.getPublisherAssertion().add(pas);
+
+                        publicationMary.addPublisherAssertions(pa);
+
+                        boolean found = verifyDelivery(TckBusiness.MARY_BUSINESS_KEY);
+
+                        DeletePublisherAssertions deletePublisherAssertions = new DeletePublisherAssertions();
+                        deletePublisherAssertions.setAuthInfo(authInfoMary);
+                        deletePublisherAssertions.getPublisherAssertion().add(pas);
+                        publicationMary.deletePublisherAssertions(deletePublisherAssertions);
+                        if (!found) {
+                                logger.warn("Test failed, dumping business list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                Assert.fail("Notification does not contain the correct service.");
+                        }
+
+                } catch (Exception e) {
+                        logger.error("No exceptions please.");
+                        e.printStackTrace();
+
+                        Assert.fail();
+                } finally {
+                        //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
+                        DeleteSubscription ds = new DeleteSubscription();
+                        ds.setAuthInfo(authInfoJoe);
+                        ds.getSubscriptionKey().add(holder.value.get(0).getSubscriptionKey());
+                        subscriptionJoe.deleteSubscription(ds);
+                        tckBusinessMary.deleteMaryPublisherBusiness(authInfoMary);
+                        tckTModelMary.deleteMaryPublisherTmodel(authInfoMary);
+
+                        tckBusinessServiceJoe.deleteJoePublisherService(authInfoJoe);
+                        tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.deleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+
+                }
+        }
+
+        /**
+         * PUBLISHERASSERTION tests joe want's updates on mary's binding
+         *
+         * @throws Exception
+         */
+        @Test
+        @Ignore
+        public void joePublisherUpdate_PUBLISHERASSERTION_DETAIL_FROM() throws Exception {
+                Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeNotNull(getHostame());
+                logger.info("joePublisherUpdate_" + getTransport() + "_PUBLISHERASSERTION_DETAIL_FROM");
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                Holder<List<Subscription>> holder = null;
+                try {
+                        reset();
+
+                        String before = TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe);
+
+                        tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                        //tckTModelJoe.saveTModels(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+
+                        tckTModelMary.saveMaryPublisherTmodel(authInfoMary);
+                        BusinessEntity saveMaryPublisherBusiness = tckBusinessMary.saveMaryPublisherBusiness(authInfoMary);
+
+                        tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
+                        //Saving the Listener Service
+                        String bindingkey = tckSubscriptionListenerJoe.saveService(authInfoJoe, getXMLLocationOfServiceForDelivery(), getPort(), getHostame());
+
+                        //Saving the Subscription
+                        holder = new Holder<List<Subscription>>();
+                        holder.value = new ArrayList<Subscription>();
+                        Subscription sub = new Subscription();
+                        sub.setBindingKey(bindingkey);
+                        sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(5000));
+                        sub.setSubscriptionFilter(new SubscriptionFilter());
+                        sub.getSubscriptionFilter().setGetAssertionStatusReport(new GetAssertionStatusReport());
+                        sub.getSubscriptionFilter().getGetAssertionStatusReport().setCompletionStatus(CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);
+
+                        holder.value.add(sub);
+                        subscriptionJoe.saveSubscription(authInfoJoe, holder);
+                        logger.info("subscription saved for " + holder.value.get(0).getSubscriptionKey());
+                        //tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION3_XML);
+                        //Changing the service we subscribed to "JoePublisherService"
+                        Thread.sleep(1000);
+                        logger.info("saving Mary's publisher assertion********** ");
+                        AddPublisherAssertions pa = new AddPublisherAssertions();
+                        pa.setAuthInfo(authInfoMary);
+                        PublisherAssertion pas = new PublisherAssertion();
+                        pas.setToKey(TckBusiness.JOE_BUSINESS_KEY);
+                        pas.setFromKey(TckBusiness.MARY_BUSINESS_KEY);
+                        pas.setKeyedReference(new KeyedReference(UDDIConstants.RELATIONSHIPS, "parent", "parent-child"));
+                        pa.getPublisherAssertion().add(pas);
+
+                        publicationMary.addPublisherAssertions(pa);
+
+                        boolean found = verifyDelivery(TckBusiness.MARY_BUSINESS_KEY);
+
+                        DeletePublisherAssertions deletePublisherAssertions = new DeletePublisherAssertions();
+                        deletePublisherAssertions.setAuthInfo(authInfoMary);
+                        deletePublisherAssertions.getPublisherAssertion().add(pas);
+                        publicationMary.deletePublisherAssertions(deletePublisherAssertions);
+                        if (!found) {
+                                logger.warn("Test failed, dumping business list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                Assert.fail("Notification does not contain the correct service.");
+                        }
+
+                } catch (Exception e) {
+                        logger.error("No exceptions please.");
+                        e.printStackTrace();
+
+                        Assert.fail();
+                } finally {
+                        //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
+                        DeleteSubscription ds = new DeleteSubscription();
+                        ds.setAuthInfo(authInfoJoe);
+                        ds.getSubscriptionKey().add(holder.value.get(0).getSubscriptionKey());
+                        subscriptionJoe.deleteSubscription(ds);
+                        tckBusinessMary.deleteMaryPublisherBusiness(authInfoMary);
+                        tckTModelMary.deleteMaryPublisherTmodel(authInfoMary);
+
+                        tckBusinessServiceJoe.deleteJoePublisherService(authInfoJoe);
+                        tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.deleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+
+                }
+        }
+
+        /**
+         * PUBLISHERASSERTION2 tests joe want's updates on mary's binding
+         *
+         * @throws Exception
+         */
+        @Test
+        @Ignore
+        public void joePublisherUpdate_PUBLISHERASSERTION_DETAIL_COMPLETE() throws Exception {
+                Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeNotNull(getHostame());
+                logger.info("joePublisherUpdate_" + getTransport() + "_PUBLISHERASSERTION_DETAIL_COMPLETE");
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                Holder<List<Subscription>> holder = null;
+                try {
+                        reset();
+
+                        String before = TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe);
+
+                        tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                        //tckTModelJoe.saveTModels(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+
+                        tckTModelMary.saveMaryPublisherTmodel(authInfoMary);
+                        BusinessEntity saveMaryPublisherBusiness = tckBusinessMary.saveMaryPublisherBusiness(authInfoMary);
+
+                        tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
+                        //Saving the Listener Service
+                        String bindingkey = tckSubscriptionListenerJoe.saveService(authInfoJoe, getXMLLocationOfServiceForDelivery(), getPort(), getHostame());
+
+                        //Saving the Subscription
+                        holder = new Holder<List<Subscription>>();
+                        holder.value = new ArrayList<Subscription>();
+                        Subscription sub = new Subscription();
+                        sub.setBindingKey(bindingkey);
+                        sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(5000));
+                        sub.setSubscriptionFilter(new SubscriptionFilter());
+                        sub.getSubscriptionFilter().setGetAssertionStatusReport(new GetAssertionStatusReport());
+                        sub.getSubscriptionFilter().getGetAssertionStatusReport().setCompletionStatus(CompletionStatus.STATUS_COMPLETE);
+
+                        holder.value.add(sub);
+                        subscriptionJoe.saveSubscription(authInfoJoe, holder);
+                        logger.info("subscription saved for " + holder.value.get(0).getSubscriptionKey());
+                        //tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION3_XML);
+                        //Changing the service we subscribed to "JoePublisherService"
+                        Thread.sleep(1000);
+                        logger.info("saving Mary's publisher assertion********** ");
+                        AddPublisherAssertions pa = new AddPublisherAssertions();
+                        pa.setAuthInfo(authInfoMary);
+                        PublisherAssertion pas = new PublisherAssertion();
+                        pas.setToKey(TckBusiness.JOE_BUSINESS_KEY);
+                        pas.setFromKey(TckBusiness.MARY_BUSINESS_KEY);
+                        pas.setKeyedReference(new KeyedReference(UDDIConstants.RELATIONSHIPS, "parent", "parent-child"));
+                        pa.getPublisherAssertion().add(pas);
+
+                        publicationMary.addPublisherAssertions(pa);
+                        pa.setAuthInfo(authInfoJoe);
+                        publicationJoe.addPublisherAssertions(pa);
+
+                        boolean found = verifyDelivery(TckBusiness.MARY_BUSINESS_KEY);
+                        DeletePublisherAssertions deletePublisherAssertions = new DeletePublisherAssertions();
+                        deletePublisherAssertions.setAuthInfo(authInfoMary);
+                        deletePublisherAssertions.getPublisherAssertion().add(pas);
+                        publicationMary.deletePublisherAssertions(deletePublisherAssertions);
+                        if (!found) {
+                                logger.warn("Test failed, dumping business list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                Assert.fail("Notification does not contain the correct service.");
+                        }
+
+                } catch (Exception e) {
+                        logger.error("No exceptions please.");
+                        e.printStackTrace();
+
+                        Assert.fail();
+                } finally {
+                        //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
+                        DeleteSubscription ds = new DeleteSubscription();
+                        ds.setAuthInfo(authInfoJoe);
+                        ds.getSubscriptionKey().add(holder.value.get(0).getSubscriptionKey());
+                        subscriptionJoe.deleteSubscription(ds);
+                        tckBusinessMary.deleteMaryPublisherBusiness(authInfoMary);
+                        tckTModelMary.deleteMaryPublisherTmodel(authInfoMary);
+
+                        tckBusinessServiceJoe.deleteJoePublisherService(authInfoJoe);
+                        tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.deleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+
+                }
+        }
+
+        //
+        /**
+         * find related businesses tests joe want's updates on mary's binding
+         *
+         * @throws Exception
+         */
+        @Test
+        @Ignore
+        public void joePublisherUpdate_FIND_RELATED_BIZ() throws Exception {
+                Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeNotNull(getHostame());
+                logger.info("joePublisherUpdate_" + getTransport() + "_FIND_RELATED_BIZ");
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                Holder<List<Subscription>> holder = null;
+                try {
+                        reset();
+
+                        String before = TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe);
+
+                        tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                        //tckTModelJoe.saveTModels(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+
+                        tckTModelMary.saveMaryPublisherTmodel(authInfoMary);
+                        BusinessEntity saveMaryPublisherBusiness = tckBusinessMary.saveMaryPublisherBusiness(authInfoMary);
+
+                        tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
+                        //Saving the Listener Service
+                        String bindingkey = tckSubscriptionListenerJoe.saveService(authInfoJoe, getXMLLocationOfServiceForDelivery(), getPort(), getHostame());
+
+                        //Saving the Subscription
+                        holder = new Holder<List<Subscription>>();
+                        holder.value = new ArrayList<Subscription>();
+                        Subscription sub = new Subscription();
+                        sub.setBindingKey(bindingkey);
+                        sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(5000));
+                        sub.setSubscriptionFilter(new SubscriptionFilter());
+                        sub.getSubscriptionFilter().setFindRelatedBusinesses(new FindRelatedBusinesses());
+                        sub.getSubscriptionFilter().getFindRelatedBusinesses().setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+
+                        holder.value.add(sub);
+                        subscriptionJoe.saveSubscription(authInfoJoe, holder);
+                        logger.info("subscription saved for " + holder.value.get(0).getSubscriptionKey());
+                        //tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION3_XML);
+                        //Changing the service we subscribed to "JoePublisherService"
+                        Thread.sleep(1000);
+                        logger.info("saving Mary's publisher assertion********** ");
+                        AddPublisherAssertions pa = new AddPublisherAssertions();
+                        pa.setAuthInfo(authInfoMary);
+                        PublisherAssertion pas = new PublisherAssertion();
+                        pas.setToKey(TckBusiness.JOE_BUSINESS_KEY);
+                        pas.setFromKey(TckBusiness.MARY_BUSINESS_KEY);
+                        pas.setKeyedReference(new KeyedReference(UDDIConstants.RELATIONSHIPS, "parent", "parent-child"));
+                        pa.getPublisherAssertion().add(pas);
+
+                        publicationMary.addPublisherAssertions(pa);
+                        logger.info("saving Joe's publisher assertion********** ");
+                        pa.setAuthInfo(authInfoJoe);
+                        publicationJoe.addPublisherAssertions(pa);
+
+                        boolean found = verifyDelivery(TckBusiness.MARY_BUSINESS_KEY);
+                        DeletePublisherAssertions deletePublisherAssertions = new DeletePublisherAssertions();
+                        deletePublisherAssertions.setAuthInfo(authInfoMary);
+                        deletePublisherAssertions.getPublisherAssertion().add(pas);
+                        publicationMary.deletePublisherAssertions(deletePublisherAssertions);
+                        if (!found) {
+                                logger.warn("Test failed, dumping business list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                Assert.fail("Notification does not contain the correct service.");
+                        }
+
+                } catch (Exception e) {
+                        logger.error("No exceptions please.");
+                        e.printStackTrace();
+
+                        Assert.fail();
+                } finally {
+                        //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
+                        DeleteSubscription ds = new DeleteSubscription();
+                        ds.setAuthInfo(authInfoJoe);
+                        ds.getSubscriptionKey().add(holder.value.get(0).getSubscriptionKey());
+                        subscriptionJoe.deleteSubscription(ds);
+                        tckBusinessMary.deleteMaryPublisherBusiness(authInfoMary);
+                        tckTModelMary.deleteMaryPublisherTmodel(authInfoMary);
+
+                        tckBusinessServiceJoe.deleteJoePublisherService(authInfoJoe);
+                        tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.deleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+
+                }
+        }
+
+        /**
+         * getBinding tests joe want's updates on mary's binding
+         *
+         * @throws Exception
+         */
+        @Test
+        @Ignore
+        public void joePublisherUpdate_FIND_BINDING() throws Exception {
+                Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeNotNull(getHostame());
+                logger.info("joePublisherUpdate_" + getTransport() + "_FIND_BINDING");
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                Holder<List<Subscription>> holder = null;
+                try {
+                        reset();
+
+                        String before = TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe);
+
+                        tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.saveTModels(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+
+                        tckTModelMary.saveMaryPublisherTmodel(authInfoMary);
+                        BusinessEntity saveMaryPublisherBusiness = tckBusinessMary.saveMaryPublisherBusiness(authInfoMary);
+
+                        BusinessService bs = new BusinessService();
+                        bs.setBusinessKey(saveMaryPublisherBusiness.getBusinessKey());
+                        bs.setServiceKey(TckTModel.MARY_KEY_PREFIX + UUID.randomUUID().toString());
+                        bs.getName().add(new Name("Mary's service for " + getTransport(), null));
+                        
+                        bs.setBindingTemplates(new BindingTemplates());
+                        BindingTemplate bt = new BindingTemplate();
+                        bt.setAccessPoint(new AccessPoint("http://localhost", "endPoint"));
+                        bt.setBindingKey(TckTModel.MARY_KEY_PREFIX + UUID.randomUUID().toString());
+                        bt.setServiceKey(bs.getServiceKey());
+                        bt = UDDIClient.addSOAPtModels(bt);
+
+                        bs.getBindingTemplates().getBindingTemplate().add(bt);
+                        SaveService ss = new SaveService();
+                        ss.getBusinessService().add(bs);
+                        ss.setAuthInfo(authInfoMary);
+                        bs = publicationMary.saveService(ss).getBusinessService().get(0);
+
+                        tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
+                        //Saving the Listener Service
+                        String bindingkey = tckSubscriptionListenerJoe.saveService(authInfoJoe, getXMLLocationOfServiceForDelivery(), getPort(), getHostame());
+
+                        //Saving the Subscription
+                        holder = new Holder<List<Subscription>>();
+                        holder.value = new ArrayList<Subscription>();
+                        Subscription sub = new Subscription();
+                        sub.setBindingKey(bindingkey);
+                        sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(5000));
+                        sub.setSubscriptionFilter(new SubscriptionFilter());
+                        sub.getSubscriptionFilter().setFindBinding(new FindBinding());
+                        sub.getSubscriptionFilter().getFindBinding().setServiceKey(bs.getServiceKey());
+                        sub.getSubscriptionFilter().getFindBinding().setTModelBag(new TModelBag());
+                        sub.getSubscriptionFilter().getFindBinding().getTModelBag().getTModelKey().add("uddi:uddi.org:categorization:types");
+                        
+
+                        holder.value.add(sub);
+                        subscriptionJoe.saveSubscription(authInfoJoe, holder);
+                        logger.info("subscription saved for " + holder.value.get(0).getSubscriptionKey());
+                        //tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION3_XML);
+                        //Changing the service we subscribed to "JoePublisherService"
+                        Thread.sleep(1000);
+                        logger.info("updating Mary's binding ********** ");
+                        updatePublisherBinding(authInfoMary, bt, publicationMary);
+
+                        boolean found = verifyDelivery("wsdlDeployment");
+
+                        if (!found) {
+                                logger.warn("Test failed, dumping business list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                Assert.fail("Notification does not contain the correct service.");
+                        }
+
+                } catch (Exception e) {
+                        logger.error("No exceptions please.");
+                        e.printStackTrace();
+
+                        Assert.fail();
+                } finally {
+                        //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
+                        DeleteSubscription ds = new DeleteSubscription();
+                        ds.setAuthInfo(authInfoJoe);
+                        ds.getSubscriptionKey().add(holder.value.get(0).getSubscriptionKey());
+                        subscriptionJoe.deleteSubscription(ds);
+                        tckBusinessMary.deleteMaryPublisherBusiness(authInfoMary);
+                        tckTModelMary.deleteMaryPublisherTmodel(authInfoMary);
+
+                        tckBusinessServiceJoe.deleteJoePublisherService(authInfoJoe);
+                        tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.deleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
+
+                }
+        }
+
+        //find binding
+        private void updatePublisherService(String authInfo, BusinessService bs, UDDIPublicationPortType pub) throws Exception {
                 bs.getName().add(new Name("Updated name", null));
                 SaveService ss = new SaveService();
                 ss.getBusinessService().add(bs);
@@ -624,6 +1209,12 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                 pub.saveService(ss);
         }
 
-        
-        
+        private void updatePublisherBinding(String authInfo, BindingTemplate bt, UDDIPublicationPortType pub) throws Exception {
+                SaveBinding sb = new SaveBinding();
+                sb.setAuthInfo(authInfo);
+                bt.getAccessPoint().setUseType("wsdlDeployment");
+                sb.getBindingTemplate().add(bt);
+                pub.saveBinding(sb);
+        }
+
 }
