@@ -1076,6 +1076,7 @@ public class MappingApiToModel {
                         modelNode.setPublishUrl(apiNode.getPublishUrl());
                         modelNode.setSecurityUrl(apiNode.getSecurityUrl());
                         modelNode.setSubscriptionUrl(apiNode.getSubscriptionUrl());
+                        modelNode.setSubscriptionListenerUrl(apiNode.getSubscriptionListenerUrl());
                         modelNode.setReplicationUrl(apiNode.getReplicationUrl());
                         modelNode.setFactoryInitial(apiNode.getFactoryInitial());
                         modelNode.setFactoryNamingProvider(apiNode.getFactoryNamingProvider());

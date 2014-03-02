@@ -45,6 +45,9 @@ public class Node implements java.io.Serializable {
 	private String custodyTransferUrl;
 	@Column(name="subscription_url", nullable = false, length=255)
 	private String subscriptionUrl;
+        
+        @Column(name="subscriptionlist_url", nullable = false, length=255)
+	private String subscriptionListenerUrl;
         @Column(name="replication_url", nullable = true, length=255)
 	private String replicationUrl;
         @Column(name="proxy_transport", nullable = false, length=255)
@@ -138,6 +141,14 @@ public class Node implements java.io.Serializable {
 
 	public void setSubscriptionUrl(String subscriptionUrl) {
 		this.subscriptionUrl = subscriptionUrl;
+	}
+        
+        public String getSubscriptionListenerUrl() {
+		return subscriptionListenerUrl;
+	}
+
+	public void setSubscriptionListenerUrl(String subscriptionUrl) {
+		this.subscriptionListenerUrl = subscriptionUrl;
 	}
         public String getReplicationUrl() {
 		return replicationUrl;

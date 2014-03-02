@@ -16,6 +16,7 @@
 package org.apache.juddi.v3.client.config;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -40,8 +41,15 @@ public class UDDIClientContainer {
 			if (clients.containsKey(clientName)) {
 				return (clients.get(clientName));
 			} else {
+                                StringBuilder sb = new StringBuilder();
+                                Iterator<String> iterator = clients.keySet().iterator();
+                                while (iterator.hasNext()){
+                                        sb.append(iterator.next());
+                                        if (iterator.hasNext())
+                                                sb.append(",");
+                                }
 				throw new ConfigurationException("No client by name " + clientName + " was found. " +
-						" Please check your client uddi.xml files, and make sure this client was started");
+						" Please check your client uddi.xml files, and make sure this client was started. Available clients: " + sb.toString());
 			}
 		} else throw new IllegalArgumentException("clientName is a required argument");
 	}

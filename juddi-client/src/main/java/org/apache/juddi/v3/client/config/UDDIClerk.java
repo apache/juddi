@@ -183,7 +183,17 @@ public class UDDIClerk implements Serializable {
         public UDDINode getUDDINode() {
                 return this.uddiNode;
         }
-
+        
+        public UDDINode getUDDINode(Node apinode) {
+                if (apinode==null)
+                        return this.uddiNode;
+                if (nodecache.containsKey(apinode.getClientName() + apinode+getName()))
+                        return nodecache.get(apinode.getClientName() + apinode+getName());
+                UDDINode node = new UDDINode(apinode);
+                nodecache.put(apinode.getClientName() + apinode+getName(),node);
+                return node;
+        }
+        Map <String, UDDINode> nodecache = new HashMap<String, UDDINode>();
         /**
          * A list of classes defined in the config file that have UDDI
          * Annotations on them for automated registration
@@ -387,7 +397,7 @@ public class UDDIClerk implements Serializable {
                         List<Subscription> subscriptions = new ArrayList<Subscription>();
                         subscriptions.add(subscription);
                         holder.value = subscriptions;
-                        getUDDINode().getTransport().getUDDISubscriptionService(node.getSubscriptionUrl()).
+                        getUDDINode(node).getTransport().getUDDISubscriptionService(node.getSubscriptionUrl()).
                                 saveSubscription(getAuthToken(node.getSecurityUrl()), holder);
                         if (log.isDebugEnabled()) {
                                 log.debug("Registering subscription " + subscription.getSubscriptionKey() + " completed.");
@@ -429,7 +439,7 @@ public class UDDIClerk implements Serializable {
                         SaveTModel saveTModel = new SaveTModel();
                         saveTModel.setAuthInfo(getAuthToken(node.getSecurityUrl()));
                         saveTModel.getTModel().add(tModel);
-                        tModelDetail = getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).saveTModel(saveTModel);
+                        tModelDetail = getUDDINode(node).getTransport().getUDDIPublishService(node.getPublishUrl()).saveTModel(saveTModel);
                         if (log.isDebugEnabled()) {
                                 log.debug("Registering tModel " + tModel.getTModelKey() + " completed.");
                         }
@@ -470,7 +480,7 @@ public class UDDIClerk implements Serializable {
                         SaveBinding saveBinding = new SaveBinding();
                         saveBinding.setAuthInfo(getAuthToken(node.getSecurityUrl()));
                         saveBinding.getBindingTemplate().add(binding);
-                        BindingDetail bindingDetail = getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).saveBinding(saveBinding);
+                        BindingDetail bindingDetail = getUDDINode(node).getTransport().getUDDIPublishService(node.getPublishUrl()).saveBinding(saveBinding);
                         bindingTemplate = bindingDetail.getBindingTemplate().get(0);
                         if (log.isDebugEnabled()) {
                                 log.debug("Registering template binding " + bindingTemplate.getBindingKey() + " completed.");
@@ -519,7 +529,7 @@ public class UDDIClerk implements Serializable {
                         SaveService saveService = new SaveService();
                         saveService.setAuthInfo(getAuthToken(node.getSecurityUrl()));
                         saveService.getBusinessService().add(service);
-                        ServiceDetail serviceDetail = getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).saveService(saveService);
+                        ServiceDetail serviceDetail = getUDDINode(node).getTransport().getUDDIPublishService(node.getPublishUrl()).saveService(saveService);
                         businessService = serviceDetail.getBusinessService().get(0);
                         if (log.isDebugEnabled()) {
                                 log.debug("Registering service " + service.getName().get(0).getValue() + " completed.");
@@ -565,7 +575,7 @@ public class UDDIClerk implements Serializable {
                         SaveBusiness saveBusiness = new SaveBusiness();
                         saveBusiness.setAuthInfo(getAuthToken(node.getSecurityUrl()));
                         saveBusiness.getBusinessEntity().add(business);
-                        BusinessDetail businessDetail = getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).saveBusiness(saveBusiness);
+                        BusinessDetail businessDetail = getUDDINode(node).getTransport().getUDDIPublishService(node.getPublishUrl()).saveBusiness(saveBusiness);
                         businessEntity = businessDetail.getBusinessEntity().get(0);
                         if (log.isDebugEnabled()) {
                                 log.debug("Registering businessEntity " + businessEntity.getName().get(0).getValue() + " completed.");
@@ -604,7 +614,7 @@ public class UDDIClerk implements Serializable {
                         DeleteBusiness deleteBusiness = new DeleteBusiness();
                         deleteBusiness.setAuthInfo(getAuthToken(node.getSecurityUrl()));
                         deleteBusiness.getBusinessKey().add(businessKey);
-                        getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).deleteBusiness(deleteBusiness);
+                        getUDDINode(node).getTransport().getUDDIPublishService(node.getPublishUrl()).deleteBusiness(deleteBusiness);
                 } catch (Exception e) {
                         log.error("Unable to register service " + businessKey
                                 + " ." + e.getMessage(), e);
@@ -634,7 +644,7 @@ public class UDDIClerk implements Serializable {
                         DeleteService deleteService = new DeleteService();
                         deleteService.setAuthInfo(getAuthToken(node.getSecurityUrl()));
                         deleteService.getServiceKey().add(serviceKey);
-                        getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).deleteService(deleteService);
+                        getUDDINode(node).getTransport().getUDDIPublishService(node.getPublishUrl()).deleteService(deleteService);
                 } catch (Exception e) {
                         log.error("Unable to register service " + serviceKey
                                 + " ." + e.getMessage(), e);
@@ -665,7 +675,7 @@ public class UDDIClerk implements Serializable {
                         DeleteBinding deleteBinding = new DeleteBinding();
                         deleteBinding.setAuthInfo(getAuthToken(node.getSecurityUrl()));
                         deleteBinding.getBindingKey().add(bindingKey);
-                        getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).deleteBinding(deleteBinding);
+                        getUDDINode(node).getTransport().getUDDIPublishService(node.getPublishUrl()).deleteBinding(deleteBinding);
                 } catch (Exception e) {
                         log.error("Unable to unregister bindingkey " + bindingKey
                                 + " ." + e.getMessage(), e);
@@ -698,7 +708,7 @@ public class UDDIClerk implements Serializable {
                         DeleteTModel deleteTModel = new DeleteTModel();
                         deleteTModel.setAuthInfo(authToken);
                         deleteTModel.getTModelKey().add(tModelKey);
-                        getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).deleteTModel(deleteTModel);
+                        getUDDINode(node).getTransport().getUDDIPublishService(node.getPublishUrl()).deleteTModel(deleteTModel);
                 } catch (Exception e) {
                         log.error("Unable to unregister tModelkey " + tModelKey
                                 + " ." + e.getMessage(), e);
@@ -729,7 +739,7 @@ public class UDDIClerk implements Serializable {
                         DeleteSubscription deleteSubscription = new DeleteSubscription();
                         deleteSubscription.setAuthInfo(authToken);
                         deleteSubscription.getSubscriptionKey().add(subscriptionKey);
-                        getUDDINode().getTransport().getUDDISubscriptionService(node.getSubscriptionUrl()).deleteSubscription(deleteSubscription);
+                        getUDDINode(node).getTransport().getUDDISubscriptionService(node.getSubscriptionUrl()).deleteSubscription(deleteSubscription);
                 } catch (Exception e) {
                         log.error("Unable to unregister subscription key " + subscriptionKey
                                 + " ." + e.getMessage(), e);
@@ -764,7 +774,7 @@ public class UDDIClerk implements Serializable {
 
                 findTModel.setAuthInfo(getAuthToken(node.getSecurityUrl()));
                 try {
-                        TModelList tModelList = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).findTModel(findTModel);
+                        TModelList tModelList = getUDDINode(node).getTransport().getUDDIInquiryService(node.getInquiryUrl()).findTModel(findTModel);
                         return tModelList;
                 } catch (DispositionReportFaultMessage dr) {
                         DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
@@ -826,7 +836,7 @@ public class UDDIClerk implements Serializable {
 
                 getTModelDetail.setAuthInfo(getAuthToken(node.getSecurityUrl()));
                 try {
-                        TModelDetail tModelDetail = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).getTModelDetail(getTModelDetail);
+                        TModelDetail tModelDetail = getUDDINode(node).getTransport().getUDDIInquiryService(node.getInquiryUrl()).getTModelDetail(getTModelDetail);
                         return tModelDetail;
                 } catch (DispositionReportFaultMessage dr) {
                         DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
@@ -906,7 +916,7 @@ public class UDDIClerk implements Serializable {
                 getServiceDetail.getServiceKey().add(serviceKey);
                 getServiceDetail.setAuthInfo(getAuthToken(node.getSecurityUrl()));
                 try {
-                        ServiceDetail sd = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).getServiceDetail(getServiceDetail);
+                        ServiceDetail sd = getUDDINode(node).getTransport().getUDDIInquiryService(node.getInquiryUrl()).getServiceDetail(getServiceDetail);
                         List<BusinessService> businessServiceList = sd.getBusinessService();
                         if (businessServiceList.size() == 0) {
                                 throw new ConfigurationException("Could not find Service with key=" + serviceKey);
@@ -991,7 +1001,7 @@ public class UDDIClerk implements Serializable {
                 getBindingDetail.getBindingKey().add(bindingKey);
                 getBindingDetail.setAuthInfo(getAuthToken(node.getSecurityUrl()));
                 try {
-                        BindingDetail bd = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).getBindingDetail(getBindingDetail);
+                        BindingDetail bd = getUDDINode(node).getTransport().getUDDIInquiryService(node.getInquiryUrl()).getBindingDetail(getBindingDetail);
                         List<BindingTemplate> bindingTemplateList = bd.getBindingTemplate();
                         if (bindingTemplateList.size() == 0) {
                                 throw new ConfigurationException("Could not find ServiceBinding with key=" + bindingKey);
@@ -1076,7 +1086,7 @@ public class UDDIClerk implements Serializable {
                 getBusinessDetail.getBusinessKey().add(businessKey);
                 getBusinessDetail.setAuthInfo(node.getSecurityUrl());
                 try {
-                        BusinessDetail bd = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).getBusinessDetail(getBusinessDetail);
+                        BusinessDetail bd = getUDDINode(node).getTransport().getUDDIInquiryService(node.getInquiryUrl()).getBusinessDetail(getBusinessDetail);
                         return bd.getBusinessEntity().get(0);
                 } catch (DispositionReportFaultMessage dr) {
                         DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
@@ -1111,7 +1121,7 @@ public class UDDIClerk implements Serializable {
                 findRelatedBusinesses.setBusinessKey(businessKey);
                 findRelatedBusinesses.setAuthInfo(node.getSecurityUrl());
                 try {
-                        RelatedBusinessesList rbl = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).findRelatedBusinesses(findRelatedBusinesses);
+                        RelatedBusinessesList rbl = getUDDINode(node).getTransport().getUDDIInquiryService(node.getInquiryUrl()).findRelatedBusinesses(findRelatedBusinesses);
                         return rbl;
                 } catch (DispositionReportFaultMessage dr) {
                         DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
@@ -1264,11 +1274,11 @@ public class UDDIClerk implements Serializable {
         public NodeDetail saveNode(Node node) {
                 NodeDetail nodeDetail = null;
                 try {
-                        log.info("Sending Node " + node.getName() + " info to jUDDI " + getUDDINode().getName());
+                        log.info("Sending Node " + node.getName() + " info to jUDDI " + getUDDINode(node).getName());
                         SaveNode saveNode = new SaveNode();
                         saveNode.setAuthInfo(getAuthToken(node.getSecurityUrl()));
                         saveNode.getNode().add(node);
-                        nodeDetail = getUDDINode().getTransport().getJUDDIApiService(node.getJuddiApiUrl()).saveNode(saveNode);
+                        nodeDetail = getUDDINode(node).getTransport().getJUDDIApiService(node.getJuddiApiUrl()).saveNode(saveNode);
                 } catch (Exception e) {
                         log.error("Unable to save node " + node.getName()
                                 + " ." + e.getMessage(), e);
@@ -1823,7 +1833,7 @@ public class UDDIClerk implements Serializable {
 
                 getDetail.setAuthInfo(getAuthToken(node.getSecurityUrl()));
                 try {
-                        ServiceDetail tModelDetail = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).getServiceDetail(getDetail);
+                        ServiceDetail tModelDetail = getUDDINode(node).getTransport().getUDDIInquiryService(node.getInquiryUrl()).getServiceDetail(getDetail);
                         return tModelDetail;
                 } catch (DispositionReportFaultMessage dr) {
                         DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);

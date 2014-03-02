@@ -1133,6 +1133,8 @@ public class MappingModelToApi {
 		apiNode.setPublishUrl(modelNode.getPublishUrl());
 		apiNode.setSecurityUrl(modelNode.getSecurityUrl());
 		apiNode.setSubscriptionUrl(modelNode.getSubscriptionUrl());
+                apiNode.setSubscriptionListenerUrl(modelNode.getSubscriptionListenerUrl());
+                apiNode.setReplicationUrl(modelNode.getReplicationUrl());
 	}
 
     private static Object convertDataToTransformContent(String type, byte[] xformBytes) throws RuntimeException {

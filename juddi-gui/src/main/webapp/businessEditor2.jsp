@@ -50,7 +50,7 @@
 
             %>
             <%                   if (!newitem) {
-                  out.write("<i class=\"icon-lock icon-large\"></i>");
+                  out.write("<i class=\"icon-lock icon-large\"></i> ");
                }
             %>
             <b><%=ResourceLoader.GetResource(session, "pages.businesskey")%></b>-

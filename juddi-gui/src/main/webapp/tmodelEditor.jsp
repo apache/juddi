@@ -133,7 +133,7 @@
             <div class="tab-pane active" id="general">
                <%
                   if (!newitem) {
-                     out.write("<i class=\"icon-lock icon-large\"></i>");
+                     out.write("<i class=\"icon-lock icon-large\"></i> ");
                   }
                %>
                <%= ResourceLoader.GetResource(session, "items.tmodel.key.description")%>
