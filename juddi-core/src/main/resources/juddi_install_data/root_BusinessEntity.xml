@@ -518,6 +518,126 @@ See below for other fields that you may want to edit...
             <keyedReference tModelKey="uddi:uddi.org:xml:localname" keyName="uddi-org:xml:localName" keyValue="UDDISubscriptionListenerService"/>
          </categoryBag>
       </businessService>
+	
+
+	<businessService serviceKey="uddi:juddi.apache.org:services-valueset" businessKey="uddi:juddi.apache.org:businesses-asf">
+      <name xml:lang="en">UDDI Value Set API Service</name>
+      <description xml:lang="en">Web Service supporting UDDI Value Set Validation service. This service provides tModel value validation and is
+		configured using the jUDDI Publisher Service</description>
+      <bindingTemplates>
+        <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-valueset-ws" serviceKey="uddi:juddi.apache.org:services-valueset">
+          <description>UDDI Value Set Validation API Version 3</description>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/valueset-validation?wsdl</accessPoint>
+          <tModelInstanceDetails>
+            <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_valuesetvalidation" />
+          </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
+        </bindingTemplate>
+		
+		<bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-valueset-ws-ssl" serviceKey="uddi:juddi.apache.org:services-valueset">
+          <description>UDDI Value Set Validation API Version 3 SSL</description>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/valueset-validation?wsdl</accessPoint>
+          <tModelInstanceDetails>
+
+            <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_valuesetvalidation" />
+
+          </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
+        </bindingTemplate>
+		
+		<bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-valueset-cp" serviceKey="uddi:juddi.apache.org:services-valueset">
+          <description>UDDI Value Set Validation API Version 3 using InVM Classpath Transport. Use this endpoint for Value Set Validation when
+		  located on the same instance of jUDDI.</description>
+          <accessPoint useType="classpath">classpath:/org.apache.juddi.api.impl.UDDIValueSetValidationImpl</accessPoint>
+          <tModelInstanceDetails>
+            <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_valuesetvalidation" />
+          </tModelInstanceDetails>
+        </bindingTemplate>
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+      </bindingTemplates>
+    </businessService>
+	
+	
+	<businessService serviceKey="uddi:juddi.apache.org:services-valueset-cache" businessKey="uddi:juddi.apache.org:businesses-asf">
+      <name xml:lang="en">UDDI Value Set Caching API Service</name>
+      <description xml:lang="en">Web Service supporting UDDI Value Set Caching service. This service provides tModel value validation and is
+		configured using the jUDDI Publisher Service</description>
+      <bindingTemplates>
+        <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-valueset-cache-ws" serviceKey="uddi:juddi.apache.org:services-valueset-cache">
+          <description>UDDI Value Set Caching API Version 3</description>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/valueset-caching?wsdl</accessPoint>
+          <tModelInstanceDetails>
+            <tModelInstanceInfo tModelKey="uddi:uddi-org:valueSetCaching_v3" />
+          </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
+        </bindingTemplate>
+		
+		<bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-valueset-cache-ws-ssl" serviceKey="uddi:juddi.apache.org:services-valueset-cache">
+          <description>UDDI Value Set caching API Version 3 SSL</description>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/valueset-caching?wsdl</accessPoint>
+          <tModelInstanceDetails>
+            <tModelInstanceInfo tModelKey="uddi:uddi-org:valueSetCaching_v3" />
+          </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+
+
+
+
+
+          </categoryBag>
+        </bindingTemplate>
+		
+      </bindingTemplates>
+    </businessService>
+	
+	
+	
+
+
+	<businessService serviceKey="uddi:juddi.apache.org:replication" businessKey="uddi:juddi.apache.org:businesses-asf">
+      <name xml:lang="en">UDDI Replication API Version 3</name>
+      <description xml:lang="en">UDDI Replication API Version 3</description>
+      <bindingTemplates>
+        <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-replication-ws" serviceKey="uddi:juddi.apache.org:replication">
+          <description>UDDI Value Set Validation API Version 3</description>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/replication?wsdl</accessPoint>
+
+         <tModelInstanceInfo
+			  tModelKey="uddi:uddi.org:v3_replication" />
+			<tModelInstanceInfo 
+			  tModelKey="uddi:uddi.org:protocol:mutualauthenticatedssl3" />
+		  
+
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
+        </bindingTemplate>
+      </bindingTemplates>
+    </businessService>
+	
+	
                 
       <!-- juddi api service -->
       <businessService serviceKey="uddi:juddi.apache.org:services-publisher" businessKey="uddi:juddi.apache.org:businesses-asf">

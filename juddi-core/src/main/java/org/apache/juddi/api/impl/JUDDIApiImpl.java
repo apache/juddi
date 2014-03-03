@@ -18,10 +18,13 @@ package org.apache.juddi.api.impl;
 
 import java.io.StringWriter;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
 
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
@@ -29,38 +32,53 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import javax.xml.ws.RequestWrapper;
+import javax.xml.ws.ResponseWrapper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.ClassUtil;
+import org.apache.juddi.api_v3.AdminSaveBusinessWrapper;
+import org.apache.juddi.api_v3.AdminSaveTModelWrapper;
 import org.apache.juddi.api_v3.Clerk;
 import org.apache.juddi.api_v3.ClerkDetail;
+import org.apache.juddi.api_v3.ClerkList;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
+import org.apache.juddi.api_v3.DeleteClerk;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
+import org.apache.juddi.api_v3.DeleteNode;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.NodeDetail;
+import org.apache.juddi.api_v3.NodeList;
 import org.apache.juddi.api_v3.PublisherDetail;
 import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.api_v3.SavePublisher;
+import org.apache.juddi.api_v3.SubscriptionWrapper;
 import org.apache.juddi.api_v3.SyncSubscription;
 import org.apache.juddi.api_v3.SyncSubscriptionDetail;
+import org.apache.juddi.api_v3.ValidValues;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.ClientSubscriptionInfo;
+import org.apache.juddi.model.Node;
 import org.apache.juddi.model.Publisher;
+import org.apache.juddi.model.ReplicationConfiguration;
 import org.apache.juddi.model.Tmodel;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.model.ValueSetValue;
+import org.apache.juddi.model.ValueSetValues;
 import org.apache.juddi.subscription.NotificationList;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.juddi.validation.ValidateClerk;
@@ -68,16 +86,20 @@ import org.apache.juddi.validation.ValidateClientSubscriptionInfo;
 import org.apache.juddi.validation.ValidateNode;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidatePublisher;
+import org.apache.juddi.validation.ValidateValueSetValidation;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.BusinessInfo;
 import org.uddi.api_v3.BusinessInfos;
 import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.GetRegisteredInfo;
 import org.uddi.api_v3.InfoSelection;
 import org.uddi.api_v3.RegisteredInfo;
+import org.uddi.api_v3.Result;
 import org.uddi.api_v3.TModelInfo;
 import org.uddi.api_v3.TModelInfos;
 import org.uddi.sub_v3.GetSubscriptionResults;
+import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISubscriptionPortType;
@@ -713,7 +735,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                         throw (DispositionReportFaultMessage) ce;
                                 }
                                 if (ce instanceof RemoteException) {
-                                        throw (RemoteException) ce;
+									 DispositionReportFaultMessage x = new FatalErrorException(new ErrorMessage("errors.subscriptionnotifier.client", ce.getMessage()));
+                                        throw x;
                                 }
                         }
                 }
@@ -722,4 +745,290 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                 return syncSubscriptionDetail;
         }
 
+        @Override
+        public NodeList getAllNodes(String authInfo) throws DispositionReportFaultMessage, RemoteException {
+
+                NodeList r = new NodeList();
+
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
+
+                        new ValidatePublish(publisher).validateGetAllNodes();
+
+                        StringBuilder sql = new StringBuilder();
+                        sql.append("select distinct c from Node c ");
+                        sql.toString();
+                        Query qry = em.createQuery(sql.toString());
+                        List<org.apache.juddi.model.Node> resultList = qry.getResultList();
+                        for (int i = 0; i < resultList.size(); i++) {
+                               org.apache.juddi.api_v3.Node api = new org.apache.juddi.api_v3.Node();
+                                MappingModelToApi.mapNode(resultList.get(i), api);
+                                r.getNode().add(api);
+
+                        }
+
+                        tx.commit();
+
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+
+                return r;
+        }
+
+        @Override
+        public ClerkList getAllClerks(String authInfo) throws DispositionReportFaultMessage, RemoteException {
+
+                ClerkList ret = new ClerkList();
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
+
+                        new ValidatePublish(publisher).validateGetAllNodes();
+
+                        StringBuilder sql = new StringBuilder();
+                        sql.append("select distinct c from Clerk c ");
+                        sql.toString();
+                        Query qry = em.createQuery(sql.toString());
+                        List<org.apache.juddi.model.Clerk> resultList = qry.getResultList();
+                        for (int i = 0; i < resultList.size(); i++) {
+                                Clerk api = new Clerk();
+                                MappingModelToApi.mapClerk(resultList.get(i), api);
+                                ret.getClerk().add(api);
+
+                        }
+                        tx.commit();
+
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+
+                return ret;
+
+        }
+
+        @Override
+        public void deleteNode(DeleteNode req) throws DispositionReportFaultMessage , RemoteException{
+                boolean found = false;
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        
+                        UddiEntityPublisher publisher = this.getEntityPublisher(em, req.getAuthInfo());
+                        new ValidatePublish(publisher).validateDeleteNode(em, req);
+                        
+
+
+                        org.apache.juddi.model.Node existingUddiEntity = em.find(org.apache.juddi.model.Node.class, req.getNodeID());
+                        if (existingUddiEntity != null) {
+
+                                //TODO cascade delete all clerks tied to this node
+
+                                em.remove(existingUddiEntity);
+                                found = true;
+                        }
+                        tx.commit();
+
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+
+                if (!found) {
+                        
+                   
+                throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.NotFound"));
+                }
+        }
+
+        @Override
+        public void deleteClerk(DeleteClerk req) throws DispositionReportFaultMessage, RemoteException {
+
+                boolean found = false;
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        UddiEntityPublisher publisher = this.getEntityPublisher(em, req.getAuthInfo());
+
+                        new ValidatePublish(publisher).validateDeleteClerk(em, req);
+
+                        org.apache.juddi.model.Clerk existingUddiEntity = em.find(org.apache.juddi.model.Clerk.class, req.getClerkID());
+                        if (existingUddiEntity != null) { 
+                                em.remove(existingUddiEntity);
+                                found = true;
+                        }
+                        tx.commit();
+
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+
+                if (!found) {
+                throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteClerk.NotFound"));      
+                }
+                
+
+        }
+
+        /**
+         * enables tmodel owners to setup valid values for tmodel instance infos
+         * to use, TODO
+         *
+         * @param authInfo
+         * @param values
+         * @return
+         * @throws DispositionReportFaultMessage
+         */
+        @Override
+        public DispositionReport setAllValidValues(String authInfo, List<ValidValues> values) throws DispositionReportFaultMessage, RemoteException {
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                UddiEntityPublisher entityPublisher = getEntityPublisher(em, authInfo);
+
+                new ValidateValueSetValidation(entityPublisher).validateSetAllValidValues(values);
+
+
+                EntityTransaction tx = em.getTransaction();
+                try {
+
+                        //TODO is this tModel used anywhere?, if so, validate all instances against the new rule?
+
+                        tx.begin();
+
+                        //each tmodel/value set
+                        for (int i = 0; i < values.size(); i++) {
+                                //remove any existing references to the key
+                                ValueSetValues find = em.find(ValueSetValues.class, values.get(i).getTModekKey());
+
+                                if (find != null) {
+
+                                        //first pass, add any missing values
+                                        for (int x = 0; x < values.get(i).getValue().size(); x++) {
+                                                boolean found = false;
+                                                for (int k = 0; k < find.getValues().size(); k++) {
+                                                        if (find.getValues().get(k).getValue().equals(values.get(i).getValue().get(x))) {
+                                                                found = true;
+                                                                break;
+                                                        }
+                                                }
+                                                if (!found) {
+                                                        ValueSetValue valueSetValue = new org.apache.juddi.model.ValueSetValue(values.get(i).getTModekKey(), values.get(i).getValue().get(x));
+                                                        find.getValues().add(valueSetValue);
+                                                }
+                                        }
+
+                                        //second pass, remove any values that were present, but now are not
+                                        for (int k = 0; k < find.getValues().size(); k++) {
+
+                                                boolean found = false;
+                                                for (int x = 0; x < values.get(i).getValue().size(); x++) {
+                                                        if (find.getValues().get(k).getValue().equals(values.get(i).getValue().get(x))) {
+                                                                found = true;
+                                                                break;
+                                                        }
+                                                }
+                                                if (!found) {
+                                                        em.remove(find.getValues().get(k));
+                                                }
+                                        }
+
+                                        em.persist(find);
+
+                                } else {
+                                        org.apache.juddi.model.ValueSetValues vv = new ValueSetValues();
+                                        vv.setTModelKey(values.get(i).getTModekKey());
+                                        List<ValueSetValue> items = new ArrayList<ValueSetValue>();
+                                        for (int k = 0; k < values.get(i).getValue().size(); k++) {
+                                                ValueSetValue valueSetValue = new org.apache.juddi.model.ValueSetValue(values.get(i).getTModekKey(), values.get(i).getValue().get(k));
+                                                valueSetValue.setParent(vv);
+                                                em.persist(valueSetValue);
+                                                items.add(valueSetValue);
+                                        }
+                                        vv.setValues(items);
+                                        em.persist(vv);
+                                }
+                        }
+
+                        tx.commit();
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+                DispositionReport r = new DispositionReport();
+                r.getResult().add(new Result());
+                return r;
+        }
+
+        @Override
+        public void adminDeleteSubscription(String authInfo, List<String> subscriptionKey) throws DispositionReportFaultMessage, RemoteException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+
+        @Override
+        public DispositionReport adminSaveBusiness(String authInfo, List<AdminSaveBusinessWrapper> values) throws DispositionReportFaultMessage, RemoteException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public DispositionReport adminSaveTModel(String authInfo, List<AdminSaveTModelWrapper> values) throws DispositionReportFaultMessage, RemoteException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        
+         @SuppressWarnings("unchecked")
+        @Override
+        public List<SubscriptionWrapper> getAllClientSubscriptionInfo(String authInfo) throws DispositionReportFaultMessage, RemoteException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        
+        @Override
+        public DispositionReport setReplicationNodes(String authInfo, org.uddi.repl_v3.ReplicationConfiguration replicationConfiguration) throws DispositionReportFaultMessage, RemoteException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public org.uddi.repl_v3.ReplicationConfiguration getReplicationNodes(String authInfo) throws DispositionReportFaultMessage, RemoteException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+
+    public void adminSaveSubscription(
+
+        String authInfo,
+
+        String publisherOrUsername,
+
+        List<Subscription> subscriptions)
+        throws DispositionReportFaultMessage, RemoteException
+    {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
 }

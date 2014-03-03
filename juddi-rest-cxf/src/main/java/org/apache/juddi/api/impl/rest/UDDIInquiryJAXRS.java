@@ -527,7 +527,7 @@ public class UDDIInquiryJAXRS {
          * @param findQualifiers
          * @param maxrows
          * @param offset
-         * @return
+         * @return serviceList
          * @throws WebApplicationException
          */
         @GET
@@ -550,7 +550,7 @@ public class UDDIInquiryJAXRS {
          * @param findQualifiers
          * @param maxrows
          * @param offset
-         * @return
+         * @return serviceList
          * @throws WebApplicationException
          */
         @GET
@@ -587,7 +587,7 @@ public class UDDIInquiryJAXRS {
          * @param findQualifiers
          * @param maxrows
          * @param offset
-         * @return
+         * @return TModelList
          * @throws WebApplicationException
          */
         @GET
@@ -610,7 +610,7 @@ public class UDDIInquiryJAXRS {
          * @param findQualifiers
          * @param maxrows
          * @param offset
-         * @return
+         * @return TModelList
          * @throws WebApplicationException
          */
         @GET

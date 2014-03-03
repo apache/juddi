@@ -56,6 +56,13 @@ public class ValidValue implements Serializable{
 	@XmlElement(required = true)
     protected String keyValue;
 
+        public ValidValue() {
+        }
+
+        public ValidValue(String val) {
+
+                this.keyValue = val;
+        }
     /**
      * Gets the value of the keyValue property.
      * 

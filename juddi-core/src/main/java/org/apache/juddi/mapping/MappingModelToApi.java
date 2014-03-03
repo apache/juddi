@@ -17,19 +17,19 @@
 
 package org.apache.juddi.mapping;
 
-import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
+import org.w3._2000._09.xmldsig_.X509IssuerSerialType;
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import javax.xml.bind.JAXBElement;
+
+import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -41,6 +41,8 @@ import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.apache.juddi.model.CanonicalizationMethod;
+import org.apache.juddi.model.ControlMessage;
+import org.apache.juddi.model.Edge;
 import org.apache.juddi.model.KeyInfo;
 import org.apache.juddi.model.OverviewDoc;
 import org.apache.juddi.model.Reference;
@@ -49,12 +51,20 @@ import org.apache.juddi.model.SignatureValue;
 import org.apache.juddi.model.SignedInfo;
 import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.model.KeyDataValue;
+import org.apache.juddi.model.Node;
+import org.apache.juddi.model.ReplicationConfiguration;
+import org.apache.juddi.model.ReplicationMessage;
 import org.apache.juddi.model.SignatureTransformDataValue;
 import org.apache.juddi.subscription.TypeConvertor;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
+import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.CompletionStatus;
+import org.uddi.api_v3.Contacts;
 import org.uddi.api_v3.OperationalInfo;
+import org.uddi.repl_v3.CommunicationGraph;
+import org.uddi.repl_v3.Operator;
+import org.uddi.repl_v3.OperatorStatusType;
 import org.uddi.sub_v3.SubscriptionFilter;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.w3._2000._09.xmldsig_.CanonicalizationMethodType;
@@ -74,7 +84,6 @@ import org.w3._2000._09.xmldsig_.SignedInfoType;
 import org.w3._2000._09.xmldsig_.TransformType;
 import org.w3._2000._09.xmldsig_.TransformsType;
 import org.w3._2000._09.xmldsig_.X509DataType;
-import org.w3._2000._09.xmldsig_.X509IssuerSerialType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -1163,4 +1172,113 @@ public class MappingModelToApi {
         }
         return transformObject;
     }
+    
+     public static void mapReplicationConfiguration(ReplicationConfiguration find, org.uddi.repl_v3.ReplicationConfiguration item) throws DispositionReportFaultMessage {
+                item.setMaximumTimeToGetChanges(find.getMaximumTimeToGetChanges());
+                item.setMaximumTimeToSyncRegistry(find.getMaximumTimeToSyncRegistry());
+                item.setSerialNumber(find.getSerialNumber());
+                List<SignatureType> sigs = new ArrayList<SignatureType>();
+                mapSignature(find.getSignatures(), sigs);
+                item.getSignature().addAll(sigs);
+                List<Operator> ops = new ArrayList<Operator>();
+                mapOperator(find.getOperator(), item.getOperator());
+
+                List<org.apache.juddi.model.Contact> modelContactList = new ArrayList<org.apache.juddi.model.Contact>();
+                org.uddi.api_v3.Contacts cs = new Contacts();
+
+                mapContacts(modelContactList, cs, new BusinessEntity());
+                item.setRegistryContact(new org.uddi.repl_v3.ReplicationConfiguration.RegistryContact());
+                item.getRegistryContact().setContact(cs.getContact().get(0));
+
+                item.setTimeOfConfigurationUpdate(find.getTimeOfConfigurationUpdate());
+                CommunicationGraph xcom = new CommunicationGraph();
+
+                mapCommunicationGraph(find.getCommunicationGraph(), xcom);
+                item.setCommunicationGraph(xcom);
+                //(List<org.apache.juddi.model.Contact> modelContactList, 
+                //org.uddi.api_v3.Contacts apiContacts,
+                //org.uddi.api_v3.BusinessEntity apiBusinessEntity) 
+        }
+ private static void mapOperator(List<org.apache.juddi.model.Operator> model, List<Operator> api) throws DispositionReportFaultMessage {
+                for (int i = 0; i < model.size(); i++) {
+                        Operator op = new Operator();
+                        op.setOperatorNodeID(model.get(i).getOperatorNodeID());
+                        op.setSoapReplicationURL(model.get(i).getSoapReplicationURL());
+                        switch (model.get(i).getOperatorStatus()) {
+                                case NEW:
+                                        op.setOperatorStatus(OperatorStatusType.NEW);
+                                        break;
+                                case NORMAL:
+                                        op.setOperatorStatus(OperatorStatusType.NORMAL);
+                                        break;
+                                case RESIGNED:
+                                        op.setOperatorStatus(OperatorStatusType.RESIGNED);
+                                        break;
+                        }
+                        Contacts c = new Contacts();
+                        mapContacts(model.get(i).getContact(), c, new BusinessEntity());
+                        op.getContact().addAll(c.getContact());
+
+                        for (int x = 0; x < model.get(i).getKeyInfo().size(); x++) {
+                                KeyInfoType apiKeyInfo = new KeyInfoType();
+                                KeyInfo modelKeyInfo = model.get(i).getKeyInfo().get(x);
+                                apiKeyInfo.setId(modelKeyInfo.getXmlID());
+                                List<KeyDataValue> modelKeyDataValueList = modelKeyInfo.getKeyDataValue();
+                                List<Object> apiX509KeyInfoList = apiKeyInfo.getContent();
+                                mapModelKeyDataValue(modelKeyDataValueList, apiX509KeyInfoList);
+                                op.getKeyInfo().add(apiKeyInfo);
+                        }
+                        api.add(op);
+                }
+
+        }
+
+        private static void mapCommunicationGraph(org.apache.juddi.model.CommunicationGraph model,
+                CommunicationGraph api) {
+
+                mapEdge(model.getEdge(), api.getEdge());
+                mapControlMessages(model.getControlMessage(), api.getControlledMessage());
+                mapEdgeNodes(model.getNode(), api.getNode());
+
+
+
+        }
+
+        private static void mapEdge(List<Edge> model, List<CommunicationGraph.Edge> api) {
+                Iterator<Edge> it = model.iterator();
+                while (it.hasNext()) {
+                        Edge modelEdge = it.next();
+                        
+                        CommunicationGraph.Edge apiEdge = new CommunicationGraph.Edge();
+                        apiEdge.setMessageReceiver(modelEdge.getMessageReceiver().getName());
+                        apiEdge.setMessageSender(modelEdge.getMessageSender().getName());
+                        Iterator<ReplicationMessage> it2 = modelEdge.getMessages().iterator();
+                        while (it2.hasNext()) {
+                                apiEdge.getMessage().add(it2.next().getMsg());
+                        }
+                        Iterator<Node> it3 = modelEdge.getMessageReceiverAlternate().iterator();
+                        while (it3.hasNext()) {
+                                apiEdge.getMessageReceiverAlternate().add(it3.next().getName());
+                        }
+
+                        api.add(apiEdge);
+
+
+
+                }
+        }
+
+        private static void mapControlMessages(List<ControlMessage> model, List<String> api) {
+                Iterator<ControlMessage> it = model.iterator();
+                while (it.hasNext()) {
+                        api.add(it.next().getMessage());
+                }
+        }
+
+        private static void mapEdgeNodes(List<Node> model, List<String> api) {
+                Iterator<Node> it = model.iterator();
+                while (it.hasNext()) {
+                        api.add(it.next().getName());
+                }
+        }
 }

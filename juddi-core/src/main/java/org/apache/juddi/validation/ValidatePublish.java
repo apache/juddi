@@ -19,9 +19,11 @@ package org.apache.juddi.validation;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -32,6 +34,8 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.AccessPointType;
+import org.apache.juddi.api_v3.DeleteClerk;
+import org.apache.juddi.api_v3.DeleteNode;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.config.AppConfig;
@@ -49,6 +53,7 @@ import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.FindBusinessByPublisherQuery;
 import org.apache.juddi.query.FindTModelByPublisherQuery;
 import org.apache.juddi.v3.client.UDDIConstants;
+import org.apache.juddi.v3.client.config.TokenResolver;
 import org.apache.juddi.v3.error.AssertionNotFoundException;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
@@ -108,10 +113,10 @@ public class ValidatePublish extends ValidateUDDIApi {
         private Log log = LogFactory.getLog(this.getClass());
 
         public ValidatePublish(UddiEntityPublisher publisher, String nodeid) {
-                super(publisher,nodeid);
+                super(publisher, nodeid);
         }
-        
-         public ValidatePublish(UddiEntityPublisher publisher) {
+
+        public ValidatePublish(UddiEntityPublisher publisher) {
                 super(publisher);
         }
 
@@ -146,7 +151,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BusinessNotFound", entityKey));
                         }
 
-                        if (!publisher.isOwner((UddiEntity) obj)&& !((Publisher) publisher).isAdmin() ) {
+                        if (!publisher.isOwner((UddiEntity) obj) && !((Publisher) publisher).isAdmin()) {
                                 throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
                         }
 
@@ -185,10 +190,9 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ServiceNotFound", entityKey));
                         }
 
-                         //if you're are the owner, access granted
+                        //if you're are the owner, access granted
                         //if you are an admin && this item belongs to this node, access granted
                         //else denied
-                        
                         AccessCheck(obj, entityKey);
                         i++;
                 }
@@ -225,7 +229,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                         if (obj == null) {
                                 throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BindingTemplateNotFound", entityKey));
                         }
-                        
+
                         AccessCheck(obj, entityKey);
 
                         i++;
@@ -268,21 +272,21 @@ public class ValidatePublish extends ValidateUDDIApi {
                         i++;
                 }
         }
-        
-        private void AccessCheck(Object obj, String entityKey) throws UserMismatchException{
-                        boolean accessCheck=false; //assume access denied
-                        if (publisher.isOwner((UddiEntity) obj)){
-                           accessCheck=true;
-                                
-                        }
-                        if (((Publisher) publisher).isAdmin() && 
-                                nodeID.equals(((UddiEntity) obj).getNodeId())){
-                           accessCheck=true;
-                        }
-                
-                        if (!accessCheck ) {
-                                throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
-                        }
+
+        private void AccessCheck(Object obj, String entityKey) throws UserMismatchException {
+                boolean accessCheck = false; //assume access denied
+                if (publisher.isOwner((UddiEntity) obj)) {
+                        accessCheck = true;
+
+                }
+                if (((Publisher) publisher).isAdmin()
+                     && nodeID.equals(((UddiEntity) obj).getNodeId())) {
+                        accessCheck = true;
+                }
+
+                if (!accessCheck) {
+                        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+                }
 
         }
 
@@ -316,8 +320,8 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 }
 
                                 if (!pubAssertion.getTmodelKey().equalsIgnoreCase(keyedRef.getTModelKey())
-                                        || !pubAssertion.getKeyName().equalsIgnoreCase(keyedRef.getKeyName())
-                                        || !pubAssertion.getKeyValue().equalsIgnoreCase(keyedRef.getKeyValue())) {
+                                     || !pubAssertion.getKeyName().equalsIgnoreCase(keyedRef.getKeyName())
+                                     || !pubAssertion.getKeyValue().equalsIgnoreCase(keyedRef.getKeyValue())) {
                                         throw new AssertionNotFoundException(new ErrorMessage("errors.pubassertion.AssertionNotFound", entity.getFromKey() + ", " + entity.getToKey()));
                                 }
 
@@ -348,6 +352,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
                 for (org.uddi.api_v3.BusinessEntity entity : entityList) {
                         validateBusinessEntity(em, entity, config, publisher);
+                        validateCheckedTModels(entity, config);
                 }
         }
 
@@ -402,6 +407,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 for (org.uddi.api_v3.BusinessService entity : entityList) {
                         // Entity specific data validation
                         validateBusinessService(em, entity, null, config, publisher);
+                        validateCheckedTModels(entity, config);
                 }
         }
 
@@ -454,6 +460,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
                 for (org.uddi.api_v3.BindingTemplate entity : entityList) {
                         validateBindingTemplate(em, entity, null, config, publisher);
+                        validateCheckedTModels(entity, config);
                 }
         }
 
@@ -506,6 +513,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
                 for (org.uddi.api_v3.TModel entity : entityList) {
                         validateTModel(em, entity, config, publisher);
+                        validateCheckedTModels(entity, config);
                 }
         }
 
@@ -581,17 +589,17 @@ public class ValidatePublish extends ValidateUDDIApi {
                 if (item.getBusinessServices() != null && !item.getSignature().isEmpty()) {
                         for (int i = 0; i < item.getBusinessServices().getBusinessService().size(); i++) {
                                 if (item.getBusinessServices().getBusinessService().get(i).getBusinessKey() == null
-                                        || item.getBusinessServices().getBusinessService().get(i).getBusinessKey().length() == 0) {
+                                     || item.getBusinessServices().getBusinessService().get(i).getBusinessKey().length() == 0) {
                                         throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "business/Service(" + i + ")/businessKey"));
                                 }
                                 if (item.getBusinessServices().getBusinessService().get(i).getServiceKey() == null
-                                        || item.getBusinessServices().getBusinessService().get(i).getServiceKey().length() == 0) {
+                                     || item.getBusinessServices().getBusinessService().get(i).getServiceKey().length() == 0) {
                                         throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "business/Service(" + i + ")/serviceKey"));
                                 }
                                 if (item.getBusinessServices().getBusinessService().get(i).getBindingTemplates() != null) {
                                         for (int k = 0; k < item.getBusinessServices().getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {
                                                 if (item.getBusinessServices().getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getBindingKey() == null
-                                                        || item.getBusinessServices().getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getBindingKey().length() == 0) {
+                                                     || item.getBusinessServices().getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getBindingKey().length() == 0) {
                                                         throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "business/Service(" + i + ")/bindingTemplate)" + k + ")/bindingKey"));
                                                 }
                                         }
@@ -635,15 +643,15 @@ public class ValidatePublish extends ValidateUDDIApi {
                 if (item.getBindingTemplates() != null && !item.getSignature().isEmpty()) {
                         for (int i = 0; i < item.getBindingTemplates().getBindingTemplate().size(); i++) {
                                 if (item.getBindingTemplates().getBindingTemplate().get(i).getBindingKey() == null
-                                        || item.getBindingTemplates().getBindingTemplate().get(i).getBindingKey().length() == 0) {
+                                     || item.getBindingTemplates().getBindingTemplate().get(i).getBindingKey().length() == 0) {
                                         throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "businessService/bindingTemplate(" + i + ")/bindingKey"));
                                 }
                         }
                 }
         }
 
-        public void validateBusinessEntity(EntityManager em, org.uddi.api_v3.BusinessEntity businessEntity, 
-        		Configuration config, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
+        public void validateBusinessEntity(EntityManager em, org.uddi.api_v3.BusinessEntity businessEntity,
+             Configuration config, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
 
                 // A supplied businessEntity can't be null
                 if (businessEntity == null) {
@@ -668,7 +676,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
                                 // Make sure publisher owns this entity.
                                 AccessCheck(obj, entityKey);
-                                
+
                         } else {
                                 // Inside this block, we have a key proposed by the publisher on a new entity
 
@@ -690,7 +698,6 @@ public class ValidatePublish extends ValidateUDDIApi {
 
                 // was TODO: validate "checked" categories or category groups (see section 5.2.3 of spec)? optional to support
                 //covered by ref integrity checks
-
                 validateNames(businessEntity.getName());
                 validateDiscoveryUrls(businessEntity.getDiscoveryURLs());
                 validateContacts(businessEntity.getContacts(), config);
@@ -701,9 +708,9 @@ public class ValidatePublish extends ValidateUDDIApi {
 
         }
 
-        public void validateBusinessServices(EntityManager em, org.uddi.api_v3.BusinessServices businessServices, 
-        		org.uddi.api_v3.BusinessEntity parent, Configuration config, UddiEntityPublisher publisher)
-                throws DispositionReportFaultMessage {
+        public void validateBusinessServices(EntityManager em, org.uddi.api_v3.BusinessServices businessServices,
+             org.uddi.api_v3.BusinessEntity parent, Configuration config, UddiEntityPublisher publisher)
+             throws DispositionReportFaultMessage {
                 // Business services is optional
                 if (businessServices == null) {
                         return;
@@ -719,9 +726,9 @@ public class ValidatePublish extends ValidateUDDIApi {
 
         }
 
-        public void validateBusinessService(EntityManager em, org.uddi.api_v3.BusinessService businessService, 
-        		org.uddi.api_v3.BusinessEntity parent, Configuration config, UddiEntityPublisher publisher)
-                throws DispositionReportFaultMessage {
+        public void validateBusinessService(EntityManager em, org.uddi.api_v3.BusinessService businessService,
+             org.uddi.api_v3.BusinessEntity parent, Configuration config, UddiEntityPublisher publisher)
+             throws DispositionReportFaultMessage {
 
                 // A supplied businessService can't be null
                 if (businessService == null) {
@@ -767,7 +774,6 @@ public class ValidatePublish extends ValidateUDDIApi {
                 // Projections don't require as rigorous testing as only the projected service's business key and service key are examined for validity.
                 if (isProjection) {
 
-
                         Object obj = em.find(org.apache.juddi.model.BusinessService.class, entityKey);
                         // Can't project a service that doesn't exist!
                         if (obj == null) {
@@ -803,7 +809,6 @@ public class ValidatePublish extends ValidateUDDIApi {
                                                 businessService.setBusinessKey(parentKey);
                                         }
 
-                                        
                                         // Make sure publisher owns this entity.
                                         AccessCheck(obj, entityKey);
 
@@ -851,7 +856,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
                                         // Make sure publisher owns this parent entity.
                                         AccessCheck(parentTemp, parentKey);
-                                       // if (!publisher.isOwner((UddiEntity) parentTemp)) {
+                                        // if (!publisher.isOwner((UddiEntity) parentTemp)) {
                                         //        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwnerParent", parentKey));
                                         //}
                                 }
@@ -865,7 +870,6 @@ public class ValidatePublish extends ValidateUDDIApi {
                         }
 
                         // TODO: validate "checked" categories or category groups (see section 5.2.3 of spec)? optional to support
-
                         validateNames(businessService.getName());
                         validateCategoryBag(businessService.getCategoryBag(), config, false);
                         validateDescriptions(businessService.getDescription());
@@ -874,9 +878,9 @@ public class ValidatePublish extends ValidateUDDIApi {
 
         }
 
-        public void validateBindingTemplates(EntityManager em, org.uddi.api_v3.BindingTemplates bindingTemplates, 
-        		org.uddi.api_v3.BusinessService parent, Configuration config, UddiEntityPublisher publisher)
-                throws DispositionReportFaultMessage {
+        public void validateBindingTemplates(EntityManager em, org.uddi.api_v3.BindingTemplates bindingTemplates,
+             org.uddi.api_v3.BusinessService parent, Configuration config, UddiEntityPublisher publisher)
+             throws DispositionReportFaultMessage {
                 // Binding templates is optional
                 if (bindingTemplates == null) {
                         return;
@@ -894,8 +898,8 @@ public class ValidatePublish extends ValidateUDDIApi {
         }
 
         public void validateBindingTemplate(EntityManager em, org.uddi.api_v3.BindingTemplate bindingTemplate,
-                org.uddi.api_v3.BusinessService parent, Configuration config, UddiEntityPublisher publisher)
-                throws DispositionReportFaultMessage {
+             org.uddi.api_v3.BusinessService parent, Configuration config, UddiEntityPublisher publisher)
+             throws DispositionReportFaultMessage {
 
                 // A supplied bindingTemplate can't be null
                 if (bindingTemplate == null) {
@@ -960,10 +964,10 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 }
 
                                 // Make sure publisher owns this entity.
-                                 AccessCheck(obj, entityKey);
+                                AccessCheck(obj, entityKey);
                                 //if (!publisher.isOwner((UddiEntity) obj)&& !((Publisher) publisher).isAdmin()) {
 //                                        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
-  //                              }
+                                //                              }
 
                         } else {
                                 // Inside this block, we have a key proposed by the publisher on a new entity
@@ -992,7 +996,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 Object parentTemp = em.find(org.apache.juddi.model.BusinessService.class, parentKey);
                                 if (parentTemp == null) {
                                         throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ParentBusinessNotFound", parentKey));
-                                } else if (!(parentTemp instanceof org.apache.juddi.model.BusinessService)){
+                                } else if (!(parentTemp instanceof org.apache.juddi.model.BusinessService)) {
                                         //JUDDI-848
                                         throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ParentBusinessNotFound", parentKey));
                                 }
@@ -1014,7 +1018,6 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
 
                 //was TODO validate "checked" categories or category groups (see section 5.2.3 of spec)? optional to support
-
                 //at least one must be defined
                 if (bindingTemplate.getAccessPoint() == null && bindingTemplate.getHostingRedirector() == null) {
                         throw new ValueNotAllowedException(new ErrorMessage("errors.bindingtemplate.NoAccessPoint"));
@@ -1029,6 +1032,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 validateDescriptions(bindingTemplate.getDescription());
                 validateHostingRedirector(em, bindingTemplate.getHostingRedirector(), config);
 
+                validateCheckedTModels(bindingTemplate, config);
         }
 
         public void validateTModel(EntityManager em, org.uddi.api_v3.TModel tModel, Configuration config, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
@@ -1057,7 +1061,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 AccessCheck(obj, entityKey);
                                 //if (!publisher.isOwner((UddiEntity) obj)&& !((Publisher) publisher).isAdmin()) {
                                 //        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
-                               // }
+                                // }
                         } else {
                                 // Inside this block, we have a key proposed by the publisher on a new entity
 
@@ -1086,11 +1090,10 @@ public class ValidatePublish extends ValidateUDDIApi {
                                         // If not a key generator, then simply validate key and then check to see that the proposed key is valid for this publisher
                                         ValidateUDDIKey.validateUDDIv3Key(entityKey);
                                         //fix for JUDDI-851
-                                        if (!entityKey.toUpperCase().startsWith("UUID:"))
-                                        {
-                                             if (!publisher.isValidPublisherKey(em, entityKey)) {
-                                                     throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
-                                             }
+                                        if (!entityKey.toUpperCase().startsWith("UUID:")) {
+                                                if (!publisher.isValidPublisherKey(em, entityKey)) {
+                                                        throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
+                                                }
                                         }
                                 }
                         }
@@ -1104,11 +1107,9 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
                 validateKeyLength(entityKey);
 
-
                 // TODO: validate "checked" categories or category groups (see section 5.2.3 of spec)? optional to support
-
                 if (tModel.getName() == null || tModel.getName().getValue() == null
-                        || tModel.getName().getValue().equals("")) {
+                     || tModel.getName().getValue().equals("")) {
                         throw new ValueNotAllowedException(new ErrorMessage("errors.tmodel.NoName"));
                 }
 
@@ -1135,9 +1136,9 @@ public class ValidatePublish extends ValidateUDDIApi {
                 // The keyedRef must not be blank and every field must contain data.
                 org.uddi.api_v3.KeyedReference keyedRef = pubAssertion.getKeyedReference();
                 if (keyedRef == null
-                        || keyedRef.getTModelKey() == null || keyedRef.getTModelKey().length() == 0
-                        || keyedRef.getKeyName() == null || keyedRef.getKeyName().length() == 0
-                        || keyedRef.getKeyValue() == null || keyedRef.getKeyValue().length() == 0) {
+                     || keyedRef.getTModelKey() == null || keyedRef.getTModelKey().length() == 0
+                     || keyedRef.getKeyName() == null || keyedRef.getKeyName().length() == 0
+                     || keyedRef.getKeyValue() == null || keyedRef.getKeyValue().length() == 0) {
                         throw new ValueNotAllowedException(new ErrorMessage("errors.pubassertion.BlankKeyedRef"));
                 }
 
@@ -1397,7 +1398,6 @@ public class ValidatePublish extends ValidateUDDIApi {
                 validateKeyValue(kr.getKeyValue());
                 validateKeyName(kr.getKeyName());
 
-
                 boolean checkRef = false;
                 try {
                         checkRef = config.getBoolean(Property.JUDDI_ENFORCE_REFERENTIAL_INTEGRITY, false);
@@ -1408,7 +1408,6 @@ public class ValidatePublish extends ValidateUDDIApi {
                         this.verifyTModelKeyExists(tmodelKey);
 
                 }
-
 
                 String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);
                 // Per section 6.2.2.1 of the specification, no publishers (except the root) are allowed to use the node categorization tmodelKey
@@ -1471,7 +1470,6 @@ public class ValidatePublish extends ValidateUDDIApi {
                 validateKeyLength(tmodelInstInfo.getTModelKey());
                 validateDescriptions(tmodelInstInfo.getDescription());
 
-
         }
 
         public void validateInstanceDetails(org.uddi.api_v3.InstanceDetails instDetails) throws DispositionReportFaultMessage {
@@ -1523,11 +1521,13 @@ public class ValidatePublish extends ValidateUDDIApi {
         }
 
         /**
-         * Publishing API functions are specific to jUDDI. Requires administrative privilege
+         * Publishing API functions are specific to jUDDI. Requires
+         * administrative privilege
+         *
          * @param em
          * @param body
-         * @throws DispositionReportFaultMessage 
-         */ 
+         * @throws DispositionReportFaultMessage
+         */
         public void validateDeletePublisher(EntityManager em, DeletePublisher body) throws DispositionReportFaultMessage {
 
                 // No null input
@@ -1635,7 +1635,6 @@ public class ValidatePublish extends ValidateUDDIApi {
                         //if (!publisher.isOwner((UddiEntity) obj)) {
                         //        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
                         //}
-
                 }
         }
         ////////////////////////////////////////////////////////////////////
@@ -1670,7 +1669,6 @@ public class ValidatePublish extends ValidateUDDIApi {
                 if (log.isDebugEnabled()) {
                         log.debug("validateAccessPoint");
                 }
-
 
                 if (value != null) {
                         if (value.getValue().length() > ValidationConstants.MAX_accessPoint) {
@@ -1786,7 +1784,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                         for (int i = 0; i < phone.size(); i++) {
                                 validateUseType(phone.get(i).getUseType());
                                 if (phone.get(i).getValue() == null
-                                        || phone.get(i).getValue().length() == 0) {
+                                     || phone.get(i).getValue().length() == 0) {
                                         throw new ValueNotAllowedException(new ErrorMessage("errors.phone.noinput"));
                                 }
                                 if (phone.get(i).getValue().length() > ValidationConstants.MAX_phone) {
@@ -1813,7 +1811,6 @@ public class ValidatePublish extends ValidateUDDIApi {
                 if (value != null && value.length() > ValidationConstants.MAX_keyValue) {
                         throw new ValueNotAllowedException(new ErrorMessage("errors.keyname.TooLong"));
                 }
-
 
         }
 
@@ -1976,7 +1973,6 @@ public class ValidatePublish extends ValidateUDDIApi {
                                         tx.begin();
                                         modelTModel = em.find(org.apache.juddi.model.Tmodel.class, tmodelKey);
 
-
                                         if (modelTModel != null) {
                                                 found = true;
                                                 api = new TModel();
@@ -2011,7 +2007,6 @@ public class ValidatePublish extends ValidateUDDIApi {
                         }
                 }
 
-
                 return ret;
         }
 
@@ -2032,13 +2027,11 @@ public class ValidatePublish extends ValidateUDDIApi {
                         }
                 }
 
-
                 return ret;
         }
 
         private List<String> GetBindingKeysCheckedTModelKeyedReference(Map<String, TModel> cache, BusinessEntity bt) {
                 List<String> ret = new ArrayList<String>();
-
 
                 if (bt == null) {
                         return ret;
@@ -2060,13 +2053,11 @@ public class ValidatePublish extends ValidateUDDIApi {
                         }
                 }
 
-
                 return ret;
         }
 
         private List<String> GetBindingKeysCheckedTModelKeyedReference(Map<String, TModel> cache, TModel bt) {
                 List<String> ret = new ArrayList<String>();
-
 
                 if (bt == null) {
                         return ret;
@@ -2101,7 +2092,6 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
                 if (ref != null) {
                         ret.addAll(TModelContains(UDDIConstants.IS_VALIDATED_BY, ref));
-
 
                 }
                 return ret;
@@ -2148,23 +2138,215 @@ public class ValidatePublish extends ValidateUDDIApi {
          * @param addressLine
          */
         private void validatedAddressLinesIfKeyDefined(List<AddressLine> addressLine) throws ValueNotAllowedException {
-                String err="";
-                for (int i=0; i < addressLine.size(); i++){
-                        
-                        if (addressLine.get(i).getKeyName()==null||
-                             addressLine.get(i).getKeyName().trim().length()==0)
-                                err+= "addressLine(" +i + ").keyName,";
-                        if (addressLine.get(i).getKeyValue()==null||
-                             addressLine.get(i).getKeyValue().trim().length()==0)
-                                err+= "addressLine(" +i + ").keyValue,";
-                        if (addressLine.get(i).getValue()==null||
-                             addressLine.get(i).getValue().trim().length()==0)
-                                err+= "addressLine(" +i + ").value,";
+                String err = "";
+                for (int i = 0; i < addressLine.size(); i++) {
+
+                        if (addressLine.get(i).getKeyName() == null
+                             || addressLine.get(i).getKeyName().trim().length() == 0) {
+                                err += "addressLine(" + i + ").keyName,";
+                        }
+                        if (addressLine.get(i).getKeyValue() == null
+                             || addressLine.get(i).getKeyValue().trim().length() == 0) {
+                                err += "addressLine(" + i + ").keyValue,";
+                        }
+                        if (addressLine.get(i).getValue() == null
+                             || addressLine.get(i).getValue().trim().length() == 0) {
+                                err += "addressLine(" + i + ").value,";
+                        }
                 }
-                if (err.length() > 0)
+                if (err.length() > 0) {
                         throw new ValueNotAllowedException(new ErrorMessage("E_invalidValueAddressLine", err));
+                }
         }
 
+        private void validateCheckedTModels(BindingTemplate bindingTemplate, Configuration config) throws ValueNotAllowedException {
 
+                boolean checkRef = false;
+                try {
+                        checkRef = config.getBoolean(Property.JUDDI_ENFORCE_REFERENTIAL_INTEGRITY, false);
+                } catch (Exception ex) {
+                        log.warn("Error caught reading " + Property.JUDDI_ENFORCE_REFERENTIAL_INTEGRITY + " from config file", ex);
+                }
+
+                if (!checkRef) {
+                        return;
+                }
+                Map<String, TModel> cache = new HashMap<String, TModel>();
+                List<String> bindings = GetBindingKeysCheckedTModelKeyedReference(cache, bindingTemplate);
+
+                if (!bindings.isEmpty()) {
+                        //get a unique list
+                        bindings = new ArrayList(new HashSet(bindings));
+                        for (int i = 0; i < bindings.size(); i++) {
+                                //load binding from database
+                                EntityManager em = PersistenceManager.getEntityManager();
+                                org.apache.juddi.model.BindingTemplate find = em.find(org.apache.juddi.model.BindingTemplate.class, bindings.get(i));
+                                if (find != null) {
+                                        //parse endpoint
+                                        String url = find.getAccessPointUrl();
+                                        if (url == null) {
+                                                url = find.getHostingRedirector();
+                                        }
+                                        if (url != null) {
+                                                //call ValidateValuesFromWebService
+                                                //optimization for localhost?
+                                                ValidateValuesFromWebService.Validate(Rectify(url, config), bindingTemplate);
+                                        }
+
+                                }
+                        }
+                }
+        }
+
+        private void validateCheckedTModels(BusinessService obj, Configuration config) throws ValueNotAllowedException {
+                boolean checkRef = false;
+                try {
+                        checkRef = config.getBoolean(Property.JUDDI_ENFORCE_REFERENTIAL_INTEGRITY, false);
+                } catch (Exception ex) {
+                        log.warn("Error caught reading " + Property.JUDDI_ENFORCE_REFERENTIAL_INTEGRITY + " from config file", ex);
+                }
+                if (!checkRef) {
+                        return;
+                }
+                Map<String, TModel> cache = new HashMap<String, TModel>();
+                List<String> bindings = GetBindingKeysCheckedTModelKeyedReference(cache, obj);
+
+                if (!bindings.isEmpty()) {
+                        //get a unique list
+                        bindings = new ArrayList(new HashSet(bindings));
+                        for (int i = 0; i < bindings.size(); i++) {
+                                //load binding from database
+                                EntityManager em = PersistenceManager.getEntityManager();
+                                org.apache.juddi.model.BindingTemplate find = em.find(org.apache.juddi.model.BindingTemplate.class, bindings.get(i));
+                                if (find != null) {
+                                        //parse endpoint
+                                        String url = find.getAccessPointUrl();
+                                        if (url == null) {
+                                                url = find.getHostingRedirector();
+                                        }
+                                        if (url != null) {
+                                                //call ValidateValuesFromWebService
+                                                //optimization for localhost?
+                                                ValidateValuesFromWebService.Validate(Rectify(url, config), obj);
+                                        }
+
+                                }
+                        }
+                }
+        }
+
+        private void validateCheckedTModels(BusinessEntity entity, Configuration config) throws ValueNotAllowedException {
+                boolean checkRef = false;
+                try {
+                        checkRef = config.getBoolean(Property.JUDDI_ENFORCE_REFERENTIAL_INTEGRITY, false);
+                } catch (Exception ex) {
+                        log.warn("Error caught reading " + Property.JUDDI_ENFORCE_REFERENTIAL_INTEGRITY + " from config file", ex);
+                }
+                if (!checkRef) {
+                        return;
+                }
+                Map<String, TModel> cache = new HashMap<String, TModel>();
+                List<String> bindings = GetBindingKeysCheckedTModelKeyedReference(cache, entity);
+
+                if (!bindings.isEmpty()) {
+                        //get a unique list
+                        bindings = new ArrayList(new HashSet(bindings));
+                        for (int i = 0; i < bindings.size(); i++) {
+                                //load binding from database
+                                EntityManager em = PersistenceManager.getEntityManager();
+                                org.apache.juddi.model.BindingTemplate find = em.find(org.apache.juddi.model.BindingTemplate.class, bindings.get(i));
+                                if (find != null) {
+                                        //parse endpoint
+                                        String url = find.getAccessPointUrl();
+                                        if (url == null) {
+                                                url = find.getHostingRedirector();
+                                        }
+                                        if (url != null) {
+                                                //call ValidateValuesFromWebService
+                                                //optimization for localhost?
+                                                ValidateValuesFromWebService.Validate(Rectify(url, config), entity);
+                                        }
+
+                                }
+                        }
+                }
+        }
+
+        private void validateCheckedTModels(TModel entity, Configuration config) throws ValueNotAllowedException {
+                boolean checkRef = false;
+                try {
+                        checkRef = config.getBoolean(Property.JUDDI_ENFORCE_REFERENTIAL_INTEGRITY, false);
+                } catch (Exception ex) {
+                        log.warn("Error caught reading " + Property.JUDDI_ENFORCE_REFERENTIAL_INTEGRITY + " from config file", ex);
+                }
+                if (!checkRef) {
+                        return;
+                }
+                Map<String, TModel> cache = new HashMap<String, TModel>();
+                List<String> bindings = GetBindingKeysCheckedTModelKeyedReference(cache, entity);
+
+                if (!bindings.isEmpty()) {
+                        //get a unique list
+                        bindings = new ArrayList(new HashSet(bindings));
+                        for (int i = 0; i < bindings.size(); i++) {
+                                //load binding from database
+                                EntityManager em = PersistenceManager.getEntityManager();
+                                org.apache.juddi.model.BindingTemplate find = em.find(org.apache.juddi.model.BindingTemplate.class, bindings.get(i));
+                                if (find != null) {
+                                        //parse endpoint
+                                        String url = find.getAccessPointUrl();
+                                        if (url == null) {
+                                                url = find.getHostingRedirector();
+                                        }
+                                        if (url != null) {
+                                                //call ValidateValuesFromWebService
+                                                //optimization for localhost?
+                                                ValidateValuesFromWebService.Validate(Rectify(url, config), entity);
+                                        }
+
+                                }
+                        }
+                }
+        }
+
+        private String Rectify(String url, Configuration config) {
+                //${juddi.server.baseurl}
+                Properties p = new Properties();
+                p.put("juddi.server.baseurl", config.getString("juddi.server.baseurl", Property.DEFAULT_BASE_URL));
+
+                return TokenResolver.replaceTokens(url, p);
+        }
+
+        public void validateDeleteNode(EntityManager em, DeleteNode nodeID) throws DispositionReportFaultMessage {
+                if (nodeID == null) {
+                        throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteClerk.NoInput"));
+                }
+                if (!((Publisher) publisher).isAdmin()) {
+                        throw new UserMismatchException(new ErrorMessage("errors.deletepublisher.AdminReqd"));
+                }
+                if (nodeID.getNodeID() == null || nodeID.getNodeID().trim().equalsIgnoreCase("")) {
+                        throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.NoInput"));
+                }
+
+        }
+
+        public void validateDeleteClerk(EntityManager em, DeleteClerk clerkID) throws DispositionReportFaultMessage {
+                if (clerkID == null) {
+                        throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteClerk.NoInput"));
+                }
+                if (!((Publisher) publisher).isAdmin()) {
+                        throw new UserMismatchException(new ErrorMessage("errors.deletepublisher.AdminReqd"));
+                }
+                if (clerkID.getClerkID() == null || clerkID.getClerkID().trim().equalsIgnoreCase("")) {
+                        throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteClerk.NoInput"));
+                }
+
+        }
+
+        public void validateGetAllNodes() throws DispositionReportFaultMessage {
+                if (!((Publisher) publisher).isAdmin()) {
+                        throw new UserMismatchException(new ErrorMessage("errors.deletepublisher.AdminReqd"));
+                }
+        }
 
 }

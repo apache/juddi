@@ -1,444 +1,1055 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<wsdl:definitions 
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions 
 xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
 xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
-xmlns:tns="urn:juddi-apache-org:v3_service" 
+xmlns:tns="urn:juddi-apache-org:v3_service"
 xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
-xmlns:http="http://schemas.xmlsoap.org/soap/http" 
-xmlns:uddiport="urn:uddi-org:api_v3_portType" 
-xmlns:juddi="urn:juddi-apache-org:api_v3"  
-name="JUDDIApiService" 
+xmlns:ns2="http://schemas.xmlsoap.org/soap/http" 
+xmlns:uddiport="urn:uddi-org:api_v3_portType"
+xmlns:ns1="urn:juddi-apache-org:api_v3" 
+
+name="JUDDIApiService"
 targetNamespace="urn:juddi-apache-org:v3_service" 
 xmlns:repl="urn:uddi-org:repl_v3" 
 xmlns:subr="urn:uddi-org:sub_v3" 
 xmlns:uddi="urn:uddi-org:api_v3">
-	<wsdl:documentation>This WSDL defines the jUDDI API Service. It is an extension to the UDDIv3 specification that is specific to jUDDI and provides primarily administrative functionality of jUDDI.</wsdl:documentation>
-	<wsdl:import namespace="urn:uddi-org:api_v3_portType" location="uddi_api_v3_portType.wsdl"/>
-	<wsdl:types>
-		<xsd:schema targetNamespace="urn:uddi-org:api_v3" elementFormDefault="qualified" >
-			<xsd:import  schemaLocation="uddi_v3.xsd" namespace="urn:uddi-org:api_v3" />
-		</xsd:schema>
-		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-		xmlns:tns="urn:juddi-apache-org:api_v3" 
-		xmlns:subr="urn:uddi-org:sub_v3" 
-		xmlns:ns2="urn:uddi-org:api_v3" 
-		xmlns:digsig="http://www.w3.org/2000/09/xmldsig#" 
-		attributeFormDefault="unqualified" 
-		elementFormDefault="qualified" 
-		targetNamespace="urn:juddi-apache-org:api_v3" 
-		xmlns:uddi="urn:uddi-org:api_v3" 
-		xmlns:repl="urn:uddi-org:repl_v3">
-			<xs:import schemaLocation="www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd" namespace="http://www.w3.org/2000/09/xmldsig#"/>
-			<xs:import  schemaLocation="uddi_v3.xsd" namespace="urn:uddi-org:api_v3" />
-			<xs:import  schemaLocation="uddi_v3subscription.xsd" namespace="urn:uddi-org:sub_v3"/>
-			<xs:import  schemaLocation="uddi_v3replication.xsd" namespace="urn:uddi-org:repl_v3" />
-			<xs:element name="delete_publisher" type="tns:delete_publisher"/>
-			<xs:element name="get_allPublisherDetail" type="tns:get_allPublisherDetail"/>
-			<xs:element name="get_publisherDetail" type="tns:get_publisher_detail"/>
-			<xs:element name="publisher" type="tns:publisher"/>
-			<xs:element name="publisherDetail" type="tns:publisherDetail"/>
-			<xs:element name="publisherDetailResponse" type="tns:publisherDetail"/>
-			
-			<xs:element name="save_publisher" type="tns:save_publisher"/>
-			<xs:element name="sync_subscription" type="tns:syncSubscription"/>
-			<xs:element name="sync_subscriptionDetail" type="tns:syncSubscriptionDetail"/>
-			<xs:complexType name="get_publisher_detail">
-				<xs:sequence>
-					<xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-					<xs:element maxOccurs="unbounded" name="publisherId" type="xs:string"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="publisherDetail">
-				<xs:sequence>
-					<xs:element maxOccurs="unbounded" minOccurs="0" name="publisher" nillable="true" type="tns:publisher"/>
-				</xs:sequence>
-				<xs:attribute name="truncated" type="xs:boolean"/>
-			</xs:complexType>
-			<xs:complexType name="publisher">
-				<xs:sequence>
-					<xs:element name="publisherName" type="xs:string"/>
-					<xs:element minOccurs="0" name="emailAddress" type="xs:string"/>
-					<xs:element minOccurs="0" name="isAdmin" type="xs:boolean"/>
-					<xs:element minOccurs="0" name="isEnabled" type="xs:boolean"/>
-					<xs:element minOccurs="0" name="maxBindingsPerService" type="xs:int"/>
-					<xs:element minOccurs="0" name="maxBusinesses" type="xs:int"/>
-					<xs:element minOccurs="0" name="maxServicePerBusiness" type="xs:int"/>
-					<xs:element minOccurs="0" name="maxTModels" type="xs:int"/>
-					<xs:element maxOccurs="unbounded" minOccurs="0" ref="digsig:Signature"/>
-				</xs:sequence>
-				<xs:attribute name="authorizedName" type="xs:string" use="required"/>
-			</xs:complexType>
-			<xs:complexType name="delete_clientSubscriptionInfo">
-				<xs:sequence>
-					<xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-					<xs:element maxOccurs="unbounded" name="subscriptionKey" type="xs:string"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="save_clerk">
-				<xs:sequence>
-					<xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-					<xs:element maxOccurs="unbounded" name="clerk" type="tns:clerk"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="clerk">
-				<xs:sequence>
-					<xs:element minOccurs="0" name="name" type="xs:string"/>
-					<xs:element minOccurs="0" name="node" type="tns:node"/>
-					<xs:element minOccurs="0" name="publisher" type="xs:string"/>
-					<xs:element minOccurs="0" name="password" type="xs:string"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="node">
-				<xs:sequence>
-					<xs:element minOccurs="0" name="name" type="xs:string"/>
-					<xs:element minOccurs="0" name="clientName" type="xs:string"/>
-					<xs:element minOccurs="0" name="description" type="xs:string"/>
-					<xs:element minOccurs="0" name="custodyTransferUrl" type="xs:string"/>
-					<xs:element minOccurs="0" name="inquiryUrl" type="xs:string"/>
-					<xs:element minOccurs="0" name="publishUrl" type="xs:string"/>
-					<xs:element minOccurs="0" name="securityUrl" type="xs:string"/>
-					<xs:element minOccurs="0" name="subscriptionUrl" type="xs:string"/>
-					<xs:element minOccurs="0" name="subscriptionListenerUrl" type="xs:string"/>
-					<xs:element minOccurs="0" name="replicationUrl" type="xs:string"/>
-					<xs:element minOccurs="0" name="juddiApiUrl" type="xs:string"/>
-					<xs:element minOccurs="0" name="proxyTransport" type="xs:string"/>
-					<xs:element minOccurs="0" name="factoryInitial" type="xs:string"/>
-					<xs:element minOccurs="0" name="factoryURLPkgs" type="xs:string"/>
-					<xs:element minOccurs="0" name="factoryNamingProvider" type="xs:string"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="clerkDetail">
-				<xs:sequence>
-					<xs:element maxOccurs="unbounded" minOccurs="0" name="clerk" nillable="true" type="tns:clerk"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="get_allPublisherDetail">
-				<xs:sequence>
-					<xs:element minOccurs="0" ref="ns2:authInfo"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="delete_publisher">
-				<xs:sequence>
-					<xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-					<xs:element maxOccurs="unbounded" name="publisherId" type="xs:string"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="save_publisher">
-				<xs:sequence>
-					<xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-					<xs:element maxOccurs="unbounded" name="publisher" type="tns:publisher"/>
-				</xs:sequence>
-			</xs:complexType>
-			
-			<xs:complexType name="save_node">
-				<xs:sequence>
-					<xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-					<xs:element maxOccurs="unbounded" name="node" type="tns:node"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="nodeDetail">
-				<xs:sequence>
-					<xs:element maxOccurs="unbounded" minOccurs="0" name="node" nillable="true" type="tns:node"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="save_clientSubscriptionInfo">
-				<xs:sequence>
-					<xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-					<xs:element maxOccurs="unbounded" name="clientSubscriptionInfo" type="tns:clientSubscriptionInfo"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="clientSubscriptionInfo">
-				<xs:sequence>
-					<xs:element name="subscriptionKey" type="xs:string"/>
-					<xs:element name="fromClerk" type="tns:clerk"/>
-					<xs:element name="toClerk" type="tns:clerk"/>
-					<xs:element minOccurs="0" name="lastModified" type="xs:dateTime"/>
-					<xs:element minOccurs="0" name="lastNotified" type="xs:dateTime"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="clientSubscriptionInfoDetail">
-				<xs:sequence>
-					<xs:element maxOccurs="unbounded" minOccurs="0" name="clientSubscriptionInfo" nillable="true" type="tns:clientSubscriptionInfo"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="syncSubscriptionRequest">
-				<xs:sequence>
-					<xs:element minOccurs="0" name="syncSubscription" type="tns:syncSubscription"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="syncSubscription">
-				<xs:sequence>
-					<xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-					<xs:element maxOccurs="unbounded" minOccurs="0" name="get_subscriptionResultsList" nillable="true" type="subr:get_subscriptionResults"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="syncSubscriptionDetail">
-				<xs:sequence>
-					<xs:element maxOccurs="unbounded" minOccurs="0" name="subscriptionResultsList" nillable="true" type="subr:subscriptionResultsList"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="syncSubscriptionDetailResponse">
-				<xs:sequence>
-					<xs:element name="syncSubscriptionDetail" nillable="true" type="tns:syncSubscriptionDetail"/>
-				</xs:sequence>
-			</xs:complexType>
-			<xs:element name="delete_ClientSubscriptionInfo" nillable="true" type="tns:delete_clientSubscriptionInfo"/>
-			<xs:element name="save_ClerkRequest"  type="tns:save_clerk"/>
-			<xs:element name="save_NodeRequest"  type="tns:save_node"/>
-			<xs:element name="adminDelete_tmodel" nillable="true" type="uddi:delete_tModel"/>
-			<xs:element name="save_ClientSubscriptionInfoRequest" nillable="true" type="tns:save_clientSubscriptionInfo"/>
-  			<xs:element name="invoke_SyncSubscription" nillable="true" type="tns:syncSubscriptionRequest"/>
-			<xsd:element name="save_ClerkResponse" nillable="true" type="tns:clerkDetail"/>
-			<xsd:element name="save_publisherResponse" nillable="true" type="tns:publisherDetail"/>
-			<xsd:element name="save_NodeResponse" nillable="true" type="tns:nodeDetail"/>
-			<xsd:element name="save_ClientSubscriptionInfoResponse" nillable="true" type="tns:clientSubscriptionInfoDetail"/>
-			<xsd:element name="invoke_SyncSubscriptionResponse" nillable="true" type="tns:syncSubscriptionDetailResponse"/>
-		</xs:schema>
-	</wsdl:types>
-	<wsdl:message name="get_allPublisherDetail">
-		<wsdl:part element="juddi:get_allPublisherDetail" name="body"/>
-	</wsdl:message>
-	<wsdl:message name="save_ClientSubscriptionInfoResponse">
-		<wsdl:part element="juddi:save_ClientSubscriptionInfoResponse" name="save_ClientSubscriptionInfoResponse"/>
-	</wsdl:message>
-	<wsdl:message name="save_NodeResponse">
-		<wsdl:part element="juddi:save_NodeResponse" name="save_NodeResponse"/>
-	</wsdl:message>
-	<wsdl:message name="get_publisherDetail">
-		<wsdl:part element="juddi:get_publisherDetail" name="parameters"/>
-	</wsdl:message>
-	<wsdl:message name="get_publisherDetailResponse">
-		<wsdl:part element="juddi:publisherDetailResponse" name="parameters"/>
-	</wsdl:message>
-	<wsdl:message name="save_ClerkResponse">
-		<wsdl:part element="juddi:save_ClerkResponse" name="save_ClerkResponse"/>
-	</wsdl:message>
-	<wsdl:message name="save_Clerk">
-		<wsdl:part element="juddi:save_ClerkRequest" name="body"/>
-	</wsdl:message>
-	<wsdl:message name="delete_ClientSubscriptionInfo">
-		<wsdl:part element="juddi:delete_ClientSubscriptionInfo" name="body"/>
-	</wsdl:message>
-	<wsdl:message name="adminDelete_tmodelResponse"/>
-	<wsdl:message name="adminDelete_tmodel">
-		<wsdl:part element="juddi:adminDelete_tmodel" name="body"/>
-	</wsdl:message>
-	<wsdl:message name="delete_publisher">
-		<wsdl:part element="juddi:delete_publisher" name="body"/>
-	</wsdl:message>
-	<wsdl:message name="save_ClientSubscriptionInfo">
-		<wsdl:part element="juddi:save_ClientSubscriptionInfoRequest" name="body"/>
-	</wsdl:message>
-	<wsdl:message name="delete_publisherResponse"/>
-	<wsdl:message name="save_publisherResponse">
-		<wsdl:part element="juddi:save_publisherResponse" name="save_publisherResponse"/>
-	</wsdl:message>
-	<wsdl:message name="invoke_SyncSubscriptionResponse">
-		<wsdl:part element="juddi:invoke_SyncSubscriptionResponse" name="invoke_SyncSubscriptionResponse"/>
-	</wsdl:message>
-	<wsdl:message name="invoke_SyncSubscription">
-		<wsdl:part element="juddi:invoke_SyncSubscription" name="body"/>
-	</wsdl:message>
-	<wsdl:message name="get_allPublisherDetailResponse">
-		<wsdl:part element="juddi:publisherDetail" name="body"/>
-	</wsdl:message>
-	<wsdl:message name="save_publisher">
-		<wsdl:part element="juddi:save_publisher" name="body"/>
-	</wsdl:message>
-	<wsdl:message name="delete_ClientSubscriptionInfoResponse"/>
-	<wsdl:message name="save_NodeRequest">
-		<wsdl:part element="juddi:save_NodeRequest" name="body"/>
-	</wsdl:message>
-	<wsdl:portType name="JUDDI_Api_PortType">
-		<wsdl:documentation> This portType defines all of the jUDDI publisher operations. This is above and beyond the original UDDI v3 specification and is NOT part of the standard. Method behavior within this class may change from version to version. These methods are primarily meant for administrative functions.</wsdl:documentation>
-		<wsdl:operation name="get_publisherDetail">
-			<wsdl:documentation> Returns a specific publisher </wsdl:documentation>
-			<wsdl:input message="tns:get_publisherDetail" name="get_publisherDetail"/>
-			<wsdl:output message="tns:get_publisherDetailResponse" name="get_publisherDetailResponse"/>
-			<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
-		</wsdl:operation>
-		<wsdl:operation name="delete_ClientSubscriptionInfo">
-			<wsdl:documentation> deletes records created from calling save_ClientSubscriptionInfo </wsdl:documentation>
-			<wsdl:input message="tns:delete_ClientSubscriptionInfo" name="delete_ClientSubscriptionInfo"/>
-			<wsdl:output message="tns:delete_ClientSubscriptionInfoResponse" name="delete_ClientSubscriptionInfoResponse"/>
-			<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
-		</wsdl:operation>
-		<wsdl:operation name="save_Clerk">
-			<wsdl:documentation> Saves a clerk (associate credentials with a stored node) </wsdl:documentation>
-			<wsdl:input message="tns:save_Clerk" name="save_Clerk"/>
-			<wsdl:output message="tns:save_ClerkResponse" name="save_ClerkResponse"/>
-			<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
-		</wsdl:operation>
-		<wsdl:operation name="get_allPublisherDetail">
-			<wsdl:documentation> Returns all publishers that are defined. This method does not support paging, so use with caution </wsdl:documentation>
-			<wsdl:input message="tns:get_allPublisherDetail" name="get_allPublisherDetail"/>
-			<wsdl:output message="tns:get_allPublisherDetailResponse" name="get_allPublisherDetailResponse"/>
-			<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
-		</wsdl:operation>
-		<wsdl:operation name="delete_publisher">
-			<wsdl:documentation> Deletes a publisher. Data owned by the publisher remains. </wsdl:documentation>
-			<wsdl:input message="tns:delete_publisher" name="delete_publisher"/>
-			<wsdl:output message="tns:delete_publisherResponse" name="delete_publisherResponse"/>
-			<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
-		</wsdl:operation>
-		<wsdl:operation name="save_publisher">
-			<wsdl:documentation> Saves a publisher to the database. Note: this does not create a user account, however it does authorize that user account to make alterations to data. </wsdl:documentation>
-			<wsdl:input message="tns:save_publisher" name="save_publisher"/>
-			<wsdl:output message="tns:save_publisherResponse" name="save_publisherResponse"/>
-			<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
-		</wsdl:operation>
-		<wsdl:operation name="save_Node">
-			<wsdl:documentation> Saves a UDDI Node to the database. These nodes can then be referenced for things like server to server subscriptions, replication and custody transfer functions </wsdl:documentation>
-			<wsdl:input message="tns:save_NodeRequest" name="save_Node"/>
-			<wsdl:output message="tns:save_NodeResponse" name="save_NodeResponse"/>
-			<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
-		</wsdl:operation>
-		<wsdl:operation name="adminDelete_tModel">
-			<wsdl:documentation> Removes a tModel from the database. References to the tModel are not affected. getTmodelDetails will no longer return these items. </wsdl:documentation>
-			<wsdl:input message="tns:adminDelete_tmodel" name="adminDelete_tmodel"/>
-			<wsdl:output message="tns:adminDelete_tmodelResponse" name="adminDelete_tmodelResponse"/>
-			<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
-		</wsdl:operation>
-		<wsdl:operation name="save_ClientSubscriptionInfo">
-			<wsdl:documentation> Associates a subscription with a clerk </wsdl:documentation>
-			<wsdl:input message="tns:save_ClientSubscriptionInfo" name="save_ClientSubscriptionInfo"/>
-			<wsdl:output message="tns:save_ClientSubscriptionInfoResponse" name="save_ClientSubscriptionInfoResponse"/>
-			<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
-		</wsdl:operation>
-		<wsdl:operation name="invoke_SyncSubscription">
-			<wsdl:documentation> Instructs the registry to perform a synchronous subscription response. </wsdl:documentation>
-			<wsdl:input message="tns:invoke_SyncSubscription" name="invoke_SyncSubscription"/>
-			<wsdl:output message="tns:invoke_SyncSubscriptionResponse" name="invoke_SyncSubscriptionResponse"/>
-			<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
-		</wsdl:operation>
-	</wsdl:portType>
-	<wsdl:binding name="JUDDIApiServiceSoapBinding" type="tns:JUDDI_Api_PortType">
-		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-		<wsdl:operation name="get_publisherDetail">
-			<soap:operation soapAction="get_publisherDetail" style="document"/>
-			<wsdl:input name="get_publisherDetail">
-				<soap:body use="literal"/>
-			</wsdl:input>
-			<wsdl:output name="get_publisherDetailResponse">
-				<soap:body use="literal"/>
-			</wsdl:output>
-			<wsdl:fault name="error">
-				<soap:fault name="error" use="literal"/>
-			</wsdl:fault>
-		</wsdl:operation>
-		<wsdl:operation name="delete_ClientSubscriptionInfo">
-			<soap:operation soapAction="delete_ClientSubscriptionInfo" style="document"/>
-			<wsdl:input name="delete_ClientSubscriptionInfo">
-				<soap:body use="literal"/>
-			</wsdl:input>
-			<wsdl:output name="delete_ClientSubscriptionInfoResponse">
-				<soap:body use="literal"/>
-			</wsdl:output>
-			<wsdl:fault name="error">
-				<soap:fault name="error" use="literal"/>
-			</wsdl:fault>
-		</wsdl:operation>
-		<wsdl:operation name="get_allPublisherDetail">
-			<soap:operation soapAction="get_allPublisherDetail" style="document"/>
-			<wsdl:input name="get_allPublisherDetail">
-				<soap:body use="literal"/>
-			</wsdl:input>
-			<wsdl:output name="get_allPublisherDetailResponse">
-				<soap:body use="literal"/>
-			</wsdl:output>
-			<wsdl:fault name="error">
-				<soap:fault name="error" use="literal"/>
-			</wsdl:fault>
-		</wsdl:operation>
-		<wsdl:operation name="save_Clerk">
-			<soap:operation soapAction="save_Clerk" style="document"/>
-			<wsdl:input name="save_Clerk">
-				<soap:body use="literal"/>
-			</wsdl:input>
-			<wsdl:output name="save_ClerkResponse">
-				<soap:body use="literal"/>
-			</wsdl:output>
-			<wsdl:fault name="error">
-				<soap:fault name="error" use="literal"/>
-			</wsdl:fault>
-		</wsdl:operation>
-		<wsdl:operation name="delete_publisher">
-			<soap:operation soapAction="delete_publisher" style="document"/>
-			<wsdl:input name="delete_publisher">
-				<soap:body use="literal"/>
-			</wsdl:input>
-			<wsdl:output name="delete_publisherResponse">
-				<soap:body use="literal"/>
-			</wsdl:output>
-			<wsdl:fault name="error">
-				<soap:fault name="error" use="literal"/>
-			</wsdl:fault>
-		</wsdl:operation>
-		<wsdl:operation name="save_Node">
-			<soap:operation soapAction="save_Node" style="document"/>
-			<wsdl:input name="save_Node">
-				<soap:body use="literal"/>
-			</wsdl:input>
-			<wsdl:output name="save_NodeResponse">
-				<soap:body use="literal"/>
-			</wsdl:output>
-			<wsdl:fault name="error">
-				<soap:fault name="error" use="literal"/>
-			</wsdl:fault>
-		</wsdl:operation>
-		<wsdl:operation name="save_publisher">
-			<soap:operation soapAction="save_publisher" style="document"/>
-			<wsdl:input name="save_publisher">
-				<soap:body use="literal"/>
-			</wsdl:input>
-			<wsdl:output name="save_publisherResponse">
-				<soap:body use="literal"/>
-			</wsdl:output>
-			<wsdl:fault name="error">
-				<soap:fault name="error" use="literal"/>
-			</wsdl:fault>
-		</wsdl:operation>
-		<wsdl:operation name="adminDelete_tModel">
-			<soap:operation soapAction="adminDelete_tmodel" style="document"/>
-			<wsdl:input name="adminDelete_tmodel">
-				<soap:body use="literal"/>
-			</wsdl:input>
-			<wsdl:output name="adminDelete_tmodelResponse">
-				<soap:body use="literal"/>
-			</wsdl:output>
-			<wsdl:fault name="error">
-				<soap:fault name="error" use="literal"/>
-			</wsdl:fault>
-		</wsdl:operation>
-		<wsdl:operation name="save_ClientSubscriptionInfo">
-			<soap:operation soapAction="save_ClientSubscriptionInfo" style="document"/>
-			<wsdl:input name="save_ClientSubscriptionInfo">
-				<soap:body use="literal"/>
-			</wsdl:input>
-			<wsdl:output name="save_ClientSubscriptionInfoResponse">
-				<soap:body use="literal"/>
-			</wsdl:output>
-			<wsdl:fault name="error">
-				<soap:fault name="error" use="literal"/>
-			</wsdl:fault>
-		</wsdl:operation>
-		<wsdl:operation name="invoke_SyncSubscription">
-			<soap:operation soapAction="invoke_SyncSubscription" style="document"/>
-			<wsdl:input name="invoke_SyncSubscription">
-				<soap:body use="literal"/>
-			</wsdl:input>
-			<wsdl:output name="invoke_SyncSubscriptionResponse">
-				<soap:body use="literal"/>
-			</wsdl:output>
-			<wsdl:fault name="error">
-				<soap:fault name="error" use="literal"/>
-			</wsdl:fault>
-		</wsdl:operation>
-	</wsdl:binding>
-	<wsdl:service name="JUDDIApiService">
-		<wsdl:documentation>This service implements the jUDDI API service from version 3.2.x</wsdl:documentation>
-		<wsdl:port binding="tns:JUDDIApiServiceSoapBinding" name="JUDDIApiImplPort">
-			<soap:address location="http://localhost/juddiv3/services/juddi-api"/>
-		</wsdl:port>
-	</wsdl:service>
+ <wsdl:documentation>This WSDL defines the jUDDI API Service. It is an extension to the UDDIv3 specification that is specific to jUDDI and
+  provides primarily administrative functionality of jUDDI.</wsdl:documentation>
+  <wsdl:import namespace="urn:uddi-org:api_v3_portType" location="uddi_api_v3_portType.wsdl"/>
+  <wsdl:types>
+  
+  <xsd:schema targetNamespace="urn:uddi-org:api_v3" elementFormDefault="qualified" >
+  <xsd:import  schemaLocation="uddi_v3.xsd" namespace="urn:uddi-org:api_v3" />
+  </xsd:schema>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:juddi-apache-org:api_v3" xmlns:ns3="urn:uddi-org:sub_v3" xmlns:ns2="urn:uddi-org:api_v3" xmlns:ns1="http://www.w3.org/2000/09/xmldsig#" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:juddi-apache-org:api_v3" xmlns:uddi="urn:uddi-org:api_v3" xmlns:subr="urn:uddi-org:sub_v3" xmlns:repl="urn:uddi-org:repl_v3">
+
+  <xs:import schemaLocation="www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd" namespace="http://www.w3.org/2000/09/xmldsig#"/>
+  <xs:import  schemaLocation="uddi_v3.xsd" namespace="urn:uddi-org:api_v3" />
+  <xs:import  schemaLocation="uddi_v3subscription.xsd" namespace="urn:uddi-org:sub_v3"/>
+  <xs:import  schemaLocation="uddi_v3replication.xsd" namespace="urn:uddi-org:repl_v3" />
+  
+  <xs:element name="delete_publisher" type="tns:delete_publisher"/>
+  <xs:element name="get_allPublisherDetail" type="tns:get_allPublisherDetail"/>
+  <xs:element name="get_publisherDetail" type="tns:get_publisher_detail"/>
+  <xs:element name="publisher" type="tns:publisher"/>
+  <xs:element name="publisherDetail" type="tns:publisherDetail"/>
+  <xs:element name="publisherDetailResponse" type="tns:publisherDetail"/>  
+  <xs:element name="save_publisher" type="tns:save_publisher"/>
+  <xs:element name="sync_subscription" type="tns:syncSubscription"/>
+  <xs:element name="sync_subscriptionDetail" type="tns:syncSubscriptionDetail"/>
+  <xs:complexType name="get_publisher_detail">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" name="publisherId" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="publisherDetail">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="publisher" nillable="true" type="tns:publisher"/>
+    </xs:sequence>
+    <xs:attribute name="truncated" type="xs:boolean"/>
+  </xs:complexType>
+  <xs:complexType name="publisher">
+    <xs:sequence>
+      <xs:element name="publisherName" type="xs:string"/>
+      <xs:element minOccurs="0" name="emailAddress" type="xs:string"/>
+      <xs:element minOccurs="0" name="isAdmin" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="isEnabled" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="maxBindingsPerService" type="xs:int"/>
+      <xs:element minOccurs="0" name="maxBusinesses" type="xs:int"/>
+      <xs:element minOccurs="0" name="maxServicePerBusiness" type="xs:int"/>
+      <xs:element minOccurs="0" name="maxTModels" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="ns1:Signature"/>
+    </xs:sequence>
+    <xs:attribute name="authorizedName" type="xs:string" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="delete_clientSubscriptionInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" name="subscriptionKey" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="save_clerk">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" name="clerk" type="tns:clerk"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="clerk">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="name" type="xs:string"/>
+      <xs:element minOccurs="0" name="node" type="tns:node"/>
+      <xs:element minOccurs="0" name="publisher" type="xs:string"/>
+      <xs:element minOccurs="0" name="password" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="node">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="name" type="xs:string"/>
+      <xs:element minOccurs="0" name="clientName" type="xs:string"/>
+      <xs:element minOccurs="0" name="description" type="xs:string"/>
+      <xs:element minOccurs="0" name="custodyTransferUrl" type="xs:string"/>
+      <xs:element minOccurs="0" name="inquiryUrl" type="xs:string"/>
+      <xs:element minOccurs="0" name="publishUrl" type="xs:string"/>
+      <xs:element minOccurs="0" name="securityUrl" type="xs:string"/>
+      <xs:element minOccurs="0" name="subscriptionUrl" type="xs:string"/>
+      <xs:element minOccurs="0" name="subscriptionListenerUrl" type="xs:string"/>
+	  <xs:element minOccurs="0" name="replicationUrl" type="xs:string"/>
+      <xs:element minOccurs="0" name="juddiApiUrl" type="xs:string"/>
+      <xs:element minOccurs="0" name="proxyTransport" type="xs:string"/>
+      <xs:element minOccurs="0" name="factoryInitial" type="xs:string"/>
+      <xs:element minOccurs="0" name="factoryURLPkgs" type="xs:string"/>
+      <xs:element minOccurs="0" name="factoryNamingProvider" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="clerkDetail">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="clerk" nillable="true" type="tns:clerk"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="get_allPublisherDetail">
+    <xs:sequence>
+      <xs:element minOccurs="0" ref="ns2:authInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="delete_publisher">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" name="publisherId" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="save_publisher">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" name="publisher" type="tns:publisher"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  
+  
+  <xs:complexType name="get_AllNodes">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+    <xs:complexType name="get_AllNodesResponse">
+    <xs:sequence>
+      <xs:element  name="nodeList" nillable="true" type="tns:nodeList"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="nodeList">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="node" type="tns:node"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  
+  <xs:complexType name="get_AllClerks">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+    <xs:complexType name="get_AllClerksResponse">
+    <xs:sequence>
+      <xs:element  name="clerkList" nillable="true" type="tns:clerkList"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="clerkList">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="clerk" nillable="true" type="tns:clerk"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  
+  <xs:complexType name="delete_Node">
+    <xs:sequence>
+      <xs:element name="authInfo" type="xs:string"/>
+	  <xs:element name="nodeID" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  
+  <xs:complexType name="delete_Clerk">
+    <xs:sequence>
+      <xs:element name="authInfo" type="xs:string"/>
+	  <xs:element name="clerkID" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+
+  
+  
+  <xs:complexType name="get_ReplicationNodes">
+    <xs:sequence>
+      <xs:element name="authInfo" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="get_ReplicationNodesResponse">
+    <xs:sequence>
+		<xs:element ref="repl:replicationConfiguration" />
+    </xs:sequence>
+  </xs:complexType>
+  
+  
+  
+  <xs:complexType name="set_ReplicationNodes">
+    <xs:sequence>
+      <xs:element name="authInfo" type="xs:string"/>
+	  <xs:element ref="repl:replicationConfiguration" />
+    </xs:sequence>
+  </xs:complexType>
+  
+    <xs:complexType name="set_ReplicationNodesResponse">
+    <xs:sequence>
+		<xs:element name="dispositionReport" type="uddi:dispositionReport"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  
+  <xs:complexType name="subscriptionWrapper">
+    <xs:sequence>
+      <xs:element name="publisherIdOrUsername" type="xs:string"/>
+	  <xs:element ref="subr:subscription" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="get_allClientSubscriptionInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+    <xs:complexType name="get_allClientSubscriptionInfoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="subscriptions" type="tns:subscriptionWrapper"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  
+  <xs:complexType name="set_allValidValues">
+    <xs:sequence>
+	<xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="values" type="tns:validValues"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+    <xs:complexType name="validValues">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="tModekKey" type="xs:string"/>
+	  <xs:element minOccurs="0" maxOccurs="unbounded" name="value" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="set_allValidValuesResponse">
+    <xs:sequence>
+      <xs:element name="dispositionReport" type="uddi:dispositionReport"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  
+  <xs:complexType name="adminSave_Business">
+	<xs:sequence>
+		<xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+		<xs:element minOccurs="0" maxOccurs="unbounded" name="values" type="tns:adminSave_BusinessWrapper"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="adminSave_BusinessResponse">
+	<xs:sequence>
+		<xs:element name="dispositionReport" type="uddi:dispositionReport"/>    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="adminSave_BusinessWrapper">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="publisherID" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" ref="uddi:businessEntity"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  
+
+
+<xs:complexType name="adminSave_tModel">
+	<xs:sequence>
+		<xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+		<xs:element minOccurs="0" maxOccurs="unbounded" name="values" type="tns:adminSave_tModelWrapper"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="adminSave_tModelResponse">
+	<xs:sequence>
+		<xs:element name="dispositionReport" type="uddi:dispositionReport"/>    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="adminSave_tModelWrapper">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="publisherID" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="tModel" nillable="true" type="uddi:tModel"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+
+
+
+
+  
+  <xs:complexType name="save_node">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" name="node" type="tns:node"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="nodeDetail">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="node" nillable="true" type="tns:node"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="save_clientSubscriptionInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" name="clientSubscriptionInfo" type="tns:clientSubscriptionInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="clientSubscriptionInfo">
+    <xs:sequence>
+      <xs:element name="subscriptionKey" type="xs:string"/>
+      <xs:element name="fromClerk" type="tns:clerk"/>
+      <xs:element name="toClerk" type="tns:clerk"/>
+      <xs:element minOccurs="0" name="lastModified" type="xs:dateTime"/>
+	  <xs:element minOccurs="0" name="lastNotified" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="clientSubscriptionInfoDetail">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="clientSubscriptionInfo" nillable="true" type="tns:clientSubscriptionInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="syncSubscriptionRequest">
+    <xs:sequence>
+	<xs:element minOccurs="0" name="syncSubscription" type="tns:syncSubscription"/>
+	  </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="syncSubscription">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="get_subscriptionResultsList" nillable="true" type="ns3:get_subscriptionResults"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="syncSubscriptionDetail">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="subscriptionResultsList" nillable="true" type="ns3:subscriptionResultsList"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="syncSubscriptionDetailResponse">
+    <xs:sequence>
+      <xs:element name="syncSubscriptionDetail" nillable="true" type="tns:syncSubscriptionDetail"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="delete_ClientSubscriptionInfo" nillable="true" type="tns:delete_clientSubscriptionInfo"/>
+  <xs:element name="save_ClerkRequest"  type="tns:save_clerk"/>
+  <xs:element name="save_NodeRequest"  type="tns:save_node"/>
+  
+  
+  
+  <xs:element name="delete_Clerk" nillable="true" type="tns:delete_Clerk"/>
+  <!--<xs:element name="delete_ClerkResponse" nillable="true" type="tns:delete_ClerkResponse"/>-->
+  
+  <xs:element name="get_AllNodes" nillable="true" type="tns:get_AllNodes"/>
+  <xs:element name="get_AllNodesResponse" nillable="true" type="tns:get_AllNodesResponse"/>
+  <xs:element name="get_AllClerks" nillable="true" type="tns:get_AllClerks"/>
+  <xs:element name="get_AllClerksResponse" nillable="true" type="tns:get_AllClerksResponse"/>
+  
+    <xs:element name="delete_Node" nillable="true" type="tns:delete_Node"/>
+  <!--<xs:element name="delete_NodeResponse" nillable="true" type="tns:delete_NodeResponse"/>-->
+ 
+    <xs:element name="get_ReplicationNodes" nillable="true" type="tns:get_ReplicationNodes"/>
+  <xs:element name="get_ReplicationNodesResponse" nillable="true" type="tns:get_ReplicationNodesResponse"/>
+ 
+   <xs:element name="set_ReplicationNodes" nillable="true" type="tns:set_ReplicationNodes"/>
+  <xs:element name="set_ReplicationNodesResponse" nillable="true" type="tns:set_ReplicationNodesResponse"/>
+  
+  <xs:element name="get_allClientSubscriptionInfo" nillable="true" type="tns:get_allClientSubscriptionInfo"/>
+  <xs:element name="get_allClientSubscriptionInfoResponse" nillable="true" type="tns:get_allClientSubscriptionInfoResponse"/>
+  
+  <xs:element name="set_allValidValues" nillable="true" type="tns:set_allValidValues"/>
+  <xs:element name="set_allValidValuesResponse" nillable="true" type="tns:set_allValidValuesResponse"/>
+  
+  <xs:element name="adminSave_Business" nillable="true" type="tns:adminSave_Business"/>
+  <xs:element name="adminSave_BusinessResponse" nillable="true" type="tns:adminSave_BusinessResponse"/>
+  
+  <xs:element name="adminSave_tModel" nillable="true" type="tns:adminSave_tModel"/>
+  <xs:element name="adminSave_tModelResponse" nillable="true" type="tns:adminSave_tModelResponse"/>
+
+  <xs:element name="adminDelete_tmodel" nillable="true" type="ns2:delete_tModel"/>
+  <xs:element name="save_ClientSubscriptionInfoRequest" nillable="true" type="tns:save_clientSubscriptionInfo"/>
+  
+  <xs:element name="invoke_SyncSubscription" nillable="true" type="tns:syncSubscriptionRequest"/>
+  <xs:element name="adminDelete_Subscription" nillable="true" type="tns:adminDelete_SubscriptionRequest"/>
+  <xs:element name="adminDelete_SubscriptionResponse" nillable="true" type="tns:adminDelete_SubscriptionResponse"/>
+  <xs:complexType name="adminDelete_SubscriptionRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" name="subscriptionKey" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="adminDelete_SubscriptionResponse">
+    <xs:sequence />
+  </xs:complexType>
+  
+  <xs:element name="adminSave_Subscription" nillable="true" type="tns:adminSave_SubscriptionRequest"/>
+  <xs:element name="adminSave_SubscriptionResponse" nillable="true" type="tns:adminSave_SubscriptionResponse"/>
+  <xs:complexType name="adminSave_SubscriptionRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+	  <xs:element minOccurs="0" name="publisherOrUsername" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" name="subscriptions" type="subr:subscription"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="adminSave_SubscriptionResponse">
+    <xs:sequence />
+  </xs:complexType>
+  
+  
+  
+  
+  
+</xs:schema>
+
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:juddi-apache-org:v3_service" xmlns:ns0="urn:juddi-apache-org:api_v3" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:juddi-apache-org:v3_service">
+
+  
+  <xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="www.w3.org/2001/xml.xsd"/>
+  <xsd:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd"/>
+	
+  <xsd:import  schemaLocation="uddi_v3.xsd" namespace="urn:uddi-org:api_v3" />
+  <xsd:import  schemaLocation="uddi_v3subscription.xsd" namespace="urn:uddi-org:sub_v3"/>
+  <xsd:import  schemaLocation="uddi_v3replication.xsd" namespace="urn:uddi-org:repl_v3" />
+  
+  <xsd:import namespace="urn:juddi-apache-org:api_v3"/>
+  <xsd:element name="save_ClerkResponse" nillable="true" type="ns0:clerkDetail"/>
+  <xsd:element name="save_publisherResponse" nillable="true" type="ns0:publisherDetail"/>
+  <xsd:element name="save_NodeResponse" nillable="true" type="ns0:nodeDetail"/>
+  <xsd:element name="save_ClientSubscriptionInfoResponse" nillable="true" type="ns0:clientSubscriptionInfoDetail"/>
+  <xsd:element name="invoke_SyncSubscriptionResponse" nillable="true" type="ns0:syncSubscriptionDetailResponse"/>
+</xsd:schema>
+ </wsdl:types>
+  <wsdl:message name="get_allPublisherDetail">
+    <wsdl:part element="ns1:get_allPublisherDetail" name="body">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="save_ClientSubscriptionInfoResponse">
+    <wsdl:part element="tns:save_ClientSubscriptionInfoResponse" name="save_ClientSubscriptionInfoResponse">
+    </wsdl:part>
+  </wsdl:message>
+  
+<wsdl:message name="save_NodeResponse">
+    <wsdl:part element="tns:save_NodeResponse" name="save_NodeResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="get_publisherDetail">
+    <wsdl:part element="ns1:get_publisherDetail" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="get_publisherDetailResponse">
+    <wsdl:part element="ns1:publisherDetail" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="save_ClerkResponse">
+    <wsdl:part element="tns:save_ClerkResponse" name="save_ClerkResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="save_Clerk">
+    <wsdl:part element="ns1:save_ClerkRequest" name="body">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="delete_ClientSubscriptionInfo">
+    <wsdl:part element="ns1:delete_ClientSubscriptionInfo" name="body">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="adminDelete_tmodelResponse">
+  </wsdl:message>
+  <wsdl:message name="adminDelete_tmodel">
+    <wsdl:part element="ns1:adminDelete_tmodel" name="body">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="delete_publisher">
+    <wsdl:part element="ns1:delete_publisher" name="body">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="save_ClientSubscriptionInfo">
+    <wsdl:part element="ns1:save_ClientSubscriptionInfoRequest" name="body">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="delete_publisherResponse">
+  </wsdl:message>
+  <wsdl:message name="save_publisherResponse">
+    <wsdl:part element="tns:save_publisherResponse" name="save_publisherResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="invoke_SyncSubscriptionResponse">
+    <wsdl:part element="tns:invoke_SyncSubscriptionResponse" name="invoke_SyncSubscriptionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="invoke_SyncSubscription">
+    <wsdl:part element="ns1:invoke_SyncSubscription" name="body">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="get_allPublisherDetailResponse">
+    <wsdl:part element="ns1:publisherDetail" name="body">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="save_publisher">
+    <wsdl:part element="ns1:save_publisher" name="body">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="delete_ClientSubscriptionInfoResponse">
+  </wsdl:message>
+  <wsdl:message name="save_NodeRequest">
+    <wsdl:part element="ns1:save_NodeRequest" name="body">
+    </wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:message name="get_AllNodes">
+    <wsdl:part element="ns1:get_AllNodes" name="body"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="get_AllNodesResponse">
+    <wsdl:part element="ns1:get_AllNodesResponse" name="response"></wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:message name="get_AllClerks">
+    <wsdl:part element="ns1:get_AllClerks" name="body"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="get_AllClerksResponse">
+    <wsdl:part element="ns1:get_AllClerksResponse" name="response"></wsdl:part>
+  </wsdl:message>
+  
+  
+  <wsdl:message name="delete_Node">
+    <wsdl:part element="ns1:delete_Node" name="body"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="delete_NodeResponse">
+    <!--<wsdl:part element="ns1:delete_NodeResponse" name="response"></wsdl:part>-->
+  </wsdl:message>
+  
+    <wsdl:message name="delete_Clerk">
+    <wsdl:part element="ns1:delete_Clerk" name="request"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="delete_ClerkResponse">
+<!--    <wsdl:part element="ns1:delete_ClerkResponse" name="response"></wsdl:part>-->
+  </wsdl:message>
+  
+  <wsdl:message name="get_ReplicationNodes">
+    <wsdl:part element="ns1:get_ReplicationNodes" name="body"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="get_ReplicationNodesResponse">
+    <wsdl:part element="ns1:get_ReplicationNodesResponse" name="response"></wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:message name="set_ReplicationNodes">
+    <wsdl:part element="ns1:set_ReplicationNodes" name="body"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="set_ReplicationNodesResponse">
+    <wsdl:part element="ns1:set_ReplicationNodesResponse" name="response"></wsdl:part>
+  </wsdl:message>
+  
+  
+  
+   <wsdl:message name="get_allClientSubscriptionInfo">
+    <wsdl:part element="ns1:get_allClientSubscriptionInfo" name="body"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="get_allClientSubscriptionInfoResponse">
+    <wsdl:part element="ns1:get_allClientSubscriptionInfoResponse" name="response"></wsdl:part>
+  </wsdl:message>
+  
+  
+   <wsdl:message name="set_allValidValues">
+    <wsdl:part element="ns1:set_allValidValues" name="body"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="set_allValidValuesResponse">
+    <wsdl:part element="ns1:set_allValidValuesResponse" name="response"></wsdl:part>
+  </wsdl:message>
+  
+   <wsdl:message name="adminSave_Business">
+    <wsdl:part element="ns1:adminSave_Business" name="body"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="adminSave_BusinessResponse">
+    <wsdl:part element="ns1:adminSave_BusinessResponse" name="response"></wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:message name="adminSave_tModel">
+    <wsdl:part element="ns1:adminSave_tModel" name="body"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="adminSave_tModelResponse">
+    <wsdl:part element="ns1:adminSave_tModelResponse" name="response"></wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:message name="adminDelete_Subscription">
+    <wsdl:part element="ns1:adminDelete_Subscription" name="body"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="adminDelete_SubscriptionResponse">
+    <wsdl:part element="ns1:adminDelete_SubscriptionResponse" name="response"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="adminSave_Subscription">
+    <wsdl:part element="ns1:adminSave_Subscription" name="body"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="adminSave_SubscriptionResponse">
+    <wsdl:part element="ns1:adminSave_SubscriptionResponse" name="response"></wsdl:part>
+  </wsdl:message>
+
+
+  
+  <wsdl:portType name="JUDDI_Api_PortType">
+	<wsdl:documentation> This portType defines all of the jUDDI publisher operations.
+  This is above and beyond the original UDDI v3 specification and is NOT part of the standard.
+  Method behavior within this class may change from version to version. These methods are
+  primarily meant for administrative functions.</wsdl:documentation>
+    <wsdl:operation name="get_publisherDetail">
+      <wsdl:input message="tns:get_publisherDetail" name="get_publisherDetail"></wsdl:input>
+      <wsdl:output message="tns:get_publisherDetailResponse" name="get_publisherDetailResponse"></wsdl:output>
+	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="delete_ClientSubscriptionInfo">
+      <wsdl:input message="tns:delete_ClientSubscriptionInfo" name="delete_ClientSubscriptionInfo">
+    </wsdl:input>
+      <wsdl:output message="tns:delete_ClientSubscriptionInfoResponse" name="delete_ClientSubscriptionInfoResponse">
+    </wsdl:output>
+	<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="save_Clerk">
+      <wsdl:input message="tns:save_Clerk" name="save_Clerk">
+    </wsdl:input>
+      <wsdl:output message="tns:save_ClerkResponse" name="save_ClerkResponse">
+    </wsdl:output>
+	<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="get_allPublisherDetail">
+      <wsdl:input message="tns:get_allPublisherDetail" name="get_allPublisherDetail">
+    </wsdl:input>
+      <wsdl:output message="tns:get_allPublisherDetailResponse" name="get_allPublisherDetailResponse">
+    </wsdl:output>
+	<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="delete_publisher">
+      <wsdl:input message="tns:delete_publisher" name="delete_publisher">
+    </wsdl:input>
+      <wsdl:output message="tns:delete_publisherResponse" name="delete_publisherResponse">
+    </wsdl:output>
+	<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="save_publisher">
+      <wsdl:input message="tns:save_publisher" name="save_publisher">
+    </wsdl:input>
+      <wsdl:output message="tns:save_publisherResponse" name="save_publisherResponse">
+    </wsdl:output>
+	<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="save_Node">
+      <wsdl:input message="tns:save_NodeRequest" name="save_Node">
+    </wsdl:input>
+      <wsdl:output message="tns:save_NodeResponse" name="save_NodeResponse">
+    </wsdl:output>
+	<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="adminDelete_tModel">
+      <wsdl:input message="tns:adminDelete_tmodel" name="adminDelete_tmodel">
+    </wsdl:input>
+      <wsdl:output message="tns:adminDelete_tmodelResponse" name="adminDelete_tmodelResponse">
+    </wsdl:output>
+	<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="save_ClientSubscriptionInfo">
+      <wsdl:input message="tns:save_ClientSubscriptionInfo" name="save_ClientSubscriptionInfo">
+    </wsdl:input>
+      <wsdl:output message="tns:save_ClientSubscriptionInfoResponse" name="save_ClientSubscriptionInfoResponse">
+    </wsdl:output>
+	
+	
+	<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+	
+    <wsdl:operation name="invoke_SyncSubscription">
+      <wsdl:input message="tns:invoke_SyncSubscription" name="invoke_SyncSubscription"></wsdl:input>
+      <wsdl:output message="tns:invoke_SyncSubscriptionResponse" name="invoke_SyncSubscriptionResponse"></wsdl:output>
+	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+	
+	<!-- additions since 3.3 -->
+	
+	
+	<wsdl:operation name="get_AllNodes">
+	  <wsdl:documentation>
+		gets all nodes persisted in the database, useful for replication scenarios
+		@since 3.3
+	  </wsdl:documentation>
+      <wsdl:input message="tns:get_AllNodes" name="get_AllNodes"></wsdl:input>
+      <wsdl:output message="tns:get_AllNodesResponse" name="get_AllNodesResponse"></wsdl:output>
+	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+	<wsdl:operation name="get_AllClerks">
+	  <wsdl:documentation>
+		gets all Clerks persisted in the database, useful for replication scenarios. Clerks provide a mapping for credentials to a Node
+		@since 3.3
+	  </wsdl:documentation>
+      <wsdl:input message="tns:get_AllClerks" name="get_AllClerks"></wsdl:input>
+      <wsdl:output message="tns:get_AllClerksResponse" name="get_AllClerksResponse"></wsdl:output>
+	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+	<wsdl:operation name="delete_Node">
+	  <wsdl:documentation>
+		removes a node from the database, useful for replication scenarios. 
+		Note: when removing a node, all associated clerks will be removed with it.
+		@since 3.3
+	  </wsdl:documentation>
+      <wsdl:input message="tns:delete_Node" name="delete_Node"></wsdl:input>
+      <wsdl:output message="tns:delete_NodeResponse" name="delete_NodeResponse"></wsdl:output>
+	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+	<wsdl:operation name="delete_Clerk">
+	  <wsdl:documentation>
+		removes a clerk from the database, useful for replication scenarios. 
+		@since 3.3
+	  </wsdl:documentation>
+      <wsdl:input message="tns:delete_Clerk" name="delete_Clerk"></wsdl:input>
+      <wsdl:output message="tns:delete_ClerkResponse" name="delete_ClerkResponse"></wsdl:output>
+	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>	
+	<wsdl:operation name="adminSave_Business">
+	  <wsdl:documentation>
+		saves a business just like from the Publication API, however administrators can use this to perform restores from backup.
+		It allows an administrator to save the business, setting the ownership to any user, thus maintaining access control rules.
+		@since 3.3
+	  </wsdl:documentation>
+      <wsdl:input message="tns:adminSave_Business" name="adminSave_Business"></wsdl:input>
+      <wsdl:output message="tns:adminSave_BusinessResponse" name="adminSave_BusinessResponse"></wsdl:output>
+	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>	
+	
+	<wsdl:operation name="adminSave_tModel">
+	  <wsdl:documentation>
+		saves a tModel just like from the Publication API, however administrators can use this to perform restores from backup.
+		It allows an administrator to save the tModel, setting the ownership to any user, thus maintaining access control rules.
+		@since 3.3
+	  </wsdl:documentation>
+      <wsdl:input message="tns:adminSave_tModel" name="adminSave_tModel"></wsdl:input>
+      <wsdl:output message="tns:adminSave_tModelResponse" name="adminSave_tModelResponse"></wsdl:output>
+	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+
+	<wsdl:operation name="get_ReplicationNodes">
+	  <wsdl:documentation>
+		returns all Nodes that have been enabled for replication. 
+		@since 3.3
+	  </wsdl:documentation>
+      <wsdl:input message="tns:get_ReplicationNodes" name="get_ReplicationNodes"></wsdl:input>
+      <wsdl:output message="tns:get_ReplicationNodesResponse" name="get_ReplicationNodesResponse"></wsdl:output>
+	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>	
+	<wsdl:operation name="set_ReplicationNodes">
+	  <wsdl:documentation>
+		sets all Nodes for replication.  Any previously set Nodes will be removed from the replication list.
+		Optionally, all data from remote nodes that 
+		@since 3.3
+	  </wsdl:documentation>
+      <wsdl:input message="tns:set_ReplicationNodes" name="set_ReplicationNodes"></wsdl:input>
+      <wsdl:output message="tns:set_ReplicationNodesResponse" name="set_ReplicationNodesResponse"></wsdl:output>
+	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+
+	<wsdl:operation name="get_allClientSubscriptionInfo">
+	  <wsdl:documentation>
+		gets all client subscriptions. useful for backup and restore operations
+		@since 3.3
+	  </wsdl:documentation>
+      <wsdl:input message="tns:get_allClientSubscriptionInfo" name="get_allClientSubscriptionInfo"></wsdl:input>
+      <wsdl:output message="tns:get_allClientSubscriptionInfoResponse" name="get_allClientSubscriptionInfoResponse"></wsdl:output>
+	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>	
+	
+	
+	<wsdl:operation name="set_allValidValues">
+	  <wsdl:documentation>
+		sets a tModel's valid values for use with the Value Set Validation API
+		@since 3.3
+	  </wsdl:documentation>
+      <wsdl:input message="tns:set_allValidValues" name="set_allValidValues"></wsdl:input>
+      <wsdl:output message="tns:set_allValidValuesResponse" name="set_allValidValuesResponse"></wsdl:output>
+	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>	
+
+	
+	<wsdl:operation name="adminDelete_Subscription">
+	  <wsdl:documentation>
+		deletes a client subscription
+		@since 3.3
+	  </wsdl:documentation>
+      <wsdl:input message="tns:adminDelete_Subscription" name="adminDelete_Subscription"></wsdl:input>
+      <wsdl:output message="tns:adminDelete_SubscriptionResponse" name="adminDelete_SubscriptionResponse"></wsdl:output>
+	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>	
+
+	
+	<wsdl:operation name="adminSave_Subscription">
+	  <wsdl:documentation>
+		saves a client subscription, useful for restore functions
+		@since 3.3
+	  </wsdl:documentation>
+      <wsdl:input message="tns:adminSave_Subscription" name="adminSave_Subscription"></wsdl:input>
+      <wsdl:output message="tns:adminSave_SubscriptionResponse" name="adminSave_SubscriptionResponse"></wsdl:output>
+	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>	
+	
+	
+	
+  </wsdl:portType>
+  <wsdl:binding name="JUDDIApiServiceSoapBinding" type="tns:JUDDI_Api_PortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+	
+	<wsdl:operation name="get_publisherDetail">
+      <soap:operation soapAction="get_publisherDetail" style="document"/>
+      <wsdl:input name="get_publisherDetail">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="get_publisherDetailResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="delete_ClientSubscriptionInfo">
+      <soap:operation soapAction="delete_ClientSubscriptionInfo" style="document"/>
+      <wsdl:input name="delete_ClientSubscriptionInfo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="delete_ClientSubscriptionInfoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="get_allPublisherDetail">
+      <soap:operation soapAction="get_allPublisherDetail" style="document"/>
+      <wsdl:input name="get_allPublisherDetail">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="get_allPublisherDetailResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="save_Clerk">
+      <soap:operation soapAction="save_Clerk" style="document"/>
+      <wsdl:input name="save_Clerk">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="save_ClerkResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="delete_publisher">
+      <soap:operation soapAction="delete_publisher" style="document"/>
+      <wsdl:input name="delete_publisher">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="delete_publisherResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="save_Node">
+      <soap:operation soapAction="save_Node" style="document"/>
+      <wsdl:input name="save_Node">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="save_NodeResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="save_publisher">
+      <soap:operation soapAction="save_publisher" style="document"/>
+      <wsdl:input name="save_publisher">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="save_publisherResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="adminDelete_tModel">
+      <soap:operation soapAction="adminDelete_tmodel" style="document"/>
+      <wsdl:input name="adminDelete_tmodel">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="adminDelete_tmodelResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="save_ClientSubscriptionInfo">
+      <soap:operation soapAction="save_ClientSubscriptionInfo" style="document"/>
+      <wsdl:input name="save_ClientSubscriptionInfo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="save_ClientSubscriptionInfoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="invoke_SyncSubscription">
+      <soap:operation soapAction="invoke_SyncSubscription" style="document"/>
+      <wsdl:input name="invoke_SyncSubscription">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="invoke_SyncSubscriptionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+		<!-- additions to 3.3 -->
+   <wsdl:operation name="get_AllNodes">
+      <soap:operation soapAction="get_AllNodes" style="document"/>
+      <wsdl:input name="get_AllNodes">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="get_AllNodesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+	<wsdl:operation name="get_AllClerks">
+      <soap:operation soapAction="get_AllClerks" style="document"/>
+      <wsdl:input name="get_AllClerks">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="get_AllClerksResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+	
+	<wsdl:operation name="delete_Node">
+      <soap:operation soapAction="delete_Node" style="document"/>
+      <wsdl:input name="delete_Node">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="delete_NodeResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+	
+	<wsdl:operation name="delete_Clerk">
+      <soap:operation soapAction="delete_Clerk" style="document"/>
+      <wsdl:input name="delete_Clerk">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="delete_ClerkResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+	
+	<wsdl:operation name="adminSave_Business">
+      <soap:operation soapAction="adminSave_Business" style="document"/>
+      <wsdl:input name="adminSave_Business">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="adminSave_BusinessResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+
+	<wsdl:operation name="adminSave_tModel">
+      <soap:operation soapAction="adminSave_tModel" style="document"/>
+      <wsdl:input name="adminSave_tModel">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="adminSave_tModelResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+
+	<wsdl:operation name="get_ReplicationNodes">
+      <soap:operation soapAction="get_ReplicationNodes" style="document"/>
+      <wsdl:input name="get_ReplicationNodes">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="get_ReplicationNodesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+	
+	<wsdl:operation name="set_ReplicationNodes">
+      <soap:operation soapAction="set_ReplicationNodes" style="document"/>
+      <wsdl:input name="set_ReplicationNodes">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="set_ReplicationNodesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>	
+	
+	<wsdl:operation name="get_allClientSubscriptionInfo">
+      <soap:operation soapAction="get_allClientSubscriptionInfo" style="document"/>
+      <wsdl:input name="get_allClientSubscriptionInfo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="get_allClientSubscriptionInfoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>	
+	
+	<wsdl:operation name="set_allValidValues">
+      <soap:operation soapAction="set_allValidValues" style="document"/>
+      <wsdl:input name="set_allValidValues">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="set_allValidValuesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>	
+	
+	
+	
+	<wsdl:operation name="adminDelete_Subscription">
+      <soap:operation soapAction="adminDelete_Subscription" style="document"/>
+      <wsdl:input name="adminDelete_Subscription">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="adminDelete_SubscriptionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+	
+	<wsdl:operation name="adminSave_Subscription">
+      <soap:operation soapAction="adminSave_Subscription" style="document"/>
+      <wsdl:input name="adminSave_Subscription">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="adminSave_SubscriptionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+
+  </wsdl:binding>
+  <wsdl:service name="JUDDIApiService">
+  <wsdl:documentation>This service implements the jUDDI API service</wsdl:documentation> 
+    <wsdl:port binding="tns:JUDDIApiServiceSoapBinding" name="JUDDIApiImplPort">
+      <soap:address location="http://localhost/juddiv3/services/juddi-api"/>
+    </wsdl:port>
+  </wsdl:service>
 </wsdl:definitions>
