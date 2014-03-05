@@ -18,13 +18,10 @@ package org.apache.juddi.api.impl;
 
 import java.io.StringWriter;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
 
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
@@ -32,8 +29,6 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
-import javax.xml.ws.RequestWrapper;
-import javax.xml.ws.ResponseWrapper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -68,12 +63,9 @@ import org.apache.juddi.config.Property;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.ClientSubscriptionInfo;
-import org.apache.juddi.model.Node;
 import org.apache.juddi.model.Publisher;
-import org.apache.juddi.model.ReplicationConfiguration;
 import org.apache.juddi.model.Tmodel;
 import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.model.ValueSetValue;
 import org.apache.juddi.model.ValueSetValues;
 import org.apache.juddi.subscription.NotificationList;
 import org.apache.juddi.v3.client.transport.Transport;
@@ -106,15 +98,16 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
  * Implements the jUDDI API service. These methods are outside of the UDDI spec
- * and are specific to jUDDI. They are primarily used for administrative functions.
+ * and are specific to jUDDI. They are primarily used for administrative
+ * functions.
  *
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 @WebService(serviceName = "JUDDIApiService",
-        endpointInterface = "org.apache.juddi.v3_service.JUDDIApiPortType",
-        targetNamespace = "urn:juddi-apache-org:v3_service")
+     endpointInterface = "org.apache.juddi.v3_service.JUDDIApiPortType",
+     targetNamespace = "urn:juddi-apache-org:v3_service")
 public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortType {
 
         private Log log = LogFactory.getLog(this.getClass());
@@ -128,7 +121,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * @throws DispositionReportFaultMessage
          */
         public PublisherDetail savePublisher(SavePublisher body)
-                throws DispositionReportFaultMessage {
+             throws DispositionReportFaultMessage {
 
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
@@ -176,7 +169,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * @throws DispositionReportFaultMessage
          */
         public void deletePublisher(DeletePublisher body)
-                throws DispositionReportFaultMessage {
+             throws DispositionReportFaultMessage {
 
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
@@ -189,47 +182,47 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                         List<String> entityKeyList = body.getPublisherId();
                         for (String entityKey : entityKeyList) {
-                        	Publisher obj = em.find(org.apache.juddi.model.Publisher.class, entityKey);
-                        
-                        	//get an authtoken for this publisher so that we can get its registeredInfo
-                        	UDDISecurityImpl security = new UDDISecurityImpl();
-                        	AuthToken authToken = security.getAuthToken(entityKey);
-                        	
-                        	GetRegisteredInfo r = new GetRegisteredInfo();
-                        	r.setAuthInfo(authToken.getAuthInfo());
-                        	r.setInfoSelection(InfoSelection.ALL);
-	                       
-                        	log.info("removing all businesses owned by publisher " + entityKey + ".");
-                        	UDDIPublicationImpl publish = new UDDIPublicationImpl();
-                        	RegisteredInfo registeredInfo = publish.getRegisteredInfo(r);
-                        	BusinessInfos businessInfos = registeredInfo.getBusinessInfos();
-                        	if (businessInfos!=null && businessInfos.getBusinessInfo()!=null) {
-                        		Iterator<BusinessInfo> iter = businessInfos.getBusinessInfo().iterator();
-                        	    while (iter.hasNext()) {
-                        	    	BusinessInfo businessInfo = iter.next();
-                        	    	Object business = em.find(org.apache.juddi.model.BusinessEntity.class, businessInfo.getBusinessKey());
-                        	    	em.remove(business);
-                        	    }
-							}
-                        	
-                        	log.info("mark all tmodels for publisher " + entityKey + " as deleted.");
-                        	TModelInfos tmodelInfos = registeredInfo.getTModelInfos();
-                        	if (tmodelInfos!=null && tmodelInfos.getTModelInfo()!=null) {
-                        		Iterator<TModelInfo> iter = tmodelInfos.getTModelInfo().iterator();
-                        		while (iter.hasNext()) {
-                        			TModelInfo tModelInfo = iter.next();
-                        			Tmodel tmodel = (Tmodel) em.find(org.apache.juddi.model.Tmodel.class, tModelInfo.getTModelKey());
-                        			tmodel.setDeleted(true);
-                        			em.persist(tmodel);
-                        		}
-                        	}
-                        	log.info("remove all persisted AuthTokens for publisher " + entityKey + ".");
-                        	Query q1 = em.createQuery("DELETE FROM AuthToken auth WHERE auth.authorizedName = '" + entityKey + "'");
-                            q1.executeUpdate();
-                      
-                            log.info("removing publisher " + entityKey + ".");
-                            //delete the publisher
-                        	em.remove(obj);
+                                Publisher obj = em.find(org.apache.juddi.model.Publisher.class, entityKey);
+
+                                //get an authtoken for this publisher so that we can get its registeredInfo
+                                UDDISecurityImpl security = new UDDISecurityImpl();
+                                AuthToken authToken = security.getAuthToken(entityKey);
+
+                                GetRegisteredInfo r = new GetRegisteredInfo();
+                                r.setAuthInfo(authToken.getAuthInfo());
+                                r.setInfoSelection(InfoSelection.ALL);
+
+                                log.info("removing all businesses owned by publisher " + entityKey + ".");
+                                UDDIPublicationImpl publish = new UDDIPublicationImpl();
+                                RegisteredInfo registeredInfo = publish.getRegisteredInfo(r);
+                                BusinessInfos businessInfos = registeredInfo.getBusinessInfos();
+                                if (businessInfos != null && businessInfos.getBusinessInfo() != null) {
+                                        Iterator<BusinessInfo> iter = businessInfos.getBusinessInfo().iterator();
+                                        while (iter.hasNext()) {
+                                                BusinessInfo businessInfo = iter.next();
+                                                Object business = em.find(org.apache.juddi.model.BusinessEntity.class, businessInfo.getBusinessKey());
+                                                em.remove(business);
+                                        }
+                                }
+
+                                log.info("mark all tmodels for publisher " + entityKey + " as deleted.");
+                                TModelInfos tmodelInfos = registeredInfo.getTModelInfos();
+                                if (tmodelInfos != null && tmodelInfos.getTModelInfo() != null) {
+                                        Iterator<TModelInfo> iter = tmodelInfos.getTModelInfo().iterator();
+                                        while (iter.hasNext()) {
+                                                TModelInfo tModelInfo = iter.next();
+                                                Tmodel tmodel = (Tmodel) em.find(org.apache.juddi.model.Tmodel.class, tModelInfo.getTModelKey());
+                                                tmodel.setDeleted(true);
+                                                em.persist(tmodel);
+                                        }
+                                }
+                                log.info("remove all persisted AuthTokens for publisher " + entityKey + ".");
+                                Query q1 = em.createQuery("DELETE FROM AuthToken auth WHERE auth.authorizedName = '" + entityKey + "'");
+                                q1.executeUpdate();
+
+                                log.info("removing publisher " + entityKey + ".");
+                                //delete the publisher
+                                em.remove(obj);
                         }
 
                         tx.commit();
@@ -241,16 +234,16 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                 }
         }
 
-        
         /**
          * Retrieves publisher(s) from the persistence layer. This method is
-         * specific to jUDDI. Administrative privilege required. 
+         * specific to jUDDI. Administrative privilege required.
+         *
          * @param body
          * @return PublisherDetail
-         * @throws DispositionReportFaultMessage 
+         * @throws DispositionReportFaultMessage
          */
         public PublisherDetail getPublisherDetail(GetPublisherDetail body)
-                throws DispositionReportFaultMessage {
+             throws DispositionReportFaultMessage {
 
                 new ValidatePublisher(null).validateGetPublisherDetail(body);
 
@@ -294,17 +287,18 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
         /**
          * Retrieves all publisher from the persistence layer. This method is
-         * specific to jUDDI. Administrative privilege required. Use caution when calling, result
-         * set is not bound. If there are many publishers, it is possible to have a 
-         * result set that is too large
+         * specific to jUDDI. Administrative privilege required. Use caution
+         * when calling, result set is not bound. If there are many publishers,
+         * it is possible to have a result set that is too large
+         *
          * @param body
          * @return PublisherDetail
          * @throws DispositionReportFaultMessage
-         * @throws RemoteException 
+         * @throws RemoteException
          */
         @SuppressWarnings("unchecked")
         public PublisherDetail getAllPublisherDetail(GetAllPublisherDetail body)
-                throws DispositionReportFaultMessage, RemoteException {
+             throws DispositionReportFaultMessage, RemoteException {
 
                 new ValidatePublisher(null).validateGetAllPublisherDetail(body);
 
@@ -341,15 +335,17 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
         /**
          * Completely deletes a tModel from the persistence layer.
-         * Administrative privilege required. All entities that reference this tModel
-         * will no longer be able to use the tModel if jUDDI Option Enforce referential Integrity is enabled.<br>
+         * Administrative privilege required. All entities that reference this
+         * tModel will no longer be able to use the tModel if jUDDI Option
+         * Enforce referential Integrity is enabled.<br>
          * Required permission, you must be am administrator
          * {@link Property#JUDDI_ENFORCE_REFERENTIAL_INTEGRITY}
+         *
          * @param body
-         * @throws DispositionReportFaultMessage 
+         * @throws DispositionReportFaultMessage
          */
         public void adminDeleteTModel(DeleteTModel body)
-                throws DispositionReportFaultMessage {
+             throws DispositionReportFaultMessage {
 
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
@@ -376,15 +372,15 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
         }
 
         /**
-         * Delete's a client's subscription information. This is typically used for
-         * server to server subscriptions
-         * Administrative privilege required.
+         * Delete's a client's subscription information. This is typically used
+         * for server to server subscriptions Administrative privilege required.
+         *
          * @param body
          * @throws DispositionReportFaultMessage
-         * @throws RemoteException 
+         * @throws RemoteException
          */
         public void deleteClientSubscriptionInfo(DeleteClientSubscriptionInfo body)
-                throws DispositionReportFaultMessage, RemoteException {
+             throws DispositionReportFaultMessage, RemoteException {
 
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
@@ -412,16 +408,16 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
         }
 
         /**
-         * Adds client subscription information. This effectively links a server to
-         * serverr subscription to clerk
-         * Administrative privilege required.
+         * Adds client subscription information. This effectively links a server
+         * to serverr subscription to clerk Administrative privilege required.
+         *
          * @param body
          * @return ClientSubscriptionInfoDetail
          * @throws DispositionReportFaultMessage
-         * @throws RemoteException 
+         * @throws RemoteException
          */
         public ClientSubscriptionInfoDetail saveClientSubscriptionInfo(SaveClientSubscriptionInfo body)
-                throws DispositionReportFaultMessage, RemoteException {
+             throws DispositionReportFaultMessage, RemoteException {
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
                 try {
@@ -461,15 +457,16 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
         }
 
         /**
-         * Gets all client subscription information. This is used for server to server subscriptions
-         * Administrative privilege required.
+         * Gets all client subscription information. This is used for server to
+         * server subscriptions Administrative privilege required.
+         *
          * @param body
          * @return ClientSubscriptionInfoDetail
-         * @throws DispositionReportFaultMessage 
+         * @throws DispositionReportFaultMessage
          */
         @SuppressWarnings("unchecked")
         public ClientSubscriptionInfoDetail getAllClientSubscriptionInfoDetail(GetAllClientSubscriptionInfoDetail body)
-                throws DispositionReportFaultMessage {
+             throws DispositionReportFaultMessage {
 
                 new ValidateClientSubscriptionInfo(null).validateGetAllClientSubscriptionDetail(body);
 
@@ -509,12 +506,13 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * Retrieves clientSubscriptionKey(s) from the persistence layer. This
          * method is specific to jUDDI. Used for server to server subscriptions
          * Administrative privilege required.
+         *
          * @param body
          * @return ClientSubscriptionInfoDetail
-         * @throws DispositionReportFaultMessage 
+         * @throws DispositionReportFaultMessage
          */
         public ClientSubscriptionInfoDetail getClientSubscriptionInfoDetail(GetClientSubscriptionInfoDetail body)
-                throws DispositionReportFaultMessage {
+             throws DispositionReportFaultMessage {
 
                 new ValidateClientSubscriptionInfo(null).validateGetClientSubscriptionInfoDetail(body);
 
@@ -557,17 +555,17 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
         }
 
-        
         /**
          * Saves clerk(s) to the persistence layer. This method is specific to
-         * jUDDI. This is used for server to server subscriptions and for future use
-         * with replication. Administrative privilege required.
+         * jUDDI. This is used for server to server subscriptions and for future
+         * use with replication. Administrative privilege required.
+         *
          * @param body
          * @return ClerkDetail
-         * @throws DispositionReportFaultMessage 
+         * @throws DispositionReportFaultMessage
          */
         public ClerkDetail saveClerk(SaveClerk body)
-                throws DispositionReportFaultMessage {
+             throws DispositionReportFaultMessage {
 
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
@@ -609,14 +607,16 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
         /**
          * Saves nodes(s) to the persistence layer. This method is specific to
-         * jUDDI. Administrative privilege required. This is used for server to server subscriptions and for future use
-         * with replication. Administrative privilege required.
+         * jUDDI. Administrative privilege required. This is used for server to
+         * server subscriptions and for future use with replication.
+         * Administrative privilege required.
+         *
          * @param body
          * @return NodeDetail
-         * @throws DispositionReportFaultMessage 
+         * @throws DispositionReportFaultMessage
          */
         public NodeDetail saveNode(SaveNode body)
-                throws DispositionReportFaultMessage {
+             throws DispositionReportFaultMessage {
 
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
@@ -659,21 +659,22 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
         /**
          * Instructs the registry to perform a synchronous subscription
          * response.
+         *
          * @param body
          * @return SyncSubscriptionDetail
          * @throws DispositionReportFaultMessage
-         * @throws RemoteException 
+         * @throws RemoteException
          */
         @SuppressWarnings("unchecked")
         public SyncSubscriptionDetail invokeSyncSubscription(
-                SyncSubscription body) throws DispositionReportFaultMessage,
-                RemoteException {
+             SyncSubscription body) throws DispositionReportFaultMessage,
+             RemoteException {
 
                 //validate
                 SyncSubscriptionDetail syncSubscriptionDetail = new SyncSubscriptionDetail();
 
                 Map<String, org.apache.juddi.api_v3.ClientSubscriptionInfo> clientSubscriptionInfoMap
-                        = new HashMap<String, org.apache.juddi.api_v3.ClientSubscriptionInfo>();
+                     = new HashMap<String, org.apache.juddi.api_v3.ClientSubscriptionInfo>();
                 //find the clerks to go with these subscriptions
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
@@ -735,7 +736,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                         throw (DispositionReportFaultMessage) ce;
                                 }
                                 if (ce instanceof RemoteException) {
-									 DispositionReportFaultMessage x = new FatalErrorException(new ErrorMessage("errors.subscriptionnotifier.client", ce.getMessage()));
+                                        DispositionReportFaultMessage x = new FatalErrorException(new ErrorMessage("errors.subscriptionnotifier.client", ce.getMessage()));
                                         throw x;
                                 }
                         }
@@ -749,7 +750,6 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
         public NodeList getAllNodes(String authInfo) throws DispositionReportFaultMessage, RemoteException {
 
                 NodeList r = new NodeList();
-
 
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
@@ -766,7 +766,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         Query qry = em.createQuery(sql.toString());
                         List<org.apache.juddi.model.Node> resultList = qry.getResultList();
                         for (int i = 0; i < resultList.size(); i++) {
-                               org.apache.juddi.api_v3.Node api = new org.apache.juddi.api_v3.Node();
+                                org.apache.juddi.api_v3.Node api = new org.apache.juddi.api_v3.Node();
                                 MappingModelToApi.mapNode(resultList.get(i), api);
                                 r.getNode().add(api);
 
@@ -822,24 +822,20 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
         }
 
         @Override
-        public void deleteNode(DeleteNode req) throws DispositionReportFaultMessage , RemoteException{
+        public void deleteNode(DeleteNode req) throws DispositionReportFaultMessage, RemoteException {
                 boolean found = false;
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
                 try {
                         tx.begin();
 
-                        
                         UddiEntityPublisher publisher = this.getEntityPublisher(em, req.getAuthInfo());
                         new ValidatePublish(publisher).validateDeleteNode(em, req);
-                        
-
 
                         org.apache.juddi.model.Node existingUddiEntity = em.find(org.apache.juddi.model.Node.class, req.getNodeID());
                         if (existingUddiEntity != null) {
 
                                 //TODO cascade delete all clerks tied to this node
-
                                 em.remove(existingUddiEntity);
                                 found = true;
                         }
@@ -853,9 +849,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                 }
 
                 if (!found) {
-                        
-                   
-                throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.NotFound"));
+
+                        throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.NotFound"));
                 }
         }
 
@@ -873,7 +868,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         new ValidatePublish(publisher).validateDeleteClerk(em, req);
 
                         org.apache.juddi.model.Clerk existingUddiEntity = em.find(org.apache.juddi.model.Clerk.class, req.getClerkID());
-                        if (existingUddiEntity != null) { 
+                        if (existingUddiEntity != null) {
                                 em.remove(existingUddiEntity);
                                 found = true;
                         }
@@ -887,9 +882,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                 }
 
                 if (!found) {
-                throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteClerk.NotFound"));      
+                        throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteClerk.NotFound"));
                 }
-                
 
         }
 
@@ -910,12 +904,10 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                 new ValidateValueSetValidation(entityPublisher).validateSetAllValidValues(values);
 
-
                 EntityTransaction tx = em.getTransaction();
                 try {
 
                         //TODO is this tModel used anywhere?, if so, validate all instances against the new rule?
-
                         tx.begin();
 
                         //each tmodel/value set
@@ -924,50 +916,13 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                 ValueSetValues find = em.find(ValueSetValues.class, values.get(i).getTModekKey());
 
                                 if (find != null) {
-
-                                        //first pass, add any missing values
-                                        for (int x = 0; x < values.get(i).getValue().size(); x++) {
-                                                boolean found = false;
-                                                for (int k = 0; k < find.getValues().size(); k++) {
-                                                        if (find.getValues().get(k).getValue().equals(values.get(i).getValue().get(x))) {
-                                                                found = true;
-                                                                break;
-                                                        }
-                                                }
-                                                if (!found) {
-                                                        ValueSetValue valueSetValue = new org.apache.juddi.model.ValueSetValue(values.get(i).getTModekKey(), values.get(i).getValue().get(x));
-                                                        find.getValues().add(valueSetValue);
-                                                }
-                                        }
-
-                                        //second pass, remove any values that were present, but now are not
-                                        for (int k = 0; k < find.getValues().size(); k++) {
-
-                                                boolean found = false;
-                                                for (int x = 0; x < values.get(i).getValue().size(); x++) {
-                                                        if (find.getValues().get(k).getValue().equals(values.get(i).getValue().get(x))) {
-                                                                found = true;
-                                                                break;
-                                                        }
-                                                }
-                                                if (!found) {
-                                                        em.remove(find.getValues().get(k));
-                                                }
-                                        }
-
+                                        find.setValidatorClass(values.get(i).getValidationClass());
                                         em.persist(find);
 
                                 } else {
                                         org.apache.juddi.model.ValueSetValues vv = new ValueSetValues();
                                         vv.setTModelKey(values.get(i).getTModekKey());
-                                        List<ValueSetValue> items = new ArrayList<ValueSetValue>();
-                                        for (int k = 0; k < values.get(i).getValue().size(); k++) {
-                                                ValueSetValue valueSetValue = new org.apache.juddi.model.ValueSetValue(values.get(i).getTModekKey(), values.get(i).getValue().get(k));
-                                                valueSetValue.setParent(vv);
-                                                em.persist(valueSetValue);
-                                                items.add(valueSetValue);
-                                        }
-                                        vv.setValues(items);
+                                        vv.setValidatorClass(values.get(i).getValidationClass());
                                         em.persist(vv);
                                 }
                         }
@@ -989,7 +944,6 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
-
         @Override
         public DispositionReport adminSaveBusiness(String authInfo, List<AdminSaveBusinessWrapper> values) throws DispositionReportFaultMessage, RemoteException {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -1000,14 +954,12 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
-        
-         @SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         @Override
         public List<SubscriptionWrapper> getAllClientSubscriptionInfo(String authInfo) throws DispositionReportFaultMessage, RemoteException {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
-        
         @Override
         public DispositionReport setReplicationNodes(String authInfo, org.uddi.repl_v3.ReplicationConfiguration replicationConfiguration) throws DispositionReportFaultMessage, RemoteException {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -1020,15 +972,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
         @Override
 
-    public void adminSaveSubscription(
-
-        String authInfo,
-
-        String publisherOrUsername,
-
-        List<Subscription> subscriptions)
-        throws DispositionReportFaultMessage, RemoteException
-    {
+        public void adminSaveSubscription(String authInfo, String publisherOrUsername, List<Subscription> subscriptions) throws DispositionReportFaultMessage, RemoteException {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 }

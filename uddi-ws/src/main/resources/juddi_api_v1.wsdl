@@ -241,7 +241,15 @@ xmlns:uddi="urn:uddi-org:api_v3">
     <xs:complexType name="validValues">
     <xs:sequence>
       <xs:element minOccurs="0" name="tModekKey" type="xs:string"/>
-	  <xs:element minOccurs="0" maxOccurs="unbounded" name="value" type="xs:string"/>
+	  <xs:element minOccurs="0" name="validationClass" type="xs:string">
+		<xs:annotation>
+		  <xs:appinfo>Implementation Note</xs:appinfo>
+		  <xs:documentation xml:lang="en">
+		  this represents the class name of the validator for this particular key
+		  </xs:documentation>
+		</xs:annotation>
+
+	  </xs:element>
     </xs:sequence>
   </xs:complexType>
 

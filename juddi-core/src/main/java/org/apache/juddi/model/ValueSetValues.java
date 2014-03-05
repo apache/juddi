@@ -40,16 +40,15 @@ public class ValueSetValues implements java.io.Serializable {
         private static final long serialVersionUID = 7767295374035531912L;
         // private Long id;
         private String tmodelKey;
-        private List<ValueSetValue> values = new ArrayList<ValueSetValue>(0);
+        private String ValidatorClass;
         
         
         public ValueSetValues() {
         }
 
-        public ValueSetValues(String tmodelkey, List<ValueSetValue> values) {
-                this.values.clear();
-                this.values.addAll(values);
+        public ValueSetValues(String tmodelkey, String clazz) {
                 this.tmodelKey = tmodelkey;
+                this.ValidatorClass=clazz;
         }
 
         /*
@@ -70,18 +69,23 @@ public class ValueSetValues implements java.io.Serializable {
         public void setTModelKey(String key) {
                 this.tmodelKey = key;
         }
-
-        @OrderBy
-        //@Column(name = "j3_vsv_values")
-        @OneToMany(targetEntity = ValueSetValue.class, fetch = FetchType.EAGER)
-         //@JoinColumn(referencedColumnName = ("j3_value"), insertable = true,table = "j3_valuesetval")
-        public List<ValueSetValue> getValues() {
-                return this.values;
-        }
-
-        public void setValues(List<ValueSetValue> values) {
-                this.values = values;
-        }
-
         
+        /**
+         * 
+         * @return should be one of businessService, businessEntity, bindingTemplate, tModel
+         */
+        @Column(name = "j3_validatorclass", nullable = false, length = 255)
+        public String getValidatorClass() {
+                return this.ValidatorClass;
+        }
+
+        /**
+         * 
+         * @param type should be one of businessService, businessEntity, bindingTemplate, tModel
+        */
+        public void setValidatorClass(String clazz) {
+                this.ValidatorClass=clazz;
+        }
+
+       
 }

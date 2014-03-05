@@ -36,7 +36,7 @@
 				<configuration>
 				<instructions>
 				<Export-Package>org.apache.juddi, org.apache.juddi.api, org.apache.juddi.api.impl, org.apache.juddi.api.impl.rest,org.apache.juddi.api.util, org.apache.juddi.config, org.apache.juddi.config, org.apache.juddi.cryptor, org.apache.juddi.keygen, org.apache.juddi.mapping, org.apache.juddi.model, org.apache.juddi.query, org.apache.juddi.query.util, org.apache.juddi.rmi, org.apache.juddi.subscription, 
-				org.apache.juddi.replication, org.apache.juddi.subscription.notify, org.apache.juddi.validation, org.apache.juddi.v3.auth, org.apache.juddi.v3.error</Export-Package>
+				org.apache.juddi.replication, org.apache.juddi.subscription.notify, org.apache.juddi.validation,org.apache.juddi.validation.vsv, org.apache.juddi.v3.auth, org.apache.juddi.v3.error</Export-Package>
 				<Include-Resource>juddi_install_data=target/classes/juddi_install_data, target/classes/messages.properties</Include-Resource>
 				</instructions>
 				</configuration>

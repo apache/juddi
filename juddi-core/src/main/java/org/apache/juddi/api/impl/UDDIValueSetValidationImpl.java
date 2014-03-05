@@ -17,19 +17,18 @@
 package org.apache.juddi.api.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.juddi.api.util.QueryStatus;
 import org.apache.juddi.api.util.ValueSetValidationQuery;
-import org.apache.juddi.config.PersistenceManager;
-import org.apache.juddi.model.ValueSetValues;
 import org.apache.juddi.v3.error.ErrorMessage;
-import org.apache.juddi.v3.error.InvalidValueException;
+import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
+import org.apache.juddi.validation.vsv.ValueSetValidator;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
@@ -48,7 +47,7 @@ import org.uddi.vs_v3.ValidateValues;
 //			endpointInterface="org.uddi.v3_service.UDDIValueSetValidationPortType",
 //			targetNamespace = "urn:uddi-org:v3_service")
 public class UDDIValueSetValidationImpl extends AuthenticatedService implements
-        UDDIValueSetValidationPortType {
+     UDDIValueSetValidationPortType {
 
         private UDDIServiceCounter serviceCounter;
 
@@ -59,13 +58,13 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
 
         @Override
         public DispositionReport validateValues(ValidateValues body)
-                throws DispositionReportFaultMessage {
+             throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 if (body == null) {
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(ValueSetValidationQuery.VALIDATE_VALUES,
-                                QueryStatus.FAILED, procTime);
+                             QueryStatus.FAILED, procTime);
 
                         throw new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.noinput"));
                 }
@@ -83,163 +82,165 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
                 /*when the entity being saved is a businessEntity, contained 
                  * businessService and bindingTemplate entities may themselves 
                  * reference values from the authorized value sets as well. */
-                validateValuesBT(body.getBindingTemplate(), "");
-                validateValuesBE(body.getBusinessEntity());
-                validateValuesBS(body.getBusinessService(), "");
-                validateValuesPA(body.getPublisherAssertion());
-                validateValuesTM(body.getTModel());
+                //go through all published items
+                //pull out all keys
+                //look up keys in database for a validation class
+                //dedup results
+                //run validation classes
+                List<String> classNames = new ArrayList<String>();
+                classNames.addAll(validateValuesBindingTemplate(body.getBindingTemplate()));
+                classNames.addAll(validateValuesBusinessEntity(body.getBusinessEntity()));
+                classNames.addAll(validateValuesBusinessService(body.getBusinessService()));
+                classNames.addAll(validateValuesPublisherAssertion(body.getPublisherAssertion()));
+                classNames.addAll(validateValuesTModel(body.getTModel()));
+                Set<String> set = new HashSet<String>(classNames);
+                Iterator<String> iterator = set.iterator();
+                while (iterator.hasNext()) {
+                        String tmodelkey = iterator.next();
+                        String clazz = ConvertKeyToClass(tmodelkey);
+                        ValueSetValidator vsv;
+                        if (clazz == null) {
+                                logger.info("No validator found for " + tmodelkey);
+                        } else {
+                                try {
+                                        vsv = (ValueSetValidator) Class.forName(clazz).newInstance();
+                                        vsv.validateValuesBindingTemplate(body.getBindingTemplate(), "");
+                                        vsv.validateValuesBusinessEntity(body.getBusinessEntity());
+                                        vsv.validateValuesBusinessService(body.getBusinessService(), "");
+                                        vsv.validateValuesPublisherAssertion(body.getPublisherAssertion());
+                                        vsv.validateValuesTModel(body.getTModel());
+                                } catch (ClassNotFoundException ex) {
+                                        throw new FatalErrorException(new ErrorMessage("errors.valuesetvalidation.fatal", "key=" + tmodelkey + " class=" + clazz + " " + ex.getMessage()));
+                                } catch (InstantiationException ex) {
+                                        throw new FatalErrorException(new ErrorMessage("errors.valuesetvalidation.fatal", "key=" + tmodelkey + " class=" + clazz + " " + ex.getMessage()));
+                                } catch (IllegalAccessException ex) {
+                                        throw new FatalErrorException(new ErrorMessage("errors.valuesetvalidation.fatal", "key=" + tmodelkey + " class=" + clazz + " " + ex.getMessage()));
+                                }
+                        }
+                }
 
                 DispositionReport r = new DispositionReport();
                 r.getResult().add(new Result());
                 long procTime = System.currentTimeMillis() - startTime;
                 serviceCounter.update(ValueSetValidationQuery.VALIDATE_VALUES,
-                        QueryStatus.SUCCESS, procTime);
+                     QueryStatus.SUCCESS, procTime);
 
                 return r;
         }
 
-        private void validateValuesBT(List<BindingTemplate> items, String xpath) throws DispositionReportFaultMessage {
+        private List<String> validateValuesBindingTemplate(List<BindingTemplate> items) {
+                List<String> ret = new ArrayList<String>();
                 if (items == null) {
-                        return;
+                        return ret;
                 }
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getCategoryBag() != null) {
-                                validatedValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference(), xpath + "bindingTemplate(" + i + ").categoryBag.");
-                                validatedValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), xpath + "bindingTemplate(" + i + ").categoryBag.");
+                                ret.addAll(validateValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference()));
+                                ret.addAll(validateValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup()));
                         }
                         if (items.get(i).getTModelInstanceDetails() != null) {
 
-                                validateTmodelInstanceDetails(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo(), xpath + "bindingTemplate(" + i + ").tModelInstanceDetails.");
+                                //validateTmodelInstanceDetails(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo(), xpath + "bindingTemplate(" + i + ").tModelInstanceDetails.");
                         }
                 }
+                return ret;
         }
 
-        private void validateValuesBE(List<BusinessEntity> items) throws DispositionReportFaultMessage {
+        private List<String> validateValuesBusinessEntity(List<BusinessEntity> items) {
+                List<String> ret = new ArrayList<String>();
                 if (items == null) {
-                        return;
+                        return ret;
                 }
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getCategoryBag() != null) {
-                                validatedValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference(), "businessEntity(" + i + ").categoryBag.");
-                                validatedValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), "businessEntity(" + i + ").categoryBag.");
+                                ret.addAll(validateValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference()));
+                                ret.addAll(validateValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup()));
                         }
                         if (items.get(i).getIdentifierBag() != null) {
-                                validatedValuesKeyRef(items.get(i).getIdentifierBag().getKeyedReference(), "businessEntity(" + i + ").identifierBag.");
+                                ret.addAll(validateValuesKeyRef(items.get(i).getIdentifierBag().getKeyedReference()));
                         }
                         if (items.get(i).getBusinessServices() != null) {
-                                validateValuesBS(items.get(i).getBusinessServices().getBusinessService(), "businessEntity(" + i + ").");
+                                ret.addAll(validateValuesBusinessService(items.get(i).getBusinessServices().getBusinessService()));
                         }
                 }
+                return ret;
         }
 
-        private void validateValuesBS(List<BusinessService> items, String xpath) throws DispositionReportFaultMessage {
+        private List<String> validateValuesBusinessService(List<BusinessService> items) {
+                List<String> ret = new ArrayList<String>();
                 if (items == null) {
-                        return;
+                        return ret;
                 }
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getCategoryBag() != null) {
-                                validatedValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference(), xpath + "businessService(" + i + ").categoryBag.");
-                                validatedValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), xpath + "businessService(" + i + ").categoryBag.");
+                                ret.addAll(validateValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference()));
+                                ret.addAll(validateValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup()));
                         }
                         if (items.get(i).getBindingTemplates() != null) {
-                                validateValuesBT(items.get(i).getBindingTemplates().getBindingTemplate(), xpath + xpath + "businessService(" + i + ").identifierBag.");
+                                ret.addAll(validateValuesBindingTemplate(items.get(i).getBindingTemplates().getBindingTemplate()));
                         }
                 }
+                return ret;
         }
 
-        private void validateValuesPA(List<PublisherAssertion> items) throws DispositionReportFaultMessage {
+        private List<String> validateValuesPublisherAssertion(List<PublisherAssertion> items) {
+
+                List<String> ret = new ArrayList<String>();
                 if (items == null) {
-                        return;
+                        return ret;
                 }
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getKeyedReference() != null) {
                                 List<KeyedReference> temp = new ArrayList<KeyedReference>();
                                 temp.add(items.get(i).getKeyedReference());
-                                validatedValuesKeyRef(temp, "publisherAssertion(" + i + ").");
+                                ret.addAll(validateValuesKeyRef(temp));
                         }
                 }
+                return ret;
         }
 
-        private void validateValuesTM(List<TModel> items) throws DispositionReportFaultMessage {
+        private List<String> validateValuesTModel(List<TModel> items) {
+                List<String> ret = new ArrayList<String>();
                 if (items == null) {
-                        return;
+                        return ret;
                 }
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getCategoryBag() != null) {
-                                validatedValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference(), "tModel(" + i + ").categoryBag.");
-                                validatedValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), "tModel(" + i + ").categoryBag.");
+                                ret.addAll(validateValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference()));
+                                ret.addAll(validateValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup()));
                         }
                         if (items.get(i).getIdentifierBag() != null) {
-                                validatedValuesKeyRef(items.get(i).getIdentifierBag().getKeyedReference(), "tModel(" + i + ").identifierBag.");
+                                ret.addAll(validateValuesKeyRef(items.get(i).getIdentifierBag().getKeyedReference()));
                         }
-                }
-        }
-
-        /**
-         * returns null if no valid values are defined (i.e. anything goes)
-         *
-         * @param tModelkey
-         * @return
-         */
-        public static List<String> getValidValues(String tModelKey) {
-                List<String> ret = null;
-                EntityManager em = PersistenceManager.getEntityManager();
-                EntityTransaction tx = em.getTransaction();
-                try {
-                        tx.begin();
-                        ValueSetValues items = em.find(ValueSetValues.class, tModelKey);
-                        if (items != null && items.getValues() != null) {
-                                ret = new ArrayList<String>();
-                                for (int i = 0; i < items.getValues().size(); i++) {
-                                        ret.add(items.getValues().get(i).getValue());
-                                }
-                        }
-                        tx.commit();
-                } finally {
-                        if (tx.isActive()) {
-                                tx.rollback();
-                        }
-                        em.close();
                 }
                 return ret;
-
         }
 
-        private void validatedValuesKeyRef(List<KeyedReference> items, String xpath) throws DispositionReportFaultMessage {
+        private List<String> validateValuesKeyRef(List<KeyedReference> items) {
+                List<String> ret = new ArrayList<String>();
                 if (items == null) {
-                        return;
+                        return ret;
                 }
-                String err = "";
+
                 for (int i = 0; i < items.size(); i++) {
-                        List<String> validValues = getValidValues(items.get(i).getTModelKey());
-                        if (validValues != null) {
-                                //ok we have some work to do
-                                boolean valid = false;
-                                for (int k = 0; k < validValues.size(); k++) {
-                                        if (validValues.get(i).equals(items.get(i).getKeyValue())) {
-                                                valid = true;
-                                        }
-                                }
-                                if (!valid) {
-                                        err += xpath + "keyedReference(" + i + ") ";
-                                }
-                        }
+                        ret.add(items.get(i).getTModelKey());
                 }
-                if (err.length() > 0) {
-                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", err));
-                }
+
+                return ret;
         }
 
-        private void validatedValuesKeyRefGrp(List<KeyedReferenceGroup> items, String xpath) throws DispositionReportFaultMessage {
+        private List<String> validateValuesKeyRefGrp(List<KeyedReferenceGroup> items) {
+                List<String> ret = new ArrayList<String>();
                 if (items == null) {
-                        return;
+                        return ret;
                 }
                 for (int i = 0; i < items.size(); i++) {
-                        validatedValuesKeyRef(items.get(i).getKeyedReference(), xpath + "keyReferenceGroup(" + i + ").");
+                        validateValuesKeyRef(items.get(i).getKeyedReference());
                 }
+                return ret;
         }
 
-        private void validateTmodelInstanceDetails(List<TModelInstanceInfo> tModelInstanceInfo, String xpath) throws DispositionReportFaultMessage {
+        private void validateTmodelInstanceDetails(List<TModelInstanceInfo> tModelInstanceInfo, String xpath) {
                 /*
                  if (tModelInstanceInfo == null) {
                  return;
@@ -267,5 +268,30 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
                  if (err.length() > 0) {
                  throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", err));
                  }*/
+        }
+
+        public static String ConvertKeyToClass(String tmodelkey) {
+
+                if (tmodelkey==null)return null;
+                if (tmodelkey.length() < 2) return null;
+                
+                String key =new String(new char[]{tmodelkey.charAt(0)}).toUpperCase() + tmodelkey.substring(1).toLowerCase();
+                key = key.replaceAll("[^a-zA-Z0-9 -]", "");
+                
+                String clazz = "org.apache.juddi.validation.vsv." + key;
+                
+                return clazz;
+                
+        }
+
+        public static List<String> getValidValues(String modelKey) {
+                try {
+                        ValueSetValidator vsv = (ValueSetValidator) Class.forName(ConvertKeyToClass(modelKey)).newInstance();
+                        return vsv.getValidValues();
+                } catch (ClassNotFoundException ex) {
+                } catch (InstantiationException ex) {
+                } catch (IllegalAccessException ex) {
+                }
+                return null;
         }
 }
