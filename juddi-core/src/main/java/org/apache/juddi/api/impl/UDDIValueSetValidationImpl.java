@@ -28,6 +28,7 @@ import org.apache.juddi.api.util.ValueSetValidationQuery;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
+import org.apache.juddi.validation.vsv.AbstractSimpleValidator;
 import org.apache.juddi.validation.vsv.ValueSetValidator;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
@@ -43,9 +44,29 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIValueSetValidationPortType;
 import org.uddi.vs_v3.ValidateValues;
 
-//@WebService(serviceName="UDDIValueSetValidationService", 
-//			endpointInterface="org.uddi.v3_service.UDDIValueSetValidationPortType",
-//			targetNamespace = "urn:uddi-org:v3_service")
+/**
+ * Implementation the UDDI v3 spec for Value Set Validation This is basically
+ * used to validate Keyed Reference value sets and offers validation via jUDDI's
+ * VSV extensibility framework.<Br><BR>
+ * To use this, define a tModel containing the following 
+ * <pre>&lt;categoryBag&gt;
+ * &lt;keyedReference keyName=&quot;&quot;
+ * keyValue=&quot;uddi:juddi.apache.org:servicebindings-valueset-cp&quot;
+ * tModelKey=&quot;uddi:uddi.org:identifier:validatedby&quot;/&gt;
+ * &lt;/categoryBag&gt;
+ * </pre>Where uddi:juddi.apache.org:servicebindings-valueset-cp
+ * is the binding key of the service implementing the VSV API (this service).
+ * <Br><BR>
+ * From there, you need to create a class that either implements
+ * {@link ValueSetValidator} or extends {@link AbstractSimpleValidator}. It must
+ * be in the package named org.apache.juddi.validation.vsv and must by named
+ * following the convention outlined in {@link #ConvertKeyToClass(java.lang.String)
+ * }
+ *
+ * @see ValueSetValidator
+ * @see AbstractSimpleValidator
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
+ */
 public class UDDIValueSetValidationImpl extends AuthenticatedService implements
      UDDIValueSetValidationPortType {
 
@@ -272,16 +293,20 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
 
         public static String ConvertKeyToClass(String tmodelkey) {
 
-                if (tmodelkey==null)return null;
-                if (tmodelkey.length() < 2) return null;
-                
-                String key =new String(new char[]{tmodelkey.charAt(0)}).toUpperCase() + tmodelkey.substring(1).toLowerCase();
+                if (tmodelkey == null) {
+                        return null;
+                }
+                if (tmodelkey.length() < 2) {
+                        return null;
+                }
+
+                String key = new String(new char[]{tmodelkey.charAt(0)}).toUpperCase() + tmodelkey.substring(1).toLowerCase();
                 key = key.replaceAll("[^a-zA-Z0-9 -]", "");
-                
+
                 String clazz = "org.apache.juddi.validation.vsv." + key;
-                
+
                 return clazz;
-                
+
         }
 
         public static List<String> getValidValues(String modelKey) {

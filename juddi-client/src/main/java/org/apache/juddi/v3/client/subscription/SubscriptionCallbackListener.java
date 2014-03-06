@@ -407,13 +407,6 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
 
         }
 
-        @Override
-        protected void finalize() throws Throwable {
-                run();
-                super.finalize();
-
-        }
-
         /**
          * shutdown hook
          */
