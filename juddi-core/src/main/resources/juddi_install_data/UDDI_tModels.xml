@@ -64,6 +64,7 @@
             <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
             <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
             <keyedReference keyName="uddi-org:types:cacheable" keyValue="cacheable" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:identifier:validatedby"/>
         </categoryBag>
     </tModel>
     <tModel tModelKey="uddi:uddi.org:categorization:general_keywords">

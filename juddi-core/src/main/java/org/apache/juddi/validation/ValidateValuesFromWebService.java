@@ -113,6 +113,7 @@ public class ValidateValuesFromWebService {
                 } catch (Exception ex) {
                         log.warn(ex);
                         ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", ex.getMessage()));
+                        throw x;
                 }
         }
 
@@ -126,6 +127,7 @@ public class ValidateValuesFromWebService {
                 } catch (Exception ex) {
                         log.warn(ex);
                         ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", ex.getMessage()));
+                        throw x;
                 }
         }
 
@@ -139,6 +141,7 @@ public class ValidateValuesFromWebService {
                 } catch (Exception ex) {
                         log.warn(ex);
                         ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", ex.getMessage()));
+                        throw x;
                 }
         }
 
@@ -151,6 +154,7 @@ public class ValidateValuesFromWebService {
                 } catch (Exception ex) {
                         log.warn(ex);
                         ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", ex.getMessage()));
+                        throw x;
                 }
         }
 }

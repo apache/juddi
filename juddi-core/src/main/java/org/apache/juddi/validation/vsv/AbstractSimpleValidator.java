@@ -30,8 +30,11 @@ import org.uddi.api_v3.TModelInstanceInfo;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
- *
+ * A simple base class for the validator interface that lets you define a simple set of allowed values. 
+ * All other values will be rejected. Valid values apply to all UDDI elements
  * @author Alex O'Ree
+ * @since 3.2.1
+ * 
  */
 public abstract class AbstractSimpleValidator implements ValueSetValidator {
 

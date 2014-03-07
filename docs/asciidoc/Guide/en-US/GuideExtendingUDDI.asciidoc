@@ -25,7 +25,14 @@ Next, setup a subscription and reference the BindingTemplate key that represents
 
 === KeyedReference Value Set Validation Services
 
-Reserved for future discussion for jUDDI v3.3
+Since jUDDI 3.2.1, we now have support for the Value Set Validation Service. This allows you to define a validator that will check when a user saves a UDDI entity that references a given tModel that contains a keyed reference to uddi:uddi.org:identifier:validatedby (which points to the VSV service).
+
+To defined your own validator, use the following steps
+# Create you tModel with a named key
+# Implement the org.apache.juddi.validation.vsv.ValueSetValidator interface
+# Name your implementation class using the naming schema defined in the ConvertKeyToClass function of UDDIValueSetValidationImpl (first letter is upper, all else is lower. Numbers and letters only. Class must be in the package org.apache.juddi.validation.vsv
+# Update your saved tModel and add a keyed reference for uddi:uddi.org:identifier:validatedby using the value of uddi:juddi.apache.org:servicebindings-valueset-cp
+# Get your class in the class path of jUDDI and give it a shot
 
 === Cryptographic Providers
 

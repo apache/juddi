@@ -16,11 +16,9 @@
 package org.apache.juddi.validation.vsv;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import org.apache.juddi.config.PersistenceManager;
-import org.apache.juddi.model.ValueSetValues;
+import java.util.Map;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.InvalidValueException;
 import org.uddi.api_v3.BindingTemplate;
@@ -46,19 +44,19 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  *
  * <h4 style="margin-left:0in;text-indent:0in">11.1.1.4 Valid Values</h4>
  *
-<p class="MsoBodyText">Checking of references to this value set consists of
+ * <p class="MsoBodyText">Checking of references to this value set consists of
  * ensuring that the keyValues are from the set of categories listed
  * below.&nbsp; No contextual checks are performed unless otherwise specified
  * for a given value.</p>
  *
-<p class="MsoBodyText">The following constitute the value set for this
+ * <p class="MsoBodyText">The following constitute the value set for this
  * category system. The valid values are those categories marked as being
  * "allowed". These values are used in the keyValue attributes of keyedReference
  * elements that are contained in categoryBag elements.</p>
  *
-<p class="MsoBodyText">&nbsp;</p>
+ * <p class="MsoBodyText">&nbsp;</p>
  *
-<table class="specTable"
+ * <table class="specTable"
  * style="width:6.0in;margin-left:.5in;border-collapse:collapse;border:none"
  * border="1" cellpadding="0" cellspacing="0" width="576">
  * <thead>
@@ -637,9 +635,9 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * </tr>
  * </tbody></table>
  *
-<p class="MsoBodyText">&nbsp;</p>
+ * <p class="MsoBodyText">&nbsp;</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>tModel: The UDDI type category system is structured to allow
@@ -648,7 +646,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * categorization of tModels within the UDDI registry. Categorization is not
  * allowed with this key.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>valueSet: A valueSet is the parent branch for the identifier,
@@ -657,7 +655,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * value set tModel to indicate redefinition of purpose, derivation, extension
  * or equivalence.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>identifier: An identifier tModel represents a specific set of
@@ -666,7 +664,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * &amp; Bradstreet D-U-N-S® Number uniquely identifies companies globally. The
  * D-U-N-S® Number system is an identifier system. </p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>namespace: A namespace tModel represents a scoping constraint
@@ -676,14 +674,14 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * example, the uddi-org:relationships tModel, which is used to assert
  * relationships between businessEntity elements, is a namespace tModel.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>categorization: A categorization tModel is used for category
  * systems within the UDDI registry. NAICS and UNSPSC are examples of
  * categorization tModels.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>postalAddress: A postalAddress tModel is used to identify
@@ -691,21 +689,21 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * tModels may be used with the address element to distinguish different forms
  * of postal address.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>categorizationGroup: A categorizationGroup tModel is used to
  * relate one or more category system tModels to one another so that they can be
  * used in keyedReferenceGroups.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>relationship: A relationship tModel is used for relationship
  * categorizations within the UDDI registry. relationship tModels are typically
  * used in connection with publisher relationship assertions.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>specification: A specification tModel is used for tModels that
@@ -714,14 +712,14 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * interaction that are prescribed by the Web service. tModels describing XML,
  * COM, CORBA, or any other Web services are specification tModels.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>xmlSpec: An xmlSpec tModel is a refinement of the specification
  * tModel type. It is used to indicate that the interaction with the Web service
  * is via XML. The UDDI API tModels are xmlSpec tModels.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>soapSpec: Further refining the xmlSpec tModel type, a soapSpec
@@ -729,24 +727,24 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * The UDDI API tModels are soapSpec tModels, in addition to xmlSpec
  * tModels.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>wsdlSpec: A tModel for a Web service described using WSDL is
  * categorized as a wsdlSpec.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>protocol: A tModel describing a protocol of any sort.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>transport: A transport tModel is a specific type of protocol.
  * HTTP, FTP, and SMTP are types of transport tModels.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>signatureComponent: A signature component is used to for cases
@@ -757,7 +755,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * error handling services. Each of these tModels would be of type signature
  * component, in addition to any others as appropriate.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>unvalidatable: Used to mark a categorization or identifier
@@ -766,7 +764,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * disallow its use.&nbsp; See Section <a href="#_Ref8981064 ">6.4</a>
  * <i>Checked Value Set Validation</i> for more information.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>checked: Marking a tModel with this categorization asserts that
@@ -774,14 +772,14 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * keyedReferences, may be checked.&nbsp; Registry, and possibly node policy
  * determines when and how a checked value set is supported.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>unchecked: Marking a tModel with this categorization asserts
  * that it represents a value set or category group system whose use, through
  * keyedReferences, is not checked.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>cacheable: Marking a tModel with this categorization asserts
@@ -790,7 +788,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * cacheable checked value set or category group system must rely solely upon
  * matching references against the cached set of&nbsp; values.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>uncacheable: Marking a tModel with this categorization asserts
@@ -800,7 +798,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * the tModel marked with this categorization and may consider contextual
  * criteria involving the entity associated with the reference.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>keyGenerator: Marking a tModel with this categorization
@@ -810,20 +808,20 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * categorization for something other than a key generator tModel will fail with
  * E_valueNotAllowed returned. </p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>findQualifier: A findQualifier tModel is used as the value of a
  * findQualifier element to indicate the type of processing to occur for the
  * inquiry function in which it is included.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>sortOrder: A sort order tModel defines a collation sequence
  * that can be used during inquiries to control ordering of the results.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>useTypeDesignator: A useTypeDesignator tModel is used to
@@ -833,7 +831,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * of common use types as simple strings; tModels of the useTypeDesignator type
  * are used to describe others.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>bindingTemplate: This key is the root of the branch of the
@@ -841,7 +839,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * bindingTemplates within the UDDI registry. Categorization is not allowed with
  * this key.</p>
  *
-<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
  * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>wsdlDeployment: A bindingTemplate categorized as a
@@ -852,19 +850,79 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public class Uddiuddiorgcategorizationtype implements ValueSetValidator {
 
+        public static final String key = "uddi:uddi.org:categorization:types";
+
+        private static Map<String, Boolean> NotAllowedOnBindings;
+        private static Map<String, Boolean> NotAllowedOnTModels;
+
+        static {
+                NotAllowedOnTModels = new HashMap<String, Boolean>();
+                NotAllowedOnTModels.put("wsdlDeployment".toLowerCase(), true);
+                NotAllowedOnBindings = new HashMap<String, Boolean>();
+                NotAllowedOnBindings.put("valueSet".toLowerCase(), true);
+                NotAllowedOnBindings.put("identifier".toLowerCase(), true);
+                NotAllowedOnBindings.put("namespace".toLowerCase(), true);
+                NotAllowedOnBindings.put("categorization".toLowerCase(), true);
+                NotAllowedOnBindings.put("postalAddress".toLowerCase(), true);
+                NotAllowedOnBindings.put("categorizationGroup".toLowerCase(), true);
+                NotAllowedOnBindings.put("relationship".toLowerCase(), true);
+                NotAllowedOnBindings.put("specification".toLowerCase(), true);
+                NotAllowedOnBindings.put("xmlSpec".toLowerCase(), true);
+                NotAllowedOnBindings.put("soapSpec".toLowerCase(), true);
+                NotAllowedOnBindings.put("wsdlSpec".toLowerCase(), true);
+                NotAllowedOnBindings.put("protocol".toLowerCase(), true);
+                NotAllowedOnBindings.put("transport".toLowerCase(), true);
+                NotAllowedOnBindings.put("signatureComponent".toLowerCase(), true);
+                NotAllowedOnBindings.put("unvalidatable".toLowerCase(), true);
+                NotAllowedOnBindings.put("checked".toLowerCase(), true);
+                NotAllowedOnBindings.put("unchecked".toLowerCase(), true);
+                NotAllowedOnBindings.put("cacheable".toLowerCase(), true);
+                NotAllowedOnBindings.put("uncacheable".toLowerCase(), true);
+                NotAllowedOnBindings.put("keyGenerator".toLowerCase(), true);
+                NotAllowedOnBindings.put("findQualifier".toLowerCase(), true);
+                NotAllowedOnBindings.put("sortOrder".toLowerCase(), true);
+                NotAllowedOnBindings.put("useTypeDesignator".toLowerCase(), true);
+        }
+
         @Override
         public void validateValuesBindingTemplate(List<BindingTemplate> items, String xpath) throws DispositionReportFaultMessage {
                 if (items == null) {
                         return;
                 }
+                //can't use everything else
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getCategoryBag() != null) {
-                                validatedValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference(), xpath + "bindingTemplate(" + i + ").categoryBag.");
-                                validatedValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), xpath + "bindingTemplate(" + i + ").categoryBag.");
+                                for (int k = 0; k < items.get(i).getCategoryBag().getKeyedReference().size(); k++) {
+                                        if (items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() != null) {
+                                                if (NotAllowedOnBindings.containsKey(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey().toLowerCase())) {
+                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Value [" + items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() + "] not allowed on bindingtemplates for key " + key));
+                                                }
+                                        }
+
+                                }
+
+                                for (int k = 0; k < items.get(i).getCategoryBag().getKeyedReferenceGroup().size(); k++) {
+                                        if (items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey() != null) {
+                                                if (NotAllowedOnBindings.containsKey(items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey().toLowerCase())) {
+                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Value [" + items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey() + "] not allowed on bindingtemplates for key " + key));
+                                                }
+                                                for (int j = 0; j < items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().size(); j++) {
+                                                        if (items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey() != null) {
+                                                                if (NotAllowedOnBindings.containsKey(items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey().toLowerCase())) {
+                                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Value [" + items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey() + "] not allowed on bindingtemplates for key " + key));
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                }
                         }
                         if (items.get(i).getTModelInstanceDetails() != null) {
 
-                                validateTmodelInstanceDetails(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo(), xpath + "bindingTemplate(" + i + ").tModelInstanceDetails.");
+                                for (int k = 0; i < items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {
+                                        if (key.equalsIgnoreCase(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey())) {
+                                                throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", key + " is not allowed on tModelInstanceInfos"));
+                                        }
+                                }
                         }
                 }
         }
@@ -874,14 +932,11 @@ public class Uddiuddiorgcategorizationtype implements ValueSetValidator {
                 if (items == null) {
                         return;
                 }
+
+                //cant use the following
+                //wsdlDeployment
                 for (int i = 0; i < items.size(); i++) {
-                        if (items.get(i).getCategoryBag() != null) {
-                                validatedValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference(), "businessEntity(" + i + ").categoryBag.");
-                                validatedValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), "businessEntity(" + i + ").categoryBag.");
-                        }
-                        if (items.get(i).getIdentifierBag() != null) {
-                                validatedValuesKeyRef(items.get(i).getIdentifierBag().getKeyedReference(), "businessEntity(" + i + ").identifierBag.");
-                        }
+
                         if (items.get(i).getBusinessServices() != null) {
                                 validateValuesBusinessService(items.get(i).getBusinessServices().getBusinessService(), "businessEntity(" + i + ").");
                         }
@@ -895,8 +950,8 @@ public class Uddiuddiorgcategorizationtype implements ValueSetValidator {
                 }
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getCategoryBag() != null) {
-                                validatedValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference(), xpath + "businessService(" + i + ").categoryBag.");
-                                validatedValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), xpath + "businessService(" + i + ").categoryBag.");
+                                //No specific rules for business services
+
                         }
                         if (items.get(i).getBindingTemplates() != null) {
                                 validateValuesBindingTemplate(items.get(i).getBindingTemplates().getBindingTemplate(), xpath + xpath + "businessService(" + i + ").identifierBag.");
@@ -909,47 +964,7 @@ public class Uddiuddiorgcategorizationtype implements ValueSetValidator {
                 if (items == null) {
                         return;
                 }
-                for (int i = 0; i < items.size(); i++) {
-                        if (items.get(i).getKeyedReference() != null) {
-                                List<KeyedReference> temp = new ArrayList<KeyedReference>();
-                                temp.add(items.get(i).getKeyedReference());
-                                validatedValuesKeyRef(temp, "publisherAssertion(" + i + ").");
-                        }
-                }
-        }
-
-        private void validatedValuesKeyRef(List<KeyedReference> items, String xpath) throws DispositionReportFaultMessage {
-                if (items == null) {
-                        return;
-                }
-                String err = "";
-                for (int i = 0; i < items.size(); i++) {
-                        List<String> validValues = getValidValues();
-                        if (validValues != null) {
-                                //ok we have some work to do
-                                boolean valid = false;
-                                for (int k = 0; k < validValues.size(); k++) {
-                                        if (validValues.get(i).equals(items.get(i).getKeyValue())) {
-                                                valid = true;
-                                        }
-                                }
-                                if (!valid) {
-                                        err += xpath + "keyedReference(" + i + ") ";
-                                }
-                        }
-                }
-                if (err.length() > 0) {
-                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", err));
-                }
-        }
-
-        private void validatedValuesKeyRefGrp(List<KeyedReferenceGroup> items, String xpath) throws DispositionReportFaultMessage {
-                if (items == null) {
-                        return;
-                }
-                for (int i = 0; i < items.size(); i++) {
-                        validatedValuesKeyRef(items.get(i).getKeyedReference(), xpath + "keyReferenceGroup(" + i + ").");
-                }
+                //no rules for PA
         }
 
         @Override
@@ -960,13 +975,8 @@ public class Uddiuddiorgcategorizationtype implements ValueSetValidator {
         @Override
         public List<String> getValidValues() {
                 List<String> ret = new ArrayList<String>();
-                ret.add("checked");
-                ret.add("unchecked");
-                ret.add("cacheable");
-                ret.add("uncacheable");
-                ret.add("keygenerator");
-                ret.add("findqualifier");
-                ret.add("wsdldeployment");
+                ret.addAll(NotAllowedOnBindings.keySet());
+                ret.addAll(NotAllowedOnTModels.keySet());
                 return ret;
         }
 
@@ -977,11 +987,39 @@ public class Uddiuddiorgcategorizationtype implements ValueSetValidator {
                 }
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getCategoryBag() != null) {
-                                validatedValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference(), "tModel(" + i + ").categoryBag.");
-                                validatedValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), "tModel(" + i + ").categoryBag.");
+                                for (int k = 0; k < items.get(i).getCategoryBag().getKeyedReference().size(); k++) {
+                                        if (items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() != null) {
+                                                if (NotAllowedOnTModels.containsKey(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey().toLowerCase())) {
+                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Value [" + items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() + "] not allowed on tModels for key " + key));
+                                                }
+                                        }
+
+                                }
+
+                                for (int k = 0; k < items.get(i).getCategoryBag().getKeyedReferenceGroup().size(); k++) {
+                                        if (items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey() != null) {
+                                                if (NotAllowedOnTModels.containsKey(items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey().toLowerCase())) {
+                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Value [" + items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey() + "] not allowed on tModels for key " + key));
+                                                }
+                                                for (int j = 0; j < items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().size(); j++) {
+                                                        if (items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey() != null) {
+                                                                if (NotAllowedOnTModels.containsKey(items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey().toLowerCase())) {
+                                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Value [" + items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey() + "] not allowed on tModels for key " + key));
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                }
                         }
                         if (items.get(i).getIdentifierBag() != null) {
-                                validatedValuesKeyRef(items.get(i).getIdentifierBag().getKeyedReference(), "tModel(" + i + ").identifierBag.");
+                                for (int k = 0; k < items.get(i).getCategoryBag().getKeyedReference().size(); k++) {
+                                        if (items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() != null) {
+                                                if (NotAllowedOnTModels.containsKey(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey().toLowerCase())) {
+                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Value [" + items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() + "] not allowed on tModels for key " + key));
+                                                }
+                                        }
+
+                                }
                         }
                 }
         }
