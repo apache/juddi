@@ -23,8 +23,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import static org.apache.juddi.api.impl.AuthenticatedService.logger;
 import org.apache.juddi.api.util.QueryStatus;
+import org.apache.juddi.api.util.SecurityQuery;
 import org.apache.juddi.api.util.ValueSetValidationQuery;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.model.Tmodel;
+import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
@@ -48,14 +55,14 @@ import org.uddi.vs_v3.ValidateValues;
  * Implementation the UDDI v3 spec for Value Set Validation This is basically
  * used to validate Keyed Reference value sets and offers validation via jUDDI's
  * VSV extensibility framework.<Br><BR>
- * To use this, define a tModel containing the following 
+ * To use this, define a tModel containing the following
  * <pre>&lt;categoryBag&gt;
  * &lt;keyedReference keyName=&quot;&quot;
  * keyValue=&quot;uddi:juddi.apache.org:servicebindings-valueset-cp&quot;
  * tModelKey=&quot;uddi:uddi.org:identifier:validatedby&quot;/&gt;
  * &lt;/categoryBag&gt;
- * </pre>Where uddi:juddi.apache.org:servicebindings-valueset-cp
- * is the binding key of the service implementing the VSV API (this service).
+ * </pre>Where uddi:juddi.apache.org:servicebindings-valueset-cp is the binding
+ * key of the service implementing the VSV API (this service).
  * <Br><BR>
  * From there, you need to create a class that either implements
  * {@link ValueSetValidator} or extends {@link AbstractSimpleValidator}. It must
@@ -116,8 +123,33 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
                 classNames.addAll(validateValuesTModel(body.getTModel()));
                 Set<String> set = new HashSet<String>(classNames);
                 Iterator<String> iterator = set.iterator();
-                while (iterator.hasNext()) {
-                        String tmodelkey = iterator.next();
+                Set<String> validators = new HashSet<String>();
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        while (iterator.hasNext()) {
+
+                                String key = iterator.next();
+                                Tmodel find = em.find(org.apache.juddi.model.Tmodel.class, key);
+                                if (find != null) {
+                                        if (ContainsValidatedKey(find, UDDIConstants.IS_VALIDATED_BY)) {
+                                                validators.add(key);
+                                        }
+                                }
+                        }
+
+                } catch (Exception drfm) {
+                        logger.warn("Unable to process vsv validation", drfm);
+                        throw new FatalErrorException(new ErrorMessage("errors.valuesetvalidation.fatal", drfm.getMessage()));
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+                Iterator<String> iterator1 = validators.iterator();
+                while (iterator1.hasNext()) {
+                        String tmodelkey = iterator1.next();
                         String clazz = ConvertKeyToClass(tmodelkey);
                         ValueSetValidator vsv;
                         if (clazz == null) {
@@ -131,10 +163,13 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
                                         vsv.validateValuesPublisherAssertion(body.getPublisherAssertion());
                                         vsv.validateValuesTModel(body.getTModel());
                                 } catch (ClassNotFoundException ex) {
+                                        logger.warn("Unable to process vsv validation for " + tmodelkey, ex);
                                         throw new FatalErrorException(new ErrorMessage("errors.valuesetvalidation.fatal", "key=" + tmodelkey + " class=" + clazz + " " + ex.getMessage()));
                                 } catch (InstantiationException ex) {
+                                        logger.warn("Unable to process vsv validation for " + tmodelkey, ex);
                                         throw new FatalErrorException(new ErrorMessage("errors.valuesetvalidation.fatal", "key=" + tmodelkey + " class=" + clazz + " " + ex.getMessage()));
                                 } catch (IllegalAccessException ex) {
+                                        logger.warn("Unable to process vsv validation for " + tmodelkey, ex);
                                         throw new FatalErrorException(new ErrorMessage("errors.valuesetvalidation.fatal", "key=" + tmodelkey + " class=" + clazz + " " + ex.getMessage()));
                                 }
                         }
@@ -318,5 +353,36 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
                 } catch (IllegalAccessException ex) {
                 }
                 return null;
+        }
+
+        private boolean ContainsValidatedKey(Tmodel find, String key) {
+                if (find.getCategoryBag() != null) {
+                        if (find.getCategoryBag().getKeyedReferences() != null) {
+                                for (int i = 0; i < find.getCategoryBag().getKeyedReferences().size(); i++) {
+                                        if (key.equalsIgnoreCase(find.getCategoryBag().getKeyedReferences().get(i).getTmodelKeyRef())) {
+                                                return true;
+                                        }
+                                }
+                        }
+                        if (find.getCategoryBag().getKeyedReferenceGroups() != null) {
+                                for (int i = 0; i < find.getCategoryBag().getKeyedReferenceGroups().size(); i++) {
+                                        for (int k = 0; k < find.getCategoryBag().getKeyedReferenceGroups().get(i).getKeyedReferences().size(); k++) {
+                                                if (key.equalsIgnoreCase(find.getCategoryBag().getKeyedReferenceGroups().get(i).getKeyedReferences().get(k).getTmodelKeyRef())) {
+                                                        return true;
+                                                }
+                                        }
+                                }
+                        }
+                }
+                if (find.getTmodelIdentifiers() != null) {
+
+                        for (int i = 0; i < find.getTmodelIdentifiers().size(); i++) {
+                                if (key.equalsIgnoreCase(find.getTmodelIdentifiers().get(i).getTmodelKeyRef())) {
+                                        return true;
+                                }
+                        }
+                }
+
+                return false;
         }
 }

@@ -352,8 +352,9 @@ public class ValidatePublish extends ValidateUDDIApi {
 
                 for (org.uddi.api_v3.BusinessEntity entity : entityList) {
                         validateBusinessEntity(em, entity, config, publisher);
-                        validateCheckedTModels(entity, config);
+                       
                 }
+                 validateCheckedTModelsBE(entityList, config);
         }
 
         public void validateSaveBusinessMax(EntityManager em) throws DispositionReportFaultMessage {
@@ -407,8 +408,9 @@ public class ValidatePublish extends ValidateUDDIApi {
                 for (org.uddi.api_v3.BusinessService entity : entityList) {
                         // Entity specific data validation
                         validateBusinessService(em, entity, null, config, publisher);
-                        validateCheckedTModels(entity, config);
+
                 }
+                validateCheckedTModelsBS(entityList, config);
         }
 
         public void validateSaveServiceMax(EntityManager em, String businessKey) throws DispositionReportFaultMessage {
@@ -460,8 +462,9 @@ public class ValidatePublish extends ValidateUDDIApi {
 
                 for (org.uddi.api_v3.BindingTemplate entity : entityList) {
                         validateBindingTemplate(em, entity, null, config, publisher);
-                        validateCheckedTModels(entity, config);
+                        
                 }
+                validateCheckedTModelsBT(entityList, config);
         }
 
         public void validateSaveBindingMax(EntityManager em, String serviceKey) throws DispositionReportFaultMessage {
@@ -513,8 +516,9 @@ public class ValidatePublish extends ValidateUDDIApi {
 
                 for (org.uddi.api_v3.TModel entity : entityList) {
                         validateTModel(em, entity, config, publisher);
-                        validateCheckedTModels(entity, config);
+                        
                 }
+                validateCheckedTModelsTM(entityList, config);
         }
 
         public void validateSaveTModelMax(EntityManager em) throws DispositionReportFaultMessage {
@@ -894,6 +898,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 for (org.uddi.api_v3.BindingTemplate bindingTemplate : bindingTemplateList) {
                         validateBindingTemplate(em, bindingTemplate, parent, config, publisher);
                 }
+                
 
         }
 
@@ -1032,7 +1037,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 validateDescriptions(bindingTemplate.getDescription());
                 validateHostingRedirector(em, bindingTemplate.getHostingRedirector(), config);
 
-                validateCheckedTModels(bindingTemplate, config);
+                //validateCheckedTModels(bindingTemplate, config);
         }
 
         public void validateTModel(EntityManager em, org.uddi.api_v3.TModel tModel, Configuration config, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
@@ -1995,90 +2000,101 @@ public class ValidatePublish extends ValidateUDDIApi {
                 return api;
         }
 
-        private List<String> GetBindingKeysCheckedTModelKeyedReference(Map<String, TModel> cache, BindingTemplate bt) {
+        private List<String> GetBindingKeysCheckedTModelKeyedReferenceBT(Map<String, TModel> cache, List<BindingTemplate> obj) {
                 List<String> ret = new ArrayList<String>();
 
-                if (bt == null) {
+                if (obj == null) {
                         return ret;
                 }
-                if (bt.getCategoryBag() != null) {
-                        for (int i = 0; i < bt.getCategoryBag().getKeyedReference().size(); i++) {
-                                ret.addAll(GetBindingKeysCheckedTModelKeyedReference(cache, bt.getCategoryBag().getKeyedReference().get(i)));
+                for (BindingTemplate bt : obj) {
+                        if (bt.getCategoryBag() != null) {
+                                for (int i = 0; i < bt.getCategoryBag().getKeyedReference().size(); i++) {
+                                        ret.addAll(GetBindingKeysCheckedTModelKeyedReference(cache, bt.getCategoryBag().getKeyedReference().get(i)));
+                                }
                         }
                 }
 
                 return ret;
         }
 
-        private List<String> GetBindingKeysCheckedTModelKeyedReference(Map<String, TModel> cache, BusinessService bt) {
+        private List<String> GetBindingKeysCheckedTModelKeyedReferenceBS(Map<String, TModel> cache, List<BusinessService> obj) {
                 List<String> ret = new ArrayList<String>();
 
-                if (bt == null) {
+                if (obj == null) {
                         return ret;
                 }
-                if (bt.getCategoryBag() != null) {
-                        for (int i = 0; i < bt.getCategoryBag().getKeyedReference().size(); i++) {
-                                ret.addAll(GetBindingKeysCheckedTModelKeyedReference(cache, bt.getCategoryBag().getKeyedReference().get(i)));
+                for (BusinessService bt : obj) {
+                        if (bt.getCategoryBag() != null) {
+                                for (int i = 0; i < bt.getCategoryBag().getKeyedReference().size(); i++) {
+                                        ret.addAll(GetBindingKeysCheckedTModelKeyedReference(cache, bt.getCategoryBag().getKeyedReference().get(i)));
+                                }
                         }
-                }
-                if (bt.getBindingTemplates() != null) {
-                        for (int i = 0; i < bt.getBindingTemplates().getBindingTemplate().size(); i++) {
-                                ret.addAll(GetBindingKeysCheckedTModelKeyedReference(cache, bt.getBindingTemplates().getBindingTemplate().get(i)));
+                        if (bt.getBindingTemplates() != null) {
+                                ret.addAll(GetBindingKeysCheckedTModelKeyedReferenceBT(cache, bt.getBindingTemplates().getBindingTemplate()));
                         }
                 }
 
                 return ret;
         }
 
-        private List<String> GetBindingKeysCheckedTModelKeyedReference(Map<String, TModel> cache, BusinessEntity bt) {
+        private List<String> GetBindingKeysCheckedTModelKeyedReferenceBE(Map<String, TModel> cache, List<BusinessEntity> obj) {
                 List<String> ret = new ArrayList<String>();
 
-                if (bt == null) {
+                if (obj == null) {
                         return ret;
                 }
-                if (bt.getCategoryBag() != null) {
-                        for (int i = 0; i < bt.getCategoryBag().getKeyedReference().size(); i++) {
-                                ret.addAll(GetBindingKeysCheckedTModelKeyedReference(cache, bt.getCategoryBag().getKeyedReference().get(i)));
+                for (BusinessEntity bt : obj) {
+                        if (bt.getCategoryBag() != null) {
+                                for (int i = 0; i < bt.getCategoryBag().getKeyedReference().size(); i++) {
+                                        ret.addAll(GetBindingKeysCheckedTModelKeyedReference(cache, bt.getCategoryBag().getKeyedReference().get(i)));
+                                }
                         }
-                }
-                if (bt.getIdentifierBag() != null) {
-                        for (int i = 0; i < bt.getIdentifierBag().getKeyedReference().size(); i++) {
-                                ret.addAll(GetBindingKeysCheckedTModelKeyedReference(cache, bt.getIdentifierBag().getKeyedReference().get(i)));
+                        if (bt.getIdentifierBag() != null) {
+                                for (int i = 0; i < bt.getIdentifierBag().getKeyedReference().size(); i++) {
+                                        ret.addAll(GetBindingKeysCheckedTModelKeyedReference(cache, bt.getIdentifierBag().getKeyedReference().get(i)));
+                                }
                         }
-                }
 
-                if (bt.getBusinessServices() != null) {
-                        for (int i = 0; i < bt.getBusinessServices().getBusinessService().size(); i++) {
-                                ret.addAll(GetBindingKeysCheckedTModelKeyedReference(cache, bt.getBusinessServices().getBusinessService().get(i)));
+                        if (bt.getBusinessServices() != null) {
+                                ret.addAll(GetBindingKeysCheckedTModelKeyedReferenceBS(cache, bt.getBusinessServices().getBusinessService()));
                         }
                 }
-
                 return ret;
         }
 
-        private List<String> GetBindingKeysCheckedTModelKeyedReference(Map<String, TModel> cache, TModel bt) {
+        private List<String> GetBindingKeysCheckedTModelKeyedReferenceTM(Map<String, TModel> cache, List<TModel> obj) {
                 List<String> ret = new ArrayList<String>();
 
-                if (bt == null) {
+                if (obj == null) {
                         return ret;
                 }
-                if (bt.getCategoryBag() != null) {
-                        for (int i = 0; i < bt.getCategoryBag().getKeyedReference().size(); i++) {
-                                ret.addAll(GetBindingKeysCheckedTModelKeyedReference(cache, bt.getCategoryBag().getKeyedReference().get(i)));
+                for (TModel bt : obj) {
+                        if (bt.getCategoryBag() != null) {
+                                for (int i = 0; i < bt.getCategoryBag().getKeyedReference().size(); i++) {
+                                        ret.addAll(GetBindingKeysCheckedTModelKeyedReference(cache, bt.getCategoryBag().getKeyedReference().get(i)));
+                                }
+                        }
+                        if (bt.getIdentifierBag() != null) {
+                                for (int i = 0; i < bt.getIdentifierBag().getKeyedReference().size(); i++) {
+                                        ret.addAll(GetBindingKeysCheckedTModelKeyedReference(cache, bt.getIdentifierBag().getKeyedReference().get(i)));
+                                }
                         }
                 }
-                if (bt.getIdentifierBag() != null) {
-                        for (int i = 0; i < bt.getIdentifierBag().getKeyedReference().size(); i++) {
-                                ret.addAll(GetBindingKeysCheckedTModelKeyedReference(cache, bt.getIdentifierBag().getKeyedReference().get(i)));
-                        }
-                }
-
                 return ret;
         }
 
+        /**
+         * this should return a list of binding keys, only if the referenced kr
+         * contains is validated by
+         *
+         * @param cache
+         * @param get
+         * @return
+         */
         private List<String> GetBindingKeysCheckedTModelKeyedReference(Map<String, TModel> cache, KeyedReference get) {
                 List<String> ret = new ArrayList<String>();
                 TModel ref = null;
+                log.debug("looking for is validated by for keyedref " + get.getTModelKey());
                 if (cache.containsKey(get.getTModelKey())) {
                         ref = cache.get(get.getTModelKey());
                 }
@@ -2091,27 +2107,39 @@ public class ValidatePublish extends ValidateUDDIApi {
                         }
                 }
                 if (ref != null) {
+
                         ret.addAll(TModelContains(UDDIConstants.IS_VALIDATED_BY, ref));
 
                 }
                 return ret;
         }
 
-        private List<String> TModelContains(String IS_VALIDATED_BY, TModel ref) {
+        /**
+         * returns all keyvalues from ref.catbag and identbag where the tmodel
+         * key matches
+         *
+         * @param key
+         * @param ref
+         * @return
+         */
+        private List<String> TModelContains(String key, TModel ref) {
 
+                log.debug("looking for key=" + key + " from tModel " + ref.getTModelKey());
                 List<String> ret = new ArrayList<String>();
                 if (ref == null) {
                         return null;
                 }
                 if (ref.getCategoryBag() != null) {
                         for (int i = 0; i < ref.getCategoryBag().getKeyedReference().size(); i++) {
-                                if (ref.getCategoryBag().getKeyedReference().get(i).getTModelKey().equalsIgnoreCase(IS_VALIDATED_BY)) {
+                                if (ref.getCategoryBag().getKeyedReference().get(i).getTModelKey().equalsIgnoreCase(key)) {
+                                        log.debug("found reference for key=" + key + " from tModel " + ref.getTModelKey() + " validation endpoint " + ref.getCategoryBag().getKeyedReference().get(i).getKeyValue());
                                         ret.add(ref.getCategoryBag().getKeyedReference().get(i).getKeyValue());
                                 }
                         }
                         for (int i = 0; i < ref.getCategoryBag().getKeyedReferenceGroup().size(); i++) {
                                 for (int k = 0; k < ref.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().size(); k++) {
-                                        if (ref.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getTModelKey().equalsIgnoreCase(IS_VALIDATED_BY)) {
+                                        if (ref.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getTModelKey().equalsIgnoreCase(key)) {
+                                                log.debug("found reference for key=" + key + " from tModel " + ref.getTModelKey() + " validation endpoint " + ref.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getKeyValue());
                                                 ret.add(ref.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getKeyValue());
                                         }
                                 }
@@ -2119,7 +2147,8 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
                 if (ref.getIdentifierBag() != null) {
                         for (int i = 0; i < ref.getIdentifierBag().getKeyedReference().size(); i++) {
-                                if (ref.getIdentifierBag().getKeyedReference().get(i).getTModelKey().equalsIgnoreCase(IS_VALIDATED_BY)) {
+                                if (ref.getIdentifierBag().getKeyedReference().get(i).getTModelKey().equalsIgnoreCase(key)) {
+                                        log.debug("found reference for key=" + key + " from tModel " + ref.getTModelKey() + " validation endpoint " + ref.getIdentifierBag().getKeyedReference().get(i).getKeyValue());
                                         ret.add(ref.getIdentifierBag().getKeyedReference().get(i).getKeyValue());
                                 }
                         }
@@ -2159,7 +2188,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
         }
 
-        private void validateCheckedTModels(BindingTemplate bindingTemplate, Configuration config) throws ValueNotAllowedException {
+        private void validateCheckedTModelsBT(List<BindingTemplate> bindingTemplate, Configuration config) throws ValueNotAllowedException {
 
                 boolean checkRef = false;
                 try {
@@ -2172,7 +2201,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                         return;
                 }
                 Map<String, TModel> cache = new HashMap<String, TModel>();
-                List<String> bindings = GetBindingKeysCheckedTModelKeyedReference(cache, bindingTemplate);
+                List<String> bindings = GetBindingKeysCheckedTModelKeyedReferenceBT(cache, bindingTemplate);
 
                 if (!bindings.isEmpty()) {
                         //get a unique list
@@ -2190,7 +2219,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                         if (url != null) {
                                                 //call ValidateValuesFromWebService
                                                 //optimization for localhost?
-                                                ValidateValuesFromWebService.Validate(Rectify(url, config), bindingTemplate);
+                                                ValidateValuesFromWebService.ValidateBinding(Rectify(url, config), bindingTemplate);
                                         }
 
                                 }
@@ -2198,7 +2227,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
         }
 
-        private void validateCheckedTModels(BusinessService obj, Configuration config) throws ValueNotAllowedException {
+        private void validateCheckedTModelsBS(List<BusinessService> bizlist, Configuration config) throws ValueNotAllowedException {
                 boolean checkRef = false;
                 try {
                         checkRef = config.getBoolean(Property.JUDDI_ENFORCE_REFERENTIAL_INTEGRITY, false);
@@ -2209,7 +2238,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                         return;
                 }
                 Map<String, TModel> cache = new HashMap<String, TModel>();
-                List<String> bindings = GetBindingKeysCheckedTModelKeyedReference(cache, obj);
+                List<String> bindings = GetBindingKeysCheckedTModelKeyedReferenceBS(cache, bizlist);
 
                 if (!bindings.isEmpty()) {
                         //get a unique list
@@ -2227,7 +2256,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                         if (url != null) {
                                                 //call ValidateValuesFromWebService
                                                 //optimization for localhost?
-                                                ValidateValuesFromWebService.Validate(Rectify(url, config), obj);
+                                                ValidateValuesFromWebService.ValidateService(Rectify(url, config), bizlist);
                                         }
 
                                 }
@@ -2235,7 +2264,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
         }
 
-        private void validateCheckedTModels(BusinessEntity entity, Configuration config) throws ValueNotAllowedException {
+        private void validateCheckedTModelsBE(List<BusinessEntity> entity, Configuration config) throws ValueNotAllowedException {
                 boolean checkRef = false;
                 try {
                         checkRef = config.getBoolean(Property.JUDDI_ENFORCE_REFERENTIAL_INTEGRITY, false);
@@ -2246,7 +2275,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                         return;
                 }
                 Map<String, TModel> cache = new HashMap<String, TModel>();
-                List<String> bindings = GetBindingKeysCheckedTModelKeyedReference(cache, entity);
+                List<String> bindings = GetBindingKeysCheckedTModelKeyedReferenceBE(cache, entity);
 
                 if (!bindings.isEmpty()) {
                         //get a unique list
@@ -2264,7 +2293,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                         if (url != null) {
                                                 //call ValidateValuesFromWebService
                                                 //optimization for localhost?
-                                                ValidateValuesFromWebService.Validate(Rectify(url, config), entity);
+                                                ValidateValuesFromWebService.ValidateBusiness(Rectify(url, config), entity);
                                         }
 
                                 }
@@ -2272,7 +2301,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
         }
 
-        private void validateCheckedTModels(TModel entity, Configuration config) throws ValueNotAllowedException {
+        private void validateCheckedTModelsTM(List<TModel> entity, Configuration config) throws ValueNotAllowedException {
                 boolean checkRef = false;
                 try {
                         checkRef = config.getBoolean(Property.JUDDI_ENFORCE_REFERENTIAL_INTEGRITY, false);
@@ -2283,7 +2312,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                         return;
                 }
                 Map<String, TModel> cache = new HashMap<String, TModel>();
-                List<String> bindings = GetBindingKeysCheckedTModelKeyedReference(cache, entity);
+                List<String> bindings = GetBindingKeysCheckedTModelKeyedReferenceTM(cache, entity);
 
                 if (!bindings.isEmpty()) {
                         //get a unique list
@@ -2299,9 +2328,10 @@ public class ValidatePublish extends ValidateUDDIApi {
                                                 url = find.getHostingRedirector();
                                         }
                                         if (url != null) {
+                                                log.info("attempting vsv from " + url);
                                                 //call ValidateValuesFromWebService
                                                 //optimization for localhost?
-                                                ValidateValuesFromWebService.Validate(Rectify(url, config), entity);
+                                                ValidateValuesFromWebService.ValidateTModel(Rectify(url, config), entity);
                                         }
 
                                 }

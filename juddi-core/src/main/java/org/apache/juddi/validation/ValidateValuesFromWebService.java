@@ -15,6 +15,7 @@
  */
 package org.apache.juddi.validation;
 
+import java.util.List;
 import javax.xml.ws.BindingProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -86,27 +87,26 @@ public class ValidateValuesFromWebService {
                 return vsv;
         }
 
-        public static void Validate(String url, BusinessEntity obj) throws ValueNotAllowedException {
+       
 
+        public static void ValidateTModel(String url, List<TModel> obj) throws ValueNotAllowedException {
                 UDDIValueSetValidationPortType vsv = getPort(url);
                 ValidateValues req = new ValidateValues();
-                req.getBusinessEntity().add(obj);
+                req.getTModel().addAll(obj);
 
                 try {
                         DispositionReport validateValues = vsv.validateValues(req);
-                        //TODO parse
                 } catch (Exception ex) {
-                        log.error("VSV Validation Failed: From external service at " + url + ". Reason: " + ex.getMessage());
-                        log.debug("VSV Validation Failed: From external service at " + url + ". Reason: ", ex);
+                        log.warn(ex);
                         ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", ex.getMessage()));
                         throw x;
                 }
         }
-
-        public static void Validate(String url, TModel obj) throws ValueNotAllowedException {
+        
+          public static void ValidateBinding(String url, List<BindingTemplate> obj) throws ValueNotAllowedException {
                 UDDIValueSetValidationPortType vsv = getPort(url);
                 ValidateValues req = new ValidateValues();
-                req.getTModel().add(obj);
+                req.getBindingTemplate().addAll(obj);
 
                 try {
                         DispositionReport validateValues = vsv.validateValues(req);
@@ -117,10 +117,25 @@ public class ValidateValuesFromWebService {
                 }
         }
 
-        public static void Validate(String url, BusinessService obj) throws ValueNotAllowedException {
+        public static void ValidateService(String url, List<BusinessService> obj) throws ValueNotAllowedException {
                 UDDIValueSetValidationPortType vsv = getPort(url);
                 ValidateValues req = new ValidateValues();
-                req.getBusinessService().add(obj);
+                req.getBusinessService().addAll(obj);
+
+                try {
+                        DispositionReport validateValues = vsv.validateValues(req);
+                } catch (Exception ex) {
+                        log.warn(ex);
+                        ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", ex.getMessage()));
+                        throw x;
+                }
+        }
+        
+      
+        public static void ValidateBusiness(String url, List<BusinessEntity> obj) throws ValueNotAllowedException {
+                UDDIValueSetValidationPortType vsv = getPort(url);
+                ValidateValues req = new ValidateValues();
+                req.getBusinessEntity().addAll(obj);
 
                 try {
                         DispositionReport validateValues = vsv.validateValues(req);
@@ -131,21 +146,7 @@ public class ValidateValuesFromWebService {
                 }
         }
 
-        public static void Validate(String url, BindingTemplate obj) throws ValueNotAllowedException {
-                UDDIValueSetValidationPortType vsv = getPort(url);
-                ValidateValues req = new ValidateValues();
-                req.getBindingTemplate().add(obj);
-
-                try {
-                        DispositionReport validateValues = vsv.validateValues(req);
-                } catch (Exception ex) {
-                        log.warn(ex);
-                        ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", ex.getMessage()));
-                        throw x;
-                }
-        }
-
-        public static void Validate(String url, PublisherAssertion obj) throws ValueNotAllowedException {
+        public static void ValidatePubAss(String url, PublisherAssertion obj) throws ValueNotAllowedException {
                 UDDIValueSetValidationPortType vsv = getPort(url);
                 ValidateValues req = new ValidateValues();
                 req.getPublisherAssertion().add(obj);

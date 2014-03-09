@@ -64,7 +64,7 @@
             <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
             <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
             <keyedReference keyName="uddi-org:types:cacheable" keyValue="cacheable" tModelKey="uddi:uddi.org:categorization:types" />
-            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:identifier:validatedby"/>
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
         </categoryBag>
     </tModel>
     <tModel tModelKey="uddi:uddi.org:categorization:general_keywords">
@@ -156,7 +156,7 @@
             <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
             <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
             <keyedReference keyName="uddi-org:types:uncacheable" keyValue="uncacheable" tModelKey="uddi:uddi.org:categorization:types" />
-            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:identifier:validatedby"/>
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
         </categoryBag>
     </tModel>
 
@@ -213,6 +213,7 @@
         <categoryBag>
             <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
             <keyedReference keyName="uddi-org:types:unchecked" keyValue="unchecked" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
         </categoryBag>
     </tModel>
     <tModel tModelKey="uddi:uddi.org:categorization:owningbusiness">
@@ -231,7 +232,7 @@
             <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
             <keyedReference keyName="uddi-org:types:uncacheable" keyValue="uncacheable" tModelKey="uddi:uddi.org:categorization:types" />
             <keyedReference keyName="entityKeyValues" keyValue="businessKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
-            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:identifier:validatedby"/>
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
         </categoryBag>
     </tModel>
     <tModel tModelKey="uddi:uddi.org:identifier:isreplacedby">
@@ -252,7 +253,7 @@
             <keyedReference keyName="uddi-org:types:uncacheable" keyValue="uncacheable" tModelKey="uddi:uddi.org:categorization:types" />
             <keyedReference keyName="entityKeyValues" keyValue="businessKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
             <keyedReference keyName="entityKeyValues" keyValue="tModelKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
-            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:identifier:validatedby"/>
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
         </categoryBag>
     </tModel>
 	
@@ -297,7 +298,7 @@
             <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
             <keyedReference keyName="uddi-org:types:uncacheable" keyValue="uncacheable" tModelKey="uddi:uddi.org:categorization:types" />
             <keyedReference keyName="entityKeyValues" keyValue="bindingKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
-            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:identifier:validatedby"/>
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
         </categoryBag>
     </tModel>
     <tModel tModelKey="uddi:uddi.org:categorization:derivedfrom">
@@ -315,6 +316,7 @@
             <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
             <keyedReference keyName="uddi-org:types:uncacheable" keyValue="uncacheable" tModelKey="uddi:uddi.org:categorization:types" />
             <keyedReference keyName="entityKeyValues" keyValue="tModelKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
         </categoryBag>
     </tModel>
     <tModel tModelKey="uddi:uddi.org:categorization:entitykeyvalues">
@@ -330,6 +332,7 @@
         <categoryBag>
             <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
             <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
         </categoryBag>
     </tModel>
     <tModel tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3">

@@ -84,6 +84,7 @@ public class Uddiuddiorgcategorizationvalidatedby implements ValueSetValidator{
                         }
                         if (items.get(i).getTModelInstanceDetails() != null) {
                                 for (int k = 0; k < items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {
+                                        if (items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k) != null) 
                                         if (key.equalsIgnoreCase(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey())) {
                                                 throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "not allowed on binding templates"));
                                         }

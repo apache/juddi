@@ -848,7 +848,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  *
  * @author Alex O'Ree
  */
-public class Uddiuddiorgcategorizationtype implements ValueSetValidator {
+public class Uddiuddiorgcategorizationtypes implements ValueSetValidator {
 
         public static final String key = "uddi:uddi.org:categorization:types";
 
@@ -918,9 +918,11 @@ public class Uddiuddiorgcategorizationtype implements ValueSetValidator {
                         }
                         if (items.get(i).getTModelInstanceDetails() != null) {
 
-                                for (int k = 0; i < items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {
-                                        if (key.equalsIgnoreCase(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey())) {
-                                                throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", key + " is not allowed on tModelInstanceInfos"));
+                                for (int k = 0; k < items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {
+                                        if (items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k) != null) {
+                                                if (key.equalsIgnoreCase(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey())) {
+                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", key + " is not allowed on tModelInstanceInfos"));
+                                                }
                                         }
                                 }
                         }
@@ -988,8 +990,9 @@ public class Uddiuddiorgcategorizationtype implements ValueSetValidator {
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getCategoryBag() != null) {
                                 for (int k = 0; k < items.get(i).getCategoryBag().getKeyedReference().size(); k++) {
-                                        if (items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() != null) {
-                                                if (NotAllowedOnTModels.containsKey(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey().toLowerCase())) {
+                                        if (items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() != null
+                                             && key.equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey())) {
+                                                if (items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() != null && NotAllowedOnTModels.containsKey(items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue().toLowerCase())) {
                                                         throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Value [" + items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() + "] not allowed on tModels for key " + key));
                                                 }
                                         }
@@ -998,12 +1001,12 @@ public class Uddiuddiorgcategorizationtype implements ValueSetValidator {
 
                                 for (int k = 0; k < items.get(i).getCategoryBag().getKeyedReferenceGroup().size(); k++) {
                                         if (items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey() != null) {
-                                                if (NotAllowedOnTModels.containsKey(items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey().toLowerCase())) {
-                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Value [" + items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey() + "] not allowed on tModels for key " + key));
-                                                }
+
                                                 for (int j = 0; j < items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().size(); j++) {
-                                                        if (items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey() != null) {
-                                                                if (NotAllowedOnTModels.containsKey(items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey().toLowerCase())) {
+                                                        if (items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey() != null
+                                                             && key.equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey())) {
+                                                                if (items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getKeyValue() != null
+                                                                     && NotAllowedOnTModels.containsKey(items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getKeyValue().toLowerCase())) {
                                                                         throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Value [" + items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey() + "] not allowed on tModels for key " + key));
                                                                 }
                                                         }

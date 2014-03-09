@@ -186,8 +186,10 @@ public class Uddiuddiorgidentifierisreplacedby implements ValueSetValidator {
                         }
                         if (items.get(i).getTModelInstanceDetails() != null) {
                                 for (int k = 0; k < items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {
-                                        if (key.equalsIgnoreCase(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey())) {
-                                                throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "not allowed on binding templates"));
+                                        if (items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k) != null) {
+                                                if (key.equalsIgnoreCase(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey())) {
+                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "not allowed on binding templates"));
+                                                }
                                         }
                                 }
                         }
@@ -199,17 +201,69 @@ public class Uddiuddiorgidentifierisreplacedby implements ValueSetValidator {
                 if (items == null) {
                         return;
                 }
-                for (int i = 0; i < items.size(); i++) {
-                        if (items.get(i).getCategoryBag() != null) {
-                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), key, "business");
-                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), key, "business");
+                //   In the case where a reference is made from an obsolete tModel the following validation rules apply:
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+                        for (int i = 0; i < items.size(); i++) {
+                                if (items.get(i).getCategoryBag() != null) {
+                                        for (int k = 0; k < items.get(i).getCategoryBag().getKeyedReference().size(); k++) {
+                                                if (key.equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey())) {
+                                                        //reference to self; this is invalid
+                                                        if (items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey().equalsIgnoreCase(items.get(i).getBusinessKey())) {
+                                                                throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + " can't reference itself"));
+                                                        }
+
+                                                        try {
+                                                                org.apache.juddi.model.BusinessEntity    find = em.find(org.apache.juddi.model.BusinessEntity.class, items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue());
+                                                                if (find == null) {
+                                                                        // reference to a new tModel; this is a valid operation
+                                                                        if (!ContainsBusinessKey(items, items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue())) {
+                                                                                throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + " does not exist"));
+                                                                        }
+                                                                }
+                                                        } catch (ClassCastException c) {
+                                                                // reference to a service, binding or business; this is an invalid operation given that the entity being pointed to must be a tModel
+                                                                throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + " must be a business"));
+
+                                                        }
+                                                }
+                                        }
+                                }
+                                if (items.get(i).getIdentifierBag() != null) {
+                                        for (int k = 0; k < items.get(i).getIdentifierBag().getKeyedReference().size(); k++) {
+                                                if (key.equalsIgnoreCase(items.get(i).getIdentifierBag().getKeyedReference().get(k).getTModelKey())) {
+                                                        //reference to self; this is invalid
+                                                        if (items.get(i).getIdentifierBag().getKeyedReference().get(k).getTModelKey().equalsIgnoreCase(items.get(i).getBusinessKey())) {
+                                                                throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue() + " can't reference itself"));
+                                                        }
+
+                                                        try {
+                                                                org.apache.juddi.model.BusinessEntity find = em.find(org.apache.juddi.model.BusinessEntity.class, items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue());
+                                                                if (find == null) {
+                                                                        // reference to a new tModel; this is a valid operation
+                                                                        if (!ContainsBusinessKey(items, items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue())) {
+                                                                                throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue() + " does not exist"));
+                                                                        }
+                                                                }
+                                                        } catch (ClassCastException c) {
+                                                                // reference to a service, binding or business; this is an invalid operation given that the entity being pointed to must be a tModel
+                                                                throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue() + " must be a business"));
+
+                                                        }
+                                                }
+                                        }
+                                }
                         }
-                        if (items.get(i).getIdentifierBag() != null) {
-                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), key, "business");
+                        tx.commit();
+                } catch (DispositionReportFaultMessage d) {
+                        throw d;
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
                         }
-                        if (items.get(i).getBusinessServices() != null) {
-                                validateValuesBusinessService(items.get(i).getBusinessServices().getBusinessService(), "businessEntity(" + i + ").");
-                        }
+                        em.close();
                 }
         }
 
@@ -281,25 +335,66 @@ public class Uddiuddiorgidentifierisreplacedby implements ValueSetValidator {
                 if (items == null) {
                         return;
                 }
+                //   In the case where a reference is made from an obsolete tModel the following validation rules apply:
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
+                
                 try {
+                        tx.begin();
                         for (int i = 0; i < items.size(); i++) {
                                 if (items.get(i).getCategoryBag() != null) {
                                         for (int k = 0; k < items.get(i).getCategoryBag().getKeyedReference().size(); k++) {
                                                 if (key.equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey())) {
-                                                        //TODO look up value
-                                                        Tmodel find = em.find(org.apache.juddi.model.Tmodel.class, items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue());
+                                                        //reference to self; this is invalid
+                                                        if (items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey().equalsIgnoreCase(items.get(i).getTModelKey())) {
+                                                                throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + " can't reference itself"));
+                                                        }
+
+                                                        Tmodel find = null;
+                                                        try {
+                                                                find = em.find(org.apache.juddi.model.Tmodel.class, items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue());
+
+                                                        } catch (ClassCastException c) {
+                                                                // reference to a service, binding or business; this is an invalid operation given that the entity being pointed to must be a tModel
+                                                                throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + " must be a tModel"));
+
+                                                        }
                                                         if (find == null) {
-                                                                throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + " does not exist"));
+                                                                // reference to a new tModel; this is a valid operation
+                                                                if (!ContainsKey(items, items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue())) {
+                                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + " does not exist"));
+                                                                }
                                                         }
                                                 }
                                         }
                                 }
                                 if (items.get(i).getIdentifierBag() != null) {
-                                        AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getIdentifierBag().getKeyedReference(), key, "tmodel identbag");
+                                        for (int k = 0; k < items.get(i).getIdentifierBag().getKeyedReference().size(); k++) {
+                                                if (key.equalsIgnoreCase(items.get(i).getIdentifierBag().getKeyedReference().get(k).getTModelKey())) {
+                                                        //reference to self; this is invalid
+                                                        if (items.get(i).getIdentifierBag().getKeyedReference().get(k).getTModelKey().equalsIgnoreCase(items.get(i).getTModelKey())) {
+                                                                throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue() + " can't reference itself"));
+                                                        }
+                                                        Tmodel find = null;
+                                                        try {
+                                                                find = em.find(org.apache.juddi.model.Tmodel.class, items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue());
+
+                                                        } catch (ClassCastException c) {
+                                                                // reference to a service, binding or business; this is an invalid operation given that the entity being pointed to must be a tModel
+                                                                throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue() + " must be a tModel"));
+
+                                                        }
+                                                        if (find == null) {
+                                                                // reference to a new tModel; this is a valid operation
+                                                                if (!ContainsKey(items, items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue())) {
+                                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue() + " does not exist"));
+                                                                }
+                                                        }
+                                                }
+                                        }
                                 }
                         }
+                        tx.commit();
                 } catch (DispositionReportFaultMessage d) {
                         throw d;
                 } finally {
@@ -313,6 +408,24 @@ public class Uddiuddiorgidentifierisreplacedby implements ValueSetValidator {
         @Override
         public List<String> getValidValues() {
                 return Collections.EMPTY_LIST;
+        }
+
+        private boolean ContainsKey(List<TModel> items, String keyValue) {
+                for (int i = 0; i < items.size(); i++) {
+                        if (items.get(i).getTModelKey().equalsIgnoreCase(keyValue)) {
+                                return true;
+                        }
+                }
+                return false;
+        }
+
+        private boolean ContainsBusinessKey(List<BusinessEntity> items, String keyValue) {
+                for (int i = 0; i < items.size(); i++) {
+                        if (items.get(i).getBusinessKey().equalsIgnoreCase(keyValue)) {
+                                return true;
+                        }
+                }
+                return false;
         }
 
 }

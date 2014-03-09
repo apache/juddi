@@ -115,7 +115,7 @@ public abstract class AbstractSimpleValidator implements ValueSetValidator {
                                 //ok we have some work to do
                                 boolean valid = false;
                                 for (int k = 0; k < validValues.size(); k++) {
-                                        if (validValues.get(i).equals(items.get(i).getKeyValue())) {
+                                        if (validValues.get(k).equals(items.get(i).getKeyValue())) {
                                                 valid = true;
                                         }
                                 }
@@ -125,7 +125,7 @@ public abstract class AbstractSimpleValidator implements ValueSetValidator {
                         }
                 }
                 if (err.length() > 0) {
-                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", err));
+                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", err + getPrintableValidValues()));
                 }
         }
 
@@ -180,7 +180,7 @@ public abstract class AbstractSimpleValidator implements ValueSetValidator {
                         return;
                 }
                 if (key.equalsIgnoreCase(item.getTModelKey())) {
-                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "key " + key + " not allowed on " + itemtype));
+                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "key " + key + " not allowed on " + itemtype) );
                 }
         }
 
@@ -194,6 +194,19 @@ public abstract class AbstractSimpleValidator implements ValueSetValidator {
                         }
                         validateKeyNotPresentKeyRef(items.get(i).getKeyedReference(), key, itemtype);
                 }
+        }
+
+        private String getPrintableValidValues() {
+                StringBuilder sb = new StringBuilder();
+                sb.append(" Valid Values:[");
+                List<String> validValues = getValidValues();
+                for (int i=0; i < validValues.size(); i++){
+                        sb.append(validValues.get(i));
+                        if (i+1< validValues.size())
+                                sb.append(",");
+                }
+                sb.append("]");
+                return sb.toString();
         }
 
 }
