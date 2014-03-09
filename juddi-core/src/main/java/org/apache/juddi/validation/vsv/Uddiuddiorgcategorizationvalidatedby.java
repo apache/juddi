@@ -187,8 +187,8 @@ public class Uddiuddiorgcategorizationvalidatedby implements ValueSetValidator{
                                 if (items.get(i).getCategoryBag() != null) {
                                         for (int k = 0; k < items.get(i).getCategoryBag().getKeyedReference().size(); k++) {
                                                 if (key.equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey())) {
-                                                        //TODO look up value
-                                                        Tmodel find = em.find(org.apache.juddi.model.Tmodel.class, items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue());
+                                                       
+                                                        org.apache.juddi.model.BindingTemplate find = em.find(org.apache.juddi.model.BindingTemplate.class, items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue());
                                                         if (find == null) {
                                                                 throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + " does not exist"));
                                                         }

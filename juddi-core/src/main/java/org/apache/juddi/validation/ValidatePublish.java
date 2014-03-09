@@ -2328,7 +2328,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                                 url = find.getHostingRedirector();
                                         }
                                         if (url != null) {
-                                                log.info("attempting vsv from " + url);
+                                                log.debug("attempting vsv from " + url);
                                                 //call ValidateValuesFromWebService
                                                 //optimization for localhost?
                                                 ValidateValuesFromWebService.ValidateTModel(Rectify(url, config), entity);

@@ -100,7 +100,7 @@ public class App {
                                 org.apache.juddi.v3.tck.UDDI_142_DigitalSignatureIntegrationTest.class,
                                 org.apache.juddi.v3.tck.UDDI_150_CustodyTransferIntegrationTest.class,
                                 org.apache.juddi.v3.tck.UDDI_160_RESTIntergrationTest.class,
-                                org.apache.juddi.v3.tck.UDDI_170_ValueSetValidation.class
+                                org.apache.juddi.v3.tck.UDDI_170_ValueSetValidationIntegrationTest.class
                         };
                 }
 
