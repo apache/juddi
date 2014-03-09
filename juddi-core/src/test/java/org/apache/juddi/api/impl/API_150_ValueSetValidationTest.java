@@ -97,6 +97,8 @@ public class API_150_ValueSetValidationTest {
                         tckTModel.saveUDDIPublisherTmodel(authInfoUDDI);
                         tckTModel.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
+                        tckTModel.saveMaryPublisherTmodel(authInfoMary);
+                        
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
                         Assert.fail("Could not obtain authInfo token.");
