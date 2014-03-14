@@ -35,3 +35,5 @@ Sybase11Dialect
 
 
 
+Since 3.2.1, these files are now no longer included in the source distribution.
+Why? because we now include DDL generation in the build process

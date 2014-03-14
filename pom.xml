@@ -334,6 +334,7 @@
 				<!-- adding these modules for release only -->
 				<module>uddi-tck</module>
 				<module>uddi-tck-runner</module>
+				<module>juddi-ddl-generator</module>
 				<module>docs</module>
 				<module>juddi-dist</module>
 				<module>uddi-client-dist</module>
@@ -347,6 +348,7 @@
 				<!-- adding these module for dist only -->
 				<module>uddi-tck</module>
 				<module>uddi-tck-runner</module>
+				<module>juddi-ddl-generator</module>
 				<module>docs</module>
 				<module>juddi-dist</module>
 				<module>uddi-client-dist</module>
