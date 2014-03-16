@@ -7,7 +7,8 @@
 	License is distributed on an "AS IS" BASIS, * WITHOUT WARRANTIES OR CONDITIONS 
 	OF ANY KIND, either express or implied. * See the License for the specific 
 	language governing permissions and * limitations under the License. * */ -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.juddi.example</groupId>
@@ -15,10 +16,9 @@
 		<version>3.2.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>subscription-notification-amqp</artifactId>
+	<artifactId>example-vsv-validator</artifactId>
 	<version>${project.parent.version}</version>
-	<name>jUDDI Example AMQP Notifier for Subscription callbacks</name>
-	<description>Demonstrates how to write a custom notifier for subscriptions</description>
+	<name>jUDDI Example Value Set Validator</name>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
@@ -32,21 +32,7 @@
 			<version>${project.parent.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-jms_1.1_spec</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.qpid</groupId>
-			<artifactId>qpid-client</artifactId>
-			<version>0.24</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.qpid</groupId>
-			<artifactId>qpid-amqp-1-0-client-jms</artifactId>
-			<version>0.24</version>
-		</dependency>
+	
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-core</artifactId>
@@ -54,41 +40,7 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
-							<mainClass>org.apache.juddi.subscription.notify.Demo</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- examples are not very useful from a maven repo, so don't put it there -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+	
 	<profiles>
 		<profile>
 			<id>default</id>
@@ -122,7 +74,7 @@
 									<goal>java</goal>
 								</goals>
 								<configuration>
-									<mainClass>org.apache.juddi.subscription.notify.Demo</mainClass>
+									<mainClass>org.apache.juddi.examples.vsv.valuesetvalidator.App</mainClass>
 								</configuration>
 							</execution>
 						</executions>

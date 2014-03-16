@@ -1528,7 +1528,7 @@ public class UDDIClerk implements Serializable {
          *
          * @param partitionName think of this as the domain, i.e. juddi.apache.org, but it can really be anything you want. This will become part of the
          * key associated with the tModel generator (uddi:juddi.apache.org:keygenerator). The colon ":" is the delimitor, so avoid using them unless you want to
-         * create nexted key domains. If you're missing the "uddi:" prefix or the ":keygenerator" suffix, it will be added automatically.
+         * create nested key domains. If you're missing the "uddi:" prefix or the ":keygenerator" suffix, it will be added automatically.
          * @param DescriptiveName required. max length is 255 char
          * @param DescriptiveNameLanguage optional, max length is 26 char
          * @return a populated tModel entity representing a tModel key

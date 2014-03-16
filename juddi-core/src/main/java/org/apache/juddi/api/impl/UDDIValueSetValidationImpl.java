@@ -336,7 +336,7 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
                 }
 
                 String key = new String(new char[]{tmodelkey.charAt(0)}).toUpperCase() + tmodelkey.substring(1).toLowerCase();
-                key = key.replaceAll("[^a-zA-Z0-9 -]", "");
+                key = key.replaceAll("[^a-zA-Z0-9]", "");
 
                 String clazz = "org.apache.juddi.validation.vsv." + key;
 

@@ -39,5 +39,6 @@
 		<module>more-uddi-samples</module>
 		<module>service-version</module>
     <module>uddiv2-api-bridge-example</module>
+    <module>ValueSetValidator</module>
   </modules>
 </project>
