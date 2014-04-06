@@ -887,7 +887,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
         }
 
-        /**
+        /*
          * enables tmodel owners to setup valid values for tmodel instance infos
          * to use, TODO
          *
@@ -895,11 +895,11 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * @param values
          * @return
          * @throws DispositionReportFaultMessage
-         */
+         
         @Override
         public DispositionReport setAllValidValues(String authInfo, List<ValidValues> values) throws DispositionReportFaultMessage, RemoteException {
-
-                EntityManager em = PersistenceManager.getEntityManager();
+throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+              /*  EntityManager em = PersistenceManager.getEntityManager();
                 UddiEntityPublisher entityPublisher = getEntityPublisher(em, authInfo);
 
                 new ValidateValueSetValidation(entityPublisher).validateSetAllValidValues(values);
@@ -937,7 +937,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                 DispositionReport r = new DispositionReport();
                 r.getResult().add(new Result());
                 return r;
-        }
+        }*/
 
         @Override
         public void adminDeleteSubscription(String authInfo, List<String> subscriptionKey) throws DispositionReportFaultMessage, RemoteException {

@@ -411,30 +411,7 @@ public interface JUDDIApiPortType {
         throws DispositionReportFaultMessage, RemoteException
     ;
 
-    /**
-     * 
-     * 		sets a tModel's valid values for use with the Value Set Validation API
-     * 		@since 3.3
-     * 	  
-     * 
-     * @param values
-     * @param authInfo
-     * @return
-     *     returns org.uddi.api_v3.DispositionReport
-     * @throws DispositionReportFaultMessage
-     */
-    @WebMethod(operationName = "set_allValidValues", action = "set_allValidValues")
-    @WebResult(name = "dispositionReport", targetNamespace = "urn:juddi-apache-org:api_v3")
-    @RequestWrapper(localName = "set_allValidValues", targetNamespace = "urn:juddi-apache-org:api_v3", className = "org.apache.juddi.api_v3.SetAllValidValues")
-    @ResponseWrapper(localName = "set_allValidValuesResponse", targetNamespace = "urn:juddi-apache-org:api_v3", className = "org.apache.juddi.api_v3.SetAllValidValuesResponse")
-    public DispositionReport setAllValidValues(
-        @WebParam(name = "authInfo", targetNamespace = "urn:juddi-apache-org:api_v3")
-        String authInfo,
-        @WebParam(name = "values", targetNamespace = "urn:juddi-apache-org:api_v3")
-        List<ValidValues> values)
-        throws DispositionReportFaultMessage, RemoteException
-    ;
-
+   
     /**
      * 
      * 		deletes a client subscription

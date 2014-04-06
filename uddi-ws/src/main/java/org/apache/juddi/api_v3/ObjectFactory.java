@@ -294,14 +294,7 @@ public class ObjectFactory {
         return new AdminDeleteSubscriptionResponse();
     }
 
-    /**
-     * Create an instance of {@link SetAllValidValuesResponse }
-     * 
-     */
-    public SetAllValidValuesResponse createSetAllValidValuesResponse() {
-        return new SetAllValidValuesResponse();
-    }
-
+   
     /**
      * Create an instance of {@link AdminSaveTModelResponse }
      * 
@@ -342,14 +335,7 @@ public class ObjectFactory {
         return new GetReplicationNodes();
     }
 
-    /**
-     * Create an instance of {@link SetAllValidValues }
-     * 
-     */
-    public SetAllValidValues createSetAllValidValues() {
-        return new SetAllValidValues();
-    }
-
+  
     /**
      * Create an instance of {@link DeletePublisher }
      * 
@@ -545,15 +531,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link SetAllValidValues }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "set_allValidValues")
-    public JAXBElement<SetAllValidValues> createSetAllValidValues(SetAllValidValues value) {
-        return new JAXBElement<SetAllValidValues>(_SetAllValidValues_QNAME, SetAllValidValues.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link AdminSaveBusinessResponse }{@code >}}
      * 
      */
@@ -634,15 +611,7 @@ public class ObjectFactory {
         return new JAXBElement<SavePublisher>(_SavePublisher_QNAME, SavePublisher.class, null, value);
     }
 
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link SetAllValidValuesResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "set_allValidValuesResponse")
-    public JAXBElement<SetAllValidValuesResponse> createSetAllValidValuesResponse(SetAllValidValuesResponse value) {
-        return new JAXBElement<SetAllValidValuesResponse>(_SetAllValidValuesResponse_QNAME, SetAllValidValuesResponse.class, null, value);
-    }
-
+  
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link DeletePublisher }{@code >}}
      * 

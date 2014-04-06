@@ -53,6 +53,7 @@ import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.FindBusinessByPublisherQuery;
 import org.apache.juddi.query.FindTModelByPublisherQuery;
 import org.apache.juddi.v3.client.UDDIConstants;
+import org.apache.juddi.v3.client.UDDIConstantsV2;
 import org.apache.juddi.v3.client.config.TokenResolver;
 import org.apache.juddi.v3.error.AssertionNotFoundException;
 import org.apache.juddi.v3.error.ErrorMessage;
@@ -2109,6 +2110,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 if (ref != null) {
 
                         ret.addAll(TModelContains(UDDIConstants.IS_VALIDATED_BY, ref));
+                        ret.addAll(TModelContains(UDDIConstantsV2.IS_VALIDATED_BY, ref));
 
                 }
                 return ret;

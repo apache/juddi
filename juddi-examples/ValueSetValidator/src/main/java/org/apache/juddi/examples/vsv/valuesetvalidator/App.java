@@ -21,7 +21,11 @@ public class App {
                 System.out.println("Notice! before running this, build this project and copy the jar file into juddi-tomcat/target/tomcat/apache-tomcat.../juddiv3.war/WEB-INF/lib and restart!");
 
                 System.out.println(UDDIValueSetValidationImpl.ConvertKeyToClass("uddi:www.bob.com:verified-tmodel"));
-
+               
+                
+                
+                
+                
                 //register joe publisher key generator
                 //register tmodel that's validated
                 UDDIClient client = new UDDIClient("META-INF/uddi.xml");

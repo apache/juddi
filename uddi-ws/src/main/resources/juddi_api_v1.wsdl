@@ -231,35 +231,6 @@ xmlns:uddi="urn:uddi-org:api_v3">
   </xs:complexType>
   
   
-  <xs:complexType name="set_allValidValues">
-    <xs:sequence>
-	<xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="values" type="tns:validValues"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-    <xs:complexType name="validValues">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="tModekKey" type="xs:string"/>
-	  <xs:element minOccurs="0" name="validationClass" type="xs:string">
-		<xs:annotation>
-		  <xs:appinfo>Implementation Note</xs:appinfo>
-		  <xs:documentation xml:lang="en">
-		  this represents the class name of the validator for this particular key
-		  </xs:documentation>
-		</xs:annotation>
-
-	  </xs:element>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="set_allValidValuesResponse">
-    <xs:sequence>
-      <xs:element name="dispositionReport" type="uddi:dispositionReport"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  
   <xs:complexType name="adminSave_Business">
 	<xs:sequence>
 		<xs:element minOccurs="0" name="authInfo" type="xs:string"/>
@@ -385,8 +356,6 @@ xmlns:uddi="urn:uddi-org:api_v3">
   <xs:element name="get_allClientSubscriptionInfo" nillable="true" type="tns:get_allClientSubscriptionInfo"/>
   <xs:element name="get_allClientSubscriptionInfoResponse" nillable="true" type="tns:get_allClientSubscriptionInfoResponse"/>
   
-  <xs:element name="set_allValidValues" nillable="true" type="tns:set_allValidValues"/>
-  <xs:element name="set_allValidValuesResponse" nillable="true" type="tns:set_allValidValuesResponse"/>
   
   <xs:element name="adminSave_Business" nillable="true" type="tns:adminSave_Business"/>
   <xs:element name="adminSave_BusinessResponse" nillable="true" type="tns:adminSave_BusinessResponse"/>
@@ -577,12 +546,6 @@ xmlns:uddi="urn:uddi-org:api_v3">
   </wsdl:message>
   
   
-   <wsdl:message name="set_allValidValues">
-    <wsdl:part element="ns1:set_allValidValues" name="body"></wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="set_allValidValuesResponse">
-    <wsdl:part element="ns1:set_allValidValuesResponse" name="response"></wsdl:part>
-  </wsdl:message>
   
    <wsdl:message name="adminSave_Business">
     <wsdl:part element="ns1:adminSave_Business" name="body"></wsdl:part>
@@ -780,17 +743,6 @@ xmlns:uddi="urn:uddi-org:api_v3">
 	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
     </wsdl:operation>	
 	
-	
-	<wsdl:operation name="set_allValidValues">
-	  <wsdl:documentation>
-		sets a tModel's valid values for use with the Value Set Validation API
-		@since 3.3
-	  </wsdl:documentation>
-      <wsdl:input message="tns:set_allValidValues" name="set_allValidValues"></wsdl:input>
-      <wsdl:output message="tns:set_allValidValuesResponse" name="set_allValidValuesResponse"></wsdl:output>
-	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
-    </wsdl:operation>	
-
 	
 	<wsdl:operation name="adminDelete_Subscription">
 	  <wsdl:documentation>
@@ -1013,17 +965,6 @@ xmlns:uddi="urn:uddi-org:api_v3">
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="get_allClientSubscriptionInfoResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
-    </wsdl:operation>	
-	
-	<wsdl:operation name="set_allValidValues">
-      <soap:operation soapAction="set_allValidValues" style="document"/>
-      <wsdl:input name="set_allValidValues">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="set_allValidValuesResponse">
         <soap:body use="literal"/>
       </wsdl:output>
 	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>

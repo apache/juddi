@@ -301,6 +301,10 @@
             <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
         </categoryBag>
     </tModel>
+   
+    
+    
+    
     <tModel tModelKey="uddi:uddi.org:categorization:derivedfrom">
         <name>uddi-org:derivedFrom</name>
         <description>Category system for referring tModels to other
@@ -319,6 +323,30 @@
             <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
         </categoryBag>
     </tModel>
+    
+       
+    <tModel tModelKey="uuid:5678dd4f-f95d-35f9-9ea6-f79a7dd64656">
+        <name>uddi-org:derivedFrom</name>
+        <description>Category system for referring tModels to other
+            tModels for the purpose of reuse.
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#DerivedFrom
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:uncacheable" keyValue="uncacheable" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="entityKeyValues" keyValue="tModelKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uuid:25b22e3e-3dfa-3024-b02a-3438b9050b59"/>
+        </categoryBag>
+    </tModel>
+    
+    
+    
+    
     <tModel tModelKey="uddi:uddi.org:categorization:entitykeyvalues">
         <name>uddi-org:entityKeyValues</name>
         <description>Category system used to declare that a value set
@@ -335,7 +363,44 @@
             <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
         </categoryBag>
     </tModel>
+    
+    
+    <tModel tModelKey="uuid:916b87bf-0756-3919-8eae-97dfa325e5a4">
+        <name>uddi-org:entityKeyValues</name>
+        <description>Category system used to declare that a value set
+            uses entity keys as valid values.
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#entityKeyValues
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+             <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uuid:25b22e3e-3dfa-3024-b02a-3438b9050b59"/>
+        </categoryBag>
+    </tModel>
+   
+    
+    
+    
     <tModel tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3">
+        <name>uddi-org:serverAuthenticatedSSL3</name>
+        <description>Secure Sockets Layer Version 3.0 with Server
+            Authentication
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#serverSSL3
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <!--
+      <tModel tModelKey="uuid:c8aea832-3faf-33c6-b32a-bbfd1b926294">
         <name>uddi-org:serverAuthenticatedSSL3
         </name>
         <description>Secure Sockets Layer Version 3.0 with Server
@@ -350,6 +415,7 @@
             <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
         </categoryBag>
     </tModel>
+    -->
     <tModel tModelKey="uddi:uddi.org:protocol:mutualauthenticatedssl3">
         <name>uddi-org:mutualAuthenticatedSSL3
         </name>
@@ -365,6 +431,24 @@
             <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
         </categoryBag>
     </tModel>
+    
+     <tModel tModelKey="uuid:9555b5b6-55d4-3b0e-bb17-e084fed4e33f">
+        <name>uddi-org:mutualAuthenticatedSSL3
+        </name>
+        <description>Secure Sockets Layer Version 3.0 with Mutual
+            Authentication
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#mutualSSL3
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    
+    
     <tModel tModelKey="uddi:uddi.org:transport:http">
         <name>uddi-org:http</name>
         <description> A Web service that uses HTTP transport</description>
@@ -377,6 +461,21 @@
             <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
         </categoryBag>
     </tModel>
+    
+    <tModel tModelKey="uuid:68DE9E80-AD09-469D-8A37-088422BFBC36">
+        <name>uddi-org:http</name>
+        <description> A Web service that uses HTTP transport</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#overHTTP
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+
+
     <tModel tModelKey="uddi:uddi.org:transport:smtp">
         <name>uddi-org:smtp</name>
         <description>E-mail based Web service</description>
@@ -389,6 +488,20 @@
             <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
         </categoryBag>
     </tModel>
+    
+    <tModel tModelKey="uuid:93335D49-3EFB-48A0-ACEA-EA102B60DDC6">
+        <name>uddi-org:smtp</name>
+        <description>E-mail based Web service</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#overSMTP
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    
     
     <tModel tModelKey="uddi:uddi.org:transport:userfriendlysmtp">
         <name>Human Readable SMTP Email Deliveries</name>
@@ -413,6 +526,21 @@
             <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
         </categoryBag>
     </tModel>
+    
+    <tModel tModelKey="uuid:5FCF5CD0-629A-4C50-8B16-F94E9CF2A674">
+        <name>uddi-org:ftp</name>
+        <description>File Transfer Protocol (FTP) based Web service
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#overFTP
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+
     <tModel tModelKey="uddi:uddi.org:transport:fax">
         <name>uddi-org:fax</name>
         <description>Fax-based Web service</description>
@@ -1891,16 +2019,7 @@
 			<keyedReference tModelKey="uuid:c1acf26d-9672-4404-9d70-39b756e62ab4" keyName="types" keyValue="checked"/>
         </categoryBag>
     </tModel>
-    <tModel tModelKey="uuid:68DE9E80-AD09-469D-8A37-088422BFBC36">
-        <name>uddi-org:http</name>
-        <description xml:lang="en">An HTTP or web browser-based web service</description>
-        <overviewDoc>
-            <overviewURL>http://www.uddi.org/taxonomies/UDDI_CoreOther_tModels.htm#overHTTP</overviewURL>
-        </overviewDoc>
-        <categoryBag>
-            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="tModelType" keyValue="transport"/>
-        </categoryBag>
-    </tModel>
+   
     <tModel tModelKey="uuid:AC104DCC-D623-452F-88A7-F8ACD94D9B2B">
         <name>uddi-org:inquiry_v2</name>
         <description xml:lang="en">UDDI Inquiry API Version 2 - Core Specification</description>
@@ -1966,6 +2085,7 @@
         <categoryBag>
             <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="categorization"/>
             <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="checked"/>
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uuid:25b22e3e-3dfa-3024-b02a-3438b9050b59"/>
         </categoryBag>
     </tModel>
     <tModel tModelKey="uuid:6E10B91B-BABC-3442-B8FC-5A3C8FDE0794">
@@ -1999,6 +2119,7 @@
         </overviewDoc>
         <categoryBag>
             <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="relationship"/>
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uuid:25b22e3e-3dfa-3024-b02a-3438b9050b59"/>
         </categoryBag>
     </tModel>
     <tModel tModelKey="uuid:1E3E9CBC-F8CE-41ab-8F99-88326BAD324A">
@@ -2024,6 +2145,7 @@
         <categoryBag>
             <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="categorization"/>
             <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="checked"/>
+            
         </categoryBag>
     </tModel>
     <tModel tModelKey="uuid:AD61DE98-4DB8-31B2-A299-A2373DC97212">

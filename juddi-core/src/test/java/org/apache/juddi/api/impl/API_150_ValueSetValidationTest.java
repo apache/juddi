@@ -232,14 +232,7 @@ public class API_150_ValueSetValidationTest {
                 publication.saveBusiness(sb);
         }
 
-        private void SaveVSVValues(String key) throws Exception {
-                List<ValidValues> items = new ArrayList<ValidValues>();
-                ValidValues i = new ValidValues();
-                i.setTModekKey(key);
-                //i.getValue().add("abcdefg");
-                items.add(i);
-                juddi.setAllValidValues(authInfoJoe, items);
-        }
+     
 
         public void DerviedFromValid() throws Exception {
 
@@ -248,7 +241,7 @@ public class API_150_ValueSetValidationTest {
                 tm.setCategoryBag(new CategoryBag());
                 tm.setName(new Name("My Custom validated key", "en"));
                 tm.getDescription().add(new Description("valid values include 'one', 'two', 'three'", "en"));
-                tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.IS_DERVIVED_FROM, "", "uddi:uddi.org:categorization:nodes"));
+                tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.IS_DERIVED_FROM, "", "uddi:uddi.org:categorization:nodes"));
                 SaveTModel stm = new SaveTModel();
                 stm.setAuthInfo(authInfoJoe);
                 stm.getTModel().add(tm);
@@ -263,7 +256,7 @@ public class API_150_ValueSetValidationTest {
                 tm.setCategoryBag(new CategoryBag());
                 tm.setName(new Name("My Custom validated key", "en"));
                 tm.getDescription().add(new Description("valid values include 'one', 'two', 'three'", "en"));
-                tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.IS_DERVIVED_FROM, "", "uddi:juddi.apache.org:" + UUID.randomUUID().toString()));
+                tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.IS_DERIVED_FROM, "", "uddi:juddi.apache.org:" + UUID.randomUUID().toString()));
                 SaveTModel stm = new SaveTModel();
                 stm.setAuthInfo(authInfoJoe);
                 stm.getTModel().add(tm);

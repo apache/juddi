@@ -590,7 +590,7 @@ public interface UDDIConstants {
      * Category system for referring tModels to other tModels for the purpose of
      * reuse.
      */
-    public static String IS_DERVIVED_FROM = "uddi:uddi.org:categorization:derivedfrom";
+    public static String IS_DERIVED_FROM = "uddi:uddi.org:categorization:derivedfrom";
     /**
      * Category system used to declare that a value set uses entity keys as
      * valid values.
@@ -666,4 +666,17 @@ public interface UDDIConstants {
      * A tModel that represents the SOAP 1.2 protocol
      */
     public static String PROTOCOL_SOAP12 = "uddi:uddi.org:protocol:soap12";
+    
+    
+    
+     public static String INQUIRY="uddi:uddi.org:v3_inquiry";
+        public static String PUBLISH="uddi:uddi.org:v3_publication";
+         public static String SECURITY="uddi:uddi.org:v3_security";
+         public static String REPLICATION="uddi:uddi.org:v3_replication";
+        public static String CUSTODY_TRANSFER="uddi:uddi.org:v3_ownership_transfer";
+        public static String NODE_TRANSFER="uddi:uddi.org:v3_node_custody_transfer";
+         public static String VSV_CACHE="uddi:uddi.org:v3_valuesetcaching";
+         public static String VSV_VALIDATE="uddi:uddi.org:v3_valuesetvalidation";
+         public static String SUBSCRIPTION="uddi:uddi.org:v3_subscription";
+         public static String SUBSCRIPTION_LISTENER="uddi:uddi.org:v3_subscriptionlistener";
 }

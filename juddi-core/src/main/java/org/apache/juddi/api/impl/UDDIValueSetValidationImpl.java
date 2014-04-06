@@ -21,17 +21,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import static org.apache.juddi.api.impl.AuthenticatedService.logger;
 import org.apache.juddi.api.util.QueryStatus;
-import org.apache.juddi.api.util.SecurityQuery;
 import org.apache.juddi.api.util.ValueSetValidationQuery;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.model.Tmodel;
 import org.apache.juddi.v3.client.UDDIConstants;
+import org.apache.juddi.v3.client.UDDIConstantsV2;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
@@ -133,6 +131,9 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
                                 Tmodel find = em.find(org.apache.juddi.model.Tmodel.class, key);
                                 if (find != null) {
                                         if (ContainsValidatedKey(find, UDDIConstants.IS_VALIDATED_BY)) {
+                                                validators.add(key);
+                                        }
+                                        if (ContainsValidatedKey(find, UDDIConstantsV2.IS_VALIDATED_BY)) {
                                                 validators.add(key);
                                         }
                                 }

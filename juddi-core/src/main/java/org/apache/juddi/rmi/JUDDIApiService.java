@@ -163,11 +163,6 @@ public class JUDDIApiService extends UnicastRemoteObject implements JUDDIApiPort
         }
 
         @Override
-        public DispositionReport setAllValidValues(String authInfo, List<ValidValues> values) throws DispositionReportFaultMessage, RemoteException {
-                return juddiAPI.setAllValidValues(authInfo, values);
-        }
-
-        @Override
         public void adminDeleteSubscription(String authInfo, List<String> subscriptionKey) throws DispositionReportFaultMessage, RemoteException {
                 juddiAPI.adminDeleteSubscription(authInfo, subscriptionKey);
         }

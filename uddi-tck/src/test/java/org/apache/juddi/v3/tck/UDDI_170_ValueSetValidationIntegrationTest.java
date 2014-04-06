@@ -348,7 +348,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 tm.setCategoryBag(new CategoryBag());
                 tm.setName(new Name("My Custom validated key", "en"));
                 tm.getDescription().add(new Description("valid values include 'one', 'two', 'three'", "en"));
-                tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.IS_DERVIVED_FROM, "", "uddi:uddi.org:categorization:nodes"));
+                tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.IS_DERIVED_FROM, "", "uddi:uddi.org:categorization:nodes"));
                 SaveTModel stm = new SaveTModel();
                 stm.setAuthInfo(authInfoJoe);
                 stm.getTModel().add(tm);
@@ -367,7 +367,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                         tm.setCategoryBag(new CategoryBag());
                         tm.setName(new Name("My Custom validated key", "en"));
                         tm.getDescription().add(new Description("valid values include 'one', 'two', 'three'", "en"));
-                        tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.IS_DERVIVED_FROM, "", "uddi:juddi.apache.org:" + UUID.randomUUID().toString()));
+                        tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.IS_DERIVED_FROM, "", "uddi:juddi.apache.org:" + UUID.randomUUID().toString()));
                         SaveTModel stm = new SaveTModel();
                         stm.setAuthInfo(authInfoJoe);
                         stm.getTModel().add(tm);
