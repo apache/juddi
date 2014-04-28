@@ -90,6 +90,7 @@ import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveService;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModel;
+import org.uddi.sub_v3.Subscription;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
@@ -1567,6 +1568,22 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
         }
 
+        public void validateSaveSubscriptionAdmin(EntityManager em, String publisherOrUsername, List<Subscription> subscriptions) throws DispositionReportFaultMessage {
+            
+            // No null input
+                if (subscriptions == null || subscriptions.isEmpty()) {
+                        throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+                }
+                
+                if (!((Publisher) publisher).isAdmin()) {
+                    throw new UserMismatchException(new ErrorMessage("errors.deletepublisher.AdminReqd"));
+                }
+                UddiEntityPublisher user = new UddiEntityPublisher(publisherOrUsername);
+                ValidateSubscription vsub = new ValidateSubscription(user);
+                for (int i=0; i < subscriptions.size(); i++){
+                    vsub.validateSubscriptions(em, subscriptions, user);
+                }
+        }
         public void validateSavePublisher(EntityManager em, SavePublisher body) throws DispositionReportFaultMessage {
 
                 // No null input

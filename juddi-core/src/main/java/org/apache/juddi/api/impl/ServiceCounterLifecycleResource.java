@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.juddi.api.util.CustodyTransferQuery;
 import org.apache.juddi.api.util.InquiryQuery;
+import org.apache.juddi.api.util.JUDDIQuery;
 import org.apache.juddi.api.util.PublicationQuery;
 import org.apache.juddi.api.util.ReplicationQuery;
 import org.apache.juddi.api.util.SecurityQuery;
@@ -38,6 +39,7 @@ public class ServiceCounterLifecycleResource {
                 implForQuery.put(UDDISubscriptionListenerImpl.class.getName(), SubscriptionListenerQuery.getQueries());
                 implForQuery.put(UDDIValueSetCachingImpl.class.getName(), ValueSetCachingQuery.getQueries());
                 implForQuery.put(UDDIValueSetValidationImpl.class.getName(), ValueSetValidationQuery.getQueries());
+                implForQuery.put(JUDDIApiImpl.class.getName(), JUDDIQuery.getQueries());
             }
         }
     }

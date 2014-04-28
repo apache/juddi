@@ -19,6 +19,7 @@ package org.apache.juddi.rmi;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import javax.xml.ws.Holder;
 
 import org.apache.juddi.api.impl.JUDDIApiImpl;
 import org.apache.juddi.api_v3.AdminSaveBusinessWrapper;
@@ -168,9 +169,11 @@ public class JUDDIApiService extends UnicastRemoteObject implements JUDDIApiPort
         }
 
         @Override
-        public void adminSaveSubscription(String authInfo, String publisherOrUsername, List<Subscription> subscriptions) throws DispositionReportFaultMessage, RemoteException {
+        public void adminSaveSubscription(String authInfo, String publisherOrUsername, Holder<List<Subscription>> subscriptions) throws DispositionReportFaultMessage {
                 juddiAPI.adminSaveSubscription(authInfo, publisherOrUsername, subscriptions);
         }
+
+      
 	
 	
 

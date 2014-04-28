@@ -903,7 +903,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	 * @param apiSubscription - renewal subscription request
 	 * @throws DispositionReportFaultMessage 
 	 */
-	private void doRenewal(org.apache.juddi.model.Subscription existingSubscription, org.uddi.sub_v3.Subscription apiSubscription) throws DispositionReportFaultMessage {
+	protected void doRenewal(org.apache.juddi.model.Subscription existingSubscription, org.uddi.sub_v3.Subscription apiSubscription) throws DispositionReportFaultMessage {
 		if (apiSubscription.getSubscriptionFilter() == null) {
 			String rawFilter = existingSubscription.getSubscriptionFilter();
 			try {
@@ -924,7 +924,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	 * @param apiSubscription
 	 * @throws DispositionReportFaultMessage
 	 */
-	private void doSubscriptionExpirationDate(org.uddi.sub_v3.Subscription apiSubscription) throws DispositionReportFaultMessage {
+	protected void doSubscriptionExpirationDate(org.uddi.sub_v3.Subscription apiSubscription) throws DispositionReportFaultMessage {
 
 		int subscriptionExpirationDays = DEFAULT_SUBSCRIPTIONEXPIRATION_DAYS;
 		try { 
@@ -963,7 +963,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	 * @return a list of subscription matches
 	 * @throws DispositionReportFaultMessage
 	 */
-	private List<?> getSubscriptionMatches(SubscriptionFilter subscriptionFilter, EntityManager em) 
+	protected List<?> getSubscriptionMatches(SubscriptionFilter subscriptionFilter, EntityManager em) 
 			 throws DispositionReportFaultMessage {
 		
 		

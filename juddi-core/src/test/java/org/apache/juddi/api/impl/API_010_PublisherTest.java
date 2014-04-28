@@ -17,7 +17,12 @@ package org.apache.juddi.api.impl;
 import static junit.framework.Assert.assertEquals;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.ws.Holder;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
@@ -31,13 +36,22 @@ import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.jaxb.EntityCreator;
+import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.UserMismatchException;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
+import org.apache.juddi.v3.tck.TckSubscription;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uddi.api_v3.FindBusiness;
+import org.uddi.api_v3.FindQualifiers;
+import org.uddi.api_v3.Name;
+import org.uddi.api_v3.TModel;
+import org.uddi.sub_v3.Subscription;
+import org.uddi.sub_v3.SubscriptionFilter;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISecurityPortType;
 
@@ -54,7 +68,7 @@ public class API_010_PublisherTest {
         private static Log logger = LogFactory.getLog(API_010_PublisherTest.class);
         private JUDDIApiImpl publisher = new JUDDIApiImpl();
         private UDDISecurityPortType security = new UDDISecurityImpl();
-        
+        private static TckSubscription tckSubscription = new TckSubscription(new UDDISubscriptionImpl(), new UDDISecurityImpl(), new UDDIInquiryImpl());
 
         @BeforeClass
         public static void startRegistry() throws ConfigurationException {
@@ -242,4 +256,90 @@ public class API_010_PublisherTest {
                 return TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
         }
 
+        /**
+         * Joe saves a subscription on Sam's behalf
+         *
+         * @throws Exception
+         */
+        @Test
+        public void testAdminSaveSubscriptionAuthorized() throws Exception {
+                saveJoePublisher();
+                saveSamSyndicator();
+                DatatypeFactory fac = DatatypeFactory.newInstance();
+                List<Subscription> subs = new ArrayList<Subscription>();
+                Subscription s = new Subscription();
+
+                s.setMaxEntities(10);
+                s.setBrief(false);
+                GregorianCalendar gcal = new GregorianCalendar();
+                gcal.setTimeInMillis(System.currentTimeMillis());
+                gcal.add(Calendar.HOUR, 1);
+                s.setExpiresAfter(fac.newXMLGregorianCalendar(gcal));
+                s.setSubscriptionFilter(new SubscriptionFilter());
+                s.getSubscriptionFilter().setFindBusiness(new FindBusiness());
+                s.getSubscriptionFilter().getFindBusiness().setFindQualifiers(new FindQualifiers());
+                s.getSubscriptionFilter().getFindBusiness().getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                s.getSubscriptionFilter().getFindBusiness().getName().add(new Name(UDDIConstants.WILDCARD, null));
+                subs.add(s);
+                Holder<List<Subscription>> items = new Holder<List<Subscription>>();
+                items.value = subs;
+                publisher.adminSaveSubscription(authInfoJoe(), TckPublisher.getSamPublisherId(), items);
+                for (int i = 0; i < items.value.size(); i++) {
+                        tckSubscription.deleteSubscription(authInfoSam(), items.value.get(i).getSubscriptionKey());
+                }
+
+                deleteJoePublisher();
+                deleteSamSyndicator();
+
+        }
+
+        /**
+         * Sam saves a subscription on Sam's behalf (not authorized
+         *
+         * @throws Exception
+         */
+        @Test(expected = UserMismatchException.class)
+        public void testAdminSaveSubscriptionNotAuthorized() throws Exception {
+                saveJoePublisher();
+                saveSamSyndicator();
+                DatatypeFactory fac = DatatypeFactory.newInstance();
+                List<Subscription> subs = new ArrayList<Subscription>();
+                Subscription s = new Subscription();
+
+                s.setMaxEntities(10);
+                s.setBrief(false);
+                GregorianCalendar gcal = new GregorianCalendar();
+                gcal.setTimeInMillis(System.currentTimeMillis());
+                gcal.add(Calendar.HOUR, 1);
+                s.setExpiresAfter(fac.newXMLGregorianCalendar(gcal));
+                s.setSubscriptionFilter(new SubscriptionFilter());
+                s.getSubscriptionFilter().setFindBusiness(new FindBusiness());
+                s.getSubscriptionFilter().getFindBusiness().setFindQualifiers(new FindQualifiers());
+                s.getSubscriptionFilter().getFindBusiness().getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                s.getSubscriptionFilter().getFindBusiness().getName().add(new Name(UDDIConstants.WILDCARD, null));
+                subs.add(s);
+                Holder<List<Subscription>> items = new Holder<List<Subscription>>();
+                items.value = subs;
+                publisher.adminSaveSubscription(authInfoSam(), TckPublisher.getJoePublisherId(), items);
+                deleteJoePublisher();
+                deleteSamSyndicator();
+
+        }
+
+        @Test
+        public void testAdminSaveTModel() throws Exception {
+                saveJoePublisher();
+                saveSamSyndicator();
+                List<org.apache.juddi.api_v3.AdminSaveTModelWrapper> values = new ArrayList<org.apache.juddi.api_v3.AdminSaveTModelWrapper>();
+                org.apache.juddi.api_v3.AdminSaveTModelWrapper x = new org.apache.juddi.api_v3.AdminSaveTModelWrapper();
+                x.setPublisherID(TckPublisher.getSamPublisherId());
+                TModel tm = new TModel();
+                tm.setName(new Name("testAdminSaveTModel joe on sam's behalf", null));
+                
+                x.getTModel().add(tm);
+                publisher.adminSaveTModel(authInfoJoe(), values);
+                deleteJoePublisher();
+                deleteSamSyndicator();
+        }
+        
 }

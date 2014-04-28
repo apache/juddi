@@ -18,6 +18,7 @@ package org.apache.juddi.api.impl;
 
 import java.io.StringWriter;
 import java.rmi.RemoteException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -29,10 +30,14 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import javax.xml.ws.Holder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.ClassUtil;
+import static org.apache.juddi.api.impl.JUDDIApiImpl.sub;
+import org.apache.juddi.api.util.JUDDIQuery;
+import org.apache.juddi.api.util.QueryStatus;
 import org.apache.juddi.api_v3.AdminSaveBusinessWrapper;
 import org.apache.juddi.api_v3.AdminSaveTModelWrapper;
 import org.apache.juddi.api_v3.Clerk;
@@ -57,28 +62,28 @@ import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.api_v3.SubscriptionWrapper;
 import org.apache.juddi.api_v3.SyncSubscription;
 import org.apache.juddi.api_v3.SyncSubscriptionDetail;
-import org.apache.juddi.api_v3.ValidValues;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.ClientSubscriptionInfo;
 import org.apache.juddi.model.Publisher;
+import org.apache.juddi.model.SubscriptionMatch;
 import org.apache.juddi.model.Tmodel;
 import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.model.ValueSetValues;
 import org.apache.juddi.subscription.NotificationList;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.UserMismatchException;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.juddi.validation.ValidateClerk;
 import org.apache.juddi.validation.ValidateClientSubscriptionInfo;
 import org.apache.juddi.validation.ValidateNode;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidatePublisher;
-import org.apache.juddi.validation.ValidateValueSetValidation;
+import org.apache.juddi.validation.ValidateSubscription;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.BusinessInfo;
 import org.uddi.api_v3.BusinessInfos;
@@ -88,6 +93,7 @@ import org.uddi.api_v3.GetRegisteredInfo;
 import org.uddi.api_v3.InfoSelection;
 import org.uddi.api_v3.RegisteredInfo;
 import org.uddi.api_v3.Result;
+import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModelInfo;
 import org.uddi.api_v3.TModelInfos;
 import org.uddi.sub_v3.GetSubscriptionResults;
@@ -106,11 +112,12 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 @WebService(serviceName = "JUDDIApiService",
-     endpointInterface = "org.apache.juddi.v3_service.JUDDIApiPortType",
-     targetNamespace = "urn:juddi-apache-org:v3_service")
+        endpointInterface = "org.apache.juddi.v3_service.JUDDIApiPortType",
+        targetNamespace = "urn:juddi-apache-org:v3_service")
 public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortType {
 
         private Log log = LogFactory.getLog(this.getClass());
+        private UDDIServiceCounter serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());
 
         /**
          * Saves publisher(s) to the persistence layer. This method is specific
@@ -121,8 +128,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * @throws DispositionReportFaultMessage
          */
         public PublisherDetail savePublisher(SavePublisher body)
-             throws DispositionReportFaultMessage {
-
+                throws DispositionReportFaultMessage {
+                long startTime = System.currentTimeMillis();
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
                 try {
@@ -152,7 +159,15 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.SAVE_PUBLISHER,
+                                QueryStatus.SUCCESS, procTime);
                         return result;
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.SAVE_PUBLISHER,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
                 } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
@@ -169,8 +184,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * @throws DispositionReportFaultMessage
          */
         public void deletePublisher(DeletePublisher body)
-             throws DispositionReportFaultMessage {
-
+                throws DispositionReportFaultMessage {
+                long startTime = System.currentTimeMillis();
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
                 try {
@@ -226,6 +241,14 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.DELETE_PUBLISHER,
+                                QueryStatus.SUCCESS, procTime);
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.DELETE_PUBLISHER,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
                 } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
@@ -243,8 +266,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * @throws DispositionReportFaultMessage
          */
         public PublisherDetail getPublisherDetail(GetPublisherDetail body)
-             throws DispositionReportFaultMessage {
-
+                throws DispositionReportFaultMessage {
+                long startTime = System.currentTimeMillis();
                 new ValidatePublisher(null).validateGetPublisherDetail(body);
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -275,7 +298,15 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.GET_PUBLISHER_DETAIL,
+                                QueryStatus.SUCCESS, procTime);
                         return result;
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.GET_PUBLISHER_DETAIL,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
                 } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
@@ -298,8 +329,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          */
         @SuppressWarnings("unchecked")
         public PublisherDetail getAllPublisherDetail(GetAllPublisherDetail body)
-             throws DispositionReportFaultMessage, RemoteException {
-
+                throws DispositionReportFaultMessage, RemoteException {
+                long startTime = System.currentTimeMillis();
                 new ValidatePublisher(null).validateGetAllPublisherDetail(body);
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -324,7 +355,15 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.GET_ALL_PUBLISHER_DETAIL,
+                                QueryStatus.SUCCESS, procTime);
                         return result;
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.GET_ALL_PUBLISHER_DETAIL,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
                 } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
@@ -345,8 +384,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * @throws DispositionReportFaultMessage
          */
         public void adminDeleteTModel(DeleteTModel body)
-             throws DispositionReportFaultMessage {
-
+                throws DispositionReportFaultMessage {
+                long startTime = System.currentTimeMillis();
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
                 try {
@@ -363,6 +402,14 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.ADMIN_DELETE_TMODEL,
+                                QueryStatus.SUCCESS, procTime);
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.ADMIN_DELETE_TMODEL,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
                 } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
@@ -380,8 +427,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * @throws RemoteException
          */
         public void deleteClientSubscriptionInfo(DeleteClientSubscriptionInfo body)
-             throws DispositionReportFaultMessage, RemoteException {
-
+                throws DispositionReportFaultMessage, RemoteException {
+                long startTime = System.currentTimeMillis();
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
                 try {
@@ -398,6 +445,15 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.DELETE_CLIENT_SUB,
+                                QueryStatus.SUCCESS, procTime);
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.DELETE_CLIENT_SUB,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
+
                 } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
@@ -417,7 +473,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * @throws RemoteException
          */
         public ClientSubscriptionInfoDetail saveClientSubscriptionInfo(SaveClientSubscriptionInfo body)
-             throws DispositionReportFaultMessage, RemoteException {
+                throws DispositionReportFaultMessage, RemoteException {
+                long startTime = System.currentTimeMillis();
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
                 try {
@@ -447,7 +504,17 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
+
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.SAVE_CLIENT_SUB,
+                                QueryStatus.SUCCESS, procTime);
                         return result;
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.SAVE_CLIENT_SUB,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
+
                 } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
@@ -466,8 +533,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          */
         @SuppressWarnings("unchecked")
         public ClientSubscriptionInfoDetail getAllClientSubscriptionInfoDetail(GetAllClientSubscriptionInfoDetail body)
-             throws DispositionReportFaultMessage {
-
+                throws DispositionReportFaultMessage {
+                long startTime = System.currentTimeMillis();
                 new ValidateClientSubscriptionInfo(null).validateGetAllClientSubscriptionDetail(body);
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -492,7 +559,16 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.GET_ALL_CLIENT_SUB,
+                                QueryStatus.SUCCESS, procTime);
                         return result;
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.GET_ALL_CLIENT_SUB,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
+
                 } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
@@ -512,8 +588,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * @throws DispositionReportFaultMessage
          */
         public ClientSubscriptionInfoDetail getClientSubscriptionInfoDetail(GetClientSubscriptionInfoDetail body)
-             throws DispositionReportFaultMessage {
-
+                throws DispositionReportFaultMessage {
+                long startTime = System.currentTimeMillis();
                 new ValidateClientSubscriptionInfo(null).validateGetClientSubscriptionInfoDetail(body);
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -529,6 +605,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         for (String subscriptionKey : subscriptionKeyList) {
 
                                 org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo = null;
+
                                 try {
                                         modelClientSubscriptionInfo = em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, subscriptionKey);
                                 } catch (ClassCastException e) {
@@ -545,7 +622,16 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
+
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.GET_CLIENT_SUB,
+                                QueryStatus.SUCCESS, procTime);
                         return result;
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.GET_CLIENT_SUB,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
                 } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
@@ -565,8 +651,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * @throws DispositionReportFaultMessage
          */
         public ClerkDetail saveClerk(SaveClerk body)
-             throws DispositionReportFaultMessage {
-
+                throws DispositionReportFaultMessage {
+                long startTime = System.currentTimeMillis();
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
                 try {
@@ -596,7 +682,16 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.SAVE_CLERK,
+                                QueryStatus.SUCCESS, procTime);
                         return result;
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.SAVE_CLERK,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
+
                 } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
@@ -616,8 +711,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * @throws DispositionReportFaultMessage
          */
         public NodeDetail saveNode(SaveNode body)
-             throws DispositionReportFaultMessage {
-
+                throws DispositionReportFaultMessage {
+                long startTime = System.currentTimeMillis();
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
                 try {
@@ -647,7 +742,16 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.SAVE_NODE,
+                                QueryStatus.SUCCESS, procTime);
                         return result;
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.SAVE_NODE,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
+
                 } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
@@ -667,14 +771,14 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          */
         @SuppressWarnings("unchecked")
         public SyncSubscriptionDetail invokeSyncSubscription(
-             SyncSubscription body) throws DispositionReportFaultMessage,
-             RemoteException {
-
+                SyncSubscription body) throws DispositionReportFaultMessage,
+                RemoteException {
+                long startTime = System.currentTimeMillis();
                 //validate
                 SyncSubscriptionDetail syncSubscriptionDetail = new SyncSubscriptionDetail();
 
                 Map<String, org.apache.juddi.api_v3.ClientSubscriptionInfo> clientSubscriptionInfoMap
-                     = new HashMap<String, org.apache.juddi.api_v3.ClientSubscriptionInfo>();
+                        = new HashMap<String, org.apache.juddi.api_v3.ClientSubscriptionInfo>();
                 //find the clerks to go with these subscriptions
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
@@ -685,6 +789,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         for (GetSubscriptionResults getSubscriptionResult : body.getGetSubscriptionResultsList()) {
                                 String subscriptionKey = getSubscriptionResult.getSubscriptionKey();
                                 org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo = null;
+
                                 try {
                                         modelClientSubscriptionInfo = em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, subscriptionKey);
                                 } catch (ClassCastException e) {
@@ -698,6 +803,12 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.INVOKE_SYNCSUB,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
+
                 } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
@@ -712,26 +823,35 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                 Clerk toClerk = clientSubscriptionInfoMap.get(subscriptionKey).getToClerk();
                                 String clazz = fromClerk.getNode().getProxyTransport();
                                 Class<?> transportClass = ClassUtil.forName(clazz, this.getClass());
-                                Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(fromClerk.getNode().getName());
+                                Transport transport = (Transport) transportClass.getConstructor(String.class
+                                ).newInstance(fromClerk.getNode().getName());
                                 UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService(fromClerk.getNode().getSubscriptionUrl());
                                 SubscriptionResultsList list = subscriptionService.getSubscriptionResults(getSubscriptionResult);
 
                                 JAXBContext context = JAXBContext.newInstance(list.getClass());
                                 Marshaller marshaller = context.createMarshaller();
                                 StringWriter sw = new StringWriter();
+
                                 marshaller.marshal(list, sw);
 
-                                log.info("Notification received by UDDISubscriptionListenerService : " + sw.toString());
+                                log.info(
+                                        "Notification received by UDDISubscriptionListenerService : " + sw.toString());
 
                                 NotificationList<String> nl = NotificationList.getInstance();
-                                nl.getNotifications().add(sw.toString());
+
+                                nl.getNotifications()
+                                        .add(sw.toString());
 
                                 //update the registry with the notification list.
                                 XRegisterHelper.handle(fromClerk, toClerk, list);
 
-                                syncSubscriptionDetail.getSubscriptionResultsList().add(list);
+                                syncSubscriptionDetail.getSubscriptionResultsList()
+                                        .add(list);
                         } catch (Exception ce) {
                                 log.error(ce.getMessage(), ce);
+                                long procTime = System.currentTimeMillis() - startTime;
+                                serviceCounter.update(JUDDIQuery.SAVE_NODE,
+                                        QueryStatus.FAILED, procTime);
                                 if (ce instanceof DispositionReportFaultMessage) {
                                         throw (DispositionReportFaultMessage) ce;
                                 }
@@ -743,12 +863,15 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                 }
                 //for now sending a clean object back
 
+                long procTime = System.currentTimeMillis() - startTime;
+                serviceCounter.update(JUDDIQuery.INVOKE_SYNCSUB,
+                        QueryStatus.SUCCESS, procTime);
                 return syncSubscriptionDetail;
         }
 
         @Override
         public NodeList getAllNodes(String authInfo) throws DispositionReportFaultMessage, RemoteException {
-
+                long startTime = System.currentTimeMillis();
                 NodeList r = new NodeList();
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -773,7 +896,14 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
-
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.GET_ALL_NODES,
+                                QueryStatus.SUCCESS, procTime);
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.GET_ALL_NODES,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
                 } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
@@ -786,7 +916,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
         @Override
         public ClerkList getAllClerks(String authInfo) throws DispositionReportFaultMessage, RemoteException {
-
+                long startTime = System.currentTimeMillis();
                 ClerkList ret = new ClerkList();
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
@@ -809,6 +939,14 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                         }
                         tx.commit();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.GET_ALL_CLERKS,
+                                QueryStatus.SUCCESS, procTime);
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.GET_ALL_CLERKS,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
 
                 } finally {
                         if (tx.isActive()) {
@@ -823,6 +961,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
         @Override
         public void deleteNode(DeleteNode req) throws DispositionReportFaultMessage, RemoteException {
+                long startTime = System.currentTimeMillis();
                 boolean found = false;
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
@@ -833,13 +972,23 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         new ValidatePublish(publisher).validateDeleteNode(em, req);
 
                         org.apache.juddi.model.Node existingUddiEntity = em.find(org.apache.juddi.model.Node.class, req.getNodeID());
-                        if (existingUddiEntity != null) {
+                        if (existingUddiEntity
+                                != null) {
 
                                 //TODO cascade delete all clerks tied to this node
                                 em.remove(existingUddiEntity);
                                 found = true;
                         }
+
                         tx.commit();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.DELETE_NODE,
+                                QueryStatus.SUCCESS, procTime);
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.DELETE_NODE,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
 
                 } finally {
                         if (tx.isActive()) {
@@ -856,7 +1005,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
         @Override
         public void deleteClerk(DeleteClerk req) throws DispositionReportFaultMessage, RemoteException {
-
+                long startTime = System.currentTimeMillis();
                 boolean found = false;
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
@@ -868,11 +1017,21 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         new ValidatePublish(publisher).validateDeleteClerk(em, req);
 
                         org.apache.juddi.model.Clerk existingUddiEntity = em.find(org.apache.juddi.model.Clerk.class, req.getClerkID());
-                        if (existingUddiEntity != null) {
+                        if (existingUddiEntity
+                                != null) {
                                 em.remove(existingUddiEntity);
                                 found = true;
                         }
+
                         tx.commit();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.DELETE_CLERK,
+                                QueryStatus.SUCCESS, procTime);
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.DELETE_CLERK,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
 
                 } finally {
                         if (tx.isActive()) {
@@ -896,83 +1055,174 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * @return
          * @throws DispositionReportFaultMessage
          
+         @Override
+         public DispositionReport setAllValidValues(String authInfo, List<ValidValues> values) throws DispositionReportFaultMessage, RemoteException {
+         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         /*  EntityManager em = PersistenceManager.getEntityManager();
+         UddiEntityPublisher entityPublisher = getEntityPublisher(em, authInfo);
+
+         new ValidateValueSetValidation(entityPublisher).validateSetAllValidValues(values);
+
+         EntityTransaction tx = em.getTransaction();
+         try {
+
+         //TODO is this tModel used anywhere?, if so, validate all instances against the new rule?
+         tx.begin();
+
+         //each tmodel/value set
+         for (int i = 0; i < values.size(); i++) {
+         //remove any existing references to the key
+         ValueSetValues find = em.find(ValueSetValues.class, values.get(i).getTModekKey());
+
+         if (find != null) {
+         find.setValidatorClass(values.get(i).getValidationClass());
+         em.persist(find);
+
+         } else {
+         org.apache.juddi.model.ValueSetValues vv = new ValueSetValues();
+         vv.setTModelKey(values.get(i).getTModekKey());
+         vv.setValidatorClass(values.get(i).getValidationClass());
+         em.persist(vv);
+         }
+         }
+
+         tx.commit();
+         } finally {
+         if (tx.isActive()) {
+         tx.rollback();
+         }
+         em.close();
+         }
+         DispositionReport r = new DispositionReport();
+         r.getResult().add(new Result());
+         return r;
+         }*/
         @Override
-        public DispositionReport setAllValidValues(String authInfo, List<ValidValues> values) throws DispositionReportFaultMessage, RemoteException {
-throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-              /*  EntityManager em = PersistenceManager.getEntityManager();
-                UddiEntityPublisher entityPublisher = getEntityPublisher(em, authInfo);
+        public void adminDeleteSubscription(String authInfo, List<String> subscriptionKey) throws DispositionReportFaultMessage, RemoteException {
+                long startTime = System.currentTimeMillis();
+                long procTime = System.currentTimeMillis() - startTime;
+                serviceCounter.update(JUDDIQuery.ADMIN_DELETE_SUB,
+                        QueryStatus.SUCCESS, procTime);
+                ValidatePublish.unsupportedAPICall();
 
-                new ValidateValueSetValidation(entityPublisher).validateSetAllValidValues(values);
+        }
 
+        @Override
+        public DispositionReport adminSaveBusiness(String authInfo, List<AdminSaveBusinessWrapper> values) throws DispositionReportFaultMessage, RemoteException {
+                long startTime = System.currentTimeMillis();
+                long procTime = System.currentTimeMillis() - startTime;
+                serviceCounter.update(JUDDIQuery.ADMIN_SAVE_BUSINESS,
+                        QueryStatus.SUCCESS, procTime);
+                ValidatePublish.unsupportedAPICall();
+                return null;
+        }
+
+        @Override
+        public DispositionReport adminSaveTModel(String authInfo, List<AdminSaveTModelWrapper> values) throws DispositionReportFaultMessage, RemoteException {
+                long startTime = System.currentTimeMillis();
+                EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
                 try {
-
-                        //TODO is this tModel used anywhere?, if so, validate all instances against the new rule?
                         tx.begin();
-
-                        //each tmodel/value set
+                        UddiEntityPublisher requestor = this.getEntityPublisher(em, authInfo);
+                        if (!((Publisher) requestor).isAdmin()) {
+                                throw new UserMismatchException(new ErrorMessage("errors.AdminReqd"));
+                        }
                         for (int i = 0; i < values.size(); i++) {
-                                //remove any existing references to the key
-                                ValueSetValues find = em.find(ValueSetValues.class, values.get(i).getTModekKey());
-
-                                if (find != null) {
-                                        find.setValidatorClass(values.get(i).getValidationClass());
-                                        em.persist(find);
-
-                                } else {
-                                        org.apache.juddi.model.ValueSetValues vv = new ValueSetValues();
-                                        vv.setTModelKey(values.get(i).getTModekKey());
-                                        vv.setValidatorClass(values.get(i).getValidationClass());
-                                        em.persist(vv);
-                                }
+                                //impersonate the user
+                                AuthToken authToken = sec.getAuthToken(values.get(i).getPublisherID());
+                                SaveTModel stm = new SaveTModel();
+                                stm.setAuthInfo(authToken.getAuthInfo());
+                                stm.getTModel().addAll(values.get(i).getTModel());
+                                pub.saveTModel(stm);
                         }
 
                         tx.commit();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.ADMIN_SAVE_TMODEL,
+                                QueryStatus.SUCCESS, procTime);
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.ADMIN_SAVE_TMODEL,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
+
                 } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
                         }
                         em.close();
                 }
+
                 DispositionReport r = new DispositionReport();
-                r.getResult().add(new Result());
                 return r;
-        }*/
-
-        @Override
-        public void adminDeleteSubscription(String authInfo, List<String> subscriptionKey) throws DispositionReportFaultMessage, RemoteException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
-        @Override
-        public DispositionReport adminSaveBusiness(String authInfo, List<AdminSaveBusinessWrapper> values) throws DispositionReportFaultMessage, RemoteException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public DispositionReport adminSaveTModel(String authInfo, List<AdminSaveTModelWrapper> values) throws DispositionReportFaultMessage, RemoteException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @SuppressWarnings("unchecked")
         @Override
         public List<SubscriptionWrapper> getAllClientSubscriptionInfo(String authInfo) throws DispositionReportFaultMessage, RemoteException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                long startTime = System.currentTimeMillis();
+                long procTime = System.currentTimeMillis() - startTime;
+                serviceCounter.update(JUDDIQuery.GET_ALL_CLIENT_SUB,
+                        QueryStatus.SUCCESS, procTime);
+                //returns ALL client subscriptions
+                ValidatePublish.unsupportedAPICall();
+                return null;
         }
 
         @Override
         public DispositionReport setReplicationNodes(String authInfo, org.uddi.repl_v3.ReplicationConfiguration replicationConfiguration) throws DispositionReportFaultMessage, RemoteException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                long startTime = System.currentTimeMillis();
+                long procTime = System.currentTimeMillis() - startTime;
+                serviceCounter.update(JUDDIQuery.SET_REPLICATION_NODES,
+                        QueryStatus.SUCCESS, procTime);
+                ValidatePublish.unsupportedAPICall();
+                return null;
         }
 
         @Override
         public org.uddi.repl_v3.ReplicationConfiguration getReplicationNodes(String authInfo) throws DispositionReportFaultMessage, RemoteException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                long startTime = System.currentTimeMillis();
+                long procTime = System.currentTimeMillis() - startTime;
+                serviceCounter.update(JUDDIQuery.GET_REPLICATION_NODES,
+                        QueryStatus.SUCCESS, procTime);
+                ValidatePublish.unsupportedAPICall();
+                return null;
         }
 
-        @Override
+        static UDDISubscriptionImpl sub = new UDDISubscriptionImpl();
+        static UDDISecurityImpl sec = new UDDISecurityImpl();
+        static UDDIPublicationImpl pub = new UDDIPublicationImpl();
 
-        public void adminSaveSubscription(String authInfo, String publisherOrUsername, List<Subscription> subscriptions) throws DispositionReportFaultMessage, RemoteException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        @Override
+        public void adminSaveSubscription(String authInfo, String publisherOrUsername, Holder<List<Subscription>> subscriptions) throws DispositionReportFaultMessage {
+                long startTime = System.currentTimeMillis();
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+                        UddiEntityPublisher requestor = this.getEntityPublisher(em, authInfo);
+                        if (!((Publisher) requestor).isAdmin()) {
+                                throw new UserMismatchException(new ErrorMessage("errors.AdminReqd"));
+                        }
+                        //impersonate the user
+                        AuthToken authToken = sec.getAuthToken(publisherOrUsername);
+                        sub.saveSubscription(authToken.getAuthInfo(), subscriptions);
+                        tx.commit();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.ADMIN_SAVE_SUB,
+                                QueryStatus.SUCCESS, procTime);
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.ADMIN_SAVE_SUB,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
+
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+
         }
 }

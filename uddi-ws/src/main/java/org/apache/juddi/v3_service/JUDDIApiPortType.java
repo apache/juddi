@@ -9,6 +9,7 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.ws.Holder;
 import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
 import org.apache.juddi.api_v3.AdminSaveBusinessWrapper;
@@ -32,7 +33,6 @@ import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.api_v3.SubscriptionWrapper;
 import org.apache.juddi.api_v3.SyncSubscription;
 import org.apache.juddi.api_v3.SyncSubscriptionDetail;
-import org.apache.juddi.api_v3.ValidValues;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -433,7 +433,7 @@ public interface JUDDIApiPortType {
         throws DispositionReportFaultMessage, RemoteException
     ;
 
-    /**
+ /**
      * 
      * 		saves a client subscription, useful for restore functions
      * 		@since 3.3
@@ -452,9 +452,10 @@ public interface JUDDIApiPortType {
         String authInfo,
         @WebParam(name = "publisherOrUsername", targetNamespace = "urn:juddi-apache-org:api_v3")
         String publisherOrUsername,
-        @WebParam(name = "subscriptions", targetNamespace = "urn:juddi-apache-org:api_v3")
-        List<Subscription> subscriptions)
-        throws DispositionReportFaultMessage, RemoteException
+        @WebParam(name = "subscriptions", targetNamespace = "urn:juddi-apache-org:api_v3", mode = WebParam.Mode.INOUT)
+        Holder<List<Subscription>> subscriptions)
+        throws DispositionReportFaultMessage
     ;
+
 
 }

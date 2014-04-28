@@ -389,7 +389,9 @@ xmlns:uddi="urn:uddi-org:api_v3">
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="adminSave_SubscriptionResponse">
-    <xs:sequence />
+    <xs:sequence >
+		<xs:element maxOccurs="unbounded" name="subscriptions" type="subr:subscription"/>
+	</xs:sequence>	
   </xs:complexType>
   
   
