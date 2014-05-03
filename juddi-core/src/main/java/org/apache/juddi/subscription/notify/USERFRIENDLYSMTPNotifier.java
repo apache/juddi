@@ -3,19 +3,9 @@ package org.apache.juddi.subscription.notify;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.rmi.RemoteException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Properties;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.mail.Address;
 import javax.mail.Message.RecipientType;
 import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -23,18 +13,12 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.xml.bind.JAXB;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.config.ResourceConfig;
-import org.apache.juddi.cryptor.CryptorFactory;
 import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.apache.juddi.model.BindingTemplate;
-import org.apache.juddi.v3.error.ErrorMessage;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.Result;
 import org.uddi.sub_v3.SubscriptionFilter;
@@ -101,6 +85,7 @@ public class USERFRIENDLYSMTPNotifier extends SMTPNotifier {
                                      + body.getSubscriptionResultsList().getSubscription().getSubscriptionKey());
                                 Transport.send(message);
                         }
+                        else throw new DispositionReportFaultMessage("Session is null!", null);
                 } catch (Exception e) {
                         log.error(e.getMessage(), e);
                         throw new DispositionReportFaultMessage(e.getMessage(), null);

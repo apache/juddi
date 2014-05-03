@@ -14,7 +14,7 @@
     <div class="hero-unit">
         <h1>jUDDI</h1>
         <p><%=ResourceLoader.GetResource(session, "index.juddi")%></p>
-        <p><a href="#" class="btn btn-primary btn-large"><%=ResourceLoader.GetResource(session, "learnmore")%> &raquo;</a></p>
+        <p><a href="http://juddi.apache.org" class="btn btn-primary btn-large"><%=ResourceLoader.GetResource(session, "learnmore")%> &raquo;</a></p>
     </div>
 
     <!-- Example row of columns -->

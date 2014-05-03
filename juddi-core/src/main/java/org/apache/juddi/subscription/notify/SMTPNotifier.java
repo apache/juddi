@@ -147,6 +147,7 @@ public class SMTPNotifier implements Notifier {
 						+ body.getSubscriptionResultsList().getSubscription().getSubscriptionKey());
 				Transport.send(message);
 			}
+                        else throw new DispositionReportFaultMessage("Session is null!", null);
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
 			throw new DispositionReportFaultMessage(e.getMessage(), null);

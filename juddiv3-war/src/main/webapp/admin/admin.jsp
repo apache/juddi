@@ -33,6 +33,7 @@
 
                 <div class="span12">
                         <% UddiAdminHub x = UddiAdminHub.getInstance(application, session);
+                        
                         %> 
                         <%=ResourceLoader.GetResource(session, "pages.admin.content")%>
                         <br>
@@ -47,6 +48,19 @@
                                 <option>save_ClientSubscriptionInfo</option>
                                 <option>save_Node</option>
                                 <option>save_publisher</option>
+                                
+                                <option>send_EmailTest</option>
+                                <option>get_AllNodes</option>
+                                <option>get_AllClerks</option>
+                                <option>delete_Node</option>
+                                <option>delete_Clerk</option>
+                                <option>admin_DeleteSubscription</option>
+                                <option>admin_SaveBusiness</option>
+                                <option>admin_SaveTModel</option>
+                                <option>get_AllClientSubscriptionInfo</option>
+                                <option>set_ReplicationNodes</option>
+                                <option>get_ReplicationNodes</option>
+                                <option>admin_SaveSubscription</option>
                         </select>
 
                         <div>
@@ -129,6 +143,23 @@
                                         jUDDI API <input type="text" id="CLERKNODEsetJuddiApiUrl"  class="forminput" placeholder="http://localhost:8080/juddiv3/services/juddi-api" value="http://localhost:8080/juddiv3/services/juddi-api"><br>
 
                                 </div>
+                                        
+                                        
+                                        
+                                <div id="send_EmailTest" style="display:none">
+                                <%=ResourceLoader.GetResource(session, "items.email")%>  <input type="text" id="send_EmailTestEMAIL"  class="forminput" placeholder="Enter email"><br>    
+                                </div>
+                                <div id="get_AllNodes" style="display:none"></div>
+                                <div id="get_AllClerks" style="display:none"></div>
+                                <div id="delete_Node" style="display:none"></div>
+                                <div id="delete_Clerk" style="display:none"></div>
+                                <div id="admin_DeleteSubscription" style="display:none"></div>
+                                <div id="admin_SaveBusiness" style="display:none"></div>
+                                <div id="admin_SaveTModel" style="display:none"></div>
+                                <div id="get_AllClientSubscriptionInfo" style="display:none"></div>
+                                <div id="set_ReplicationNodes" style="display:none"></div>
+                                <div id="get_ReplicationNodes" style="display:none"></div>
+                                <div id="admin_SaveSubscription" style="display:none"></div>
 
                         </div>
                         <script type="text/javascript">
@@ -146,6 +177,22 @@
                                         $("#save_publisher").hide();
                                         $("#save_Clerk").hide();
                                         $("#save_Node").hide();
+                                        
+                                        
+                                        $("#send_EmailTest").hide();
+                                        $("#get_AllNodes").hide();
+                                        $("#get_AllClerks").hide();
+                                        $("#delete_Node").hide();
+                                        $("#delete_Clerk").hide();
+                                        $("#admin_DeleteSubscription").hide();
+                                        $("#admin_SaveBusiness").hide();
+                                        $("#admin_SaveTModel").hide();
+                                        $("#get_AllClientSubscriptionInfo").hide();
+                                        $("#set_ReplicationNodes").hide();
+                                        $("#get_ReplicationNodes").hide();
+                                        $("#admin_SaveSubscription").hide();
+                        
+                        
                                         $("#" + x).show();
                                 }
                                 toggledivs();//run when the page loads

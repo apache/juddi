@@ -62,6 +62,8 @@ import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.juddi.adminconsole.AES;
 import org.apache.juddi.adminconsole.resources.ResourceLoader;
 import org.apache.juddi.api_v3.ClientSubscriptionInfo;
+import org.apache.juddi.model.BindingTemplate;
+import org.apache.juddi.subscription.notify.SMTPNotifier;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.api_v3.DiscardAuthToken;
@@ -70,6 +72,9 @@ import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.GetAuthToken;
 import org.uddi.api_v3.Name;
+import org.uddi.sub_v3.Subscription;
+import org.uddi.sub_v3.SubscriptionResultsList;
+import org.uddi.subr_v3.NotifySubscriptionListener;
 
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISecurityPortType;
@@ -341,6 +346,32 @@ public class UddiAdminHub {
                         if (action.equalsIgnoreCase("save_publisher")) {
                                 return save_publisher(parameters);
                         }
+
+                        if (action.equalsIgnoreCase("send_EmailTest")) {
+                                return sendTestEmail(parameters);
+                        }
+                        /*if (action.equalsIgnoreCase("get_AllNodes")) {
+                        }
+                        if (action.equalsIgnoreCase("get_AllClerks")) {
+                        }
+                        if (action.equalsIgnoreCase("delete_Node")) {
+                        }
+                        if (action.equalsIgnoreCase("delete_Clerk")) {
+                        }
+                        if (action.equalsIgnoreCase("admin_DeleteSubscription")) {
+                        }
+                        if (action.equalsIgnoreCase("admin_SaveBusiness")) {
+                        }
+                        if (action.equalsIgnoreCase("admin_SaveTModel")) {
+                        }
+                        if (action.equalsIgnoreCase("get_AllClientSubscriptionInfo")) {
+                        }
+                        if (action.equalsIgnoreCase("set_ReplicationNodes")) {
+                        }
+                        if (action.equalsIgnoreCase("get_ReplicationNodes")) {
+                        }
+                        if (action.equalsIgnoreCase("admin_SaveSubscription")) {
+                        }*/
                 } catch (Exception ex) {
                         return "Error!" + HandleException(ex);
                 }
@@ -430,6 +461,26 @@ public class UddiAdminHub {
                         }
                 }
                 return "Success";
+        }
+
+        private String sendTestEmail(HttpServletRequest parameters) {
+                try {
+                        
+                        String to = parameters.getParameter("send_EmailTestEMAIL");
+                        if (!to.startsWith("mailto:"))
+                                to = "mailto:" + to;
+                        BindingTemplate modellbt = new BindingTemplate("test", null, "endpoint", to, null, null, null, null, null);
+                        org.apache.juddi.subscription.notify.SMTPNotifier smtp = new SMTPNotifier(modellbt);
+                        NotifySubscriptionListener body = new NotifySubscriptionListener();
+                        
+                        body.setSubscriptionResultsList(new SubscriptionResultsList());
+                        body.getSubscriptionResultsList().setSubscription(new Subscription());
+                        body.getSubscriptionResultsList().getSubscription().setSubscriptionKey("TEST");
+                        smtp.notifySubscriptionListener(body);
+                        return "Success";
+                } catch (Exception ex) {
+                        return "Failure!" + HandleException(ex);
+                }
         }
 
         public enum AuthStyle {
@@ -654,7 +705,7 @@ public class UddiAdminHub {
                 return null;
         }
 
-        public static String getSampleSave_ClientSubscriptionInfo(){
+        public static String getSampleSave_ClientSubscriptionInfo() {
                 SaveClientSubscriptionInfo x = new SaveClientSubscriptionInfo();
                 x.setAuthInfo("");
                 x.getClientSubscriptionInfo().add(new ClientSubscriptionInfo());
@@ -677,7 +728,7 @@ public class UddiAdminHub {
                 x.getClientSubscriptionInfo().get(0).getFromClerk().getNode().setSubscriptionListenerUrl("http://localhost:8080/juddiv3/services/subscription-listener");
                 x.getClientSubscriptionInfo().get(0).getFromClerk().getNode().setJuddiApiUrl("http://localhost:8080/juddiv3/services/juddi-api");
                 x.getClientSubscriptionInfo().get(0).getFromClerk().getNode().setReplicationUrl("http://localhost:8080/juddiv3/services/replication");
-                
+
                 x.getClientSubscriptionInfo().get(0).getToClerk().setName("ClerkName");
                 x.getClientSubscriptionInfo().get(0).getToClerk().setPublisher("username");
                 x.getClientSubscriptionInfo().get(0).getToClerk().setPassword("password");
@@ -696,12 +747,14 @@ public class UddiAdminHub {
                 JAXB.marshal(x, sw);
                 return sw.toString();
         }
+
         private String save_ClientSubscriptionInfo(HttpServletRequest parameters) {
                 StringBuilder ret = new StringBuilder();
                 SaveClientSubscriptionInfo sb = new SaveClientSubscriptionInfo();
 
-                if (parameters.getParameter("ClientSubscriptionInfoDetailXML")==null)
+                if (parameters.getParameter("ClientSubscriptionInfoDetailXML") == null) {
                         return "No input!";
+                }
                 ClientSubscriptionInfoDetail d = null;
                 try {
                         StringReader sr = new StringReader(parameters.getParameter("ClientSubscriptionInfoDetailXML").trim());
@@ -788,7 +841,7 @@ public class UddiAdminHub {
                         p.setIsEnabled(Boolean.parseBoolean(parameters.getParameter("savePublisherIsEnabled")));
                 } catch (Exception ex) {
                 }
-              
+
                 PublisherDetail d = null;
                 sb.setAuthInfo(GetToken());
                 try {
