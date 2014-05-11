@@ -148,13 +148,14 @@ mvn clean package -P openjpa-jboss7up
 ----
 Then copy the `target/juddiv3.war` to the `<jboss>/standalone/deployments` directory.
 	
-Not all the JBoss appservers mentioned above shipped a module for openjpa. If it did not then you can create it:
+Not all the JBoss appservers mentioned above shipped a module for openjpa. If it did not then download the OpenJPA version that jUDDI depends on. In this case, 2.2.1. 
 
-In your appserver create the following directory structure `<jboss>/modules/system/layers/base/org/apache/openjpa/main` and the following files:
+In your appserver create the following directory structure `<jboss>/modules/org/apache/openjpa/main` and the following files:
 ....
-module.xml		openjpa-2.2.1.jar	serp-1.13.1.jar
+<contents of downloaded OpenJPA.zip/*.jar and OpenJPA.zip/lib/*.jar>
+<create a new file, module.xml>
 ....
-where the contents of the modules.xml should look like
+where the contents of the module.xml should look like
 ....
 <module xmlns="urn:jboss:module:1.1" name="org.apache.openjpa"> 
     <resources> 
@@ -171,43 +172,9 @@ where the contents of the modules.xml should look like
         </dependencies> 
 </module>
 ....
+Modify the contents as required based on version information.
 
-Next create the directory structure `<jboss>/modules/system/layers/base/org/jboss/as/jpa/openjpa/main` with the files:
-....
-jboss-as-jpa-openjpa-7.1.1.Final.jar	module.xml
-....
-where the contents of the modules.xml should look like
-....
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- contains the JPA integration classes for OpenJPA 2.x --> 
-<module xmlns="urn:jboss:module:1.1" name="org.jboss.as.jpa.openjpa">
-    <properties>
-        <property name="jboss.api" value="private"/>
-    </properties>
 
-    <resources>
-        <resource-root path="jboss-as-jpa-openjpa-7.1.1.Final.jar"/>
-        <!-- Insert resources here -->
-    </resources>
-
-    <dependencies>
-        <module name="javax.annotation.api"/>
-        <module name="javax.persistence.api"/>
-        <module name="javax.transaction.api"/>
-
-        <module name="org.jboss.as.jpa.spi"/>
-        <module name="org.jboss.logging"/>
-        <module name="org.jboss.jandex"/>
-
-        <module name="org.apache.openjpa" optional="true"/>  <!-- org.apache.openjpa:main must be created manually with OpenJPA jars -->
-    </dependencies>
-</module>
-....
-and in the `modules/system/layers/base/org/jboss/as/jpa/main/module.xml
-add dependency
-....
-<module name="org.jboss.as.jpa.openjpa"/>
-....
 
 === Deploying to Glassfish
 This section describes how to deploy juddi to Glassfish 2.1.1. These instructions will use CXF as a webservice framework.
