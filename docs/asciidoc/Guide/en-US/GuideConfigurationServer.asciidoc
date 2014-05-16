@@ -49,7 +49,8 @@ CAUTION: Take caution in changing the  jUDDI Node ID. If jUDDI has already been 
 
 === Email
 
-.As of 3.1.5, jUDDI supports Email delivery options for Subscription API functions. Email properties can be referenced in the _juddiv3.xml_ file
+.As of 3.1.5, jUDDI supports Email delivery options for Subscription API functions. Email properties can be referenced in the _juddiv3.xml_ file.
+Starting with 3.2.1, jUDDI can now send a test email via the juddiv3.war/admin console.
 [options="header"]
 |===========================================================================================
 |Property Name                   |Description         |Required     |Default Value or [Example Value]
