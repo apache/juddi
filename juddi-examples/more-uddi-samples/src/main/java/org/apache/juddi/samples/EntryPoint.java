@@ -49,7 +49,7 @@ public class EntryPoint {
                         System.out.println("14) Get the details of a service");
                         System.out.println("15) Make a Key Generator tModel");
                         System.out.println("16) Create a Business Relationship Between two users and two Businesses");
-                        System.out.println("17) Subscriptions - Asynchronous, listens for all business changes");
+                        System.out.println("17) Subscriptions - Asynchronous, listens for all changes");
                         System.out.println("18) Subscriptions - Synchronous");
                         System.out.println("19) WSDL2UDDI - Register a service from a WSDL document");
                         System.out.println("20) WADL2UDDI - Register a service from a WADL document");
@@ -58,6 +58,7 @@ public class EntryPoint {
                         System.out.println("23) Print Subscriptions");
                         System.out.println("24) Delete a subscription");
                         System.out.println("25) Delete all subscriptions");
+                        System.out.println("26) Subscriptions - Asynchronous, publisher assertion subscriptions");
                         System.out.println("q) quit");
                         System.out.print("Selection: ");
                         input = System.console().readLine();
@@ -254,6 +255,10 @@ public class EntryPoint {
                 }
                 if (input.equals("25")) {
                         new UddiSubscriptionManagement().DeleteAllSubscriptions(authtoken);
+                }
+                 if (input.equals("26")) {
+                        new UddiSubscribeAssertionStatus().Fire();
+
                 }
 
         }

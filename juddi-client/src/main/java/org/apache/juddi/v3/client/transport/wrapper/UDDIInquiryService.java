@@ -58,7 +58,7 @@ public class UDDIInquiryService {
 
 	public UDDIInquiryService() {
 		super();
-		clientName = System.getProperty("org.apache.juddi.v3.client.client.name");
+		clientName = System.getProperty("org.apache.juddi.v3.client.name");
 		nodeName    = System.getProperty("org.apache.juddi.v3.client.node.name",DEFAULT_NODE_NAME);
 		operations = new HashMap<String, Handler>();
 		operations.put("find_business", new Handler("findBusiness", FindBusiness.class));

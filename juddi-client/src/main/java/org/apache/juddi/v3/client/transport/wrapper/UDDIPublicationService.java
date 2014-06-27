@@ -54,7 +54,7 @@ public class UDDIPublicationService {
 
 	  public UDDIPublicationService() {
 		super();
-		clientName = System.getProperty("org.apache.juddi.v3.client.client.name");
+		clientName = System.getProperty("org.apache.juddi.v3.client.name");
 		nodeName    = System.getProperty("org.apache.juddi.v3.client.node.name",DEFAULT_NODE_NAME);
 		operations = new HashMap<String, Handler>();
 		operations.put("get_registeredInfo", new Handler("getRegisteredInfo", GetRegisteredInfo.class));
