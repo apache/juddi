@@ -2,7 +2,7 @@
 <jboss-deployment-structure>
   <deployment>
     <dependencies>
-      <module name="org.jboss.as.jpa.openjpa" />
+      <module name="org.jboss.as.jpa" />
       <module name="org.jboss.ws.cxf.jbossws-cxf-server" />
     </dependencies>
   </deployment>

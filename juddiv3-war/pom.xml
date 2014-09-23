@@ -445,7 +445,17 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-war-plugin</artifactId>
+                        <version>2.4</version>
                         <configuration>
+                            <packagingExcludes>
+                                WEB-INF/lib/hibernate*.jar,
+                                WEB-INF/lib/cglib*.jar,
+                                WEB-INF/lib/log4j*.jar,
+                                WEB-INF/lib/stax*.jar,
+                                WEB-INF/lib/commons-log*.jar,
+                                WEB-INF/classes/commons*,
+                                WEB-INF/classes/log*
+                            </packagingExcludes>
                             <webResources>
                                 <resource>
                                     <directory>JPA/OpenJPA-JBossAS7Up</directory>
@@ -454,13 +464,14 @@
                                     <directory>JAX-WS/CXF-JBossAS7Up</directory>
                                 </resource>
                             </webResources>
+                            
                         </configuration>
                     </plugin>
                 </plugins>
             </build>
             <dependencies>
                 <dependency>
-                    <artifactId>juddi-core-openjpa</artifactId>
+                    <artifactId>juddi-core</artifactId>
                     <groupId>org.apache.juddi</groupId>
                     <version>${project.version}</version>
                     <exclusions>
@@ -469,8 +480,16 @@
                             <artifactId>junit</artifactId>
                         </exclusion>
                         <exclusion>
-                            <groupId>org.apache.openjpa</groupId>
-                            <artifactId>openjpa</artifactId>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-core</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-entitymanager</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-jpa</artifactId>
                         </exclusion>
                     </exclusions>
                 </dependency>
@@ -487,14 +506,21 @@
                             <groupId>cglib</groupId>
                             <artifactId>cglib-nodep</artifactId>
                         </exclusion>
+                        <exclusion>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-core</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-entitymanager</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-jpa</artifactId>
+                        </exclusion>
                     </exclusions>
                 </dependency>
-                <dependency>
-                    <groupId>javax.persistence</groupId>
-                    <artifactId>persistence-api</artifactId>
-                    <version>1.0</version>
-                    <scope>provided</scope>
-                </dependency>
+                
             </dependencies>
         </profile>
 	</profiles>
