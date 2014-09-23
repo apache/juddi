@@ -170,4 +170,35 @@ language governing permissions and * limitations under the License. * */ -->
         	</plugins>
         </pluginManagement>
     </build>
+    <profiles>
+        <profile>
+            <id>jboss7up</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <packagingExcludes>
+                                WEB-INF/lib/cxf*.jar,
+                                WEB-INF/lib/log4j*.jar,
+                                WEB-INF/lib/commons-log*.jar,
+                                WEB-INF/classes/commons*,
+                                WEB-INF/classes/log*
+                            </packagingExcludes>
+                            <webResources>
+                                <resource>
+                                    <directory>JAX-WS/CXF-JBossAS7Up</directory>
+                                </resource>
+                            </webResources>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+       </profile>
+    </profiles>
 </project>

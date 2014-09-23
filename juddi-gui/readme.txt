@@ -10,6 +10,8 @@ Pre-requists:
 Build:
 1) First, build the main jUDDI project. 
 	mvn clean install
+For JBoss Wildly/EAP use
+    mvn clean install -Pjboss7up
 2) Deploy
 	copy the war file into any J2EE container that has a soap stack that supports JAX-WS 2.2 or higher
 	and the servlet 2.4 API spec or higher
@@ -18,3 +20,4 @@ Build:
 4) Configure
 	Alter the contents of juddi-gui/WEB-INF/classes/META-INF/uddi.xml as necessary.
 	These can also be edited in browser via Settings > Config
+	

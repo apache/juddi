@@ -436,7 +436,7 @@
 			</dependencies>
 		</profile>
 		<profile>
-            <id>openjpa-jboss7up</id>
+            <id>jboss7up</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
@@ -458,7 +458,7 @@
                             </packagingExcludes>
                             <webResources>
                                 <resource>
-                                    <directory>JPA/OpenJPA-JBossAS7Up</directory>
+                                    <directory>JPA/Hibernate-JBossAS7Up</directory>
                                 </resource>
                                 <resource>
                                     <directory>JAX-WS/CXF-JBossAS7Up</directory>

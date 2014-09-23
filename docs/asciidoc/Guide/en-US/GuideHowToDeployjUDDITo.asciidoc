@@ -137,44 +137,12 @@ This section describes how to deploy juddi to JBossAS 7, WildFly and JBossEAP 6
 
 ===== Hibernate and JBossWS-CXF
 
-This profile is not yet scripted as there is an issue with Hibernate, see JUDDI-587.
-
-===== OpenJPA and JBossWS-CXF
-
-Target platform using HSQL using OpenJPA and JBossWS-CXF. The juddiv3.war relies on the openjpa and cxf modules in the appserver. 
-
+Target platform Wildfly/EAP and H2 using Hibernate and JBossWS-cxf. The juddiv3.war relies on Hibernate and JBossWS-cxf modules in the appserver. To build the correct juddiv3.war run
 ----
-mvn clean package -P openjpa-jboss7up
+mvn clean package -P jboss7up
 ----
-Then copy the `target/juddiv3.war` to the `<jboss>/standalone/deployments` directory.
-	
-Not all the JBoss appservers mentioned above shipped a module for openjpa. If it did not then download the OpenJPA version that jUDDI depends on. In this case, 2.2.1. 
 
-In your appserver create the following directory structure `<jboss>/modules/org/apache/openjpa/main` and the following files:
-....
-<contents of downloaded OpenJPA.zip/*.jar and OpenJPA.zip/lib/*.jar>
-<create a new file, module.xml>
-....
-where the contents of the module.xml should look like
-....
-<module xmlns="urn:jboss:module:1.1" name="org.apache.openjpa"> 
-    <resources> 
-        <resource-root path="openjpa-2.2.1.jar"/> 
-        <resource-root path="serp-1.13.1.jar"/> 
-    </resources> 
-        <dependencies> 
-            <module name="javax.persistence.api"/> 
-            <module name="javax.transaction.api"/> 
-            <module name="javax.validation.api"/> 
-            <module name="org.apache.commons.lang"/> 
-            <module name="org.apache.commons.collections"/> 
-            <module name="org.apache.log4j"/> 
-        </dependencies> 
-</module>
-....
-Modify the contents as required based on version information.
-
-
+Use the JBoss add-user.sh script to create an application user with the uddiadmin role.
 
 === Deploying to Glassfish
 This section describes how to deploy juddi to Glassfish 2.1.1. These instructions will use CXF as a webservice framework.
