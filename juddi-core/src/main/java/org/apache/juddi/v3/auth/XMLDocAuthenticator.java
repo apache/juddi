@@ -17,11 +17,12 @@
 
 package org.apache.juddi.v3.auth;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -100,16 +101,22 @@ public class XMLDocAuthenticator implements Authenticator
 	{
             
 		userTable = new HashMap<String, User> ();
-                String usersFileName = getFilename();
-                if (usersFileName==null || usersFileName.length()==0)
-                    throw new ConfigurationException("usersFileName value is null!");
-		//log.info("Reading jUDDI Users File: " + usersFileName + "...");
-                URL resource = ClassUtil.getResource(usersFileName, this.getClass());
-                if (resource!=null)
-                    log.info("Reading jUDDI Users File: " + usersFileName + "...from " + resource.toExternalForm());
-                else
-                    log.info("Reading jUDDI Users File: " + usersFileName + "...");
-		InputStream stream = ClassUtil.getResource(usersFileName, this.getClass()).openStream();
+        String usersFileName = getFilename();
+        if (usersFileName==null || usersFileName.length()==0)
+           throw new ConfigurationException("usersFileName value is null!");
+        File file = new File(usersFileName);
+        InputStream stream = null;
+        if (file.exists()) {
+        	log.info("Reading jUDDI Users File: " + usersFileName + "...");
+        	stream = new FileInputStream(file);
+        } else {
+            URL resource = ClassUtil.getResource(usersFileName, this.getClass());
+            if (resource!=null)
+                log.info("Reading jUDDI Users File: " + usersFileName + "...from " + resource.toExternalForm());
+            else
+                log.info("Reading jUDDI Users File: " + usersFileName + "...");
+            stream = ClassUtil.getResource(usersFileName, this.getClass()).openStream();
+        }
 		JAXBContext jaxbContext=JAXBContext.newInstance(JuddiUsers.class);
 		Unmarshaller unMarshaller = jaxbContext.createUnmarshaller();
 		JAXBElement<JuddiUsers> element = unMarshaller.unmarshal(new StreamSource(stream),JuddiUsers.class);
