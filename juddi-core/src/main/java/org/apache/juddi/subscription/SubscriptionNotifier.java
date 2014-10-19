@@ -384,6 +384,8 @@ public class SubscriptionNotifier extends TimerTask {
 								getSubscriptionResults.setChunkToken(chunkToken);
 								resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);
 								body.setSubscriptionResultsList(resultList);
+                                                                if (resultListContainsChanges(resultList))
+                                                                //if (!IsEmpty(resultList))
 								notifier.notifySubscriptionListener(body);
 								chunkToken=body.getSubscriptionResultsList().getChunkToken();
 							}
