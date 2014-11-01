@@ -31,7 +31,10 @@ function pagedownBusiness()
         return;
     //alert(newoffset);
     if (newoffset != offsetBusiness)
+    {
+        offsetBusiness = newoffset;
         RenderBusinessListBySearch('%', newoffset, maxrecordsBusiness);
+    }
 }
 function refreshBusinessList()
 {
