@@ -3,10 +3,10 @@
     Created on : Mar 14, 2013, 9:17:21 PM
     Author     : Alex O'Ree
 --%><%@page import="javax.xml.bind.JAXB"%><%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%><%@page import="org.apache.juddi.jaxb.JAXBMarshaller"%><%@page import="org.apache.juddi.jaxb.EntityCreator"%><%@page import="org.apache.juddi.webconsole.hub.UddiHub"%><%@page import="org.apache.juddi.jaxb.PrintUDDI"%><%@page contentType="text/html" pageEncoding="UTF-8"%><%
-//<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-//NO NOT UNCOMMENT  
-//   response.setContentType("text/xml");
-    UddiHub x = UddiHub.getInstance(application, session);
+    
+        //do we need cross site request forgery project here? probably but it's left out due to adding additional end lines
+        //its low risk here since nothing actually changes server side for these functions
+        UddiHub x = UddiHub.getInstance(application, session);
 
     String type = request.getParameter("type");
     String id = request.getParameter("id");
@@ -26,8 +26,6 @@
         }
         if (j != null) {
             JAXB.marshal(j, out);
-         //   out.write(JAXBMarshaller.marshallToString(j, JAXBMarshaller.PACKAGE_UDDIAPI));
-            // out.write(EntityCreator.outputEntityToString(j, "org.apache.juddi.api_v3"));
         } else {
             out.write(ResourceLoader.GetResource(session, "items.unknown"));
             response.setStatus(406);

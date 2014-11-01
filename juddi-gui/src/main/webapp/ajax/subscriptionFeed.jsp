@@ -10,6 +10,7 @@
 <%@page import="javax.xml.datatype.DatatypeFactory"%>
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@include  file="../csrf.jsp" %>
 <!DOCTYPE html>
 <%
     UddiHub x = UddiHub.getInstance(application, session);

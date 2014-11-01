@@ -27,6 +27,9 @@ language governing permissions and * limitations under the License. * */ -->
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+					  <archive>
+						<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+					  </archive>
                 </configuration>
                 <executions>
                     <execution>
@@ -48,6 +51,7 @@ language governing permissions and * limitations under the License. * */ -->
                         </goals>
                         <phase>package</phase>
                         <configuration>
+							
                             <archive>${project.build.directory}/${artifactId}-${version}-jar-with-dependencies.jar</archive>
                             <keystore>src/main/keystore/signing-jar.keystore</keystore>
                             <alias>applet</alias>

@@ -3,6 +3,7 @@
     Created on : Mar 28, 2013, 6:39:09 PM
     Author     : Alex O'Ree
 --%><%@page import="org.apache.juddi.webconsole.hub.UddiHub"%><%
+        //note CSRF left off due to additiona endlines being injected (screws with parsing of the x509 cert)
     String type = request.getParameter("type");
     String id = request.getParameter("id");
     int index = 0;

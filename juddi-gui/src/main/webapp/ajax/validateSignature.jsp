@@ -14,6 +14,7 @@
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@include  file="../csrf.jsp" %>
 <%
     //org.apache.juddi.jaxb.PrintUDDI p = new PrintUDDI();
     UddiHub x = UddiHub.getInstance(application, session);

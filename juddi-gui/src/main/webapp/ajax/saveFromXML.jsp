@@ -19,6 +19,7 @@
 <%@page import="org.apache.juddi.jaxb.EntityCreator"%> 
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page import="org.apache.juddi.jaxb.PrintUDDI"%>
+<%@include  file="../csrf.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%><%
 
     UddiHub x = UddiHub.getInstance(application, session);
