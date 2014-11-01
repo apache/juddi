@@ -184,4 +184,10 @@ public interface Property {
      * @since 3.2.1
      */
     public static final String JUDDI_AUTHENTICATOR_HTTP_HEADER_NAME="juddi.auth.authenticator.header";
+    
+    /**
+     * Records inquiry find* requests to disk, sans auth token
+     * @since 3.2.1
+     */
+    public final static String JUDDI_LOGGING_FindApiCalls = "juddi.logging.logInquirySearchPayloads";
 }
