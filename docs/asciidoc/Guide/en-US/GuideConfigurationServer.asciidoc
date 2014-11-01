@@ -145,6 +145,18 @@ RMI Proxy properties that can be referenced in the _juddiv3.xml_ file and is onl
 |===========================================================================================
 
 
+=== Logging
+
+.These properties are used to enable additional logging capabilities.
+
+Logging properties that can be referenced in the _juddiv3.xml_ file.
+[options="header"]
+|===========================================================================================
+|Property Name                   		|Description         |Required     |Default Value or [Example Value]
+|_juddi/logging/logInquirySearchPayloads| Enables request payload logging for the Inquiry Find apis    |N| false
+|===========================================================================================
+
+
 
 === Deploying two or more jUDDI server on the same application server
 

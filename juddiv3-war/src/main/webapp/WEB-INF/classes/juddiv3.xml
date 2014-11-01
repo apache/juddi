@@ -189,5 +189,9 @@
 				<password encrypted="false">pass</password>-->
 			</smtp>
 		</mail>
+		
+		<logging>
+			<logInquirySearchPayloads>false</logInquirySearchPayloads>
+		</logging>
 	</juddi>
 </config>
