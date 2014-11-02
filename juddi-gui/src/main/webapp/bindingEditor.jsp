@@ -682,8 +682,14 @@
                               var postbackdata = new Array();
                                       postbackdata.push({
                                               name: "id",
-                                              value: $("#" + "<%=PostBackConstants.BINDINGKEY%>").text()
+                                              value: $("#" + "<%=PostBackConstants.BINDINGKEY%>").text().trim()
                                       });
+                                      postbackdata.push({
+                                              name: "svcid",
+                                              value: $("#" + "<%=PostBackConstants.SERVICEKEY %>").text().trim()
+                                      });
+                                      
+                                      
                               
                               postbackdata.push({
                                       name: "nonce",
