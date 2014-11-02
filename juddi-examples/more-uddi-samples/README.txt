@@ -5,7 +5,7 @@ annotate items in UDDI for service or software versioning.
 
 2. Check the settings of the META-INF/simple-publish-uddi.xml, to make sure the serverName and serverPort are set correctly.
 
-Note: This is an interactive program. Do not run this from a headless server or from CI/Buildbot/Jenkisn
+Note: This is an interactive program. Do not run this from a headless server or from CI/Buildbot/Jenkins
 
 3. mvn -Pinteractive
 

@@ -20,7 +20,7 @@ java -Duddi.client.xml=uddi.xml -jar uddi-tck-runner-{version}-jar-with-dependen
 
 You can also specify which test cases to run (i.e. a focused test). This will reduce run time by only running the test classes selected by giving the option -Dtests=(comma separated list)
 Example: 
-java -Dtests=org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerExternalTest -Duddi.client.xml=uddi.xml -jar uddi-tck-runner-{version}-jar-with-dependencies.jar
+java -Dtests=org.apache.juddi.v3.tck.UDDI_090_HttpExternalTest -Duddi.client.xml=uddi.xml -jar uddi-tck-runner-{version}-jar-with-dependencies.jar
 
 This application SHOULD have a net zero effect on the registry, however it is recommended to make a backup of your registry server, database and/or content before proceeding. 
 
