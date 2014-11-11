@@ -7,6 +7,6 @@ annotate items in UDDI for service or software versioning.
 
 Note: This is an interactive program. Do not run this from a headless server or from CI/Buildbot/Jenkins
 
-3. mvn -Pinteractive
+3. mvn clean install -Pinteractive
 
 Follow the onscreen prompts
