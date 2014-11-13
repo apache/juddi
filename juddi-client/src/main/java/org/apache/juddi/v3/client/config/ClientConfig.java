@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.v3.client.config;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,8 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 
@@ -57,8 +56,8 @@ public class ClientConfig {
         public final static String DEFAULT_UDDI_CONFIG = "META-INF/uddi.xml";
         private Log log = LogFactory.getLog(ClientConfig.class);
         private Configuration config = null;
-        
-	private Map<String, UDDINode> uddiNodes = null;
+
+        private Map<String, UDDINode> uddiNodes = null;
         private Map<String, UDDIClerk> uddiClerks = null;
         private Set<XRegistration> xBusinessRegistrations = null;
         private Set<XRegistration> xServiceBindingRegistrations = null;
@@ -86,18 +85,21 @@ public class ClientConfig {
 
         /**
          * Attempts to save any changes made to the configuration back to disk
+         * Revised in 3.2.1 to reconstruct the file from the in memory data
+         * structure, enable you to programmatically add nodes
          *
          * @throws ConfigurationException
          */
         public void saveConfig() throws ConfigurationException {
 
-                /*System.out.println("DEBUG dumping current cfg");
-                Iterator<String> keys = config.getKeys();
-                while(keys.hasNext())
-                {
-                        String k=keys.next();
-                        System.out.println(k +" = " + config.getProperty(k));
-                }*/
+                if (log.isDebugEnabled()) {
+                        System.out.println("DEBUG dumping current cfg");
+                        Iterator<String> keys = config.getKeys();
+                        while (keys.hasNext()) {
+                                String k = keys.next();
+                                System.out.println(k + " = " + config.getProperty(k));
+                        }
+                }
                 XMLConfiguration saveConfiguration = new XMLConfiguration();
                 Configuration cc = new CompositeConfiguration(saveConfiguration);
 
@@ -112,16 +114,16 @@ public class ClientConfig {
                         throw new ConfigurationException("error", ex);
                 }
                 addSubscriptionCallback(cc);
-                
-                /*log.de("DEBUG dumping NEW cfg");
-              keys=  cc.getKeys();
-                 
-                while(keys.hasNext())
-                {
-                        String k=keys.next();
-                        System.out.println(k +" = " + config.getProperty(k));
-                }*/
                 addXRegistration(cc);
+                if (log.isDebugEnabled()) {
+                        System.out.println("DEBUG dumping NEW cfg");
+                        Iterator<String> keys = cc.getKeys();
+
+                        while (keys.hasNext()) {
+                                String k = keys.next();
+                                System.out.println(k + " = " + config.getProperty(k));
+                        }
+                }
 
                 saveConfiguration.save(configurationFile);
         }
@@ -209,9 +211,13 @@ public class ClientConfig {
                                 if (numberOfWslds > 0) {
                                         UDDIClerk.WSDL[] wsdls = new UDDIClerk.WSDL[numberOfWslds];
                                         for (int w = 0; w < wsdls.length; w++) {
+
                                                 UDDIClerk.WSDL wsdl = uddiClerk.new WSDL();
                                                 String fileName = config.getString("client.clerks.clerk(" + i + ").wsdl(" + w + ")");
                                                 wsdl.setFileName(fileName);
+                                                if (!new File(fileName).exists()) {
+                                                        log.warn("The wsdl file referenced in the config at '" + fileName + "' doesn't exist!");
+                                                }
                                                 String businessKey = config.getString("client.clerks.clerk(" + i + ").wsdl(" + w + ")[@businessKey]");
                                                 String businessName = config.getString("client.clerks.clerk(" + i + ").wsdl(" + w + ")[@businessName]");
                                                 String keyDomain = config.getString("client.clerks.clerk(" + i + ").wsdl(" + w + ")[@keyDomain]");
@@ -248,7 +254,7 @@ public class ClientConfig {
                                                         }
                                                 }
                                                 if (!businessKey.toLowerCase().startsWith("uddi:") || !businessKey.substring(5).contains(":")) {
-                                                        throw new ConfigurationException("The businessKey " + businessKey + " does not implement a valid UDDI v3 key format.");
+                                                        throw new ConfigurationException("The businessKey '" + businessKey + "' does not implement a valid UDDI v3 key format. See config file at client.clerks.clerk(" + i + ").wsdl(" + w + ")[@businessKey]");
                                                 }
                                                 wsdl.setBusinessKey(businessKey);
                                                 if (keyDomain == null) {
@@ -413,14 +419,17 @@ public class ClientConfig {
                 if (uddiNodes.values().size() == 1) {
                         return uddiNodes.values().iterator().next();
                 }
-                UDDINode ret=null;
+                UDDINode ret = null;
                 for (UDDINode uddiNode : uddiNodes.values()) {
                         if (uddiNode.isHomeJUDDI()) {
-                                if (ret!=null){
+                                if (ret != null) {
                                         throw new ConfigurationException("Only one of the node elements in the client configuration needs to a 'isHomeJUDDI=\"true\"' attribute.");
                                 }
-                                ret= uddiNode;
+                                ret = uddiNode;
                         }
+                }
+                if (ret != null) {
+                        return ret;
                 }
                 throw new ConfigurationException("One of the node elements in the client configuration needs to a 'isHomeJUDDI=\"true\"' attribute.");
         }
@@ -558,7 +567,6 @@ public class ClientConfig {
                         node.setClientName(this.clientName);
                 }
                 this.uddiNodes.put(node.getClientName(), node);
-                
 
         }
 
@@ -602,14 +610,15 @@ public class ClientConfig {
 
         private void addCurrentNodeConfig(Configuration cc) {
 
-                cc.addProperty("client(0)[@name]",clientName);
+                cc.addProperty("[@xmlns]", config.getProperty("[@xmlns]"));
+                cc.addProperty("client(0)[@name]", clientName);
                 Iterator<Map.Entry<String, UDDINode>> iterator = uddiNodes.entrySet().iterator();
                 int i = 0;
                 while (iterator.hasNext()) {
                         log.debug("node names=" + uddiNodes.size());
 
                         UDDINode uddiNode = iterator.next().getValue();
-                        
+
                         Properties properties = uddiNode.getProperties();
 
                         if (properties == null) {
@@ -627,7 +636,6 @@ public class ClientConfig {
                                 x++;
                         }
 
-                        
                         cc.addProperty("client(0).nodes.node(" + i + ")[@isHomeJUDDI]", uddiNode.isHomeJUDDI());
                         cc.addProperty("client(0).nodes.node(" + i + ").name", uddiNode.getName());
                         cc.addProperty("client(0).nodes.node(" + i + ").description", uddiNode.getDescription());
@@ -656,7 +664,7 @@ public class ClientConfig {
                 clientName = config.getString("client[@name]");
                 clientCallbackUrl = config.getString("client(0)[@callbackUrl]");
 
-                cc.addProperty("client(0).clerks[@registerOnStartup", isRegisterOnStartup()) ;
+                cc.addProperty("client(0).clerks[@registerOnStartup]", isRegisterOnStartup());
                 int i = 0;
                 while (iterator.hasNext()) {
 
@@ -689,26 +697,26 @@ public class ClientConfig {
                         }
                         i++;
                 }
-                
-                if (xBusinessRegistrations!=null){
+
+                if (xBusinessRegistrations != null) {
                         Iterator<XRegistration> iterator1 = xBusinessRegistrations.iterator();
-                        int x=0;
-                        while (iterator1.hasNext()){
+                        int x = 0;
+                        while (iterator1.hasNext()) {
                                 XRegistration next = iterator1.next();
-                                cc.addProperty("client(0).clerks.business("+x+")[@fromClerk]" ,next.getFromClerk().name );
-                                cc.addProperty("client(0).clerks.business("+x+")[@toClerk]" ,next.getToClerk().name );
-                                cc.addProperty("client(0).clerks.business("+x+")[@entityKey]" ,next.getEntityKey() );
+                                cc.addProperty("client(0).clerks.business(" + x + ")[@fromClerk]", next.getFromClerk().name);
+                                cc.addProperty("client(0).clerks.business(" + x + ")[@toClerk]", next.getToClerk().name);
+                                cc.addProperty("client(0).clerks.business(" + x + ")[@entityKey]", next.getEntityKey());
                                 x++;
                         }
                 }
-                 if (xServiceBindingRegistrations!=null){
+                if (xServiceBindingRegistrations != null) {
                         Iterator<XRegistration> iterator1 = xServiceBindingRegistrations.iterator();
-                        int x=0;
-                        while (iterator1.hasNext()){
+                        int x = 0;
+                        while (iterator1.hasNext()) {
                                 XRegistration next = iterator1.next();
-                                cc.addProperty("client(0).clerks.servicebinding("+x+")[@fromClerk]" ,next.getFromClerk().name );
-                                cc.addProperty("client(0).clerks.servicebinding("+x+")[@toClerk]" ,next.getToClerk().name );
-                                cc.addProperty("client(0).clerks.servicebinding("+x+")[@entityKey]" ,next.getEntityKey() );
+                                cc.addProperty("client(0).clerks.servicebinding(" + x + ")[@fromClerk]", next.getFromClerk().name);
+                                cc.addProperty("client(0).clerks.servicebinding(" + x + ")[@toClerk]", next.getToClerk().name);
+                                cc.addProperty("client(0).clerks.servicebinding(" + x + ")[@entityKey]", next.getEntityKey());
                                 x++;
                         }
                 }
@@ -742,8 +750,9 @@ public class ClientConfig {
                         Map.Entry<Object, Object> next = it.next();
                         String key = (String) next.getKey();
                         Object val = next.getValue();
-                        if (val==null)
+                        if (val == null) {
                                 continue;
+                        }
                         if (key.equalsIgnoreCase(DigSigUtil.CANONICALIZATIONMETHOD)) {
                                 cc.addProperty("client(0).signature.canonicalizationMethod", val);
                         } else if (key.equalsIgnoreCase(DigSigUtil.CHECK_TIMESTAMPS)) {
@@ -794,7 +803,6 @@ public class ClientConfig {
 
                 }
 
-                
                 if (p.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD_WASENC, "false").equalsIgnoreCase("true")) {
                         cc.addProperty("client(0).signature.signingKeyStoreFilePassword", p.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD_CIPHER));
                 } else {
@@ -817,7 +825,7 @@ public class ClientConfig {
 
         private void addXRegistration(Configuration cc) {
 
-                cc.addProperty("client.XtoWsdl.IgnoreSSLErrors",                 isX_To_Wsdl_Ignore_SSL_Errors());
+                cc.addProperty("client.XtoWsdl.IgnoreSSLErrors", isX_To_Wsdl_Ignore_SSL_Errors());
         }
 
 }
