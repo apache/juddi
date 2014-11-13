@@ -86,7 +86,9 @@ public class ClientConfig {
         /**
          * Attempts to save any changes made to the configuration back to disk
          * Revised in 3.2.1 to reconstruct the file from the in memory data
-         * structure, enable you to programmatically add nodes
+         * structure, enable you to programmatically add nodes.
+         * <br><br>
+         * For previous functionality see, saveConfigRaw()
          *
          * @throws ConfigurationException
          */
@@ -127,7 +129,29 @@ public class ClientConfig {
 
                 saveConfiguration.save(configurationFile);
         }
+        
+        /**
+         * Use this method to attempt to save the jUDDI configuration file after
+         * you've modified it using the Apache Commons Configuration settings.
+         * This is especially useful if you've constructed a user interface for manipulating
+         * the configuration like a properties sheet and is used by the juddi-gui (web ui)
+         * @since 3.2.1
+         * @throws org.apache.commons.configuration.ConfigurationException
+         */
+        public void saveConfigRaw() throws ConfigurationException{
+         XMLConfiguration saveConfiguration = new XMLConfiguration(configurationFile);
+            Configuration cc = new CompositeConfiguration(saveConfiguration);
+            Iterator<String> keys = this.config.getKeys();
+            while (keys.hasNext()){
+                String key = keys.next();
+                if (key.startsWith("client") || key.startsWith("config"))
+                {
+                    cc.setProperty(key, config.getProperty(key));
+                }
+            }
+            saveConfiguration.save();
 
+        }
         protected void readConfig(Properties properties) throws ConfigurationException {
                 uddiNodes = readNodeConfig(config, properties);
                 uddiClerks = readClerkConfig(config, uddiNodes);

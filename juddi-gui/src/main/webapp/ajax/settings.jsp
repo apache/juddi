@@ -50,7 +50,7 @@
                 }
             }
             try {
-                x.GetJuddiClientConfig().saveConfig();
+                x.GetJuddiClientConfig().saveConfigRaw();
                 out.write(ResourceLoader.GetResource(session, "actions.saved"));
             } catch (Exception ex) {
                 response.setStatus(406);
