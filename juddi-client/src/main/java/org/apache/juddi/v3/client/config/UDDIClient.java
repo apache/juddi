@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.v3.annotations.AnnotationProcessor;
 import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.Release;

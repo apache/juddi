@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<uddi xmlns="urn:juddi-apache-org:v3_client" xsi:schemaLocation="classpath:/xsd/uddi-client.xsd">
+<uddi xmlns="urn:juddi-apache-org:v3_client" xsi:schemaLocation="classpath:/xsd/uddi-client.xsd"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     <reloadDelay>5000</reloadDelay>
     <client name="example-client">
 		<nodes>

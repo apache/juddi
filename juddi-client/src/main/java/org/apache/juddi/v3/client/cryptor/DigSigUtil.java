@@ -88,6 +88,16 @@ import sun.security.provider.certpath.OCSP.RevocationStatus;
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree </a>
  */
 public class DigSigUtil {
+        public final static String SIGNATURE_KEYSTORE_KEY_PASSWORD_PROVIDER="signatureKeystoreKeyPassENCProvider";
+        public final static String SIGNATURE_KEYSTORE_KEY_PASSWORD_WAS_ENC="signatureKeystoreKeyPassENC";
+        public final static String SIGNATURE_KEYSTORE_KEY_PASSWORD_CIPHER="signatureKeyStoreCipherPass";
+        
+        public final static String SIGNATURE_KEYSTORE_FILE_PASSWORD_WASENC="signatureKeystoreFilePassENC";
+        public final static String SIGNATURE_KEYSTORE_FILE_PASSWORD_PROVIDER="signatureKeystoreFileENCProvider";
+        public final static String TRUSTSTORE_FILE_PASSWORD_WASENC="truststoreFilePassENC";
+        public final static String TRUSTSTORE_FILE_PASSWORD_PROVIDER="truststoreFilePassENCProvider";
+        public final static String SIGNATURE_KEYSTORE_FILE_PASSWORD_CIPHER="signatureKeystoreFileKeyPass";
+        public final static String TRUSTSTORE_FILE_PASSWORD_CIPHER="truststoreFilePass";
 
         /**
          * Expects a properties object containing the desired configuration
@@ -116,6 +126,9 @@ public class DigSigUtil {
                 map.clear();
         }
         private Properties map = new Properties();
+        
+        
+        
         /**
          * This is the location of the keystore
          *
