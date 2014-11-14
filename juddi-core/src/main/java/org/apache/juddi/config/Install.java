@@ -46,9 +46,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.ClassUtil;
 import org.apache.juddi.api.impl.UDDIInquiryImpl;
+import org.apache.juddi.api.impl.UDDIPublicationImpl;
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.replication.ReplicationNotifier;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
@@ -56,6 +58,7 @@ import org.apache.juddi.v3.error.KeyUnavailableException;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidateUDDIKey;
+import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModel;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -288,7 +291,7 @@ public class Install {
 
                 for (org.apache.juddi.model.BusinessService service : modelBusinessEntity.getBusinessServices()) {
                         service.setAuthorizedName(rootPublisher.getAuthorizedName());
-                        service.setNodeId(nodeId);
+                        service.setNodeId(modelBusinessEntity.getNodeId());
                         service.setCreated(now);
                         service.setModified(now);
                         service.setModifiedIncludingChildren(now);
@@ -310,6 +313,9 @@ public class Install {
                 }
 
                 em.persist(modelBusinessEntity);
+                SaveBusiness sb = new SaveBusiness();
+                sb.getBusinessEntity().add(rootBusinessEntity);
+                ReplicationNotifier.Enqueue(UDDIPublicationImpl.getChangeRecord(modelBusinessEntity, rootBusinessEntity, modelBusinessEntity.getNodeId()));
 
                 return modelBusinessEntity.getEntityKey();
 
@@ -485,6 +491,10 @@ public class Install {
                                         modelTModel.setNodeId(nodeId);
 
                                         em.persist(modelTModel);
+                                        
+                                        SaveTModel stm = new SaveTModel();
+                                        stm.getTModel().add(apiTModel);
+                                        ReplicationNotifier.Enqueue(UDDIPublicationImpl.getChangeRecord(modelTModel, apiTModel, nodeId));
                                 }
 
                         }

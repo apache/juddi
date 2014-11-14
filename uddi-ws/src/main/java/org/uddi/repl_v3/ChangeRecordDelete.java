@@ -30,6 +30,11 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 
 /**
+ * A changeRecordDelete element indicates that an item defined in the UDDI registry is to no longer be used and expunged from the data stores in each of the nodes. The item to be deleted is indicated in the change record by the key of an appropriate entity type; this must contain the unique key of some businessEntity, businessService, bindingTemplate, or tModel that is presently defined.  The changeRecordDelete element for deleting tModels corresponds to the administrative deletion of a tModel described in Section 6.1.3 Updates and Deletions of this specification.  The changeRecordDelete for a tModel does not correspond to any API described in this specification and should only appear in the replication stream as the result of an administrative function to permanently remove a tModel.
+
+Permanent deletions of tModel information within the node may be made administratively. In this event, a UDDI Node may insert a delete operation into the replication stream.  The publisher identifier for this operation is the account associated with the UDDI Node.  Note that a permanent deletion of tModel information from the registry must have the prior approval of the other nodes participating within the registry.
+
+The changeRecordDelete MUST contain a modified timestamp to allow multi-node registries to calculate consistent modifiedIncludingChildren timestamps as described in Section 3.8 operationalInfo Structure.
  * <p>Java class for anonymous complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.

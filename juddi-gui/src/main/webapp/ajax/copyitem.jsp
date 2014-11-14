@@ -9,7 +9,7 @@
 
 <%@include  file="../csrf.jsp" %>
 <%
-    //TODO for 3.2.1
+    //TODO for 3.3
     /*if (request.getMethod().equalsIgnoreCase("POST")) {
         UddiHub x = UddiHub.getInstance(application, session);
         out.write(x.copyEntity(request.getParameter("id"),

@@ -19,19 +19,28 @@ package org.apache.juddi.model;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 @Entity
 @Table(name = "j3_chg_record")
 public class ChangeRecord implements Serializable {
 
+        private static final long serialVersionUID = 1L;
+
         protected String nodeID;
         protected Long originatingUSN;
-        
+        private byte[] contents;
+        private RecordType e = RecordType.ChangeRecordNull;
         private Long id;
+        private String entityKey;
 
-        @Column(name="change_contents")
+        @Column(name = "change_contents")
+        @Lob
         public byte[] getContents() {
                 return contents;
         }
@@ -39,22 +48,8 @@ public class ChangeRecord implements Serializable {
         public void setContents(byte[] contents) {
                 this.contents = contents;
         }
-        /*protected ChangeRecordIDType changeID;
-         protected Object changeRecordNull;
-         protected ChangeRecordNewData changeRecordNewData;
-         protected ChangeRecordDelete changeRecordDelete;
-         protected ChangeRecordPublisherAssertion changeRecordPublisherAssertion;
-         protected ChangeRecordHide changeRecordHide;
-         protected ChangeRecordDeleteAssertion changeRecordDeleteAssertion;
-         protected ChangeRecordAcknowledgement changeRecordAcknowledgement;
-         protected ChangeRecordCorrection changeRecordCorrection;
-         protected ChangeRecordNewDataConditional changeRecordNewDataConditional;
-         protected ChangeRecordConditionFailed changeRecordConditionFailed;
-         protected boolean acknowledgementRequested;
-         * */
-        byte[] contents;
 
-        enum RecordType {
+        public enum RecordType {
 
                 ChangeRecordNewData,
                 ChangeRecordDelete,
@@ -64,10 +59,27 @@ public class ChangeRecord implements Serializable {
                 ChangeRecordAcknowledgement,
                 ChangeRecordCorrection,
                 ChangeRecordNewDataConditional,
-                ChangeRecordConditionFailed
+                ChangeRecordConditionFailed,
+                ChangeRecordNull
+        }
+
+        public void setRecordType(RecordType e) {
+                this.e = e;
+        }
+
+        @Column(name = "record_type")
+        public RecordType getRecordType() {
+                return e;
         }
 
         @Id
+        @GeneratedValue(strategy = GenerationType.TABLE,
+             generator = "personGen")
+        @TableGenerator(name = "personGen",
+             table = "JPAGEN_GENERATORS",
+             pkColumnName = "NAME",
+             pkColumnValue = "JPAGEN_PERSON_GEN",
+             valueColumnName = "VALUE")
         public Long getId() {
                 return id;
         }
@@ -76,7 +88,7 @@ public class ChangeRecord implements Serializable {
                 this.id = id;
         }
 
-        @Column(name="node_id")
+        @Column(name = "node_id")
         public String getNodeID() {
                 return nodeID;
         }
@@ -85,8 +97,16 @@ public class ChangeRecord implements Serializable {
                 this.nodeID = value;
         }
 
-        
-        @Column(name="orginating_usn")
+        @Column(name = "entity_key")
+        public String getEntityKey() {
+                return entityKey;
+        }
+
+        public void setEntityKey(String value) {
+                this.entityKey = value;
+        }
+
+        @Column(name = "orginating_usn")
         public Long getOriginatingUSN() {
                 return originatingUSN;
         }
@@ -95,4 +115,3 @@ public class ChangeRecord implements Serializable {
                 this.originatingUSN = value;
         }
 }
-

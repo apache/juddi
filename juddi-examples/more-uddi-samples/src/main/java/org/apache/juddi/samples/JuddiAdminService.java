@@ -15,13 +15,21 @@
  */
 package org.apache.juddi.samples;
 
+import java.rmi.RemoteException;
+import java.util.List;
+import javax.xml.bind.JAXB;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.api_v3.Node;
+import org.apache.juddi.api_v3.NodeDetail;
+import org.apache.juddi.api_v3.NodeList;
 import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.jaxb.PrintJUDDI;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
+import org.apache.juddi.v3.client.config.UDDINode;
 import org.apache.juddi.v3.client.transport.Transport;
+import org.apache.juddi.v3.client.transport.TransportException;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.GetAuthToken;
@@ -34,62 +42,124 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class JuddiAdminService {
 
-    private static UDDISecurityPortType security = null;
-    private static UDDIPublicationPortType publish = null;
-    static JUDDIApiPortType juddi = null;
-    static UDDIClerk clerk = null;
+        private static UDDISecurityPortType security = null;
+        private static UDDIPublicationPortType publish = null;
+        static JUDDIApiPortType juddi = null;
+        static UDDIClerk clerk = null;
+        static UDDIClient clerkManager = null;
 
-    public JuddiAdminService() {
-        try {
-            // create a manager and read the config in the archive; 
-            // you can use your config file name
-            UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
-            clerk = clerkManager.getClerk("default");
-            // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
-            Transport transport = clerkManager.getTransport();
-            // Now you create a reference to the UDDI API
-            security = transport.getUDDISecurityService();
-            publish = transport.getUDDIPublishService();
-            juddi = transport.getJUDDIApiService();
-        } catch (Exception e) {
-            e.printStackTrace();
+        public JuddiAdminService() {
+                try {
+                        // create a manager and read the config in the archive; 
+                        // you can use your config file name
+                        clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
+                        clerk = clerkManager.getClerk("default");
+                        // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
+                        Transport transport = clerkManager.getTransport();
+                        // Now you create a reference to the UDDI API
+                        security = transport.getUDDISecurityService();
+                        publish = transport.getUDDIPublishService();
+                        juddi = transport.getJUDDIApiService();
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
         }
-    }
 
-    public void go(String token) {
-        try {
-            // Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
-            // and can save other publishers).
-                
-            
-
-          
-            SaveNode node = new SaveNode();
-            node.setAuthInfo(token);
-            Node n = new Node();
-            n.setClientName("juddicloud");
-            n.setName("juddicloud");
-            n.setCustodyTransferUrl("http://uddi-jbossoverlord.rhcloud.com/services/custody-transfer");
-            n.setDescription("juddicloud");
-            n.setProxyTransport("org.apache.juddi.v3.client.transport.JAXWSTransport");
-            n.setInquiryUrl("http://uddi-jbossoverlord.rhcloud.com/services/inquiry");
-            n.setJuddiApiUrl("http://uddi-jbossoverlord.rhcloud.com/services/juddi-api");
-            n.setPublishUrl("http://uddi-jbossoverlord.rhcloud.com/services/publish");
-            n.setSecurityUrl( "http://uddi-jbossoverlord.rhcloud.com/services/security");
-            n.setSubscriptionListenerUrl("http://uddi-jbossoverlord.rhcloud.com/services/subscription-listener");
-            n.setSubscriptionUrl("http://uddi-jbossoverlord.rhcloud.com/services/subscription");
-            node.getNode().add(n);
-            
-            PrintJUDDI<SaveNode> p = new PrintJUDDI<SaveNode>();
-            System.out.println("Before sending");
-            System.out.println(p.print(node));
-            juddi.saveNode(node);
-            System.out.println("Saved");
-         
-            
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        static Node getCloudInstance() {
+                Node n = new Node();
+                n.setClientName("juddicloud");
+                n.setName("juddicloud");
+                n.setCustodyTransferUrl("http://uddi-jbossoverlord.rhcloud.com/services/custody-transfer");
+                n.setDescription("juddicloud");
+                n.setProxyTransport("org.apache.juddi.v3.client.transport.JAXWSTransport");
+                n.setInquiryUrl("http://uddi-jbossoverlord.rhcloud.com/services/inquiry");
+                n.setJuddiApiUrl("http://uddi-jbossoverlord.rhcloud.com/services/juddi-api");
+                n.setPublishUrl("http://uddi-jbossoverlord.rhcloud.com/services/publish");
+                n.setSecurityUrl("http://uddi-jbossoverlord.rhcloud.com/services/security");
+                n.setSubscriptionListenerUrl("http://uddi-jbossoverlord.rhcloud.com/services/subscription-listener");
+                n.setSubscriptionUrl("http://uddi-jbossoverlord.rhcloud.com/services/subscription");
+                n.setReplicationUrl("uddi-jbossoverlord.rhcloud.com/services/replication");
+                return n;
         }
-    }
+
+        public void quickRegisterRemoteCloud(String token) {
+                try {
+                        // Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
+                        // and can save other publishers).
+                        SaveNode node = new SaveNode();
+                        node.setAuthInfo(token);
+
+                        node.getNode().add(getCloudInstance());
+
+                        PrintJUDDI<SaveNode> p = new PrintJUDDI<SaveNode>();
+                        System.out.println("Before sending");
+                        System.out.println(p.print(node));
+                        juddi.saveNode(node);
+                        System.out.println("Saved");
+
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+        }
+
+        void setupReplication() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        void viewRemoteNodes(String authtoken) throws ConfigurationException, TransportException, RemoteException {
+
+                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
+                System.out.println();
+                System.out.println("Select a node");
+                for (int i = 0; i < uddiNodeList.size(); i++) {
+                        System.out.print(i + 1);
+                        System.out.println(") " + uddiNodeList.get(i).getName() + uddiNodeList.get(i).getDescription());
+                }
+                System.out.println("Node #: ");
+                int index = Integer.parseInt(System.console().readLine()) - 1;
+                String node = uddiNodeList.get(index).getName();
+                Transport transport = clerkManager.getTransport(node);
+
+                JUDDIApiPortType juddiApiService = transport.getJUDDIApiService();
+
+                NodeList allNodes = juddiApiService.getAllNodes(authtoken);
+                if (allNodes == null || allNodes.getNode().isEmpty()) {
+                        System.out.println("No nodes registered!");
+                } else {
+                        for (int i = 0; i < allNodes.getNode().size(); i++) {
+                                System.out.println("_______________________________________________________________________________");
+                                System.out.println("Name :" + allNodes.getNode().get(i).getName());
+                                System.out.println("Inquiry :" + allNodes.getNode().get(i).getInquiryUrl());
+                                System.out.println("Publish :" + allNodes.getNode().get(i).getPublishUrl());
+                                System.out.println("Securit :" + allNodes.getNode().get(i).getSecurityUrl());
+                                System.out.println("Replication :" + allNodes.getNode().get(i).getReplicationUrl());
+                                System.out.println("Subscription :" + allNodes.getNode().get(i).getSubscriptionUrl());
+                                System.out.println("Custody Xfer :" + allNodes.getNode().get(i).getCustodyTransferUrl());
+
+                        }
+                }
+
+        }
+
+        void quickRegisterLocalCloud() throws ConfigurationException {
+                UDDINode node = new UDDINode(getCloudInstance());
+                clerkManager.getClientConfig().addUDDINode(node);
+                clerkManager.getClientConfig().saveConfig();
+                System.out.println();
+                System.out.println("Added and saved.");
+        }
+
+        void registerLocalNodeToRemoteNode(String authtoken, Node cfg, Node publishTo) throws Exception {
+             
+                Transport transport = clerkManager.getTransport(publishTo.getName());
+
+                JUDDIApiPortType juddiApiService = transport.getJUDDIApiService();
+                SaveNode sn = new SaveNode();
+                sn.setAuthInfo(authtoken);
+                sn.getNode().add(cfg);
+                NodeDetail saveNode = juddiApiService.saveNode(sn);
+                JAXB.marshal(saveNode, System.out);
+                System.out.println("Success.");
+
+        }
 }

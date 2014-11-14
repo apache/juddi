@@ -18,6 +18,8 @@
 package org.apache.juddi.api.impl;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 
 import javax.persistence.EntityManager;
@@ -47,7 +49,17 @@ public abstract class AuthenticatedService {
 	public static final int AUTHTOKEN_ACTIVE = 1;
 	public static final int AUTHTOKEN_RETIRED = 0;
 	static final Log logger = LogFactory.getLog(AuthenticatedService.class);
-	
+	protected String node = "UNDEFINED_NODE_NAME";
+        
+        public AuthenticatedService(){
+                try {
+                        node = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID, "UNDEFINED_NODE_NAME");
+                } catch (ConfigurationException ex) {
+                        logger.fatal(null, ex);
+                }
+        }
+        
+        
         @Resource
         protected WebServiceContext ctx;
 	public UddiEntityPublisher getEntityPublisher(EntityManager em, String authInfo) throws DispositionReportFaultMessage {

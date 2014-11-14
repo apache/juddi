@@ -25,11 +25,14 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 @Entity
 @Table(name = "j3_chg_replconf")
@@ -37,7 +40,7 @@ public class ReplicationConfiguration implements Serializable {
 
         private static final long serialVersionUID = 1L;
         
-        private long serialNumber;
+        private Long serialNumber;
         private String timeOfConfigurationUpdate;
         private List<Operator> operator = new ArrayList<Operator>(0);
         private CommunicationGraph communicationGraph;
@@ -73,8 +76,15 @@ public class ReplicationConfiguration implements Serializable {
          */
         @Column(name = "serialnumb")
         @OrderBy(value = "SerialNumber DESC")
-        @Id
-        public long getSerialNumber() {
+         @Id
+        @GeneratedValue(strategy = GenerationType.TABLE,
+             generator = "replcfgGen")
+        @TableGenerator(name = "replcfgGen",
+             table = "JPAGEN_REPLGEN",
+             pkColumnName = "NAME",
+             pkColumnValue = "JPAGEN_PERSON_GEN",
+             valueColumnName = "VALUE")
+        public Long getSerialNumber() {
                 return serialNumber;
         }
 
@@ -82,7 +92,7 @@ public class ReplicationConfiguration implements Serializable {
          * Sets the value of the serialNumber property.
          *
          */
-        public void setSerialNumber(long value) {
+        public void setSerialNumber(Long value) {
                 this.serialNumber = value;
         }
 

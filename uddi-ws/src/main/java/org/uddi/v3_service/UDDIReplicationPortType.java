@@ -107,6 +107,25 @@ public interface UDDIReplicationPortType extends Remote {
      * changeRecords element. Under all circumstances, all change records
      * returned therein by the message recipient MUST be returned sorted in
      * increasing order according to the recipient’s local USN.</p>
+     * 
+     * <p><b>A node that is ready to initiate replication of change records held
+     * at another node within the registry uses the get_changeRecords message.  
+     * Part of the message is a high water mark vector that contains for each 
+     * node of the registry the originating USN of the most recent change record
+     * that has been successfully processed by the invocating node. The effect 
+     * of receiving a get_changeRecords message causes a node to return to the 
+     * calling node change records it has generated locally and processed from 
+     * other nodes constrained by the directives of the high water mark vector 
+     * specified. As such, by invoking get_changeRecords a node obtains from its
+     * adjacent node all change records (constrained by the high water mark 
+     * vector) the adjacent node has generated locally or successfully processed
+     * from other nodes participating in the replication topology. What 
+     * constitutes an adjacent node is governed by the replication communication
+     * graph. Replication topology is controlled via a Replication Configuration
+     * Structure. Amongst other parameters, the Replication Configuration 
+     * Structure identifies one unique URL to represent the replication point, 
+     * soapReplicationURL, of each of the nodes of the registry. 
+     * </b></p>
      *
      * @param responseLimitVector responseLimitCount or responseLimitVector: A
      * caller MAY place an upper bound on the number of change records he wishes

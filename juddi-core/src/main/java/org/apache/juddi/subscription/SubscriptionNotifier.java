@@ -143,7 +143,7 @@ public class SubscriptionNotifier extends TimerTask {
 		if ((firedOnTime(scheduledExecutionTime()) || alwaysNotify) && registryMayContainUpdates()) {
 			long startTime = System.currentTimeMillis();
 			desiredDate = null;
-			log.debug("Start Notification background task; checking if subscription notifications need to be send out..");
+			log.info("Start Notification background task; checking if subscription notifications need to be send out..");
 			
 			Collection<Subscription> subscriptions = getAllAsyncSubscriptions();
 			for (Subscription subscription : subscriptions) {
@@ -164,23 +164,23 @@ public class SubscriptionNotifier extends TimerTask {
 							SubscriptionResultsList resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);
                                                         String token = resultList.getChunkToken();
 							if (resultListContainsChanges(resultList)) {
-								log.debug("We have a change and need to notify " + subscription.getSubscriptionKey());
+								log.info("We have a change and need to notify " + subscription.getSubscriptionKey());
                                                                 resultList.setChunkToken(null);
                                                                //Note that the chunkToken is not returned with this structure for this API.  
 								notify(getSubscriptionResults,resultList, notificationDate);
 							} else {
-								log.debug("No changes where recorded, no need to notify.");
+								log.info("No changes where recorded, no need to notify.");
 							}
                                                         while (!token.equalsIgnoreCase("0"))
                                                         {
                                                             resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);
                                                             if (resultListContainsChanges(resultList)) {
-                                                                    log.debug("We have a change and need to notify " + subscription.getSubscriptionKey());
+                                                                    log.info("We have a change and need to notify " + subscription.getSubscriptionKey());
                                                                     resultList.setChunkToken(null);
                                                                    //Note that the chunkToken is not returned with this structure for this API.  
                                                                     notify(getSubscriptionResults,resultList, notificationDate);
                                                             } else {
-                                                                    log.debug("No changes where recorded, no need to notify.");
+                                                                    log.info("No changes where recorded, no need to notify.");
                                                             }
                                                         }
                                                             
@@ -199,14 +199,14 @@ public class SubscriptionNotifier extends TimerTask {
             long endTime   = System.currentTimeMillis();
             
             if ((endTime-startTime) > interval) {
-            	log.debug("Notification background task duration exceeds the JUDDI_NOTIFICATION_INTERVAL" +
+            	log.info("Notification background task duration exceeds the JUDDI_NOTIFICATION_INTERVAL" +
             			" of " + interval + ". Notification background task took " 
             			+ (endTime - startTime) + " milliseconds.");
             } else {
-            	log.debug("Notification background task took " + (endTime - startTime) + " milliseconds.");
+            	log.info("Notification background task took " + (endTime - startTime) + " milliseconds.");
             }
 		} else {
-			log.debug("Skipping current notification cycle because lagtime is too great.");
+			log.warn("Skipping current notification cycle because lagtime is too great.");
 		}
  	}
 	/**
@@ -254,7 +254,7 @@ public class SubscriptionNotifier extends TimerTask {
 			if (log.isDebugEnabled()) log.debug("Period " + period.getStartPoint() + " " + period.getEndPoint());
 			getSubscriptionResults.setCoveragePeriod(period);
 		} else {
-			log.debug("Client does not yet want a notification. The next desidered notification Date " + nextDesiredNotificationDate + ". The current interval [" 
+			log.info("Client does not yet want a notification. The next desidered notification Date " + nextDesiredNotificationDate + ". The current interval [" 
 				+ startPoint + " , " + endPoint + "] therefore skipping this notification cycle.");
 			if (desiredDate==null || nextDesiredNotificationDate.getTime() < desiredDate.getTime()) {
 				desiredDate = nextDesiredNotificationDate;

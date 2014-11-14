@@ -44,7 +44,6 @@
         if (msg != null && msg.get() != null) {
             out.write(UddiHub.ToErrorAlert(msg.get()));
         } else if (data == null || data.isEmpty())
-                //TODO revise this
             out.write(UddiHub.ToErrorAlert(ResourceLoader.GetResource(session, "errors.nodatareturned")));
         else {
 

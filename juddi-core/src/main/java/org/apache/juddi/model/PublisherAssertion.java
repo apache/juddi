@@ -16,6 +16,7 @@ package org.apache.juddi.model;
  */
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -29,11 +30,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
  */
-@Entity
+        @Entity
 @Table(name = "j3_publisher_assertion")
 public class PublisherAssertion implements java.io.Serializable {
 
@@ -46,6 +49,7 @@ public class PublisherAssertion implements java.io.Serializable {
 	private String keyValue;
 	private String fromCheck;
 	private String toCheck;
+	private Date modified;
 
 	public PublisherAssertion() {
 	}
@@ -62,6 +66,20 @@ public class PublisherAssertion implements java.io.Serializable {
 		this.keyValue = keyValue;
 		this.fromCheck = fromCheck;
 		this.toCheck = toCheck;
+	}
+        
+	public void setModified(Date created) {
+		this.modified = created;
+	}
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "modified", nullable = false, length = 29)
+	public Date getModified() {
+		if (modified!=null) {
+			return new Date(modified.getTime());
+		} else {
+			return null;
+		}
 	}
 
 	@EmbeddedId

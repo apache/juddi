@@ -26,8 +26,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import javax.xml.ws.BindingProvider;
-
-
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,8 +34,8 @@ import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.model.ChangeRecord;
 import org.apache.juddi.model.ReplicationConfiguration;
-
 import org.apache.juddi.v3.client.UDDIService;
 import org.uddi.repl_v3.ChangeRecordIDType;
 import org.uddi.repl_v3.CommunicationGraph;
@@ -46,17 +44,21 @@ import org.uddi.repl_v3.NotifyChangeRecordsAvailable;
 import org.uddi.v3_service.UDDIReplicationPortType;
 
 /**
- * 
+ * Handles when local records have been changed, change journal storage and
+ * notifications to all remote replication nodes that something has been
+ * altered.
+ *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  *
  */
 public class ReplicationNotifier extends TimerTask {
 
-        private Log log = LogFactory.getLog(this.getClass());
+        private static Log log = LogFactory.getLog(ReplicationNotifier.class);
         private Timer timer = null;
         private long startBuffer = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_START_BUFFER, 20000l); // 20s startup delay default 
         private long interval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
         private long acceptableLagTime = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME, 1000l); //1000 milliseconds
+        private static String node = null;
 
         /**
          * default constructor
@@ -70,6 +72,7 @@ public class ReplicationNotifier extends TimerTask {
                 if (queue == null) {
                         queue = new ConcurrentLinkedQueue();
                 }
+                node = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID, "UNDEFINED_NODE_NAME");
         }
 
         @Override
@@ -80,13 +83,85 @@ public class ReplicationNotifier extends TimerTask {
         }
 
         //ReplicationNotifier.Enqueue(this);
-        public synchronized static void Enqueue(Object change) {
+        public synchronized static void Enqueue(org.apache.juddi.model.ChangeRecord change) {
                 if (queue == null) {
-                        queue = new ConcurrentLinkedQueue();
+                        queue = new ConcurrentLinkedQueue<ChangeRecord>();
                 }
                 queue.add(change);
         }
-        static Queue queue;
+        static Queue<ChangeRecord> queue;
+
+        /**
+         *
+         * @param j must be one of the UDDI save APIs
+         */
+        protected void ProcessChangeRecord(ChangeRecord j) {
+                //store and convert the changes to database model
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = null;
+                try {
+                        tx = em.getTransaction();
+                        tx.begin();
+
+                        em.persist(j);
+                        tx.commit();
+                } catch (Exception ex) {
+                        log.error("error", ex);
+                        if (tx != null && tx.isActive()) {
+                                tx.rollback();
+                        }
+                } finally {
+                        em.close();
+                }
+
+                log.info("ChangeRecord: " + j.getId() + "," + j.getEntityKey() + "," + j.getNodeID() + "," + j.getOriginatingUSN() + "," + j.getRecordType().toString());
+                org.uddi.repl_v3.ReplicationConfiguration repcfg = FetchEdges();
+
+                //TODO figure out what this statement means 7.5.3
+                /**
+                 * In the absence of a communicationGraph element from the
+                 * Replication Configuration Structure, all nodes listed in the
+                 * node element MAY send any and all messages to any other node
+                 * of the registry.
+                 */
+                if (repcfg == null) {
+                        log.info("No replication configuration is defined!");
+                        return;
+
+                }
+                Iterator<CommunicationGraph.Edge> it = repcfg.getCommunicationGraph().getEdge().iterator();
+
+                while (it.hasNext()) {
+                        //send each change set to the replication node in the graph
+
+                        UDDIReplicationPortType x = new UDDIService().getUDDIReplicationPort();
+                        CommunicationGraph.Edge next = it.next();
+                        //next.getMessageReceiver(); //Node ID
+                        Node destinationNode = getNode(next.getMessageSender());
+                        if (destinationNode == null) {
+                                log.warn(next.getMessageSender() + " node was not found, cannot deliver replication messages");
+                        } else {
+                                //TODO the spec talks about control messages, should we even support it? seems pointless
+                                ((BindingProvider) x).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, destinationNode.getReplicationUrl());
+                                NotifyChangeRecordsAvailable req = new NotifyChangeRecordsAvailable();
+
+                                req.setNotifyingNode(node);
+                                HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
+                              
+                                highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(node, j.getId()));
+                                req.setChangesAvailable(highWaterMarkVectorType);
+
+                                try {
+                                        x.notifyChangeRecordsAvailable(req);
+                                        log.info("Successfully sent change record available message to " + destinationNode.getName());
+                                } catch (Exception ex) {
+                                        log.warn("Unable to send change notification to " + destinationNode.getName(), ex);
+                                }
+                        }
+                }
+
+        }
 
         public synchronized void run() {
                 log.debug("Replication thread triggered");
@@ -94,53 +169,22 @@ public class ReplicationNotifier extends TimerTask {
                         queue = new ConcurrentLinkedQueue();
                 }
                 while (!queue.isEmpty()) {
-                        log.info("Notifying nodes of change records " + queue.size());
-                        //TODO identify chnage set format
-                        Object j = queue.poll();
-                        org.uddi.repl_v3.ReplicationConfiguration repcfg = FetchEdges();
-                        if (repcfg == null) {
-                                log.debug("No replication configuration is defined!");
-                                queue.clear();
-                                break;
-                        }
-                        Iterator<CommunicationGraph.Edge> it = repcfg.getCommunicationGraph().getEdge().iterator();
+                        //for each change at this node
+                        log.info("Replication, Notifying nodes of new change records. " + queue.size() + " remaining");
 
-                        while (it.hasNext()) {
+                        ChangeRecord j = queue.poll();
+                        ProcessChangeRecord(j);
 
-                                //for (int i = 0; i < endpoints.size(); i++) {
-                                UDDIReplicationPortType x = new UDDIService().getUDDIReplicationPort();
-                                CommunicationGraph.Edge next = it.next();
-                                next.getMessageReceiver(); //Node ID
-                                Node destinationNode = getNode(next.getMessageSender());
-                                if (destinationNode == null) {
-                                        log.warn(next.getMessageSender() + " node was not found, cannot deliver replication messages");
-                                } else {
-                                        ((BindingProvider) x).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, destinationNode.getReplicationUrl());
-                                        NotifyChangeRecordsAvailable req = new NotifyChangeRecordsAvailable();
-                                        String node = "UNKNOWN";
-                                        try {
-                                                node = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);
-                                        } catch (ConfigurationException ex) {
-                                                log.fatal(ex);
-                                        }
-                                        req.setNotifyingNode(node);
-                                        HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
-                                        String nextWatermark = ""; //TODO get current watermark + 1 toString()
-                                        //TODO save watermark along with change set
-
-                                        highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(node, 1L));
-                                        req.setChangesAvailable(highWaterMarkVectorType);
-                                        try {
-                                                x.notifyChangeRecordsAvailable(req);
-                                        } catch (Exception ex) {
-                                                log.warn("Unable to send change notification to " + next.getMessageSender(), ex);
-                                        }
-                                }
-                        }
                 }
         }
 
-        private org.uddi.repl_v3.ReplicationConfiguration FetchEdges() {
+        /**
+         * returns the latest version of the replication config or null if there
+         * is no config
+         *
+         * @return
+         */
+        public static org.uddi.repl_v3.ReplicationConfiguration FetchEdges() {
 
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = null;
@@ -173,7 +217,6 @@ public class ReplicationNotifier extends TimerTask {
         private Node getNode(String messageSender) {
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = null;
-                org.uddi.repl_v3.ReplicationConfiguration item = new org.uddi.repl_v3.ReplicationConfiguration();
                 try {
                         tx = em.getTransaction();
                         tx.begin();

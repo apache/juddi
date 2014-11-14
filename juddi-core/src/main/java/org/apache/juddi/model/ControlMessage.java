@@ -29,6 +29,10 @@ import javax.persistence.Id;
 public class ControlMessage implements Serializable{
         private static final long serialVersionUID = 1L;
         
+        public ControlMessage(){}
+        public ControlMessage(String msg){
+                this.message = msg;
+        }
         
         private Long id;
 

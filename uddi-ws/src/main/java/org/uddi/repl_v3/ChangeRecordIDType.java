@@ -61,6 +61,19 @@ public class ChangeRecordIDType implements Serializable {
         public ChangeRecordIDType() {
         }
 
+        /**
+         * 
+         * @param node owning node of the item/source of request
+         * @param oUSN Each node SHALL maintain a strictly increasing register known as its Originating Update Sequence Number (USN).  An originating USN is assigned to a change record at its creation by a node. The originating USN SHALL NEVER decrease in value, even in the face of system crashes and restarts. UDDI nodes MUST NOT rely on an originating USN sequence increasing monotonically by a value of "1".  Gaps in a node's originating USN sequence MUST be allowed for as they are likely to occur in the face of system crashes and restarts.
+
+While processing changes to the Registry as a result of performing UDDI Replication, all replicated data MUST be assigned an additional unique and locally generated USN register value – a local USN. 
+
+The originating and local USN registers MUST be sufficiently large such that register rollover is not a concern. For this purpose, UDDI nodes MUST implement a USN of exactly 63 bits in size.
+
+Note that it is semantically meaningless to compare USNs that have been generated on different nodes; only USNs generated on the same node may be meaningfully compared to each other.
+
+NO change record MAY have a USN equal to 0 (zero).  
+         */
         public ChangeRecordIDType(String node, Long oUSN) {
                 originatingUSN = oUSN;
                 nodeID = node;

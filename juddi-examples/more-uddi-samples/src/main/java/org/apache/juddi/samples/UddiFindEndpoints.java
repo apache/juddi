@@ -56,7 +56,6 @@ public class UddiFindEndpoints {
 
         public void Fire(String authtoken, String key) {
                 try {
-                        //TODO Key! insert your key here!
                         if (key == null) {
                                 key = "uddi:juddi.apache.org:services-inquiry";
                         }

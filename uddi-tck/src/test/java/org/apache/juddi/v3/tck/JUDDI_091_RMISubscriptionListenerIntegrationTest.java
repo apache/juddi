@@ -90,7 +90,6 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
 
 
                 } catch (Exception e2) {
-                        // TODO Auto-generated catch block
                         e2.printStackTrace();
                         Assert.fail();
                 }

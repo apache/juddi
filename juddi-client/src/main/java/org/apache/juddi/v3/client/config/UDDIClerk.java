@@ -150,7 +150,6 @@ public class UDDIClerk implements Serializable {
          */
         public UDDIClerk() {
                 super();
-                // TODO Auto-generated constructor stub
         }
 
         public UDDIClerk(Clerk clerk) {

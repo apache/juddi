@@ -16,36 +16,55 @@
  */
 package org.apache.juddi.mapping;
 
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
+import javax.persistence.EntityManager;
 import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
 import javax.xml.transform.dom.DOMResult;
-
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.jaxb.JAXBMarshaller;
+import org.apache.juddi.model.Address;
 import org.apache.juddi.model.BindingTemplate;
 import org.apache.juddi.model.BusinessService;
 import org.apache.juddi.model.CanonicalizationMethod;
+import org.apache.juddi.model.CommunicationGraph;
+import org.apache.juddi.model.Contact;
+import org.apache.juddi.model.ControlMessage;
+import org.apache.juddi.model.Edge;
+import org.apache.juddi.model.KeyDataValue;
 import org.apache.juddi.model.KeyInfo;
+import org.apache.juddi.model.Node;
+import org.apache.juddi.model.Operator;
+import org.apache.juddi.model.OperatorStatusType;
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.Reference;
 import org.apache.juddi.model.Signature;
 import org.apache.juddi.model.SignatureMethod;
 import org.apache.juddi.model.SignatureTransform;
+import org.apache.juddi.model.SignatureTransformDataValue;
 import org.apache.juddi.model.SignatureValue;
 import org.apache.juddi.model.SignedInfo;
 import org.apache.juddi.model.Tmodel;
-import org.apache.juddi.model.KeyDataValue;
-import org.apache.juddi.model.SignatureTransformDataValue;
+import org.apache.juddi.model.UddiEntity;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.uddi.api_v3.Description;
+import org.uddi.api_v3.OperationalInfo;
+import org.uddi.api_v3.SaveBinding;
+import org.uddi.repl_v3.ChangeRecord;
+import org.uddi.repl_v3.ReplicationConfiguration;
 import org.uddi.sub_v3.ObjectFactory;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.w3._2000._09.xmldsig_.DSAKeyValueType;
+import org.w3._2000._09.xmldsig_.KeyInfoType;
 import org.w3._2000._09.xmldsig_.KeyValueType;
 import org.w3._2000._09.xmldsig_.PGPDataType;
 import org.w3._2000._09.xmldsig_.RSAKeyValueType;
@@ -83,8 +102,8 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapPublisher(org.apache.juddi.api_v3.Publisher apiPublisher,
-                org.apache.juddi.model.Publisher modelPublisher)
-                throws DispositionReportFaultMessage {
+             org.apache.juddi.model.Publisher modelPublisher)
+             throws DispositionReportFaultMessage {
                 modelPublisher.setAuthorizedName(apiPublisher.getAuthorizedName());
                 modelPublisher.setPublisherName(apiPublisher.getPublisherName());
                 modelPublisher.setEmailAddress(apiPublisher.getEmailAddress());
@@ -104,8 +123,8 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapBusinessEntity(org.uddi.api_v3.BusinessEntity apiBusinessEntity,
-                org.apache.juddi.model.BusinessEntity modelBusinessEntity)
-                throws DispositionReportFaultMessage {
+             org.apache.juddi.model.BusinessEntity modelBusinessEntity)
+             throws DispositionReportFaultMessage {
 
                 modelBusinessEntity.setEntityKey(apiBusinessEntity.getBusinessKey());
 
@@ -120,15 +139,15 @@ public class MappingApiToModel {
                 }
 
                 mapBusinessServices(apiBusinessEntity.getBusinessServices(),
-                        modelBusinessEntity.getBusinessServices(),
-                        modelBusinessEntity.getServiceProjections(),
-                        modelBusinessEntity);
+                     modelBusinessEntity.getBusinessServices(),
+                     modelBusinessEntity.getServiceProjections(),
+                     modelBusinessEntity);
 
                 mapBusinessSignature(apiBusinessEntity.getSignature(), modelBusinessEntity);
         }
 
         private static List<Signature> mapApiSignaturesToModelSignatures(List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures)
-                throws DispositionReportFaultMessage {
+             throws DispositionReportFaultMessage {
                 List<Signature> modelSignatures = new ArrayList<Signature>();
                 modelSignatures.clear();
                 for (org.w3._2000._09.xmldsig_.SignatureType signatureType : apiSignatures) {
@@ -224,7 +243,7 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapBusinessServiceSignature(List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures, BusinessService modelBusinessService)
-                throws DispositionReportFaultMessage {
+             throws DispositionReportFaultMessage {
                 List<Signature> modelSignatures = mapApiSignaturesToModelSignatures(apiSignatures);
                 for (Signature modelSignature : modelSignatures) {
                         modelSignature.setBusinessService(modelBusinessService);
@@ -239,7 +258,7 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapTmodelSignatures(List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures, Tmodel modelTmodel)
-                throws DispositionReportFaultMessage {
+             throws DispositionReportFaultMessage {
                 List<Signature> modelSignatures = mapApiSignaturesToModelSignatures(apiSignatures);
                 for (Signature modelSignature : modelSignatures) {
                         modelSignature.setTmodel(modelTmodel);
@@ -254,7 +273,7 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapBindingTemplateSignatures(List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures, BindingTemplate modelBindingTemplate)
-                throws DispositionReportFaultMessage {
+             throws DispositionReportFaultMessage {
                 List<Signature> modelSignatures = mapApiSignaturesToModelSignatures(apiSignatures);
                 for (Signature modelSignature : modelSignatures) {
                         modelSignature.setBindingTemplate(modelBindingTemplate);
@@ -269,7 +288,7 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapPublisherSignatures(List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures, Publisher modelPublisher)
-                throws DispositionReportFaultMessage {
+             throws DispositionReportFaultMessage {
                 List<Signature> modelSignatures = mapApiSignaturesToModelSignatures(apiSignatures);
                 for (Signature modelSignature : modelSignatures) {
                         modelSignature.setPublisher(modelPublisher);
@@ -284,8 +303,8 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapBusinessSignature(List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures,
-                org.apache.juddi.model.BusinessEntity modelBusinessEntity)
-                throws DispositionReportFaultMessage {
+             org.apache.juddi.model.BusinessEntity modelBusinessEntity)
+             throws DispositionReportFaultMessage {
                 List<Signature> modelSignatures = mapApiSignaturesToModelSignatures(apiSignatures);
                 for (Signature modelSignature : modelSignatures) {
                         modelSignature.setBusinessEntity(modelBusinessEntity);
@@ -301,9 +320,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapBusinessNames(List<org.uddi.api_v3.Name> apiNameList,
-                List<org.apache.juddi.model.BusinessName> modelNameList,
-                org.apache.juddi.model.BusinessEntity modelBusinessEntity)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.BusinessName> modelNameList,
+             org.apache.juddi.model.BusinessEntity modelBusinessEntity)
+             throws DispositionReportFaultMessage {
                 modelNameList.clear();
 
                 for (org.uddi.api_v3.Name apiName : apiNameList) {
@@ -319,9 +338,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapBusinessDescriptions(List<org.uddi.api_v3.Description> apiDescList,
-                List<org.apache.juddi.model.BusinessDescr> modelDescList,
-                org.apache.juddi.model.BusinessEntity modelBusinessEntity)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.BusinessDescr> modelDescList,
+             org.apache.juddi.model.BusinessEntity modelBusinessEntity)
+             throws DispositionReportFaultMessage {
                 modelDescList.clear();
 
                 for (org.uddi.api_v3.Description apiDesc : apiDescList) {
@@ -337,9 +356,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapDiscoveryUrls(org.uddi.api_v3.DiscoveryURLs apiDiscUrls,
-                List<org.apache.juddi.model.DiscoveryUrl> modelDiscUrlList,
-                org.apache.juddi.model.BusinessEntity modelBusinessEntity)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.DiscoveryUrl> modelDiscUrlList,
+             org.apache.juddi.model.BusinessEntity modelBusinessEntity)
+             throws DispositionReportFaultMessage {
                 modelDiscUrlList.clear();
 
                 if (apiDiscUrls != null) {
@@ -358,9 +377,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapContacts(org.uddi.api_v3.Contacts apiContacts,
-                List<org.apache.juddi.model.Contact> modelContactList,
-                org.apache.juddi.model.BusinessEntity modelBusinessEntity)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.Contact> modelContactList,
+             org.apache.juddi.model.BusinessEntity modelBusinessEntity)
+             throws DispositionReportFaultMessage {
                 modelContactList.clear();
 
                 if (apiContacts != null) {
@@ -373,7 +392,7 @@ public class MappingApiToModel {
                                 mapContactDescriptions(apiContact.getDescription(), modelContact.getContactDescrs(), modelContact, modelBusinessEntity.getEntityKey());
                                 mapContactEmails(apiContact.getEmail(), modelContact.getEmails(), modelContact, modelBusinessEntity.getEntityKey());
                                 mapContactPhones(apiContact.getPhone(), modelContact.getPhones(), modelContact, modelBusinessEntity.getEntityKey());
-                                mapContactAddresses(apiContact.getAddress(), modelContact.getAddresses(), modelContact, modelBusinessEntity.getEntityKey());
+                                mapContactAddresses(apiContact.getAddress(), modelContact.getAddresses(), modelContact);
 
                                 modelContactList.add(modelContact);
                         }
@@ -389,10 +408,10 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapContactDescriptions(List<org.uddi.api_v3.Description> apiDescList,
-                List<org.apache.juddi.model.ContactDescr> modelDescList,
-                org.apache.juddi.model.Contact modelContact,
-                String businessKey)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.ContactDescr> modelDescList,
+             org.apache.juddi.model.Contact modelContact,
+             String businessKey)
+             throws DispositionReportFaultMessage {
                 modelDescList.clear();
 
                 for (org.uddi.api_v3.Description apiDesc : apiDescList) {
@@ -409,10 +428,10 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapPersonNames(List<org.uddi.api_v3.PersonName> apiPersonNameList,
-                List<org.apache.juddi.model.PersonName> modelPersonNameList,
-                org.apache.juddi.model.Contact modelContact,
-                String businessKey)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.PersonName> modelPersonNameList,
+             org.apache.juddi.model.Contact modelContact,
+             String businessKey)
+             throws DispositionReportFaultMessage {
                 modelPersonNameList.clear();
 
                 for (org.uddi.api_v3.PersonName apiPersonName : apiPersonNameList) {
@@ -429,10 +448,10 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapContactEmails(List<org.uddi.api_v3.Email> apiEmailList,
-                List<org.apache.juddi.model.Email> modelEmailList,
-                org.apache.juddi.model.Contact modelContact,
-                String businessKey)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.Email> modelEmailList,
+             org.apache.juddi.model.Contact modelContact,
+             String businessKey)
+             throws DispositionReportFaultMessage {
                 modelEmailList.clear();
 
                 for (org.uddi.api_v3.Email apiEmail : apiEmailList) {
@@ -449,10 +468,10 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapContactPhones(List<org.uddi.api_v3.Phone> apiPhoneList,
-                List<org.apache.juddi.model.Phone> modelPhoneList,
-                org.apache.juddi.model.Contact modelContact,
-                String businessKey)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.Phone> modelPhoneList,
+             org.apache.juddi.model.Contact modelContact,
+             String businessKey)
+             throws DispositionReportFaultMessage {
                 modelPhoneList.clear();
 
                 for (org.uddi.api_v3.Phone apiPhone : apiPhoneList) {
@@ -469,10 +488,10 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapContactAddresses(List<org.uddi.api_v3.Address> apiAddressList,
-                List<org.apache.juddi.model.Address> modelAddressList,
-                org.apache.juddi.model.Contact modelContact,
-                String businessKey)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.Address> modelAddressList,
+             org.apache.juddi.model.Contact modelContact
+        )
+             throws DispositionReportFaultMessage {
                 modelAddressList.clear();
 
                 for (org.uddi.api_v3.Address apiAddress : apiAddressList) {
@@ -481,7 +500,7 @@ public class MappingApiToModel {
                         modelAddress.setTmodelKey(apiAddress.getTModelKey());
                         modelAddress.setUseType(apiAddress.getUseType());
 
-                        mapAddressLines(apiAddress.getAddressLine(), modelAddress.getAddressLines(), modelAddress, businessKey, modelContact.getId());
+                        mapAddressLines(apiAddress.getAddressLine(), modelAddress.getAddressLines(), modelAddress, modelContact.getId());
 
                         modelAddressList.add(modelAddress);
                 }
@@ -492,16 +511,15 @@ public class MappingApiToModel {
          * @param apiAddressLineList
          * @param modelAddressLineList
          * @param modelAddress
-         * @param businessKey
+         *
          * @param contactId
          * @throws DispositionReportFaultMessage
          */
         public static void mapAddressLines(List<org.uddi.api_v3.AddressLine> apiAddressLineList,
-                List<org.apache.juddi.model.AddressLine> modelAddressLineList,
-                org.apache.juddi.model.Address modelAddress,
-                String businessKey,
-                Long contactId)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.AddressLine> modelAddressLineList,
+             org.apache.juddi.model.Address modelAddress,
+             Long contactId)
+             throws DispositionReportFaultMessage {
                 modelAddressLineList.clear();
 
                 for (org.uddi.api_v3.AddressLine apiAddressLine : apiAddressLineList) {
@@ -517,9 +535,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapBusinessIdentifiers(org.uddi.api_v3.IdentifierBag apiIdentifierBag,
-                List<org.apache.juddi.model.BusinessIdentifier> modelIdentifierList,
-                org.apache.juddi.model.BusinessEntity modelBusinessEntity)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.BusinessIdentifier> modelIdentifierList,
+             org.apache.juddi.model.BusinessEntity modelBusinessEntity)
+             throws DispositionReportFaultMessage {
                 modelIdentifierList.clear();
 
                 if (apiIdentifierBag != null) {
@@ -539,10 +557,10 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapBusinessServices(org.uddi.api_v3.BusinessServices apiBusinessServices,
-                List<org.apache.juddi.model.BusinessService> modelBusinessServiceList,
-                List<org.apache.juddi.model.ServiceProjection> modelServiceProjectionList,
-                org.apache.juddi.model.BusinessEntity modelBusinessEntity)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.BusinessService> modelBusinessServiceList,
+             List<org.apache.juddi.model.ServiceProjection> modelServiceProjectionList,
+             org.apache.juddi.model.BusinessEntity modelBusinessEntity)
+             throws DispositionReportFaultMessage {
                 modelBusinessServiceList.clear();
                 if (apiBusinessServices != null) {
                         List<org.uddi.api_v3.BusinessService> apiBusinessServiceList = apiBusinessServices.getBusinessService();
@@ -551,7 +569,7 @@ public class MappingApiToModel {
 
                                 // If the parent businessEntity key and the service businessEntity key (if provided) do not match, it's a projection.
                                 if (apiBusinessService.getBusinessKey() != null && apiBusinessService.getBusinessKey().length() > 0
-                                        && !modelBusinessEntity.getEntityKey().equalsIgnoreCase(apiBusinessService.getBusinessKey())) {
+                                     && !modelBusinessEntity.getEntityKey().equalsIgnoreCase(apiBusinessService.getBusinessKey())) {
 
                                         modelBusinessService.setEntityKey(apiBusinessService.getServiceKey());
                                         org.apache.juddi.model.ServiceProjection modelServiceProjection = new org.apache.juddi.model.ServiceProjection(modelBusinessEntity, modelBusinessService);
@@ -573,9 +591,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapBusinessService(org.uddi.api_v3.BusinessService apiBusinessService,
-                org.apache.juddi.model.BusinessService modelBusinessService,
-                org.apache.juddi.model.BusinessEntity modelBusinessEntity)
-                throws DispositionReportFaultMessage {
+             org.apache.juddi.model.BusinessService modelBusinessService,
+             org.apache.juddi.model.BusinessEntity modelBusinessEntity)
+             throws DispositionReportFaultMessage {
 
                 modelBusinessService.setBusinessEntity(modelBusinessEntity);
                 modelBusinessService.setEntityKey(apiBusinessService.getServiceKey());
@@ -599,9 +617,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapServiceNames(List<org.uddi.api_v3.Name> apiNameList,
-                List<org.apache.juddi.model.ServiceName> modelNameList,
-                org.apache.juddi.model.BusinessService modelBusinessService)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.ServiceName> modelNameList,
+             org.apache.juddi.model.BusinessService modelBusinessService)
+             throws DispositionReportFaultMessage {
                 modelNameList.clear();
 
                 for (org.uddi.api_v3.Name apiName : apiNameList) {
@@ -617,9 +635,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapServiceDescriptions(List<org.uddi.api_v3.Description> apiDescList,
-                List<org.apache.juddi.model.ServiceDescr> modelDescList,
-                org.apache.juddi.model.BusinessService modelBusinessService)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.ServiceDescr> modelDescList,
+             org.apache.juddi.model.BusinessService modelBusinessService)
+             throws DispositionReportFaultMessage {
                 modelDescList.clear();
 
                 for (org.uddi.api_v3.Description apiDesc : apiDescList) {
@@ -635,9 +653,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapBindingTemplates(org.uddi.api_v3.BindingTemplates apiBindingTemplates,
-                List<org.apache.juddi.model.BindingTemplate> modelBindingTemplateList,
-                org.apache.juddi.model.BusinessService modelBusinessService)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.BindingTemplate> modelBindingTemplateList,
+             org.apache.juddi.model.BusinessService modelBusinessService)
+             throws DispositionReportFaultMessage {
                 modelBindingTemplateList.clear();
 
                 if (apiBindingTemplates != null) {
@@ -660,9 +678,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapBindingTemplate(org.uddi.api_v3.BindingTemplate apiBindingTemplate,
-                org.apache.juddi.model.BindingTemplate modelBindingTemplate,
-                org.apache.juddi.model.BusinessService modelBusinessService)
-                throws DispositionReportFaultMessage {
+             org.apache.juddi.model.BindingTemplate modelBindingTemplate,
+             org.apache.juddi.model.BusinessService modelBusinessService)
+             throws DispositionReportFaultMessage {
 
                 modelBindingTemplate.setBusinessService(modelBusinessService);
                 modelBindingTemplate.setEntityKey(apiBindingTemplate.getBindingKey());
@@ -691,9 +709,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapBindingDescriptions(List<org.uddi.api_v3.Description> apiDescList,
-                List<org.apache.juddi.model.BindingDescr> modelDescList,
-                org.apache.juddi.model.BindingTemplate modelBindingTemplate)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.BindingDescr> modelDescList,
+             org.apache.juddi.model.BindingTemplate modelBindingTemplate)
+             throws DispositionReportFaultMessage {
                 modelDescList.clear();
                 for (org.uddi.api_v3.Description apiDesc : apiDescList) {
                         modelDescList.add(new org.apache.juddi.model.BindingDescr(modelBindingTemplate, apiDesc.getLang(), apiDesc.getValue()));
@@ -707,8 +725,8 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapCategoryBag(org.uddi.api_v3.CategoryBag apiCategoryBag,
-                org.apache.juddi.model.CategoryBag modelCategoryBag)
-                throws DispositionReportFaultMessage {
+             org.apache.juddi.model.CategoryBag modelCategoryBag)
+             throws DispositionReportFaultMessage {
 
                 if (apiCategoryBag != null) {
                         List<org.uddi.api_v3.KeyedReference> krList = apiCategoryBag.getKeyedReference();
@@ -718,7 +736,7 @@ public class MappingApiToModel {
                                         //modelKeyedReferences.clear();
                                         org.uddi.api_v3.KeyedReference apiKeyedReference = (org.uddi.api_v3.KeyedReference) elem;
                                         modelKeyedReferences.add(new org.apache.juddi.model.KeyedReference(modelCategoryBag,
-                                                apiKeyedReference.getTModelKey(), apiKeyedReference.getKeyName(), apiKeyedReference.getKeyValue()));
+                                             apiKeyedReference.getTModelKey(), apiKeyedReference.getKeyName(), apiKeyedReference.getKeyValue()));
                                 }
                         }
                         List<org.uddi.api_v3.KeyedReferenceGroup> krgList = apiCategoryBag.getKeyedReferenceGroup();
@@ -746,9 +764,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapKeyedReferenceGroup(org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup,
-                org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup,
-                org.apache.juddi.model.CategoryBag modelCategoryBag)
-                throws DispositionReportFaultMessage {
+             org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup,
+             org.apache.juddi.model.CategoryBag modelCategoryBag)
+             throws DispositionReportFaultMessage {
                 if (apiKeyedReferenceGroup != null) {
                         modelKeyedReferenceGroup.setCategoryBag(modelCategoryBag);
                         modelKeyedReferenceGroup.setTmodelKey(apiKeyedReferenceGroup.getTModelKey());
@@ -757,7 +775,7 @@ public class MappingApiToModel {
                                 List<org.apache.juddi.model.KeyedReference> modelKeyedReferences = modelKeyedReferenceGroup.getKeyedReferences();
                                 for (org.uddi.api_v3.KeyedReference apiKeyedReference : apiKeyedReferenceGroup.getKeyedReference()) {
                                         modelKeyedReferences.add(new org.apache.juddi.model.KeyedReference(modelKeyedReferenceGroup,
-                                                apiKeyedReference.getTModelKey(), apiKeyedReference.getKeyName(), apiKeyedReference.getKeyValue()));
+                                             apiKeyedReference.getTModelKey(), apiKeyedReference.getKeyName(), apiKeyedReference.getKeyValue()));
                                 }
                         }
 
@@ -773,9 +791,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapTModelInstanceDetails(org.uddi.api_v3.TModelInstanceDetails apiTModelInstDetails,
-                List<org.apache.juddi.model.TmodelInstanceInfo> modelTModelInstInfoList,
-                org.apache.juddi.model.BindingTemplate modelBindingTemplate)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.TmodelInstanceInfo> modelTModelInstInfoList,
+             org.apache.juddi.model.BindingTemplate modelBindingTemplate)
+             throws DispositionReportFaultMessage {
                 modelTModelInstInfoList.clear();
 
                 if (apiTModelInstDetails != null) {
@@ -799,9 +817,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapTModelInstanceInfoDescriptions(List<org.uddi.api_v3.Description> apiDescList,
-                List<org.apache.juddi.model.TmodelInstanceInfoDescr> modelDescList,
-                org.apache.juddi.model.TmodelInstanceInfo modelTModelInstInfo)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.TmodelInstanceInfoDescr> modelDescList,
+             org.apache.juddi.model.TmodelInstanceInfo modelTModelInstInfo)
+             throws DispositionReportFaultMessage {
                 modelDescList.clear();
 
                 for (org.uddi.api_v3.Description apiDesc : apiDescList) {
@@ -816,17 +834,17 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapInstanceDetails(org.uddi.api_v3.InstanceDetails apiInstanceDetails,
-                org.apache.juddi.model.TmodelInstanceInfo modelTmodelInstInfo)
-                throws DispositionReportFaultMessage {
+             org.apache.juddi.model.TmodelInstanceInfo modelTmodelInstInfo)
+             throws DispositionReportFaultMessage {
                 modelTmodelInstInfo.getInstanceDetailsDescrs().clear();
 
                 if (apiInstanceDetails != null) {
                         List<org.uddi.api_v3.Description> descriptions = apiInstanceDetails.getDescription();
                         List<org.uddi.api_v3.OverviewDoc> overviewdocs = apiInstanceDetails.getOverviewDoc();
                         for (org.uddi.api_v3.Description apiDesc : descriptions) {
-                                org.apache.juddi.model.InstanceDetailsDescr modelInstanceDetailsDescr =
-                                        new org.apache.juddi.model.InstanceDetailsDescr(
-                                        modelTmodelInstInfo, apiDesc.getLang(), apiDesc.getValue());
+                                org.apache.juddi.model.InstanceDetailsDescr modelInstanceDetailsDescr
+                                     = new org.apache.juddi.model.InstanceDetailsDescr(
+                                          modelTmodelInstInfo, apiDesc.getLang(), apiDesc.getValue());
                                 modelTmodelInstInfo.getInstanceDetailsDescrs().add(modelInstanceDetailsDescr);
                         }
                         for (org.uddi.api_v3.OverviewDoc apiOverviewDoc : overviewdocs) {
@@ -845,8 +863,8 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapOverviewDoc(org.uddi.api_v3.OverviewDoc apiOverviewDoc,
-                org.apache.juddi.model.OverviewDoc modelOverviewDoc)
-                throws DispositionReportFaultMessage {
+             org.apache.juddi.model.OverviewDoc modelOverviewDoc)
+             throws DispositionReportFaultMessage {
                 if (apiOverviewDoc != null) {
 
                         List<Description> descContent = apiOverviewDoc.getDescription();
@@ -854,7 +872,7 @@ public class MappingApiToModel {
                                 org.uddi.api_v3.Description description = (org.uddi.api_v3.Description) elem;
                                 if (description != null) {
                                         org.apache.juddi.model.OverviewDocDescr modelOverviewDocDescr = new org.apache.juddi.model.OverviewDocDescr(
-                                                modelOverviewDoc, description.getLang(), description.getValue());
+                                             modelOverviewDoc, description.getLang(), description.getValue());
                                         modelOverviewDoc.getOverviewDocDescrs().add(modelOverviewDocDescr);
                                 }
                         }
@@ -876,8 +894,8 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapTModel(org.uddi.api_v3.TModel apiTModel,
-                org.apache.juddi.model.Tmodel modelTModel)
-                throws DispositionReportFaultMessage {
+             org.apache.juddi.model.Tmodel modelTModel)
+             throws DispositionReportFaultMessage {
 
                 modelTModel.setEntityKey(apiTModel.getTModelKey());
                 modelTModel.setName(apiTModel.getName().getValue());
@@ -902,9 +920,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapTModelDescriptions(List<org.uddi.api_v3.Description> apiDescList,
-                List<org.apache.juddi.model.TmodelDescr> modelDescList,
-                org.apache.juddi.model.Tmodel modelTModel)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.TmodelDescr> modelDescList,
+             org.apache.juddi.model.Tmodel modelTModel)
+             throws DispositionReportFaultMessage {
                 modelDescList.clear();
 
                 for (org.uddi.api_v3.Description apiDesc : apiDescList) {
@@ -920,9 +938,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapTModelIdentifiers(org.uddi.api_v3.IdentifierBag apiIdentifierBag,
-                List<org.apache.juddi.model.TmodelIdentifier> modelIdentifierList,
-                org.apache.juddi.model.Tmodel modelTModel)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.TmodelIdentifier> modelIdentifierList,
+             org.apache.juddi.model.Tmodel modelTModel)
+             throws DispositionReportFaultMessage {
                 modelIdentifierList.clear();
 
                 if (apiIdentifierBag != null) {
@@ -941,9 +959,9 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapTModelOverviewDocs(List<org.uddi.api_v3.OverviewDoc> apiOverviewDocList,
-                List<org.apache.juddi.model.OverviewDoc> modelOverviewDocList,
-                org.apache.juddi.model.Tmodel modelTmodel)
-                throws DispositionReportFaultMessage {
+             List<org.apache.juddi.model.OverviewDoc> modelOverviewDocList,
+             org.apache.juddi.model.Tmodel modelTmodel)
+             throws DispositionReportFaultMessage {
                 modelOverviewDocList.clear();
 
                 for (org.uddi.api_v3.OverviewDoc apiOverviewDoc : apiOverviewDocList) {
@@ -960,8 +978,8 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapPublisherAssertion(org.uddi.api_v3.PublisherAssertion apiPubAssertion,
-                org.apache.juddi.model.PublisherAssertion modelPubAssertion)
-                throws DispositionReportFaultMessage {
+             org.apache.juddi.model.PublisherAssertion modelPubAssertion)
+             throws DispositionReportFaultMessage {
 
                 modelPubAssertion.setId(new org.apache.juddi.model.PublisherAssertionId(apiPubAssertion.getFromKey(), apiPubAssertion.getToKey()));
 
@@ -988,8 +1006,8 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapSubscription(org.uddi.sub_v3.Subscription apiSubscription,
-                org.apache.juddi.model.Subscription modelSubscription)
-                throws DispositionReportFaultMessage {
+             org.apache.juddi.model.Subscription modelSubscription)
+             throws DispositionReportFaultMessage {
 
                 modelSubscription.setSubscriptionKey(apiSubscription.getSubscriptionKey());
                 modelSubscription.setBindingKey(apiSubscription.getBindingKey());
@@ -1008,7 +1026,6 @@ public class MappingApiToModel {
                         modelSubscription.setBrief(Boolean.FALSE);
                 }
 
-
                 String rawFilter = JAXBMarshaller.marshallToString(new ObjectFactory().createSubscriptionFilter(apiSubscription.getSubscriptionFilter()), "org.uddi.sub_v3");
                 logger.debug("marshalled subscription filter:  " + rawFilter);
                 modelSubscription.setSubscriptionFilter(rawFilter);
@@ -1022,8 +1039,8 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapClientSubscriptionInfo(org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo,
-                org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo)
-                throws DispositionReportFaultMessage {
+             org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo)
+             throws DispositionReportFaultMessage {
 
                 modelClientSubscriptionInfo.setLastNotified(new Date());
                 modelClientSubscriptionInfo.setSubscriptionKey(apiClientSubscriptionInfo.getSubscriptionKey());
@@ -1132,10 +1149,10 @@ public class MappingApiToModel {
                         } else if (x509IssuerSerialOrX509SKIOrX509SubjectName instanceof String) {
                                 modelKeyInfoValue.setKeyDataValueString((String) x509IssuerSerialOrX509SKIOrX509SubjectName);
                         } else if (x509IssuerSerialOrX509SKIOrX509SubjectName instanceof X509IssuerSerialType) {
-                        	modelKeyInfoValue.setKeyDataType(X509IssuerSerialType.class.getSimpleName());
-                        	X509IssuerSerialType x509IssuerSerialType = (X509IssuerSerialType) x509IssuerSerialOrX509SKIOrX509SubjectName;
-                        	modelKeyInfoValue.setKeyDataValueString(x509IssuerSerialType.getX509IssuerName());
-                        	modelKeyInfoValue.setKeyDataValueBytes(x509IssuerSerialType.getX509SerialNumber().toByteArray());
+                                modelKeyInfoValue.setKeyDataType(X509IssuerSerialType.class.getSimpleName());
+                                X509IssuerSerialType x509IssuerSerialType = (X509IssuerSerialType) x509IssuerSerialOrX509SKIOrX509SubjectName;
+                                modelKeyInfoValue.setKeyDataValueString(x509IssuerSerialType.getX509IssuerName());
+                                modelKeyInfoValue.setKeyDataValueBytes(x509IssuerSerialType.getX509SerialNumber().toByteArray());
                         } else if (x509IssuerSerialOrX509SKIOrX509SubjectName != null) {
                                 throw new RuntimeException("Unrecognized Value for Element: " + tagName + ": " + x509IssuerSerialOrX509SKIOrX509SubjectName.getClass().getCanonicalName());
                         }
@@ -1358,4 +1375,201 @@ public class MappingApiToModel {
                 String str = serializer.writeToString(xformEl);
                 return str;
         }
+
+        public static org.apache.juddi.model.ChangeRecord mapChangeRecord(ChangeRecord rec) throws UnsupportedEncodingException {
+                org.apache.juddi.model.ChangeRecord r = new org.apache.juddi.model.ChangeRecord();
+                r.setId(rec.getChangeID().getOriginatingUSN());
+                r.setNodeID(rec.getChangeID().getNodeID());
+                StringWriter sw = new StringWriter();
+                JAXB.marshal(rec, sw);
+                r.setContents(sw.toString().getBytes("UTF8"));
+                return r;
+
+        }
+
+        public static void mapOperationalInfo(UddiEntity model, OperationalInfo operationalInfo) {
+                if (operationalInfo == null || model == null) {
+                        return;
+                }
+                if (operationalInfo.getCreated() != null) {
+                        model.setCreated(operationalInfo.getCreated().toGregorianCalendar().getTime());
+                }
+                model.setAuthorizedName(operationalInfo.getAuthorizedName());
+                if (operationalInfo.getModified() != null) {
+                        model.setModified(operationalInfo.getModified().toGregorianCalendar().getTime());
+                }
+                if (operationalInfo.getModifiedIncludingChildren() != null) {
+                        model.setModifiedIncludingChildren(operationalInfo.getModifiedIncludingChildren().toGregorianCalendar().getTime());
+                }
+                model.setNodeId(operationalInfo.getNodeID());
+
+        }
+
+        public static void mapSaveBindingToChangeRecord(SaveBinding recordIn, List<org.apache.juddi.model.ChangeRecord> recordsOut) {
+                List<org.apache.juddi.model.ChangeRecord> r = new ArrayList<org.apache.juddi.model.ChangeRecord>();
+
+        }
+
+        public static void mapReplicationConfiguration(ReplicationConfiguration replicationConfiguration, org.apache.juddi.model.ReplicationConfiguration model, EntityManager em) throws DispositionReportFaultMessage {
+
+                model.setMaximumTimeToGetChanges(replicationConfiguration.getMaximumTimeToGetChanges());
+                model.setMaximumTimeToSyncRegistry(replicationConfiguration.getMaximumTimeToSyncRegistry());
+                model.setSerialNumber(null);
+
+                //the spec doesn't specify what the format should be, however there was an example
+                //2002 03 04 1859Z
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddkkmmZ");
+                model.setTimeOfConfigurationUpdate(sdf.format(new Date()));
+                model.setContact(mapContact(replicationConfiguration.getRegistryContact().getContact()));
+                model.setCommunicationGraph(mapCommunicationGraph(replicationConfiguration.getCommunicationGraph(), em));
+                model.setOperator(mapOperators(replicationConfiguration.getOperator()));
+                if (replicationConfiguration.getSignature() != null) {
+                        model.setSignatures(mapApiSignaturesToModelSignatures(replicationConfiguration.getSignature()));
+                }
+
+        }
+
+        private static Contact mapContact(org.uddi.api_v3.Contact contact) throws DispositionReportFaultMessage {
+                Contact model = new Contact();
+                model.setAddresses(new ArrayList<Address>());
+                mapContactAddresses(contact.getAddress(), model.getAddresses(), model);
+                if (model.getAddresses().isEmpty()) {
+                        model.setAddresses(null);
+                }
+                return model;
+        }
+
+        private static CommunicationGraph mapCommunicationGraph(org.uddi.repl_v3.CommunicationGraph communicationGraph, EntityManager em) throws DispositionReportFaultMessage {
+                if (communicationGraph == null) {
+                        return null;
+                }
+                CommunicationGraph model = new CommunicationGraph();
+
+                /**
+                 * Following the listing of nodes is the controlledMessage
+                 * element that lists the set of messages over which this
+                 * communication graph is intended to administer control of. If
+                 * a message element local name is listed in the
+                 * controlledMessage element, then such messages SHALL only be
+                 * sent between nodes that are listed in the subsequent edges of
+                 * the graph. In contrast, communication restrictions are not
+                 * imposed on replication messages not identified in the
+                 * controlledMessage element.
+                 */
+                if (communicationGraph.getControlledMessage() != null) {
+                        model.setControlMessage(new ArrayList<ControlMessage>());
+                        for (int k = 0; k < communicationGraph.getControlledMessage().size(); k++) {
+                                model.getControlMessage().add(new ControlMessage(communicationGraph.getControlledMessage().get(k)));
+                        }
+                }
+                model.setNode(new ArrayList<Node>());
+                for (int i = 0; i < communicationGraph.getNode().size(); i++) {
+                        Node find = em.find(org.apache.juddi.model.Node.class, communicationGraph.getNode().get(i));
+                        if (find == null) {
+                                throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getNode().get(i)));
+                        }
+                        model.getNode().add(find);
+                }
+                if (communicationGraph.getEdge() != null) {
+                        List<Edge> ret = new ArrayList<Edge>();
+                        for (int i = 0; i < communicationGraph.getEdge().size(); i++) {
+                                Edge e = new Edge();
+                                e.setCommunicationGraph(model);
+                                Node find = em.find(org.apache.juddi.model.Node.class, communicationGraph.getEdge().get(i).getMessageReceiver());
+                                if (find == null) {
+                                        throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageReceiver()));
+                                }
+                                e.setMessageReceiver(find);
+                                find = em.find(org.apache.juddi.model.Node.class, communicationGraph.getEdge().get(i).getMessageSender());
+                                if (find == null) {
+                                        throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageSender()));
+                                }
+                                e.setMessageSender(find);
+
+                                /**
+                                 * The message elements contain the local name
+                                 * of the Replication API message elements. They
+                                 * indicate that only messages of the type
+                                 * explicitly identified for a particular edge
+                                 * MAY be sent from the specified messageSender
+                                 * to the specified messageReceiver.
+                                 */
+                                if (communicationGraph.getEdge().get(i).getMessage() != null) {
+                                        e.setMessage(new ArrayList<ControlMessage>());
+                                        for (int k = 0; k < communicationGraph.getEdge().get(i).getMessage().size(); k++) {
+                                                e.getMessages().add(new ControlMessage(communicationGraph.getEdge().get(i).getMessage().get(k)));
+                                        }
+                                }
+                                if (communicationGraph.getEdge().get(i).getMessageReceiverAlternate() != null) {
+                                        e.setMessageReceiverAlternate(new HashSet<Node>());
+                                        for (int k = 0; k < communicationGraph.getEdge().get(i).getMessageReceiverAlternate().size(); k++) {
+                                                find = em.find(org.apache.juddi.model.Node.class, communicationGraph.getEdge().get(i).getMessageSender());
+                                                if (find == null) {
+                                                        throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageSender()));
+                                                }
+                                                e.getMessageReceiverAlternate().add(find);
+                                        }
+                                }
+
+                                ret.add(e);
+                        }
+                        model.setEdge(ret);
+                }
+
+                return model;
+
+        }
+
+        private static List<Operator> mapOperators(List<org.uddi.repl_v3.Operator> api) throws DispositionReportFaultMessage {
+                if (api == null) {
+                        return null;
+                }
+                List<Operator> model = new ArrayList<Operator>();
+                for (int i = 0; i < api.size(); i++) {
+                        Operator op = new Operator();
+                        op.setSoapReplicationURL(api.get(i).getSoapReplicationURL());
+
+                        if (!api.get(i).getContact().isEmpty()) {
+                                op.setContact(new ArrayList<Contact>());
+                                for (int k = 0; k < api.get(i).getContact().size(); k++) {
+                                        op.getContact().add(mapContact(api.get(i).getContact().get(k)));
+                                }
+                        }
+                        op.setOperatorNodeID(api.get(i).getOperatorNodeID());
+                        op.setOperatorStatus(mapOperatorStatus(api.get(i).getOperatorStatus()));
+                        if (!api.get(i).getKeyInfo().isEmpty()) {
+                                op.setKeyInfo(new ArrayList<KeyInfo>());
+                                for (int k = 0; k < api.get(i).getKeyInfo().size(); k++) {
+                                        //TODO api.get(i).getKeyInfo().get(k)
+                                        org.apache.juddi.model.KeyInfo modelKeyInfo = new KeyInfo();
+                                        modelKeyInfo.setXmlID(api.get(i).getKeyInfo().get(i).getId());
+                                        modelKeyInfo.setKeyDataValue(new ArrayList<KeyDataValue>());
+                                        if (api.get(i).getKeyInfo().get(i).getContent() != null) {
+                                                modelKeyInfo.setKeyDataValue(new ArrayList<KeyDataValue>());
+                                                for (int x = 0; x < api.get(i).getKeyInfo().get(k).getContent().size(); x++) {
+                                                        mapKeyValue((JAXBElement) api.get(i).getKeyInfo().get(k).getContent().get(x), modelKeyInfo.getKeyDataValue());
+                                                }
+                                        }
+                                        op.getKeyInfo().add(modelKeyInfo);
+                                }
+
+                        }
+                        model.add(op);
+
+                }
+                return model;
+        }
+
+        private static OperatorStatusType mapOperatorStatus(org.uddi.repl_v3.OperatorStatusType operatorStatus) {
+                switch (operatorStatus) {
+                        case NEW:
+                                return OperatorStatusType.NEW;
+                        case NORMAL:
+                                return OperatorStatusType.NORMAL;
+                        case RESIGNED:
+                                return OperatorStatusType.RESIGNED;
+                }
+                return null;
+        }
+
 }

@@ -36,18 +36,26 @@ import javax.persistence.Table;
 public class Edge {
 
         private Long id;
-        private Set<ReplicationMessage>  message;
+        private List<ControlMessage>  message;
         private Node messageSender;
         private Node messageReceiver;
         private Set<Node> messageReceiverAlternate;
         private CommunicationGraph parent;
 
+         /**
+         * link the parent object
+         * @param val 
+         */
         @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = CommunicationGraph.class)
         //@JoinColumn(name = "OWNER_ID")
         public CommunicationGraph getCommunicationGraph() {
                 return parent;
         }
 
+        /**
+         * link the parent object
+         * @param val 
+         */
         public void setCommunicationGraph(CommunicationGraph val) {
                 parent = val;
         }
@@ -56,14 +64,14 @@ public class Edge {
          * The message elements contain the local name of the Replication API message elements
          * @return 
          */
-        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = ReplicationMessage.class)
-        public Set<ReplicationMessage> getMessages() {
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = ControlMessage.class)
+        public List<ControlMessage> getMessages() {
                 if (message == null) {
-                        message = new HashSet<ReplicationMessage>();
+                        message = new ArrayList<ControlMessage>();
                 }
                 return this.message;
         }
-        public void setMessages(Set<ReplicationMessage>  values) {
+        public void setMessages(List<ControlMessage>  values) {
                 this.message = values;
         }
 
@@ -113,7 +121,7 @@ public class Edge {
                 return id;
         }
 
-        public void setMessage(Set<ReplicationMessage> message) {
+        public void setMessage(List<ControlMessage> message) {
                 this.message = message;
         }
 
@@ -121,9 +129,7 @@ public class Edge {
                 this.messageReceiverAlternate = messageReceiverAlternate;
         }
 
-        public void setParent(CommunicationGraph parent) {
-                this.parent = parent;
-        }
+     
 
         public void setId(Long id) {
                 this.id = id;

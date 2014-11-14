@@ -26,9 +26,12 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 @Entity
 @Table(name = "j3_chg_graph")
@@ -78,6 +81,13 @@ public class CommunicationGraph implements Serializable {
 
         @Id
         @Column(name = "j3_id")
+        @GeneratedValue(strategy = GenerationType.TABLE,
+             generator = "cfggrphGen")
+        @TableGenerator(name = "cfggrphGen",
+             table = "JPAGEN_CFGGRPH",
+             pkColumnName = "NAME",
+             pkColumnValue = "JPAGEN_PERSON_GEN",
+             valueColumnName = "VALUE")
         public Long getId() {
                 return id;
         }

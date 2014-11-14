@@ -107,6 +107,8 @@ public class ClientConfig {
 
                 saveConfiguration.setRootElementName("uddi");
 
+                                
+                cc.addProperty("client(0).selection.policy", config.getProperty("client.selection.policy"));
                 cc.addProperty("reloadDelay", config.getProperty("reloadDelay"));
                 addCurrentNodeConfig(cc);
                 addCurrentClerks(cc);
@@ -605,8 +607,6 @@ public class ClientConfig {
                 if (this.uddiNodes.containsKey(name)) {
                         this.uddiNodes.remove(name);
                 }
-
-                //TODO to configuration xml structure
         }
 
         /**

@@ -140,7 +140,7 @@ public class ServiceLocator {
 		try {
 			if (selectionPolicy==null) {
 				if (policy==null) {
-                                        //TODO move this constant to Property.class
+                                        //TODO update .NET schema file to support this
 					policy = properties.getProperty("juddi.client.selection.policy", "org.apache.juddi.v3.client.mapping.PolicyLocalFirst");
 				}
 				@SuppressWarnings("unchecked")

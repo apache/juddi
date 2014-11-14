@@ -66,7 +66,7 @@ public class UDDINode implements Serializable {
 		description = node.getDescription();
 		custodyTransferUrl = node.getCustodyTransferUrl();
 		inquiryUrl = node.getInquiryUrl();
-                //TODO inquiryRESTUrl = node.getInquiryRESTUrl();
+                //TODO need juddi schema updat inquiryRESTUrl = node.getInquiryRESTUrl()
 		publishUrl = node.getPublishUrl();
 		securityUrl = node.getSecurityUrl();
 		subscriptionUrl = node.getSubscriptionUrl();

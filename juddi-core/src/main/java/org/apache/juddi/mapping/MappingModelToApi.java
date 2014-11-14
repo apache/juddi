@@ -23,10 +23,15 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import org.w3._2000._09.xmldsig_.X509IssuerSerialType;
 import java.io.ByteArrayInputStream;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
 
 import javax.xml.bind.JAXBException;
@@ -53,7 +58,6 @@ import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.model.KeyDataValue;
 import org.apache.juddi.model.Node;
 import org.apache.juddi.model.ReplicationConfiguration;
-import org.apache.juddi.model.ReplicationMessage;
 import org.apache.juddi.model.SignatureTransformDataValue;
 import org.apache.juddi.subscription.TypeConvertor;
 import org.apache.juddi.v3.error.ErrorMessage;
@@ -62,6 +66,8 @@ import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.CompletionStatus;
 import org.uddi.api_v3.Contacts;
 import org.uddi.api_v3.OperationalInfo;
+import org.uddi.repl_v3.ChangeRecord;
+import org.uddi.repl_v3.ChangeRecordIDType;
 import org.uddi.repl_v3.CommunicationGraph;
 import org.uddi.repl_v3.Operator;
 import org.uddi.repl_v3.OperatorStatusType;
@@ -1219,14 +1225,16 @@ public class MappingModelToApi {
                         mapContacts(model.get(i).getContact(), c, new BusinessEntity());
                         op.getContact().addAll(c.getContact());
 
-                        for (int x = 0; x < model.get(i).getKeyInfo().size(); x++) {
-                                KeyInfoType apiKeyInfo = new KeyInfoType();
-                                KeyInfo modelKeyInfo = model.get(i).getKeyInfo().get(x);
-                                apiKeyInfo.setId(modelKeyInfo.getXmlID());
-                                List<KeyDataValue> modelKeyDataValueList = modelKeyInfo.getKeyDataValue();
-                                List<Object> apiX509KeyInfoList = apiKeyInfo.getContent();
-                                mapModelKeyDataValue(modelKeyDataValueList, apiX509KeyInfoList);
-                                op.getKeyInfo().add(apiKeyInfo);
+                        if (model.get(i).getKeyInfo() != null) {
+                                for (int x = 0; x < model.get(i).getKeyInfo().size(); x++) {
+                                        KeyInfoType apiKeyInfo = new KeyInfoType();
+                                        KeyInfo modelKeyInfo = model.get(i).getKeyInfo().get(x);
+                                        apiKeyInfo.setId(modelKeyInfo.getXmlID());
+                                        List<KeyDataValue> modelKeyDataValueList = modelKeyInfo.getKeyDataValue();
+                                        List<Object> apiX509KeyInfoList = apiKeyInfo.getContent();
+                                        mapModelKeyDataValue(modelKeyDataValueList, apiX509KeyInfoList);
+                                        op.getKeyInfo().add(apiKeyInfo);
+                                }
                         }
                         api.add(op);
                 }
@@ -1252,9 +1260,10 @@ public class MappingModelToApi {
                         CommunicationGraph.Edge apiEdge = new CommunicationGraph.Edge();
                         apiEdge.setMessageReceiver(modelEdge.getMessageReceiver().getName());
                         apiEdge.setMessageSender(modelEdge.getMessageSender().getName());
-                        Iterator<ReplicationMessage> it2 = modelEdge.getMessages().iterator();
+                        
+                        Iterator<ControlMessage> it2 = modelEdge.getMessages().iterator();
                         while (it2.hasNext()) {
-                                apiEdge.getMessage().add(it2.next().getMsg());
+                                apiEdge.getMessage().add(it2.next().getMessage());
                         }
                         Iterator<Node> it3 = modelEdge.getMessageReceiverAlternate().iterator();
                         while (it3.hasNext()) {
@@ -1280,5 +1289,28 @@ public class MappingModelToApi {
                 while (it.hasNext()) {
                         api.add(it.next().getName());
                 }
+        }
+
+        public static ChangeRecord mapChangeRecord(org.apache.juddi.model.ChangeRecord cr) {
+                if (cr == null) {
+                        return null;
+                }
+                ChangeRecord ret = new ChangeRecord();
+
+                StringReader sr = null;
+                try {
+                        sr = new StringReader(new String(cr.getContents(), "UTF8"));
+                } catch (UnsupportedEncodingException ex) {
+                        Logger.getLogger(MappingModelToApi.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                ret = JAXB.unmarshal(sr, ChangeRecord.class);
+                //secret sauce here, if this is -1, that means that the record originated at this node and needs to be populated with the databases record id
+                if (cr.getOriginatingUSN()==null || cr.getOriginatingUSN() == -1L) {
+                        ret.setChangeID(new ChangeRecordIDType(cr.getNodeID(), cr.getId()));
+                } else {
+                        ret.setChangeID(new ChangeRecordIDType(cr.getNodeID(), cr.getOriginatingUSN()));
+                }
+                return ret;
+                        
         }
 }

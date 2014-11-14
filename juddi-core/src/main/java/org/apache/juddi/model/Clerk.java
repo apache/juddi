@@ -38,7 +38,7 @@ public class Clerk implements java.io.Serializable {
 	private String clerkName;
 	@Column(name="publisher_id", nullable = false, length=255)
 	private String publisherId;
-	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Node node;
 	@Column(name="cred", length=255)
 	private String cred;

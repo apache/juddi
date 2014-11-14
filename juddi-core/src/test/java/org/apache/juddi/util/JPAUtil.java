@@ -35,8 +35,9 @@ import org.apache.juddi.config.PersistenceManager;
 		System.out.println("object=" + object);
 	}
  */
+@Deprecated
 public class JPAUtil {
-	//TODO Comment from Code Review: This class does not seem to be in use. Do we need it?
+	//REMOVE Comment from Code Review: This class does not seem to be in use. Do we need it?
 	
 	public static void persistEntity(Object uddiEntity, Object entityKey) {
 		EntityManager em = PersistenceManager.getEntityManager();

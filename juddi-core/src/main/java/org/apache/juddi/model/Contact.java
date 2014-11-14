@@ -77,7 +77,7 @@ public class Contact implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "entity_key", nullable = false)
+	@JoinColumn(name = "entity_key", nullable = true)
 	public BusinessEntity getBusinessEntity() {
 		return this.businessEntity;
 	}

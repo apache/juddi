@@ -15,7 +15,10 @@
  */
 package org.apache.juddi.samples;
 
+import java.util.List;
+import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.v3.client.config.UDDIClient;
+import org.apache.juddi.v3.client.config.UDDINode;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.api_v3.DiscardAuthToken;
 import org.uddi.api_v3.GetAuthToken;
@@ -35,17 +38,17 @@ public class EntryPoint {
                         System.out.println("____________________________");
                         System.out.println(" 1) Login (get an auth token)");
                         System.out.println(" 2) Compare Two Binding/tModelInstanceInfo - QOS Example");
-                        System.out.println(" 3) jUDDI Admin service - Register a Node");
+                        System.out.println(" 3) jUDDI Admin service - Register a Node (quick add of the jUDDI cloud server)");
                         System.out.println(" 4) Find Binding by QOS Parameters (Binding/tModelInstanceInfo)");
                         System.out.println(" 5) Find Service by QOS Parameters (Binding/tModelInstanceInfo)");
                         System.out.println(" 6) UDDI Create Bulk (makes N business/services");
-                        System.out.println(" 7) UDDI Custody Transfer");
+                        System.out.println(" 7) UDDI Custody Transfer (within a single node)");
                         System.out.println(" 8) UDDI Digital Signatures - Sign a Business");
                         System.out.println(" 9) UDDI Digital Signatures - Sign a Service");
                         System.out.println("10) UDDI Digital Signatures - Sign a tModel");
                         System.out.println("11) UDDI Digital Signatures - Search for Signed Items");
                         System.out.println("12) Find a Binding, lists all bindings for all services");
-                        System.out.println("13) Find Endpoints of a service");
+                        System.out.println("13) Find Endpoints of a service (given the key)");
                         System.out.println("14) Get the details of a service");
                         System.out.println("15) Make a Key Generator tModel");
                         System.out.println("16) Create a Business Relationship Between two users and two Businesses");
@@ -59,6 +62,17 @@ public class EntryPoint {
                         System.out.println("24) Delete a subscription");
                         System.out.println("25) Delete all subscriptions");
                         System.out.println("26) Subscriptions - Asynchronous, publisher assertion subscriptions");
+                        System.out.println("27) Replication - do_ping");
+                        System.out.println("28) Replication - get high watermarks");
+                        System.out.println("29) Replication - get change records");
+                        System.out.println("30) Replication - Setup replication between two nodes");
+                        System.out.println("31) Quick add the jUDDI cloud node to *this's configuration file");
+                        System.out.println("32) Add a node to *this's configuration file");
+                        System.out.println("33) Register a *this node to a jUDDI server");
+                        System.out.println("34) View all registered remote nodes on a jUDDI server");
+                        System.out.println("35) View all registered nodes for this client");
+                        System.out.println("36) UnRegister a node on a jUDDI server");
+
                         System.out.println("q) quit");
                         System.out.print("Selection: ");
                         input = System.console().readLine();
@@ -93,7 +107,7 @@ public class EntryPoint {
                         CompareByTModelInstanceInfoQOS.main(null);
                 }
                 if (input.equals("3")) {
-                        new JuddiAdminService().go(authtoken);
+                        new JuddiAdminService().quickRegisterRemoteCloud(authtoken);
                 }
                 if (input.equals("4")) {
                         SearchByQos.doFindBinding(authtoken);
@@ -256,9 +270,145 @@ public class EntryPoint {
                 if (input.equals("25")) {
                         new UddiSubscriptionManagement().DeleteAllSubscriptions(authtoken);
                 }
-                 if (input.equals("26")) {
+                if (input.equals("26")) {
                         new UddiSubscribeAssertionStatus().Fire();
 
+                }
+                if (input.equals("27")) {
+                        //System.out.println("27) Replication - do_ping");
+
+                        System.out.print("URL: ");
+                        String key2 = (System.console().readLine());
+                        new UddiReplication().DoPing(key2);
+
+                }
+                if (input.equals("28")) {
+                        //System.out.println("28) Replication - get high watermarks");
+                        System.out.print("URL: ");
+                        String key2 = (System.console().readLine());
+                        new UddiReplication().GetHighWatermarks(key2);
+
+                }
+                if (input.equals("29")) {
+                        //System.out.println("29) Replication - get change records");
+                        System.out.print("URL: ");
+                        String key2 = (System.console().readLine());
+
+                        System.out.print("Change ID to fetch: ");
+                        String id = (System.console().readLine());
+
+                        new UddiReplication().GetChangeRecords(key2, Long.parseLong(id));
+
+                }
+                if (input.equals("30")) {
+                        // System.out.println("30) Replication - Setup replication between two nodes");
+                        new JuddiAdminService().setupReplication();
+
+                }
+                if (input.equals("31")) {
+                        //System.out.println("31) Quick add the jUDDI cloud node to *this's configuration file");
+                        new JuddiAdminService().quickRegisterLocalCloud();
+                }
+                if (input.equals("32")) {
+                        // System.out.println("32) Add a node to *this's configuration file");
+                        UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
+                        UDDINode node = new UDDINode();
+                        System.out.print("Name (must be unique: ");
+                        node.setClientName(System.console().readLine());
+                        System.out.print("Description: ");
+                        node.setDescription(System.console().readLine());
+
+                        node.setHomeJUDDI(false);
+                        System.out.print("Inquiry URL: ");
+                        node.setInquiryUrl(System.console().readLine());
+
+                        System.out.print("Inquiry REST URL (optional): ");
+                        node.setInquiryRESTUrl(System.console().readLine());
+
+                        System.out.print("jUDDI API URL (optional): ");
+                        node.setJuddiApiUrl(System.console().readLine());
+                        System.out.print("Custody Transfer URL: ");
+                        node.setCustodyTransferUrl(System.console().readLine());
+                        System.out.print("Publish URL: ");
+                        node.setPublishUrl(System.console().readLine());
+                        System.out.print("Replication URL: ");
+                        node.setReplicationUrl(System.console().readLine());
+                        System.out.print("Security URL: ");
+                        node.setSecurityUrl(System.console().readLine());
+                        System.out.print("Subscription URL: ");
+                        node.setSubscriptionUrl(System.console().readLine());
+                        System.out.print("Transport (defaults to JAXWS): ");
+                        node.setProxyTransport(System.console().readLine());
+                        if (node.getProxyTransport() == null) {
+                                node.setProxyTransport(org.apache.juddi.v3.client.transport.JAXWSTransport.class.getCanonicalName());
+                        }
+                        System.out.print("Factory Initial (optional): ");
+                        node.setFactoryInitial(System.console().readLine());
+                        System.out.print("Factory Naming Provider (optional): ");
+                        node.setFactoryNamingProvider(System.console().readLine());
+                        System.out.print("Factory URL Packages (optional): ");
+                        node.setFactoryURLPkgs(System.console().readLine());
+
+                        clerkManager.getClientConfig().addUDDINode(node);
+                        clerkManager.getClientConfig().saveConfig();
+                        System.out.println("Saved.");
+                }
+                if (input.equals("32")) {
+
+                        //System.out.println("32) Register a *this node to a jUDDI server");
+                        UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
+                        List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
+                        System.out.println();
+                        
+                        System.out.println("Locally defined nodes:");
+                        for (int i = 0; i < uddiNodeList.size(); i++) {
+                                System.out.println("________________________________________________________________________________");
+                                System.out.println(i + ") Node name: " + uddiNodeList.get(i).getName());
+                                System.out.println(i + ") Node description: " + uddiNodeList.get(i).getDescription());
+                                System.out.println(i + ") Transport: " + uddiNodeList.get(i).getProxyTransport());
+                                System.out.println(i + ") jUDDI URL: " + uddiNodeList.get(i).getJuddiApiUrl());
+                        }
+                        System.out.println("Local Node to publish to remote jUDDI instance: ");
+                        int index=Integer.parseInt(System.console().readLine());
+                        
+                        System.out.println("Pick a node (remote jUDDI instance) to publish the selected node information to");
+                        for (int i = 0; i < uddiNodeList.size(); i++) {
+                                System.out.println("________________________________________________________________________________");
+                                System.out.println(i + ") Node name: " + uddiNodeList.get(i).getName());
+                                System.out.println(i + ") Node description: " + uddiNodeList.get(i).getDescription());
+                                System.out.println(i + ") Transport: " + uddiNodeList.get(i).getProxyTransport());
+                                System.out.println(i + ") jUDDI URL: " + uddiNodeList.get(i).getJuddiApiUrl());
+                        }
+                        System.out.println("Node to publish to remote jUDDI instance: ");
+                        int index2=Integer.parseInt(System.console().readLine());
+                        
+                        
+                        new JuddiAdminService().registerLocalNodeToRemoteNode(authtoken, uddiNodeList.get(index), uddiNodeList.get(index2)); 
+                        
+                }
+                if (input.equals("34")) {
+
+                        // System.out.println("33) View all register remote nodes on a jUDDI server");
+                        new JuddiAdminService().viewRemoteNodes(authtoken);
+                }
+
+                if (input.equals("35")) {
+                        UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
+                        List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
+                        for (int i = 0; i < uddiNodeList.size(); i++) {
+                                System.out.println("________________________________________________________________________________");
+                                System.out.println("Client name: " + uddiNodeList.get(i).getClientName());
+                                System.out.println("Node name: " + uddiNodeList.get(i).getName());
+                                System.out.println("Node description: " + uddiNodeList.get(i).getDescription());
+                                System.out.println("Transport: " + uddiNodeList.get(i).getProxyTransport());
+                                System.out.println(i + ") jUDDI URL: " + uddiNodeList.get(i).getJuddiApiUrl());
+
+                        }
+
+                }
+                if (input.equals("36")) {
+
+                        //System.out.println("35) UnRegister a node on a jUDDI server");
                 }
 
         }

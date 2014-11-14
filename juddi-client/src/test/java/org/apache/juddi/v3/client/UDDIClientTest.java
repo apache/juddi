@@ -63,7 +63,6 @@ public class UDDIClientTest {
                         client2.stop();
 
                 } catch (Exception e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                         Assert.fail("No exceptions are expected");
                 }
@@ -81,7 +80,6 @@ public class UDDIClientTest {
                         client.stop();
 
                 } catch (Exception e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                         Assert.fail("No exceptions are expected");
                 }
@@ -102,7 +100,6 @@ public class UDDIClientTest {
                         client.stop();
 
                 } catch (Exception e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                         Assert.fail("No exceptions are expected");
                 }
@@ -162,7 +159,6 @@ public class UDDIClientTest {
                         client.stop();
 
                 } catch (Exception e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                         Assert.fail("No exceptions are expected");
                 }

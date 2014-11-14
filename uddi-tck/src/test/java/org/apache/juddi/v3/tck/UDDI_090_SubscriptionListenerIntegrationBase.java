@@ -738,7 +738,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
          * @throws Exception
          */
         @Test
-        @Ignore
+        //@Ignore
         public void joePublisherUpdate_PUBLISHERASSERTION_DETAIL_TO() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
@@ -781,8 +781,8 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         AddPublisherAssertions pa = new AddPublisherAssertions();
                         pa.setAuthInfo(authInfoMary);
                         PublisherAssertion pas = new PublisherAssertion();
-                        pas.setToKey(TckBusiness.JOE_BUSINESS_KEY);
-                        pas.setFromKey(TckBusiness.MARY_BUSINESS_KEY);
+                        pas.setToKey(TckBusiness.MARY_BUSINESS_KEY);
+                        pas.setFromKey(TckBusiness.JOE_BUSINESS_KEY);
                         pas.setKeyedReference(new KeyedReference(UDDIConstants.RELATIONSHIPS, "parent", "parent-child"));
                         pa.getPublisherAssertion().add(pas);
 
