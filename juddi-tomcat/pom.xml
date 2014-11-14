@@ -139,6 +139,7 @@
 								<ant antfile="${basedir}/build.xml">
 									<property name="dependency.tomcat.zip" value="${dependency.tomcat.zip}" />
 									<target name="package-tomcat" />
+									<target name="package-tomcat2" />
 								</ant>
 							</tasks>
 						</configuration>

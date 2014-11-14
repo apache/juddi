@@ -43,5 +43,57 @@
 			</fileset>
 		</chmod>
 	</target>
+	
+	
+	<!-- node 2 -->
+	<property name="lib2.dir" value="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/lib"/>
+	<property name="webapps2.dir" value="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/webapps"/>
+	<property name="conf2.dir" value="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/conf"/>
+	<property name="endorsed2.dir" value="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/endorsed"/>
+
+	<target name="unzip-tomcat2">
+		<mkdir dir="${basedir}/target/tomcat2"/>
+		<unzip dest="${basedir}/target/tomcat2" src="${dependency.tomcat.zip}"/>
+		<unzip dest="${webapps.dir}/juddiv3" src="${dependency.juddiv3.war}"/>
+		<unzip dest="${webapps.dir}/juddi-gui" src="${dependency.juddi-gui.war}"/>
+	</target>
+	
+	<target name="copy-resources2" depends="unzip-tomcat2">
+		<copy file="${basedir}/catalina.sh" todir="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
+		<copy file="${basedir}/catalina.bat" todir="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
+		<copy file="${basedir}/truststore.jks" todir="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
+		<copy file="${basedir}/truststore.jks" todir="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/" overwrite="true"/>
+		
+		<copy file="${basedir}/juddi-cryptor.bat" todir="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
+		<copy file="${basedir}/juddi-md5.bat" todir="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
+		<copy file="${basedir}/juddi-cryptor.sh" todir="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
+		<copy file="${basedir}/juddi-md5.sh" todir="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
+		
+		
+		<copy file="${basedir}/juddiv3Node2.xml" tofile="${webapps2.dir}/juddiv3/WEB-INF/classes/juddiv3.xml" overwrite="true"/>
+		<copy file="${basedir}/uddiNode2.xml" tofile="${webapps2.dir}/juddi-gui/WEB-INF/classes/META-INF/uddi.xml" overwrite="true"/>
+		<copy file="${basedir}/serverNode2.xml" tofile="${conf2.dir}/server.xml" overwrite="true"/>
+		
+		
+		
+        <copy file="${basedir}/tomcat-users.xml" todir="${conf2.dir}" overwrite="true"/>
+		<copy file="${basedir}/context.xml" todir="${webapps2.dir}/juddiv3/META-INF" overwrite="true"/>
+		<copy file="${basedir}/keystore.jks" todir="${conf2.dir}" overwrite="true"/>
+		
+ 		<copy file="${dependency.mysql.jar}" todir="${lib2.dir}"/>
+		<copy file="${dependency.postgres.jar}" todir="${lib2.dir}"/>
+		<copy file="${dependency.log4j.jar}" todir="${lib2.dir}"/>
+		<copy file="${dependency.derby.jar}" todir="${lib2.dir}"/>
+		<copy file="${dependency.commons-discovery.jar}" todir="${lib2.dir}"/>
+		<copy file="${dependency.jaxws.jar}" todir="${endorsed2.dir}"/>
+	</target>
+	
+	<target name="package-tomcat2" depends="copy-resources2">
+		<chmod perm="ugo+x">
+			<fileset dir="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/bin">
+				<include name="*.sh"/>
+			</fileset>
+		</chmod>
+	</target>
 
 </project>

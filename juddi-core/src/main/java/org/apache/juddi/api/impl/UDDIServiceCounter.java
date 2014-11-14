@@ -206,7 +206,7 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
         }        
     }
     
-    //@Override, this is jdk1.6 style, please uncomment when we go 1.6
+    @Override
     public Object getAttribute(String attribute)
             throws AttributeNotFoundException, MBeanException,
             ReflectionException {
@@ -228,15 +228,14 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
         return null;
     }
 
-    //@Override, this is jdk1.6 style, please uncomment when we go 1.6
+    @Override
     public void setAttribute(Attribute attribute)
             throws AttributeNotFoundException, InvalidAttributeValueException,
             MBeanException, ReflectionException {
-        // TODO Auto-generated method stub
         
     }
 
-    //@Override, this is jdk1.6 style, please uncomment when we go 1.6
+    @Override
     public AttributeList getAttributes(String[] attributes) {
         AttributeList attributeList = new AttributeList();
 
@@ -267,13 +266,12 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
         return attributeList;
     }
 
-    //@Override, this is jdk1.6 style, please uncomment when we go 1.6
+    @Override
     public AttributeList setAttributes(AttributeList attributes) {
-        // TODO Auto-generated method stub
         return null;
     }
 
-    //@Override, this is jdk1.6 style, please uncomment when we go 1.6
+    @Override
     public Object invoke(String actionName, Object[] params, String[] signature)
             throws MBeanException, ReflectionException {
         if (actionName.equalsIgnoreCase(RESET_COUNTER)) {
@@ -284,7 +282,7 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
         }
     }
 
-    //@Override, this is jdk1.6 style, please uncomment when we go 1.6
+    @Override
     public MBeanInfo getMBeanInfo() {
         // the extra 3 added are for totalApiQueries, faultApiQueries, and
         // successfulApiQueries

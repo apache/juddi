@@ -69,6 +69,7 @@ import org.apache.juddi.config.Property;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.ClientSubscriptionInfo;
+import org.apache.juddi.model.Node;
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.ReplicationConfiguration;
 import org.apache.juddi.model.SubscriptionMatch;
@@ -86,6 +87,7 @@ import org.apache.juddi.validation.ValidateClientSubscriptionInfo;
 import org.apache.juddi.validation.ValidateNode;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidatePublisher;
+import org.apache.juddi.validation.ValidateReplication;
 import org.apache.juddi.validation.ValidateSubscription;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.BusinessInfo;
@@ -675,8 +677,11 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                 MappingApiToModel.mapClerk(apiClerk, modelClerk);
                                 org.apache.juddi.model.Node node = em.find(org.apache.juddi.model.Node.class, apiClerk.getNode().getName());
                                 if (node==null)
-                                        MappingApiToModel.mapNode(apiClerk.getNode(), node);
-
+                                {
+                                        //it doesn't exist yet
+                                        node = new Node();
+                                }
+                                MappingApiToModel.mapNode(apiClerk.getNode(), node);
                                 modelClerk.setNode(node);
                                 Object existingUddiEntity = em.find(modelClerk.getClass(), modelClerk.getClerkName());
                                 if (existingUddiEntity != null) {
@@ -983,7 +988,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         if (existingUddiEntity
                              != null) {
 
-                                //TODO cascade delete all clerks tied to this node
+                                //TODO cascade delete all clerks tied to this node, confirm that it works
                                 em.remove(existingUddiEntity);
                                 found = true;
                         }
@@ -1260,8 +1265,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         if (!((Publisher) publisher).isAdmin()) {
                                 throw new UserMismatchException(new ErrorMessage("errors.AdminReqd"));
                         }
+                        new ValidateReplication(publisher).validateSetReplicationNodes(replicationConfiguration);
 
-                        //TODO validate inbound request
                         org.apache.juddi.model.ReplicationConfiguration model = new ReplicationConfiguration();
                         MappingApiToModel.mapReplicationConfiguration(replicationConfiguration, model, em);
                         em.persist(model);

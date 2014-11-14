@@ -463,9 +463,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 if (!Excluded(changesAlreadySeen, r)) {
                                         ret.add(r);
                                 }
-                                
+
                         }
-                        
 
                         tx.rollback();
                         long procTime = System.currentTimeMillis() - startTime;
@@ -582,6 +581,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
          * @param body
          * @throws DispositionReportFaultMessage
          */
+        @Override
         public void transferCustody(TransferCustody body)
              throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -593,13 +593,43 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 EntityManager em = PersistenceManager.getEntityManager();
                 //EntityTransaction tx = em.getTransaction();
 
-                //The custodial node must verify that it has granted permission to transfer the entities identified and that this permission is still valid.  This operation is comprised of two steps:
-                //1.       Verification that the transferToken was issued by it, that it has not expired, that it represents the authority to transfer no more and no less than those entities identified by the businessKey and tModelKey elements and that all these entities are still valid and not yet transferred. The transferToken is invalidated if any of these conditions are not met.
-                //2.       If the conditions above are met, the custodial node will prevent any further changes to the entities identified by the businessKey and tModelKey elements identified. The entity will remain in this state until the replication stream indicates it has been successfully processed via the replication stream. 
-                //Upon successful verification of the custody transfer request by the custodial node, an empty message is returned by it indicating the success of the request and acknowledging the custody transfer. 
-                //Following the issue of the empty message, the custodial node will submit into the replication stream a changeRecordNewData providing in the operationalInfo, the nodeID accepting custody of the datum and the authorizedName of the publisher accepting ownership. The acknowledgmentRequested attribute of this change record MUST be set to "true".
-                //TODO enqueue Replication message
-                //Finally, the custodial node invalidates the transferToken in order to prevent additional calls of the transfer_entities API.
+                /**
+                 * The custodial node must verify that it has granted permission
+                 * to transfer the entities identified and that this permission
+                 * is still valid. This operation is comprised of two steps: 
+                 * 
+                 * 1.
+                 * Verification that the transferToken was issued by it, that it
+                 * has not expired, that it represents the authority to transfer
+                 * no more and no less than those entities identified by the
+                 * businessKey and tModelKey elements and that all these
+                 * entities are still valid and not yet transferred. The
+                 * transferToken is invalidated if any of these conditions are
+                 * not met. 
+                 * 
+                 * 2. If the conditions above are met, the custodial
+                 * node will prevent any further changes to the entities
+                 * identified by the businessKey and tModelKey elements
+                 * identified. The entity will remain in this state until the
+                 * replication stream indicates it has been successfully
+                 * processed via the replication stream. Upon successful
+                 * verification of the custody transfer request by the custodial
+                 * node, an empty message is returned by it indicating the
+                 * success of the request and acknowledging the custody
+                 * transfer. Following the issue of the empty message, the
+                 * custodial node will submit into the replication stream a
+                 * changeRecordNewData providing in the operationalInfo, the
+                 * nodeID accepting custody of the datum and the authorizedName
+                 * of the publisher accepting ownership. The
+                 * acknowledgmentRequested attribute of this change record MUST
+                 * be set to "true".
+                 *
+                 * TODO enqueue Replication message 
+                 * 
+                 * Finally, the custodial node
+                 * invalidates the transferToken in order to prevent additional
+                 * calls of the transfer_entities API.
+                 */
                 DiscardTransferToken dtt = new DiscardTransferToken();
                 dtt.setKeyBag(body.getKeyBag());
                 dtt.setTransferToken(body.getTransferToken());

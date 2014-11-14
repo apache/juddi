@@ -1509,7 +1509,6 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
                 for (int i = 0; i < elems.size(); i++) {
                         validateLang(elems.get(i).getLang());
-                        //TODO verify this is correct
                         validateURL(elems.get(i).getValue());
                 }
         }

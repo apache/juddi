@@ -723,7 +723,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			}
 			if (subscriptionFilter.getGetAssertionStatusReport() != null) {
 				// The coverage period doesn't apply here (basically because publisher assertions don't keep operational info).
-				
+				// TODO, JUDDI-873 edit they do now, rewrite this query
 				GetAssertionStatusReport getAssertionStatusReport = subscriptionFilter.getGetAssertionStatusReport();
 				
 				List<AssertionStatusItem> assertionList = PublicationHelper.getAssertionStatusItemList(publisher, getAssertionStatusReport.getCompletionStatus(), em);

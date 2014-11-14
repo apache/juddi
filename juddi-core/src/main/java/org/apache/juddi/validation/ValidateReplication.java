@@ -111,4 +111,8 @@ public class ValidateReplication extends ValidateUDDIApi {
                 return false;
         }
 
+        public void validateSetReplicationNodes(ReplicationConfiguration replicationConfiguration) throws DispositionReportFaultMessage {
+                
+        }
+
 }

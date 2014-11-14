@@ -1411,7 +1411,9 @@ public class MappingApiToModel {
         }
 
         public static void mapReplicationConfiguration(ReplicationConfiguration replicationConfiguration, org.apache.juddi.model.ReplicationConfiguration model, EntityManager em) throws DispositionReportFaultMessage {
-
+                if (replicationConfiguration == null) {
+                        throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNull"));
+                }
                 model.setMaximumTimeToGetChanges(replicationConfiguration.getMaximumTimeToGetChanges());
                 model.setMaximumTimeToSyncRegistry(replicationConfiguration.getMaximumTimeToSyncRegistry());
                 model.setSerialNumber(null);
@@ -1420,7 +1422,9 @@ public class MappingApiToModel {
                 //2002 03 04 1859Z
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddkkmmZ");
                 model.setTimeOfConfigurationUpdate(sdf.format(new Date()));
-                model.setContact(mapContact(replicationConfiguration.getRegistryContact().getContact()));
+                if (replicationConfiguration.getRegistryContact() != null) {
+                        model.setContact(mapContact(replicationConfiguration.getRegistryContact().getContact()));
+                }
                 model.setCommunicationGraph(mapCommunicationGraph(replicationConfiguration.getCommunicationGraph(), em));
                 model.setOperator(mapOperators(replicationConfiguration.getOperator()));
                 if (replicationConfiguration.getSignature() != null) {
@@ -1470,16 +1474,22 @@ public class MappingApiToModel {
                         }
                         model.getNode().add(find);
                 }
-                if (communicationGraph.getEdge() != null) {
+                if (communicationGraph.getEdge() != null && !communicationGraph.getEdge().isEmpty()) {
                         List<Edge> ret = new ArrayList<Edge>();
                         for (int i = 0; i < communicationGraph.getEdge().size(); i++) {
                                 Edge e = new Edge();
                                 e.setCommunicationGraph(model);
+                                if (communicationGraph.getEdge().get(i).getMessageReceiver() == null) {
+                                        throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageReceiver()));
+                                }
                                 Node find = em.find(org.apache.juddi.model.Node.class, communicationGraph.getEdge().get(i).getMessageReceiver());
                                 if (find == null) {
                                         throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageReceiver()));
                                 }
                                 e.setMessageReceiver(find);
+                                if (communicationGraph.getEdge().get(i).getMessageSender() == null) {
+                                        throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageReceiver()));
+                                }
                                 find = em.find(org.apache.juddi.model.Node.class, communicationGraph.getEdge().get(i).getMessageSender());
                                 if (find == null) {
                                         throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageSender()));
@@ -1540,7 +1550,6 @@ public class MappingApiToModel {
                         if (!api.get(i).getKeyInfo().isEmpty()) {
                                 op.setKeyInfo(new ArrayList<KeyInfo>());
                                 for (int k = 0; k < api.get(i).getKeyInfo().size(); k++) {
-                                        //TODO api.get(i).getKeyInfo().get(k)
                                         org.apache.juddi.model.KeyInfo modelKeyInfo = new KeyInfo();
                                         modelKeyInfo.setXmlID(api.get(i).getKeyInfo().get(i).getId());
                                         modelKeyInfo.setKeyDataValue(new ArrayList<KeyDataValue>());

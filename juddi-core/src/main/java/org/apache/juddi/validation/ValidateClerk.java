@@ -86,10 +86,11 @@ public class ValidateClerk extends ValidateUDDIApi {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoName"));
 		
 		//make sure node exists
-		Object obj = em.find(org.apache.juddi.model.Node.class, nodeName);
+                //edit, doesn't matter if it doesn't exist, it'll be created on save of the clerk
+		/*Object obj = em.find(org.apache.juddi.model.Node.class, nodeName);
 		if (obj == null)
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NodeNotFound", nodeName));
-
+*/
 	}
 	
 	
