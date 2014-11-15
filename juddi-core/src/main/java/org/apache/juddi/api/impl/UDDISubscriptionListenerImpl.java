@@ -88,7 +88,7 @@ public class UDDISubscriptionListenerImpl extends AuthenticatedService implement
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.SubscripKeyNotFound", subscriptionKey));
 				}
 				apiClientSubscriptionInfo = new org.apache.juddi.api_v3.ClientSubscriptionInfo();
-				MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo);
+				MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo,em);
 		
 				tx.commit();
 			} finally {

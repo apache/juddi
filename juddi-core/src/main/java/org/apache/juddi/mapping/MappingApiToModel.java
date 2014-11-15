@@ -1071,7 +1071,7 @@ public class MappingApiToModel {
                         if (apiClerk.getNode() != null) {
                                 org.apache.juddi.model.Node modelNode = new org.apache.juddi.model.Node();
                                 mapNode(apiClerk.getNode(), modelNode);
-                                modelClerk.setNode(modelNode);
+                                modelClerk.setNode(modelNode.getName());
                         }
                 }
         }

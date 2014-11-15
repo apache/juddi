@@ -214,6 +214,9 @@ public class ReplicationConfiguration implements Serializable{
     }
 
     /**
+     * The element, maximumTimeToSyncRegistry, allows for the specification of when (in hours) a change made at any single node in the Registry is expected to be visible at all nodes within the registry.  The element, maximumTimeToGetChanges, allows for the specification of the maximum amount of time (in hours) that an individual node may wait to request changes.  Use of this element is determined by registry policy as detailed in Section 9.6.4 Replication Policies.
+
+
      * Gets the value of the maximumTimeToSyncRegistry property.
      * 
      * @return
@@ -238,6 +241,9 @@ public class ReplicationConfiguration implements Serializable{
     }
 
     /**
+     * The element, maximumTimeToGetChanges, allows for the specification of the maximum amount of time (in hours) that an individual node may wait to request changes. Nodes MUST perform a get_changeRecords replication message within the time frame defined by the value of the maximumTimeToGetChanges element defined within the Replication Configuration Structure.  Thus, change data can always be propagated throughout the UDDI registry within a finite amount of time, while at the same time changes will often propagate quickly. Use of this element is determined by registry policy as detailed in Section 9.6.4 Replication Policies. 
+
+
      * Gets the value of the maximumTimeToGetChanges property.
      * 
      * @return

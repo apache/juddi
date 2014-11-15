@@ -18,6 +18,7 @@ package org.apache.juddi.api.impl;
 import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.UUID;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -125,7 +126,7 @@ public class API_160_ReplicationTest {
         }
 
         /**
-         * add a clerk and node, delete the node, then try to access the clerk.
+         * add a clerk and node, delete the clerk, then check that the node is still there
          * it should have been deleted
          *
          * @throws Exception
@@ -174,7 +175,62 @@ public class API_160_ReplicationTest {
                         }
                 }
                 //TODO revise cascade deletes on nodes and clerks
-                Assert.fail("node unexpected deleted");
+                Assert.fail("node unexpectedly deleted");
+        }
+        
+        
+        /**
+         * add clerk + node, try to delete the node
+         * @throws Exception 
+         */
+         @Test
+        public void testAddClerkNodeThenDelete2() throws Exception {
+                SaveClerk sc = new SaveClerk();
+                sc.setAuthInfo(authInfoRoot);
+                Clerk c = new Clerk();
+                c.setName("clerk1" + UUID.randomUUID().toString());
+
+                c.setPassword("pass");
+                c.setPublisher("username");
+                c.setNode(new Node());
+                c.getNode().setName("test_node" + UUID.randomUUID().toString());
+                c.getNode().setClientName("test_client");
+                c.getNode().setProxyTransport(org.apache.juddi.v3.client.transport.JAXWSTransport.class.getCanonicalName());
+                c.getNode().setCustodyTransferUrl("http://localhost");
+                c.getNode().setDescription("http://localhost");
+                c.getNode().setInquiryUrl("http://localhost");
+                c.getNode().setPublishUrl("http://localhost");
+                c.getNode().setReplicationUrl("http://localhost");
+                c.getNode().setSecurityUrl("http://localhost");
+                c.getNode().setSubscriptionListenerUrl("http://localhost");
+                c.getNode().setSubscriptionUrl("http://localhost");
+
+                sc.getClerk().add(c);
+                juddi.saveClerk(sc);
+
+                juddi.deleteNode(new DeleteNode(authInfoRoot, c.getNode().getName()));
+                //this should success
+                
+                
+                //the clerk should be gone too
+                ClerkList allNodes = juddi.getAllClerks(authInfoRoot);
+                boolean found = false;
+                for (int i = 0; i < allNodes.getClerk().size(); i++) {
+                        if (allNodes.getClerk().get(i).getName().equals(c.getName())) {
+                                found = true;
+                        }
+
+                }
+                Assert.assertFalse(found);
+
+                //confirm the node is gone
+                NodeList allNodes1 = juddi.getAllNodes(authInfoRoot);
+                for (int i = 0; i < allNodes1.getNode().size(); i++) {
+                        if (allNodes1.getNode().get(i).getName().equals(c.getNode().getName())) {
+                                 Assert.fail("node is still there!");
+                        }
+                }
+                
         }
 
         @Test
@@ -183,12 +239,12 @@ public class API_160_ReplicationTest {
                 SaveClerk sc = new SaveClerk();
                 sc.setAuthInfo(authInfoRoot);
                 Clerk c = new Clerk();
-                c.setName("clerk1");
+                c.setName("clerk1" + UUID.randomUUID().toString());
 
                 c.setPassword("pass");
                 c.setPublisher("username");
                 c.setNode(new Node());
-                c.getNode().setName("test_node");
+                c.getNode().setName("test_node" + UUID.randomUUID().toString());
                 c.getNode().setClientName("test_client");
                 c.getNode().setProxyTransport(org.apache.juddi.v3.client.transport.JAXWSTransport.class.getCanonicalName());
                 c.getNode().setCustodyTransferUrl("http://localhost");
@@ -208,15 +264,20 @@ public class API_160_ReplicationTest {
                 juddi.saveNode(saveNode);
 
                 juddi.saveClerk(sc);
+                
+                //success
+                
+                
                 //delete it
-                juddi.deleteClerk(new DeleteClerk(authInfoRoot, "clerk1"));
-
-                juddi.deleteNode(new DeleteNode(authInfoRoot, "test_node"));
+                juddi.deleteClerk(new DeleteClerk(authInfoRoot,c.getName()));
+                System.out.println(c.getName()+" deleted");
+                
+                juddi.deleteNode(new DeleteNode(authInfoRoot, c.getNode().getName()));
                 //confirm it's gone
                 NodeList allNodes = juddi.getAllNodes(authInfoRoot);
                 boolean found = false;
                 for (int i = 0; i < allNodes.getNode().size(); i++) {
-                        if (allNodes.getNode().get(i).getName().equals("test_node")) {
+                        if (allNodes.getNode().get(i).getName().equals(c.getNode().getName())) {
                                 found = true;
                         }
 

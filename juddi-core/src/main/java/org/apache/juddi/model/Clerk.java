@@ -20,7 +20,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -38,14 +41,19 @@ public class Clerk implements java.io.Serializable {
 	private String clerkName;
 	@Column(name="publisher_id", nullable = false, length=255)
 	private String publisherId;
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Node node;
+        //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	//@OneToOne(cascade = CascadeType.PERSIST , fetch = FetchType.EAGER)
+        //@JoinColumn(name = "nodeid", nullable = false)
+	//@ManyToOne(fetch = FetchType.LAZY,  targetEntity = Node.class , cascade =  {CascadeType.PERSIST,  CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
+        
+        @Column (name="nodeid")
+        private String node;
 	@Column(name="cred", length=255)
 	private String cred;
 	
 	public Clerk() {}
 
-	public Clerk(String clerkName, String cred, Node node, String publisherId) {
+	public Clerk(String clerkName, String cred, String node, String publisherId) {
 		super();
 		this.clerkName = clerkName;
 		this.cred = cred;
@@ -69,11 +77,11 @@ public class Clerk implements java.io.Serializable {
 		this.publisherId = publisherId;
 	}
 
-	public Node getNode() {
+	public String getNode() {
 		return node;
 	}
 
-	public void setNode(Node node) {
+	public void setNode(String node) {
 		this.node = node;
 	}
 

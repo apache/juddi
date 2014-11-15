@@ -17,6 +17,7 @@
 package org.apache.juddi.api.impl;
 
 import java.io.StringWriter;
+import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -558,7 +559,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                                 org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo = new org.apache.juddi.api_v3.ClientSubscriptionInfo();
 
-                                MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo);
+                                MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo,em);
 
                                 result.getClientSubscriptionInfo().add(apiClientSubscriptionInfo);
                         }
@@ -621,7 +622,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                                 org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo = new org.apache.juddi.api_v3.ClientSubscriptionInfo();
 
-                                MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo);
+                                MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo,em);
 
                                 result.getClientSubscriptionInfo().add(apiClientSubscriptionInfo);
                         }
@@ -655,6 +656,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * @return ClerkDetail
          * @throws DispositionReportFaultMessage
          */
+        @Override
         public ClerkDetail saveClerk(SaveClerk body)
              throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -675,14 +677,16 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                 org.apache.juddi.model.Clerk modelClerk = new org.apache.juddi.model.Clerk();
 
                                 MappingApiToModel.mapClerk(apiClerk, modelClerk);
-                                org.apache.juddi.model.Node node = em.find(org.apache.juddi.model.Node.class, apiClerk.getNode().getName());
-                                if (node==null)
+                                org.apache.juddi.model.Node node2 = em.find(org.apache.juddi.model.Node.class, apiClerk.getNode().getName());
+                                if (node2==null)
                                 {
                                         //it doesn't exist yet
-                                        node = new Node();
+                                        node2 = new Node();
+                                        MappingApiToModel.mapNode(apiClerk.getNode(), node2);
+                                        em.persist(node2);
                                 }
-                                MappingApiToModel.mapNode(apiClerk.getNode(), node);
-                                modelClerk.setNode(node);
+                                
+                                modelClerk.setNode(node2.getName());
                                 Object existingUddiEntity = em.find(modelClerk.getClass(), modelClerk.getClerkName());
                                 if (existingUddiEntity != null) {
                                         
@@ -690,7 +694,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                 } else {
                                         em.persist(modelClerk);
                                 }
-
+                
                                 result.getClerk().add(apiClerk);
                         }
 
@@ -811,7 +815,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                         throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.SubscripKeyNotFound", subscriptionKey));
                                 }
                                 org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo = new org.apache.juddi.api_v3.ClientSubscriptionInfo();
-                                MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo);
+                                MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo,em);
                                 clientSubscriptionInfoMap.put(apiClientSubscriptionInfo.getSubscriptionKey(), apiClientSubscriptionInfo);
                         }
 
@@ -947,7 +951,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         List<org.apache.juddi.model.Clerk> resultList = qry.getResultList();
                         for (int i = 0; i < resultList.size(); i++) {
                                 Clerk api = new Clerk();
-                                MappingModelToApi.mapClerk(resultList.get(i), api);
+                                MappingModelToApi.mapClerk(resultList.get(i), api,em);
                                 ret.getClerk().add(api);
 
                         }
@@ -980,18 +984,25 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                 EntityTransaction tx = em.getTransaction();
                 try {
                         tx.begin();
-
+                        //TODO if the given node is in the replication config, prevent deletion
                         UddiEntityPublisher publisher = this.getEntityPublisher(em, req.getAuthInfo());
-                        new ValidatePublish(publisher).validateDeleteNode(em, req);
+                        new ValidatePublish(publisher).validateDeleteNode(em, req, getReplicationNodes(req.getAuthInfo()));
 
                         org.apache.juddi.model.Node existingUddiEntity = em.find(org.apache.juddi.model.Node.class, req.getNodeID());
-                        if (existingUddiEntity
-                             != null) {
+                        if (existingUddiEntity != null) {
 
-                                //TODO cascade delete all clerks tied to this node, confirm that it works
-                                em.remove(existingUddiEntity);
-                                found = true;
+                            
+                                //cascade delete all clerks tied to this node, confirm that it works
+                              
+                            Query createQuery = em.createQuery("delete from Clerk c where c.node = :nodename");
+                            createQuery.setParameter("nodename", req.getNodeID());
+                            createQuery.executeUpdate();
+                             
+                               em.remove(existingUddiEntity);
+                                found=true;
                         }
+                        else 
+                            throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.NotFound"));
 
                         tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
@@ -1012,7 +1023,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                 if (!found) {
 
-                        throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.NotFound"));
+                        throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.NotFound", req.getNodeID()));
                 }
         }
 
@@ -1306,7 +1317,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         StringBuilder sql = new StringBuilder();
-                        sql.append("select c from ReplicationConfiguration c order by c.SerialNumber desc");
+                        sql.append("select c from ReplicationConfiguration c order by c.serialNumber desc");
                         sql.toString();
                         Query qry = em.createQuery(sql.toString());
                         qry.setMaxResults(1);
@@ -1329,6 +1340,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         em.close();
                 }
 
+                r.setMaximumTimeToGetChanges(BigInteger.ONE);
+                r.setMaximumTimeToSyncRegistry(BigInteger.ONE);
                 return r;
         }
 

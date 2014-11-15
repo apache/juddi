@@ -90,6 +90,7 @@ import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveService;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModel;
+import org.uddi.repl_v3.ReplicationConfiguration;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
@@ -2365,7 +2366,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 return TokenResolver.replaceTokens(url, p);
         }
 
-        public void validateDeleteNode(EntityManager em, DeleteNode nodeID) throws DispositionReportFaultMessage {
+        public void validateDeleteNode(EntityManager em, DeleteNode nodeID, ReplicationConfiguration cfg) throws DispositionReportFaultMessage {
                 if (nodeID == null) {
                         throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteClerk.NoInput"));
                 }
@@ -2374,6 +2375,22 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
                 if (nodeID.getNodeID() == null || nodeID.getNodeID().trim().equalsIgnoreCase("")) {
                         throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.NoInput"));
+                }
+                //get the latest replication config
+                if (cfg!=null){
+                    if (cfg.getCommunicationGraph()!=null){
+                        for (String node : cfg.getCommunicationGraph().getNode()) {
+                            if (node.equals(nodeID.getNodeID()))
+                                throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.InReplicationConfig", nodeID.getNodeID()));
+                        }
+                        for (int i=0; i <cfg.getCommunicationGraph().getEdge().size(); i++){
+                            if (nodeID.getNodeID().equals(cfg.getCommunicationGraph().getEdge().get(i).getMessageReceiver()))
+                                throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.InReplicationConfig", nodeID.getNodeID()));
+                            if (nodeID.getNodeID().equals(cfg.getCommunicationGraph().getEdge().get(i).getMessageSender()))
+                                throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.InReplicationConfig", nodeID.getNodeID()));
+                            
+                        }
+                    }
                 }
 
         }

@@ -15,9 +15,17 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
+import java.util.List;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -61,7 +69,7 @@ public class Node implements java.io.Serializable {
 	private String factoryURLPkgs;
 	@Column(name="factory_naming_provider", nullable = true, length=255)
 	private String factoryNamingProvider;
-
+        
 	public Node() {}
 
 	public Node(String custodyTransferUrl, String inquiryUrl,
@@ -189,5 +197,7 @@ public class Node implements java.io.Serializable {
 	public void setFactoryNamingProvider(String factoryNamingProvider) {
 		this.factoryNamingProvider = factoryNamingProvider;
 	}
+        
+        
 
 }

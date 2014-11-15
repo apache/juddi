@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityManager;
 import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
 
@@ -1111,7 +1112,7 @@ public class MappingModelToApi {
         }
 
         public static void mapClientSubscriptionInfo(org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo,
-             org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo)
+             org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo, EntityManager em)
              throws DispositionReportFaultMessage {
 
                 apiClientSubscriptionInfo.setSubscriptionKey(modelClientSubscriptionInfo.getSubscriptionKey());
@@ -1125,18 +1126,18 @@ public class MappingModelToApi {
 
                 if (modelClientSubscriptionInfo.getFromClerk() != null) {
                         org.apache.juddi.api_v3.Clerk apiFromClerk = new org.apache.juddi.api_v3.Clerk();
-                        mapClerk(modelClientSubscriptionInfo.getFromClerk(), apiFromClerk);
+                        mapClerk(modelClientSubscriptionInfo.getFromClerk(), apiFromClerk,em);
                         apiClientSubscriptionInfo.setFromClerk(apiFromClerk);
                 }
                 if (modelClientSubscriptionInfo.getToClerk() != null) {
                         org.apache.juddi.api_v3.Clerk apiToClerk = new org.apache.juddi.api_v3.Clerk();
-                        mapClerk(modelClientSubscriptionInfo.getToClerk(), apiToClerk);
+                        mapClerk(modelClientSubscriptionInfo.getToClerk(), apiToClerk,em);
                         apiClientSubscriptionInfo.setToClerk(apiToClerk);
                 }
         }
 
         public static void mapClerk(org.apache.juddi.model.Clerk modelClerk,
-             org.apache.juddi.api_v3.Clerk apiClerk)
+             org.apache.juddi.api_v3.Clerk apiClerk,EntityManager em)
              throws DispositionReportFaultMessage {
 
                 apiClerk.setName(modelClerk.getClerkName());
@@ -1144,7 +1145,9 @@ public class MappingModelToApi {
                 apiClerk.setPublisher(modelClerk.getPublisherId());
                 if (modelClerk.getNode() != null) {
                         org.apache.juddi.api_v3.Node apiNode = new org.apache.juddi.api_v3.Node();
-                        mapNode(modelClerk.getNode(), apiNode);
+                        mapNode(
+                                em.find(org.apache.juddi.model.Node.class, modelClerk.getNode()) 
+                               , apiNode);
                         apiClerk.setNode(apiNode);
                 }
         }
