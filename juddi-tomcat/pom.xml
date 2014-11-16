@@ -138,8 +138,8 @@
 								<property name="dependency.jaxws.jar" value="${maven.dependency.org.apache.geronimo.specs.geronimo-jaxws_2.2_spec.jar.path}" />
 								<ant antfile="${basedir}/build.xml">
 									<property name="dependency.tomcat.zip" value="${dependency.tomcat.zip}" />
-									<target name="package-tomcat" />
-									<target name="package-tomcat2" />
+									<target name="twonode" />
+									
 								</ant>
 							</tasks>
 						</configuration>

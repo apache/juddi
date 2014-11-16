@@ -72,6 +72,7 @@ public class EntryPoint {
                         System.out.println("34) View all registered remote nodes on a jUDDI server");
                         System.out.println("35) View all registered nodes for this client");
                         System.out.println("36) UnRegister a node on a jUDDI server");
+                        System.out.println("37) Fetch the replication config from a jUDDI server");
 
                         System.out.println("q) quit");
                         System.out.print("Selection: ");
@@ -408,7 +409,11 @@ public class EntryPoint {
                 }
                 if (input.equals("36")) {
 
+                        new JuddiAdminService().viewRemoveRemoteNode(authtoken);
                         //System.out.println("35) UnRegister a node on a jUDDI server");
+                }
+                if (input.equals("37")){
+                        new JuddiAdminService().viewReplicationConfig(authtoken);
                 }
 
         }

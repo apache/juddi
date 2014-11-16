@@ -19,6 +19,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 import javax.xml.bind.JAXB;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.api_v3.DeleteNode;
 import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.NodeList;
@@ -32,7 +33,10 @@ import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.AuthToken;
+import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.GetAuthToken;
+import org.uddi.repl_v3.CommunicationGraph;
+import org.uddi.repl_v3.ReplicationConfiguration;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
@@ -110,7 +114,7 @@ public class JuddiAdminService {
 
                 List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
                 System.out.println();
-                System.out.println("Select a node");
+                System.out.println("Select a node (from *this config)");
                 for (int i = 0; i < uddiNodeList.size(); i++) {
                         System.out.print(i + 1);
                         System.out.println(") " + uddiNodeList.get(i).getName() + uddiNodeList.get(i).getDescription());
@@ -150,7 +154,7 @@ public class JuddiAdminService {
         }
 
         void registerLocalNodeToRemoteNode(String authtoken, Node cfg, Node publishTo) throws Exception {
-             
+
                 Transport transport = clerkManager.getTransport(publishTo.getName());
 
                 JUDDIApiPortType juddiApiService = transport.getJUDDIApiService();
@@ -160,6 +164,141 @@ public class JuddiAdminService {
                 NodeDetail saveNode = juddiApiService.saveNode(sn);
                 JAXB.marshal(saveNode, System.out);
                 System.out.println("Success.");
+
+        }
+
+        void viewReplicationConfig(String authtoken) throws Exception {
+                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
+                System.out.println();
+                System.out.println("Select a node (from *this config)");
+                for (int i = 0; i < uddiNodeList.size(); i++) {
+                        System.out.print(i + 1);
+                        System.out.println(") " + uddiNodeList.get(i).getName() + uddiNodeList.get(i).getDescription());
+                }
+                System.out.println("Node #: ");
+                int index = Integer.parseInt(System.console().readLine()) - 1;
+                String node = uddiNodeList.get(index).getName();
+                Transport transport = clerkManager.getTransport(node);
+
+                JUDDIApiPortType juddiApiService = transport.getJUDDIApiService();
+                ReplicationConfiguration replicationNodes = juddiApiService.getReplicationNodes(authtoken);
+
+                System.out.println("Current Config:");
+                JAXB.marshal(replicationNodes, System.out);
+
+        }
+
+        void setReplicationConfig(String authtoken) throws Exception {
+                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
+                System.out.println();
+                System.out.println("Select a node (from *this config)");
+                for (int i = 0; i < uddiNodeList.size(); i++) {
+                        System.out.print(i + 1);
+                        System.out.println(") " + uddiNodeList.get(i).getName() + uddiNodeList.get(i).getDescription());
+                }
+                System.out.println("Node #: ");
+                int index = Integer.parseInt(System.console().readLine()) - 1;
+                String node = uddiNodeList.get(index).getName();
+                Transport transport = clerkManager.getTransport(node);
+
+                JUDDIApiPortType juddiApiService = transport.getJUDDIApiService();
+
+                ReplicationConfiguration replicationNodes = juddiApiService.getReplicationNodes(authtoken);
+
+                String input = "";
+                while (!"d".equalsIgnoreCase(input) && !"q".equalsIgnoreCase(input)) {
+                        System.out.println("Current Config:");
+                        JAXB.marshal(replicationNodes, System.out);
+                        System.out.println("1) Remove a replication node");
+                        System.out.println("2) Add a replication node");
+                        System.out.println("3) Remove an Edge");
+                        System.out.println("4) Add an Edge");
+                        System.out.println("5) Set Registry Contact");
+                        System.out.println("6) Add Operator info");
+                        System.out.println("7) Remove Operator info");
+                        input = System.console().readLine();
+                        if (input.equalsIgnoreCase("1")) {
+                                menu_RemoveReplicationNode(replicationNodes);
+                        } else if (input.equalsIgnoreCase("2")) {
+                                menu_AddReplicationNode(replicationNodes, juddiApiService, authtoken);
+                        }
+
+                }
+                if (input.equalsIgnoreCase("d")) {
+                        //save the changes
+                        DispositionReport setReplicationNodes = juddiApiService.setReplicationNodes(authtoken, replicationNodes);
+                        System.out.println("Saved!, dumping config from the server");
+                        replicationNodes = juddiApiService.getReplicationNodes(authtoken);
+                        JAXB.marshal(replicationNodes, System.out);
+
+                } else {
+                        //quit this sub menu
+                        System.out.println("aborting!");
+                }
+
+        }
+
+        void viewRemoveRemoteNode(String authtoken) throws Exception {
+                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
+                System.out.println();
+                System.out.println("Select a node (from *this config)");
+                for (int i = 0; i < uddiNodeList.size(); i++) {
+                        System.out.print(i + 1);
+                        System.out.println(") " + uddiNodeList.get(i).getName() + uddiNodeList.get(i).getDescription());
+                }
+                System.out.println("Node #: ");
+                int index = Integer.parseInt(System.console().readLine()) - 1;
+                String node = uddiNodeList.get(index).getName();
+                Transport transport = clerkManager.getTransport(node);
+
+                JUDDIApiPortType juddiApiService = transport.getJUDDIApiService();
+
+                NodeList allNodes = juddiApiService.getAllNodes(authtoken);
+                if (allNodes == null || allNodes.getNode().isEmpty()) {
+                        System.out.println("No nodes registered!");
+                } else {
+                        for (int i = 0; i < allNodes.getNode().size(); i++) {
+                                System.out.println("_______________________________________________________________________________");
+                                System.out.println("(" + i + ") Name :" + allNodes.getNode().get(i).getName());
+                                System.out.println("(" + i + ") Inquiry :" + allNodes.getNode().get(i).getInquiryUrl());
+
+                        }
+
+                        System.out.println("Node to remove from : ");
+                        int nodenum = Integer.parseInt(System.console().readLine());
+                        juddiApiService.deleteNode(new DeleteNode(authtoken, allNodes.getNode().get(nodenum).getName()));
+
+                }
+        }
+
+        private void menu_RemoveReplicationNode(ReplicationConfiguration replicationNodes) {
+                if (replicationNodes.getCommunicationGraph() == null) {
+                        replicationNodes.setCommunicationGraph(new CommunicationGraph());
+                }
+                for (int i = 0; i < replicationNodes.getCommunicationGraph().getNode().size(); i++) {
+                        System.out.println((i + 1) + ") " + replicationNodes.getCommunicationGraph().getNode().get(i));
+                }
+                System.out.println("Node #: ");
+                int index = Integer.parseInt(System.console().readLine()) - 1;
+                replicationNodes.getCommunicationGraph().getNode().remove(index);
+
+        }
+
+        private void menu_AddReplicationNode(ReplicationConfiguration replicationNodes, JUDDIApiPortType juddiApiService, String authtoken) throws Exception {
+
+                NodeList allNodes = juddiApiService.getAllNodes(authtoken);
+                if (allNodes == null || allNodes.getNode().isEmpty()) {
+                        System.out.println("No nodes registered!");
+                } else {
+                        for (int i = 0; i < allNodes.getNode().size(); i++) {
+                                System.out.println((i + 1) + ") Name :" + allNodes.getNode().get(i).getName());
+                                System.out.println((i + 1) + ") Replication :" + allNodes.getNode().get(i).getReplicationUrl());
+
+                        }
+                        System.out.println("Node #: ");
+                        int index = Integer.parseInt(System.console().readLine()) - 1;
+                        replicationNodes.getCommunicationGraph().getNode().add(allNodes.getNode().get(index).getName());
+                }
 
         }
 }

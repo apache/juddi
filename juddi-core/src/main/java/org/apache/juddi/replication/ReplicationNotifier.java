@@ -168,6 +168,7 @@ public class ReplicationNotifier extends TimerTask {
                 if (queue == null) {
                         queue = new ConcurrentLinkedQueue();
                 }
+                //TODO check for replication config changes
                 while (!queue.isEmpty()) {
                         //for each change at this node
                         log.info("Replication, Notifying nodes of new change records. " + queue.size() + " remaining");

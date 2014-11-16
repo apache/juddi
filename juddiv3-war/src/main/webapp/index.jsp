@@ -114,7 +114,7 @@
                 <%
                 } else {
                 %>
-                <h2>jUDDI has NOT installed correctly!</h2>
+                <h2 color="red">jUDDI has NOT installed correctly!</h2>
                 <p />
                 <h3>Error Information</h3>
                 <p>
@@ -125,6 +125,31 @@
                     <li>config/juddi/nodeId, default = uddi:juddi.apache.org:node1</li>
                     <li>config/juddi/rootBusinessId, default = uddi:juddi.apache.org:businesses-asf</li>
                 </ul>
+                Configured values:
+                <table>
+                    <tr>
+                        <td><b>Root Partition:</b></td>
+                        <td><%= StringEscapeUtils.escapeHtml(rootPartition)%></td>
+                    </tr>
+
+                    <tr>
+                        <td><b>Node Id:</b></td>
+                        <td><%=StringEscapeUtils.escapeHtml(nodeId)%></td>
+                    </tr>
+                    <tr>
+                        <td><b>Root Business Key:</b></td>
+                        <td><%= StringEscapeUtils.escapeHtml(rootBusiness)%></td>
+                    </tr>
+                    <tr>
+                        <td><b>Root Business Name:</b></td>
+                        <td><%= StringEscapeUtils.escapeHtml(nodeName)%></td>
+                    </tr>
+                    <tr>
+                        <td><b>Root Business Description:</b></td>
+                        <td><%=StringEscapeUtils.escapeHtml(nodeDescription)%></td>
+                    </tr>
+
+                </table>
 
                 <%                    }
                 %>

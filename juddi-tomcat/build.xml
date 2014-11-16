@@ -54,8 +54,8 @@
 	<target name="unzip-tomcat2">
 		<mkdir dir="${basedir}/target/tomcat2"/>
 		<unzip dest="${basedir}/target/tomcat2" src="${dependency.tomcat.zip}"/>
-		<unzip dest="${webapps.dir}/juddiv3" src="${dependency.juddiv3.war}"/>
-		<unzip dest="${webapps.dir}/juddi-gui" src="${dependency.juddi-gui.war}"/>
+		<unzip dest="${webapps2.dir}/juddiv3" src="${dependency.juddiv3.war}"/>
+		<unzip dest="${webapps2.dir}/juddi-gui" src="${dependency.juddi-gui.war}"/>
 	</target>
 	
 	<target name="copy-resources2" depends="unzip-tomcat2">
@@ -71,6 +71,11 @@
 		
 		
 		<copy file="${basedir}/juddiv3Node2.xml" tofile="${webapps2.dir}/juddiv3/WEB-INF/classes/juddiv3.xml" overwrite="true"/>
+		<copy file="${basedir}/juddi_install_data_node2/root_BusinessEntity.xml" todir="${webapps2.dir}/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
+<copy file="${basedir}/juddi_install_data_node2/root_Publisher.xml" todir="${webapps2.dir}/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
+<copy file="${basedir}/juddi_install_data_node2/root_tModelKeyGen.xml" todir="${webapps2.dir}/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
+
+		
 		<copy file="${basedir}/uddiNode2.xml" tofile="${webapps2.dir}/juddi-gui/WEB-INF/classes/META-INF/uddi.xml" overwrite="true"/>
 		<copy file="${basedir}/serverNode2.xml" tofile="${conf2.dir}/server.xml" overwrite="true"/>
 		
@@ -95,5 +100,7 @@
 			</fileset>
 		</chmod>
 	</target>
+
+	<target name="twonode" depends="package-tomcat,package-tomcat2"/>
 
 </project>

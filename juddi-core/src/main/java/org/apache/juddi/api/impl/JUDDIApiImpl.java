@@ -1335,9 +1335,9 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         sql.toString();
                         Query qry = em.createQuery(sql.toString());
                         qry.setMaxResults(1);
+                       
                         org.apache.juddi.model.ReplicationConfiguration resultList = (org.apache.juddi.model.ReplicationConfiguration) qry.getSingleResult();
                         MappingModelToApi.mapReplicationConfiguration(resultList, r);
-
                         tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.GET_ALL_NODES,
@@ -1347,7 +1347,15 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         serviceCounter.update(JUDDIQuery.GET_ALL_NODES,
                                 QueryStatus.FAILED, procTime);
                         throw drfm;
-                } finally {
+                } catch (Exception ex){
+                //possible that there is no config to return
+                        r.setCommunicationGraph(null);
+                        logger.warn("Error caught, is there a replication config is avaiable?", ex);
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.GET_REPLICATION_NODES,
+                                QueryStatus.FAILED, procTime);
+                
+                }finally {
                         if (tx.isActive()) {
                                 tx.rollback();
                         }
