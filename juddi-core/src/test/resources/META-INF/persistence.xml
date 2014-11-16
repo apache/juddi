@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence xmlns="http://java.sun.com/xml/ns/persistence" 
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" 
-             version="1.0">
+<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
   <persistence-unit name="juddiDatabase" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
-    
     <!-- entity classes -->
     <class>org.apache.juddi.model.Address</class>
     <class>org.apache.juddi.model.AddressLine</class>
@@ -59,7 +55,7 @@
     <class>org.apache.juddi.model.SubscriptionChunkToken</class>
     <class>org.apache.juddi.model.SubscriptionMatch</class>
     <class>org.apache.juddi.model.TempKey</class>
-	<class>org.apache.juddi.model.TempKeyPK</class>
+    <class>org.apache.juddi.model.TempKeyPK</class>
     <class>org.apache.juddi.model.Tmodel</class>
     <class>org.apache.juddi.model.TmodelCategoryBag</class>
     <class>org.apache.juddi.model.TmodelDescr</class>
@@ -70,29 +66,24 @@
     <class>org.apache.juddi.model.TransferTokenKey</class>
     <class>org.apache.juddi.model.UddiEntity</class>
     <class>org.apache.juddi.model.UddiEntityPublisher</class>
-	<class>org.apache.juddi.model.ValueSetValues</class>
-
-	<class>org.apache.juddi.model.ChangeRecord</class>
-	<class>org.apache.juddi.model.CommunicationGraph</class>
-	<class>org.apache.juddi.model.Operator</class>
-	<class>org.apache.juddi.model.ReplicationConfiguration</class>
-	<class>org.apache.juddi.model.Edge</class>
-	<class>org.apache.juddi.model.ControlMessage</class>
-	<class>org.apache.juddi.model.ReplicationMessage</class>
-    
+    <class>org.apache.juddi.model.ValueSetValues</class>
+    <class>org.apache.juddi.model.ChangeRecord</class>
+    <class>org.apache.juddi.model.CommunicationGraph</class>
+    <class>org.apache.juddi.model.Operator</class>
+    <class>org.apache.juddi.model.ReplicationConfiguration</class>
+    <class>org.apache.juddi.model.Edge</class>
+    <class>org.apache.juddi.model.ControlMessage</class>
     <properties>
       <property name="hibernate.archive.autodetection" value="class"/>
       <property name="hibernate.hbm2ddl.auto" value="update"/>
       <property name="hibernate.show_sql" value="false"/>
-
       <!-- derby connection properties -->
       <property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect"/>
       <property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver"/>
       <property name="hibernate.connection.url" value="jdbc:derby:memory:juddi-derby-test-db;create=true"/>
       <property name="hibernate.connection.username" value=""/>
       <property name="hibernate.connection.password" value=""/>
-
- 	  <!--  mysql connection properties 
+      <!--  mysql connection properties 
 
       <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
       <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
@@ -100,12 +91,11 @@
       <property name="hibernate.connection.password" value="" />
       <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/juddiv3" />
 -->
-      
       <!-- connection pool properties -->
+      <!--<property name = "hibernate.show_sql" value = "true" />-->
       <property name="hibernate.dbcp.maxActive" value="100"/>
       <property name="hibernate.dbcp.maxIdle" value="30"/>
       <property name="hibernate.dbcp.maxWait" value="10000"/>
-      
     </properties>
   </persistence-unit>
 </persistence>

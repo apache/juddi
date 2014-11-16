@@ -35,7 +35,6 @@ import org.apache.juddi.model.Address;
 import org.apache.juddi.model.BindingTemplate;
 import org.apache.juddi.model.BusinessService;
 import org.apache.juddi.model.CanonicalizationMethod;
-import org.apache.juddi.model.CommunicationGraph;
 import org.apache.juddi.model.Contact;
 import org.apache.juddi.model.ControlMessage;
 import org.apache.juddi.model.Edge;
@@ -60,6 +59,7 @@ import org.uddi.api_v3.Description;
 import org.uddi.api_v3.OperationalInfo;
 import org.uddi.api_v3.SaveBinding;
 import org.uddi.repl_v3.ChangeRecord;
+import org.uddi.repl_v3.CommunicationGraph;
 import org.uddi.repl_v3.ReplicationConfiguration;
 import org.uddi.sub_v3.ObjectFactory;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -1425,7 +1425,7 @@ public class MappingApiToModel {
                 if (replicationConfiguration.getRegistryContact() != null) {
                         model.setContact(mapContact(replicationConfiguration.getRegistryContact().getContact()));
                 }
-                model.setCommunicationGraph(mapCommunicationGraph(replicationConfiguration.getCommunicationGraph(), em));
+                mapCommunicationGraph(model,replicationConfiguration.getCommunicationGraph(), em);
                 model.setOperator(mapOperators(replicationConfiguration.getOperator()));
                 if (replicationConfiguration.getSignature() != null) {
                         model.setSignatures(mapApiSignaturesToModelSignatures(replicationConfiguration.getSignature()));
@@ -1443,92 +1443,7 @@ public class MappingApiToModel {
                 return model;
         }
 
-        private static CommunicationGraph mapCommunicationGraph(org.uddi.repl_v3.CommunicationGraph communicationGraph, EntityManager em) throws DispositionReportFaultMessage {
-                if (communicationGraph == null) {
-                        return null;
-                }
-                CommunicationGraph model = new CommunicationGraph();
-
-                /**
-                 * Following the listing of nodes is the controlledMessage
-                 * element that lists the set of messages over which this
-                 * communication graph is intended to administer control of. If
-                 * a message element local name is listed in the
-                 * controlledMessage element, then such messages SHALL only be
-                 * sent between nodes that are listed in the subsequent edges of
-                 * the graph. In contrast, communication restrictions are not
-                 * imposed on replication messages not identified in the
-                 * controlledMessage element.
-                 */
-                if (communicationGraph.getControlledMessage() != null) {
-                        model.setControlMessage(new ArrayList<ControlMessage>());
-                        for (int k = 0; k < communicationGraph.getControlledMessage().size(); k++) {
-                                model.getControlMessage().add(new ControlMessage(communicationGraph.getControlledMessage().get(k)));
-                        }
-                }
-                model.setNode(new ArrayList<Node>());
-                for (int i = 0; i < communicationGraph.getNode().size(); i++) {
-                        Node find = em.find(org.apache.juddi.model.Node.class, communicationGraph.getNode().get(i));
-                        if (find == null) {
-                                throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getNode().get(i)));
-                        }
-                        model.getNode().add(find);
-                }
-                if (communicationGraph.getEdge() != null && !communicationGraph.getEdge().isEmpty()) {
-                        List<Edge> ret = new ArrayList<Edge>();
-                        for (int i = 0; i < communicationGraph.getEdge().size(); i++) {
-                                Edge e = new Edge();
-                                e.setCommunicationGraph(model);
-                                if (communicationGraph.getEdge().get(i).getMessageReceiver() == null) {
-                                        throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageReceiver()));
-                                }
-                                Node find = em.find(org.apache.juddi.model.Node.class, communicationGraph.getEdge().get(i).getMessageReceiver());
-                                if (find == null) {
-                                        throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageReceiver()));
-                                }
-                                e.setMessageReceiver(find);
-                                if (communicationGraph.getEdge().get(i).getMessageSender() == null) {
-                                        throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageReceiver()));
-                                }
-                                find = em.find(org.apache.juddi.model.Node.class, communicationGraph.getEdge().get(i).getMessageSender());
-                                if (find == null) {
-                                        throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageSender()));
-                                }
-                                e.setMessageSender(find);
-
-                                /**
-                                 * The message elements contain the local name
-                                 * of the Replication API message elements. They
-                                 * indicate that only messages of the type
-                                 * explicitly identified for a particular edge
-                                 * MAY be sent from the specified messageSender
-                                 * to the specified messageReceiver.
-                                 */
-                                if (communicationGraph.getEdge().get(i).getMessage() != null) {
-                                        e.setMessage(new ArrayList<ControlMessage>());
-                                        for (int k = 0; k < communicationGraph.getEdge().get(i).getMessage().size(); k++) {
-                                                e.getMessages().add(new ControlMessage(communicationGraph.getEdge().get(i).getMessage().get(k)));
-                                        }
-                                }
-                                if (communicationGraph.getEdge().get(i).getMessageReceiverAlternate() != null) {
-                                        e.setMessageReceiverAlternate(new HashSet<Node>());
-                                        for (int k = 0; k < communicationGraph.getEdge().get(i).getMessageReceiverAlternate().size(); k++) {
-                                                find = em.find(org.apache.juddi.model.Node.class, communicationGraph.getEdge().get(i).getMessageSender());
-                                                if (find == null) {
-                                                        throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageSender()));
-                                                }
-                                                e.getMessageReceiverAlternate().add(find);
-                                        }
-                                }
-
-                                ret.add(e);
-                        }
-                        model.setEdge(ret);
-                }
-
-                return model;
-
-        }
+       
 
         private static List<Operator> mapOperators(List<org.uddi.repl_v3.Operator> api) throws DispositionReportFaultMessage {
                 if (api == null) {
@@ -1581,4 +1496,88 @@ public class MappingApiToModel {
                 return null;
         }
 
-}
+    private static void mapCommunicationGraph(org.apache.juddi.model.ReplicationConfiguration model, CommunicationGraph communicationGraph, EntityManager em) throws ValueNotAllowedException {
+        
+    if (model == null) {
+                        return;
+                }
+           
+                /**
+                 * Following the listing of nodes is the controlledMessage
+                 * element that lists the set of messages over which this
+                 * communication graph is intended to administer control of. If
+                 * a message element local name is listed in the
+                 * controlledMessage element, then such messages SHALL only be
+                 * sent between nodes that are listed in the subsequent edges of
+                 * the graph. In contrast, communication restrictions are not
+                 * imposed on replication messages not identified in the
+                 * controlledMessage element.
+                 */
+                if (communicationGraph.getControlledMessage() != null) {
+                        model.setControlMessage(new ArrayList<ControlMessage>());
+                        for (int k = 0; k < communicationGraph.getControlledMessage().size(); k++) {
+                                model.getControlMessage().add(new ControlMessage(communicationGraph.getControlledMessage().get(k)));
+                        }
+                }
+                model.setNode(new ArrayList<Node>());
+                for (int i = 0; i < communicationGraph.getNode().size(); i++) {
+                        Node find = em.find(org.apache.juddi.model.Node.class, communicationGraph.getNode().get(i));
+                        if (find == null) {
+                                throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getNode().get(i)));
+                        }
+                        model.getNode().add(find);
+                }
+                if (communicationGraph.getEdge() != null && !communicationGraph.getEdge().isEmpty()) {
+                        List<Edge> ret = new ArrayList<Edge>();
+                        for (int i = 0; i < communicationGraph.getEdge().size(); i++) {
+                                Edge e = new Edge();
+                                
+                                if (communicationGraph.getEdge().get(i).getMessageReceiver() == null) {
+                                        throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageReceiver()));
+                                }
+                                Node find = em.find(org.apache.juddi.model.Node.class, communicationGraph.getEdge().get(i).getMessageReceiver());
+                                if (find == null) {
+                                        throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageReceiver()));
+                                }
+                                e.setMessageReceiver(find);
+                                if (communicationGraph.getEdge().get(i).getMessageSender() == null) {
+                                        throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageReceiver()));
+                                }
+                                find = em.find(org.apache.juddi.model.Node.class, communicationGraph.getEdge().get(i).getMessageSender());
+                                if (find == null) {
+                                        throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageSender()));
+                                }
+                                e.setMessageSender(find);
+
+                                /**
+                                 * The message elements contain the local name
+                                 * of the Replication API message elements. They
+                                 * indicate that only messages of the type
+                                 * explicitly identified for a particular edge
+                                 * MAY be sent from the specified messageSender
+                                 * to the specified messageReceiver.
+                                 */
+                                if (communicationGraph.getEdge().get(i).getMessage() != null) {
+                                        e.setMessage(new ArrayList<ControlMessage>());
+                                        for (int k = 0; k < communicationGraph.getEdge().get(i).getMessage().size(); k++) {
+                                                e.getMessages().add(new ControlMessage(communicationGraph.getEdge().get(i).getMessage().get(k)));
+                                        }
+                                }
+                                if (communicationGraph.getEdge().get(i).getMessageReceiverAlternate() != null) {
+                                        e.setMessageReceiverAlternate(new HashSet<Node>());
+                                        for (int k = 0; k < communicationGraph.getEdge().get(i).getMessageReceiverAlternate().size(); k++) {
+                                                find = em.find(org.apache.juddi.model.Node.class, communicationGraph.getEdge().get(i).getMessageSender());
+                                                if (find == null) {
+                                                        throw new ValueNotAllowedException(new ErrorMessage("errors.replication.configNodeNotFound", communicationGraph.getEdge().get(i).getMessageSender()));
+                                                }
+                                                e.getMessageReceiverAlternate().add(find);
+                                        }
+                                }
+
+                                ret.add(e);
+                        }
+                        model.setEdge(ret);
+                }}            }
+    
+
+

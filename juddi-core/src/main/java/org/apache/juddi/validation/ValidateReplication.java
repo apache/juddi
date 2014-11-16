@@ -17,11 +17,15 @@
 package org.apache.juddi.validation;
 
 import java.math.BigInteger;
+import javax.persistence.EntityManager;
 import javax.xml.ws.WebServiceContext;
+import org.apache.juddi.model.Node;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.InvalidValueException;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
+import org.uddi.repl_v3.CommunicationGraph.Edge;
 import org.uddi.repl_v3.HighWaterMarkVectorType;
 import org.uddi.repl_v3.NotifyChangeRecordsAvailable;
 import org.uddi.repl_v3.ReplicationConfiguration;
@@ -75,11 +79,11 @@ public class ValidateReplication extends ValidateUDDIApi {
                 if (responseLimitVector != null) {
                         for (int i = 0; i < responseLimitVector.getHighWaterMark().size(); i++) {
                                 if (responseLimitVector.getHighWaterMark().get(i).getOriginatingUSN() == null
-                                     || responseLimitVector.getHighWaterMark().get(i).getOriginatingUSN() <= 0) {
+                                        || responseLimitVector.getHighWaterMark().get(i).getOriginatingUSN() <= 0) {
                                         throw new FatalErrorException(new ErrorMessage("errors.replication.limitVectorNull"));
                                 }
-                                if (responseLimitVector.getHighWaterMark().get(i).getNodeID()== null
-                                     || responseLimitVector.getHighWaterMark().get(i).getNodeID().trim().equalsIgnoreCase("")) {
+                                if (responseLimitVector.getHighWaterMark().get(i).getNodeID() == null
+                                        || responseLimitVector.getHighWaterMark().get(i).getNodeID().trim().equalsIgnoreCase("")) {
                                         throw new FatalErrorException(new ErrorMessage("errors.replication.limitVectorNoNode"));
                                 }
                         }
@@ -111,8 +115,37 @@ public class ValidateReplication extends ValidateUDDIApi {
                 return false;
         }
 
-        public void validateSetReplicationNodes(ReplicationConfiguration replicationConfiguration) throws DispositionReportFaultMessage {
-                
+        public void validateSetReplicationNodes(ReplicationConfiguration replicationConfiguration, EntityManager em) throws DispositionReportFaultMessage {
+                if (replicationConfiguration == null) {
+                        throw new InvalidValueException(new ErrorMessage("errors.replication.configNull"));
+
+                }
+                if (replicationConfiguration.getCommunicationGraph() != null) {
+                        for (String s : replicationConfiguration.getCommunicationGraph().getNode()) {
+                                Node find = em.find(org.apache.juddi.model.Node.class, s);
+                                if (find == null) {
+                                        throw new InvalidValueException(new ErrorMessage("errors.replication.configNodeNotFound"));
+                                }
+                        }
+                        for (Edge s : replicationConfiguration.getCommunicationGraph().getEdge()) {
+                                Node find = em.find(org.apache.juddi.model.Node.class, s.getMessageReceiver());
+                                if (find == null) {
+                                        throw new InvalidValueException(new ErrorMessage("errors.replication.configNodeNotFound"));
+                                }
+                                find = null;
+                                find = em.find(org.apache.juddi.model.Node.class, s.getMessageSender());
+                                if (find == null) {
+                                        throw new InvalidValueException(new ErrorMessage("errors.replication.configNodeNotFound"));
+                                }
+                                for (String id : s.getMessageReceiverAlternate()) {
+                                        find = em.find(org.apache.juddi.model.Node.class, id);
+                                        if (find == null) {
+                                                throw new InvalidValueException(new ErrorMessage("errors.replication.configNodeNotFound"));
+                                        }
+                                }
+
+                        }
+                }
         }
 
 }

@@ -322,6 +322,26 @@ public class API_160_ReplicationTest {
                 Assert.assertNotNull(replicationNodes.getMaximumTimeToSyncRegistry());
                 Assert.assertNotNull(replicationNodes.getTimeOfConfigurationUpdate());
                 Assert.assertNotNull(replicationNodes.getSerialNumber());
+                long firstcommit = replicationNodes.getSerialNumber();
+                
+                
+                
+                 r = new ReplicationConfiguration();
+                r.setCommunicationGraph(new CommunicationGraph());
+              //  r.getCommunicationGraph().getEdge().add(new CommunicationGraph.Edge());
+                r.getCommunicationGraph().getNode().add("test_node");
+
+                 setReplicationNodes = juddi.setReplicationNodes(authInfoRoot, r);
+
+                 replicationNodes = juddi.getReplicationNodes(authInfoRoot);
+                Assert.assertNotNull(replicationNodes.getCommunicationGraph());
+                Assert.assertNotNull(replicationNodes.getCommunicationGraph().getNode());
+                Assert.assertEquals("test_node", replicationNodes.getCommunicationGraph().getNode().get(0));
+                Assert.assertNotNull(replicationNodes.getMaximumTimeToGetChanges());
+                Assert.assertNotNull(replicationNodes.getMaximumTimeToSyncRegistry());
+                Assert.assertNotNull(replicationNodes.getTimeOfConfigurationUpdate());
+                Assert.assertNotNull(replicationNodes.getSerialNumber());
+                Assert.assertTrue(firstcommit < replicationNodes.getSerialNumber());
 
         }
 }

@@ -43,7 +43,6 @@ public class ReplicationConfiguration implements Serializable {
         private Long serialNumber;
         private String timeOfConfigurationUpdate;
         private List<Operator> operator = new ArrayList<Operator>(0);
-        private CommunicationGraph communicationGraph;
         private BigInteger maximumTimeToSyncRegistry;
         private BigInteger maximumTimeToGetChanges;
         private List<Signature> signatures = new ArrayList<Signature>(0);
@@ -77,13 +76,6 @@ public class ReplicationConfiguration implements Serializable {
         @Column(name = "serialnumb")
         @OrderBy(value = "SerialNumber DESC")
          @Id
-        @GeneratedValue(strategy = GenerationType.TABLE,
-             generator = "replcfgGen")
-        @TableGenerator(name = "replcfgGen",
-             table = "JPAGEN_REPLGEN",
-             pkColumnName = "NAME",
-             pkColumnValue = "JPAGEN_PERSON_GEN",
-             valueColumnName = "VALUE")
         public Long getSerialNumber() {
                 return serialNumber;
         }
@@ -131,26 +123,7 @@ public class ReplicationConfiguration implements Serializable {
                 this.operator=v;
         }
 
-        /**
-         * Gets the value of the communicationGraph property.
-         *
-         * @return possible object is {@link CommunicationGraph }
-         *
-         */
-        @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = CommunicationGraph.class)
-        public CommunicationGraph getCommunicationGraph() {
-                return communicationGraph;
-        }
-
-        /**
-         * Sets the value of the communicationGraph property.
-         *
-         * @param value allowed object is {@link CommunicationGraph }
-         *
-         */
-        public void setCommunicationGraph(CommunicationGraph value) {
-                this.communicationGraph = value;
-        }
+      
 
         /**
          * Gets the value of the maximumTimeToSyncRegistry property.
@@ -204,6 +177,47 @@ public class ReplicationConfiguration implements Serializable {
                 this.signatures = signatures;
         }
 
+        private List<Node> node;
+        private List<ControlMessage> controlledMessage;
+        private List<Edge> edge;
+
+        //To use a Node or a String reference...
+        //Node will give us strict ref integ but makes a change history of the replication config impossible
+        //Strig increases code logic for ref integ,but makes chage history possible
+        @OneToMany(targetEntity = Node.class, orphanRemoval = false,fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+        public List<Node> getNode() {
+                if (node == null) {
+                        node = new ArrayList<Node>();
+                }
+                return this.node;
+        }
+
+        public void setNode(List<Node> nodes) {
+
+                this.node = nodes;
+        }
+
+        @OneToMany(targetEntity = ControlMessage.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+        public List<ControlMessage> getControlMessage() {
+                if (controlledMessage == null) {
+                        controlledMessage = new ArrayList<ControlMessage>();
+                }
+                return this.controlledMessage;
+        }
+
+        public void setControlMessage(List<ControlMessage> controlledMessages) {
+
+                this.controlledMessage = controlledMessages;
+        }
+
+        // @OneToMany( fetch = FetchType.LAZY,targetEntity = Edge.class, mappedBy = "Edge")
+        @OneToMany(targetEntity = Edge.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+        public List<Edge> getEdge() {
+                return this.edge;
+        }
         
+         public void setEdge( List<Edge> edges) {
+                this.edge=edges;
+        }
 }
 

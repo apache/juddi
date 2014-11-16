@@ -1220,7 +1220,7 @@ public class MappingModelToApi {
                 item.setTimeOfConfigurationUpdate(find.getTimeOfConfigurationUpdate());
                 CommunicationGraph xcom = new CommunicationGraph();
 
-                mapCommunicationGraph(find.getCommunicationGraph(), xcom);
+                mapCommunicationGraph(find, xcom);
                 item.setCommunicationGraph(xcom);
                 //(List<org.apache.juddi.model.Contact> modelContactList, 
                 //org.uddi.api_v3.Contacts apiContacts,
@@ -1263,7 +1263,7 @@ public class MappingModelToApi {
 
         }
 
-        private static void mapCommunicationGraph(org.apache.juddi.model.CommunicationGraph model,
+        private static void mapCommunicationGraph(org.apache.juddi.model.ReplicationConfiguration model,
              CommunicationGraph api) {
 
                 mapEdge(model.getEdge(), api.getEdge());

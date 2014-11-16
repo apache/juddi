@@ -40,26 +40,9 @@ public class Edge {
         private Node messageSender;
         private Node messageReceiver;
         private Set<Node> messageReceiverAlternate;
-        private CommunicationGraph parent;
+        private ReplicationConfiguration parent;
 
-         /**
-         * link the parent object
-         * @param val 
-         */
-        @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = CommunicationGraph.class)
-        //@JoinColumn(name = "OWNER_ID")
-        public CommunicationGraph getCommunicationGraph() {
-                return parent;
-        }
-
-        /**
-         * link the parent object
-         * @param val 
-         */
-        public void setCommunicationGraph(CommunicationGraph val) {
-                parent = val;
-        }
-
+        
         /**
          * The message elements contain the local name of the Replication API message elements
          * @return 
