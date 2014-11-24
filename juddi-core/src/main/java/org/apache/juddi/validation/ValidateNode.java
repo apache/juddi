@@ -87,7 +87,7 @@ public class ValidateNode extends ValidateUDDIApi {
                         throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoPUB"));
                 }
                 if (node.getSubscriptionListenerUrl() == null || node.getSubscriptionListenerUrl().length() == 0 || node.getSubscriptionListenerUrl().length() > 255) {
-                        throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoSUBL"));
+                //        throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoSUBL"));
                 }
                 if (node.getReplicationUrl() == null || node.getReplicationUrl().length() == 0 || node.getReplicationUrl().length() > 255) {
                         //throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoSUBL"));
@@ -95,6 +95,9 @@ public class ValidateNode extends ValidateUDDIApi {
                 }
                 if (node.getSubscriptionUrl() == null || node.getSubscriptionUrl().length() == 0 || node.getSubscriptionUrl().length() > 255) {
                         throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoSUB"));
+                }
+                if (node.getSecurityUrl()== null || node.getSecurityUrl().length() == 0 || node.getSecurityUrl().length() > 255) {
+                        throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoSec"));
                 }
                 if (node.getProxyTransport() == null || node.getProxyTransport().length() == 0 || node.getProxyTransport().length() > 255) {
                         throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoProxy"));

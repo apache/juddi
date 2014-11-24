@@ -67,7 +67,7 @@ class UddiReplication {
                 }
         }
 
-        void GetChangeRecords(String key2, Long record) {
+        void GetChangeRecords(String key2, Long record, String sourcenode) {
                 try {
                         UDDIReplicationPortType uddiReplicationPort = new UDDIService().getUDDIReplicationPort();
                         HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
@@ -75,7 +75,7 @@ class UddiReplication {
                         
                         highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(DoPing(key2), record));
                         ((BindingProvider) uddiReplicationPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, key2);
-                        List<ChangeRecord> changeRecords = uddiReplicationPort.getChangeRecords("random", null, BigInteger.valueOf(100), highWaterMarkVectorType);
+                        List<ChangeRecord> changeRecords = uddiReplicationPort.getChangeRecords(sourcenode, highWaterMarkVectorType, BigInteger.valueOf(100), null);
                         System.out.println("Success...." + changeRecords.size() + " records returned");
                         System.out.println("Node, USN, type");
                         for (int i = 0; i < changeRecords.size(); i++) {

@@ -28,6 +28,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
@@ -42,6 +43,7 @@ public class Contact implements java.io.Serializable {
 	private static final long serialVersionUID = 3350341195850056589L;
 	private Long id;
 	private BusinessEntity businessEntity;
+        private ReplicationConfiguration replicationConfigSerial;
 	private String useType;
 	private List<PersonName> personNames = new ArrayList<PersonName>(0);
 	private List<ContactDescr> contactDescrs = new ArrayList<ContactDescr>(0);
@@ -67,6 +69,15 @@ public class Contact implements java.io.Serializable {
 		this.addresses = addresses;
 	}
 
+        @OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "replicationCfgId", nullable = true)
+        public ReplicationConfiguration getReplicationConfigId() {
+		return this.replicationConfigSerial;
+	}
+	public void setReplicationConfigId(ReplicationConfiguration id) {
+		this.replicationConfigSerial = id;
+	}
+        
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {

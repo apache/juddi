@@ -15,7 +15,6 @@
  *
  */
 
-
 package org.uddi.repl_v3;
 
 import java.io.Serializable;
@@ -26,6 +25,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import org.uddi.api_v3.Contact;
@@ -79,11 +79,21 @@ import org.w3._2000._09.xmldsig_.SignatureType;
     "maximumTimeToGetChanges",
     "signature"
 })
+@XmlSeeAlso({
+        org.uddi.api_v3.ObjectFactory.class,
+        org.uddi.custody_v3.ObjectFactory.class,
+        org.apache.juddi.ObjectFactory.class,
+        org.apache.juddi.api_v3.ObjectFactory.class,
+        org.uddi.repl_v3.ObjectFactory.class,
+        org.w3._2000._09.xmldsig_.ObjectFactory.class
+        
+        }
+)
 @XmlRootElement(name = "replicationConfiguration")
 public class ReplicationConfiguration implements Serializable{
 	@XmlTransient
 	private static final long serialVersionUID = 621260248291581845L;
-	protected long serialNumber;
+    protected long serialNumber;
     @XmlElement(required = true)
     protected String timeOfConfigurationUpdate;
     @XmlElement(required = true)
@@ -317,7 +327,7 @@ public class ReplicationConfiguration implements Serializable{
      * 
      */
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
+    @XmlType(name = "", namespace="urn:uddi-org:repl_v3", propOrder = {
         "contact"
     })
     public static class RegistryContact {
@@ -352,4 +362,3 @@ public class ReplicationConfiguration implements Serializable{
     }
 
 }
-

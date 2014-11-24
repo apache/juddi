@@ -16,8 +16,11 @@ package org.apache.juddi.api_v3;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import javax.xml.bind.JAXB;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -33,7 +36,13 @@ import static junit.framework.Assert.assertTrue;
 
 import org.junit.Test;
 import org.uddi.api_v3.AuthToken;
+import org.uddi.api_v3.Contact;
 import org.uddi.api_v3.ObjectFactory;
+import org.uddi.api_v3.PersonName;
+import org.uddi.repl_v3.CommunicationGraph;
+import org.uddi.repl_v3.Operator;
+import org.uddi.repl_v3.OperatorStatusType;
+import org.uddi.repl_v3.ReplicationConfiguration;
 
 /**
  * Testing marshalling functionality, making sure UTF-8 is handled correctly.
@@ -85,5 +94,29 @@ public class GetPublisherDetailTest {
 			fail("No exception should be thrown");
 		}
 	}
+        
+        @Test
+        public void marshallReplicationMessage() throws Exception{
+                ReplicationConfiguration r = new ReplicationConfiguration();
+                r.setCommunicationGraph(new CommunicationGraph());
+                        Operator op = new Operator();
+                        op.setOperatorNodeID("a node");
+                        op.setSoapReplicationURL("http://localhost/services/replication");
+                        
+                        op.getContact().add(new Contact());
+                        op.getContact().get(0).getPersonName().add(new PersonName("Unknown", null));
+                        op.setOperatorStatus(OperatorStatusType.NORMAL);
+                        
+                        r.getOperator().add(op);
+                        r.getCommunicationGraph().getNode().add("a node");
+                        r.getCommunicationGraph().getControlledMessage().add("*");
+                        r.setSerialNumber(0);
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddkkmmZ");
+                        r.setTimeOfConfigurationUpdate(sdf.format(new Date()));
+                        r.setRegistryContact(new org.uddi.repl_v3.ReplicationConfiguration.RegistryContact());
+                        r.getRegistryContact().setContact(new Contact());
+                        r.getRegistryContact().getContact().getPersonName().add(new PersonName("Unknown", null));
+                                JAXB.marshal(r, System.out);
+        }
 	
 }

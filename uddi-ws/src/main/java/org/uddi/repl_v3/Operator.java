@@ -14,8 +14,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.uddi.repl_v3;
 
 import java.io.Serializable;
@@ -31,12 +29,30 @@ import javax.xml.bind.annotation.XmlType;
 import org.uddi.api_v3.Contact;
 import org.w3._2000._09.xmldsig_.KeyInfoType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * The operator elements in a Replication Configuration Structure are a list of
+ * the nodes and established paths of communication between the nodes within a
+ * registry. The communication paths and general replication topology
+ * considerations are discussed later in this specification.
+ * <br><br>
+ * The operatorNodeID contains a unique key that is used to uniquely identify
+ * this node throughout the UDDI registry. The value used MUST match the
+ * businessKey of the Node Business Entity as referenced in Section 6.2.2
+ * Self-Registration of Node Business Entity. The contact or contacts listed
+ * provide information about humans who should be contacted in the face of
+ * administrative and technical situations of various sorts. . The dsig:KeyInfo
+ * elements are intended to contain the certificate details if the
+ * soapReplicationURL makes use of Secure Sockets Layer 3.0 with mutual
+ * authentication as described in Section 7.5.5 Security Configuration.
+ *
+ *
+ * <p>
+ * Java class for anonymous complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -52,162 +68,150 @@ import org.w3._2000._09.xmldsig_.KeyInfoType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "operatorNodeID",
-    "operatorStatus",
-    "contact",
-    "soapReplicationURL",
-    "keyInfo"
+        "operatorNodeID",
+        "operatorStatus",
+        "contact",
+        "soapReplicationURL",
+        "keyInfo"
 })
 @XmlRootElement(name = "operator")
-public class Operator implements Serializable{
-	@XmlTransient
-	private static final long serialVersionUID = 3012475870316361941L;
-	@XmlElement(required = true)
-    protected String operatorNodeID;
-    @XmlElement(required = true)
-    protected OperatorStatusType operatorStatus;
-    @XmlElement(namespace = "urn:uddi-org:api_v3", required = true)
-    protected List<Contact> contact;
-    @XmlElement(required = true)
-    @XmlSchemaType(name = "anyURI")
-    protected String soapReplicationURL;
-    @XmlElement(name = "KeyInfo", namespace = "http://www.w3.org/2000/09/xmldsig#")
-    protected List<KeyInfoType> keyInfo;
+public class Operator implements Serializable {
 
-    /**
-     * Gets the value of the operatorNodeID property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getOperatorNodeID() {
-        return operatorNodeID;
-    }
+        @XmlTransient
+        private static final long serialVersionUID = 3012475870316361941L;
+        @XmlElement(required = true)
+        protected String operatorNodeID;
+        @XmlElement(required = true)
+        protected OperatorStatusType operatorStatus;
+        @XmlElement(namespace = "urn:uddi-org:api_v3", required = true)
+        protected List<Contact> contact;
+        @XmlElement(required = true)
+        @XmlSchemaType(name = "anyURI")
+        protected String soapReplicationURL;
+        @XmlElement(name = "KeyInfo", namespace = "http://www.w3.org/2000/09/xmldsig#")
+        protected List<KeyInfoType> keyInfo;
 
-    /**
-     * Sets the value of the operatorNodeID property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setOperatorNodeID(String value) {
-        this.operatorNodeID = value;
-    }
+        /**
+         * Gets the value of the operatorNodeID property.
+         *
+         * @return possible object is {@link String }
+         *
+         */
+        public String getOperatorNodeID() {
+                return operatorNodeID;
+        }
 
-    /**
-     * Gets the value of the operatorStatus property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link OperatorStatusType }
-     *     
-     */
-    public OperatorStatusType getOperatorStatus() {
-        return operatorStatus;
-    }
+        /**
+         * Sets the value of the operatorNodeID property.
+         *
+         * @param value allowed object is {@link String }
+         *
+         */
+        public void setOperatorNodeID(String value) {
+                this.operatorNodeID = value;
+        }
 
-    /**
-     * Sets the value of the operatorStatus property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link OperatorStatusType }
-     *     
-     */
-    public void setOperatorStatus(OperatorStatusType value) {
-        this.operatorStatus = value;
-    }
+        /**
+         * Gets the value of the operatorStatus property.
+         *
+         * @return possible object is {@link OperatorStatusType }
+         *
+         */
+        public OperatorStatusType getOperatorStatus() {
+                return operatorStatus;
+        }
 
-    /**
-     * Gets the value of the contact property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the contact property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getContact().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
+        /**
+         * Sets the value of the operatorStatus property.
+         *
+         * @param value allowed object is {@link OperatorStatusType }
+         *
+         */
+        public void setOperatorStatus(OperatorStatusType value) {
+                this.operatorStatus = value;
+        }
+
+        /**
+         * Gets the value of the contact property.
+         *
+         * <p>
+         * This accessor method returns a reference to the live list, not a
+         * snapshot. Therefore any modification you make to the returned list
+         * will be present inside the JAXB object. This is why there is not a
+         * <CODE>set</CODE> method for the contact property.
+         *
+         * <p>
+         * For example, to add a new item, do as follows:
+         * <pre>
+         *    getContact().add(newItem);
+         * </pre>
+         *
+         *
+         * <p>
+         * Objects of the following type(s) are allowed in the list
      * {@link Contact }
-     * 
-     * 
-     */
-    public List<Contact> getContact() {
-        if (contact == null) {
-            contact = new ArrayList<Contact>();
+         *
+         *
+         */
+        public List<Contact> getContact() {
+                if (contact == null) {
+                        contact = new ArrayList<Contact>();
+                }
+                return this.contact;
         }
-        return this.contact;
-    }
 
-    /**
-     * Gets the value of the soapReplicationURL property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getSoapReplicationURL() {
-        return soapReplicationURL;
-    }
+        /**
+         * Gets the value of the soapReplicationURL property.
+         *
+         * @return possible object is {@link String }
+         *
+         */
+        public String getSoapReplicationURL() {
+                return soapReplicationURL;
+        }
 
-    /**
-     * Sets the value of the soapReplicationURL property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setSoapReplicationURL(String value) {
-        this.soapReplicationURL = value;
-    }
+        /**
+         * Sets the value of the soapReplicationURL property.
+         *
+         * @param value allowed object is {@link String }
+         *
+         */
+        public void setSoapReplicationURL(String value) {
+                this.soapReplicationURL = value;
+        }
 
-    /**
-     * Gets the value of the keyInfo property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the keyInfo property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getKeyInfo().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
+        /**
+         * Gets the value of the keyInfo property.
+         *
+         * <p>
+         * This accessor method returns a reference to the live list, not a
+         * snapshot. Therefore any modification you make to the returned list
+         * will be present inside the JAXB object. This is why there is not a
+         * <CODE>set</CODE> method for the keyInfo property.
+         *
+         * <p>
+         * For example, to add a new item, do as follows:
+         * <pre>
+         *    getKeyInfo().add(newItem);
+         * </pre>
+         *
+         *
+         * <p>
+         * Objects of the following type(s) are allowed in the list
      * {@link KeyInfoType }
-     * 
-     * 
-     */
-    public List<KeyInfoType> getKeyInfo() {
-        if (keyInfo == null) {
-            keyInfo = new ArrayList<KeyInfoType>();
+         *
+         *
+         */
+        public List<KeyInfoType> getKeyInfo() {
+                if (keyInfo == null) {
+                        keyInfo = new ArrayList<KeyInfoType>();
+                }
+                return this.keyInfo;
         }
-        return this.keyInfo;
-    }
 
 }
-

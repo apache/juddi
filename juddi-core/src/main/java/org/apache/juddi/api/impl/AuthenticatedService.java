@@ -50,10 +50,15 @@ public abstract class AuthenticatedService {
 	public static final int AUTHTOKEN_RETIRED = 0;
 	static final Log logger = LogFactory.getLog(AuthenticatedService.class);
 	protected String node = "UNDEFINED_NODE_NAME";
+        protected String baseUrlSSL="UNDEFINED";
+         protected String baseUrl="UNDEFINED";
         
         public AuthenticatedService(){
                 try {
                         node = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID, "UNDEFINED_NODE_NAME");
+                        node=node.trim();
+                        baseUrlSSL=AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL_SECURE, Property.DEFAULT_BASE_URL_SECURE);
+                        baseUrlSSL=AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL, Property.DEFAULT_BASE_URL);
                 } catch (ConfigurationException ex) {
                         logger.fatal(null, ex);
                 }

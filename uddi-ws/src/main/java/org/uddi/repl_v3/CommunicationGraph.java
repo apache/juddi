@@ -77,6 +77,7 @@ public class CommunicationGraph implements Serializable{
     protected List<String> node;
     @XmlElement(required = true)
     protected List<String> controlledMessage;
+    @XmlElement(required = false)
     protected List<CommunicationGraph.Edge> edge;
 
     /**

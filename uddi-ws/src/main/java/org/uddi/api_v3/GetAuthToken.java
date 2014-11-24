@@ -14,8 +14,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.uddi.api_v3;
 
 import java.io.Serializable;
@@ -26,12 +24,14 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for get_authToken complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for get_authToken complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ *
  * <pre>
  * &lt;complexType name="get_authToken">
  *   &lt;complexContent>
@@ -42,66 +42,70 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "get_authToken")
-public class GetAuthToken implements Serializable{
-	@XmlTransient
-	private static final long serialVersionUID = -2736132681478711038L;
-	@XmlAttribute(required = true)
-    protected String userID;
-    @XmlAttribute(required = true)
-    protected String cred;
+public class GetAuthToken implements Serializable {
 
-    /**
-     * Gets the value of the userID property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getUserID() {
-        return userID;
-    }
+        public GetAuthToken() {
+        }
 
-    /**
-     * Sets the value of the userID property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setUserID(String value) {
-        this.userID = value;
-    }
+        /**
+         * @since 3.3
+         * @param username
+         * @param password 
+         */
+        public GetAuthToken(String username, String password) {
+                this.userID = username;
+                this.cred = password;
+        }
+        @XmlTransient
+        private static final long serialVersionUID = -2736132681478711038L;
+        @XmlAttribute(required = true)
+        protected String userID;
+        @XmlAttribute(required = true)
+        protected String cred;
 
-    /**
-     * Gets the value of the cred property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getCred() {
-        return cred;
-    }
+        /**
+         * Gets the value of the userID property.
+         *
+         * @return possible object is {@link String }
+         *
+         */
+        public String getUserID() {
+                return userID;
+        }
 
-    /**
-     * Sets the value of the cred property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setCred(String value) {
-        this.cred = value;
-    }
+        /**
+         * Sets the value of the userID property.
+         *
+         * @param value allowed object is {@link String }
+         *
+         */
+        public void setUserID(String value) {
+                this.userID = value;
+        }
+
+        /**
+         * Gets the value of the cred property.
+         *
+         * @return possible object is {@link String }
+         *
+         */
+        public String getCred() {
+                return cred;
+        }
+
+        /**
+         * Sets the value of the cred property.
+         *
+         * @param value allowed object is {@link String }
+         *
+         */
+        public void setCred(String value) {
+                this.cred = value;
+        }
 
 }
-

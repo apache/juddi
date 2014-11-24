@@ -17,6 +17,7 @@
 package org.apache.juddi.validation;
 
 import java.math.BigInteger;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.xml.ws.WebServiceContext;
 import org.apache.juddi.model.Node;
@@ -28,6 +29,7 @@ import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.uddi.repl_v3.CommunicationGraph.Edge;
 import org.uddi.repl_v3.HighWaterMarkVectorType;
 import org.uddi.repl_v3.NotifyChangeRecordsAvailable;
+import org.uddi.repl_v3.Operator;
 import org.uddi.repl_v3.ReplicationConfiguration;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
@@ -115,37 +117,64 @@ public class ValidateReplication extends ValidateUDDIApi {
                 return false;
         }
 
-        public void validateSetReplicationNodes(ReplicationConfiguration replicationConfiguration, EntityManager em) throws DispositionReportFaultMessage {
+        public void validateSetReplicationNodes(ReplicationConfiguration replicationConfiguration, EntityManager em, String thisnode) throws DispositionReportFaultMessage {
                 if (replicationConfiguration == null) {
                         throw new InvalidValueException(new ErrorMessage("errors.replication.configNull"));
 
                 }
+                if (replicationConfiguration.getCommunicationGraph() == null) {
+                        throw new InvalidValueException(new ErrorMessage("errors.replication.configNull"));
+                }
+                if (replicationConfiguration.getRegistryContact() == null) {
+                        throw new InvalidValueException(new ErrorMessage("errors.replication.contactNull"));
+                }
+                if (replicationConfiguration.getRegistryContact().getContact() == null) {
+                        throw new InvalidValueException(new ErrorMessage("errors.replication.contactNull"));
+                }
+                if (replicationConfiguration.getRegistryContact().getContact().getPersonName().get(0) == null) {
+                        throw new InvalidValueException(new ErrorMessage("errors.replication.contactNull"));
+                }
+
                 if (replicationConfiguration.getCommunicationGraph() != null) {
                         for (String s : replicationConfiguration.getCommunicationGraph().getNode()) {
-                                Node find = em.find(org.apache.juddi.model.Node.class, s);
-                                if (find == null) {
+                                if (!Contains(replicationConfiguration.getOperator(), s)) {
                                         throw new InvalidValueException(new ErrorMessage("errors.replication.configNodeNotFound"));
                                 }
                         }
                         for (Edge s : replicationConfiguration.getCommunicationGraph().getEdge()) {
-                                Node find = em.find(org.apache.juddi.model.Node.class, s.getMessageReceiver());
-                                if (find == null) {
+                                //TODO revisit this for correctness
+                                //Node find = null;
+                                //if (!thisnode.equalsIgnoreCase(s.getMessageReceiver())) {
+                                if (!Contains(replicationConfiguration.getOperator(), s.getMessageReceiver())) {
                                         throw new InvalidValueException(new ErrorMessage("errors.replication.configNodeNotFound"));
+                                        //}
                                 }
-                                find = null;
-                                find = em.find(org.apache.juddi.model.Node.class, s.getMessageSender());
-                                if (find == null) {
+                                //find = null;
+                                //if (!thisnode.equalsIgnoreCase(s.getMessageSender())) {
+                                if (!Contains(replicationConfiguration.getOperator(), s.getMessageSender())) {
                                         throw new InvalidValueException(new ErrorMessage("errors.replication.configNodeNotFound"));
+                                        //}
                                 }
                                 for (String id : s.getMessageReceiverAlternate()) {
-                                        find = em.find(org.apache.juddi.model.Node.class, id);
-                                        if (find == null) {
+                                        if (!Contains(replicationConfiguration.getOperator(), id)) {
                                                 throw new InvalidValueException(new ErrorMessage("errors.replication.configNodeNotFound"));
                                         }
                                 }
 
                         }
                 }
+        }
+
+        private boolean Contains(List<Operator> operator, String s) {
+                if (operator == null) {
+                        return false;
+                }
+                for (Operator o : operator) {
+                        if (o.getOperatorNodeID().equalsIgnoreCase(s)) {
+                                return true;
+                        }
+                }
+                return false;
         }
 
 }

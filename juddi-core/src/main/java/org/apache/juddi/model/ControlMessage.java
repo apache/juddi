@@ -19,7 +19,13 @@ package org.apache.juddi.model;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import org.uddi.repl_v3.CommunicationGraph;
 
 /**
  *
@@ -48,6 +54,7 @@ public class ControlMessage implements Serializable{
         }
 
         @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
         public Long getId() {
                 return id;
         }
@@ -55,4 +62,27 @@ public class ControlMessage implements Serializable{
         public void setId(Long id) {
                 this.id = id;
         }
+        
+       //  @JoinColumn( )
+       // @ManyToOne(targetEntity = ReplicationConfiguration.class)
+         @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ReplicationConfiguration", nullable = true)
+        public ReplicationConfiguration getReplicationConfiguration() {
+                return parent;
+        }
+        private ReplicationConfiguration parent;
+        public void setReplicationConfiguration(ReplicationConfiguration p){
+                parent = p;
+        }
+        
+         @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "entity_key_ed", nullable = true)
+         public Edge getParentEdge(){
+                 return this.edge;
+         }
+         private Edge edge;
+         public void setParentEdge(Edge e){
+                 this.edge = e;
+         }
+         
 }

@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -37,11 +38,20 @@ public class Edge {
 
         private Long id;
         private List<ControlMessage>  message;
-        private Node messageSender;
-        private Node messageReceiver;
-        private Set<Node> messageReceiverAlternate;
+        private String messageSender;
+        private String messageReceiver;
+        private List<EdgeReceiverAlternate> messageReceiverAlternate;
         private ReplicationConfiguration parent;
 
+         @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ReplicationConfiguration", nullable = false)
+        public ReplicationConfiguration getReplicationConfiguration() {
+                return parent;
+        }
+        
+        public void setReplicationConfiguration(ReplicationConfiguration p){
+                parent = p;
+        }
         
         /**
          * The message elements contain the local name of the Replication API message elements
@@ -58,13 +68,13 @@ public class Edge {
                 this.message = values;
         }
 
-        @JoinColumn(referencedColumnName ="name" )
-        @ManyToOne(targetEntity = Node.class)
-        public Node getMessageSender() {
+        
+        @Column
+        public String getMessageSender() {
                 return messageSender;
         }
 
-        public void setMessageSender(Node value) {
+        public void setMessageSender(String value) {
                 this.messageSender = value;
         }
 
@@ -73,13 +83,12 @@ public class Edge {
                  *
          * @return
          */
-        @JoinColumn(referencedColumnName ="name" )
-        @ManyToOne(targetEntity = Node.class)
-        public Node getMessageReceiver() {
+        @Column
+        public String getMessageReceiver() {
                 return messageReceiver;
         }
 
-        public void setMessageReceiver(Node value) {
+        public void setMessageReceiver(String value) {
                 this.messageReceiver = value;
         }
 
@@ -90,10 +99,12 @@ public class Edge {
          *
          * @return
          */
-        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Node.class)
-        public Set<Node> getMessageReceiverAlternate() {
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = EdgeReceiverAlternate.class
+                //, mappedBy = "messageReceiverAlternate"
+        )
+        public List<EdgeReceiverAlternate> getMessageReceiverAlternate() {
                 if (messageReceiverAlternate == null) {
-                        messageReceiverAlternate = new HashSet<Node>();
+                        messageReceiverAlternate = new ArrayList<EdgeReceiverAlternate>();
                 }
                 return this.messageReceiverAlternate;
         }
@@ -108,7 +119,7 @@ public class Edge {
                 this.message = message;
         }
 
-        public void setMessageReceiverAlternate(Set<Node> messageReceiverAlternate) {
+        public void setMessageReceiverAlternate(List<EdgeReceiverAlternate> messageReceiverAlternate) {
                 this.messageReceiverAlternate = messageReceiverAlternate;
         }
 

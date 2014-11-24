@@ -48,6 +48,7 @@ import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.apache.juddi.model.CanonicalizationMethod;
 import org.apache.juddi.model.ControlMessage;
 import org.apache.juddi.model.Edge;
+import org.apache.juddi.model.EdgeReceiverAlternate;
 import org.apache.juddi.model.KeyInfo;
 import org.apache.juddi.model.OverviewDoc;
 import org.apache.juddi.model.Reference;
@@ -58,14 +59,17 @@ import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.model.KeyDataValue;
 import org.apache.juddi.model.Node;
 import org.apache.juddi.model.ReplicationConfiguration;
+import org.apache.juddi.model.ReplicationConfigurationNode;
 import org.apache.juddi.model.SignatureTransformDataValue;
 import org.apache.juddi.subscription.TypeConvertor;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.CompletionStatus;
+import org.uddi.api_v3.Contact;
 import org.uddi.api_v3.Contacts;
 import org.uddi.api_v3.OperationalInfo;
+import org.uddi.api_v3.PersonName;
 import org.uddi.repl_v3.ChangeRecord;
 import org.uddi.repl_v3.ChangeRecordIDType;
 import org.uddi.repl_v3.CommunicationGraph;
@@ -1203,6 +1207,7 @@ public class MappingModelToApi {
                 item.setMaximumTimeToGetChanges(find.getMaximumTimeToGetChanges());
                 item.setMaximumTimeToSyncRegistry(find.getMaximumTimeToSyncRegistry());
                 item.setSerialNumber(find.getSerialNumber());
+                
                 List<SignatureType> sigs = new ArrayList<SignatureType>();
                 mapSignature(find.getSignatures(), sigs);
                 item.getSignature().addAll(sigs);
@@ -1213,9 +1218,15 @@ public class MappingModelToApi {
                 org.uddi.api_v3.Contacts cs = new Contacts();
 
                 mapContacts(modelContactList, cs, new BusinessEntity());
+                item.setRegistryContact(new org.uddi.repl_v3.ReplicationConfiguration.RegistryContact());
                 if (!cs.getContact().isEmpty()) {
-                        item.setRegistryContact(new org.uddi.repl_v3.ReplicationConfiguration.RegistryContact());
+                        
                         item.getRegistryContact().setContact(cs.getContact().get(0));
+                }
+                else
+                {
+                        item.getRegistryContact().setContact(new Contact());
+                        item.getRegistryContact().getContact().getPersonName().add(new PersonName("unknown", null));
                 }
                 item.setTimeOfConfigurationUpdate(find.getTimeOfConfigurationUpdate());
                 CommunicationGraph xcom = new CommunicationGraph();
@@ -1278,16 +1289,16 @@ public class MappingModelToApi {
                         Edge modelEdge = it.next();
 
                         CommunicationGraph.Edge apiEdge = new CommunicationGraph.Edge();
-                        apiEdge.setMessageReceiver(modelEdge.getMessageReceiver().getName());
-                        apiEdge.setMessageSender(modelEdge.getMessageSender().getName());
+                        apiEdge.setMessageReceiver(modelEdge.getMessageReceiver());
+                        apiEdge.setMessageSender(modelEdge.getMessageSender());
 
                         Iterator<ControlMessage> it2 = modelEdge.getMessages().iterator();
                         while (it2.hasNext()) {
                                 apiEdge.getMessage().add(it2.next().getMessage());
                         }
-                        Iterator<Node> it3 = modelEdge.getMessageReceiverAlternate().iterator();
+                        Iterator<EdgeReceiverAlternate> it3 = modelEdge.getMessageReceiverAlternate().iterator();
                         while (it3.hasNext()) {
-                                apiEdge.getMessageReceiverAlternate().add(it3.next().getName());
+                                apiEdge.getMessageReceiverAlternate().add(it3.next().getReceiverAlternate());
                         }
 
                         api.add(apiEdge);
@@ -1302,10 +1313,10 @@ public class MappingModelToApi {
                 }
         }
 
-        private static void mapEdgeNodes(List<Node> model, List<String> api) {
-                Iterator<Node> it = model.iterator();
+        private static void mapEdgeNodes(List<ReplicationConfigurationNode> model, List<String> api) {
+                Iterator<ReplicationConfigurationNode> it = model.iterator();
                 while (it.hasNext()) {
-                        api.add(it.next().getName());
+                        api.add(it.next().getNodeName());
                 }
         }
 

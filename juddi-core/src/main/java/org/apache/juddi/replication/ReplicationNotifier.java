@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.replication;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
@@ -25,6 +26,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import javax.xml.bind.JAXB;
 import javax.xml.ws.BindingProvider;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
@@ -41,6 +43,7 @@ import org.uddi.repl_v3.ChangeRecordIDType;
 import org.uddi.repl_v3.CommunicationGraph;
 import org.uddi.repl_v3.HighWaterMarkVectorType;
 import org.uddi.repl_v3.NotifyChangeRecordsAvailable;
+import org.uddi.repl_v3.Operator;
 import org.uddi.v3_service.UDDIReplicationPortType;
 
 /**
@@ -104,6 +107,7 @@ public class ReplicationNotifier extends TimerTask {
                         tx = em.getTransaction();
                         tx.begin();
 
+                        
                         em.persist(j);
                         tx.commit();
                 } catch (Exception ex) {
@@ -111,6 +115,7 @@ public class ReplicationNotifier extends TimerTask {
                         if (tx != null && tx.isActive()) {
                                 tx.rollback();
                         }
+                        JAXB.marshal(MappingModelToApi.mapChangeRecord(j), System.out);
                 } finally {
                         em.close();
                 }
@@ -121,7 +126,7 @@ public class ReplicationNotifier extends TimerTask {
                 //TODO figure out what this statement means 7.5.3
                 /**
                  * In the absence of a communicationGraph element from the
-                 * Replication Configuration Structure, all nodes listed in the
+                 * Replication Configuration Structure (although it's mandatory in the xsd), all nodes listed in the
                  * node element MAY send any and all messages to any other node
                  * of the registry.
                  */
@@ -130,37 +135,60 @@ public class ReplicationNotifier extends TimerTask {
                         return;
 
                 }
+                List<String> destinationUrls = new ArrayList<String>();
+
+                for (Operator o:repcfg.getOperator())
+                {
+                        //no need to tell myself about a change at myself
+                        if (!o.getOperatorNodeID().equalsIgnoreCase(node))
+                                 destinationUrls.add(o.getSoapReplicationURL());
+                }
+                /*
+                Iterator<String> iterator = repcfg.getCommunicationGraph().getNode().iterator();
+                while (iterator.hasNext()) {
+                        String next = iterator.next();
+                        
+                        Node destinationNode = getNode(next);
+                        if (destinationNode == null) {
+                                log.warn(next + " node was not found, cannot deliver replication messages");
+                        } else {
+                                destinationUrls.add(destinationNode.getReplicationUrl());
+                        }
+                }
                 Iterator<CommunicationGraph.Edge> it = repcfg.getCommunicationGraph().getEdge().iterator();
 
                 while (it.hasNext()) {
                         //send each change set to the replication node in the graph
 
-                        UDDIReplicationPortType x = new UDDIService().getUDDIReplicationPort();
+                        
                         CommunicationGraph.Edge next = it.next();
                         //next.getMessageReceiver(); //Node ID
-                        Node destinationNode = getNode(next.getMessageSender());
+                        Node destinationNode = getNode(next.getMessageReceiver());
                         if (destinationNode == null) {
-                                log.warn(next.getMessageSender() + " node was not found, cannot deliver replication messages");
+                                log.warn(next.getMessageReceiver() + " node was not found, cannot deliver replication messages");
                         } else {
-                                //TODO the spec talks about control messages, should we even support it? seems pointless
-                                ((BindingProvider) x).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, destinationNode.getReplicationUrl());
-                                NotifyChangeRecordsAvailable req = new NotifyChangeRecordsAvailable();
+                                destinationUrls.add(destinationNode.getReplicationUrl());
+                        }
+                }*/
+                for (String s : destinationUrls) {
+                        //TODO the spec talks about control messages, should we even support it? seems pointless
+                        UDDIReplicationPortType x = new UDDIService().getUDDIReplicationPort();
+                        ((BindingProvider) x).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, s);
+                        NotifyChangeRecordsAvailable req = new NotifyChangeRecordsAvailable();
 
-                                req.setNotifyingNode(node);
-                                HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
-                              
-                                highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(node, j.getId()));
-                                req.setChangesAvailable(highWaterMarkVectorType);
+                        req.setNotifyingNode(node);
+                        HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
 
-                                try {
-                                        x.notifyChangeRecordsAvailable(req);
-                                        log.info("Successfully sent change record available message to " + destinationNode.getName());
-                                } catch (Exception ex) {
-                                        log.warn("Unable to send change notification to " + destinationNode.getName(), ex);
-                                }
+                        highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(node, j.getId()));
+                        req.setChangesAvailable(highWaterMarkVectorType);
+
+                        try {
+                                x.notifyChangeRecordsAvailable(req);
+                                log.info("Successfully sent change record available message to " + s);
+                        } catch (Exception ex) {
+                                log.warn("Unable to send change notification to " + s, ex);
                         }
                 }
-
         }
 
         public synchronized void run() {
@@ -193,19 +221,19 @@ public class ReplicationNotifier extends TimerTask {
                 try {
                         tx = em.getTransaction();
                         tx.begin();
-                        Query q = em.createQuery("SELECT item FROM ReplicationConfiguration item");
+                        Query q = em.createQuery("SELECT item FROM ReplicationConfiguration item order by item.serialNumber DESC");
                         q.setMaxResults(1);
-                        List<ReplicationConfiguration> results = (List<ReplicationConfiguration>) q.getResultList();
+                        ReplicationConfiguration results = (ReplicationConfiguration) q.getSingleResult();
                         //   ReplicationConfiguration find = em.find(ReplicationConfiguration.class, null);
-                        if (results != null && !results.isEmpty()) {
-                                MappingModelToApi.mapReplicationConfiguration(results.get(0), item);
-                        } else {
-                                item = null;
+                        if (results != null) {
+                                MappingModelToApi.mapReplicationConfiguration(results, item);
                         }
+
                         tx.commit();
                         return item;
                 } catch (Exception ex) {
-                        log.error("error", ex);
+                        //log.error("error", ex);
+                        //no config available
                         if (tx != null && tx.isActive()) {
                                 tx.rollback();
                         }

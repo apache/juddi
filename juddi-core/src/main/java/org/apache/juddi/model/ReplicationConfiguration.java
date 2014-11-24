@@ -19,27 +19,23 @@ package org.apache.juddi.model;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
 
 @Entity
 @Table(name = "j3_chg_replconf")
 public class ReplicationConfiguration implements Serializable {
 
         private static final long serialVersionUID = 1L;
-        
+
         private Long serialNumber;
         private String timeOfConfigurationUpdate;
         private List<Operator> operator = new ArrayList<Operator>(0);
@@ -47,6 +43,9 @@ public class ReplicationConfiguration implements Serializable {
         private BigInteger maximumTimeToGetChanges;
         private List<Signature> signatures = new ArrayList<Signature>(0);
         private Contact contact;
+        private List<ReplicationConfigurationNode> node;
+        private List<ControlMessage> controlledMessage;
+        private List<Edge> edge;
 
         /**
          * Gets the value of the contact property.
@@ -54,7 +53,8 @@ public class ReplicationConfiguration implements Serializable {
          * @return possible object is {@link Contact }
          *
          */
-        @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Contact.class)
+        @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "replicationConfigId")
+        //@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Contact.class, mappedBy = "serialNumber")
         public Contact getContact() {
                 return contact;
         }
@@ -75,7 +75,7 @@ public class ReplicationConfiguration implements Serializable {
          */
         @Column(name = "serialnumb")
         @OrderBy(value = "SerialNumber DESC")
-         @Id
+        @Id
         public Long getSerialNumber() {
                 return serialNumber;
         }
@@ -116,14 +116,11 @@ public class ReplicationConfiguration implements Serializable {
                 }
                 return this.operator;
         }
-        
-        
-         public void setOperator(List<Operator> v) {
-                
-                this.operator=v;
-        }
 
-      
+        public void setOperator(List<Operator> v) {
+
+                this.operator = v;
+        }
 
         /**
          * Gets the value of the maximumTimeToSyncRegistry property.
@@ -177,26 +174,24 @@ public class ReplicationConfiguration implements Serializable {
                 this.signatures = signatures;
         }
 
-        private List<Node> node;
-        private List<ControlMessage> controlledMessage;
-        private List<Edge> edge;
-
         //To use a Node or a String reference...
         //Node will give us strict ref integ but makes a change history of the replication config impossible
         //Strig increases code logic for ref integ,but makes chage history possible
-        @OneToMany(targetEntity = Node.class, orphanRemoval = false,fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
-        public List<Node> getNode() {
+        @OneToMany(targetEntity = ReplicationConfigurationNode.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+       // @OneToMany(cascade = {CascadeType.ALL})
+        public List<ReplicationConfigurationNode> getNode() {
                 if (node == null) {
-                        node = new ArrayList<Node>();
+                        node = new ArrayList<ReplicationConfigurationNode>();
                 }
                 return this.node;
         }
 
-        public void setNode(List<Node> nodes) {
+        public void setNode(List<ReplicationConfigurationNode> nodes) {
 
                 this.node = nodes;
         }
 
+        //@javax.persistence.Transient
         @OneToMany(targetEntity = ControlMessage.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
         public List<ControlMessage> getControlMessage() {
                 if (controlledMessage == null) {
@@ -215,9 +210,8 @@ public class ReplicationConfiguration implements Serializable {
         public List<Edge> getEdge() {
                 return this.edge;
         }
-        
-         public void setEdge( List<Edge> edges) {
-                this.edge=edges;
+
+        public void setEdge(List<Edge> edges) {
+                this.edge = edges;
         }
 }
-

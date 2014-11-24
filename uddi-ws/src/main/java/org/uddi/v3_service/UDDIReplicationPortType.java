@@ -66,7 +66,7 @@ import org.uddi.repl_v3.TransferCustody;
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>get_highWaterMarks</p>
  */
-@WebService(name = "UDDI_Replication_PortType", targetNamespace = "urn:uddi-org:v3_service")
+@WebService(name = "UDDI_Replication_PortType", targetNamespace = "urn:uddi-org:repl_v3_portType")
 @XmlSeeAlso({
     org.uddi.custody_v3.ObjectFactory.class,
     org.uddi.repl_v3.ObjectFactory.class,
@@ -155,16 +155,20 @@ public interface UDDIReplicationPortType extends Remote {
      * code. Error reporting SHALL be that specified by Section 4.8 – Success
      * and Error Reporting of this specification.
      */
-    @WebMethod(operationName = "get_changeRecords", action = "get_changeRecords")
+ @WebMethod(operationName = "get_changeRecords", action = "get_changeRecords")
     @WebResult(name = "changeRecord", targetNamespace = "urn:uddi-org:repl_v3")
     @RequestWrapper(localName = "get_changeRecords", targetNamespace = "urn:uddi-org:repl_v3", className = "org.uddi.repl_v3.GetChangeRecords")
     @ResponseWrapper(localName = "changeRecords", targetNamespace = "urn:uddi-org:repl_v3", className = "org.uddi.repl_v3.ChangeRecords")
     public List<ChangeRecord> getChangeRecords(
-            @WebParam(name = "requestingNode", targetNamespace = "urn:uddi-org:repl_v3") String requestingNode,
-            @WebParam(name = "changesAlreadySeen", targetNamespace = "urn:uddi-org:repl_v3") HighWaterMarkVectorType changesAlreadySeen,
-            @WebParam(name = "responseLimitCount", targetNamespace = "urn:uddi-org:repl_v3") BigInteger responseLimitCount,
-            @WebParam(name = "responseLimitVector", targetNamespace = "urn:uddi-org:repl_v3") HighWaterMarkVectorType responseLimitVector)
-            throws DispositionReportFaultMessage, RemoteException;
+        @WebParam(name = "requestingNode", targetNamespace = "urn:uddi-org:repl_v3")
+        String requestingNode,
+        @WebParam(name = "changesAlreadySeen", targetNamespace = "urn:uddi-org:repl_v3")
+        HighWaterMarkVectorType changesAlreadySeen,
+        @WebParam(name = "responseLimitCount", targetNamespace = "urn:uddi-org:repl_v3")
+        BigInteger responseLimitCount,
+        @WebParam(name = "responseLimitVector", targetNamespace = "urn:uddi-org:repl_v3")
+        HighWaterMarkVectorType responseLimitVector)
+        throws DispositionReportFaultMessage, RemoteException;
 
     /**
      * <p class="MsoBodyText">Nodes can inform other nodes that they have new
@@ -221,8 +225,9 @@ public interface UDDIReplicationPortType extends Remote {
     @WebMethod(operationName = "notify_changeRecordsAvailable", action = "notify_changeRecordsAvailable")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void notifyChangeRecordsAvailable(
-            @WebParam(name = "notify_changeRecordsAvailable", targetNamespace = "urn:uddi-org:repl_v3", partName = "body") NotifyChangeRecordsAvailable body)
-            throws DispositionReportFaultMessage, RemoteException;
+        @WebParam(name = "notify_changeRecordsAvailable", targetNamespace = "urn:uddi-org:repl_v3", partName = "body")
+        NotifyChangeRecordsAvailable body)
+        throws DispositionReportFaultMessage,RemoteException;
 
     /**
      * This UDDI API message provides the means by which the current existence
@@ -241,8 +246,9 @@ public interface UDDIReplicationPortType extends Remote {
     @WebResult(name = "operatorNodeID", targetNamespace = "urn:uddi-org:repl_v3", partName = "body")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public String doPing(
-            @WebParam(name = "do_ping", targetNamespace = "urn:uddi-org:repl_v3", partName = "body") DoPing body)
-            throws DispositionReportFaultMessage, RemoteException;
+        @WebParam(name = "do_ping", targetNamespace = "urn:uddi-org:repl_v3", partName = "body")
+        DoPing body)
+        throws DispositionReportFaultMessage, RemoteException;
 
     /**
      * This UDDI API message provides a means to obtain a list of highWaterMark
@@ -283,7 +289,7 @@ public interface UDDIReplicationPortType extends Remote {
     @RequestWrapper(localName = "get_highWaterMarks", targetNamespace = "urn:uddi-org:repl_v3", className = "org.uddi.repl_v3.GetHighWaterMarks")
     @ResponseWrapper(localName = "highWaterMarks", targetNamespace = "urn:uddi-org:repl_v3", className = "org.uddi.repl_v3.HighWaterMarkVectorType")
     public List<ChangeRecordIDType> getHighWaterMarks()
-            throws DispositionReportFaultMessage, RemoteException;
+        throws DispositionReportFaultMessage, RemoteException;
 
     /**
      * Invoked by the target node in a custody transfer operation in response to
@@ -414,7 +420,7 @@ public interface UDDIReplicationPortType extends Remote {
     @WebMethod(operationName = "transfer_custody", action = "transfer_custody")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void transferCustody(
-            @WebParam(name = "transfer_custody", targetNamespace = "urn:uddi-org:repl_v3", partName = "body") TransferCustody body)
-            throws DispositionReportFaultMessage, RemoteException;
+        @WebParam(name = "transfer_custody", targetNamespace = "urn:uddi-org:repl_v3", partName = "body")
+        TransferCustody body)
+        throws DispositionReportFaultMessage, RemoteException;
 }
-

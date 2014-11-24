@@ -73,6 +73,9 @@
     <class>org.apache.juddi.model.ReplicationConfiguration</class>
     <class>org.apache.juddi.model.Edge</class>
     <class>org.apache.juddi.model.ControlMessage</class>
+    <class>org.apache.juddi.model.ReplicationConfigurationNode</class>
+    <class>org.apache.juddi.model.EdgeReceiverAlternate</class>
+    
     <properties>
       <property name="hibernate.archive.autodetection" value="class"/>
       <property name="hibernate.hbm2ddl.auto" value="update"/>

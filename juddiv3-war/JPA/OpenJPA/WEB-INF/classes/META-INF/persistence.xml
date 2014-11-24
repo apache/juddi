@@ -75,6 +75,9 @@
 	<class>org.apache.juddi.model.Edge</class>
 	<class>org.apache.juddi.model.Operator</class>
 	<class>org.apache.juddi.model.ReplicationConfiguration</class>
+     <class>org.apache.juddi.model.ControlMessage</class>
+    <class>org.apache.juddi.model.ReplicationConfigurationNode</class>
+    <class>org.apache.juddi.model.EdgeReceiverAlternate</class>
 	
     <properties>
       <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='add')"/>

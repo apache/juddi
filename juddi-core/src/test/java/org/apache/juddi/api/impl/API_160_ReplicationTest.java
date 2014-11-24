@@ -19,6 +19,7 @@ import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.UUID;
+import javax.xml.bind.JAXB;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,12 +41,16 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uddi.api_v3.Contact;
 import org.uddi.api_v3.DispositionReport;
+import org.uddi.api_v3.PersonName;
 import org.uddi.repl_v3.ChangeRecord;
 import org.uddi.repl_v3.ChangeRecordIDType;
 import org.uddi.repl_v3.CommunicationGraph;
 import org.uddi.repl_v3.DoPing;
 import org.uddi.repl_v3.HighWaterMarkVectorType;
+import org.uddi.repl_v3.Operator;
+import org.uddi.repl_v3.OperatorStatusType;
 import org.uddi.repl_v3.ReplicationConfiguration;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIReplicationPortType;
@@ -126,8 +131,8 @@ public class API_160_ReplicationTest {
         }
 
         /**
-         * add a clerk and node, delete the clerk, then check that the node is still there
-         * it should have been deleted
+         * add a clerk and node, delete the clerk, then check that the node is
+         * still there it should have been deleted
          *
          * @throws Exception
          */
@@ -177,13 +182,13 @@ public class API_160_ReplicationTest {
                 //TODO revise cascade deletes on nodes and clerks
                 Assert.fail("node unexpectedly deleted");
         }
-        
-        
+
         /**
          * add clerk + node, try to delete the node
-         * @throws Exception 
+         *
+         * @throws Exception
          */
-         @Test
+        @Test
         public void testAddClerkNodeThenDelete2() throws Exception {
                 SaveClerk sc = new SaveClerk();
                 sc.setAuthInfo(authInfoRoot);
@@ -210,8 +215,7 @@ public class API_160_ReplicationTest {
 
                 juddi.deleteNode(new DeleteNode(authInfoRoot, c.getNode().getName()));
                 //this should success
-                
-                
+
                 //the clerk should be gone too
                 ClerkList allNodes = juddi.getAllClerks(authInfoRoot);
                 boolean found = false;
@@ -227,10 +231,10 @@ public class API_160_ReplicationTest {
                 NodeList allNodes1 = juddi.getAllNodes(authInfoRoot);
                 for (int i = 0; i < allNodes1.getNode().size(); i++) {
                         if (allNodes1.getNode().get(i).getName().equals(c.getNode().getName())) {
-                                 Assert.fail("node is still there!");
+                                Assert.fail("node is still there!");
                         }
                 }
-                
+
         }
 
         @Test
@@ -264,14 +268,12 @@ public class API_160_ReplicationTest {
                 juddi.saveNode(saveNode);
 
                 juddi.saveClerk(sc);
-                
+
                 //success
-                
-                
                 //delete it
-                juddi.deleteClerk(new DeleteClerk(authInfoRoot,c.getName()));
-                System.out.println(c.getName()+" deleted");
-                
+                juddi.deleteClerk(new DeleteClerk(authInfoRoot, c.getName()));
+                System.out.println(c.getName() + " deleted");
+
                 juddi.deleteNode(new DeleteNode(authInfoRoot, c.getNode().getName()));
                 //confirm it's gone
                 NodeList allNodes = juddi.getAllNodes(authInfoRoot);
@@ -288,30 +290,23 @@ public class API_160_ReplicationTest {
         @Test
         public void setReplicationConfig() throws Exception {
 
-                Node node = new Node();
-                node.setName("test_node");
-                node.setClientName("test_client");
-                node.setProxyTransport(org.apache.juddi.v3.client.transport.JAXWSTransport.class.getCanonicalName());
-                node.setCustodyTransferUrl("http://localhost");
-                node.setDescription("http://localhost");
-                node.setInquiryUrl("http://localhost");
-                node.setPublishUrl("http://localhost");
-                node.setReplicationUrl("http://localhost");
-                node.setSecurityUrl("http://localhost");
-                node.setSubscriptionListenerUrl("http://localhost");
-                node.setSubscriptionUrl("http://localhost");
-
-                SaveNode saveNode = new SaveNode();
-                saveNode.setAuthInfo(authInfoRoot);
-                saveNode.getNode().add(node);
-
-                juddi.saveNode(saveNode);
+               
 
                 ReplicationConfiguration r = new ReplicationConfiguration();
+                Operator op = new Operator();
+                op.setOperatorNodeID("test_node");
+                op.setSoapReplicationURL("http://localhost");
+                op.setOperatorStatus(OperatorStatusType.NORMAL);
+                
+                r.getOperator().add(op);
                 r.setCommunicationGraph(new CommunicationGraph());
-              //  r.getCommunicationGraph().getEdge().add(new CommunicationGraph.Edge());
+                r.setRegistryContact(new ReplicationConfiguration.RegistryContact());
+                r.getRegistryContact().setContact(new Contact());
+                r.getRegistryContact().getContact().getPersonName().add(new PersonName("test", null));
+                //  r.getCommunicationGraph().getEdge().add(new CommunicationGraph.Edge());
                 r.getCommunicationGraph().getNode().add("test_node");
 
+                JAXB.marshal(r, System.out);
                 DispositionReport setReplicationNodes = juddi.setReplicationNodes(authInfoRoot, r);
 
                 ReplicationConfiguration replicationNodes = juddi.getReplicationNodes(authInfoRoot);
@@ -323,17 +318,20 @@ public class API_160_ReplicationTest {
                 Assert.assertNotNull(replicationNodes.getTimeOfConfigurationUpdate());
                 Assert.assertNotNull(replicationNodes.getSerialNumber());
                 long firstcommit = replicationNodes.getSerialNumber();
-                
-                
-                
-                 r = new ReplicationConfiguration();
+
+                r = new ReplicationConfiguration();
+                r.getOperator().add(op);
                 r.setCommunicationGraph(new CommunicationGraph());
-              //  r.getCommunicationGraph().getEdge().add(new CommunicationGraph.Edge());
+                r.setRegistryContact(new ReplicationConfiguration.RegistryContact());
+                r.getRegistryContact().setContact(new Contact());
+                r.getRegistryContact().getContact().getPersonName().add(new PersonName("test", null));
+                //  r.getCommunicationGraph().getEdge().add(new CommunicationGraph.Edge());
                 r.getCommunicationGraph().getNode().add("test_node");
 
-                 setReplicationNodes = juddi.setReplicationNodes(authInfoRoot, r);
+                JAXB.marshal(r, System.out);
+                setReplicationNodes = juddi.setReplicationNodes(authInfoRoot, r);
 
-                 replicationNodes = juddi.getReplicationNodes(authInfoRoot);
+                replicationNodes = juddi.getReplicationNodes(authInfoRoot);
                 Assert.assertNotNull(replicationNodes.getCommunicationGraph());
                 Assert.assertNotNull(replicationNodes.getCommunicationGraph().getNode());
                 Assert.assertEquals("test_node", replicationNodes.getCommunicationGraph().getNode().get(0));
@@ -342,6 +340,62 @@ public class API_160_ReplicationTest {
                 Assert.assertNotNull(replicationNodes.getTimeOfConfigurationUpdate());
                 Assert.assertNotNull(replicationNodes.getSerialNumber());
                 Assert.assertTrue(firstcommit < replicationNodes.getSerialNumber());
+
+        }
+
+        @Test
+        public void setReplicationConfig2() throws Exception {
+
+                
+
+                ReplicationConfiguration r = new ReplicationConfiguration();
+                Operator op = new Operator();
+                op.setOperatorNodeID("test_node");
+                op.setSoapReplicationURL("http://localhost");
+                op.setOperatorStatus(OperatorStatusType.NORMAL);
+                
+                r.getOperator().add(op);
+                r.setCommunicationGraph(new CommunicationGraph());
+                r.setRegistryContact(new ReplicationConfiguration.RegistryContact());
+                r.getRegistryContact().setContact(new Contact());
+                r.getRegistryContact().getContact().getPersonName().add(new PersonName("test", null));
+                //  r.getCommunicationGraph().getEdge().add(new CommunicationGraph.Edge());
+                r.getCommunicationGraph().getNode().add("test_node");
+                r.getCommunicationGraph().getControlledMessage().add("doPing");
+                r.getCommunicationGraph().getEdge().add(new CommunicationGraph.Edge());
+                r.getCommunicationGraph().getEdge().get(0).setMessageReceiver("test_node");
+                r.getCommunicationGraph().getEdge().get(0).setMessageSender("test_node");
+                r.getCommunicationGraph().getEdge().get(0).getMessage().add("doPing");
+                r.getCommunicationGraph().getEdge().get(0).getMessageReceiverAlternate().add("test_node");
+                
+                DispositionReport setReplicationNodes = juddi.setReplicationNodes(authInfoRoot, r);
+
+                ReplicationConfiguration replicationNodes = juddi.getReplicationNodes(authInfoRoot);
+                Assert.assertNotNull(replicationNodes.getCommunicationGraph());
+                Assert.assertNotNull(replicationNodes.getCommunicationGraph().getNode());
+                Assert.assertEquals("test_node", replicationNodes.getCommunicationGraph().getNode().get(0));
+                Assert.assertNotNull(replicationNodes.getMaximumTimeToGetChanges());
+                Assert.assertNotNull(replicationNodes.getMaximumTimeToSyncRegistry());
+                Assert.assertNotNull(replicationNodes.getTimeOfConfigurationUpdate());
+                Assert.assertNotNull(replicationNodes.getSerialNumber());
+
+        }
+
+        //TODO edges can be listed only once and must be unique
+        //TODO In the absence of a communicationGraph element from the Replication Configuration Structure, all nodes listed in the node element MAY send any and all messages to any other node of the registry.
+        //implies that communicationGraph may be null or empty ,despite the xsd
+        @Test
+        public void getReplicationConfigMandatoryItems() throws Exception {
+
+                ReplicationConfiguration replicationNodes = juddi.getReplicationNodes(authInfoRoot);
+                Assert.assertNotNull(replicationNodes);
+                Assert.assertNotNull(replicationNodes.getCommunicationGraph());
+                Assert.assertNotNull(replicationNodes.getTimeOfConfigurationUpdate());
+                Assert.assertNotNull(replicationNodes.getMaximumTimeToGetChanges());
+                Assert.assertNotNull(replicationNodes.getMaximumTimeToSyncRegistry());
+                Assert.assertNotNull(replicationNodes.getRegistryContact());
+                Assert.assertNotNull(replicationNodes.getRegistryContact().getContact());
+                Assert.assertNotNull(replicationNodes.getRegistryContact().getContact().getPersonName().get(0));
 
         }
 }

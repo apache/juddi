@@ -19,6 +19,7 @@ package org.apache.juddi.api.impl;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.rmi.RemoteException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.ws.Holder;
@@ -73,7 +75,6 @@ import org.apache.juddi.model.ClientSubscriptionInfo;
 import org.apache.juddi.model.Node;
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.ReplicationConfiguration;
-import org.apache.juddi.model.SubscriptionMatch;
 import org.apache.juddi.model.Tmodel;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.subscription.NotificationList;
@@ -89,19 +90,24 @@ import org.apache.juddi.validation.ValidateNode;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidatePublisher;
 import org.apache.juddi.validation.ValidateReplication;
-import org.apache.juddi.validation.ValidateSubscription;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.BusinessInfo;
 import org.uddi.api_v3.BusinessInfos;
+import org.uddi.api_v3.Contact;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.GetRegisteredInfo;
 import org.uddi.api_v3.InfoSelection;
+import org.uddi.api_v3.KeyType;
+import org.uddi.api_v3.PersonName;
 import org.uddi.api_v3.RegisteredInfo;
 import org.uddi.api_v3.Result;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModelInfo;
 import org.uddi.api_v3.TModelInfos;
+import org.uddi.repl_v3.CommunicationGraph;
+import org.uddi.repl_v3.Operator;
+import org.uddi.repl_v3.OperatorStatusType;
 import org.uddi.sub_v3.GetSubscriptionResults;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionResultsList;
@@ -119,7 +125,7 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  */
 @WebService(serviceName = "JUDDIApiService",
         endpointInterface = "org.apache.juddi.v3_service.JUDDIApiPortType",
-        targetNamespace = "urn:juddi-apache-org:v3_service")
+        targetNamespace = "urn:juddi-apache-org:v3_service", wsdlLocation =  "classpath:/juddi_api_v1.wsdl")
 public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortType {
 
         private Log log = LogFactory.getLog(this.getClass());
@@ -786,6 +792,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * @throws RemoteException
          */
         @SuppressWarnings("unchecked")
+        @Override
         public SyncSubscriptionDetail invokeSyncSubscription(
                 SyncSubscription body) throws DispositionReportFaultMessage,
                 RemoteException {
@@ -1273,30 +1280,42 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         if (!((Publisher) publisher).isAdmin()) {
                                 throw new UserMismatchException(new ErrorMessage("errors.AdminReqd"));
                         }
-                        new ValidateReplication(publisher).validateSetReplicationNodes(replicationConfiguration,em);
+                        new ValidateReplication(publisher).validateSetReplicationNodes(replicationConfiguration, em, node);
 
                         org.apache.juddi.model.ReplicationConfiguration model = null;
                         try {
                                 model = (ReplicationConfiguration) em.createQuery("select c FROM ReplicationConfiguration c order by c.serialNumber desc").getSingleResult();
                         } catch (Exception ex) {
                         }
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddkkmmZ");
                         if (model == null) {
+                                //this is a brand new configuration
                                 model = new ReplicationConfiguration();
-                                MappingApiToModel.mapReplicationConfiguration(replicationConfiguration, model, em);
+                                MappingApiToModel.mapReplicationConfiguration(replicationConfiguration, model,em);
                                 model.setSerialNumber(System.currentTimeMillis());
+                                model.setTimeOfConfigurationUpdate(sdf.format(new Date()));
                                 em.persist(model);
+                                //if (newReplicationNode(model)){
+                                //tell the replication notifier to start transfering with
+                                //the first change record
+                                //}
 
                         } else {
-                                //long oldid = model.getSerialNumber();
-                                em.remove(model);
+                                //a config exists, remove it, add the new one
+                                //spec doesn't appear to mention if recording a change history on the config is required
+                                //assuming not.
+                                //em.remove(model);
                                 model = new ReplicationConfiguration();
                                 MappingApiToModel.mapReplicationConfiguration(replicationConfiguration, model, em);
                                 model.setSerialNumber(System.currentTimeMillis());
-                                em.persist(model);
+
+                                model.setTimeOfConfigurationUpdate(sdf.format(new Date()));
+                                em.merge(model);
 
                         }
 
                         tx.commit();
+                        //UDDIReplicationImpl.notifyConfigurationChange(replicationConfiguration);
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.SET_REPLICATION_NODES,
                                 QueryStatus.SUCCESS, procTime);
@@ -1305,14 +1324,22 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         serviceCounter.update(JUDDIQuery.SET_REPLICATION_NODES,
                                 QueryStatus.FAILED, procTime);
                         throw drfm;
-                } finally {
+                } catch (Exception ex){
+                        logger.error(ex,ex);
+                        JAXB.marshal(replicationConfiguration, System.out);
+                        throw new FatalErrorException(new ErrorMessage("E_fatalError", ex.getMessage()));
+                }
+                finally {
                         if (tx.isActive()) {
                                 tx.rollback();
                         }
                         em.close();
                 }
+                DispositionReport d = new DispositionReport();
+                Result res = new Result();
 
-                return new DispositionReport();
+                d.getResult().add(res);
+                return d;
         }
 
         @Override
@@ -1335,7 +1362,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         sql.toString();
                         Query qry = em.createQuery(sql.toString());
                         qry.setMaxResults(1);
-                       
+
                         org.apache.juddi.model.ReplicationConfiguration resultList = (org.apache.juddi.model.ReplicationConfiguration) qry.getSingleResult();
                         MappingModelToApi.mapReplicationConfiguration(resultList, r);
                         tx.commit();
@@ -1347,15 +1374,36 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         serviceCounter.update(JUDDIQuery.GET_ALL_NODES,
                                 QueryStatus.FAILED, procTime);
                         throw drfm;
-                } catch (Exception ex){
-                //possible that there is no config to return
-                        r.setCommunicationGraph(null);
-                        logger.warn("Error caught, is there a replication config is avaiable?", ex);
+                } catch (Exception ex) {
+                        //possible that there is no config to return
+                        r.setCommunicationGraph(new CommunicationGraph());
+                        Operator op = new Operator();
+                        op.setOperatorNodeID(node);
+                        op.setSoapReplicationURL(baseUrlSSL + "/services/replication");
+                        //TODO lookup from the root business
+                       
+                        op.getContact().add(new Contact());
+                        op.getContact().get(0).getPersonName().add(new PersonName("Unknown", null));
+                        op.setOperatorStatus(OperatorStatusType.NORMAL);
+                        
+                        r.getOperator().add(op);
+                        r.getCommunicationGraph().getNode().add(node);
+                        r.getCommunicationGraph().getControlledMessage().add("*");
+                        logger.warn("Error caught, is there a replication config is avaiable? Returning a default config (no replication): " + ex.getMessage());
+                        logger.debug("Error caught, is there a replication config is avaiable? Returning a default config (no replication): ", ex);
                         long procTime = System.currentTimeMillis() - startTime;
+                        r.setSerialNumber(0);
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddkkmmZ");
+                        r.setTimeOfConfigurationUpdate(sdf.format(new Date()));
+                        r.setRegistryContact(new org.uddi.repl_v3.ReplicationConfiguration.RegistryContact());
+                        //TODO pull from root business
+                        r.getRegistryContact().setContact(new Contact());
+                        r.getRegistryContact().getContact().getPersonName().add(new PersonName("Unknown", null));
+
                         serviceCounter.update(JUDDIQuery.GET_REPLICATION_NODES,
                                 QueryStatus.FAILED, procTime);
-                
-                }finally {
+
+                } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
                         }
@@ -1364,6 +1412,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                 r.setMaximumTimeToGetChanges(BigInteger.ONE);
                 r.setMaximumTimeToSyncRegistry(BigInteger.ONE);
+                JAXB.marshal(r, System.out);
                 return r;
         }
 

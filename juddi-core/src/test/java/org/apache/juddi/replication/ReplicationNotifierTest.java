@@ -22,14 +22,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
 import org.apache.juddi.api.impl.API_141_JIRATest;
 import org.apache.juddi.api.impl.UDDIReplicationImpl;
-import org.apache.juddi.model.ChangeRecord;
 import org.junit.AfterClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.BeforeClass;
-import org.uddi.api_v3.BusinessEntity;
-import org.uddi.api_v3.Name;
-import org.uddi.api_v3.SaveBusiness;
 import org.uddi.v3_service.UDDIReplicationPortType;
 
 /**
