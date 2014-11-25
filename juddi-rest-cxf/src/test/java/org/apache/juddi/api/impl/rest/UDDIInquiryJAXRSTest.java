@@ -56,7 +56,7 @@ import org.uddi.sub_v3.KeyBag;
 public class UDDIInquiryJAXRSTest extends Assert {
 
         private final static String ENDPOINT_ADDRESS = "http://localhost:8080/rest";
-        private final static String JUDDI_BIZ = "uddi:juddi.apache.org:businesses-asf";
+        private final static String JUDDI_BIZ ="uddi:juddi.apache.org:node1";
         private final static String JUDDI_SVC = "uddi:juddi.apache.org:services-inquiry";
         private final static String JUDDI_BT = "uddi:juddi.apache.org:servicebindings-inquiry-ws";
         private final static String JUDDI_TMODEL = "uddi:uddi.org:transport:smtp";

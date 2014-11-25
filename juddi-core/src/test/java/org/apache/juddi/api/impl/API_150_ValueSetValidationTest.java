@@ -104,7 +104,7 @@ public class API_150_ValueSetValidationTest {
                         Assert.fail("Could not obtain authInfo token.");
                 }
         }
-        final static String VSV_KEY = "uddi:juddi.apache.org:businesses-asf";
+        static String VSV_KEY = "uddi:juddi.apache.org:node1";
         //VIA InVM transport
         final static String VSV_BT_KEY = "uddi:juddi.apache.org:servicebindings-valueset-cp";
         //VIA JAXWS Transport "uddi:juddi.apache.org:servicebindings-valueset-ws";
@@ -341,7 +341,7 @@ public class API_150_ValueSetValidationTest {
                 tm.setCategoryBag(new CategoryBag());
                 tm.setName(new Name("My Custom validated key", "en"));
                 tm.getDescription().add(new Description("valid values include 'one', 'two', 'three'", "en"));
-                tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.OWNING_BUSINESS, "", "uddi:juddi.apache.org:businesses-asf"));
+                tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.OWNING_BUSINESS, "",VSV_KEY));
                 SaveTModel stm = new SaveTModel();
                 stm.setAuthInfo(authInfoJoe);
                 stm.getTModel().add(tm);
@@ -632,7 +632,7 @@ public class API_150_ValueSetValidationTest {
                 tm.setName(new Name("My new tmodel", "en"));
                 tm.getDescription().add(new Description("valid values include 'one', 'two', 'three'", "en"));
                 tm.setCategoryBag(new CategoryBag());
-                tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.IS_REPLACED_BY, "", "uddi:juddi.apache.org:businesses-asf"));
+                tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.IS_REPLACED_BY, "",VSV_KEY));
                 SaveTModel stm = new SaveTModel();
                 stm.setAuthInfo(authInfoJoe);
                 stm.getTModel().add(tm);

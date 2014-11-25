@@ -26,7 +26,7 @@
 			<!-- this is the 'root' username, or owner of the node -->
 			<publisher>root</publisher>
 			<!-- The key of the root business that all of the UDDI services are registered in, as defined in the install_data -->
-			<businessId>uddi:juddi.apache.org:businesses-asf</businessId>
+			<businessId>uddi:juddi.apache.org:node1</businessId>
 			<partition>uddi:juddi.apache.org</partition>
 		</root>
 		<seed>

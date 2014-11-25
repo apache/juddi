@@ -38,7 +38,7 @@
   
 See below for other fields that you may want to edit...
 -->
-<businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:juddi.apache.org:businesses-asf">
+<businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:juddi.apache.org:node1">
      <!-- Change the name field to represent the name of your registry -->
      <name xml:lang="en">An Apache jUDDI Node</name>
      <!-- Change the description field to provided a brief description of your registry -->
@@ -54,7 +54,7 @@ See below for other fields that you may want to edit...
           <!-- As mentioned above, you may want to provide user-defined keys for these (and the services/bindingTemplates below.  Services that you
           don't intend to support should be removed entirely -->
           <!-- inquiry v3 -->
-          <businessService serviceKey="uddi:juddi.apache.org:services-inquiry" businessKey="uddi:juddi.apache.org:businesses-asf">
+          <businessService serviceKey="uddi:juddi.apache.org:services-inquiry" businessKey="uddi:juddi.apache.org:node1">
                <name xml:lang="en">UDDI Inquiry Service</name>
                <description xml:lang="en">Web Service supporting UDDI Inquiry API</description>
                <bindingTemplates>
@@ -124,7 +124,7 @@ See below for other fields that you may want to edit...
                </categoryBag>
           </businessService>
           <!-- inquiry v2 -->
-          <businessService serviceKey="uddi:juddi.apache.org:services-inquiryv2" businessKey="uddi:juddi.apache.org:businesses-asf">
+          <businessService serviceKey="uddi:juddi.apache.org:services-inquiryv2" businessKey="uddi:juddi.apache.org:node1">
                <name xml:lang="en">UDDIv2 Inquiry Service</name>
                <description xml:lang="en">Web Service supporting UDDIv2 Inquiry API</description>
                <bindingTemplates>
@@ -165,7 +165,7 @@ See below for other fields that you may want to edit...
                </categoryBag>
           </businessService>
           <!-- inquiry v3 REST -->
-          <businessService serviceKey="uddi:juddi.apache.org:services-inquiry-rest" businessKey="uddi:juddi.apache.org:businesses-asf">
+          <businessService serviceKey="uddi:juddi.apache.org:services-inquiry-rest" businessKey="uddi:juddi.apache.org:node1">
                <name xml:lang="en">UDDI Inquiry REST Service</name>
                <description xml:lang="en">Web Service supporting UDDI Inquiry API via HTTP GET</description>
                <bindingTemplates>
@@ -200,7 +200,7 @@ See below for other fields that you may want to edit...
                </categoryBag>
           </businessService>
           <!-- publish v3 -->
-          <businessService serviceKey="uddi:juddi.apache.org:services-publish" businessKey="uddi:juddi.apache.org:businesses-asf">
+          <businessService serviceKey="uddi:juddi.apache.org:services-publish" businessKey="uddi:juddi.apache.org:node1">
                <name xml:lang="en">UDDI Publish Service</name>
                <description xml:lang="en">Web Service supporting UDDI Publish API</description>
                <bindingTemplates>
@@ -265,7 +265,7 @@ See below for other fields that you may want to edit...
           </businessService>
  
           <!-- publish v2 -->
-          <businessService serviceKey="uddi:juddi.apache.org:services-publishv2" businessKey="uddi:juddi.apache.org:businesses-asf">
+          <businessService serviceKey="uddi:juddi.apache.org:services-publishv2" businessKey="uddi:juddi.apache.org:node1">
                <name xml:lang="en">UDDIv2 Publish Service</name>
                <description xml:lang="en">Web Service supporting UDDIv2 Publish API</description>
                <bindingTemplates>
@@ -302,7 +302,7 @@ See below for other fields that you may want to edit...
  
           <!-- security v3 -->
 
-          <businessService serviceKey="uddi:juddi.apache.org:services-security" businessKey="uddi:juddi.apache.org:businesses-asf">
+          <businessService serviceKey="uddi:juddi.apache.org:services-security" businessKey="uddi:juddi.apache.org:node1">
                <name xml:lang="en">UDDI Security Service</name>
                <description xml:lang="en">Web Service supporting UDDI Security API</description>
                <bindingTemplates>
@@ -342,7 +342,7 @@ See below for other fields that you may want to edit...
                </categoryBag>
           </businessService>
           <!-- custody v3 -->
-          <businessService serviceKey="uddi:juddi.apache.org:services-custodytransfer" businessKey="uddi:juddi.apache.org:businesses-asf">
+          <businessService serviceKey="uddi:juddi.apache.org:services-custodytransfer" businessKey="uddi:juddi.apache.org:node1">
                <name xml:lang="en">UDDI Custody and Ownership Transfer Service</name>
                <description xml:lang="en">Web Service supporting UDDI Custody and Ownership Transfer API</description>
                <bindingTemplates>
@@ -411,7 +411,7 @@ See below for other fields that you may want to edit...
           </businessService>
                 
           <!-- subscription v3 -->
-          <businessService serviceKey="uddi:juddi.apache.org:services-subscription" businessKey="uddi:juddi.apache.org:businesses-asf">
+          <businessService serviceKey="uddi:juddi.apache.org:services-subscription" businessKey="uddi:juddi.apache.org:node1">
                <name xml:lang="en">UDDI Subscription Service</name>
                <description xml:lang="en">Web Service supporting UDDI Subscription API</description>
                <bindingTemplates>
@@ -477,7 +477,7 @@ See below for other fields that you may want to edit...
                </categoryBag>
           </businessService>
           <!-- subscription listener v3 -->
-          <businessService serviceKey="uddi:juddi.apache.org:services-subscriptionlistener" businessKey="uddi:juddi.apache.org:businesses-asf">
+          <businessService serviceKey="uddi:juddi.apache.org:services-subscriptionlistener" businessKey="uddi:juddi.apache.org:node1">
                <name xml:lang="en">UDDI Subscription Listener Service</name>
                <description xml:lang="en">Web Service supporting UDDI Subscription Listener API</description>
                <bindingTemplates>
@@ -520,7 +520,7 @@ See below for other fields that you may want to edit...
           </businessService>
 	
 
-          <businessService serviceKey="uddi:juddi.apache.org:services-valueset" businessKey="uddi:juddi.apache.org:businesses-asf">
+          <businessService serviceKey="uddi:juddi.apache.org:services-valueset" businessKey="uddi:juddi.apache.org:node1">
                <name xml:lang="en">UDDI Value Set API Service</name>
                <description xml:lang="en">Web Service supporting UDDI Value Set Validation service. This service provides tModel value validation and is
                     configured using the jUDDI Publisher Service</description>
@@ -562,7 +562,7 @@ See below for other fields that you may want to edit...
           </businessService>
 	
 	
-          <businessService serviceKey="uddi:juddi.apache.org:services-valueset-cache" businessKey="uddi:juddi.apache.org:businesses-asf">
+          <businessService serviceKey="uddi:juddi.apache.org:services-valueset-cache" businessKey="uddi:juddi.apache.org:node1">
                <name xml:lang="en">UDDI Value Set Caching API Service</name>
                <description xml:lang="en">Web Service supporting UDDI Value Set Caching service. This service provides tModel value validation and is
                     configured using the jUDDI Publisher Service</description>
@@ -601,7 +601,7 @@ See below for other fields that you may want to edit...
 	
 
 
-          <businessService serviceKey="uddi:juddi.apache.org:replication" businessKey="uddi:juddi.apache.org:businesses-asf">
+          <businessService serviceKey="uddi:juddi.apache.org:replication" businessKey="uddi:juddi.apache.org:node1">
                <name xml:lang="en">UDDI Replication API Version 3</name>
                <description xml:lang="en">UDDI Replication API Version 3</description>
                <bindingTemplates>
@@ -625,7 +625,7 @@ See below for other fields that you may want to edit...
 	
                 
           <!-- juddi api service -->
-          <businessService serviceKey="uddi:juddi.apache.org:services-publisher" businessKey="uddi:juddi.apache.org:businesses-asf">
+          <businessService serviceKey="uddi:juddi.apache.org:services-publisher" businessKey="uddi:juddi.apache.org:node1">
                <name xml:lang="en">jUDDI Publisher Service</name>
                <description xml:lang="en">Web Service supporting jUDDI specific API</description>
                <bindingTemplates>
