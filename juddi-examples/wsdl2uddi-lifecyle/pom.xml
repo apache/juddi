@@ -3,7 +3,7 @@
   <parent>
      <groupId>org.apache.juddi.example</groupId>
      <artifactId>juddi-examples</artifactId>
-     <version>3.2.1-SNAPSHOT</version>
+     <version>3.2.1</version>
      <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>wsdl2uddi-lifecycle</artifactId>
