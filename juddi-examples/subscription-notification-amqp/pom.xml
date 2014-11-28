@@ -12,11 +12,11 @@
 	<parent>
 		<groupId>org.apache.juddi.example</groupId>
 		<artifactId>juddi-examples</artifactId>
-		<version>3.2.1-SNAPSHOT</version>
+		<version>3.2.1</version>
 	</parent>
 
 	<artifactId>subscription-notification-amqp</artifactId>
-	<version>${project.parent.version}</version>
+	<version>3.2.1</version>
 	<name>jUDDI Example AMQP Notifier for Subscription callbacks</name>
 	<description>Demonstrates how to write a custom notifier for subscriptions</description>
 	<dependencies>
