@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-parent</artifactId>
-    <version>3.2.1-SNAPSHOT</version>
+    <version>3.2.1</version>
   </parent>
   <groupId>org.apache.juddi.client.plugins</groupId>
   <artifactId>juddi-client-plugins</artifactId>
