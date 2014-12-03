@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.juddi.example</groupId>
 		<artifactId>juddi-examples</artifactId>
-		<version>3.3.0-SNAPSHOT</version>
+		<version>3.2.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>uddi-annotations</artifactId>
