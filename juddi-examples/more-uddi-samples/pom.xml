@@ -24,7 +24,7 @@
 	</parent>
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>juddi-more-samples</artifactId>
-	<version>3.2.1-SNAPSHOP</version>
+	<version>3.2.1-SNAPSHOT</version>
 	<name>jUDDI Even More Examples and Samples</name>
 	<url>http://maven.apache.org</url>
 	<properties>
