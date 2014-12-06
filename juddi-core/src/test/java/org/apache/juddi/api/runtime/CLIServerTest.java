@@ -34,6 +34,7 @@ import org.uddi.api_v3.Contact;
 import org.uddi.api_v3.PersonName;
 import org.uddi.repl_v3.CommunicationGraph;
 import org.uddi.repl_v3.DoPing;
+import org.uddi.repl_v3.GetChangeRecords;
 
 /**
  *
@@ -101,7 +102,7 @@ public class CLIServerTest {
 
                 UDDIReplicationPortType juddiApiService = new UDDIService().getUDDIReplicationPort();
                 ((BindingProvider) juddiApiService).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, replUrl);
-                juddiApiService.getChangeRecords(null, new HighWaterMarkVectorType(), BigInteger.ONE, new HighWaterMarkVectorType());
+                juddiApiService.getChangeRecords(new GetChangeRecords());
                 Assert.assertTrue(sink);
                 sink = false;
         }

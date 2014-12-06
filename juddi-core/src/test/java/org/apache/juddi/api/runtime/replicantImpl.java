@@ -21,7 +21,9 @@ import java.util.List;
 import javax.jws.WebService;
 import org.uddi.repl_v3.ChangeRecord;
 import org.uddi.repl_v3.ChangeRecordIDType;
+import org.uddi.repl_v3.ChangeRecords;
 import org.uddi.repl_v3.DoPing;
+import org.uddi.repl_v3.GetChangeRecords;
 import org.uddi.repl_v3.HighWaterMarkVectorType;
 import org.uddi.repl_v3.NotifyChangeRecordsAvailable;
 import org.uddi.repl_v3.TransferCustody;
@@ -39,11 +41,7 @@ import org.uddi.v3_service.UDDIReplicationPortType;
         public replicantImpl(){
         }
 
-        @Override
-        public List<ChangeRecord> getChangeRecords(String requestingNode, HighWaterMarkVectorType changesAlreadySeen, BigInteger responseLimitCount, HighWaterMarkVectorType responseLimitVector) throws DispositionReportFaultMessage, RemoteException {
-                CLIServerTest.sink = true;
-                return null;
-        }
+    
 
         @Override
         public void notifyChangeRecordsAvailable(NotifyChangeRecordsAvailable body) throws DispositionReportFaultMessage, RemoteException {
@@ -65,6 +63,12 @@ import org.uddi.v3_service.UDDIReplicationPortType;
         @Override
         public void transferCustody(TransferCustody body) throws DispositionReportFaultMessage, RemoteException {
                 CLIServerTest.sink = true;
+        }
+
+        @Override
+        public ChangeRecords getChangeRecords(GetChangeRecords body) throws DispositionReportFaultMessage, RemoteException {
+                    CLIServerTest.sink = true;
+                return null;
         }
         
 }

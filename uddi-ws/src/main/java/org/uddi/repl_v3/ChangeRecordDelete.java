@@ -66,13 +66,13 @@ The changeRecordDelete MUST contain a modified timestamp to allow multi-node reg
 public class ChangeRecordDelete implements Serializable{
 	@XmlTransient
 	private static final long serialVersionUID = -7081596275330679517L;
-	@XmlElement(namespace = "urn:uddi-org:api_v3")
+	@XmlElement(namespace = "urn:uddi-org:repl_v3")
     protected String businessKey;
-    @XmlElement(namespace = "urn:uddi-org:api_v3")
+    @XmlElement(namespace = "urn:uddi-org:repl_v3")
     protected String tModelKey;
-    @XmlElement(namespace = "urn:uddi-org:api_v3")
+    @XmlElement(namespace = "urn:uddi-org:repl_v3")
     protected String serviceKey;
-    @XmlElement(namespace = "urn:uddi-org:api_v3")
+    @XmlElement(namespace = "urn:uddi-org:repl_v3")
     protected String bindingKey;
     @XmlElement(required = true)
     protected XMLGregorianCalendar modified;

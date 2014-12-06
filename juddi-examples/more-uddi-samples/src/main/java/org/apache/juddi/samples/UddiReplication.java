@@ -20,11 +20,14 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.JAXB;
 import javax.xml.ws.BindingProvider;
 import org.apache.juddi.v3.client.UDDIService;
 import org.uddi.repl_v3.ChangeRecord;
 import org.uddi.repl_v3.ChangeRecordIDType;
+import org.uddi.repl_v3.ChangeRecords;
 import org.uddi.repl_v3.DoPing;
+import org.uddi.repl_v3.GetChangeRecords;
 import org.uddi.repl_v3.HighWaterMarkVectorType;
 import org.uddi.v3_service.UDDIReplicationPortType;
 
@@ -75,7 +78,12 @@ class UddiReplication {
                         
                         highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(DoPing(key2), record));
                         ((BindingProvider) uddiReplicationPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, key2);
-                        List<ChangeRecord> changeRecords = uddiReplicationPort.getChangeRecords(sourcenode, highWaterMarkVectorType, BigInteger.valueOf(100), null);
+                        GetChangeRecords req = new GetChangeRecords();
+                        req.setRequestingNode(sourcenode);
+                        req.setChangesAlreadySeen(highWaterMarkVectorType);
+                        req.setResponseLimitCount(BigInteger.valueOf(100));
+                        ChangeRecords res = uddiReplicationPort.getChangeRecords(req);
+                        List<ChangeRecord> changeRecords = res.getChangeRecord();
                         System.out.println("Success...." + changeRecords.size() + " records returned");
                         System.out.println("Node, USN, type");
                         for (int i = 0; i < changeRecords.size(); i++) {
@@ -83,6 +91,7 @@ class UddiReplication {
                                      changeRecords.get(i).getChangeID().getNodeID() + ", "
                                      + changeRecords.get(i).getChangeID().getOriginatingUSN() + ": "
                                      + GetChangeType(changeRecords.get(i)));
+                                JAXB.marshal(changeRecords.get(i), System.out);
                         }
                 } catch (Exception ex) {
                         Logger.getLogger(UddiReplication.class.getName()).log(Level.SEVERE, null, ex);

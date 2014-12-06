@@ -17,6 +17,7 @@
 package org.apache.juddi.api.impl;
 
 import java.math.BigInteger;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,21 +27,16 @@ import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import javax.xml.bind.JAXB;
 import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.BindingProvider;
-import javax.xml.ws.RequestWrapper;
-import javax.xml.ws.ResponseWrapper;
 import org.apache.commons.configuration.ConfigurationException;
 import static org.apache.juddi.api.impl.AuthenticatedService.logger;
 import org.apache.juddi.api.util.QueryStatus;
@@ -52,7 +48,6 @@ import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.BusinessEntity;
 import org.apache.juddi.model.BusinessService;
-import org.apache.juddi.model.Node;
 import org.apache.juddi.model.Operator;
 import org.apache.juddi.model.Tmodel;
 import static org.apache.juddi.replication.ReplicationNotifier.FetchEdges;
@@ -64,7 +59,9 @@ import org.uddi.api_v3.OperationalInfo;
 import org.uddi.custody_v3.DiscardTransferToken;
 import org.uddi.repl_v3.ChangeRecord;
 import org.uddi.repl_v3.ChangeRecordIDType;
+import org.uddi.repl_v3.ChangeRecords;
 import org.uddi.repl_v3.DoPing;
+import org.uddi.repl_v3.GetChangeRecords;
 import org.uddi.repl_v3.HighWaterMarkVectorType;
 import org.uddi.repl_v3.NotifyChangeRecordsAvailable;
 import org.uddi.repl_v3.ReplicationConfiguration;
@@ -176,22 +173,32 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                         UDDIReplicationPortType replicationClient = getReplicationClient(poll.getNotifyingNode());
                                         if (replicationClient == null) {
                                                 logger.fatal("unable to obtain a replication client to node " + poll.getNotifyingNode());
-                                        }
-                                        try {
+                                        } else {
+                                                try {
                                                 //get the high water marks for this node
-                                                //ok now get all the changes
-                                                logger.info("fetching updates...");
-
-                                                List<ChangeRecord> records
-                                                        = replicationClient.getChangeRecords(node,
-                                                                poll.getChangesAvailable(), BigInteger.valueOf(100), null);
-                                                //ok now we need to persist the change records
-                                                logger.info("Change records retrieved " + records.size());
-                                                for (int i = 0; i < records.size(); i++) {
-                                                        PersistChangeRecord(records.get(i));
+                                                        //ok now get all the changes
+                                                        logger.info("fetching updates on, since ");
+                                                        for (int xx = 0; xx < poll.getChangesAvailable().getHighWaterMark().size(); xx++) {
+                                                                logger.info("Node " + poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID()
+                                                                        + " USN " + poll.getChangesAvailable().getHighWaterMark().get(xx).getOriginatingUSN());
+                                                        }
+                                                        //JAXB.marshal(poll, System.out);
+                                                        GetChangeRecords body = new GetChangeRecords();
+                                                        body.setRequestingNode(node);
+                                                        body.setResponseLimitCount(BigInteger.valueOf(100));
+                                                        //indexing is screwed up
+                                                        body.setChangesAlreadySeen(poll.getChangesAvailable());
+                                                        List<ChangeRecord> records
+                                                                = replicationClient.getChangeRecords(body).getChangeRecord();
+                                                        //ok now we need to persist the change records
+                                                        logger.info("Change records retrieved " + records.size());
+                                                        for (int i = 0; i < records.size(); i++) {
+                                                                logger.info("Change records retrieved " + records.get(i).getChangeID().getNodeID() + " USN " + records.get(i).getChangeID().getOriginatingUSN());
+                                                                PersistChangeRecord(records.get(i));
+                                                        }
+                                                } catch (Exception ex) {
+                                                        logger.error("Error caught fetching replication changes from " + poll.getNotifyingNode(), ex);
                                                 }
-                                        } catch (Exception ex) {
-                                                logger.error("Error caught fetching replication changes from " + poll.getNotifyingNode(), ex);
                                         }
                                 } else {
                                         logger.warn("weird, popped an object from the queue but it was null.");
@@ -226,10 +233,14 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                          * a USN is less than the USN specified in the
                          * changesAlreadySeen highWaterMarkVector.
                          */
+                        logger.info("Remote change request");
+                        JAXB.marshal(rec, System.out);
                         try {
                                 tx.begin();
                                 //the change record rec must also be persisted!!
-                                em.persist(MappingApiToModel.mapChangeRecord(rec));
+                                org.apache.juddi.model.ChangeRecord mapChangeRecord = MappingApiToModel.mapChangeRecord(rec);
+                                mapChangeRecord.setId(null);
+                                em.persist(mapChangeRecord);
                                 //<editor-fold defaultstate="collapsed" desc="delete a record">
 
                                 if (rec.getChangeRecordDelete() != null) {
@@ -291,7 +302,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                                                                 org.apache.juddi.model.BindingTemplate modelT = new org.apache.juddi.model.BindingTemplate();
                                                                 MappingApiToModel.mapBindingTemplate(rec.getChangeRecordNewData().getBindingTemplate(), modelT, model);
-                                                                MappingApiToModel.mapOperationalInfo(model, rec.getChangeRecordNewData().getOperationalInfo());
+                                                                MappingApiToModel.mapOperationalInfo(modelT, rec.getChangeRecordNewData().getOperationalInfo());
+                                                                // MappingApiToModel.mapOperationalInfoIncludingChildren(model, rec.getChangeRecordNewData().getOperationalInfo());
                                                                 em.persist(model);
                                                         }
 
@@ -304,8 +316,9 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                 ValidateNodeIdMatches(model.getNodeId(), rec.getChangeRecordNewData().getOperationalInfo());
                                                         }
                                                         MappingApiToModel.mapBusinessEntity(rec.getChangeRecordNewData().getBusinessEntity(), model);
-                                                        MappingApiToModel.mapOperationalInfo(model, rec.getChangeRecordNewData().getOperationalInfo());
+                                                       // MappingApiToModel.mapOperationalInfo(model, rec.getChangeRecordNewData().getOperationalInfo());
 
+                                                        MappingApiToModel.mapOperationalInfoIncludingChildren(model, rec.getChangeRecordNewData().getOperationalInfo());
                                                         em.persist(model);
 
                                                 }
@@ -317,6 +330,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                 org.apache.juddi.model.BusinessService model = new org.apache.juddi.model.BusinessService();
                                                                 MappingApiToModel.mapBusinessService(rec.getChangeRecordNewData().getBusinessService(), model, find);
                                                                 MappingApiToModel.mapOperationalInfo(model, rec.getChangeRecordNewData().getOperationalInfo());
+                                                                MappingApiToModel.mapOperationalInfoIncludingChildren(model, rec.getChangeRecordNewData().getOperationalInfo());
 
                                                                 em.persist(model);
                                                         }
@@ -366,7 +380,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 tx.commit();
 
                         } catch (Exception drfm) {
-                                logger.warn(drfm);
+                                logger.warn("Error persisting change record!", drfm);
                         } finally {
                                 if (tx.isActive()) {
                                         tx.rollback();
@@ -441,17 +455,28 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
         }
 
-        @WebResult(name = "changeRecord", targetNamespace = "urn:uddi-org:repl_v3")
-        @RequestWrapper(localName = "get_changeRecords", targetNamespace = "urn:uddi-org:repl_v3", className = "org.uddi.repl_v3.GetChangeRecords")
-        @ResponseWrapper(localName = "changeRecords", targetNamespace = "urn:uddi-org:repl_v3", className = "org.uddi.repl_v3.ChangeRecords")
+        @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+        @WebResult(name = "changeRecords", targetNamespace = "urn:uddi-org:repl_v3", partName = "body")
+        // @WebMethod(operationName = "get_changeRecords", action = "get_changeRecords")
+        public org.uddi.repl_v3.ChangeRecords getChangeRecords(
+                @WebParam(partName = "body", name = "get_changeRecords", targetNamespace = "urn:uddi-org:repl_v3") org.uddi.repl_v3.GetChangeRecords body
+        ) throws DispositionReportFaultMessage, RemoteException {/*
+                 @WebResult(name = "changeRecord", targetNamespace = "urn:uddi-org:repl_v3")
+                 @RequestWrapper(localName = "get_changeRecords", targetNamespace = "urn:uddi-org:repl_v3", className = "org.uddi.repl_v3.GetChangeRecords")
+                 @ResponseWrapper(localName = "changeRecords", targetNamespace = "urn:uddi-org:repl_v3", className = "org.uddi.repl_v3.ChangeRecords")
 
-        @Override
-        public List<ChangeRecord> getChangeRecords(@WebParam(name = "requestingNode", targetNamespace = "urn:uddi-org:repl_v3") String requestingNode,
-                @WebParam(name = "changesAlreadySeen", targetNamespace = "urn:uddi-org:repl_v3") HighWaterMarkVectorType changesAlreadySeen,
-                @WebParam(name = "responseLimitCount", targetNamespace = "urn:uddi-org:repl_v3") BigInteger responseLimitCount,
-                @WebParam(name = "responseLimitVector", targetNamespace = "urn:uddi-org:repl_v3") HighWaterMarkVectorType responseLimitVector)
-                throws DispositionReportFaultMessage {
+                 @Override
+                 public List<ChangeRecord> getChangeRecords(@WebParam(name = "requestingNode", targetNamespace = "urn:uddi-org:repl_v3") String requestingNode,
+                 @WebParam(name = "changesAlreadySeen", targetNamespace = "urn:uddi-org:repl_v3") HighWaterMarkVectorType changesAlreadySeen,
+                 @WebParam(name = "responseLimitCount", targetNamespace = "urn:uddi-org:repl_v3") BigInteger responseLimitCount,
+                 @WebParam(name = "responseLimitVector", targetNamespace = "urn:uddi-org:repl_v3") HighWaterMarkVectorType responseLimitVector)
+                 throws DispositionReportFaultMessage {*/
+
                 long startTime = System.currentTimeMillis();
+                String requestingNode = body.getRequestingNode();
+                HighWaterMarkVectorType changesAlreadySeen = body.getChangesAlreadySeen();
+                BigInteger responseLimitCount = body.getResponseLimitCount();
+                HighWaterMarkVectorType responseLimitVector = body.getResponseLimitVector();
 
                 new ValidateReplication(null).validateGetChangeRecords(requestingNode, changesAlreadySeen, responseLimitCount, responseLimitVector, FetchEdges(), ctx);
 
@@ -483,7 +508,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 }
                 try {
                         tx.begin();
-                        Long firstrecord = 1L;
+                        Long firstrecord = 0L;
                         Long lastrecord = null;
 
                         if (changesAlreadySeen != null) {
@@ -491,7 +516,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 //therefore we want the oldest record stored locally to return to the requestor for processing
                                 for (int i = 0; i < changesAlreadySeen.getHighWaterMark().size(); i++) {
                                         if (changesAlreadySeen.getHighWaterMark().get(i).getNodeID().equals(node)) {
-                                                firstrecord = changesAlreadySeen.getHighWaterMark().get(i).getOriginatingUSN() + 1;
+                                                firstrecord = changesAlreadySeen.getHighWaterMark().get(i).getOriginatingUSN();
                                         }
                                 }
                         }
@@ -505,25 +530,31 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 }
                         }
 
+                        logger.info("Query db for replication changes, lower index is " + (firstrecord - 1) + " last index " + lastrecord + " record limit " + maxrecords);
                         Query createQuery = null;
                         if (lastrecord != null) {
-                                createQuery = em.createQuery("select e from ChangeRecord e where ((e.id >= :inbound and e.nodeID = :node and e.id < :lastrecord) OR "
-                                        + "(e.originatingUSN > :inbound and e.nodeID <> :node and e.originatingUSN < :lastrecord)) order by e.id ASC");
+                                createQuery = em.createQuery("select e from ChangeRecord e where "
+                                        + "((e.id > :inbound AND e.nodeID = :node AND e.id < :lastrecord) OR "
+                                        + "(e.originatingUSN > :inbound AND e.nodeID <> :node AND e.originatingUSN < :lastrecord)) "
+                                        + "order by e.id ASC");
                                 createQuery.setParameter("lastrecord", lastrecord);
                         } else {
-                                createQuery = em.createQuery("select e from ChangeRecord e where ((e.id >= :inbound and e.nodeID = :node) OR "
-                                        + "(e.originatingUSN > :inbound and e.nodeID <> :node)) order by e.id ASC");
+                                createQuery = em.createQuery("select e from ChangeRecord e where "
+                                        + "((e.id > :inbound AND e.nodeID = :node) OR "
+                                        + "(e.originatingUSN > :inbound AND e.nodeID <> :node)) "
+                                        + "order by e.id ASC");
                         }
                         createQuery.setMaxResults(maxrecords);
-                        createQuery.setParameter("inbound", firstrecord);
+                        createQuery.setParameter("inbound", firstrecord - 1);
                         createQuery.setParameter("node", node);
 
                         List<org.apache.juddi.model.ChangeRecord> records = (List<org.apache.juddi.model.ChangeRecord>) createQuery.getResultList();
+                        logger.info(records.size() + " CR records returned from query");
                         for (int i = 0; i < records.size(); i++) {
                                 ChangeRecord r = MappingModelToApi.mapChangeRecord(records.get(i));
-                                if (!Excluded(changesAlreadySeen, r)) {
-                                        ret.add(r);
-                                }
+                                //if (!Excluded(changesAlreadySeen, r)) {
+                                ret.add(r);
+                                //}
 
                         }
 
@@ -544,7 +575,9 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 }
                 logger.info("Change records returned for " + requestingNode + ": " + ret.size());
                 //JAXB.marshal(ret, System.out);
-                return ret;
+                ChangeRecords x = new ChangeRecords();
+                x.getChangeRecord().addAll(ret);
+                return x;
         }
 
         /**
@@ -639,9 +672,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                 new ValidateReplication(null).validateNotifyChangeRecordsAvailable(body, ctx);
 
-                logger.info(body.getNotifyingNode() + " just told me that there are change records available, enqueuing...");
                 queue.add(body);
-
+                logger.info(body.getNotifyingNode() + " just told me that there are change records available, enqueuing...size is " + queue.size());
                 //ValidateReplication.unsupportedAPICall();
         }
         private static Queue<NotifyChangeRecordsAvailable> queue = null;

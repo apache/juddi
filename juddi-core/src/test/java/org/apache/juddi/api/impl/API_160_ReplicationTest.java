@@ -48,6 +48,7 @@ import org.uddi.repl_v3.ChangeRecord;
 import org.uddi.repl_v3.ChangeRecordIDType;
 import org.uddi.repl_v3.CommunicationGraph;
 import org.uddi.repl_v3.DoPing;
+import org.uddi.repl_v3.GetChangeRecords;
 import org.uddi.repl_v3.HighWaterMarkVectorType;
 import org.uddi.repl_v3.Operator;
 import org.uddi.repl_v3.OperatorStatusType;
@@ -126,7 +127,12 @@ public class API_160_ReplicationTest {
 
                 HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
                 highWaterMarkVectorType.getHighWaterMark().add(highWaterMarks.get(0));
-                List<ChangeRecord> changeRecords = repl.getChangeRecords("test", null, BigInteger.valueOf(highWaterMarks.get(0).getOriginatingUSN()), highWaterMarkVectorType);
+                GetChangeRecords req = new GetChangeRecords();
+                req.setRequestingNode("test");
+                req.setChangesAlreadySeen(null);
+                
+                req.setResponseLimitVector(highWaterMarkVectorType);
+                repl.getChangeRecords(req);//"test", null, BigInteger.valueOf(highWaterMarks.get(0).getOriginatingUSN()), highWaterMarkVectorType);
                 Assert.fail("unexpected success");
         }
 

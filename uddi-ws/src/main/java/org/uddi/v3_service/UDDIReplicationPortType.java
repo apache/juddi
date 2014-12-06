@@ -155,6 +155,14 @@ public interface UDDIReplicationPortType extends Remote {
      * code. Error reporting SHALL be that specified by Section 4.8 – Success
      * and Error Reporting of this specification.
      */
+          @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    @WebResult(name = "changeRecords", targetNamespace = "urn:uddi-org:repl_v3", partName = "body")
+    @WebMethod(operationName = "get_changeRecords", action = "get_changeRecords")
+    public org.uddi.repl_v3.ChangeRecords getChangeRecords(
+        @WebParam(partName = "body", name = "get_changeRecords", targetNamespace = "urn:uddi-org:repl_v3")
+        org.uddi.repl_v3.GetChangeRecords body
+    ) throws DispositionReportFaultMessage,RemoteException;
+    /*
  @WebMethod(operationName = "get_changeRecords", action = "get_changeRecords")
     @WebResult(name = "changeRecord", targetNamespace = "urn:uddi-org:repl_v3")
     @RequestWrapper(localName = "get_changeRecords", targetNamespace = "urn:uddi-org:repl_v3", className = "org.uddi.repl_v3.GetChangeRecords")
@@ -169,7 +177,7 @@ public interface UDDIReplicationPortType extends Remote {
         @WebParam(name = "responseLimitVector", targetNamespace = "urn:uddi-org:repl_v3")
         HighWaterMarkVectorType responseLimitVector)
         throws DispositionReportFaultMessage, RemoteException;
-
+*/
     /**
      * <p class="MsoBodyText">Nodes can inform other nodes that they have new
      * change records available for consumption by replication by using this

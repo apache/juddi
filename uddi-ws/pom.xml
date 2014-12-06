@@ -61,5 +61,11 @@
           <type>jar</type>
           <scope>provided</scope>
         </dependency>
+          <dependency>
+            <scope>test</scope>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-databinding-jaxb</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
 	</dependencies>
 </project>

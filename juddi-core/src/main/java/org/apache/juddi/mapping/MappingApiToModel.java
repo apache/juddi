@@ -33,6 +33,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.apache.juddi.model.Address;
 import org.apache.juddi.model.BindingTemplate;
+import org.apache.juddi.model.BusinessEntity;
 import org.apache.juddi.model.BusinessService;
 import org.apache.juddi.model.CanonicalizationMethod;
 import org.apache.juddi.model.Contact;
@@ -1381,6 +1382,27 @@ public class MappingApiToModel {
         public static org.apache.juddi.model.ChangeRecord mapChangeRecord(ChangeRecord rec) throws UnsupportedEncodingException {
                 org.apache.juddi.model.ChangeRecord r = new org.apache.juddi.model.ChangeRecord();
                 r.setId(rec.getChangeID().getOriginatingUSN());
+                r.setOriginatingUSN(rec.getChangeID().getOriginatingUSN());
+                if (rec.getChangeRecordNewData()!=null)
+                r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordNewData);
+                else if (rec.getChangeRecordAcknowledgement()!=null)
+                        r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordAcknowledgement);
+                else if (rec.getChangeRecordConditionFailed()!=null)
+                        r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordConditionFailed);
+                else if (rec.getChangeRecordCorrection()!=null)
+                        r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordCorrection);
+                else if (rec.getChangeRecordDelete()!=null)
+                        r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordDelete);
+                else if (rec.getChangeRecordDeleteAssertion()!=null)
+                        r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordDeleteAssertion);
+                else if (rec.getChangeRecordHide()!=null)
+                        r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordHide);
+                else if (rec.getChangeRecordNewDataConditional()!=null)
+                        r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordNewDataConditional);
+                else if (rec.getChangeRecordNull()!=null)
+                        r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordNull);
+                else if (rec.getChangeRecordPublisherAssertion()!=null)
+                        r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordPublisherAssertion);
                 r.setNodeID(rec.getChangeID().getNodeID());
                 StringWriter sw = new StringWriter();
                 JAXB.marshal(rec, sw);
@@ -1404,6 +1426,30 @@ public class MappingApiToModel {
                         model.setModifiedIncludingChildren(operationalInfo.getModifiedIncludingChildren().toGregorianCalendar().getTime());
                 }
                 model.setNodeId(operationalInfo.getNodeID());
+
+        }
+        
+        public static void mapOperationalInfoIncludingChildren(BusinessEntity model, OperationalInfo operationalInfo) {
+                if (operationalInfo == null || model == null) {
+                        return;
+                }
+                if (operationalInfo.getCreated() != null) {
+                        model.setCreated(operationalInfo.getCreated().toGregorianCalendar().getTime());
+                }
+                model.setAuthorizedName(operationalInfo.getAuthorizedName());
+                if (operationalInfo.getModified() != null) {
+                        model.setModified(operationalInfo.getModified().toGregorianCalendar().getTime());
+                }
+                if (operationalInfo.getModifiedIncludingChildren() != null) {
+                        model.setModifiedIncludingChildren(operationalInfo.getModifiedIncludingChildren().toGregorianCalendar().getTime());
+                }
+                model.setNodeId(operationalInfo.getNodeID());
+                for (int i=0; i < model.getBusinessServices().size(); i++)
+                {
+                       mapOperationalInfo( model.getBusinessServices().get(i), operationalInfo);
+                       for (int k=0; k < model.getBusinessServices().get(i).getBindingTemplates().size(); k++)
+                               mapOperationalInfo( model.getBusinessServices().get(i).getBindingTemplates().get(k), operationalInfo);
+                }
 
         }
 
@@ -1580,6 +1626,27 @@ public class MappingApiToModel {
                         }
                         model.setEdge(ret);
                 }
+        }
+
+        public static void mapOperationalInfoIncludingChildren(BusinessService model, OperationalInfo operationalInfo) {
+                if (operationalInfo == null || model == null) {
+                        return;
+                }
+                if (operationalInfo.getCreated() != null) {
+                        model.setCreated(operationalInfo.getCreated().toGregorianCalendar().getTime());
+                }
+                model.setAuthorizedName(operationalInfo.getAuthorizedName());
+                if (operationalInfo.getModified() != null) {
+                        model.setModified(operationalInfo.getModified().toGregorianCalendar().getTime());
+                }
+                if (operationalInfo.getModifiedIncludingChildren() != null) {
+                        model.setModifiedIncludingChildren(operationalInfo.getModifiedIncludingChildren().toGregorianCalendar().getTime());
+                }
+                model.setNodeId(operationalInfo.getNodeID());
+               
+                       for (int k=0; k < model.getBindingTemplates().size(); k++)
+                               mapOperationalInfo( model.getBindingTemplates().get(k), operationalInfo);
+                
         }
 
         

@@ -33,6 +33,7 @@ import javax.xml.transform.stream.StreamSource;
 import static junit.framework.Assert.fail;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import org.junit.Ignore;
 
 import org.junit.Test;
 import org.uddi.api_v3.AuthToken;
@@ -118,5 +119,11 @@ public class GetPublisherDetailTest {
                         r.getRegistryContact().getContact().getPersonName().add(new PersonName("Unknown", null));
                                 JAXB.marshal(r, System.out);
         }
+         @Test
+         @Ignore
+        public void testWithCXFMarhsaller() throws Exception{
+                org.apache.cxf.jaxb.JAXBEncoderDecoder.marshall(null, this, null, this);
+        }
+       
 	
 }
