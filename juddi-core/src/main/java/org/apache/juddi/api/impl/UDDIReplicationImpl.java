@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.api.impl;
 
+import java.io.StringWriter;
 import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.model.BindingTemplate;
 import org.apache.juddi.model.BusinessEntity;
 import org.apache.juddi.model.BusinessService;
 import org.apache.juddi.model.Operator;
@@ -108,7 +110,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
         private static PullTimerTask timer = null;
         private long startBuffer = 20000l;//AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_START_BUFFER, 20000l); // 20s startup delay default 
-        private long interval = 300000l;// AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
+        private long interval = 5000l;// AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
 
         private static UDDIPublicationImpl pub = null;
 
@@ -175,7 +177,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                 logger.fatal("unable to obtain a replication client to node " + poll.getNotifyingNode());
                                         } else {
                                                 try {
-                                                //get the high water marks for this node
+                                                        //get the high water marks for this node
                                                         //ok now get all the changes
                                                         logger.info("fetching updates on, since ");
                                                         for (int xx = 0; xx < poll.getChangesAvailable().getHighWaterMark().size(); xx++) {
@@ -233,8 +235,10 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                          * a USN is less than the USN specified in the
                          * changesAlreadySeen highWaterMarkVector.
                          */
-                        logger.info("Remote change request");
-                        JAXB.marshal(rec, System.out);
+                        StringWriter sw = new StringWriter();
+                        JAXB.marshal(rec, sw);
+                        logger.info("_______________________Remote change request " + sw.toString());
+
                         try {
                                 tx.begin();
                                 //the change record rec must also be persisted!!
@@ -300,25 +304,31 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                         } else {
                                                                 ValidateNodeIdMatches(model.getNodeId(), rec.getChangeRecordNewData().getOperationalInfo());
 
-                                                                org.apache.juddi.model.BindingTemplate modelT = new org.apache.juddi.model.BindingTemplate();
-                                                                MappingApiToModel.mapBindingTemplate(rec.getChangeRecordNewData().getBindingTemplate(), modelT, model);
-                                                                MappingApiToModel.mapOperationalInfo(modelT, rec.getChangeRecordNewData().getOperationalInfo());
+                                                               org.apache.juddi.model.BindingTemplate bt= em.find(org.apache.juddi.model.BindingTemplate.class,rec.getChangeRecordNewData().getBindingTemplate().getBindingKey() );
+                                                               if (bt!=null){
+                                                                       em.remove(bt);
+                                                               }
+                                                                bt = new BindingTemplate();
+                                                                MappingApiToModel.mapBindingTemplate(rec.getChangeRecordNewData().getBindingTemplate(), bt, model);
+                                                                MappingApiToModel.mapOperationalInfo(bt, rec.getChangeRecordNewData().getOperationalInfo());
                                                                 // MappingApiToModel.mapOperationalInfoIncludingChildren(model, rec.getChangeRecordNewData().getOperationalInfo());
-                                                                em.persist(model);
+                                                                em.persist(bt);
                                                         }
 
                                                 } else if (rec.getChangeRecordNewData().getBusinessEntity() != null) {
 
                                                         BusinessEntity model = em.find(org.apache.juddi.model.BusinessEntity.class, rec.getChangeRecordNewData().getBusinessEntity().getBusinessKey());
-                                                        if (model == null) {
-                                                                model = new BusinessEntity();
-                                                        } else {
+                                                        if (model != null) {
                                                                 ValidateNodeIdMatches(model.getNodeId(), rec.getChangeRecordNewData().getOperationalInfo());
-                                                        }
+                                                                //TODO revisit access control rules
+                                                                em.remove(model);
+                                                        } 
+                                                        model = new BusinessEntity();
                                                         MappingApiToModel.mapBusinessEntity(rec.getChangeRecordNewData().getBusinessEntity(), model);
-                                                       // MappingApiToModel.mapOperationalInfo(model, rec.getChangeRecordNewData().getOperationalInfo());
+                                                        // MappingApiToModel.mapOperationalInfo(model, rec.getChangeRecordNewData().getOperationalInfo());
 
                                                         MappingApiToModel.mapOperationalInfoIncludingChildren(model, rec.getChangeRecordNewData().getOperationalInfo());
+                                                        logger.warn("Name size on save is " + model.getBusinessNames().size());
                                                         em.persist(model);
 
                                                 }
@@ -327,7 +337,15 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                         if (find == null) {
                                                                 logger.error("Replication error, attempting to insert a service where the business doesn't exist yet");
                                                         } else {
-                                                                org.apache.juddi.model.BusinessService model = new org.apache.juddi.model.BusinessService();
+
+                                                                org.apache.juddi.model.BusinessService model = null;
+                                                                model = em.find(org.apache.juddi.model.BusinessService.class, rec.getChangeRecordNewData().getBusinessService().getServiceKey());
+                                                                if (model != null) {
+                                                                        ValidateNodeIdMatches(model.getNodeId(), rec.getChangeRecordNewData().getOperationalInfo());
+                                                                        em.remove(model);
+                                                                }
+
+                                                                model = new org.apache.juddi.model.BusinessService();
                                                                 MappingApiToModel.mapBusinessService(rec.getChangeRecordNewData().getBusinessService(), model, find);
                                                                 MappingApiToModel.mapOperationalInfo(model, rec.getChangeRecordNewData().getOperationalInfo());
                                                                 MappingApiToModel.mapOperationalInfoIncludingChildren(model, rec.getChangeRecordNewData().getOperationalInfo());
@@ -336,7 +354,13 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                         }
 
                                                 } else if (rec.getChangeRecordNewData().getTModel() != null) {
-                                                        Tmodel model = new Tmodel();
+
+                                                        Tmodel model = em.find(org.apache.juddi.model.Tmodel.class, rec.getChangeRecordNewData().getTModel().getTModelKey());
+                                                        if (model != null) {
+                                                                ValidateNodeIdMatches(model.getNodeId(), rec.getChangeRecordNewData().getOperationalInfo());
+                                                                em.remove(model);
+                                                        }
+                                                        model = new Tmodel();
                                                         MappingApiToModel.mapTModel(rec.getChangeRecordNewData().getTModel(), model);
 
                                                         MappingApiToModel.mapOperationalInfo(model, rec.getChangeRecordNewData().getOperationalInfo());

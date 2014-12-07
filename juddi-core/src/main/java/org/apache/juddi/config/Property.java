@@ -50,7 +50,7 @@ public interface Property {
      */
     public final static String JUDDI_NODE_ROOT_BUSINESS = "juddi.root.businessId";
     /**
-     * this is the unique identifier of this uddi service provide, primarily used for clustered setups with the replication api
+     * this is the unique identifier of this uddi service provider, primarily used for clustered setups with the replication api
      * JUDDI-645
      */
     public final static String JUDDI_NODE_ID = "juddi.nodeId";

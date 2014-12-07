@@ -115,6 +115,12 @@ public class ValidatePublish extends ValidateUDDIApi {
          */
         private Log log = LogFactory.getLog(this.getClass());
 
+        /**
+         * used from Install class
+         * @param publisher
+         * @param nodeid 
+         * @see Install
+         */
         public ValidatePublish(UddiEntityPublisher publisher, String nodeid) {
                 super(publisher, nodeid);
         }
@@ -278,10 +284,12 @@ public class ValidatePublish extends ValidateUDDIApi {
 
         private void AccessCheck(Object obj, String entityKey) throws UserMismatchException {
                 boolean accessCheck = false; //assume access denied
+                //TODO revisit access control rules in a replicated environment
                 if (publisher.isOwner((UddiEntity) obj)) {
                         accessCheck = true;
 
                 }
+                //if i'm an admin, let me edit stuff on this node, but only stuff that's owned by this node
                 if (((Publisher) publisher).isAdmin()
                      && nodeID.equals(((UddiEntity) obj).getNodeId())) {
                         accessCheck = true;
