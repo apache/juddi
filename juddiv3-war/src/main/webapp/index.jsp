@@ -38,14 +38,12 @@
         Here's some useful links to learn more about the UDDI and jUDDI.
         <ul>
             <li><a href="services">View the service listing on this UDDI node</a></li>
-            <li><a href="http://juddi.apache.org/">Visit</a> the Apache-jUDDI Home Page</li>
-            <li><a href="http://juddi.apache.org/docs/3.x/userguide/html/index.html">jUDDI Users Guide</a></li>
-            <li><a href="http://juddi.apache.org/docs/3.x/devguide/html/index.html" >jUDDI Developers Guide</a></li>
-            <li><a href="http://juddi.apache.org/docs.html" >jUDDI API Documentation</a></li>
+            <li><a href="http://juddi.apache.org/">The Apache-jUDDI Home Page</a></li>
+            <li><a href="http://juddi.apache.org/docs.html" >Documentation</a></li>
             <li><a href="http://wiki.apache.org/juddi" >jUDDI Wiki</a></li>
             <li><a href="http://juddi.apache.org/issue-tracking.html" >jUDDI's Issue Tracker (report a bug)</a></li>
-            <li><a href="http://svn.apache.org/viewvc/juddi/" >jUDDI's Source Code</a></li>
-            <li><a href="http://www.nabble.com/jUDDI-f218.html">jUDDI's Mailing lists</a></li>
+            <li><a href="http://juddi.apache.org/source.html" >jUDDI's Source Code</a></li>
+            <li><a href="http://juddi.apache.org/mailing-list.html">jUDDI's Mailing lists</a></li>
 
         </ul>
 
