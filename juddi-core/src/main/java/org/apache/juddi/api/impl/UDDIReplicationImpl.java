@@ -16,7 +16,6 @@
  */
 package org.apache.juddi.api.impl;
 
-import java.io.StringWriter;
 import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
@@ -37,7 +36,6 @@ import javax.jws.soap.SOAPBinding;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
-import javax.xml.bind.JAXB;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.BindingProvider;
 import org.apache.commons.configuration.ConfigurationException;
@@ -111,7 +109,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                 Set<String> addedNodes = diffNodeList(oldnodes, newNodes);
                 if (queue == null) {
-                        queue = new ConcurrentLinkedDeque<NotifyChangeRecordsAvailable>();
+                        queue = new ConcurrentLinkedQueue<NotifyChangeRecordsAvailable>();
                 }
                 for (String s : addedNodes) {
                         if (!s.equals(node)) {
@@ -183,7 +181,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
         private synchronized void Init() {
                 if (queue == null) {
-                        queue = new ConcurrentLinkedDeque<NotifyChangeRecordsAvailable>();
+                        queue = new ConcurrentLinkedQueue<NotifyChangeRecordsAvailable>();
                 }
                 timer = new PullTimerTask();
 
