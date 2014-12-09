@@ -133,7 +133,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 }
                 manager.stop();
         }
-        final static String VSV_KEY = "uddi:juddi.apache.org:businesses-asf";
+        final static String VSV_KEY = "uddi:juddi.apache.org:node1";
         //final static String VSV_BT_KEY = "uddi:juddi.apache.org:servicebindings-valueset-cp";
         final static String TMODEL = "validated.checked.tmodel";
 
@@ -508,7 +508,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 tm.setCategoryBag(new CategoryBag());
                 tm.setName(new Name("My Custom validated key", "en"));
                 tm.getDescription().add(new Description("valid values include 'one', 'two', 'three'", "en"));
-                tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.OWNING_BUSINESS, "", "uddi:juddi.apache.org:businesses-asf"));
+                tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.OWNING_BUSINESS, "", "uddi:juddi.apache.org:node1"));
                 SaveTModel stm = new SaveTModel();
                 stm.setAuthInfo(authInfoJoe);
                 stm.getTModel().add(tm);
@@ -955,7 +955,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                         tm.setName(new Name("My new tmodel", "en"));
                         tm.getDescription().add(new Description("valid values include 'one', 'two', 'three'", "en"));
                         tm.setCategoryBag(new CategoryBag());
-                        tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.IS_REPLACED_BY, "", "uddi:juddi.apache.org:businesses-asf"));
+                        tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.IS_REPLACED_BY, "", "uddi:juddi.apache.org:node1"));
                         SaveTModel stm = new SaveTModel();
                         stm.setAuthInfo(authInfoJoe);
                         stm.getTModel().add(tm);

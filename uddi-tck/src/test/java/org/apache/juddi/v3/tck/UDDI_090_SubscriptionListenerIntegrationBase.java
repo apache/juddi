@@ -738,7 +738,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
          * @throws Exception
          */
         @Test
-        //@Ignore
+        @Ignore
         public void joePublisherUpdate_PUBLISHERASSERTION_DETAIL_TO() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
