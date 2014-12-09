@@ -125,7 +125,7 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  */
 @WebService(serviceName = "JUDDIApiService",
         endpointInterface = "org.apache.juddi.v3_service.JUDDIApiPortType",
-        targetNamespace = "urn:juddi-apache-org:v3_service", wsdlLocation =  "classpath:/juddi_api_v1.wsdl")
+        targetNamespace = "urn:juddi-apache-org:v3_service", wsdlLocation = "classpath:/juddi_api_v1.wsdl")
 public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortType {
 
         private Log log = LogFactory.getLog(this.getClass());
@@ -1276,6 +1276,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                 try {
                         tx.begin();
 
+                        org.uddi.repl_v3.ReplicationConfiguration oldConfig = null;
                         UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
                         if (!((Publisher) publisher).isAdmin()) {
                                 throw new UserMismatchException(new ErrorMessage("errors.AdminReqd"));
@@ -1289,9 +1290,9 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddkkmmZ");
                         if (model == null) {
-                                //this is a brand new configuration
+                                //this is a brand new configuration and we didn't have one before
                                 model = new ReplicationConfiguration();
-                                MappingApiToModel.mapReplicationConfiguration(replicationConfiguration, model,em);
+                                MappingApiToModel.mapReplicationConfiguration(replicationConfiguration, model, em);
                                 model.setSerialNumber(System.currentTimeMillis());
                                 model.setTimeOfConfigurationUpdate(sdf.format(new Date()));
                                 em.persist(model);
@@ -1305,17 +1306,20 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                 //spec doesn't appear to mention if recording a change history on the config is required
                                 //assuming not.
                                 //em.remove(model);
-                                model = new ReplicationConfiguration();
-                                MappingApiToModel.mapReplicationConfiguration(replicationConfiguration, model, em);
-                                model.setSerialNumber(System.currentTimeMillis());
+                                oldConfig = new org.uddi.repl_v3.ReplicationConfiguration();
+                                MappingModelToApi.mapReplicationConfiguration(model, oldConfig);
 
-                                model.setTimeOfConfigurationUpdate(sdf.format(new Date()));
-                                em.merge(model);
+                                ReplicationConfiguration model2 = new ReplicationConfiguration();
+                                MappingApiToModel.mapReplicationConfiguration(replicationConfiguration, model2, em);
+                                model2.setSerialNumber(System.currentTimeMillis());
+
+                                model2.setTimeOfConfigurationUpdate(sdf.format(new Date()));
+                                em.persist(model2);
 
                         }
 
                         tx.commit();
-                        //UDDIReplicationImpl.notifyConfigurationChange(replicationConfiguration);
+                        UDDIReplicationImpl.notifyConfigurationChange(oldConfig, replicationConfiguration);
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.SET_REPLICATION_NODES,
                                 QueryStatus.SUCCESS, procTime);
@@ -1324,12 +1328,11 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         serviceCounter.update(JUDDIQuery.SET_REPLICATION_NODES,
                                 QueryStatus.FAILED, procTime);
                         throw drfm;
-                } catch (Exception ex){
-                        logger.error(ex,ex);
+                } catch (Exception ex) {
+                        logger.error(ex, ex);
                         JAXB.marshal(replicationConfiguration, System.out);
                         throw new FatalErrorException(new ErrorMessage("E_fatalError", ex.getMessage()));
-                }
-                finally {
+                } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
                         }
@@ -1381,11 +1384,11 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         op.setOperatorNodeID(node);
                         op.setSoapReplicationURL(baseUrlSSL + "/services/replication");
                         //TODO lookup from the root business
-                       
+
                         op.getContact().add(new Contact());
                         op.getContact().get(0).getPersonName().add(new PersonName("Unknown", null));
                         op.setOperatorStatus(OperatorStatusType.NORMAL);
-                        
+
                         r.getOperator().add(op);
                         r.getCommunicationGraph().getNode().add(node);
                         r.getCommunicationGraph().getControlledMessage().add("*");

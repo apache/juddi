@@ -41,12 +41,12 @@ public class UddiCreatebulk {
         private static UDDISecurityPortType security = null;
         private static UDDIPublicationPortType publish = null;
 
-        public UddiCreatebulk() {
+        public UddiCreatebulk(String node) {
                 try {
                         // create a manager and read the config in the archive; 
                         // you can use your config file name
                         UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
-                        Transport transport = clerkManager.getTransport();
+                        Transport transport = clerkManager.getTransport(node);
                         // Now you create a reference to the UDDI API
                         security = transport.getUDDISecurityService();
                         publish = transport.getUDDIPublishService();
@@ -186,7 +186,7 @@ public class UddiCreatebulk {
         }
 
         public static void main(String args[]) {
-                UddiCreatebulk sp = new UddiCreatebulk();
+                UddiCreatebulk sp = new UddiCreatebulk(null);
                 sp.publishBusiness(null, 15, 20);
         }
 }

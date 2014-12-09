@@ -133,7 +133,7 @@ public class EntryPoint {
                         int biz = Integer.parseInt(System.console().readLine());
                         System.out.print("servicesPerBusiness: ");
                         int svc = Integer.parseInt(System.console().readLine());
-                        new UddiCreatebulk().publishBusiness(authtoken, biz, svc);
+                        new UddiCreatebulk("default").publishBusiness(authtoken, biz, svc);
                 }
                 if (input.equals("7")) {
                         UDDISecurityPortType security = null;
@@ -439,22 +439,25 @@ public class EntryPoint {
                 }
                 if (input.equals("magic")) {
                         //secret menu, setups up replication between juddi8080 and 9080 and adds a record or two on 8080
-                        UDDISecurityPortType security = null;
-                        UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
+                        //UDDISecurityPortType security = null;
+                        //UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
                         
-                        Transport transport = clerkManager.getTransport("default");
+                       /* Transport transport = clerkManager.getTransport("default");
                         security = transport.getUDDISecurityService();
                        
-                        String uname = "root";
+                       String uname = "root";
                        
                         GetAuthToken getAuthTokenRoot = new GetAuthToken();
                         getAuthTokenRoot.setUserID(uname);
                         getAuthTokenRoot.setCred("root");
                         authtoken = security.getAuthToken(getAuthTokenRoot).getAuthInfo();
-                        System.out.println("Success!");
+                        System.out.println("Success!");*/
+                        
+                        //this setups up a replication config between the two nodes
                         new JuddiAdminService().autoMagic();
 
-                        new UddiCreatebulk().publishBusiness(authtoken, 1, 1);
+                        new UddiCreatebulk("default").publishBusiness(null, 1, 1);
+                        new UddiCreatebulk("uddi:another.juddi.apache.org:node2").publishBusiness(null, 1, 1);
                 }
 
         }

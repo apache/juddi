@@ -40,7 +40,7 @@ See below for other fields that you may want to edit...
 -->
 <businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:another.juddi.apache.org:businesses-asf">
      <!-- Change the name field to represent the name of your registry -->
-     <name xml:lang="en">An Apache jUDDI Node</name>
+     <name xml:lang="en">An Apache jUDDI Node (2)</name>
      <!-- Change the description field to provided a brief description of your registry -->
      <description xml:lang="en">This is a UDDI registry node as implemented by Apache jUDDI.</description>
      <discoveryURLs>

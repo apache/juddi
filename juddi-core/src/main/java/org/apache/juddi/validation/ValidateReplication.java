@@ -58,9 +58,9 @@ public class ValidateReplication extends ValidateUDDIApi {
                         //This is the unique key for the calling node and SHOULD be specified within the Replication Configuration Structure.
                         throw new FatalErrorException(new ErrorMessage("errors.replication.nodeNotSpecified"));
                 }
-                if (!ContainsNode(requestingNode, FetchEdges)) {
-                        throw new FatalErrorException(new ErrorMessage("errors.replication.unknownNode"));
-                }
+                //if (!ContainsNode(requestingNode, FetchEdges)) {
+                //        throw new FatalErrorException(new ErrorMessage("errors.replication.unknownNode"));
+                //}
 
                 if (changesAlreadySeen != null) {
                         // changesAlreadySeen: The changesAlreadySeen element, if present, indicates changes from each

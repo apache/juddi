@@ -1,0 +1,2362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+* Copyright 2001-2009 The Apache Software Foundation.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+* 
+*      http://www.apache.org/licenses/LICenSE-2.0
+* 
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+*/ -->
+
+<!-- Important notes on editing this file 
+
+1) if you add a new find qualifier item, you must then increase the count in 
+	org.apache.juddi.v3.tck.TckSubscription.FINDQUALIFIER_TMODEL_TOTAL
+
+-->
+
+
+<save_tModel xmlns="urn:uddi-org:api_v3">
+    <tModel tModelKey="uddi:uddi.org:keygenerator" xmlns="urn:uddi-org:api_v3">
+        <name>uddi-org:keyGenerator</name>
+        <description>UDDI domain key generator</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:categorization:keygenerator" xmlns="urn:uddi-org:api_v3">
+        <name>uddi-org:categorization:keyGenerator
+        </name>
+        <description>Key Generator for UDDI Categorization tModels
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#categorizationKeyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:categorization:types">
+        <name>uddi-org:types</name>
+        <description>UDDI Type Category System</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#UDDITypes
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:cacheable" keyValue="cacheable" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:categorization:general_keywords">
+        <name>uddi-org:general_keywords</name>
+        <description>Category system consisting of namespace
+            identifiers and the keywords associated with
+            the namespaces.
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#GenKW
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:sortorder:keygenerator" xmlns="urn:uddi-org:api_v3">
+        <name>uddi-org:sortorder:keyGenerator
+        </name>
+        <description>Key Generator for UDDI Sort Order tModels
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#sortorderKeyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:transport:keygenerator" xmlns="urn:uddi-org:api_v3">
+        <name>uddi-org:transport:keyGenerator
+        </name>
+        <description>Key Generator for UDDI Transport tModels </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#transportKeyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:protocol:keygenerator" xmlns="urn:uddi-org:api_v3">
+        <name>uddi-org:protocol:keyGenerator</name>
+        <description> Key Generator for UDDI Protocol tModels </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#protocolKeyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:v3_inquiry">
+        <name>uddi-org:inquiry_v3</name>
+        <description>UDDI Inquiry API V3.0</description>
+        <overviewDoc>
+            <overviewURL useType="wsdlInterface">
+                http://uddi.org/wsdl/uddi_api_v3_binding.wsdl#UDDI_Inquiry_SoapBinding
+            </overviewURL>
+        </overviewDoc>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#InqV3
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlSpec" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:soap" keyValue="soapSpec" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:xml" keyValue="xmlSpec" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:specification" keyValue="specification" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:categorization:nodes">
+        <name>uddi-org:nodes</name>
+        <description>Category system for identifying the nodes
+            of a registry.
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#Nodes
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:uncacheable" keyValue="uncacheable" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
+        </categoryBag>
+    </tModel>
+
+    <tModel tModelKey="uddi:uddi.org:v3_publication">
+        <name>uddi-org:publication_v3</name>
+        <description>UDDI Publication API V3.0</description>
+        <overviewDoc>
+            <overviewURL useType="wsdlInterface">
+                http://uddi.org/wsdl/uddi_api_v3_binding.wsdl#UDDI_Publication_SoapBinding
+            </overviewURL>
+        </overviewDoc>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#PubV3
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlSpec" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:soap" keyValue="soapSpec" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:xml" keyValue="xmlSpec" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:specification" keyValue="specification" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:v3_security">
+        <name>uddi-org:security_v3</name>
+        <description>UDDI Security API V3.0</description>
+        <overviewDoc>
+            <overviewURL useType="wsdlInterface">
+                http://uddi.org/wsdl/uddi_api_v3_binding.wsdl#UDDI_Security_SoapBinding
+            </overviewURL>
+        </overviewDoc>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#SecV3
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlSpec" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:soap" keyValue="soapSpec" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:xml" keyValue="xmlSpec" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:specification" keyValue="specification" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+  
+    <tModel tModelKey="uddi:uddi.org:relationships">
+        <name>uddi-org:relationships</name>
+        <description>Basic types of business relationships
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#Relationships
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:unchecked" keyValue="unchecked" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:categorization:owningbusiness">
+        <name>uddi-org:owningBusiness_v3</name>
+        <description>Category system used to point to the
+            businessEntity
+            associated with the publisher of the tModel.
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#owningBusiness
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:uncacheable" keyValue="uncacheable" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="entityKeyValues" keyValue="businessKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:identifier:isreplacedby">
+        <name>uddi-org:isReplacedBy</name>
+        <description>Identifier system used to point to the UDDI
+            entity,
+            using UDDI keys, that is the logical replacement
+            for the one in which isReplacedBy is used.
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#IsReplacedBy
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:identifier" keyValue="identifier" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:uncacheable" keyValue="uncacheable" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="entityKeyValues" keyValue="businessKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
+            <keyedReference keyName="entityKeyValues" keyValue="tModelKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:identifier:taxid">
+        <name>Tax ID</name>
+        <description>The Tax Identifier for this business
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+               http://uddi.org/pubs/uddi-v3.0.2-20041019.htm#_Toc515847032
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:identifier" keyValue="identifier" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:uncacheable" keyValue="uncacheable" tModelKey="uddi:uddi.org:categorization:types" />
+
+            <keyedReference keyName="entityKeyValues" keyValue="businessKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
+
+            <keyedReference keyName="entityKeyValues" keyValue="tModelKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
+        </categoryBag>
+    </tModel>
+	
+	
+    <tModel tModelKey="uddi:uddi.org:categorization:validatedby">
+        <name>uddi-org:validatedBy</name>
+        <description xml:lang="en">Category system used to point a value set or
+            category
+            group system tModel to associated value set Web service
+            implementations.
+        </description>
+		<description xml:lang="en">This is typically used on tModels to validate tModel Instances via the Value Set Validation service. The keyValue
+		should be an existing binding key pointing to that service.
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#validatedBy
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:uncacheable" keyValue="uncacheable" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="entityKeyValues" keyValue="bindingKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
+        </categoryBag>
+    </tModel>
+   
+    
+    
+    
+    <tModel tModelKey="uddi:uddi.org:categorization:derivedfrom">
+        <name>uddi-org:derivedFrom</name>
+        <description>Category system for referring tModels to other
+            tModels for the purpose of reuse.
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#DerivedFrom
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:uncacheable" keyValue="uncacheable" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="entityKeyValues" keyValue="tModelKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
+        </categoryBag>
+    </tModel>
+    
+       
+    <tModel tModelKey="uuid:5678dd4f-f95d-35f9-9ea6-f79a7dd64656">
+        <name>uddi-org:derivedFrom</name>
+        <description>Category system for referring tModels to other
+            tModels for the purpose of reuse.
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#DerivedFrom
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:uncacheable" keyValue="uncacheable" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="entityKeyValues" keyValue="tModelKey" tModelKey="uddi:uddi.org:categorization:entitykeyvalues" />
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uuid:25b22e3e-3dfa-3024-b02a-3438b9050b59"/>
+        </categoryBag>
+    </tModel>
+    
+    
+    
+    
+    <tModel tModelKey="uddi:uddi.org:categorization:entitykeyvalues">
+        <name>uddi-org:entityKeyValues</name>
+        <description>Category system used to declare that a value set
+            uses entity keys as valid values.
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#entityKeyValues
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uddi:uddi.org:categorization:validatedby"/>
+        </categoryBag>
+    </tModel>
+    
+    
+    <tModel tModelKey="uuid:916b87bf-0756-3919-8eae-97dfa325e5a4">
+        <name>uddi-org:entityKeyValues</name>
+        <description>Category system used to declare that a value set
+            uses entity keys as valid values.
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#entityKeyValues
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+             <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uuid:25b22e3e-3dfa-3024-b02a-3438b9050b59"/>
+        </categoryBag>
+    </tModel>
+   
+    
+    
+    
+    <tModel tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3">
+        <name>uddi-org:serverAuthenticatedSSL3</name>
+        <description>Secure Sockets Layer Version 3.0 with Server
+            Authentication
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#serverSSL3
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <!--
+      <tModel tModelKey="uuid:c8aea832-3faf-33c6-b32a-bbfd1b926294">
+        <name>uddi-org:serverAuthenticatedSSL3
+        </name>
+        <description>Secure Sockets Layer Version 3.0 with Server
+            Authentication
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#serverSSL3
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    -->
+    <tModel tModelKey="uddi:uddi.org:protocol:mutualauthenticatedssl3">
+        <name>uddi-org:mutualAuthenticatedSSL3
+        </name>
+        <description>Secure Sockets Layer Version 3.0 with Mutual
+            Authentication
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#mutualSSL3
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    
+     <tModel tModelKey="uuid:9555b5b6-55d4-3b0e-bb17-e084fed4e33f">
+        <name>uddi-org:mutualAuthenticatedSSL3
+        </name>
+        <description>Secure Sockets Layer Version 3.0 with Mutual
+            Authentication
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#mutualSSL3
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    
+    
+    <tModel tModelKey="uddi:uddi.org:transport:http">
+        <name>uddi-org:http</name>
+        <description> A Web service that uses HTTP transport</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#overHTTP
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    
+    <tModel tModelKey="uuid:68DE9E80-AD09-469D-8A37-088422BFBC36">
+        <name>uddi-org:http</name>
+        <description> A Web service that uses HTTP transport</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#overHTTP
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+
+
+    <tModel tModelKey="uddi:uddi.org:transport:smtp">
+        <name>uddi-org:smtp</name>
+        <description>E-mail based Web service</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#overSMTP
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    
+    <tModel tModelKey="uuid:93335D49-3EFB-48A0-ACEA-EA102B60DDC6">
+        <name>uddi-org:smtp</name>
+        <description>E-mail based Web service</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#overSMTP
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    
+    
+    <tModel tModelKey="uddi:uddi.org:transport:userfriendlysmtp">
+        <name>Human Readable SMTP Email Deliveries</name>
+        <description>This is a jUDDI extension for providing SMTP based subscription alerts in a human readable fashion.</description>
+        
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    
+    
+    <tModel tModelKey="uddi:uddi.org:transport:ftp">
+        <name>uddi-org:ftp</name>
+        <description>File Transfer Protocol (FTP) based Web service
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#overFTP
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    
+    <tModel tModelKey="uuid:5FCF5CD0-629A-4C50-8B16-F94E9CF2A674">
+        <name>uddi-org:ftp</name>
+        <description>File Transfer Protocol (FTP) based Web service
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#overFTP
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+
+    <tModel tModelKey="uddi:uddi.org:transport:fax">
+        <name>uddi-org:fax</name>
+        <description>Fax-based Web service</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#overFax
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:transport:telephone">
+        <name>uddi-org:telephone</name>
+        <description>Telephone based service</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#overPhone
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:transport:rmi">
+        <name>uddi-org:rmi</name>
+        <description>Java RMI based service registered to the Java Registry</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://juddi.apache.org/docs/3.0/userguide/html_single/index.html#sect-overRMI
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:transport:jndi-rmi">
+        <name>uddi-org:jndi-rmi</name>
+        <description>A Java RMI based service registered to a JNDI Registry</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://juddi.apache.org/docs/3.0/userguide/html_single/index.html#sect-overJNDIRMI
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	
+	    <tModel tModelKey="uddi:uddi.org:transport:amqp">
+        <name>uddi-org:amqp</name>
+        <description> A Web service that uses the AMQP transport</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+               http://www.amqp.org/
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+
+	
+		    <tModel tModelKey="uddi:uddi.org:transport:omgdds">
+        <name>uddi-org:omgdds</name>
+        <description> A Web service that uses the OMG DDS transport</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+              http://portals.omg.org/dds/
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	
+	<tModel tModelKey="uddi:uddi.org:transport:udp">
+        <name>uddi-org:udp</name>
+        <description> A Web service that uses the UDP transport</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+              http://docs.oasis-open.org/ws-dd/soapoverudp/1.1/os/wsdd-soapoverudp-1.1-spec-os.html
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:transport:jms">
+        <name>uddi-org:jms</name>
+        <description> A Web service that uses the JMS API</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+              http://docs.oasis-open.org/ws-dd/soapoverudp/1.1/os/wsdd-soapoverudp-1.1-spec-os.html
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:protocol:rest">
+        <name>uddi-org:protocol:rest</name>
+        <description xml:lang="en">A tModel that represents the Representational State Transfer architectural style</description>
+        <overviewDoc>
+            <overviewURL>
+               http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	
+	
+	
+    <tModel tModelKey="uddi:uddi.org:findqualifier:approximatematch">
+        <name>uddi-org:approximateMatch:SQL99
+        </name>
+        <description>UDDI approximate matching find qualifier
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#wildcard
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:exactmatch">
+        <name>uddi-org:exactMatch</name>
+        <description>UDDI exact name matching findQualifier
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#exactmatch
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:caseinsensitivematch">
+        <name>uddi-org:caseInsensitiveMatch
+        </name>
+        <description>UDDI case insensitive matching find qualifier
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#caseinsens
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:casesensitivematch">
+        <name>uddi-org:caseSensitiveMatch</name>
+        <description>UDDI Case Sensitive Matching find qualifier
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#casesens
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:diacriticsinsensitivematch">
+        <name>uddi-org:diacriticsInsensitiveMatch
+        </name>
+        <description>UDDI Diacritics Insensitive Matching find qualifier
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#diacritInsens
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:diacriticssensitivematch">
+        <name>uddi-org:diacriticsSensitiveMatch
+        </name>
+        <description>UDDI Diacritics Sensitive Matching find qualifier
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#diacritSens
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:sortorder:binarysort">
+        <name>uddi-org:binarySort</name>
+        <description>UDDI binary sort sortOrder qualifier
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#sortOrd
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:sortOrder" keyValue="sortOrder" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:sortorder:uts-10">
+        <name>uddi-org:UTS-10</name>
+        <description>UDDI Unicode Technical Standard #10 sort
+            collation sequence find qualifier
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#UCASort
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:sortOrder" keyValue="sortOrder" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:caseinsensitivesort">
+        <name>uddi-org:caseInsensitiveSort</name>
+        <description>UDDI sort qualifier used to sort results without
+            regard to case
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#caseInsensSort
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:casesensitivesort">
+        <name>uddi-org:caseSensitiveSort</name>
+        <description>UDDI sort qualifier used to sort results using
+            case sensitivity
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#caseSensSort
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+
+            <keyedReference keyName="uddi-org:types:sortOrder" keyValue="sortOrder" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:sortbynameasc">
+        <name>uddi-org:sortByNameAsc</name>
+        <description>UDDI sort qualifier used to sort results by name
+            in ascending order
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#nameAsc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:sortbynamedesc">
+        <name>uddi-org:sortByNameDesc</name>
+        <description>UDDI sort qualifier used to sort results by
+            name in descending order
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#nameDesc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:sortbydateasc">
+        <name>uddi-org:sortByDateAsc</name>
+        <description>UDDI sort qualifier used to sort results by date in
+            ascending order
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#dateAsc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:sortbydatedesc">
+        <name>uddi-org:sortByDateDesc</name>
+        <description>UDDI sort qualifier used to sort results
+            by date in descending order
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#dateDesc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:andallkeys">
+        <name>uddi-org:andAllKeys</name>
+        <description>UDDI find qualifier used to request that a
+            logical AND be performed on bag contents
+            prior to a search
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#andAll
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:orallkeys">
+        <name>uddi-org:orAllKeys</name>
+        <description>UDDI find qualifier used to request that a
+            logical OR be performed on bag contents
+            prior to a search
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#orAll
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:orlikekeys">
+        <name>uddi-org:orLikeKeys</name>
+        <description>UDDI find qualifier used to find entities
+            that reference one of the values from each
+            referenced value set
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#orLike
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:combinecategorybags">
+        <name>uddi-org:combineCategoryBags</name>
+        <description>UDDI find qualifier used to treat all of the
+            categoryBags within a businessEntity as if
+            they were one during inquiry
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#combineCatBags
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:servicesubset">
+        <name>uddi-org:serviceSubset</name>
+        <description>UDDI find qualifier used to use categoryBags
+            of businessService elements to satisfy the
+            find_business inquiry.
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#servSubset
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:bindingsubset">
+        <name>uddi-org:bindingSubset</name>
+        <description>UDDI find qualifier for specifying use of
+            categoryBags of bindingTempate elements to satisfy
+            the find_business or find_service inquiries.
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#bindSubset
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:suppressprojectedservices">
+        <name>uddi-org:suppressProjectedServices
+        </name>
+        <description>UDDI find qualifier used to exclude service
+            projections from an inquiry function at all
+            levels.
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#suppressProjSvcs
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:findqualifier:signaturepresent">
+        <name>uddi-org:signaturePresent</name>
+        <description>UDDI findQualifier used to return only entities
+            that have or are contained in entities that have
+            XML Digital Signatures.
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#sign
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:specification:hostingredirector">
+        <name>uddi-org:hostingRedirector</name>
+        <description>UDDI Hosting Redirector service specification
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#hostDir
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:specification" keyValue="specification" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:specification:v3_policy">
+        <name>uddi-org:v3_policy</name>
+        <description>UDDI Policy Description service specification
+        </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#policyDesc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:specification" keyValue="specification" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:v3_ownership_transfer">
+        <name>uddi-org:ownership_transfer_v3</name>
+        <description>UDDI Custody and Ownership Transfer API V3.0</description>
+        <overviewDoc>
+            <overviewURL useType="wsdlInterface">
+                http://uddi.org/wsdl/uddi_custody_v3_binding.wsdl
+            </overviewURL>
+        </overviewDoc>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#OwnershipTransfer
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl"
+                      keyValue="wsdlSpec"
+                      tModelKey="uddi:uddi.org:categorization:types"/>
+            <keyedReference keyName="uddi-org:types:soap"
+                      keyValue="soapSpec"
+                      tModelKey="uddi:uddi.org:categorization:types"/>
+            <keyedReference keyName="uddi-org:types:xml"
+                      keyValue="xmlSpec"
+                      tModelKey="uddi:uddi.org:categorization:types"/>
+            <keyedReference keyName="uddi-org:types:specification"
+                      keyValue="specification"
+                      tModelKey="uddi:uddi.org:categorization:types"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:v3_subscription">
+        <name>uddi-org:subscription_v3</name>
+        <description>UDDI Subscription API V3.0</description>
+        <overviewDoc>
+            <overviewURL useType="wsdlInterface">
+                http://uddi.org/wsdl/uddi_sub_v3_binding.wsdl
+            </overviewURL>
+        </overviewDoc>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#Sub
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl"
+                      keyValue="wsdlSpec"
+                      tModelKey="uddi:uddi.org:categorization:types"/>
+            <keyedReference keyName="uddi-org:types:soap"
+                      keyValue="soapSpec"
+                      tModelKey="uddi:uddi.org:categorization:types"/>
+            <keyedReference keyName="uddi-org:types:xml"
+                      keyValue="xmlSpec"
+                      tModelKey="uddi:uddi.org:categorization:types"/>
+            <keyedReference keyName="uddi-org:types:specification"
+                      keyValue="specification"
+                      tModelKey="uddi:uddi.org:categorization:types"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uddi:uddi.org:v3_subscriptionlistener">
+        <name>uddi-org:subscriptionListener_v3</name>
+        <description>UDDI Subscription Listener API V3.0</description>
+        <overviewDoc>
+            <overviewURL useType="wsdlInterface">
+                http://uddi.org/wsdl/uddi_subr_v3_binding.wsdl
+            </overviewURL>
+        </overviewDoc>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#Subscribe
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl"
+                      keyValue="wsdlSpec"
+                      tModelKey="uddi:uddi.org:categorization:types"/>
+            <keyedReference keyName="uddi-org:types:soap"
+                      keyValue="soapSpec"
+                      tModelKey="uddi:uddi.org:categorization:types"/>
+            <keyedReference keyName="uddi-org:types:xml"
+                      keyValue="xmlSpec"
+                      tModelKey="uddi:uddi.org:categorization:types"/>
+            <keyedReference keyName="uddi-org:types:specification"
+                      keyValue="specification"
+                      tModelKey="uddi:uddi.org:categorization:types"/>
+        </categoryBag>
+    </tModel>
+    <!--  New Canonical tModels (see also JUDDI-461) -->
+    <!--  1. WSDL Entity Type tModel -->
+    <tModel tModelKey="uddi:uddi.org:wsdl:types">
+        <name>uddi-org:wsdl:types</name>
+        <description xml:lang="en">WSDL Type Category System</description>
+        <overviewDoc>
+            <overviewURL>
+                http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#wsdlTypes
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:unchecked" keyValue="unchecked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	 <tModel tModelKey="uddi:uddi.org:wadl:types">
+        <name>uddi-org:wadl:types</name>
+        <description xml:lang="en">WADL Type Category System</description>
+        <overviewDoc>
+            <overviewURL>
+                http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:unchecked" keyValue="unchecked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	
+    <!-- 2. XML Namespace tModel  -->
+    <tModel tModelKey="uddi:uddi.org:xml:namespace">
+        <name>uddi-org:xml:namespace</name>
+        <description xml:lang="en">A category system used to indicate namespaces</description>
+        <overviewDoc>
+            <overviewURL>   
+                http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#xmlNamespace
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:unchecked" keyValue="unchecked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <!-- 3. XML Local Name tModel  -->
+    <tModel tModelKey="uddi:uddi.org:xml:localname">
+        <name>uddi-org:xml:localName</name>
+        <description xml:lang="en">A category system used to indicate XML local names</description>
+        <overviewDoc>
+            <overviewURL>   
+                http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#xmlLocalName
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:unchecked" keyValue="unchecked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <!--  4. WSDL portType Reference tModel -->
+    <tModel tModelKey="uddi:uddi.org:wsdl:porttypereference">
+        <name>uddi-org:wsdl:portTypeReference</name>
+        <description xml:lang="en">A category system used to reference a wsdl:portType tModel</description>
+        <overviewDoc>
+            <overviewURL>
+                http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#portTypeReference
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <!-- 5. SOAP Protocol tModel  -->
+    <tModel tModelKey="uddi:uddi.org:protocol:soap">
+        <name>uddi-org:protocol:soap</name>
+        <description xml:lang="en">A tModel that represents the SOAP 1.1 protocol</description>
+        <overviewDoc>
+            <overviewURL>
+                http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#soap
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	
+	 <tModel tModelKey="uddi:uddi.org:protocol:soap12">
+        <name>uddi-org:protocol:soap12</name>
+        <description xml:lang="en">A tModel that represents the SOAP 1.2 protocol</description>
+        <overviewDoc>
+            <overviewURL>
+                http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#soap
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	
+    <!-- 6. HTTP Protocol tModel -->
+    <tModel tModelKey="uddi:uddi.org:protocol:http">
+        <name>uddi-org:protocol:http</name>
+        <description xml:lang="en">A tModel that represents the HTTP protocol</description>
+        <overviewDoc>
+            <overviewURL>
+                http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#http
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <!-- 7. Protocol Categorization -->
+    <tModel tModelKey="uddi:uddi.org:wsdl:categorization:protocol">
+        <name>uddi-org:wsdl:categorization:protocol</name>
+        <description xml:lang="en">Category system used to describe the protocol supported by a wsdl:binding</description>
+        <overviewDoc>
+            <overviewURL>
+                http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#protocol
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <!-- 8. Transport Categorization -->
+    <tModel tModelKey="uddi:uddi.org:wsdl:categorization:transport">
+        <name>uddi-org:wsdl:categorization:transport</name>
+        <description xml:lang="en">Category system used to describe the transport supported by a wsdl:binding</description>
+        <overviewDoc>
+            <overviewURL>
+                http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#transport
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <!-- 9. WSDL Address tModel -->
+    <tModel tModelKey="uddi:uddi.org:wsdl:address" >
+        <name>uddi-org:wsdl:address</name>
+        <description xml:lang="en">A tModel used to indicate the WSDL address option</description>
+        <overviewDoc>
+            <overviewURL>
+                http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#Address
+            </overviewURL>
+        </overviewDoc>
+    </tModel>
+    <!-- BPEL Categorization -->
+    <tModel tModelKey="uddi:uddi.org:bpel:types">
+        <name>uddi-org:bpel:types</name>
+        <description xml:lang="en">Category system used indicate BPEL processes</description>
+        <overviewDoc>
+            <overviewURL>
+                http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-bpel-20040725.htm
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:unchecked" keyValue="unchecked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+  
+   
+  
+  
+    <tModel tModelKey="uddi:tmodelkey:keygenerator" xmlns="urn:uddi-org:api_v3">
+        <name>uddi:tmodelkey:keygenerator
+        </name>
+        <description>Key Generator for generic UDDI tModel Keys
+        </description>
+       
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+
+  
+    <tModel tModelKey="uddi:tmodelkey:address">
+        <name>uddi:tmodelkey:address</name>
+        <description xml:lang="en">Identifies an address. This can be a physical, mailing, or electric address.</description>
+       
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" 
+                keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:unchecked"
+                keyValue="unchecked" tModelKey="uddi:uddi.org:categorization:types"/>
+        </categoryBag>
+    </tModel>
+    
+     <tModel tModelKey="uddi:tmodelkey:group">
+        <name>uddi:tmodelkey:group</name>
+        <description xml:lang="en">Identifies a tModel group.</description>
+       
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+
+    <tModel tModelKey="uddi:tmodelkey:blank">
+        <name>uddi:tmodelkey:blank</name>
+        <description xml:lang="en">Identifies a blank tModel</description>
+       
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    
+    
+    
+    
+    
+    
+    <tModel tModelKey="urn:wsdm.org:keygenerator" xmlns="urn:uddi-org:api_v3">
+        <name>urn:wsdm.org:keygenerator</name>
+        <description>Key Generator for WSDM.org tModels </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#protocolKeyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+     <tModel tModelKey="urn:wsdm.org:metric:keygenerator" xmlns="urn:uddi-org:api_v3">
+        <name>urn:wsdm.org:metric:keygenerator</name>
+        <description>Key Generator for WSDM.org Metric tModels </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#protocolKeyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+     <tModel tModelKey="urn:wsdm.org:identity:keygenerator" xmlns="urn:uddi-org:api_v3">
+        <name>urn:wsdm.org:identity:keygenerator</name>
+        <description>Key Generator for WSDM.org Identity tModels </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#protocolKeyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:qos:keygenerator" xmlns="urn:uddi-org:api_v3">
+        <name>urn:wsdm.org:qos:keygenerator</name>
+        <description>Key Generator for WSDM.org Quality of Service tModels </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#protocolKeyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:metric:requestcount">
+        <name>RequestCount</name>
+        <description xml:lang="en">The number of requests to a given service. (number of requests)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:metric:replycount">
+        <name>ReplyCount</name>
+        <description xml:lang="en">The number of replies from a given service. (number of replies)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+     <tModel tModelKey="urn:wsdm.org:metric:faultcount">
+        <name>FaultCount</name>
+        <description xml:lang="en">The number of faults from a given service. (number of faults)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:identity:resourceId">
+        <name>ResourceId</name>
+        <description xml:lang="en">This is the unique identity by which the resource (service) is known to the management system.  It is useful for further queries. (resource identification in URI format)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    
+    <tModel tModelKey="urn:wsdm.org:metric:lastupdatetime">
+        <name>LastUpdateTime</name>
+        <description xml:lang="en">Represents the last time this metric was updated. (time value)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    
+    <tModel tModelKey="urn:wsdm.org:qos:responsetime_average">
+        <name>ResponseTime_Average</name>
+        <description xml:lang="en">Average response time of the service. (numeric value or symbolic rating)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:qos:throughput_count">
+        <name>Throughput_count</name>
+        <description xml:lang="en">Throughput count. (numeric value or symbolic rating)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:qos:throughput_bytes">
+        <name>Throughput_bytes</name>
+        <description xml:lang="en">Throughput bytes. (numeric value or symbolic rating)</description>
+       <overviewDoc> 
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:qos:reliability">
+        <name>Reliability</name>
+        <description xml:lang="en">Reliability or the measure of. (numeric value or symbolic rating)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:qos:reportingperiodstart">
+        <name>ReportingPeriodStart</name>
+        <description xml:lang="en">The beginning on the reporting time period used for the information above. (dateTime)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:qos:reportingperiodend">
+        <name>ReportingPeriodEnd</name>
+        <description xml:lang="en">The end of the reporting time period used for the information above. (dateTime)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:qos:updateinterval">
+        <name>UpdateInterval</name>
+        <description xml:lang="en">How often is this information updated in UDDI (it is not assumed to be realtime). (duration)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="urn:uddi:uddi.org:version">
+        <name>Service Interface Version</name>
+        <description xml:lang="en">When using this tModel as a tModelInstance, it can be used to describe a version associated with either a service interface, a bindingTemplate service instance. Note: This is a jUDDI specific addon and may not be present in other registries.</description>
+       <overviewDoc>
+            <overviewURL>
+               http://www.ibm.com/developerworks/webservices/library/ws-version/
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorization:iso3166">
+		<name>ubr-uddi-org:iso-ch:3166-2003</name>
+        <name>ISO 3166 Country Codes</name>
+        <description xml:lang="en">When used in a Category Bag for a Business or Service, it can indicate the physical or logically location of the Business or Service.</description>
+		<description xml:lang="en">ISO 3166 Codes for names of countries or regions. Updated with newsletters ISO 3166-1 V-1, V-2, V-3, V-4, V-5, V-6, V-7, ISO 3166-2 I-1, I-2, I-3, I-4.</description>
+       <overviewDoc>
+            <overviewURL>
+               http://www.iso.org/iso/country_codes
+            </overviewURL>
+        </overviewDoc>
+		 <overviewDoc>
+		<overviewURL useType="text">
+		  http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#ISO3166
+		</overviewURL> 
+	  </overviewDoc> 
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+			<keyedReference keyName="uddi-org:types:categorization"      keyValue="categorization"       tModelKey="uddi:uddi.org:categorization:types"/> 
+			 <keyedReference keyName="uddi-org:types:cacheable"      keyValue="cacheable"       tModelKey="uddi:uddi.org:categorization:types"/> 
+			<keyedReference keyName="uddi-org:types:valueSet"      keyValue="valueSet"       tModelKey="uddi:uddi.org:categorization:types"/> 
+   
+			
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorizationgroup:unspsc_geo3166">
+        <name>United Nations Standard Products and Services Code with ISO 3166 Grouping</name>
+        <description xml:lang="en">Grouping of the category systems for UNSPSC and ISO 3166. As a consequence, keyedReferenceGroups that reference this tModel describe countries or regions where a product category is offered.</description>
+       <overviewDoc>
+            <overviewURL>
+               http://uddi.org/pubs/uddi-v3.0.2-20041019.htm#_Toc535251470
+            </overviewURL>
+        </overviewDoc>
+		<overviewDoc>
+            <overviewURL>
+               http://www.unspsc.org/
+            </overviewURL>
+        </overviewDoc>
+		
+		<categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+			<keyedReference keyName="uddi-org:types:categorization"      keyValue="categorization"       tModelKey="uddi:uddi.org:categorization:types"/> 
+		</categoryBag>
+    </tModel>
+	
+	
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorizationgroup:wgs84:keygenerator">
+        <name>World Geodetic System Key Generator</name>
+        <description xml:lang="en">Key Generator for Standard for use in cartography, geodesy, and navigation. </description>
+       <overviewDoc>
+            <overviewURL>
+               http://www.ngs.noaa.gov/PUBS_LIB/Geodesy4Layman/TR80003E.HTM#ZZ11
+            </overviewURL>
+        </overviewDoc>
+		<overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#protocolKeyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+			<keyedReference keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" tModelKey="uddi:uddi.org:categorization:types" />
+         </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorizationgroup:wgs84">
+        <name>World Geodetic System</name>
+        <description xml:lang="en">Standard for use in cartography, geodesy, and navigation. </description>
+       <overviewDoc>
+            <overviewURL>
+               http://www.ngs.noaa.gov/PUBS_LIB/Geodesy4Layman/TR80003E.HTM#ZZ11
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorizationgroup:wgs84:latitude">
+        <name>WGS Latitude</name>
+        <description xml:lang="en">Standard for use in cartography, geodesy, and navigation. </description>
+       <overviewDoc>
+            <overviewURL>
+               http://www.ngs.noaa.gov/PUBS_LIB/Geodesy4Layman/TR80003E.HTM#ZZ11
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorizationgroup:wgs84:longitude">
+        <name>WGS Longitude</name>
+        <description xml:lang="en">Standard for use in cartography, geodesy, and navigation. </description>
+       <overviewDoc>
+            <overviewURL>
+               http://www.ngs.noaa.gov/PUBS_LIB/Geodesy4Layman/TR80003E.HTM#ZZ11
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="org:ubr:categorization:geo_precision">
+        <name xml:lang="en">WGS Geographic Precision</name>
+        <description xml:lang="en">Standard for use in cartography, geodesy, and navigation. </description>
+       <overviewDoc>
+            <overviewURL>
+               http://www.ngs.noaa.gov/PUBS_LIB/Geodesy4Layman/TR80003E.HTM#ZZ11
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	
+	
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:keygenerator">
+        <name>Universal Business Registry Key Generator</name>
+        <description>UBR domain key generator</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+    </tModel>
+	<tModel tModelKey="uddi:uddi.org:ubr:categorizationgroup:keygenerator">
+        <name>Universal Business Registry Categorization Group Key Generator</name>
+        <description>UBR Categorization Group domain key generator</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorization:keygenerator">
+        <name>Universal Business Registry Categorization Key Generator</name>
+        <description>UBR Categorization domain key generator</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+    </tModel>
+	
+	 <tModel tModelKey="uddi:uddi.org:ubr:postaladdress">
+	  <name>ubr-uddi-org:postalAddress</name>
+	  <description xml:lang="en">Postal address structure</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#postal
+	    </overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference keyName="uddi-org:types:postalAddress"	      keyValue="postalAddress"	      tModelKey="uddi:uddi.org:categorization:types"/>
+	    <keyedReference keyName="uddi-org:types:unchecked"	      keyValue="unchecked"	      tModelKey="uddi:uddi.org:categorization:types"/>
+	   </categoryBag>
+	</tModel>
+	
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:relationships">
+	  <name>ubr-uddi-org:relationships</name>
+	  <description xml:lang="en">relationships in a UBR</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm
+	    </overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference keyName="uddi-org:types:unchecked"
+	      keyValue="unchecked"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	   </categoryBag>
+	</tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:identifier:keygenerator">
+	  <name>ubr-uddi-org:identifier key generator</name>
+	  <description>UBR Identifier Group domain key generator</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+	</tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:identifier:owningbusiness">
+	  <name>UBR Identifier Owning Business</name>
+	  <description xml:lang="en">Identifier for an Owning Business in a UBR</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm
+	    </overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference keyName="uddi-org:types:unchecked"
+	      keyValue="unchecked"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	   </categoryBag>
+	</tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorization:unspsc">
+	  <name>UBR Categorization United Nations Standard Products and Services Code</name>
+	  <description xml:lang="en">UNSPSC Categorization in a UBR</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm
+	    </overviewURL>
+	  </overviewDoc>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      http://www.unspsc.org/
+	    </overviewURL>
+	  </overviewDoc>
+	  
+	  <categoryBag>
+	    <!--<keyedReference keyName="uddi-org:types:unchecked"	      keyValue="unchecked"	      tModelKey="uddi:uddi.org:categorization:types"/>-->
+		  <keyedReference keyName="uddi-org:types:categorization"      keyValue="categorization"       tModelKey="uddi:uddi.org:categorization:types"/> 
+		<keyedReference keyName="uddi-org:types:checked"      keyValue="checked"       tModelKey="uddi:uddi.org:categorization:types"/> 
+		<keyedReference keyName="uddi-org:types:cacheable"      keyValue="cacheable"       tModelKey="uddi:uddi.org:categorization:types"/> 
+	  
+	   </categoryBag>
+	</tModel>
+	
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorization:naics:keygenerator">
+	  <name>North American Industry Classification System Key Generator</name>
+	  <description xml:lang="en">North American Industry Classification System Key Generator.</description>
+	  <description xml:lang="en">The North American Industry Classification System (NAICS) is the standard used by Federal statistical agencies in classifying business establishments for the purpose of collecting, analyzing, and publishing statistical data in the U.S. business economy</description>
+	  <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+			<overviewURL useType="text">
+                https://www.census.gov/eos/www/naics/index.html
+            </overviewURL>
+			
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+	</tModel>
+	 
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorization:naics:1997">
+	  <name>North American Industry Classification System 1997</name>
+	  <description xml:lang="en">North American Industry Classification System 1997</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      https://www.census.gov/eos/www/naics/reference_files_tools/1997/1997.html
+	    </overviewURL>
+		
+	  </overviewDoc>
+	  <overviewDoc>
+	   <overviewURL useType="text">
+            http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#NAICS 
+         </overviewURL>  
+		</overviewDoc>
+	  <categoryBag>
+	     <!--<keyedReference keyName="uddi-org:types:unchecked" keyValue="unchecked"  tModelKey="uddi:uddi.org:categorization:types"/>-->
+		 <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types"/> 
+	     <keyedReference keyName="uddi-org:types:checked"  keyValue="checked"   tModelKey="uddi:uddi.org:categorization:types"/> 
+         <keyedReference keyName="uddi-org:types:cacheable"  keyValue="cacheable"  tModelKey="uddi:uddi.org:categorization:types"/> 
+	   </categoryBag>
+	</tModel>
+	 
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorization:naics:2012">
+	  <name>North American Industry Classification System 2012</name>
+	  <description xml:lang="en">North American Industry Classification System 2012</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      https://www.census.gov/cgi-bin/sssd/naics/naicsrch?chart=2012
+	    </overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference keyName="uddi-org:types:unchecked"
+	      keyValue="unchecked"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	   </categoryBag>
+	</tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorization:naics:2002">
+	  <name>ntis-gov:naics:2002</name> 
+	  <name>North American Industry Classification System 2002</name>
+	  <description xml:lang="en">North American Industry Classification System 2002</description>
+	  <description xml:lang="en">Business Taxonomy: NAICS (2002 Release)</description> 
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      https://www.census.gov/cgi-bin/sssd/naics/naicsrch?chart=2002
+	    </overviewURL>
+	  </overviewDoc>
+	  <overviewDoc> 
+    <overviewURL>
+      http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#NAICS2002 
+    </overviewURL> 
+  </overviewDoc> 
+	  <categoryBag>
+		<keyedReference keyName="uddi-org:types:categorization"     keyValue="categorization"     tModelKey="uddi:uddi.org:categorization:types"/> 
+		<keyedReference keyName="uddi-org:types:checked"      keyValue="checked"       tModelKey="uddi:uddi.org:categorization:types"/> 
+		<keyedReference keyName="uddi-org:types:cacheable"      keyValue="cacheable"       tModelKey="uddi:uddi.org:categorization:types"/> 
+	   </categoryBag>
+	</tModel>
+
+
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorization:naics:2007">
+	  <name>North American Industry Classification System 2007</name>
+	  <description xml:lang="en">North American Industry Classification System 2007</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      https://www.census.gov/cgi-bin/sssd/naics/naicsrch?chart=2007
+	    </overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference keyName="uddi-org:types:unchecked"
+	      keyValue="unchecked"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	   </categoryBag>
+	</tModel>
+	
+	
+	
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:taxonomy:keygenerator">
+	  <name>UBR Taxonomies</name>
+	  <description xml:lang="en">Universal Business Registry Taxonomy Key Generator.</description>
+	  <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+	</tModel>
+
+	<tModel tModelKey="uddi:uddi.org:ubr:taxonomy:naics">
+	  <name>North American Industry Classification System Taxonomy</name>
+	  <description xml:lang="en">North American Industry Classification System Taxonomy</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      https://www.census.gov/eos/www/naics/index.html
+	    </overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference keyName="uddi-org:types:unchecked"
+	      keyValue="unchecked"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	   </categoryBag>
+	</tModel>
+	
+	
+	
+	<tModel tModelKey="uddi:uddi.org:sortorder:jis-x4061">
+	  <name>uddi-org:JIS-X4061</name>
+	  <description>UDDI JIS X 4061 Japanese
+				   collation sequence find qualifier
+	  </description>
+	  <overviewDoc typeURI="text">
+		<overviewURL>
+		   http://uddi.org/pubs/uddi-v3.0.2-20041019.htm#_Toc42047570
+		</overviewURL> 
+	  </overviewDoc> 
+	  <categoryBag>
+		<keyedReference keyName="uddi-org:types:categorization"
+		  keyValue="sortOrder" 
+		  tModelKey="uddi:uddi.org:categorization:types"/> 
+		<keyedReference keyName="uddi-org:types:categorization"
+		  keyValue="findQualifier" 
+		  tModelKey="uddi:uddi.org:categorization:types"/> 
+	   </categoryBag>
+	</tModel>
+	
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:identifier:dnb.com:keygenerator">
+	  <name>ubr-uddi-org:identifier for dnb.com</name>
+	  <description>UBR Identifier dnb.com Group domain key generator</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+	</tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:identifier:dnb.com:d-u-n-s">
+	  <name>Dun and Bradstreet D-U-N-S Number</name>
+	  <description>A unique nine digit identification number, for each physical location of your business. </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://fedgov.dnb.com/webform/pages/dunsnumber.jsp
+            </overviewURL>
+        </overviewDoc>
+		<overviewDoc>
+			<overviewURL useType="text">
+			  http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#D-U-N-S
+			</overviewURL> 
+		  </overviewDoc> 
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:unchecked"	      keyValue="unchecked"	      tModelKey="uddi:uddi.org:categorization:types"/>
+		   <keyedReference keyName="uddi-org:types:identifier"		keyValue="identifier"       tModelKey="uddi:uddi.org:categorization:types"/> 
+		   <keyedReference keyName="D-U-N-S"   keyValue="0060"  tModelKey="uddi:uddi.org:ubr:identifier:iso6523icd"/>
+        </categoryBag>
+	</tModel>
+	<!-- new stuff -->
+	
+	<tModel	 tModelKey="uddi:uddi.org:ubr:identifier:iso6523icd">
+	  <name>ubr-uddi-org:iso-ch:1998:icd</name>
+	  <description xml:lang="EN">ISO 6523 International Code Designator (ICD) System
+	  </description>
+	  <overviewDoc>
+		<overviewURL useType="text">
+		  http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#ISO6523Code
+		</overviewURL> 
+		http://metadata-stds.org/Document-library/Draft-standards/6523-Identification-of-Organizations/ICD_list.htm
+	  </overviewDoc> 
+	  <overviewDoc>
+		<overviewURL useType="text">
+		http://metadata-stds.org/Document-library/Draft-standards/6523-Identification-of-Organizations/ICD_list.htm  
+		</overviewURL> 
+	  </overviewDoc> 
+	  <categoryBag>
+		<keyedReference keyName="uddi-org:types:identifier"      keyValue="identifier"       tModelKey="uddi:uddi.org:categorization:types"/> 
+		<keyedReference keyName="uddi-org:types:unchecked"      keyValue="unchecked"       tModelKey="uddi:uddi.org:categorization:types"/> 
+	   </categoryBag>
+	</tModel>
+	
+	
+	<tModel tModelKey="uuid:8609C81E-EE1F-4D5A-B202-3EB13AD01823">
+        <name>dnb-com:D-U-N-S</name>
+        <description xml:lang="en">Dun&amp;Bradstreet D-U-N-S® Number</description>
+        <overviewDoc>
+            <description xml:lang="en">This tModel is used for the Dun&amp;Bradstreet D-U-N-S® Number identifier.</description>
+            <overviewURL>http://www.uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#D-U-N-S</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="identifier"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:C0B9FE13-179F-413D-8A5B-5004DB8E5BB2">
+        <name>ntis-gov:naics:1997</name>
+        <description xml:lang="en">Business Taxonomy: NAICS(1997 Release)</description>
+        <overviewDoc>
+            <description xml:lang="en">This tModel defines the NAICS industry taxonomy.</description>
+            <overviewURL>http://www.uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#NAICS</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="categorization"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="checked"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:C7536010-F786-11DB-A010-E6245C4E79A1">
+        <name>org.jboss.soa.esb.:category</name>
+        <overviewDoc/>
+    </tModel>
+    <tModel tModelKey="uuid:B1B1BAF5-2329-43E6-AE13-BA8E97195039">
+        <name>thomasregister-com:supplierID</name>
+        <description xml:lang="en">Thomas Registry Suppliers</description>
+        <overviewDoc>
+            <description xml:lang="en">This tModel is used for the Thomas Register supplier identifier codes.</description>
+            <overviewURL>http://www.uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#Thomas</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="identifier"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:A035A07C-F362-44DD-8F95-E2B134BF43B4">
+        <name>uddi-org:general_keywords</name>
+        <description xml:lang="en">Special taxonomy consisting of namespace identifiers and the keywords associated with the namespaces</description>
+        <overviewDoc>
+            <description xml:lang="en">This tModel defines an unidentified taxonomy.</description>
+            <overviewURL>http://www.uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#GenKW</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="categorization"/>
+			<keyedReference tModelKey="uuid:c1acf26d-9672-4404-9d70-39b756e62ab4" keyName="types" keyValue="checked"/>
+        </categoryBag>
+    </tModel>
+   
+    <tModel tModelKey="uuid:AC104DCC-D623-452F-88A7-F8ACD94D9B2B">
+        <name>uddi-org:inquiry_v2</name>
+        <description xml:lang="en">UDDI Inquiry API Version 2 - Core Specification</description>
+        <overviewDoc>
+            <description xml:lang="en">This tModel defines the inquiry API calls for interacting with a V2 UDDI node.</description>
+            <overviewURL>http://www.uddi.org/wsdl/inquire_v2.wsdl</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="specification"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="xmlSpec"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="soapSpec"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="wsdlSpec"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:E59AE320-77A5-11D5-B898-0004AC49CC1E">
+        <name>uddi-org:isReplacedBy</name>
+        <description xml:lang="en">An identifier system used to point (using UDDI keys) to the tModel (or businessEntity) that is the logical replacement for the one in which isReplacedBy is used</description>
+        <overviewDoc>
+            <description xml:lang="en">This is a checked value set.</description>
+            <overviewURL>http://www.uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#IsReplacedBy</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="identifier"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="checked"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:4E49A8D6-D5A2-4FC2-93A0-0411D8D19E88">
+        <name>uddi-org:iso-ch:3166-1999</name>
+        <description xml:lang="en">ISO 3166-1:1997 and 3166-2:1998. Codes for names of countries and their subdivisions. Part 1: Country codes. Part 2:Country subdivision codes. Update newsletters include ISO 3166-1 V-1 (1998-02-05), V-2 (1999-10-01), ISO 3166-2 I-1 (1998)</description>
+        <overviewDoc>
+            <description xml:lang="en">Taxonomy used to categorize entries by geographic location.</description>
+            <overviewURL>http://www.uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#ISO3166</overviewURL>
+        </overviewDoc>
+		 <overviewDoc>
+            <overviewURL>
+               http://www.iso.org/iso/country_codes
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="categorization"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="checked"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:327A56F0-3299-4461-BC23-5CD513E95C55">
+        <name>uddi-org:operators</name>
+        <description xml:lang="en">Taxonomy for categorizing the businessEntity of an operator of a registry.</description>
+        <overviewDoc>
+            <description xml:lang="en">This checked value set is used to identify UDDI operators.</description>
+            <overviewURL>http://www.uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#Operators</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="categorization"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="checked"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:4064C064-6D14-4F35-8953-9652106476A9">
+        <name>uddi-org:owningBusiness</name>
+        <description xml:lang="en">A pointer to a businessEntity that owns the tagged data.</description>
+        <overviewDoc>
+            <description xml:lang="en">This tModel indicates the businessEntity that published or owns the tagged tModel. Used with tModels to establish an &quot;owned&quot; relationship with a registered businessEntity.</description>
+            <overviewURL>http://www.uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#owningBusiness</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="categorization"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="checked"/>
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uuid:25b22e3e-3dfa-3024-b02a-3438b9050b59"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:6E10B91B-BABC-3442-B8FC-5A3C8FDE0794">
+        <name>uddi-org:protocol:http</name>
+        <description xml:lang="en">A tModel that represents the HTTP protocol</description>
+        <overviewDoc>
+            <description xml:lang="en">The HTTP Protocol tModel can be used to indicate that a Web service supports the HTTP protocol.</description>
+            <overviewURL>http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#http</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="uddi-org:types" keyValue="protocol"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:AA254698-93DE-3870-8DF3-A5C075D64A0E">
+        <name>uddi-org:protocol:soap</name>
+        <description xml:lang="en">A tModel that represents the SOAP 1.1 protocol</description>
+        <overviewDoc>
+            <description xml:lang="en">The SOAP Protocol tModel can be used to indicate that a Web service supports the SOAP 1.1 protocol.</description>
+            <overviewURL>http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#soap</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="uddi-org:types" keyValue="protocol"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:807A2C6A-EE22-470D-ADC7-E0424A337C03">
+        <name>uddi-org:relationships</name>
+        <description xml:lang="en">Starter set classifications of businessEntity relationships</description>
+        <overviewDoc>
+            <description xml:lang="en">This tModel is used to describe business relationships. Used in the publisher assertion messages.</description>
+            <overviewURL>http://www.uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#Relationships</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="relationship"/>
+            <keyedReference keyName="" keyValue="uddi:juddi.apache.org:servicebindings-valueset-cp" tModelKey="uuid:25b22e3e-3dfa-3024-b02a-3438b9050b59"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:1E3E9CBC-F8CE-41ab-8F99-88326BAD324A">
+        <name>uddi-org:taxonomy_v2</name>
+        <description xml:lang="en">UDDI Taxonomy API Version 2 - Core Specification</description>
+        <overviewDoc>
+            <description xml:lang="en">This tModel defines the taxonomy validation API calls for interacting with a V2 UDDI node.</description>
+            <overviewURL>http://www.uddi.org/taxonomies/UDDI_Registry_tModels.htm#TaxV2</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="specification"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="xmlSpec"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="soapSpec"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4">
+        <name>uddi-org:types</name>
+        <description xml:lang="en">UDDI Type Taxonomy</description>
+        <overviewDoc>
+            <description xml:lang="en">Taxonomy used to categorize Service Descriptions.</description>
+            <overviewURL>http://www.uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#UDDItypes</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="categorization"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="checked"/>
+            
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:AD61DE98-4DB8-31B2-A299-A2373DC97212">
+        <name>uddi-org:wsdl:address</name>
+        <description xml:lang="en">A tModel used to indicate the WSDL address option.</description>
+        <overviewDoc>
+            <description xml:lang="en">The WSDL Address tModel provides A mechanism to indicate that the endpoint address should be obtained from a WSDL document.</description>
+            <overviewURL>http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#Address</overviewURL>
+        </overviewDoc>
+    </tModel>
+    <tModel tModelKey="uuid:4DC74177-7806-34D9-AECD-33C57DC3A865">
+        <name>uddi-org:wsdl:categorization:protocol</name>
+        <description xml:lang="en">Category system used to describe the protocol supported by a wsdl:binding.</description>
+        <overviewDoc>
+            <description xml:lang="en">The Protocol Categorization tModel provides a mechanism to capture this protocol information in the UDDI binding tModel.</description>
+            <overviewURL>http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#protocol</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="uddi-org:types" keyValue="categorization"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="uddi-org:types" keyValue="checked"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:E5C43936-86E4-37BF-8196-1D04B35C0099">
+        <name>uddi-org:wsdl:categorization:transport</name>
+        <description xml:lang="en">Category system used to describe the transport supported by a wsdl:binding.</description>
+        <overviewDoc>
+            <description xml:lang="en">The Transport Categorization tModel provides a mechanism to capture transport information in the UDDI binding tModel which allows a user to search for bindings that implement a specific transport protocol.</description>
+            <overviewURL>http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#transport</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="uddi-org:types" keyValue="categorization"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="uddi-org:types" keyValue="checked"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:082B0851-25D8-303C-B332-F24A6D53E38E">
+        <name>uddi-org:wsdl:portTypeReference</name>
+        <description xml:lang="en">A category system used to reference a wsdl:portType tModel</description>
+        <overviewDoc>
+            <description xml:lang="en">The WSDL portType Reference category system provides a mechanism to indicate that a UDDI entity has a relationship with a certain wsdl:portType tModel.</description>
+            <overviewURL>http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#portTypeReference</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="uddi-org:types" keyValue="checked"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="uddi-org:types" keyValue="categorization"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:6E090AFA-33E5-36EB-81B7-1CA18373F457">
+        <name>uddi-org:wsdl:types</name>
+        <description xml:lang="en">WSDL Type Category System</description>
+        <overviewDoc>
+            <description xml:lang="en">The WSDL Entity Type tModel uses a number of UDDI entities to represent the various entities within a WSDL document.</description>
+            <overviewURL>http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#wsdlTypes</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="uddi-org:types" keyValue="unchecked"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="uddi-org:types" keyValue="categorization"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:2EC65201-9109-3919-9BEC-C9DBEFCACCF6">
+        <name>uddi-org:xml:localName</name>
+        <description xml:lang="en">A category system used to indicate XML local names</description>
+        <overviewDoc>
+            <description xml:lang="en">The XML Local Name tModel provides a mechanism to indicate the name attribute for the uddi:businessService.</description>
+            <overviewURL>http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#xmlLocalName</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="uddi-org:types" keyValue="unchecked"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="uddi-org:types" keyValue="categorization"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:D01987D1-AB2E-3013-9BE2-2A66EB99D824">
+        <name>uddi-org:xml:namespace</name>
+        <description xml:lang="en">A category system used to indicate namespaces</description>
+        <overviewDoc>
+            <description xml:lang="en">A namespace provides necessary qualifying information about a technical concept or model. The XML Namespace tModel provides a mechanism to associate a namespace with a UDDI entity.</description>
+            <overviewURL>http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#xmlNamespace</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="uddi-org:types" keyValue="unchecked"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="uddi-org:types" keyValue="categorization"/>
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:CD153257-086A-4237-B336-6BDCBDCC6634">
+        <name>unspsc-org:unspsc</name>
+        <description xml:lang="en">Product Taxonomy: UNSPSC (Version 7.3)</description>
+        <overviewDoc>
+            <description xml:lang="en">This tModel defines Version 7.3 of the UNSPSC product taxonomy.</description>
+            <overviewURL>http://www.uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#UNSPSC</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="categorization"/>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="Checked"/>
+			<keyedReference keyName="uddi-org:types:cacheable"   keyValue="cacheable"  tModelKey="uddi:uddi.org:categorization:types"/> 
+   
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="uuid:DB77450D-9FA8-45D4-A7BC-04411D14E384">
+        <name>unspsc-org:unspsc:3-1</name>
+        <description xml:lang="en">Product Taxonomy: UNSPSC (Version 3.1)</description>
+        <overviewDoc>
+            <description xml:lang="en">This tModel defines the UNSPSC product taxonomy.</description>
+            <overviewURL>http://www.uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#UNSPSC31</overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4" keyName="types" keyValue="categorization"/>
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="uuid:f1b347da-6cbb-3a10-93e7-7cd4328b88d3">
+  <name>ubr-uddi-org:iso-ch:1998:icd</name>
+  <description xml:lang="EN">ISO 6523 International Code Designator (ICD) System
+  </description>
+  <overviewDoc>
+    <overviewURL>
+      http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#ISO6523Code
+    </overviewURL> 
+  </overviewDoc> 
+  <categoryBag>
+    <keyedReference tModelKey="uuid:c1acf26d-9672-4404-9d70-39b756e62ab4"
+      keyName="types"
+      keyValue="identifier"/>
+  </categoryBag>
+</tModel>
+
+
+
+<tModel tModelKey="uuid:1ff729f2-1948-46cf-b660-31ec107f1663"> 
+  <name>ntis-gov:naics:2002</name> 
+  <name>North American Industry Classification System 2002</name>
+  <description xml:lang="en">North American Industry Classification System 2002</description>
+  <description xml:lang="en">Business Taxonomy: NAICS (2002 Release)</description> 
+  <overviewDoc> 
+    <overviewURL>
+      http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#NAICS2002 
+    </overviewURL> 
+  </overviewDoc> 
+  <categoryBag>
+    <keyedReference keyName="uddi-org:types:categorization"      keyValue="categorization"       tModelKey="uuid:c1acf26d-9672-4404-9d70-39b756e62ab4"/> 
+    <keyedReference keyName="uddi-org:types:checked"      keyValue="checked"       tModelKey="uuid:c1acf26d-9672-4404-9d70-39b756e62ab4"/>
+    <keyedReference keyName="uddi-org:types:cacheable"       keyValue="cacheable"       tModelKey="uuid:c1acf26d-9672-4404-9d70-39b756e62ab4"/>
+   </categoryBag>
+</tModel>
+ 
+ <tModel
+ tModelKey="uuid:4614c240-b483-11d7-8be8-000629dc0a53">
+  <name> unspsc-org:unspsc:v6.0501</name>
+  <description xml:lang="en"> Product and Service Category System: United Nations Standard Products and Services Code (UNSPSC)</description>
+  <overviewDoc>
+    <overviewURL>
+      http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#UNSPSCv60501
+    </overviewURL> 
+  </overviewDoc> 
+  <categoryBag>
+    <keyedReference tModelKey="uuid:c1acf26d-9672-4404-9d70-39b756e62ab4"      keyName="types"      keyValue="categorization"/>
+    <keyedReference tModelKey="uuid:c1acf26d-9672-4404-9d70-39b756e62ab4"      keyName="types"      keyValue="checked"/>
+  </categoryBag>
+</tModel>
+
+
+<tModel
+ tModelKey="uuid:48eb2518-c1bd-354f-92c9-21a53b0ff2b1">
+  <name>ubr-uddi-org:postalAddress</name>
+  <description xml:lang="en">Postal address structure</description>
+  <overviewDoc>
+    <overviewURL useType="text">
+      http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#postal
+    </overviewURL> 
+  </overviewDoc> 
+  <categoryBag>
+    <keyedReference tModelKey="uuid:c1acf26d-9672-4404-9d70-39b756e62ab4"      keyName="types"      keyValue="categorization"/>
+    <keyedReference tModelKey="uuid:c1acf26d-9672-4404-9d70-39b756e62ab4"      keyName="types"      keyValue="checked"/>
+  </categoryBag>
+</tModel> 
+
+
+
+
+
+
+	<tModel tModelKey="uddi:uddi.org:ubr:identifier:thomasregister.com:keygenerator">
+	  <name>thomasregister-com:key generator</name>
+	  <description> Thomas Registry Suppliers key generator</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+	</tModel>
+
+	<tModel tModelKey="uddi:uddi.org:ubr:identifier:thomasregister.com:supplierid">
+	  <name>Thomas Registry</name>
+	  <name>thomasregister-com:supplierID</name>
+	  <description xml:lang="en">This tModel is used for the Thomas Register supplier identifier codes.</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://www.uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#Thomas
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:identifier"
+			  keyValue="identifier" 
+			  tModelKey="uddi:uddi.org:categorization:types"/> 
+			<keyedReference keyName="uddi-org:types:unchecked"
+			  keyValue="unchecked" 
+			  tModelKey="uddi:uddi.org:categorization:types"/> 
+        </categoryBag>
+	</tModel>
+	
+ 
+</save_tModel>

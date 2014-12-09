@@ -117,8 +117,9 @@ public class ValidatePublish extends ValidateUDDIApi {
 
         /**
          * used from Install class
+         *
          * @param publisher
-         * @param nodeid 
+         * @param nodeid
          * @see Install
          */
         public ValidatePublish(UddiEntityPublisher publisher, String nodeid) {
@@ -284,14 +285,20 @@ public class ValidatePublish extends ValidateUDDIApi {
 
         private void AccessCheck(Object obj, String entityKey) throws UserMismatchException {
                 boolean accessCheck = false; //assume access denied
-                //TODO revisit access control rules in a replicated environment
+                if (!((UddiEntity) obj).getNodeId().equals(nodeID)) {
+                        //prevent changes to data owned by another node in a replicated environment
+                        //even if you're the boss
+                        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidNode", entityKey + " Owning Node: " +((UddiEntity) obj).getNodeId()
+                        + ", this node: " + nodeID));
+                }
+
                 if (publisher.isOwner((UddiEntity) obj)) {
                         accessCheck = true;
 
                 }
                 //if i'm an admin, let me edit stuff on this node, but only stuff that's owned by this node
                 if (((Publisher) publisher).isAdmin()
-                     && nodeID.equals(((UddiEntity) obj).getNodeId())) {
+                        && nodeID.equals(((UddiEntity) obj).getNodeId())) {
                         accessCheck = true;
                 }
 
@@ -331,8 +338,8 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 }
 
                                 if (!pubAssertion.getTmodelKey().equalsIgnoreCase(keyedRef.getTModelKey())
-                                     || !pubAssertion.getKeyName().equalsIgnoreCase(keyedRef.getKeyName())
-                                     || !pubAssertion.getKeyValue().equalsIgnoreCase(keyedRef.getKeyValue())) {
+                                        || !pubAssertion.getKeyName().equalsIgnoreCase(keyedRef.getKeyName())
+                                        || !pubAssertion.getKeyValue().equalsIgnoreCase(keyedRef.getKeyValue())) {
                                         throw new AssertionNotFoundException(new ErrorMessage("errors.pubassertion.AssertionNotFound", entity.getFromKey() + ", " + entity.getToKey()));
                                 }
 
@@ -363,9 +370,9 @@ public class ValidatePublish extends ValidateUDDIApi {
 
                 for (org.uddi.api_v3.BusinessEntity entity : entityList) {
                         validateBusinessEntity(em, entity, config, publisher);
-                       
+
                 }
-                 validateCheckedTModelsBE(entityList, config);
+                validateCheckedTModelsBE(entityList, config);
         }
 
         public void validateSaveBusinessMax(EntityManager em) throws DispositionReportFaultMessage {
@@ -473,7 +480,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
                 for (org.uddi.api_v3.BindingTemplate entity : entityList) {
                         validateBindingTemplate(em, entity, null, config, publisher);
-                        
+
                 }
                 validateCheckedTModelsBT(entityList, config);
         }
@@ -527,7 +534,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
                 for (org.uddi.api_v3.TModel entity : entityList) {
                         validateTModel(em, entity, config, publisher);
-                        
+
                 }
                 validateCheckedTModelsTM(entityList, config);
         }
@@ -604,17 +611,17 @@ public class ValidatePublish extends ValidateUDDIApi {
                 if (item.getBusinessServices() != null && !item.getSignature().isEmpty()) {
                         for (int i = 0; i < item.getBusinessServices().getBusinessService().size(); i++) {
                                 if (item.getBusinessServices().getBusinessService().get(i).getBusinessKey() == null
-                                     || item.getBusinessServices().getBusinessService().get(i).getBusinessKey().length() == 0) {
+                                        || item.getBusinessServices().getBusinessService().get(i).getBusinessKey().length() == 0) {
                                         throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "business/Service(" + i + ")/businessKey"));
                                 }
                                 if (item.getBusinessServices().getBusinessService().get(i).getServiceKey() == null
-                                     || item.getBusinessServices().getBusinessService().get(i).getServiceKey().length() == 0) {
+                                        || item.getBusinessServices().getBusinessService().get(i).getServiceKey().length() == 0) {
                                         throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "business/Service(" + i + ")/serviceKey"));
                                 }
                                 if (item.getBusinessServices().getBusinessService().get(i).getBindingTemplates() != null) {
                                         for (int k = 0; k < item.getBusinessServices().getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {
                                                 if (item.getBusinessServices().getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getBindingKey() == null
-                                                     || item.getBusinessServices().getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getBindingKey().length() == 0) {
+                                                        || item.getBusinessServices().getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getBindingKey().length() == 0) {
                                                         throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "business/Service(" + i + ")/bindingTemplate)" + k + ")/bindingKey"));
                                                 }
                                         }
@@ -658,7 +665,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 if (item.getBindingTemplates() != null && !item.getSignature().isEmpty()) {
                         for (int i = 0; i < item.getBindingTemplates().getBindingTemplate().size(); i++) {
                                 if (item.getBindingTemplates().getBindingTemplate().get(i).getBindingKey() == null
-                                     || item.getBindingTemplates().getBindingTemplate().get(i).getBindingKey().length() == 0) {
+                                        || item.getBindingTemplates().getBindingTemplate().get(i).getBindingKey().length() == 0) {
                                         throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "businessService/bindingTemplate(" + i + ")/bindingKey"));
                                 }
                         }
@@ -666,7 +673,7 @@ public class ValidatePublish extends ValidateUDDIApi {
         }
 
         public void validateBusinessEntity(EntityManager em, org.uddi.api_v3.BusinessEntity businessEntity,
-             Configuration config, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
+                Configuration config, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
 
                 // A supplied businessEntity can't be null
                 if (businessEntity == null) {
@@ -724,8 +731,8 @@ public class ValidatePublish extends ValidateUDDIApi {
         }
 
         public void validateBusinessServices(EntityManager em, org.uddi.api_v3.BusinessServices businessServices,
-             org.uddi.api_v3.BusinessEntity parent, Configuration config, UddiEntityPublisher publisher)
-             throws DispositionReportFaultMessage {
+                org.uddi.api_v3.BusinessEntity parent, Configuration config, UddiEntityPublisher publisher)
+                throws DispositionReportFaultMessage {
                 // Business services is optional
                 if (businessServices == null) {
                         return;
@@ -742,8 +749,8 @@ public class ValidatePublish extends ValidateUDDIApi {
         }
 
         public void validateBusinessService(EntityManager em, org.uddi.api_v3.BusinessService businessService,
-             org.uddi.api_v3.BusinessEntity parent, Configuration config, UddiEntityPublisher publisher)
-             throws DispositionReportFaultMessage {
+                org.uddi.api_v3.BusinessEntity parent, Configuration config, UddiEntityPublisher publisher)
+                throws DispositionReportFaultMessage {
 
                 // A supplied businessService can't be null
                 if (businessService == null) {
@@ -894,8 +901,8 @@ public class ValidatePublish extends ValidateUDDIApi {
         }
 
         public void validateBindingTemplates(EntityManager em, org.uddi.api_v3.BindingTemplates bindingTemplates,
-             org.uddi.api_v3.BusinessService parent, Configuration config, UddiEntityPublisher publisher)
-             throws DispositionReportFaultMessage {
+                org.uddi.api_v3.BusinessService parent, Configuration config, UddiEntityPublisher publisher)
+                throws DispositionReportFaultMessage {
                 // Binding templates is optional
                 if (bindingTemplates == null) {
                         return;
@@ -909,13 +916,12 @@ public class ValidatePublish extends ValidateUDDIApi {
                 for (org.uddi.api_v3.BindingTemplate bindingTemplate : bindingTemplateList) {
                         validateBindingTemplate(em, bindingTemplate, parent, config, publisher);
                 }
-                
 
         }
 
         public void validateBindingTemplate(EntityManager em, org.uddi.api_v3.BindingTemplate bindingTemplate,
-             org.uddi.api_v3.BusinessService parent, Configuration config, UddiEntityPublisher publisher)
-             throws DispositionReportFaultMessage {
+                org.uddi.api_v3.BusinessService parent, Configuration config, UddiEntityPublisher publisher)
+                throws DispositionReportFaultMessage {
 
                 // A supplied bindingTemplate can't be null
                 if (bindingTemplate == null) {
@@ -1125,7 +1131,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
                 // TODO: validate "checked" categories or category groups (see section 5.2.3 of spec)? optional to support
                 if (tModel.getName() == null || tModel.getName().getValue() == null
-                     || tModel.getName().getValue().equals("")) {
+                        || tModel.getName().getValue().equals("")) {
                         throw new ValueNotAllowedException(new ErrorMessage("errors.tmodel.NoName"));
                 }
 
@@ -1152,9 +1158,9 @@ public class ValidatePublish extends ValidateUDDIApi {
                 // The keyedRef must not be blank and every field must contain data.
                 org.uddi.api_v3.KeyedReference keyedRef = pubAssertion.getKeyedReference();
                 if (keyedRef == null
-                     || keyedRef.getTModelKey() == null || keyedRef.getTModelKey().length() == 0
-                     || keyedRef.getKeyName() == null || keyedRef.getKeyName().length() == 0
-                     || keyedRef.getKeyValue() == null || keyedRef.getKeyValue().length() == 0) {
+                        || keyedRef.getTModelKey() == null || keyedRef.getTModelKey().length() == 0
+                        || keyedRef.getKeyName() == null || keyedRef.getKeyName().length() == 0
+                        || keyedRef.getKeyValue() == null || keyedRef.getKeyValue().length() == 0) {
                         throw new ValueNotAllowedException(new ErrorMessage("errors.pubassertion.BlankKeyedRef"));
                 }
 
@@ -1577,21 +1583,22 @@ public class ValidatePublish extends ValidateUDDIApi {
         }
 
         public void validateSaveSubscriptionAdmin(EntityManager em, String publisherOrUsername, List<Subscription> subscriptions) throws DispositionReportFaultMessage {
-            
-            // No null input
+
+                // No null input
                 if (subscriptions == null || subscriptions.isEmpty()) {
                         throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
                 }
-                
+
                 if (!((Publisher) publisher).isAdmin()) {
-                    throw new UserMismatchException(new ErrorMessage("errors.deletepublisher.AdminReqd"));
+                        throw new UserMismatchException(new ErrorMessage("errors.deletepublisher.AdminReqd"));
                 }
                 UddiEntityPublisher user = new UddiEntityPublisher(publisherOrUsername);
                 ValidateSubscription vsub = new ValidateSubscription(user);
-                for (int i=0; i < subscriptions.size(); i++){
-                    vsub.validateSubscriptions(em, subscriptions, user);
+                for (int i = 0; i < subscriptions.size(); i++) {
+                        vsub.validateSubscriptions(em, subscriptions, user);
                 }
         }
+
         public void validateSavePublisher(EntityManager em, SavePublisher body) throws DispositionReportFaultMessage {
 
                 // No null input
@@ -1815,7 +1822,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                         for (int i = 0; i < phone.size(); i++) {
                                 validateUseType(phone.get(i).getUseType());
                                 if (phone.get(i).getValue() == null
-                                     || phone.get(i).getValue().length() == 0) {
+                                        || phone.get(i).getValue().length() == 0) {
                                         throw new ValueNotAllowedException(new ErrorMessage("errors.phone.noinput"));
                                 }
                                 if (phone.get(i).getValue().length() > ValidationConstants.MAX_phone) {
@@ -2198,15 +2205,15 @@ public class ValidatePublish extends ValidateUDDIApi {
                 for (int i = 0; i < addressLine.size(); i++) {
 
                         if (addressLine.get(i).getKeyName() == null
-                             || addressLine.get(i).getKeyName().trim().length() == 0) {
+                                || addressLine.get(i).getKeyName().trim().length() == 0) {
                                 err += "addressLine(" + i + ").keyName,";
                         }
                         if (addressLine.get(i).getKeyValue() == null
-                             || addressLine.get(i).getKeyValue().trim().length() == 0) {
+                                || addressLine.get(i).getKeyValue().trim().length() == 0) {
                                 err += "addressLine(" + i + ").keyValue,";
                         }
                         if (addressLine.get(i).getValue() == null
-                             || addressLine.get(i).getValue().trim().length() == 0) {
+                                || addressLine.get(i).getValue().trim().length() == 0) {
                                 err += "addressLine(" + i + ").value,";
                         }
                 }
@@ -2385,20 +2392,23 @@ public class ValidatePublish extends ValidateUDDIApi {
                         throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.NoInput"));
                 }
                 //get the latest replication config
-                if (cfg!=null){
-                    if (cfg.getCommunicationGraph()!=null){
-                        for (String node : cfg.getCommunicationGraph().getNode()) {
-                            if (node.equals(nodeID.getNodeID()))
-                                throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.InReplicationConfig", nodeID.getNodeID()));
+                if (cfg != null) {
+                        if (cfg.getCommunicationGraph() != null) {
+                                for (String node : cfg.getCommunicationGraph().getNode()) {
+                                        if (node.equals(nodeID.getNodeID())) {
+                                                throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.InReplicationConfig", nodeID.getNodeID()));
+                                        }
+                                }
+                                for (int i = 0; i < cfg.getCommunicationGraph().getEdge().size(); i++) {
+                                        if (nodeID.getNodeID().equals(cfg.getCommunicationGraph().getEdge().get(i).getMessageReceiver())) {
+                                                throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.InReplicationConfig", nodeID.getNodeID()));
+                                        }
+                                        if (nodeID.getNodeID().equals(cfg.getCommunicationGraph().getEdge().get(i).getMessageSender())) {
+                                                throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.InReplicationConfig", nodeID.getNodeID()));
+                                        }
+
+                                }
                         }
-                        for (int i=0; i <cfg.getCommunicationGraph().getEdge().size(); i++){
-                            if (nodeID.getNodeID().equals(cfg.getCommunicationGraph().getEdge().get(i).getMessageReceiver()))
-                                throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.InReplicationConfig", nodeID.getNodeID()));
-                            if (nodeID.getNodeID().equals(cfg.getCommunicationGraph().getEdge().get(i).getMessageSender()))
-                                throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.InReplicationConfig", nodeID.getNodeID()));
-                            
-                        }
-                    }
                 }
 
         }

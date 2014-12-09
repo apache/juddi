@@ -92,7 +92,7 @@ function AddDescription()
     var i = currentDescriptionEntries;
     $("<div id=\"Description" + i + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('Description" + i 
-        +"');\"><i class=\"icon-trash icon-large\"></i></a></div>"
+        +"');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>"
         +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"Description" + i + "Value\"></div>"
         +"<div style=\"float:left\">" + i18n_lang + ": &nbsp;</div>"
@@ -109,7 +109,7 @@ function AddDisco()
     
     $("<div id=\"disco" + i + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('disco" + i 
-        +"');\"><i class=\"icon-trash icon-large\"></i></a></div>"
+        +"');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>"
         +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"disco" + i + "Value\"></div>"
         +"<div style=\"float:left\">" + i18n_type + ": &nbsp;</div>"
@@ -129,7 +129,7 @@ function AddContact()
     
     $("<div id=\"contact" + i + "\" style=\"border-width:2px; border-style:solid; border-color:red\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('contact" + i 
-        +"');\"><i class=\"icon-trash icon-large\"></i></a></div>"
+        +"');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>"
         +"<div style=\"float:left\">" + i18n_contactType+ ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + i + "Type\">" + i18n_contactTypeDefault + "</div>"
         +"<a href=\"javascript:AddContactName('" + i + "');\"><i class=\"icon-plus-sign icon-large\"></i></a>" + i18n_name + " &nbsp"
@@ -148,7 +148,7 @@ function AddContactName(contactid)
 {
     $("<div id=\"contact" + contactid + "Name" + contactname + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('contact" + contactid + "Name" + contactname
-        +"');\"><i class=\"icon-trash icon-large\"></i></a></div>"
+        +"');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>"
         +"<div style=\"float:left\">" + i18n_name + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "Name" + contactname + "Value\"></div>"
         +"<div style=\"float:left\">" + i18n_lang + ": &nbsp;</div>"
@@ -162,7 +162,7 @@ function AddContactEmail(contactid)
 {
     $("<div id=\"contact" + contactid + "Email" + contactemail + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('contact" + contactid + "Email" + contactemail
-        +"');\"><i class=\"icon-trash icon-large\"></i></a></div>"
+        +"');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>"
         +"<div style=\"float:left\">" + i18n_type + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "Email" + contactemail + "Type\">" + i18n_email+ "</div>"
         +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
@@ -175,7 +175,7 @@ function AddContactDescription(contactid)
 {
     $("<div id=\"contact" + contactid + "Description" + contactdescription + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('contact" + contactid + "Description" + contactdescription
-        +"');\"><i class=\"icon-trash icon-large\"></i></a></div>"
+        +"');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>"
         +"<div style=\"float:left\">" + i18n_description + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "Description" + contactdescription + "Value\">"+i18n_contactPrimary+"</div>"
         +"<div style=\"float:left\">" + i18n_lang + ": &nbsp;</div>"
@@ -189,7 +189,7 @@ function AddContactPhone(contactid)
 {
     $("<div id=\"contact" + contactid + "Phone" + contactphone + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('contact" + contactid + "Phone" + contactphone
-        +"');\"><i class=\"icon-trash icon-large\"></i></a></div>"
+        +"');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>"
         +"<div style=\"float:left\">" + i18n_phone + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "Phone" + contactphone + "Value\"></div>"
         +"<div style=\"float:left\">" + i18n_type + ": &nbsp;</div>"
@@ -204,7 +204,7 @@ function AddContactAddress(contactid)
     $("<div id=\"contact" + contactid + "Address" + contactaddress + "\" style=\"border-width:1px; border-style:solid\" >" 
         
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('contact" + contactid + "Address" + contactaddress
-        +"');\"><i class=\"icon-trash icon-large\"></i></a>" + i18n_address + "</div><br>"
+        +"');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a>" + i18n_address + "</div><br>"
         +"<div style=\"float:left\">" + i18n_lang + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "Address" + contactaddress + "Lang\"></div>"
         +"<div style=\"float:left\">" + i18n_addressSortCode + ": &nbsp;</div>"
@@ -228,7 +228,7 @@ function AddContactAddressLine(contactid)
         "\" style=\"border-width:1px; border-style:solid\" >" 
         
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('contact" + contactid + "addressLine" +contactaddresslines 
-        +"');\"><i class=\"icon-trash icon-large\"></i></a></div>"
+        +"');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>"
         +"<div style=\"float:left\">" + i18n_addressValue + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "addressLine" + contactaddresslines + "Value\"></div>"
         +"<div style=\"float:left\">" +i18n_keyname_optional + ": &nbsp;</div>"
@@ -248,7 +248,7 @@ function AddCategoryKeyReferenceParam(tmodelkey, keyname, keyvalue)
     var i=currentcatkeyref;
     
     $("<div id=\"catbagkeyref" + i + "\" style=\"border-width:1px; border-style:solid\">"+
-        "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('catbagkeyref" + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div>"+
+        "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('catbagkeyref" + i + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>"+
         "<div style=\"float:left\">" + i18n_key +" (<a href=\"javascript:tModelModal('catbagkeyref" + i + "Value')\" ><i class=\"icon-list-alt icon-large\"></i>" + il8n_picker + "</a>): &nbsp;</div>"
         + "<div class=\"edit\" id=\"catbagkeyref" + i + "Value\">" + tmodelkey + "</div>"
         +"<div style=\"float:left\">" + i18n_name + ": &nbsp;</div>"
@@ -267,7 +267,7 @@ function AddCategoryKeyReference()
     var i=currentcatkeyref;
     
     $("<div id=\"catbagkeyref" + i + "\" style=\"border-width:1px; border-style:solid\">"+
-        "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('catbagkeyref" + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div>"+
+        "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('catbagkeyref" + i + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>"+
         // <div style=\"float:left\">" + s.key") + ": <a href=\"javascript:tModelModal('" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.VALUE + "')\" class=\"btn btn-mini\">Picker</a> &nbsp;</div>"
         "<div style=\"float:left\">" + i18n_key +" (<a href=\"javascript:tModelModal('catbagkeyref" + i + "Value')\" ><i class=\"icon-list-alt icon-large\"></i>" + il8n_picker + "</a>): &nbsp;</div>"
         + "<div class=\"edit\" id=\"catbagkeyref" + i + "Value\"></div>"

@@ -81,8 +81,10 @@
 		
 		<copy file="${basedir}/juddiv3Node2.xml" tofile="${webapps2.dir}/juddiv3/WEB-INF/classes/juddiv3.xml" overwrite="true"/>
 		<copy file="${basedir}/juddi_install_data_node2/root_BusinessEntity.xml" todir="${webapps2.dir}/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
-<copy file="${basedir}/juddi_install_data_node2/root_Publisher.xml" todir="${webapps2.dir}/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
-<copy file="${basedir}/juddi_install_data_node2/root_tModelKeyGen.xml" todir="${webapps2.dir}/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
+		<copy file="${basedir}/juddi_install_data_node2/root_Publisher.xml" todir="${webapps2.dir}/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
+		<copy file="${basedir}/juddi_install_data_node2/root_tModelKeyGen.xml" todir="${webapps2.dir}/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
+		<copy file="${basedir}/juddi_install_data_node2/UDDI_Publisher.xml" todir="${webapps2.dir}/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
+		<copy file="${basedir}/juddi_install_data_node2/UDDI_tModels.xml" todir="${webapps2.dir}/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
 
 		
 		<copy file="${basedir}/uddiNode2.xml" tofile="${webapps2.dir}/juddi-gui/WEB-INF/classes/META-INF/uddi.xml" overwrite="true"/>

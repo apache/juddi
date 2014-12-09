@@ -217,14 +217,14 @@
 
                                                 <b><%=ResourceLoader.GetResource(session, "items.description")%> </b>- 
                                                 <%=ResourceLoader.GetResource(session, "items.services.description")%><br>
-                                                <a href="javascript:AddDescription('Description');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.description.add")%>
+                                                <a href="javascript:AddDescription('Description');"><i class="icon-plus-sign icon-large"></i> <%=ResourceLoader.GetResource(session, "items.description.add")%></a>
 
                                                 <div id="Description" style="border-width: 2px; border-style: solid;" >
                                                         <%
                                                                 for (int i = 0; i < bd.getDescription().size(); i++) {
                                                                         out.write("<div id=\"" + PostBackConstants.DESCRIPTION + i + "\" style=\"border-width:1px; border-style:solid\">");
                                                                         out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('Description" + i + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
-                                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + ":&nbsp;</div>"
+                                                                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
                                                                              + "<div class=\"edit\" id=\"" + PostBackConstants.DESCRIPTION + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getDescription().get(i).getValue()) + "</div>");
                                                                         out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
                                                                              + "<div class=\"edit\" id=\"" + PostBackConstants.DESCRIPTION + i + PostBackConstants.LANG + "\">"

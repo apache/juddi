@@ -348,7 +348,7 @@
                                                 <b><%=ResourceLoader.GetResource(session, "items.bindingtemplate")%> </b>- <%=ResourceLoader.GetResource(session, "items.bindingtemplate.description")%> <br>
                                                 <% if (!newitem) {
                                                 %>
-                                                <a href="bindingEditor.jsp?svcid=<%=URLEncoder.encode(bd.getServiceKey(), "UTF8")%>"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.bindingtemplate.add")%> <Br>
+                                                <a href="bindingEditor.jsp?svcid=<%=URLEncoder.encode(bd.getServiceKey(), "UTF8")%>"><i class="icon-plus-sign icon-large"></i> <%=ResourceLoader.GetResource(session, "items.bindingtemplate.add")%></a> <Br>
                                                 
                                                         <%
                                                 }

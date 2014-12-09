@@ -21,10 +21,12 @@ import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -104,6 +106,55 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
         static void notifyConfigurationChange(ReplicationConfiguration oldConfig, ReplicationConfiguration newConfig) {
 
                 //if the config is different
+                Set<String> oldnodes = getNodes(oldConfig);
+                Set<String> newNodes = getNodes(newConfig);
+
+                Set<String> addedNodes = diffNodeList(oldnodes, newNodes);
+                if (queue == null) {
+                        queue = new ConcurrentLinkedDeque<NotifyChangeRecordsAvailable>();
+                }
+                for (String s : addedNodes) {
+                        if (!s.equals(node)) {
+                                logger.info("This node: " + node + ". New replication node queue for synchronization: " + s);
+                                HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
+                                highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(s, 0L));
+                                queue.add(new NotifyChangeRecordsAvailable(s, highWaterMarkVectorType));
+                        }
+                }
+
+        }
+
+        private static Set<String> getNodes(ReplicationConfiguration oldConfig) {
+                Set<String> ret = new HashSet<String>();
+                if (oldConfig == null) {
+                        return ret;
+                }
+                for (org.uddi.repl_v3.Operator o : oldConfig.getOperator()) {
+                        ret.add(o.getOperatorNodeID());
+                }
+                if (oldConfig.getCommunicationGraph() != null) {
+                        ret.addAll(oldConfig.getCommunicationGraph().getNode());
+                }
+                return ret;
+        }
+
+        private static Set<String> diffNodeList(Set<String> oldnodes, Set<String> newNodes) {
+                Set<String> diff = new HashSet<String>();
+                Iterator<String> iterator = null;
+                /*oldnodes.iterator();
+                 while (iterator.hasNext()){
+                 String lhs=iterator.next();
+                 if (!newNodes.contains(lhs))
+                 diff.add(lhs);
+                 }*/
+                iterator = newNodes.iterator();
+                while (iterator.hasNext()) {
+                        String lhs = iterator.next();
+                        if (!oldnodes.contains(lhs)) {
+                                diff.add(lhs);
+                        }
+                }
+                return diff;
         }
 
         private UDDIServiceCounter serviceCounter;
@@ -179,17 +230,19 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                 try {
                                                         //get the high water marks for this node
                                                         //ok now get all the changes
-                                                        logger.info("fetching updates on, since ");
-                                                        for (int xx = 0; xx < poll.getChangesAvailable().getHighWaterMark().size(); xx++) {
-                                                                logger.info("Node " + poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID()
-                                                                        + " USN " + poll.getChangesAvailable().getHighWaterMark().get(xx).getOriginatingUSN());
-                                                        }
-                                                        //JAXB.marshal(poll, System.out);
+
+                                                        //done TODO replace with last known record from the given node
+                                                        //for (int xx = 0; xx < poll.getChangesAvailable().getHighWaterMark().size(); xx++) {
+                                                        //        logger.info("Node " + poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID()
+                                                        //                + " USN " + poll.getChangesAvailable().getHighWaterMark().get(xx).getOriginatingUSN());
+                                                        //}
                                                         GetChangeRecords body = new GetChangeRecords();
                                                         body.setRequestingNode(node);
                                                         body.setResponseLimitCount(BigInteger.valueOf(100));
-                                                        //indexing is screwed up
-                                                        body.setChangesAlreadySeen(poll.getChangesAvailable());
+
+                                                        body.setChangesAlreadySeen(getLastChangeRecordFrom(poll.getNotifyingNode()));
+                                                        logger.info("fetching updates from " + poll.getNotifyingNode() + " since " + body.getChangesAlreadySeen().getHighWaterMark().get(0).getOriginatingUSN());
+
                                                         List<ChangeRecord> records
                                                                 = replicationClient.getChangeRecords(body).getChangeRecord();
                                                         //ok now we need to persist the change records
@@ -235,9 +288,9 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                          * a USN is less than the USN specified in the
                          * changesAlreadySeen highWaterMarkVector.
                          */
-                        StringWriter sw = new StringWriter();
-                        JAXB.marshal(rec, sw);
-                        logger.info("_______________________Remote change request " + sw.toString());
+                        // StringWriter sw = new StringWriter();
+                        //JAXB.marshal(rec, sw);
+                        logger.info("_______________________Remote change request " + rec.getChangeID().getNodeID() + ":" + rec.getChangeID().getOriginatingUSN());
 
                         try {
                                 tx.begin();
@@ -245,6 +298,9 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 org.apache.juddi.model.ChangeRecord mapChangeRecord = MappingApiToModel.mapChangeRecord(rec);
                                 mapChangeRecord.setId(null);
                                 em.persist(mapChangeRecord);
+                                tx.commit();
+                                tx = em.getTransaction();
+                                tx.begin();
                                 //<editor-fold defaultstate="collapsed" desc="delete a record">
 
                                 if (rec.getChangeRecordDelete() != null) {
@@ -304,10 +360,10 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                         } else {
                                                                 ValidateNodeIdMatches(model.getNodeId(), rec.getChangeRecordNewData().getOperationalInfo());
 
-                                                               org.apache.juddi.model.BindingTemplate bt= em.find(org.apache.juddi.model.BindingTemplate.class,rec.getChangeRecordNewData().getBindingTemplate().getBindingKey() );
-                                                               if (bt!=null){
-                                                                       em.remove(bt);
-                                                               }
+                                                                org.apache.juddi.model.BindingTemplate bt = em.find(org.apache.juddi.model.BindingTemplate.class, rec.getChangeRecordNewData().getBindingTemplate().getBindingKey());
+                                                                if (bt != null) {
+                                                                        em.remove(bt);
+                                                                }
                                                                 bt = new BindingTemplate();
                                                                 MappingApiToModel.mapBindingTemplate(rec.getChangeRecordNewData().getBindingTemplate(), bt, model);
                                                                 MappingApiToModel.mapOperationalInfo(bt, rec.getChangeRecordNewData().getOperationalInfo());
@@ -322,7 +378,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                 ValidateNodeIdMatches(model.getNodeId(), rec.getChangeRecordNewData().getOperationalInfo());
                                                                 //TODO revisit access control rules
                                                                 em.remove(model);
-                                                        } 
+                                                        }
                                                         model = new BusinessEntity();
                                                         MappingApiToModel.mapBusinessEntity(rec.getChangeRecordNewData().getBusinessEntity(), model);
                                                         // MappingApiToModel.mapOperationalInfo(model, rec.getChangeRecordNewData().getOperationalInfo());
@@ -413,14 +469,67 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                         }
                 }
 
+                private HighWaterMarkVectorType getLastChangeRecordFrom(String notifyingNode) {
+                        HighWaterMarkVectorType ret = new HighWaterMarkVectorType();
+                        ChangeRecordIDType cid = new ChangeRecordIDType();
+                        cid.setNodeID(notifyingNode);
+                        cid.setOriginatingUSN(0L);
+                        EntityManager em = PersistenceManager.getEntityManager();
+                        EntityTransaction tx = em.getTransaction();
+                        try {
+                                tx.begin();
+                                Long id = 0L;
+                                try {
+                                        cid.setOriginatingUSN((Long) em.createQuery("select e.originatingUSN from ChangeRecord e where e.nodeID = :node order by e.originatingUSN desc").setParameter("node", notifyingNode).setMaxResults(1).getSingleResult());
+                                } catch (Exception ex) {
+                                        logger.info(ex);
+                                }
+
+                                tx.rollback();
+
+                        } catch (Exception drfm) {
+                                logger.warn("error caught fetching newest record from node " + notifyingNode, drfm);
+                        } finally {
+                                if (tx.isActive()) {
+                                        tx.rollback();
+                                }
+                                em.close();
+                        }
+
+                        ret.getHighWaterMark().add(cid);
+
+                        return ret;
+                }
         }
 
-        private static void ValidateNodeIdMatches(String nodeId, OperationalInfo operationalInfo) throws Exception {
-                if (nodeId == null || operationalInfo == null) {
+        // private void ValidateDontChangeMyRecordsAtAnotherNode(String )
+        private void ValidateNodeIdMatches(String modelNodeId, OperationalInfo newDataOperationalInfo) throws Exception {
+                if (modelNodeId == null || newDataOperationalInfo == null) {
                         throw new Exception("either the local node ID is null or the inbound replication data's node id is null");
                 }
-                if (!nodeId.equals(operationalInfo.getNodeID())) {
+                //only time this is allowed is custody transfer
+                if (!modelNodeId.equals(newDataOperationalInfo.getNodeID())) {
                         throw new Exception("node id mismatch!");
+                }
+
+                //if i already have a record and "own it" and the remote node has a record with the same key, reject the update
+                //1.5.8 
+                /**
+                 * Each node has custody of a portion of the aggregate data
+                 * managed by the registry of which it is a part. Each datum is
+                 * by definition in the custody of exactly one such node. A
+                 * datum in this context can be a businessEntity, a
+                 * businessService, a bindingTemplate, a tModel, or a
+                 * publisherAssertion. Changes to a datum in the registry MUST
+                 * originate at the node which is the custodian of the datum.
+                 * The registry defines the policy for data custody and, if
+                 * allowed, the custodian node for a given datum can be changed;
+                 * such custody transfer processes are discussed in Section 5.4
+                 * Custody and Ownership Transfer API.
+                 */
+                //so someone else attempted to update one of my records, reject it
+                if (modelNodeId.equals(node)) {
+                        throw new Exception("node id mismatch! this node already has a record for key " + newDataOperationalInfo.getEntityKey() + " and I'm the authority for it.");
                 }
         }
 
@@ -482,6 +591,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
         @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
         @WebResult(name = "changeRecords", targetNamespace = "urn:uddi-org:repl_v3", partName = "body")
         // @WebMethod(operationName = "get_changeRecords", action = "get_changeRecords")
+        @Override
         public org.uddi.repl_v3.ChangeRecords getChangeRecords(
                 @WebParam(partName = "body", name = "get_changeRecords", targetNamespace = "urn:uddi-org:repl_v3") org.uddi.repl_v3.GetChangeRecords body
         ) throws DispositionReportFaultMessage, RemoteException {/*
@@ -625,6 +735,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
+                HashMap<String, Long> map = new HashMap<String, Long>();
                 try {
                         tx.begin();
                         if (FetchEdges != null) {
@@ -632,26 +743,26 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 while (it.hasNext()) {
                                         String nextNode = it.next();
                                         if (!nextNode.equals(node)) {
+                                                if (!map.containsKey(nextNode)) {
+                                                        Long id = 0L;
+                                                        try {
+                                                                id = (Long) em.createQuery("select e.originatingUSN from ChangeRecord e where e.nodeID = :node order by e.originatingUSN desc").setParameter("node", nextNode).setMaxResults(1).getSingleResult();
+                                                        } catch (Exception ex) {
+                                                                logger.debug(ex);
+                                                        }
+                                                        if (id == null) {
+                                                                id = 0L;
+                                                                //per the spec
+                                                        }
+                                                        map.put(nextNode, id);
 
-                                                Long id = 0L;
-                                                try {
-                                                        id = (Long) em.createQuery("select e.originatingUSN from ChangeRecord e where e.nodeID = :node order by e.originatingUSN desc").setParameter("node", nextNode).setMaxResults(1).getSingleResult();
-                                                } catch (Exception ex) {
-                                                        logger.debug(ex);
                                                 }
-                                                if (id == null) {
-                                                        id = 0L;
-                                                        //per the spec
-                                                }
-                                                ChangeRecordIDType x = new ChangeRecordIDType(nextNode, id);
-
-                                                ret.add(x);
-
                                         }
                                 }
                         }
                         //dont forget this node
-                        Long id = (Long) em.createQuery("select (e.id) from ChangeRecord e where e.nodeID = :node  order by e.id desc").setParameter("node", node).setMaxResults(1).getSingleResult();
+                        Long id = (Long) em.createQuery("select (e.id) from ChangeRecord e where e.nodeID = :node  order by e.id desc")
+                                .setParameter("node", node).setMaxResults(1).getSingleResult();
                         if (id == null) {
                                 id = 0L;
                         }
@@ -674,6 +785,11 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                         em.close();
                 }
 
+                Iterator<Map.Entry<String, Long>> iterator = map.entrySet().iterator();
+                while (iterator.hasNext()) {
+                        Map.Entry<String, Long> next = iterator.next();
+                        ret.add(new ChangeRecordIDType(next.getKey(), next.getValue()));
+                }
                 return ret;
         }
 

@@ -49,7 +49,10 @@ public abstract class AuthenticatedService {
 	public static final int AUTHTOKEN_ACTIVE = 1;
 	public static final int AUTHTOKEN_RETIRED = 0;
 	static final Log logger = LogFactory.getLog(AuthenticatedService.class);
-	protected String node = "UNDEFINED_NODE_NAME";
+        /**
+         * the node id of this server instance, as loaded from the config file
+         */
+	protected static String node = "UNDEFINED_NODE_NAME";
         protected String baseUrlSSL="UNDEFINED";
          protected String baseUrl="UNDEFINED";
         
