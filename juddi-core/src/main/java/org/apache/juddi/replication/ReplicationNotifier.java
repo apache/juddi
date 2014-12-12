@@ -120,7 +120,7 @@ public class ReplicationNotifier extends TimerTask {
                         em.close();
                 }
 
-                log.info("ChangeRecord: " + j.getId() + "," + j.getEntityKey() + "," + j.getNodeID() + "," + j.getOriginatingUSN() + "," + j.getRecordType().toString());
+                log.debug("ChangeRecord: " + j.getId() + "," + j.getEntityKey() + "," + j.getNodeID() + "," + j.getOriginatingUSN() + "," + j.getRecordType().toString());
                 org.uddi.repl_v3.ReplicationConfiguration repcfg = FetchEdges();
 
                 //TODO figure out what this statement means 7.5.3
@@ -131,7 +131,7 @@ public class ReplicationNotifier extends TimerTask {
                  * of the registry.
                  */
                 if (repcfg == null) {
-                        log.info("No replication configuration is defined!");
+                        log.debug("No replication configuration is defined!");
                         return;
 
                 }
@@ -184,7 +184,7 @@ public class ReplicationNotifier extends TimerTask {
 
                         try {
                                 x.notifyChangeRecordsAvailable(req);
-                                log.info("Successfully sent change record available message to " + s);
+                                log.debug("Successfully sent change record available message to " + s);
                         } catch (Exception ex) {
                                 log.warn("Unable to send change notification to " + s, ex);
                         }
@@ -196,11 +196,14 @@ public class ReplicationNotifier extends TimerTask {
                 if (queue == null) {
                         queue = new ConcurrentLinkedQueue();
                 }
+                //TODO revisie this
+                if (!queue.isEmpty())
+                        log.info("Replication, Notifying nodes of new change records. " + queue.size() + " queued");
+
                 //TODO check for replication config changes
                 while (!queue.isEmpty()) {
                         //for each change at this node
-                        log.info("Replication, Notifying nodes of new change records. " + queue.size() + " remaining");
-
+                        
                         ChangeRecord j = queue.poll();
                         ProcessChangeRecord(j);
 

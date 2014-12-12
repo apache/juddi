@@ -139,16 +139,64 @@ public class UddiSubscribe implements ISubscriptionCallback, Runnable {
 
                 System.out.println("Registered FindTModel subscription key: " + (subscriptionTM.getSubscriptionKey()) + " bindingkey: " + subscriptionTM.getBindingKey());
 
+                sub = new Subscription();
+                sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(1000));
+                sub.setBindingKey(start.getBindingKey());
+                sub.setSubscriptionFilter(new SubscriptionFilter());
+                sub.getSubscriptionFilter().setGetAssertionStatusReport(new GetAssertionStatusReport());
+                sub.getSubscriptionFilter().getGetAssertionStatusReport().setCompletionStatus(CompletionStatus.STATUS_COMPLETE);
+
+                Subscription subscriptionPA = clerk.register(sub, clerk.getUDDINode().getApiNode());
+
+                System.out.println("Registered Completed PublisherAssertion subscription key: " + (subscriptionPA.getSubscriptionKey()) + " bindingkey: " + subscriptionTM.getBindingKey());
+
+                sub = new Subscription();
+                sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(1000));
+                sub.setBindingKey(start.getBindingKey());
+                sub.setSubscriptionFilter(new SubscriptionFilter());
+                sub.getSubscriptionFilter().setGetAssertionStatusReport(new GetAssertionStatusReport());
+                sub.getSubscriptionFilter().getGetAssertionStatusReport().setCompletionStatus(CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);
+
+                Subscription subscriptionPA2 = clerk.register(sub, clerk.getUDDINode().getApiNode());
+
+                System.out.println("Registered FROM incomplete PublisherAssertion subscription key: " + (subscriptionPA2.getSubscriptionKey()) + " bindingkey: " + subscriptionTM.getBindingKey());
+
+                sub = new Subscription();
+                sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(1000));
+                sub.setBindingKey(start.getBindingKey());
+                sub.setSubscriptionFilter(new SubscriptionFilter());
+                sub.getSubscriptionFilter().setGetAssertionStatusReport(new GetAssertionStatusReport());
+                sub.getSubscriptionFilter().getGetAssertionStatusReport().setCompletionStatus(CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
+
+                Subscription subscriptionPA3 = clerk.register(sub, clerk.getUDDINode().getApiNode());
+
+                System.out.println("Registered TO incomplete PublisherAssertion subscription key: " + (subscriptionPA3.getSubscriptionKey()) + " bindingkey: " + subscriptionTM.getBindingKey());
+
+                sub = new Subscription();
+                sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(1000));
+                sub.setBindingKey(start.getBindingKey());
+                sub.setSubscriptionFilter(new SubscriptionFilter());
+                sub.getSubscriptionFilter().setGetAssertionStatusReport(new GetAssertionStatusReport());
+                sub.getSubscriptionFilter().getGetAssertionStatusReport().setCompletionStatus(CompletionStatus.STATUS_BOTH_INCOMPLETE);
+
+                Subscription subscriptionPA4 = clerk.register(sub, clerk.getUDDINode().getApiNode());
+
+                System.out.println("Registered recently deleted PublisherAssertion subscription key: " + (subscriptionPA4.getSubscriptionKey()) + " bindingkey: " + subscriptionTM.getBindingKey());
+
                 System.out.println("Waiting for callbacks. Now would be a good time to launch either another program or juddi-gui to make some changes. Press any key to stop!");
                 //Thread hook = new Thread(this);
-              //  Runtime.getRuntime().addShutdownHook(hook);
-                
-                        System.in.read();
-                
+                //  Runtime.getRuntime().addShutdownHook(hook);
+
+                System.in.read();
+
                 SubscriptionCallbackListener.stop(client, "default", start.getBindingKey());
                 clerk.unRegisterSubscription(subscriptionBiz.getSubscriptionKey());
                 clerk.unRegisterSubscription(subscriptionSvc.getSubscriptionKey());
                 clerk.unRegisterSubscription(subscriptionTM.getSubscriptionKey());
+                clerk.unRegisterSubscription(subscriptionPA.getSubscriptionKey());
+                clerk.unRegisterSubscription(subscriptionPA2.getSubscriptionKey());
+                clerk.unRegisterSubscription(subscriptionPA3.getSubscriptionKey());
+                clerk.unRegisterSubscription(subscriptionPA4.getSubscriptionKey());
 
                 clerk.unRegisterTModel(createKeyGenator.getTModelKey());
 

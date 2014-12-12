@@ -280,7 +280,8 @@ public class SubscriptionNotifier extends TimerTask {
                 if (resultList.getBindingDetail() != null || resultList.getBusinessDetail() != null
                         || resultList.getBusinessList() != null || resultList.getServiceDetail() != null
                         || resultList.getServiceList() != null || resultList.getTModelDetail() != null
-                        || resultList.getTModelList() != null || resultList.getRelatedBusinessesList() != null) {
+                        || resultList.getTModelList() != null || resultList.getRelatedBusinessesList() != null
+                        || resultList.getAssertionStatusReport() !=null) {
                         return true;
                 }
                 //When the response is 'brief', or when there are deleted only keyBags are used.

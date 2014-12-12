@@ -105,8 +105,9 @@ public class UddiSubscribeAssertionStatus implements ISubscriptionCallback, Runn
                 sub.setBindingKey(start.getBindingKey());
                 sub.setSubscriptionFilter(new SubscriptionFilter());
                 sub.getSubscriptionFilter().setGetAssertionStatusReport(new GetAssertionStatusReport());
+                //it's optional
                 
-
+                //sub.getSubscriptionFilter().getGetAssertionStatusReport().setCompletionStatus(CompletionStatus.STATUS_COMPLETE);
                 Subscription subscriptionBiz = clerk.register(sub, clerk.getUDDINode().getApiNode());
 
                 System.out.println("Registered GetAssertionStatus subscription key: " + (subscriptionBiz.getSubscriptionKey()) + " bindingkey: " + subscriptionBiz.getBindingKey());

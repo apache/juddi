@@ -42,9 +42,11 @@ import org.apache.juddi.config.Property;
 import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.model.PublisherAssertion;
 import org.apache.juddi.model.SubscriptionChunkToken;
 import org.apache.juddi.model.SubscriptionMatch;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.query.FindBusinessByPublisherQuery;
 import org.apache.juddi.query.FindSubscriptionByPublisherQuery;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
@@ -725,12 +727,30 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 				// The coverage period doesn't apply here (basically because publisher assertions don't keep operational info).
 				// TODO, JUDDI-873 edit they do now, rewrite this query
 				GetAssertionStatusReport getAssertionStatusReport = subscriptionFilter.getGetAssertionStatusReport();
-				
-				List<AssertionStatusItem> assertionList = PublicationHelper.getAssertionStatusItemList(publisher, getAssertionStatusReport.getCompletionStatus(), em);
-	
-				AssertionStatusReport assertionStatusReport  = new AssertionStatusReport();
-				for(AssertionStatusItem asi : assertionList)
-					assertionStatusReport.getAssertionStatusItem().add(asi);
+                                List<?> businessKeysFound = null;
+                                businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);
+		
+                                AssertionStatusReport assertionStatusReport  = new AssertionStatusReport();
+                                
+				List<org.apache.juddi.model.PublisherAssertion> pubAssertionList = org.apache.juddi.query.FindPublisherAssertionByBusinessQuery.select(em, businessKeysFound, getAssertionStatusReport.getCompletionStatus());
+                                //if (pubAssertionList==null)
+                                //    return result;
+                                for (org.apache.juddi.model.PublisherAssertion modelPubAssertion : pubAssertionList) {
+
+                                        if (startPointDate.after(modelPubAssertion.getModified())) {
+                                                continue;
+                                        }
+
+                                        if (endPointDate.before(modelPubAssertion.getModified())) {
+                                                continue;
+                                        }
+                                        org.uddi.api_v3.AssertionStatusItem apiAssertionStatusItem = new org.uddi.api_v3.AssertionStatusItem();
+
+                                        MappingModelToApi.mapAssertionStatusItem(modelPubAssertion, apiAssertionStatusItem, businessKeysFound);
+
+                                        assertionStatusReport.getAssertionStatusItem().add(apiAssertionStatusItem);
+                                }
+
 				
 				result.setAssertionStatusReport(assertionStatusReport);
 			}

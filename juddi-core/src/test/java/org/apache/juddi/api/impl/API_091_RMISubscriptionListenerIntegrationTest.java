@@ -20,6 +20,8 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -115,6 +117,8 @@ public class API_091_RMISubscriptionListenerIntegrationTest
 	@Test
 	public void joePublisher() {
 		try {
+                        UDDISubscriptionListenerImpl.notifcationMap.clear();
+                        UDDISubscriptionListenerImpl.notificationCount=0;
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
@@ -126,7 +130,17 @@ public class API_091_RMISubscriptionListenerIntegrationTest
 			tckBusinessService.updateJoePublisherService(authInfoJoe, "foo");
 			
             //waiting up to 100 seconds for the listener to notice the change.
-			String test="";
+                        boolean found=API_090_SubscriptionListenerIntegrationTest.verifyDelivery("Service One");
+                        if (!found)
+                        {
+                                logger.warn("The test failed, dumping any received notifications");
+                                Iterator<Map.Entry<Integer, String>> iterator = UDDISubscriptionListenerImpl.notifcationMap.entrySet().iterator();
+                                while (iterator.hasNext()){
+                                        logger.info("Notification RX: " +iterator.next().getValue());
+                                }
+                        }
+                        Assert.assertTrue("Notification failed " +UDDISubscriptionListenerImpl.notificationCount + " items returned" , found);
+			/*String test="";
 			for (int i=0; i<200; i++) {
 				Thread.sleep(500);
 				System.out.print(".");
@@ -139,9 +153,9 @@ public class API_091_RMISubscriptionListenerIntegrationTest
 			if (UDDISubscriptionListenerImpl.notificationCount == 0) {
 				Assert.fail("No Notification was sent");
 			}
-			if (!UDDISubscriptionListenerImpl.notifcationMap.get(0).contains("<name xml:lang=\"en\">Service One</name>")) {
+			if (!UDDISubscriptionListenerImpl.notifcationMap.get(0).contains("foo")) {
 				Assert.fail("Notification does not contain the correct service");
-			}
+			}*/
 			
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -51,6 +51,8 @@ import org.apache.juddi.model.BindingTemplate;
 import org.apache.juddi.model.BusinessEntity;
 import org.apache.juddi.model.BusinessService;
 import org.apache.juddi.model.Operator;
+import org.apache.juddi.model.PublisherAssertion;
+import org.apache.juddi.model.PublisherAssertionId;
 import org.apache.juddi.model.Tmodel;
 import static org.apache.juddi.replication.ReplicationNotifier.FetchEdges;
 import org.apache.juddi.v3.client.UDDIService;
@@ -229,7 +231,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                         //get the high water marks for this node
                                                         //ok now get all the changes
 
-                                                        //done TODO replace with last known record from the given node
+                                                        //done  replace with last known record from the given node
                                                         //for (int xx = 0; xx < poll.getChangesAvailable().getHighWaterMark().size(); xx++) {
                                                         //        logger.info("Node " + poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID()
                                                         //                + " USN " + poll.getChangesAvailable().getHighWaterMark().get(xx).getOriginatingUSN());
@@ -451,10 +453,37 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                                 //<editor-fold defaultstate="collapsed" desc="changeRecordPublisherAssertion">
                                 if (rec.getChangeRecordPublisherAssertion() != null) {
-//TODO implement
+
+                                        //TODO are publisher assertions owned by a given node?
+                                        PublisherAssertionId paid = new PublisherAssertionId(rec.getChangeRecordPublisherAssertion().getPublisherAssertion().getFromKey(), rec.getChangeRecordPublisherAssertion().getPublisherAssertion().getToKey());
+                                        org.apache.juddi.model.PublisherAssertion model = em.find(org.apache.juddi.model.PublisherAssertion.class, paid);
+                                        if (model != null) {
+                                                //permission check?
+                                        }
+                                        model = new PublisherAssertion();
+
+                                        MappingApiToModel.mapPublisherAssertion(rec.getChangeRecordPublisherAssertion().getPublisherAssertion(), model);
+                                        model.setModified(rec.getChangeRecordPublisherAssertion().getModified().toGregorianCalendar().getTime());
+                                        em.persist(model);
+
                                 }
 //</editor-fold>
+                                if (rec.getChangeRecordNewDataConditional() != null) {
+                                        //TODO
 
+                                }
+                                if (rec.getChangeRecordNull() != null) {
+                                        //TODO
+
+                                }
+                                if (rec.getChangeRecordCorrection() != null) {
+                                        //TODO
+
+                                }
+                                if (rec.getChangeRecordConditionFailed() != null) {
+                                        //TODO
+
+                                }
                                 tx.commit();
 
                         } catch (Exception drfm) {
