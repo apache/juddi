@@ -32,6 +32,9 @@
                 <li><a href="javascript:AddCategoryKeyReferenceParam('uddi:uddi.org:categorization:validatedby','uddi.org:validatedBy','');">Validated By</a></li>
                 <li><a href="javascript:AddCategoryKeyReferenceParam('uddi:uddi.org:categorization:derivedfrom','uddi-org:derivedFrom','');">Derived From</a></li>
                 <li><a href="javascript:AddCategoryKeyReferenceParam('uddi:uddi.org:identifier:isreplacedby','uddi-org:isReplacedBy','');">Is Replaced By</a></li>
+                <li><a href="javascript:AddCategoryKeyReferenceParam('uddi:uddi.org:categorization:types','uddi-org:types:uncacheable','uncacheable');">Uncacheable</a></li>
+                <li><a href="javascript:AddCategoryKeyReferenceParam('uddi:uddi.org:categorization:types','uddi-org:types:cacheable','cacheable');">Cacheable</a></li>
+                
        </ul>
 </div>
 

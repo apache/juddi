@@ -492,7 +492,7 @@ public interface UDDIConstants {
      * wildcard characters to be interpreted literally, and as such should not
      * also be combined with the escape character.
      */
-    public static String WILDCARD = "%";
+    public static final String  WILDCARD = "%";
     /**
      * Presents any SINGLE character<br> Wildcards, when they are allowed, may
      * occur at any position in the string of characters that constitutes the
@@ -504,13 +504,13 @@ public interface UDDIConstants {
      * findQualifier will cause wildcard characters to be interpreted literally,
      * and as such should not also be combined with the escape character.
      */
-    public static String WILDCARD_CHAR = "_";
+    public static final String  WILDCARD_CHAR = "_";
     /**
      * unchecked: Marking a tModel with this categorization asserts that it
      * represents a value set or category group system whose use, through
      * keyedReferences, is not checked.
      */
-    public static String TMODEL_GENERAL_KEYWORDS = "uddi:uddi.org:categorization:general_keywords";
+    public static final String  TMODEL_GENERAL_KEYWORDS = "uddi:uddi.org:categorization:general_keywords";
     /**
      * An unchecked value set is one that allows unrestricted references to its
      * values. A UDDI registry is REQUIRED to have a policy to differentiate
@@ -519,14 +519,14 @@ public interface UDDIConstants {
      * that represent unchecked value sets SHOULD be categorized with the
      * unchecked value from the uddi-org:types category system.
      */
-    public static String UNCHECKED = "uddi-org:types:unchecked";
+    public static final String  UNCHECKED = "uddi-org:types:unchecked";
     /**
      * checked: Marking a tModel with this categorization asserts that it
      * represents a value set or category group system whose use, through
      * keyedReferences, may be checked. Registry, and possibly node policy
      * determines when and how a checked value set is supported.
      */
-    public static String CHECKED = "uddi-org:types:checked";
+    public static final String  CHECKED = "uddi-org:types:checked";
     /**
      * uncacheable: Marking a tModel with this categorization asserts that it
      * represents a checked value set or category group system whose values must
@@ -535,11 +535,11 @@ public interface UDDIConstants {
      * tModel marked with this categorization and may consider contextual
      * criteria involving the entity associated with the reference.
      */
-    public static String UNCACHEABLE = "uddi-org:types:uncacheable";
+    public static final String  UNCACHEABLE = "uddi-org:types:uncacheable";
     /**
      * Basic types of business relationships
      */
-    public static String RELATIONSHIPS = "uddi:uddi.org:relationships";
+    public static final String  RELATIONSHIPS = "uddi:uddi.org:relationships";
     /**
      * "uddi:uddi.org:keygenerator" keyGenerator: Marking a tModel with this
      * categorization designates it as one whose tModelKey identifies a key
@@ -548,7 +548,7 @@ public interface UDDIConstants {
      * tModels. Any attempt to use this categorization for something other than
      * a key generator tModel will fail with E_valueNotAllowed returned.
      */
-    public static String KEY_GENERATOR_TMODEL = "uddi:uddi.org:keygenerator";
+    public static final String  KEY_GENERATOR_TMODEL = "uddi:uddi.org:keygenerator";
     /**
      * "uddi.org:keygenerator" keyGenerator: Marking a tModel with this
      * categorization designates it as one whose tModelKey identifies a key
@@ -557,7 +557,7 @@ public interface UDDIConstants {
      * tModels. Any attempt to use this categorization for something other than
      * a key generator tModel will fail with E_valueNotAllowed returned.
      */
-    public static String KEY_GENERATOR = "uddi.org:keygenerator";
+    public static final String  KEY_GENERATOR = "uddi.org:keygenerator";
     /**
      * "keyGenerator" keyGenerator: Marking a tModel with this categorization
      * designates it as one whose tModelKey identifies a key generator partition
@@ -566,117 +566,126 @@ public interface UDDIConstants {
      * use this categorization for something other than a key generator tModel
      * will fail with E_valueNotAllowed returned.
      */
-    public static String KEY_GENERATOR_VALUE = "keyGenerator";
+    public static final String  KEY_GENERATOR_VALUE = "keyGenerator";
     /**
      * Identifier system used to point to the UDDI entity, using UDDI keys, that
      * is the logical replacement for the one in which isReplacedBy is used.
      */
-    public static String IS_REPLACED_BY = "uddi:uddi.org:identifier:isreplacedby";
+    public static final String  IS_REPLACED_BY = "uddi:uddi.org:identifier:isreplacedby";
     /**
      * Category system used to point a value set or category group system tModel
      * to associated value set Web service implementations.
      * used for keyedReference tmodel key<br>
      * hint: use the ValueSetValidation binding template key as the value
      */
-    public static String IS_VALIDATED_BY = "uddi:uddi.org:categorization:validatedby";
+    public static final String  IS_VALIDATED_BY = "uddi:uddi.org:categorization:validatedby";
     /**
      * Category system used to point a value set or category group system tModel
      * to associated value set Web service implementations.
      * used for keyedReference key name<br>
      * hint: use the ValueSetValidation binding template key as the value
      */
-    public static String IS_VALIDATED_BY_KEY_NAME = "uddi-org:validatedBy";
+    public static final String  IS_VALIDATED_BY_KEY_NAME = "uddi-org:validatedBy";
     /**
      * Category system for referring tModels to other tModels for the purpose of
      * reuse.
      */
-    public static String IS_DERIVED_FROM = "uddi:uddi.org:categorization:derivedfrom";
+    public static final String  IS_DERIVED_FROM = "uddi:uddi.org:categorization:derivedfrom";
     /**
      * Category system used to declare that a value set uses entity keys as
      * valid values.
      */
-    public static String ENTITY_KEY_VALUES = "uddi:uddi.org:categorization:entitykeyvalues";
+    public static final String  ENTITY_KEY_VALUES = "uddi:uddi.org:categorization:entitykeyvalues";
     /**
      * Category system used to point to the businessEntity associated with the
      * publisher of the tModel.
      */
-    public static String OWNING_BUSINESS = "uddi:uddi.org:categorization:owningbusiness";
+    public static final String  OWNING_BUSINESS = "uddi:uddi.org:categorization:owningbusiness";
     /**
      * Secure Sockets Layer Version 3.0 with Server Authentication
      */
-    public static String PROTOCOL_SSLv3 = "uddi:uddi.org:protocol:serverauthenticatedssl3";
+    public static final String  PROTOCOL_SSLv3 = "uddi:uddi.org:protocol:serverauthenticatedssl3";
     /**
      * Secure Sockets Layer Version 3.0 with Mutual Authentication
      */
-    public static String PROTOCOL_SSLv3_CLIENT_CERT = "uddi:uddi.org:protocol:mutualauthenticatedssl3";
+    public static final String  PROTOCOL_SSLv3_CLIENT_CERT = "uddi:uddi.org:protocol:mutualauthenticatedssl3";
     /**
      * A Web service that uses HTTP transport -
      */
-    public static String TRANSPORT_HTTP = "uddi:uddi.org:transport:http";
+    public static final String  TRANSPORT_HTTP = "uddi:uddi.org:transport:http";
     /**
      * E-mail based Web service
      */
-    public static String TRANSPORT_EMAIL = "uddi:uddi.org:transport:smtp";
+    public static final String  TRANSPORT_EMAIL = "uddi:uddi.org:transport:smtp";
     /**
      * File Transfer Protocol (FTP) based Web service
      */
-    public static String TRANSPORT_FTP = "uddi:uddi.org:transport:ftp";
+    public static final String  TRANSPORT_FTP = "uddi:uddi.org:transport:ftp";
     /**
      * Fax-based Web service
      */
-    public static String TRANSPORT_FAX = "uddi:uddi.org:transport:fax";
+    public static final String  TRANSPORT_FAX = "uddi:uddi.org:transport:fax";
     /**
      * Telephone based service
      */
-    public static String TRANSPORT_POTS = "uddi:uddi.org:transport:telephone";
+    public static final String  TRANSPORT_POTS = "uddi:uddi.org:transport:telephone";
     /**
      * Java RMI based service registered to the Java Registry
      */
-    public static String TRANSPORT_RMI = "uddi:uddi.org:transport:rmi";
+    public static final String  TRANSPORT_RMI = "uddi:uddi.org:transport:rmi";
     /**
      * A Java RMI based service registered to a JNDI Registry
      */
-    public static String TRANSPORT_JNDI_RMI = "uddi:uddi.org:transport:jndi-rmi";
+    public static final String  TRANSPORT_JNDI_RMI = "uddi:uddi.org:transport:jndi-rmi";
     /**
      * A Web service that uses the AMQP transport
      */
-    public static String TRANSPORT_AMQP = "uddi:uddi.org:transport:amqp";
+    public static final String  TRANSPORT_AMQP = "uddi:uddi.org:transport:amqp";
     /**
      * A Web service that uses the OMG DDS transport
      */
-    public static String TRANSPORT_OMGDDS = "uddi:uddi.org:transport:omgdds";
+    public static final String  TRANSPORT_OMGDDS = "uddi:uddi.org:transport:omgdds";
     /**
      * A Web service that uses UDP
      */
-    public static String TRANSPORT_UDP = "uddi:uddi.org:transport:udp";
+    public static final String  TRANSPORT_UDP = "uddi:uddi.org:transport:udp";
     /**
      * A Web service that uses the JMS API
      */
-    public static String TRANSPORT_JMS = "uddi:uddi.org:transport:jms";
+    public static final String  TRANSPORT_JMS = "uddi:uddi.org:transport:jms";
     /**
      * A tModel that represents the Representational State Transfer
      * architectural style
      */
-    public static String PROTOCOL_REST = "uddi:uddi.org:protocol:rest";
+    public static final String  PROTOCOL_REST = "uddi:uddi.org:protocol:rest";
     /**
      * A tModel that represents the SOAP 1.1 protocol
      */
-    public static String PROTOCOL_SOAP = "uddi:uddi.org:protocol:soap";
+    public static final String  PROTOCOL_SOAP = "uddi:uddi.org:protocol:soap";
     /**
      * A tModel that represents the SOAP 1.2 protocol
      */
-    public static String PROTOCOL_SOAP12 = "uddi:uddi.org:protocol:soap12";
+    public static final String  PROTOCOL_SOAP12 = "uddi:uddi.org:protocol:soap12";
     
     
     
-     public static String INQUIRY="uddi:uddi.org:v3_inquiry";
-        public static String PUBLISH="uddi:uddi.org:v3_publication";
-         public static String SECURITY="uddi:uddi.org:v3_security";
-         public static String REPLICATION="uddi:uddi.org:v3_replication";
-        public static String CUSTODY_TRANSFER="uddi:uddi.org:v3_ownership_transfer";
-        public static String NODE_TRANSFER="uddi:uddi.org:v3_node_custody_transfer";
-         public static String VSV_CACHE="uddi:uddi.org:v3_valuesetcaching";
-         public static String VSV_VALIDATE="uddi:uddi.org:v3_valuesetvalidation";
-         public static String SUBSCRIPTION="uddi:uddi.org:v3_subscription";
-         public static String SUBSCRIPTION_LISTENER="uddi:uddi.org:v3_subscriptionlistener";
+     public static final String  INQUIRY="uddi:uddi.org:v3_inquiry";
+        public static final String  PUBLISH="uddi:uddi.org:v3_publication";
+         public static final String  SECURITY="uddi:uddi.org:v3_security";
+         public static final String  REPLICATION="uddi:uddi.org:v3_replication";
+        public static final String  CUSTODY_TRANSFER="uddi:uddi.org:v3_ownership_transfer";
+        public static final String  NODE_TRANSFER="uddi:uddi.org:v3_node_custody_transfer";
+         public static final String  VSV_CACHE="uddi:uddi.org:v3_valuesetcaching";
+         public static final String  VSV_VALIDATE="uddi:uddi.org:v3_valuesetvalidation";
+         public static final String  SUBSCRIPTION="uddi:uddi.org:v3_subscription";
+         public static final String  SUBSCRIPTION_LISTENER="uddi:uddi.org:v3_subscriptionlistener";
+         /**
+          * @since 3.3
+          */
+        public static final String  CategorizationTypes_Cacheable="uddi-org:types:cacheable";
+           /**
+          * @since 3.3
+          */
+        public static final String  CategorizationTypes="uddi-org:categorization:types";
+        
 }
