@@ -41,6 +41,7 @@ public class EntryPoint {
                         System.out.println(" 2) Compare Two Binding/tModelInstanceInfo - QOS Example");
                         System.out.println(" 3) jUDDI Admin service - Register a Node (quick add of the jUDDI cloud server)");
                         System.out.println(" 4) Find Binding by QOS Parameters (Binding/tModelInstanceInfo)");
+                        System.out.println(" 4.4) Find Business by QOS Parameters (Binding/tModelInstanceInfo)");
                         System.out.println(" 5) Find Service by QOS Parameters (Binding/tModelInstanceInfo)");
                         System.out.println(" 6) UDDI Create Bulk (makes N business/services");
                         System.out.println(" 7) UDDI Custody Transfer (within a single node)");
@@ -124,6 +125,9 @@ public class EntryPoint {
                 }
                 if (input.equals("4")) {
                         SearchByQos.doFindBinding(authtoken);
+                }
+                 if (input.equals("4.5")) {
+                        SearchByQos.doFindBusiness(authtoken);
                 }
                 if (input.equals("5")) {
                         SearchByQos.doFindService(authtoken);

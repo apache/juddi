@@ -33,6 +33,8 @@ import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BindingTemplates;
 import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.BusinessInfos;
+import org.uddi.api_v3.BusinessList;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.BusinessServices;
 import org.uddi.api_v3.CategoryBag;
@@ -43,6 +45,7 @@ import org.uddi.api_v3.Description;
 import org.uddi.api_v3.DiscoveryURL;
 import org.uddi.api_v3.DiscoveryURLs;
 import org.uddi.api_v3.FindBinding;
+import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.GetAuthToken;
@@ -170,7 +173,7 @@ public class SearchByQos {
                 System.out.println("saving...");
                 SaveTM(createKeyGenator, uddi);
 
-                System.out.println("fetching business list");
+                System.out.println("fetching binding list");
                 BindingDetail before = getBindingList(uddi);
                 if (before.getBindingTemplate() == null) {
                         System.out.println("before no service returned!");
@@ -178,6 +181,7 @@ public class SearchByQos {
                 } else {
                         System.out.println(before.getBindingTemplate().size() + " service returned before");
                 }
+             
 
                 System.out.println("saving mary");
                 SaveMary(uddi);
@@ -200,6 +204,75 @@ public class SearchByQos {
                         System.out.println("something's not right, here's the before service listing");
                         System.out.println(p.print(before));
                         System.out.println(p.print(after));
+                }
+                
+                
+                
+
+        }
+
+        
+        
+        public static void doFindBusiness(String token) throws Exception {
+        // create a manager and read the config in the archive; 
+                // you can use your config file name
+                UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
+                Transport transport = clerkManager.getTransport();
+                // Now you create a reference to the UDDI API
+                security = transport.getUDDISecurityService();
+                publish = transport.getUDDIPublishService();
+                inquiry = transport.getUDDIInquiryService();
+        //step one, get a token
+                // GetAuthToken getAuthTokenRoot = new GetAuthToken();
+                //getAuthTokenRoot.setUserID("uddi");
+                //getAuthTokenRoot.setCred("uddi");
+
+        // Making API call that retrieves the authentication token for the 'root' user.
+                //String rootAuthToken = clerk.getAuthToken(clerk.getUDDINode().getSecurityUrl());
+                String uddi = token;//security.getAuthToken(getAuthTokenRoot).getAuthInfo();
+
+                System.out.println("killing mary's business if it exists");
+                //first check is Mary's business exists and delete
+                DeleteIfExists("uddi:uddi.marypublisher.com:marybusinessone", uddi);
+
+                System.out.println("making mary's tmodel key gen");
+                //make the key gen since our test case uses some custom keys
+                TModel createKeyGenator = UDDIClerk.createKeyGenator("uddi.marypublisher.com", "mary key gen", "en");
+                //clerk.register(createKeyGenator);
+                System.out.println("saving...");
+                SaveTM(createKeyGenator, uddi);
+
+              
+                 System.out.println("fetching business list");
+                 BusinessList before2 = getBusinessList(uddi);
+                  if (before2.getBusinessInfos()== null) {
+                        System.out.println("before no service returned!");
+                        // before.setServiceInfos(new ServiceInfos());
+                } else {
+                        System.out.println(before2.getBusinessInfos().getBusinessInfo().size() + " business returned before");
+                }
+
+                System.out.println("saving mary");
+                SaveMary(uddi);
+
+                
+                
+                
+                    BusinessList after2 = getBusinessList(uddi);
+               
+                PrintUDDI<BusinessList> p2 = new PrintUDDI<BusinessList>();
+                if (before2.getBusinessInfos()==null )
+                        before2.setBusinessInfos(new BusinessInfos());
+                if ((before2.getBusinessInfos().getBusinessInfo().size()
+                        < after2.getBusinessInfos().getBusinessInfo().size())) {
+                        System.out.println("hey it worked as advertised. Here's all the business with QOS parameters");
+                        System.out.println(p2.print(after2));
+
+                } else {
+
+                        System.out.println("something's not right, here's the before business listing");
+                        System.out.println(p2.print(before2));
+                        System.out.println(p2.print(after2));
                 }
 
         }
@@ -228,6 +301,21 @@ public class SearchByQos {
                                 Logger.getLogger(FindBusinessBugHunt.class.getName()).log(Level.SEVERE, null, ex);
                         }
                 }
+        }
+        
+        private static BusinessList getBusinessList(String token) throws Exception {
+                FindBusiness fb = new FindBusiness();
+                fb.setAuthInfo(token);
+                org.uddi.api_v3.FindQualifiers fq = new org.uddi.api_v3.FindQualifiers();
+                fq.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                fq.getFindQualifier().add(UDDIConstants.OR_ALL_KEYS);
+                fb.setFindQualifiers(fq);
+                fb.getName().add((new Name(UDDIConstants.WILDCARD, null)));
+
+                fb.setTModelBag(new TModelBag());
+                fb.getTModelBag().getTModelKey().addAll(WSDMQosConstants.getAllQOSKeys());
+
+                return inquiry.findBusiness(fb);
         }
 
         private static ServiceList getServiceList(String token) throws Exception {
