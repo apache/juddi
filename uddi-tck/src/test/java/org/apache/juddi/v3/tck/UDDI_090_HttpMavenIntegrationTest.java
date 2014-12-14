@@ -93,6 +93,10 @@ public class UDDI_090_HttpMavenIntegrationTest extends UDDI_090_SubscriptionList
                                 found = true;
                         }
                 }
+                if (!found){
+                        logger.error("_________________________________________________the test failed!!!");
+                        Thread.dumpStack();
+                                }
                 return found;
         }
 

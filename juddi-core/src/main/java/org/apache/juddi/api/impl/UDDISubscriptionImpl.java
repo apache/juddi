@@ -253,8 +253,8 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 					// Setting the start index to the chunkData
 					Holder<Integer> subscriptionStartIndex = new Holder<Integer>(chunkData);
 					
-					BindingDetail bindingDetail = InquiryHelper.getBindingDetailFromKeys(fb, findQualifiers, em, currentMatchingKeys,
-																						 startPointDate, endPointDate, subscriptionStartIndex, modelSubscription.getMaxEntities());
+					BindingDetail bindingDetail = InquiryHelper.getBindingDetailFromKeys(fb, findQualifiers, em, currentMatchingKeys,              
+						startPointDate, endPointDate, subscriptionStartIndex, modelSubscription.getMaxEntities());
 							
 					// Upon exiting above function, if more results are to be had, the subscriptionStartIndex will contain the latest value (or null
 					// if no more results)
