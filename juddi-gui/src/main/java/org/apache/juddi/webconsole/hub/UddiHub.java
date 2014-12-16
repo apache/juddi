@@ -1714,6 +1714,7 @@ public class UddiHub implements Serializable {
                                 sb.append("<table class=\"table\">");
                                 for (int i = 0; i < findBusiness.getBindingTemplate().size(); i++) {
                                         sb.append("<tr><td>");
+                                        sb.append(ResourceLoader.GetResource(session, "items.service.key")).append(": ");
                                         sb.append("<a href=\"serviceEditor.jsp?id=").
                                              append(StringEscapeUtils.escapeHtml(findBusiness.getBindingTemplate().get(i).getServiceKey())).
                                              append("\">");
@@ -1727,6 +1728,12 @@ public class UddiHub implements Serializable {
                                                         sb.append(t);
                                                 }
                                         }
+                                        sb.append("</a><br>");
+                                        sb.append(ResourceLoader.GetResource(session, "items.bindingtemplate.key"));
+                                        sb.append(": <a href=\"bindingEditor.jsp?id=");
+                                        sb.append(StringEscapeUtils.escapeHtml(findBusiness.getBindingTemplate().get(i).getBindingKey()));
+                                        sb.append("\">");
+                                        sb.append(StringEscapeUtils.escapeHtml(findBusiness.getBindingTemplate().get(i).getBindingKey()));
                                         sb.append("</a>");
                                         sb.append("</td></tr>");
                                 }
@@ -2975,7 +2982,7 @@ public class UddiHub implements Serializable {
 
         /**
          * Searches first for a service, then iterates through to identify
-         * bindings matching the specified criteria. Since UDDI does not have a
+         * bindings matching the specified criteria. Since UDDI does not have name/keyword searches for a
          * find_binding API, this is as good as it gets.
          *
          * @param keyword
