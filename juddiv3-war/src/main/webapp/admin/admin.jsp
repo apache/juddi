@@ -38,29 +38,43 @@
                         <%=ResourceLoader.GetResource(session, "pages.admin.content")%>
                         <br>
                         <select onchange="toggledivs();" id="divselector">
-                                <option>adminDelete_tmodel</option>
+                                
+                                <option>------ Subscription Management -----</option>
+                                <option>get_AllClientSubscriptionInfo</option>
                                 <option>delete_ClientSubscriptionInfo</option>
-                                <option>delete_publisher</option>
+                                <option>invoke_SyncSubscription</option>
+                                <option>save_ClientSubscriptionInfo</option>
+                                
+                                <option>admin_SaveSubscription</option>
+                                <option>admin_DeleteSubscription</option>
+                                
+                                <option>get_AllNodes</option>
+                                <option>save_Node</option>
+                                <option>delete_Node</option>
+                                
+                                <option>get_AllClerks</option>
+                                <option>save_Clerk</option>
+                                <option>delete_Clerk</option>
+                                
+                                <option>------ Publisher/User Management -----</option>
                                 <option>getAllPublisherDetail</option>
                                 <option>get_publisherDetail</option>
-                                <option>invoke_SyncSubscription</option>
-                                <option>save_Clerk</option>
-                                <option>save_ClientSubscriptionInfo</option>
-                                <option>save_Node</option>
+                                <option>delete_publisher</option>
                                 <option>save_publisher</option>
                                 
-                                <option>send_EmailTest</option>
-                                <option>get_AllNodes</option>
-                                <option>get_AllClerks</option>
-                                <option>delete_Node</option>
-                                <option>delete_Clerk</option>
-                                <option>admin_DeleteSubscription</option>
-                                <option>admin_SaveBusiness</option>
-                                <option>admin_SaveTModel</option>
-                                <option>get_AllClientSubscriptionInfo</option>
+                                
+                                
+                                <option>------ Node Management -----</option>
                                 <option>set_ReplicationNodes</option>
                                 <option>get_ReplicationNodes</option>
-                                <option>admin_SaveSubscription</option>
+
+                                <option>------ Backup/Restore Management -----</option>
+                                <option>admin_SaveBusiness</option>
+                                <option>admin_SaveTModel</option>
+                                <option>adminDelete_tmodel</option>                                 
+                                <option>send_EmailTest</option>
+                               
+                                
                         </select>
 
                         <div>
@@ -149,17 +163,51 @@
                                 <div id="send_EmailTest" style="display:none">
                                 <%=ResourceLoader.GetResource(session, "items.email")%>  <input type="text" id="send_EmailTestEMAIL"  class="forminput" placeholder="Enter email"><br>    
                                 </div>
-                                <div id="get_AllNodes" style="display:none"></div>
-                                <div id="get_AllClerks" style="display:none"></div>
-                                <div id="delete_Node" style="display:none"></div>
-                                <div id="delete_Clerk" style="display:none"></div>
-                                <div id="admin_DeleteSubscription" style="display:none"></div>
-                                <div id="admin_SaveBusiness" style="display:none"></div>
-                                <div id="admin_SaveTModel" style="display:none"></div>
-                                <div id="get_AllClientSubscriptionInfo" style="display:none"></div>
-                                <div id="set_ReplicationNodes" style="display:none"></div>
-                                <div id="get_ReplicationNodes" style="display:none"></div>
-                                <div id="admin_SaveSubscription" style="display:none"></div>
+                                <div id="get_AllNodes" style="display:none">
+                                    No input required.
+                                </div>
+                                <div id="get_AllClerks" style="display:none">
+                                    No input required.
+                                </div>
+                                <div id="delete_Node" style="display:none">
+                                    Node name <input type="text" id="delete_NodeName"  class="forminput" placeholder="Node name"><br>
+                                </div>
+                                <div id="delete_Clerk" style="display:none">
+                                    Clerk name <input type="text" id="delete_ClerkName"  class="forminput" placeholder="Clerk name"><br>
+                                </div>
+                                <div id="admin_DeleteSubscription" style="display:none">
+                                   Subscription Key <input type="text" id="admin_DeleteSubscriptionKey"  class="forminput" placeholder="Subscription Key"><br>
+                                </div>
+                                <div id="admin_SaveBusiness" style="display:none">
+                                     <%=ResourceLoader.GetResource(session, "items.noauthtoken")%>  <br>
+                                        <textarea rows="4" cols="80" id="admin_SaveBusinessXML" class="forminput" placeholder="Enter save business XML"></textarea>
+
+                                </div>
+                                <div id="admin_SaveTModel" style="display:none">
+                                     <%=ResourceLoader.GetResource(session, "items.noauthtoken")%>  <br>
+                                        <textarea rows="4" cols="80" id="admin_SaveTModelXML" class="forminput" placeholder="Enter save tmodel XML"></textarea>
+
+                                </div>
+                                <div id="get_AllClientSubscriptionInfo" style="display:none">
+                                    No input required.
+                                </div>
+                                <div id="set_ReplicationNodes" style="display:none">
+                                    
+                                         <%=ResourceLoader.GetResource(session, "items.noauthtoken")%>  <br>
+                                        <textarea rows="4" cols="80" id="set_ReplicationNodesXML" class="forminput" placeholder="Enter replication config XML"></textarea>
+
+                                </div>
+                                <div id="get_ReplicationNodes" style="display:none">
+                                    No input required.
+                                </div>
+                                <div id="admin_SaveSubscription" style="display:none">
+                                    
+                                         <%=ResourceLoader.GetResource(session, "items.noauthtoken")%>  <br>
+                                        <textarea rows="4" cols="80" id="admin_SaveSubscriptionXML" class="forminput" placeholder="Enter save subscription XML"></textarea>
+
+                                </div>
+                                
+                               
 
                         </div>
                         <script type="text/javascript">
@@ -191,9 +239,58 @@
                                         $("#set_ReplicationNodes").hide();
                                         $("#get_ReplicationNodes").hide();
                                         $("#admin_SaveSubscription").hide();
-                        
+                                       
                         
                                         $("#" + x).show();
+                                        
+                                        //get a samle xml doc
+                                        
+                                       // var x = $("#" + select).val();
+                                        var url = 'ajax/advanced.jsp';
+
+                                        var postbackdata = new Array();
+
+
+                                        postbackdata.push({
+                                            name: "advancedaction",
+                                            value: "getdefaultrequest"
+                                        });
+
+                                        postbackdata.push({
+                                            name: "nonce",
+                                            value: $("#nonce").val()
+                                        });
+
+                                       
+                                        postbackdata.push({
+                                            name: "method",
+                                            value: x
+                                        });
+
+
+
+                                        var request = $.ajax({
+                                            url: url,
+                                            type: "POST",
+                                            //  data" + i18n_type + ": "html", 
+                                            cache: false,
+                                            //  processData: false,f
+                                            data: postbackdata
+                                        });
+
+
+                                        request.done(function(msg) {
+                                            window.console && console.log('postback done ' + url);
+                                            //trim it
+                                            $("#" + x + "XML").html(msg.replace(/^\s+|\s+$/g, ''));
+                                        });
+
+                                        request.fail(function(jqXHR, textStatus) {
+                                            window.console && console.log('postback failed ' + url + ' ' + jqXHR.responseText + textStatus);
+                                            //$("#adminresults").html(jqXHR.responseText + textStatus);
+
+
+                                        });
                                 }
                                 toggledivs();//run when the page loads
                                 function submitform() {
@@ -215,9 +312,9 @@
                                         $(".forminput").each(function()
                                         {
                                                 var id = $(this).attr("id");
-                                                var value = $(this).text();
+                                                var value = $(this).val();
                                                 if (value === null || value === "" || value === undefined)
-                                                        value = $(this).val();
+                                                        value=$(this).text();
                                                 postbackdata.push({
                                                         name: id,
                                                         value: value
@@ -263,7 +360,9 @@
                         <%=ResourceLoader.GetResource(session, "pages.admin.notes")%>
 
                         <br>
-                        <a href="javascript:submitform();" class="btn btn-primary"><%=ResourceLoader.GetResource(session, "actions.go")%></a>
+                        <a href="javascript:submitform();" class="btn btn-primary"><%=ResourceLoader.GetResource(session, "actions.go")%></a><br><br>
+                        <br>
+
                 </div>
         </div>
 

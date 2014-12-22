@@ -87,7 +87,10 @@ public class API_110_FindBusinessTest
 				Assert.fail("Could not obtain authInfo token.");
 	     } 
 	}
-	
+	/**
+         * JUDDI-398
+         * JUDDI-881
+         */
 	@Test
 	public void findBusinessByTModelBag() {
 		try {

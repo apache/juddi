@@ -21,6 +21,8 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javax.servlet.ServletContext;
@@ -34,6 +36,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.BindingProvider;
+import javax.xml.ws.Holder;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
@@ -61,7 +64,15 @@ import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.juddi.adminconsole.AES;
 import org.apache.juddi.adminconsole.resources.ResourceLoader;
+import org.apache.juddi.api_v3.AdminSaveBusiness;
+import org.apache.juddi.api_v3.AdminSaveSubscriptionRequest;
+import org.apache.juddi.api_v3.AdminSaveTModel;
+import org.apache.juddi.api_v3.ClerkList;
 import org.apache.juddi.api_v3.ClientSubscriptionInfo;
+import org.apache.juddi.api_v3.DeleteClerk;
+import org.apache.juddi.api_v3.DeleteNode;
+import org.apache.juddi.api_v3.NodeList;
+import org.apache.juddi.api_v3.SubscriptionWrapper;
 import org.apache.juddi.model.BindingTemplate;
 import org.apache.juddi.subscription.notify.SMTPNotifier;
 import org.uddi.api_v3.AuthToken;
@@ -72,6 +83,7 @@ import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.GetAuthToken;
 import org.uddi.api_v3.Name;
+import org.uddi.repl_v3.ReplicationConfiguration;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.subr_v3.NotifySubscriptionListener;
@@ -350,28 +362,39 @@ public class UddiAdminHub {
                         if (action.equalsIgnoreCase("send_EmailTest")) {
                                 return sendTestEmail(parameters);
                         }
-                        /*if (action.equalsIgnoreCase("get_AllNodes")) {
+                        if (action.equalsIgnoreCase("get_AllNodes")) {
+                                return getAllNodes(parameters);
                         }
                         if (action.equalsIgnoreCase("get_AllClerks")) {
+                                return getAllClerks(parameters);
                         }
                         if (action.equalsIgnoreCase("delete_Node")) {
+                                return deleteNode(parameters);
                         }
                         if (action.equalsIgnoreCase("delete_Clerk")) {
+                                return deleteClerk(parameters);
                         }
                         if (action.equalsIgnoreCase("admin_DeleteSubscription")) {
+                                return deleteSubscription(parameters);
                         }
                         if (action.equalsIgnoreCase("admin_SaveBusiness")) {
+                                return adminSaveBusiness(parameters);
                         }
                         if (action.equalsIgnoreCase("admin_SaveTModel")) {
+                                return adminSaveTmodel(parameters);
                         }
                         if (action.equalsIgnoreCase("get_AllClientSubscriptionInfo")) {
+                                return getAllClientSubscriptionInfo(parameters);
                         }
                         if (action.equalsIgnoreCase("set_ReplicationNodes")) {
+                                return setReplicationConfig(parameters);
                         }
                         if (action.equalsIgnoreCase("get_ReplicationNodes")) {
+                                return getReplicationNodes(parameters);
                         }
                         if (action.equalsIgnoreCase("admin_SaveSubscription")) {
-                        }*/
+                                return adminSaveSubscription(parameters);
+                        }
                 } catch (Exception ex) {
                         return "Error!" + HandleException(ex);
                 }
@@ -465,14 +488,15 @@ public class UddiAdminHub {
 
         private String sendTestEmail(HttpServletRequest parameters) {
                 try {
-                        
+
                         String to = parameters.getParameter("send_EmailTestEMAIL");
-                        if (!to.startsWith("mailto:"))
+                        if (!to.startsWith("mailto:")) {
                                 to = "mailto:" + to;
+                        }
                         BindingTemplate modellbt = new BindingTemplate("test", null, "endpoint", to, null, null, null, null, null);
                         org.apache.juddi.subscription.notify.SMTPNotifier smtp = new SMTPNotifier(modellbt);
                         NotifySubscriptionListener body = new NotifySubscriptionListener();
-                        
+
                         body.setSubscriptionResultsList(new SubscriptionResultsList());
                         body.getSubscriptionResultsList().setSubscription(new Subscription());
                         body.getSubscriptionResultsList().getSubscription().setSubscriptionKey("TEST");
@@ -481,6 +505,272 @@ public class UddiAdminHub {
                 } catch (Exception ex) {
                         return "Failure!" + HandleException(ex);
                 }
+        }
+
+        private String getAllNodes(HttpServletRequest parameters) {
+                NodeList allNodes = null;
+                try {
+
+                        allNodes = juddi.getAllNodes(GetToken());
+                } catch (Exception ex) {
+
+                        if (isExceptionExpiration(ex)) {
+                                token = null;
+                                try {
+                                        allNodes = juddi.getAllNodes(GetToken());
+                                } catch (Exception ex1) {
+                                        return HandleException(ex1);
+                                }
+                        } else {
+                                return HandleException(ex);
+                        }
+                }
+                StringWriter sw = new StringWriter();
+                JAXB.marshal(allNodes, sw);
+                return StringEscapeUtils.escapeHtml(sw.toString());
+        }
+
+        private String getAllClerks(HttpServletRequest parameters) {
+                ClerkList allNodes = null;
+                try {
+
+                        allNodes = juddi.getAllClerks(GetToken());
+                } catch (Exception ex) {
+
+                        if (isExceptionExpiration(ex)) {
+                                token = null;
+                                try {
+                                        allNodes = juddi.getAllClerks(GetToken());
+                                } catch (Exception ex1) {
+                                        return HandleException(ex1);
+                                }
+                        } else {
+                                return HandleException(ex);
+                        }
+                }
+                StringWriter sw = new StringWriter();
+                JAXB.marshal(allNodes, sw);
+                return StringEscapeUtils.escapeHtml(sw.toString());
+        }
+
+        private String getAllClientSubscriptionInfo(HttpServletRequest parameters) {
+                List<SubscriptionWrapper> allClientSubscriptionInfo = null;
+                try {
+
+                        allClientSubscriptionInfo = juddi.getAllClientSubscriptionInfo(GetToken());
+                } catch (Exception ex) {
+
+                        if (isExceptionExpiration(ex)) {
+                                token = null;
+                                try {
+                                        allClientSubscriptionInfo = juddi.getAllClientSubscriptionInfo(GetToken());
+                                } catch (Exception ex1) {
+                                        return HandleException(ex1);
+                                }
+                        } else {
+                                return HandleException(ex);
+                        }
+                }
+                StringWriter sw = new StringWriter();
+                JAXB.marshal(allClientSubscriptionInfo, sw);
+                return StringEscapeUtils.escapeHtml(sw.toString());
+        }
+
+        private String getReplicationNodes(HttpServletRequest parameters) {
+                ReplicationConfiguration cfg = null;
+                try {
+
+                        cfg = juddi.getReplicationNodes(GetToken());
+                } catch (Exception ex) {
+
+                        if (isExceptionExpiration(ex)) {
+                                token = null;
+                                try {
+                                        cfg = juddi.getReplicationNodes(GetToken());
+                                } catch (Exception ex1) {
+                                        return HandleException(ex1);
+                                }
+                        } else {
+                                return HandleException(ex);
+                        }
+                }
+                StringWriter sw = new StringWriter();
+                JAXB.marshal(cfg, sw);
+                return StringEscapeUtils.escapeHtml(sw.toString());
+        }
+
+        private String deleteNode(HttpServletRequest parameters) {
+                DeleteNode cfg = new DeleteNode();
+                cfg.setAuthInfo(GetToken());
+                cfg.setNodeID(parameters.getParameter("delete_NodeName"));
+                try {
+
+                        juddi.deleteNode(cfg);
+                } catch (Exception ex) {
+
+                        if (isExceptionExpiration(ex)) {
+                                token = null;
+                                try {
+                                        cfg.setAuthInfo(GetToken());
+                                        juddi.deleteNode(cfg);
+                                } catch (Exception ex1) {
+                                        return HandleException(ex1);
+                                }
+                        } else {
+                                return HandleException(ex);
+                        }
+                }
+
+                return "Success";
+        }
+
+        private String deleteSubscription(HttpServletRequest parameters) {
+                List<String> keys = new ArrayList<String>();
+                keys.add(parameters.getParameter("admin_DeleteSubscriptionKey"));
+                try {
+
+                        juddi.adminDeleteSubscription(GetToken(), keys);
+                } catch (Exception ex) {
+
+                        if (isExceptionExpiration(ex)) {
+                                token = null;
+                                try {
+                                        juddi.adminDeleteSubscription(GetToken(), keys);
+                                } catch (Exception ex1) {
+                                        return HandleException(ex1);
+                                }
+                        } else {
+                                return HandleException(ex);
+                        }
+                }
+
+                return "Success";
+        }
+
+        private String deleteClerk(HttpServletRequest parameters) {
+                DeleteClerk cfg = new DeleteClerk();
+                cfg.setAuthInfo(GetToken());
+                cfg.setClerkID(parameters.getParameter("delete_ClerkName"));
+                try {
+
+                        juddi.deleteClerk(cfg);
+                } catch (Exception ex) {
+
+                        if (isExceptionExpiration(ex)) {
+                                token = null;
+                                try {
+                                        cfg.setAuthInfo(GetToken());
+                                        juddi.deleteClerk(cfg);
+                                } catch (Exception ex1) {
+                                        return HandleException(ex1);
+                                }
+                        } else {
+                                return HandleException(ex);
+                        }
+                }
+
+                return "Success";
+        }
+
+        private String setReplicationConfig(HttpServletRequest parameters) {
+                ReplicationConfiguration cfg = (ReplicationConfiguration) JUDDIRequestsAsXML.getObjectJuddi("set_ReplicationNodes", parameters.getParameter("set_ReplicationNodesXML"));
+                DispositionReport setReplicationNodes = null;
+                try {
+
+                        setReplicationNodes = juddi.setReplicationNodes(GetToken(), cfg);
+                } catch (Exception ex) {
+
+                        if (isExceptionExpiration(ex)) {
+                                token = null;
+                                try {
+                                        setReplicationNodes = juddi.setReplicationNodes(GetToken(), cfg);
+                                } catch (Exception ex1) {
+                                        return HandleException(ex1);
+                                }
+                        } else {
+                                return HandleException(ex);
+                        }
+                }
+                StringWriter sw = new StringWriter();
+                JAXB.marshal(setReplicationNodes, sw);
+                return StringEscapeUtils.escapeHtml(sw.toString());
+        }
+
+        private String adminSaveBusiness(HttpServletRequest parameters) {
+                //admin_SaveBusiness
+                AdminSaveBusiness cfg = (AdminSaveBusiness) JUDDIRequestsAsXML.getObjectJuddi("admin_SaveBusiness", parameters.getParameter("admin_SaveBusinessXML"));
+                DispositionReport setReplicationNodes = null;
+                try {
+
+                        setReplicationNodes = juddi.adminSaveBusiness(GetToken(), cfg.getValues());
+                } catch (Exception ex) {
+
+                        if (isExceptionExpiration(ex)) {
+                                token = null;
+                                try {
+                                        setReplicationNodes = juddi.adminSaveBusiness(GetToken(), cfg.getValues());
+                                } catch (Exception ex1) {
+                                        return HandleException(ex1);
+                                }
+                        } else {
+                                return HandleException(ex);
+                        }
+                }
+                StringWriter sw = new StringWriter();
+                JAXB.marshal(setReplicationNodes, sw);
+                return StringEscapeUtils.escapeHtml(sw.toString());
+        }
+
+        private String adminSaveTmodel(HttpServletRequest parameters) {
+                //admin_SaveTModel
+                AdminSaveTModel cfg = (AdminSaveTModel) JUDDIRequestsAsXML.getObjectJuddi("admin_SaveTModel", parameters.getParameter("admin_SaveTModelXML"));
+                //JAXB.marshal(cfg, System.out);
+                DispositionReport setReplicationNodes = null;
+                try {
+
+                        setReplicationNodes = juddi.adminSaveTModel(GetToken(), cfg.getValues());
+                } catch (Exception ex) {
+
+                        if (isExceptionExpiration(ex)) {
+                                token = null;
+                                try {
+                                        setReplicationNodes = juddi.adminSaveTModel(GetToken(), cfg.getValues());
+                                } catch (Exception ex1) {
+                                        return HandleException(ex1);
+                                }
+                        } else {
+                                return HandleException(ex);
+                        }
+                }
+                StringWriter sw = new StringWriter();
+                JAXB.marshal(setReplicationNodes, sw);
+                return StringEscapeUtils.escapeHtml(sw.toString());
+        }
+
+        private String adminSaveSubscription(HttpServletRequest parameters) {
+                //
+                AdminSaveSubscriptionRequest cfg = (AdminSaveSubscriptionRequest) JUDDIRequestsAsXML.getObjectJuddi("admin_SaveSubscription", parameters.getParameter("admin_SaveSubscriptionXML"));
+
+                Holder<List<Subscription>> holder = new Holder<List<Subscription>>(cfg.getSubscriptions());
+                try {
+
+                        juddi.adminSaveSubscription(GetToken(), cfg.getPublisherOrUsername(), holder);
+                } catch (Exception ex) {
+
+                        if (isExceptionExpiration(ex)) {
+                                token = null;
+                                try {
+                                        juddi.adminSaveSubscription(GetToken(), cfg.getPublisherOrUsername(), holder);
+                                } catch (Exception ex1) {
+                                        return HandleException(ex1);
+                                }
+                        } else {
+                                return HandleException(ex);
+                        }
+                }
+                StringWriter sw = new StringWriter();
+                JAXB.marshal(holder, sw);
+                return StringEscapeUtils.escapeHtml(sw.toString());
         }
 
         public enum AuthStyle {
@@ -564,7 +854,7 @@ public class UddiAdminHub {
                                 try {
                                         d = juddi.getAllPublisherDetail(sb);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex);
+                                        return HandleException(ex1);
                                 }
 
                         } else {
@@ -632,7 +922,7 @@ public class UddiAdminHub {
                                 try {
                                         d = juddi.getPublisherDetail(sb);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex);
+                                        return HandleException(ex1);
                                 }
 
                         } else {
@@ -671,7 +961,7 @@ public class UddiAdminHub {
                                 try {
                                         d = juddi.invokeSyncSubscription(sb);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex);
+                                        return HandleException(ex1);
                                 }
 
                         } else {
@@ -770,7 +1060,7 @@ public class UddiAdminHub {
                                         try {
                                                 d = juddi.saveClientSubscriptionInfo(sb);
                                         } catch (Exception ex1) {
-                                                return HandleException(ex);
+                                                return HandleException(ex1);
                                         }
                                 }
                         } else {
@@ -880,7 +1170,7 @@ public class UddiAdminHub {
                                 try {
                                         d = juddi.savePublisher(sb);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex);
+                                        return HandleException(ex1);
                                 }
                         } else {
                                 return HandleException(ex);
@@ -902,7 +1192,7 @@ public class UddiAdminHub {
                                 try {
                                         juddi.adminDeleteTModel(sb);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex);
+                                        return HandleException(ex1);
                                 }
                         } else {
                                 return HandleException(ex);
@@ -924,7 +1214,7 @@ public class UddiAdminHub {
                                 try {
                                         juddi.deleteClientSubscriptionInfo(sb);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex);
+                                        return HandleException(ex1);
                                 }
 
                         } else {
@@ -1013,6 +1303,148 @@ public class UddiAdminHub {
                         }
                 }
                 return "Unexpected error";
+        }
+
+        public String SendAdvanced(Object request, String method) {
+                StringWriter sw = new StringWriter();
+                try {
+                        if (method.equalsIgnoreCase("save_ClientSubscriptionInfo")) {
+                                SaveClientSubscriptionInfo x = (SaveClientSubscriptionInfo) request;
+                                x.setAuthInfo(GetToken());
+                                ClientSubscriptionInfoDetail saveClientSubscriptionInfo = null;
+                                try {
+                                        saveClientSubscriptionInfo = juddi.saveClientSubscriptionInfo(x);
+                                        sw.append("Success:<br>");
+                                        JAXB.marshal(saveClientSubscriptionInfo, sw);
+                                } catch (Exception ex) {
+                                        if (isExceptionExpiration(ex)) {
+                                                token = null;
+                                                x.setAuthInfo(GetToken());
+                                                saveClientSubscriptionInfo = juddi.saveClientSubscriptionInfo(x);
+                                                sw.append("Success:<br>");
+                                                JAXB.marshal(saveClientSubscriptionInfo, sw);
+
+                                        } else {
+                                                throw ex;
+                                        }
+                                }
+
+                        }
+                        if (method.equalsIgnoreCase("invoke_SyncSubscription")) {
+                                SyncSubscription x = (SyncSubscription) request;
+                                x.setAuthInfo(GetToken());
+                                SyncSubscriptionDetail invokeSyncSubscription = null;
+                                try {
+                                        invokeSyncSubscription = juddi.invokeSyncSubscription(x);
+                                        sw.append("Success:<br>");
+                                        JAXB.marshal(invokeSyncSubscription, sw);
+                                } catch (Exception ex) {
+                                        if (isExceptionExpiration(ex)) {
+                                                token = null;
+                                                x.setAuthInfo(GetToken());
+                                                invokeSyncSubscription = juddi.invokeSyncSubscription(x);
+                                                sw.append("Success:<br>");
+                                                JAXB.marshal(invokeSyncSubscription, sw);
+
+                                        } else {
+                                                throw ex;
+                                        }
+                                }
+
+                        }
+                        if (method.equalsIgnoreCase("admin_SaveBusiness")) {
+                                AdminSaveBusiness x = (AdminSaveBusiness) request;
+
+                                DispositionReport adminSaveBusiness = null;
+
+                                try {
+                                        adminSaveBusiness = juddi.adminSaveBusiness(GetToken(), x.getValues());
+                                        sw.append("Success:<br>");
+                                        JAXB.marshal(adminSaveBusiness, sw);
+
+                                } catch (Exception ex) {
+                                        if (isExceptionExpiration(ex)) {
+                                                token = null;
+                                                x.setAuthInfo(GetToken());
+                                                adminSaveBusiness = juddi.adminSaveBusiness(GetToken(), x.getValues());
+                                                sw.append("Success:<br>");
+                                                JAXB.marshal(adminSaveBusiness, sw);
+
+                                        } else {
+                                                throw ex;
+                                        }
+                                }
+                        }
+                        if (method.equalsIgnoreCase("admin_SaveTModel")) {
+                                AdminSaveTModel x = (AdminSaveTModel) request;
+
+                                DispositionReport adminSaveTModel = null;
+                                try {
+                                        adminSaveTModel = juddi.adminSaveTModel(GetToken(), x.getValues());
+                                        sw.append("Success:<br>");
+                                        JAXB.marshal(adminSaveTModel, sw);
+
+                                } catch (Exception ex) {
+                                        if (isExceptionExpiration(ex)) {
+                                                token = null;
+                                                x.setAuthInfo(GetToken());
+                                                adminSaveTModel = juddi.adminSaveTModel(GetToken(), x.getValues());
+                                                sw.append("Success:<br>");
+                                                JAXB.marshal(adminSaveTModel, sw);
+
+                                        } else {
+                                                throw ex;
+                                        }
+                                }
+
+                        }
+
+                        if (method.equalsIgnoreCase("admin_SaveSubscription")) {
+                                AdminSaveSubscriptionRequest x = (AdminSaveSubscriptionRequest) request;
+                                Holder<List<Subscription>> holder = new Holder<List<Subscription>>(x.getSubscriptions());
+                                try {
+                                        juddi.adminSaveSubscription(GetToken(), x.getPublisherOrUsername(), holder);
+                                        sw.append("Success:<br>");
+                                        JAXB.marshal(holder, sw);
+                                } catch (Exception ex) {
+                                        if (isExceptionExpiration(ex)) {
+                                                token = null;
+
+                                                juddi.adminSaveSubscription(GetToken(), x.getPublisherOrUsername(), holder);
+                                                sw.append("Success:<br>");
+                                                JAXB.marshal(holder, sw);
+
+                                        } else {
+                                                throw ex;
+                                        }
+                                }
+                        }
+                        if (method.equalsIgnoreCase("set_ReplicationNodes")) {
+                                ReplicationConfiguration x = (ReplicationConfiguration) request;
+                                //    Holder<List<Subscription>> holder = new Holder<List<Subscription>>(x.getSubscriptions());
+                                try {
+                                        DispositionReport setReplicationNodes = juddi.setReplicationNodes(GetToken(), x);
+                                        sw.append("Success:<br>");
+                                        JAXB.marshal(setReplicationNodes, sw);
+                                } catch (Exception ex) {
+                                        if (isExceptionExpiration(ex)) {
+                                                token = null;
+
+                                                DispositionReport setReplicationNodes = juddi.setReplicationNodes(GetToken(), x);
+                                                sw.append("Success:<br>");
+                                                JAXB.marshal(setReplicationNodes, sw);
+
+                                        } else {
+                                                throw ex;
+                                        }
+                                }
+                        }
+
+                } catch (Exception ex) {
+                        return HandleException(ex);
+                }
+                return null;
+
         }
 
 }

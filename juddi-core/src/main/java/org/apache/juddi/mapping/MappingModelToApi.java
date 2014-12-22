@@ -435,6 +435,21 @@ public class MappingModelToApi {
                 }
                 apiBusinessEntity.setDiscoveryURLs(apiDiscUrls);
         }
+        
+        public static void mapContact(org.apache.juddi.model.Contact modelContact,
+                org.uddi.api_v3.Contact apiContact) throws DispositionReportFaultMessage {
+                if (apiContact == null) {
+                        apiContact = new org.uddi.api_v3.Contact();
+                }
+                apiContact.setUseType(modelContact.getUseType());
+
+                mapPersonNames(modelContact.getPersonNames(), apiContact.getPersonName());
+                mapContactDescriptions(modelContact.getContactDescrs(), apiContact.getDescription());
+                mapContactEmails(modelContact.getEmails(), apiContact.getEmail());
+                mapContactPhones(modelContact.getPhones(), apiContact.getPhone());
+                mapContactAddresses(modelContact.getAddresses(), apiContact.getAddress());
+
+        }
 
         public static void mapContacts(List<org.apache.juddi.model.Contact> modelContactList,
              org.uddi.api_v3.Contacts apiContacts,
@@ -453,14 +468,9 @@ public class MappingModelToApi {
 
                 for (org.apache.juddi.model.Contact modelContact : modelContactList) {
                         org.uddi.api_v3.Contact apiContact = new org.uddi.api_v3.Contact();
-                        apiContact.setUseType(modelContact.getUseType());
-
-                        mapPersonNames(modelContact.getPersonNames(), apiContact.getPersonName());
-                        mapContactDescriptions(modelContact.getContactDescrs(), apiContact.getDescription());
-                        mapContactEmails(modelContact.getEmails(), apiContact.getEmail());
-                        mapContactPhones(modelContact.getPhones(), apiContact.getPhone());
-                        mapContactAddresses(modelContact.getAddresses(), apiContact.getAddress());
-
+                        
+                        mapContact(modelContact,apiContact);
+                      
                         apiContactList.add(apiContact);
                 }
                 apiBusinessEntity.setContacts(apiContacts);

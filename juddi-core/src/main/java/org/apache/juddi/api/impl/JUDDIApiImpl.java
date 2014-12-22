@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
@@ -35,6 +37,7 @@ import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.ws.Holder;
+import org.apache.commons.configuration.ConfigurationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -67,10 +70,12 @@ import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.api_v3.SubscriptionWrapper;
 import org.apache.juddi.api_v3.SyncSubscription;
 import org.apache.juddi.api_v3.SyncSubscriptionDetail;
+import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.model.BusinessEntity;
 import org.apache.juddi.model.ClientSubscriptionInfo;
 import org.apache.juddi.model.Node;
 import org.apache.juddi.model.Publisher;
@@ -95,6 +100,7 @@ import org.uddi.api_v3.BusinessInfo;
 import org.uddi.api_v3.BusinessInfos;
 import org.uddi.api_v3.Contact;
 import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.DiscardAuthToken;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.GetRegisteredInfo;
 import org.uddi.api_v3.InfoSelection;
@@ -102,6 +108,7 @@ import org.uddi.api_v3.KeyType;
 import org.uddi.api_v3.PersonName;
 import org.uddi.api_v3.RegisteredInfo;
 import org.uddi.api_v3.Result;
+import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModelInfo;
 import org.uddi.api_v3.TModelInfos;
@@ -190,11 +197,14 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
         /**
          * Deletes publisher(s) from the persistence layer. This method is
-         * specific to jUDDI. Administrative privilege required.
+         * specific to jUDDI. Administrative privilege required. Also removes all
+         * registered business entities of the user and marks all created tModels as "deleted"
+         * but not does not remove the tModel from persistence. All subscriptions are also destroyed
          *
          * @param body
          * @throws DispositionReportFaultMessage
          */
+        @Override
         public void deletePublisher(DeletePublisher body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -244,7 +254,12 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                         }
                                 }
                                 log.info("remove all persisted AuthTokens for publisher " + entityKey + ".");
-                                Query q1 = em.createQuery("DELETE FROM AuthToken auth WHERE auth.authorizedName = '" + entityKey + "'");
+                                Query q1 = em.createQuery("DELETE FROM AuthToken auth WHERE auth.authorizedName = ?");
+                                q1.setParameter(1, entityKey);
+                                q1.executeUpdate();
+                                log.info("remove all subscriptions for publisher " + entityKey + ".");
+                                q1 = em.createQuery("DELETE FROM Subscription s WHERE s.authorizedName = ?");
+                                q1.setParameter(1, entityKey);
                                 q1.executeUpdate();
 
                                 log.info("removing publisher " + entityKey + ".");
@@ -395,6 +410,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * @param body
          * @throws DispositionReportFaultMessage
          */
+        @Override
         public void adminDeleteTModel(DeleteTModel body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -407,6 +423,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                         new ValidatePublish(publisher).validateAdminDeleteTModel(em, body);
 
+                        //TODO if referiental integrity is turned on, check to see if this is referenced anywhere and prevent the delete
                         List<String> entityKeyList = body.getTModelKey();
                         for (String entityKey : entityKeyList) {
                                 Object obj = em.find(org.apache.juddi.model.Tmodel.class, entityKey);
@@ -1170,11 +1187,47 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
         @Override
         public DispositionReport adminSaveBusiness(String authInfo, List<AdminSaveBusinessWrapper> values) throws DispositionReportFaultMessage, RemoteException {
                 long startTime = System.currentTimeMillis();
-                long procTime = System.currentTimeMillis() - startTime;
-                serviceCounter.update(JUDDIQuery.ADMIN_SAVE_BUSINESS,
-                        QueryStatus.SUCCESS, procTime);
-                ValidatePublish.unsupportedAPICall();
-                return null;
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+                        UddiEntityPublisher requestor = this.getEntityPublisher(em, authInfo);
+                        if (!((Publisher) requestor).isAdmin()) {
+                                throw new UserMismatchException(new ErrorMessage("errors.AdminReqd"));
+                        }
+                               
+                        for (int i = 0; i < values.size(); i++) {
+                                //impersonate the user
+                                AuthToken authToken = sec.getAuthToken(values.get(i).getPublisherID());
+               
+                                SaveBusiness stm = new SaveBusiness();
+                                
+                                stm.setAuthInfo(authToken.getAuthInfo());
+                                stm.getBusinessEntity().addAll(values.get(i).getBusinessEntity());
+                                pub.saveBusiness(stm);
+                        }
+
+                        
+                        tx.commit();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.ADMIN_SAVE_BUSINESS,
+                                QueryStatus.SUCCESS, procTime);
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.ADMIN_SAVE_BUSINESS,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
+
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+
+                DispositionReport r = new DispositionReport();
+                return r;
+            
         }
 
         @Override
@@ -1188,6 +1241,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         if (!((Publisher) requestor).isAdmin()) {
                                 throw new UserMismatchException(new ErrorMessage("errors.AdminReqd"));
                         }
+                        
                         for (int i = 0; i < values.size(); i++) {
                                 //impersonate the user
                                 AuthToken authToken = sec.getAuthToken(values.get(i).getPublisherID());
@@ -1379,6 +1433,9 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         throw drfm;
                 } catch (Exception ex) {
                         //possible that there is no config to return
+                         logger.warn("Error caught, is there a replication config is avaiable? Returning a default config (no replication): " + ex.getMessage());
+                        logger.debug("Error caught, is there a replication config is avaiable? Returning a default config (no replication): ", ex);
+                      
                         r.setCommunicationGraph(new CommunicationGraph());
                         Operator op = new Operator();
                         op.setOperatorNodeID(node);
@@ -1392,17 +1449,37 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         r.getOperator().add(op);
                         r.getCommunicationGraph().getNode().add(node);
                         r.getCommunicationGraph().getControlledMessage().add("*");
-                        logger.warn("Error caught, is there a replication config is avaiable? Returning a default config (no replication): " + ex.getMessage());
-                        logger.debug("Error caught, is there a replication config is avaiable? Returning a default config (no replication): ", ex);
-                        long procTime = System.currentTimeMillis() - startTime;
+                         long procTime = System.currentTimeMillis() - startTime;
                         r.setSerialNumber(0);
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddkkmmZ");
                         r.setTimeOfConfigurationUpdate(sdf.format(new Date()));
                         r.setRegistryContact(new org.uddi.repl_v3.ReplicationConfiguration.RegistryContact());
-                        //TODO pull from root business
-                        r.getRegistryContact().setContact(new Contact());
-                        r.getRegistryContact().getContact().getPersonName().add(new PersonName("Unknown", null));
+                        try {
+                                // pull from root business
+                                if (!tx.isActive()) {
+                                        tx = em.getTransaction();
+                                }
 
+                                BusinessEntity rootbiz = em.find(BusinessEntity.class, AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ROOT_BUSINESS));
+                                if (rootbiz != null) {
+                                        
+                                        for (int i = 0; i < rootbiz.getContacts().size(); i++) {
+                                                Contact c = new Contact();
+                                                MappingModelToApi.mapContact(rootbiz.getContacts().get(i), c);
+                                                r.getRegistryContact().setContact(c);
+                                                break;
+                                        }
+
+                                }
+                                tx.rollback();
+
+                        } catch (Exception ex1) {
+                                logger.warn("unexpected error", ex1);
+                        }
+                        if (r.getRegistryContact().getContact()==null){
+                                r.getRegistryContact().setContact(new Contact());
+                                r.getRegistryContact().getContact().getPersonName().add(new PersonName("Unknown", null));
+                        }
                         serviceCounter.update(JUDDIQuery.GET_REPLICATION_NODES,
                                 QueryStatus.FAILED, procTime);
 
@@ -1415,7 +1492,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                 r.setMaximumTimeToGetChanges(BigInteger.ONE);
                 r.setMaximumTimeToSyncRegistry(BigInteger.ONE);
-                JAXB.marshal(r, System.out);
+               // JAXB.marshal(r, System.out);
                 return r;
         }
 

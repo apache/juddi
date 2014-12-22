@@ -82,6 +82,8 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
 	@OrderBy
 	public List<Contact> getContacts() {
+                if (this.contacts==null)
+                        this.contacts = new ArrayList<Contact>();
 		return this.contacts;
 	}
 	public void setContacts(List<Contact> contacts) {
