@@ -254,11 +254,11 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                         }
                                 }
                                 log.info("remove all persisted AuthTokens for publisher " + entityKey + ".");
-                                Query q1 = em.createQuery("DELETE FROM AuthToken auth WHERE auth.authorizedName = ?");
+                                Query q1 = em.createQuery("DELETE FROM AuthToken auth WHERE auth.authorizedName = ?1");
                                 q1.setParameter(1, entityKey);
                                 q1.executeUpdate();
                                 log.info("remove all subscriptions for publisher " + entityKey + ".");
-                                q1 = em.createQuery("DELETE FROM Subscription s WHERE s.authorizedName = ?");
+                                q1 = em.createQuery("DELETE FROM Subscription s WHERE s.authorizedName = ?1");
                                 q1.setParameter(1, entityKey);
                                 q1.executeUpdate();
 
