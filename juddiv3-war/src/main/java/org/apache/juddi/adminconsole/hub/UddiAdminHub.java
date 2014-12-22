@@ -954,7 +954,7 @@ public class UddiAdminHub {
 
                 SyncSubscriptionDetail d = null;
                 try {
-                        StringReader sr = new StringReader(parameters.getParameter("invokeSyncSubscriptionXML").trim());
+                        StringReader sr = new StringReader(parameters.getParameter("invoke_SyncSubscriptionXML").trim());
                         sb = (JAXB.unmarshal(sr, SyncSubscription.class));
                         sb.setAuthInfo(GetToken());
                         d = juddi.invokeSyncSubscription(sb);

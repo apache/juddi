@@ -86,7 +86,7 @@
                                 </div>
                                 <div id="invoke_SyncSubscription" style="display:none">
                                         <%=ResourceLoader.GetResource(session, "items.noauthtoken")%>  <br>
-                                        <textarea rows="4" cols="80" id="invokeSyncSubscriptionXML" class="forminput" placeholder="Enter subscription XML"></textarea>
+                                        <textarea rows="4" cols="80" id="invoke_SyncSubscriptionXML" class="forminput" placeholder="Enter subscription XML"></textarea>
 
                                 </div>
                                 <div id="delete_publisher" style="display:none">
