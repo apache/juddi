@@ -20,7 +20,7 @@
     </moduleSet>
     </moduleSets>
 	<dependencySets>
-		<!-- binary artifacts -->
+		<!-- binary artifacts 
 		<dependencySet>
 		    
             <outputDirectory>bin</outputDirectory>
@@ -52,7 +52,7 @@
             <fileMode>0755</fileMode>
         </dependencySet>
         
-        <!--  wars -->
+         wars 
         <dependencySet>
             <outputDirectory>bin</outputDirectory>
             <includes>
@@ -65,8 +65,9 @@
             <useTransitiveFiltering>false</useTransitiveFiltering>
             <directoryMode>0755</directoryMode>
             <fileMode>0755</fileMode>
-        </dependencySet>
-       <dependencySet>
+      </dependencySet>
+     JUDDI-893   
+        <dependencySet>
             <outputDirectory>bin</outputDirectory>
             <includes>
                 <include>org.apache.juddi:juddi-gui-war:war</include>
@@ -78,7 +79,7 @@
             <useTransitiveFiltering>false</useTransitiveFiltering>
             <directoryMode>0755</directoryMode>
             <fileMode>0755</fileMode>
-        </dependencySet>
+        </dependencySet>-->
 		<!-- The source archives JARs -->
 		<dependencySet>
 			<outputDirectory>src</outputDirectory>
