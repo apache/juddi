@@ -218,7 +218,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 @Override
                 public void run() {
 
-                        logger.info("Replication change puller thread started. Queue size: " + queue.size());
+                        if (!queue.isEmpty())
+                                logger.info("Replication change puller thread started. Queue size: " + queue.size());
                         //ok someone told me there's a change available
                         while (!queue.isEmpty()) {
                                 NotifyChangeRecordsAvailable poll = queue.poll();
