@@ -66,6 +66,7 @@ import org.apache.juddi.adminconsole.AES;
 import org.apache.juddi.adminconsole.resources.ResourceLoader;
 import org.apache.juddi.api_v3.AdminSaveBusiness;
 import org.apache.juddi.api_v3.AdminSaveSubscriptionRequest;
+import org.apache.juddi.api_v3.AdminSaveSubscriptionResponse;
 import org.apache.juddi.api_v3.AdminSaveTModel;
 import org.apache.juddi.api_v3.ClerkList;
 import org.apache.juddi.api_v3.ClientSubscriptionInfo;
@@ -768,8 +769,11 @@ public class UddiAdminHub {
                                 return HandleException(ex);
                         }
                 }
+                AdminSaveSubscriptionResponse res = new AdminSaveSubscriptionResponse()
+                        ;
+                res.getSubscriptions().addAll(holder.value);
                 StringWriter sw = new StringWriter();
-                JAXB.marshal(holder, sw);
+                JAXB.marshal(res, sw);
                 return StringEscapeUtils.escapeHtml(sw.toString());
         }
 

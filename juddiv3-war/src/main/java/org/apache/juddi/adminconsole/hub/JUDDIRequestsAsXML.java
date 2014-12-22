@@ -40,9 +40,11 @@ import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.api_v3.SyncSubscription;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
+import org.apache.juddi.v3.client.UDDIConstants;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.Contact;
 import org.uddi.api_v3.FindBusiness;
+import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.PersonName;
 import org.uddi.api_v3.TModel;
@@ -134,6 +136,10 @@ public class JUDDIRequestsAsXML {
                         obj.getSubscriptions().get(0).setSubscriptionFilter(new SubscriptionFilter());
                         obj.getSubscriptions().get(0).setBrief(Boolean.TRUE);
                         obj.getSubscriptions().get(0).getSubscriptionFilter().setFindBusiness(new FindBusiness());
+                        obj.getSubscriptions().get(0).getSubscriptionFilter().getFindBusiness().getName().add(new Name(UDDIConstants.WILDCARD, null));
+                        obj.getSubscriptions().get(0).getSubscriptionFilter().getFindBusiness().setFindQualifiers(new FindQualifiers());
+                        obj.getSubscriptions().get(0).getSubscriptionFilter().getFindBusiness().getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                        obj.getSubscriptions().get(0).getSubscriptionFilter().getFindBusiness().getFindQualifiers().getFindQualifier().add(UDDIConstants.CASE_INSENSITIVE_MATCH);
                         //obj.getSubscriptions().get(0).getSubscriptionFilter().getFindBusiness()
                         JAXB.marshal(obj, sw);
                 }

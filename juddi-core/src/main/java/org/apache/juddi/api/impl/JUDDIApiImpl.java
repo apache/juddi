@@ -26,8 +26,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
@@ -37,7 +35,6 @@ import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.ws.Holder;
-import org.apache.commons.configuration.ConfigurationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,7 +42,6 @@ import org.apache.juddi.ClassUtil;
 import static org.apache.juddi.api.impl.JUDDIApiImpl.sub;
 import org.apache.juddi.api.util.JUDDIQuery;
 import org.apache.juddi.api.util.QueryStatus;
-import org.apache.juddi.api.util.SubscriptionQuery;
 import org.apache.juddi.api_v3.AdminSaveBusinessWrapper;
 import org.apache.juddi.api_v3.AdminSaveTModelWrapper;
 import org.apache.juddi.api_v3.Clerk;
@@ -100,11 +96,9 @@ import org.uddi.api_v3.BusinessInfo;
 import org.uddi.api_v3.BusinessInfos;
 import org.uddi.api_v3.Contact;
 import org.uddi.api_v3.DeleteTModel;
-import org.uddi.api_v3.DiscardAuthToken;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.GetRegisteredInfo;
 import org.uddi.api_v3.InfoSelection;
-import org.uddi.api_v3.KeyType;
 import org.uddi.api_v3.PersonName;
 import org.uddi.api_v3.RegisteredInfo;
 import org.uddi.api_v3.Result;
@@ -1168,11 +1162,11 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                         tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
-                        serviceCounter.update(SubscriptionQuery.DELETE_SUBSCRIPTION,
+                        serviceCounter.update(JUDDIQuery.ADMIN_SAVE_SUB,
                                 QueryStatus.SUCCESS, procTime);
                 } catch (DispositionReportFaultMessage drfm) {
                         long procTime = System.currentTimeMillis() - startTime;
-                        serviceCounter.update(SubscriptionQuery.DELETE_SUBSCRIPTION,
+                        serviceCounter.update(JUDDIQuery.ADMIN_SAVE_SUB,
                                 QueryStatus.FAILED, procTime);
                         throw drfm;
                 } finally {
@@ -1481,7 +1475,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                 r.getRegistryContact().getContact().getPersonName().add(new PersonName("Unknown", null));
                         }
                         serviceCounter.update(JUDDIQuery.GET_REPLICATION_NODES,
-                                QueryStatus.FAILED, procTime);
+                                QueryStatus.SUCCESS, procTime);
 
                 } finally {
                         if (tx.isActive()) {

@@ -43,7 +43,7 @@ public enum JUDDIQuery implements UDDIQuery {
         ADMIN_DELETE_SUB("admin_deleteSubcriptionInfo"),
         ADMIN_SAVE_TMODEL("admin_saveTmodel"),
         ADMIN_SAVE_BUSINESS("admin_saveBusiness"),
-        SET_REPLICATION_NODES("set_replioationNodes"),
+        SET_REPLICATION_NODES("set_replicationNodes"),
         GET_REPLICATION_NODES("get_replicationNodes"),
         ADMIN_SAVE_SUB("admin_saveClientSubscription"),
         INVOKE_SYNCSUB("invoke_synchSubscription");
@@ -82,7 +82,7 @@ public enum JUDDIQuery implements UDDIQuery {
                         _inquiryQueries.put("admin_deleteSubcriptionInfo", JUDDIQuery.ADMIN_DELETE_SUB);
                         _inquiryQueries.put("admin_saveTmodel", JUDDIQuery.ADMIN_SAVE_TMODEL);
                         _inquiryQueries.put("admin_saveBusiness", JUDDIQuery.ADMIN_SAVE_BUSINESS);
-                        _inquiryQueries.put("set_replioationNodes", JUDDIQuery.SET_REPLICATION_NODES);
+                        _inquiryQueries.put("set_replicationNodes", JUDDIQuery.SET_REPLICATION_NODES);
                         _inquiryQueries.put("get_replicationNodes", JUDDIQuery.GET_REPLICATION_NODES);
                         _inquiryQueries.put("admin_saveClientSubscription", JUDDIQuery.ADMIN_SAVE_SUB);
                         
