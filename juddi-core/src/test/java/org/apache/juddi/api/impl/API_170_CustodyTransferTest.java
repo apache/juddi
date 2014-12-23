@@ -125,5 +125,7 @@ public class API_170_CustodyTransferTest {
                 operationalInfo = inquire.getOperationalInfo(goi);
                 
                 Assert.assertEquals(operationalInfo.getOperationalInfo().get(0).getAuthorizedName(), TckPublisher.getMaryPublisherId());
+                tckBusiness.deleteBusiness(authInfoMary, TckBusiness.SAM_BUSINESS_XML, TckBusiness.SAM_BUSINESS_KEY);
+                tckBusiness.deleteBusiness(authInfoMary, TckBusiness.MARY_BUSINESS_XML, TckBusiness.MARY_BUSINESS_KEY);
         }
 }

@@ -184,7 +184,8 @@ public class ReplicationNotifier extends TimerTask {
                                 x.notifyChangeRecordsAvailable(req);
                                 log.debug("Successfully sent change record available message to " + s);
                         } catch (Exception ex) {
-                                log.warn("Unable to send change notification to " + s, ex);
+                                log.warn("Unable to send change notification to " + s   );
+                                log.debug("Unable to send change notification to " + s, ex);
                         }
                 }
         }
