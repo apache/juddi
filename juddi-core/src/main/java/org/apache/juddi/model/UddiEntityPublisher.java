@@ -97,20 +97,19 @@ public class UddiEntityPublisher {
          * @return true/false
          */
 	public boolean isOwner(UddiEntity entity){
-            boolean ret = false;
             try {
                 AppConfig instance = AppConfig.getInstance();
 
                 if (entity != null) {
                     if (entity.getAuthorizedName().equals(getAuthorizedName())
                             && entity.getNodeId().equals((AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID)))) {
-                        ret = true;
+                        return true;
                     }
                 }
             } catch (Exception ex) {
                 logger.log(Level.WARNING, "Error caught determining node id! Defaulting to access denied", ex);
             }
-            return ret;
+            return false;
 	}
 
 	

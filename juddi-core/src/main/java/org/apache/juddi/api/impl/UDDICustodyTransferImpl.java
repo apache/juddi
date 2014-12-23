@@ -16,7 +16,9 @@
  */
 package org.apache.juddi.api.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
@@ -31,6 +33,7 @@ import javax.persistence.Query;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Holder;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -38,18 +41,22 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api.util.CustodyTransferQuery;
 import org.apache.juddi.api.util.QueryStatus;
-import org.apache.juddi.api.util.ValueSetValidationQuery;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
+import org.apache.juddi.mapping.MappingApiToModel;
+import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.BindingTemplate;
 import org.apache.juddi.model.BusinessEntity;
 import org.apache.juddi.model.BusinessService;
+import org.apache.juddi.model.Operator;
+import org.apache.juddi.model.Tmodel;
 import org.apache.juddi.model.TransferTokenKey;
 import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.replication.ReplicationNotifier;
+import org.apache.juddi.v3.client.UDDIService;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.validation.ValidateCustodyTransfer;
@@ -57,16 +64,22 @@ import org.uddi.api_v3.OperationalInfo;
 import org.uddi.custody_v3.DiscardTransferToken;
 import org.uddi.custody_v3.KeyBag;
 import org.uddi.custody_v3.TransferEntities;
+import org.uddi.custody_v3.TransferOperationalInfo;
+import org.uddi.repl_v3.ChangeRecord;
+import org.uddi.repl_v3.ChangeRecordIDType;
+import org.uddi.repl_v3.ChangeRecordNewData;
+import org.uddi.repl_v3.TransferCustody;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
+import org.uddi.v3_service.UDDIReplicationPortType;
 
 /**
  * This implements the UDDI v3 Custody Transfer API web service
  *
  */
 @WebService(serviceName = "UDDICustodyTransferService",
-     endpointInterface = "org.uddi.v3_service.UDDICustodyTransferPortType",
-     targetNamespace = "urn:uddi-org:v3_service")
+        endpointInterface = "org.uddi.v3_service.UDDICustodyTransferPortType",
+        targetNamespace = "urn:uddi-org:v3_service")
 public class UDDICustodyTransferImpl extends AuthenticatedService implements UDDICustodyTransferPortType {
 
         public static final String TRANSFER_TOKEN_PREFIX = "transfertoken:";
@@ -77,7 +90,7 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
         private static DatatypeFactory df = null;
         private UDDIServiceCounter serviceCounter;
 
-        public UDDICustodyTransferImpl()  {
+        public UDDICustodyTransferImpl() {
                 super();
                 serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());
                 if (df == null) {
@@ -90,8 +103,9 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
         }
 
         @SuppressWarnings("unchecked")
+        @Override
         public void discardTransferToken(DiscardTransferToken body)
-             throws DispositionReportFaultMessage {
+                throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -119,8 +133,8 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
                                 for (String key : keyList) {
                                         // Creating parameters for key-checking query
                                         DynamicQuery.Parameter param = new DynamicQuery.Parameter("UPPER(ttk.entityKey)",
-                                             key.toUpperCase(),
-                                             DynamicQuery.PREDICATE_EQUALS);
+                                                key.toUpperCase(),
+                                                DynamicQuery.PREDICATE_EQUALS);
 
                                         params.add(param);
                                 }
@@ -142,7 +156,7 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
                         tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(CustodyTransferQuery.DISCARD_TRANSFERTOKEN,
-                             QueryStatus.SUCCESS, procTime);
+                                QueryStatus.SUCCESS, procTime);
 
                 } finally {
                         if (tx.isActive()) {
@@ -152,9 +166,10 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
                 }
         }
 
+        @Override
         public void getTransferToken(String authInfo, KeyBag keyBag,
-             Holder<String> nodeID, Holder<XMLGregorianCalendar> expirationTime,
-             Holder<byte[]> opaqueToken) throws DispositionReportFaultMessage {
+                Holder<String> nodeID, Holder<XMLGregorianCalendar> expirationTime,
+                Holder<byte[]> opaqueToken) throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -206,7 +221,7 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(CustodyTransferQuery.GET_TRANSFERTOKEN,
-                             QueryStatus.SUCCESS, procTime);
+                                QueryStatus.SUCCESS, procTime);
 
                 } finally {
                         if (tx.isActive()) {
@@ -216,111 +231,124 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
                 }
         }
 
+        @Override
         public void transferEntities(TransferEntities body)
-             throws DispositionReportFaultMessage {
+                throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
+                 List<ChangeRecord> changes = new ArrayList<ChangeRecord>();
                 try {
                         tx.begin();
 
                         UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 
-                        new ValidateCustodyTransfer(publisher).validateTransferEntities(em, body);
+                        ValidateCustodyTransfer verifier = new ValidateCustodyTransfer(publisher);
 
-                        // Once validated, the ownership transfer is as simple as switching the publisher
-                        KeyBag keyBag = body.getKeyBag();
-                        List<String> keyList = keyBag.getKey();
-                        //used for the change journal
-                        List<OperationalInfo> op_info = new ArrayList<OperationalInfo>();
-                        for (String key : keyList) {
-                                UddiEntity uddiEntity = em.find(UddiEntity.class, key);
-                                uddiEntity.setAuthorizedName(publisher.getAuthorizedName());
-                                OperationalInfo o = new OperationalInfo();
-                                o.setAuthorizedName(publisher.getAuthorizedName());
+                        //if the destination transfer is to a different node, 
+                        if (!verifier.validateTransferEntities(em, body)) {
+                                //i don't own these entities, so tell the ower to transfer to me.
 
-                                GregorianCalendar gcal = new GregorianCalendar();
-                                gcal.setTime(uddiEntity.getCreated());
-                                o.setCreated(df.newXMLGregorianCalendar(gcal));
+                                //look up the replication config endpoint for that node and trigger the transfer, then return
+                                //ok this is a node to node transfer, first up a replication client to the destination node
+                                String sourceNode = null;
+                                try {
+                                        KeyBag keyBag = body.getKeyBag();
+                                        List<String> keyList = keyBag.getKey();
+                                        for (String key : keyList) {
+                                                UddiEntity uddiEntity = em.find(UddiEntity.class, key);
+                                                if (sourceNode != null
+                                                        && !uddiEntity.getNodeId().equals(sourceNode)) {
+                                                        throw new Exception("All entities to be transfer must be transfered to the same source and destination node");
+                                                }
+                                                sourceNode = uddiEntity.getNodeId();
+                                        }
 
-                                o.setEntityKey(uddiEntity.getEntityKey());
+                                        UDDIReplicationPortType replicationClient = getReplicationClient(sourceNode);
+                                        if (replicationClient == null) {
+                                                throw new Exception("Unknown node. is it in the replication graph?" + sourceNode);
+                                        }
+                                        TransferCustody transferCustody = new TransferCustody();
+                                        transferCustody.setTransferToken(body.getTransferToken());
+                                        transferCustody.setKeyBag(body.getKeyBag());
+                                        transferCustody.setTransferOperationalInfo(new TransferOperationalInfo());
+                                        transferCustody.getTransferOperationalInfo().setAuthorizedName(publisher.getAuthorizedName());
+                                        transferCustody.getTransferOperationalInfo().setNodeID(node);
 
-                                gcal = new GregorianCalendar();
-                                gcal.setTime(uddiEntity.getModified());
-                                o.setModified(df.newXMLGregorianCalendar(gcal));
+                                        replicationClient.transferCustody(transferCustody);
+                                } catch (Exception ex) {
+                                        logger.error("Unable to transfer entities to node " + sourceNode + ".", ex);
+                                }
+                                //and trigger the transfer
+                        } else {
 
-                                gcal = new GregorianCalendar();
-                                gcal.setTime(uddiEntity.getModifiedIncludingChildren());
-                                o.setModifiedIncludingChildren(df.newXMLGregorianCalendar(gcal));
-                                o.setNodeID(uddiEntity.getNodeId());
-                                op_info.add(o);
+                                // Once validated, the ownership transfer is as simple as switching the publisher
+                                KeyBag keyBag = body.getKeyBag();
+                                List<String> keyList = keyBag.getKey();
+                                //used for the change journal
+                               
+                                for (String key : keyList) {
+                                        UddiEntity uddiEntity = em.find(UddiEntity.class, key);
+                                        uddiEntity.setAuthorizedName(publisher.getAuthorizedName());
+                                        Date now = new Date();
+                                        uddiEntity.setModified(now);
+                                        uddiEntity.setModifiedIncludingChildren(now);
+                                        
+                                        if (uddiEntity instanceof BusinessEntity) {
+                                                BusinessEntity be = (BusinessEntity) uddiEntity;
 
-                                if (uddiEntity instanceof BusinessEntity) {
-                                        BusinessEntity be = (BusinessEntity) uddiEntity;
+                                                List<BusinessService> bsList = be.getBusinessServices();
+                                                for (BusinessService bs : bsList) {
+                                                        bs.setAuthorizedName(publisher.getAuthorizedName());
+                                                        bs.setModified(now);
+                                                        bs.setModifiedIncludingChildren(now);
 
-                                        List<BusinessService> bsList = be.getBusinessServices();
-                                        for (BusinessService bs : bsList) {
-                                                bs.setAuthorizedName(publisher.getAuthorizedName());
-                                                OperationalInfo o2 = new OperationalInfo();
-                                                o2.setAuthorizedName(bs.getAuthorizedName());
-
-                                                gcal = new GregorianCalendar();
-                                                gcal.setTime(bs.getCreated());
-                                                o2.setCreated(df.newXMLGregorianCalendar(gcal));
-
-                                                o2.setEntityKey(bs.getEntityKey());
-
-                                                gcal = new GregorianCalendar();
-                                                gcal.setTime(bs.getModified());
-                                                o2.setModified(df.newXMLGregorianCalendar(gcal));
-
-                                                gcal = new GregorianCalendar();
-                                                gcal.setTime(bs.getModifiedIncludingChildren());
-                                                o2.setModifiedIncludingChildren(df.newXMLGregorianCalendar(gcal));
-                                                o2.setNodeID(bs.getNodeId());
-                                                op_info.add(o2);
-
-                                                List<BindingTemplate> btList = bs.getBindingTemplates();
-                                                for (BindingTemplate bt : btList) {
-                                                        bt.setAuthorizedName(publisher.getAuthorizedName());
-                                                        OperationalInfo o3 = new OperationalInfo();
-                                                        o3.setAuthorizedName(bt.getAuthorizedName());
-
-                                                        gcal = new GregorianCalendar();
-                                                        gcal.setTime(bt.getCreated());
-                                                        o3.setCreated(df.newXMLGregorianCalendar(gcal));
-
-                                                        o3.setEntityKey(bt.getEntityKey());
-
-                                                        gcal = new GregorianCalendar();
-                                                        gcal.setTime(bt.getModified());
-                                                        o3.setModified(df.newXMLGregorianCalendar(gcal));
-
-                                                        gcal = new GregorianCalendar();
-                                                        gcal.setTime(bt.getModifiedIncludingChildren());
-                                                        o3.setModifiedIncludingChildren(df.newXMLGregorianCalendar(gcal));
-                                                        o3.setNodeID(bt.getNodeId());
-                                                        op_info.add(o3);
+                                                        List<BindingTemplate> btList = bs.getBindingTemplates();
+                                                        for (BindingTemplate bt : btList) {
+                                                                bt.setAuthorizedName(publisher.getAuthorizedName());
+                                                                bt.setModified(now);
+                                                                bt.setModifiedIncludingChildren(now);
+                                                       
+                                                        }
                                                 }
                                         }
+                                        ChangeRecord cr = new ChangeRecord();
+                                        cr.setChangeRecordNewData(new ChangeRecordNewData());
+                                        if (uddiEntity instanceof BusinessEntity) {
+                                                cr.getChangeRecordNewData().setBusinessEntity(new org.uddi.api_v3.BusinessEntity());
+                                                MappingModelToApi.mapBusinessEntity((BusinessEntity) uddiEntity, cr.getChangeRecordNewData().getBusinessEntity());
+                                        }
+                                        if (uddiEntity instanceof Tmodel) {
+                                                cr.getChangeRecordNewData().setTModel(new org.uddi.api_v3.TModel());
+                                                MappingModelToApi.mapTModel((Tmodel) uddiEntity, cr.getChangeRecordNewData().getTModel());
+                                        }
+                                        changes.add(cr);
+                                        em.persist(uddiEntity);
+
                                 }
+
+                                // After transfer is finished, the token can be removed
+                                org.uddi.custody_v3.TransferToken apiTransferToken = body.getTransferToken();
+                                String transferTokenId = new String(apiTransferToken.getOpaqueToken());
+                                org.apache.juddi.model.TransferToken modelTransferToken = em.find(org.apache.juddi.model.TransferToken.class, transferTokenId);
+                                em.remove(modelTransferToken);
                         }
-
-                        // After transfer is finished, the token can be removed
-                        org.uddi.custody_v3.TransferToken apiTransferToken = body.getTransferToken();
-                        String transferTokenId = new String(apiTransferToken.getOpaqueToken());
-                        org.apache.juddi.model.TransferToken modelTransferToken = em.find(org.apache.juddi.model.TransferToken.class, transferTokenId);
-                        em.remove(modelTransferToken);
-
                         tx.commit();
-                        //TODO do we need to do something for replication purposes here?
-                        //OperationalInfoWrapper t = new OperationalInfoWrapper();
-                        //t.data = op_info;
-                        //ReplicationNotifier.Enqueue(UDDIPublicationImpl.);
+                        //we need to do something for replication purposes here
+                        //enqueue notifications and storage of the changed records
+                        for (ChangeRecord c: changes)
+                                 try {
+                                         c.setChangeID(new ChangeRecordIDType());
+                                         c.getChangeID().setNodeID(node);
+                                         c.getChangeID().setOriginatingUSN(null);
+                                         ReplicationNotifier.Enqueue(MappingApiToModel.mapChangeRecord(c));
+                                } catch (UnsupportedEncodingException ex) {
+                                        Logger.getLogger(UDDICustodyTransferImpl.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(CustodyTransferQuery.TRANSFER_ENTITIES,
-                             QueryStatus.SUCCESS, procTime);
+                                QueryStatus.SUCCESS, procTime);
 
                 } finally {
                         if (tx.isActive()) {
@@ -331,8 +359,40 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 
         }
 
-        public class OperationalInfoWrapper {
+        private synchronized UDDIReplicationPortType getReplicationClient(String node) {
 
-                public List<OperationalInfo> data;
+                UDDIService svc = new UDDIService();
+                UDDIReplicationPortType replicationClient = svc.getUDDIReplicationPort();
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        StringBuilder sql = new StringBuilder();
+                        sql.append("select c from ReplicationConfiguration c order by c.serialNumber desc");
+                        sql.toString();
+                        Query qry = em.createQuery(sql.toString());
+                        qry.setMaxResults(1);
+
+                        org.apache.juddi.model.ReplicationConfiguration resultList = (org.apache.juddi.model.ReplicationConfiguration) qry.getSingleResult();
+                        for (Operator o : resultList.getOperator()) {
+                                if (o.getOperatorNodeID().equalsIgnoreCase(node)) {
+                                        ((BindingProvider) replicationClient).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, o.getSoapReplicationURL());
+
+                                        return replicationClient;
+                                }
+                        }
+                        tx.rollback();
+
+                } catch (Exception ex) {
+                        logger.fatal("Node not found (or there isn't a replication config)!" + node, ex);
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+                //em.close();
+                return null;
+
         }
 }

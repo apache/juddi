@@ -26,11 +26,13 @@ import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.InvalidValueException;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
+import org.uddi.custody_v3.TransferEntities;
 import org.uddi.repl_v3.CommunicationGraph.Edge;
 import org.uddi.repl_v3.HighWaterMarkVectorType;
 import org.uddi.repl_v3.NotifyChangeRecordsAvailable;
 import org.uddi.repl_v3.Operator;
 import org.uddi.repl_v3.ReplicationConfiguration;
+import org.uddi.repl_v3.TransferCustody;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
@@ -175,6 +177,34 @@ public class ValidateReplication extends ValidateUDDIApi {
                         }
                 }
                 return false;
+        }
+
+        public void validateTransfer(EntityManager em, TransferCustody body) throws DispositionReportFaultMessage {
+                
+                 if (body == null)
+			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+		if (body.getTransferToken()==null)
+                        throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+                if (body.getKeyBag()==null)
+                        throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+                if (body.getTransferOperationalInfo()==null)
+                        throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+                
+                 if (body.getTransferOperationalInfo().getNodeID()==null)
+                        throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+                 if (body.getTransferOperationalInfo().getAuthorizedName()==null)
+                        throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+                
+                 
+                //confirm i own the records in question
+                //confirm i issued the transfer token
+                
+                TransferEntities x = new TransferEntities();
+                x.setKeyBag(body.getKeyBag());
+                x.setTransferToken(body.getTransferToken());
+                new ValidateCustodyTransfer(null).validateTransferEntities(em, x);
+                
+               
         }
 
 }

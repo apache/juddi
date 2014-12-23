@@ -54,14 +54,18 @@ import org.apache.juddi.model.Operator;
 import org.apache.juddi.model.PublisherAssertion;
 import org.apache.juddi.model.PublisherAssertionId;
 import org.apache.juddi.model.Tmodel;
+import org.apache.juddi.replication.ReplicationNotifier;
 import static org.apache.juddi.replication.ReplicationNotifier.FetchEdges;
 import org.apache.juddi.v3.client.UDDIService;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.TransferNotAllowedException;
+import org.apache.juddi.validation.ValidateCustodyTransfer;
 import org.apache.juddi.validation.ValidateReplication;
 import org.uddi.api_v3.OperationalInfo;
 import org.uddi.custody_v3.DiscardTransferToken;
 import org.uddi.repl_v3.ChangeRecord;
+import org.uddi.repl_v3.ChangeRecordAcknowledgement;
 import org.uddi.repl_v3.ChangeRecordIDType;
 import org.uddi.repl_v3.ChangeRecords;
 import org.uddi.repl_v3.DoPing;
@@ -218,8 +222,9 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 @Override
                 public void run() {
 
-                        if (!queue.isEmpty())
+                        if (!queue.isEmpty()) {
                                 logger.info("Replication change puller thread started. Queue size: " + queue.size());
+                        }
                         //ok someone told me there's a change available
                         while (!queue.isEmpty()) {
                                 NotifyChangeRecordsAvailable poll = queue.poll();
@@ -469,12 +474,105 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                                 }
 //</editor-fold>
+
+                                if (rec.isAcknowledgementRequested()) {
+                                        ChangeRecord posack = new ChangeRecord();
+                                        posack.setChangeRecordAcknowledgement(new ChangeRecordAcknowledgement());
+                                        posack.getChangeRecordAcknowledgement().setAcknowledgedChange(rec.getChangeID());
+                                        posack.setAcknowledgementRequested(false);
+                                        ReplicationNotifier.Enqueue(MappingApiToModel.mapChangeRecord(posack));
+                                }
                                 if (rec.getChangeRecordNewDataConditional() != null) {
-                                        //TODO
+
+                                        if (rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID() == null) {
+                                                throw new Exception("Inbound replication data is missiong node id!");
+                                        }
+
+                                        //The operationalInfo element MUST contain the operational information associated with the indicated new data.
+                                        if (rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo() == null) {
+                                                logger.warn("Inbound replication data does not have the required OperationalInfo element and is NOT spec compliant. Data will be ignored");
+                                        } else {
+                                                if (rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBindingTemplate() != null) {
+                                                        //fetch the binding template if it exists already
+                                                        //if it exists, 
+                                                        //      confirm the owning node, it shouldn't be the local node id, if it is, throw
+                                                        //      the owning node should be the same as it was before
+
+                                                        BusinessService model = em.find(org.apache.juddi.model.BusinessService.class, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBindingTemplate().getServiceKey());
+                                                        if (model == null) {
+                                                                logger.error("Replication error, attempting to insert a binding where the service doesn't exist yet");
+                                                        } else {
+                                                                ValidateNodeIdMatches(model.getNodeId(), rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo());
+
+                                                                org.apache.juddi.model.BindingTemplate bt = em.find(org.apache.juddi.model.BindingTemplate.class, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBindingTemplate().getBindingKey());
+                                                                if (bt != null) {
+                                                                        em.remove(bt);
+                                                                }
+                                                                bt = new BindingTemplate();
+                                                                MappingApiToModel.mapBindingTemplate(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBindingTemplate(), bt, model);
+                                                                MappingApiToModel.mapOperationalInfo(bt, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo());
+                                                                // MappingApiToModel.mapOperationalInfoIncludingChildren(model, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo());
+                                                                em.persist(bt);
+                                                        }
+
+                                                } else if (rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBusinessEntity() != null) {
+
+                                                        BusinessEntity model = em.find(org.apache.juddi.model.BusinessEntity.class, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBusinessEntity().getBusinessKey());
+                                                        if (model != null) {
+                                                                ValidateNodeIdMatches(model.getNodeId(), rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo());
+                                                                //TODO revisit access control rules
+                                                                em.remove(model);
+                                                        }
+                                                        model = new BusinessEntity();
+                                                        MappingApiToModel.mapBusinessEntity(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBusinessEntity(), model);
+                                                        // MappingApiToModel.mapOperationalInfo(model, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo());
+
+                                                        MappingApiToModel.mapOperationalInfoIncludingChildren(model, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo());
+                                                        logger.warn("Name size on save is " + model.getBusinessNames().size());
+                                                        em.persist(model);
+
+                                                }
+                                                if (rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBusinessService() != null) {
+                                                        BusinessEntity find = em.find(org.apache.juddi.model.BusinessEntity.class, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBusinessService().getBusinessKey());
+                                                        if (find == null) {
+                                                                logger.error("Replication error, attempting to insert a service where the business doesn't exist yet");
+                                                        } else {
+
+                                                                org.apache.juddi.model.BusinessService model = null;
+                                                                model = em.find(org.apache.juddi.model.BusinessService.class, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBusinessService().getServiceKey());
+                                                                if (model != null) {
+                                                                        ValidateNodeIdMatches(model.getNodeId(), rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo());
+                                                                        em.remove(model);
+                                                                }
+
+                                                                model = new org.apache.juddi.model.BusinessService();
+                                                                MappingApiToModel.mapBusinessService(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBusinessService(), model, find);
+                                                                MappingApiToModel.mapOperationalInfo(model, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo());
+                                                                MappingApiToModel.mapOperationalInfoIncludingChildren(model, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo());
+
+                                                                em.persist(model);
+                                                        }
+
+                                                } else if (rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getTModel() != null) {
+
+                                                        Tmodel model = em.find(org.apache.juddi.model.Tmodel.class, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getTModel().getTModelKey());
+                                                        if (model != null) {
+                                                                ValidateNodeIdMatches(model.getNodeId(), rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo());
+                                                                em.remove(model);
+                                                        }
+                                                        model = new Tmodel();
+                                                        MappingApiToModel.mapTModel(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getTModel(), model);
+
+                                                        MappingApiToModel.mapOperationalInfo(model, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo());
+
+                                                        em.persist(model);
+                                                }
+
+                                        }
 
                                 }
                                 if (rec.getChangeRecordNull() != null) {
-                                        //TODO
+                                        //No action required
 
                                 }
                                 if (rec.getChangeRecordCorrection() != null) {
@@ -832,23 +930,30 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
         public void notifyChangeRecordsAvailable(NotifyChangeRecordsAvailable body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
-                long procTime = System.currentTimeMillis() - startTime;
-                serviceCounter.update(ReplicationQuery.NOTIFY_CHANGERECORDSAVAILABLE,
-                        QueryStatus.SUCCESS, procTime);
+
                 //some other node just told us there's new records available, call
                 //getChangeRecords from the remote node asynch
-
                 new ValidateReplication(null).validateNotifyChangeRecordsAvailable(body, ctx);
 
                 queue.add(body);
                 logger.info(body.getNotifyingNode() + " just told me that there are change records available, enqueuing...size is " + queue.size());
                 //ValidateReplication.unsupportedAPICall();
+                long procTime = System.currentTimeMillis() - startTime;
+                serviceCounter.update(ReplicationQuery.NOTIFY_CHANGERECORDSAVAILABLE,
+                        QueryStatus.SUCCESS, procTime);
         }
         private static Queue<NotifyChangeRecordsAvailable> queue = null;
 
         /**
          * transfers custody of an entity from node1/user1 to node2/user2
-         *
+         * 
+         * assume this node is node 2.
+         * 
+         * user1 on node1 requests a transfer token. node 1 issues the token.
+         * 
+         * user1 now has a transfer token for their stuff
+         * user now takes the token to node 2 and calls transferEntities
+         *<img src="http://www.uddi.org/pubs/uddi-v3.0.2-20041019_files/image086.gif"> 
          * @param body
          * @throws DispositionReportFaultMessage
          */
@@ -858,12 +963,35 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 long startTime = System.currentTimeMillis();
 
                 //*this node is transfering data to another node
-                //body.getTransferOperationalInfo().
-                ValidateReplication.unsupportedAPICall();
+                //ValidateReplication.unsupportedAPICall();
 
+                //a remote node just told me to give up control of some of my entities
                 EntityManager em = PersistenceManager.getEntityManager();
                 //EntityTransaction tx = em.getTransaction();
-
+                //confirm i have a replication config
+                boolean ok =false;
+                ReplicationConfiguration FetchEdges = ReplicationNotifier.FetchEdges();
+                for (int i=0; i<FetchEdges.getOperator().size(); i++){
+                        //confirm that the destination node is in the replication config
+                        if (FetchEdges.getOperator().get(i).getOperatorNodeID().equals(body.getTransferOperationalInfo().getNodeID()))
+                        {
+                                ok = true;
+                                break;
+                        }
+                }
+                if (!ok){
+                        throw new TransferNotAllowedException(new ErrorMessage("E_transferNotAllowedUnknownNode"));
+                }
+                
+                
+                
+                new ValidateReplication(null).validateTransfer(em,body);
+                
+                
+                //make the change
+                //enqueue in replication notifier
+                //discard the token
+                
                 /**
                  * The custodial node must verify that it has granted permission
                  * to transfer the entities identified and that this permission
@@ -903,6 +1031,9 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 dtt.setKeyBag(body.getKeyBag());
                 dtt.setTransferToken(body.getTransferToken());
                 new UDDICustodyTransferImpl().discardTransferToken(dtt);
+                long procTime = System.currentTimeMillis() - startTime;
+                serviceCounter.update(ReplicationQuery.TRANSFER_CUSTODY,
+                        QueryStatus.SUCCESS, procTime);
         }
 
 }

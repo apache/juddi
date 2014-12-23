@@ -123,9 +123,9 @@ public class ValidateCustodyTransfer extends ValidateUDDIApi {
 				throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", key));
 			
 			// Creating parameters for key-checking query
-			DynamicQuery.Parameter param = new DynamicQuery.Parameter("UPPER(ttk.entityKey)", 
-																	  key.toUpperCase(), 
-																	  DynamicQuery.PREDICATE_EQUALS);
+			DynamicQuery.Parameter param = new DynamicQuery.Parameter("UPPER(ttk.entityKey)",   
+                                key.toUpperCase(), 
+                                DynamicQuery.PREDICATE_EQUALS);
 			params.add(param);
 
 		}
@@ -142,8 +142,16 @@ public class ValidateCustodyTransfer extends ValidateUDDIApi {
 
 	}
 	
-	public void validateTransferEntities(EntityManager em, TransferEntities body) throws DispositionReportFaultMessage {
+        /**
+         * returns true if all items to be transfered are within this node (no node to node transfers)
+         * @param em
+         * @param body
+         * @return
+         * @throws DispositionReportFaultMessage 
+         */
+	public boolean validateTransferEntities(EntityManager em, TransferEntities body) throws DispositionReportFaultMessage {
 
+                boolean ret = true;
 		// No null input
 		if (body == null)
 			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
@@ -193,10 +201,11 @@ public class ValidateCustodyTransfer extends ValidateUDDIApi {
 			UddiEntity uddiEntity = em.find(UddiEntity.class, key);
 			if (uddiEntity == null)
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.EntityNotFound", key));
-			
+			if (!uddiEntity.getNodeId().equalsIgnoreCase(nodeID))
+                                ret = false;
 			count++;
 		}
 
+                return ret;
 	}
-
 }

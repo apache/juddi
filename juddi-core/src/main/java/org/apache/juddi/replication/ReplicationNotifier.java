@@ -17,7 +17,6 @@
 package org.apache.juddi.replication;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Timer;
@@ -40,7 +39,6 @@ import org.apache.juddi.model.ChangeRecord;
 import org.apache.juddi.model.ReplicationConfiguration;
 import org.apache.juddi.v3.client.UDDIService;
 import org.uddi.repl_v3.ChangeRecordIDType;
-import org.uddi.repl_v3.CommunicationGraph;
 import org.uddi.repl_v3.HighWaterMarkVectorType;
 import org.uddi.repl_v3.NotifyChangeRecordsAvailable;
 import org.uddi.repl_v3.Operator;
