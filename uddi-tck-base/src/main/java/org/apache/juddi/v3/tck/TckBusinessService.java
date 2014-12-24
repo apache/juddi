@@ -123,7 +123,7 @@ public class TckBusinessService
 				ss = new SaveService();
 				ss.setAuthInfo(authInfo);
 				bsIn.getName().get(0).setValue(serviceName + "-" + i);
-				bsIn.setBusinessKey(parentBusinessKey);
+				bsIn.setBusinessKey(parentBusinessKey +"-" + businessInt);
 				bsIn.setServiceKey(serviceKey + "-" + businessInt + "-" + i);
 				bsIn.getBindingTemplates().getBindingTemplate().get(0).setBindingKey(bindingKey + "-" + businessInt + "-" + i);
 				bsIn.getBindingTemplates().getBindingTemplate().get(0).setServiceKey(serviceKey + "-" + businessInt + "-" + i);

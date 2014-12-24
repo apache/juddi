@@ -87,9 +87,11 @@ public class API_110_FindBusinessTest
 				Assert.fail("Could not obtain authInfo token.");
 	     } 
 	}
-	/**
+
+         /**
          * JUDDI-398
          * JUDDI-881
+         * "If a tModelBag or find_tModel was used in the search, the resulting serviceInfos structure reflects data only for the businessServices that actually contained a matching bindingTemplate.
          */
 	@Test
 	public void findBusinessByTModelBag() {
@@ -115,8 +117,8 @@ public class API_110_FindBusinessTest
 							+ "found " + size);
 				} else {
 					List<BusinessInfo> biList = bl.getBusinessInfos().getBusinessInfo();
-					if (biList.get(0).getServiceInfos().getServiceInfo().size() != 2) {
-						Assert.fail("Should have found two ServiceInfos");
+					if (biList.get(0).getServiceInfos().getServiceInfo().size() != 1) {
+						Assert.fail("Should have found one ServiceInfos");
 					} else {
 							List<ServiceInfo> siList = biList.get(0).getServiceInfos().getServiceInfo();
 							ServiceInfo si = siList.get(0);

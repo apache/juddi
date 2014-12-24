@@ -168,6 +168,16 @@ public class TckBusiness {
                                 beIn.getName().get(0).setValue(businessName + "-" + i);
                                 beIn.setBusinessKey(businessKey + "-" + i);
                                 sb.getBusinessEntity().add(beIn);
+                               /* if (beIn.getBusinessServices()!=null){
+                                        for (int x=0; x < beIn.getBusinessServices().getBusinessService().size(); x++){
+                                                beIn.getBusinessServices().getBusinessService().get(x).setBusinessKey(businessKey + "-" + i);
+                                                if (beIn.getBusinessServices().getBusinessService().get(x).getBindingTemplates()!=null){
+                                                        for (int y=0; y < beIn.getBusinessServices().getBusinessService().get(x).getBindingTemplates().getBindingTemplate().size(); y++){
+                                                                beIn.getBusinessServices().getBusinessService().get(x).getBindingTemplates().getBindingTemplate().get(y).
+                                                        }
+                                                }
+                                        }
+                                }*/
                                 publication.saveBusiness(sb);
                                 logger.info("Saved business with key " + businessName + "-" + i);
                         }

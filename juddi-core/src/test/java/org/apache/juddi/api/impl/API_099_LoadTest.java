@@ -38,14 +38,15 @@ import org.junit.Test;
 import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.Name;
+import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionFilter;
 
 /**
- *
+ * Load tests for subscriptions
  * @author Alex O'Ree
  */
-public class API_099_LoadTests {
+public class API_099_LoadTest {
 
         private static Log logger = LogFactory.getLog(API_080_SubscriptionTest.class);
 
@@ -82,7 +83,7 @@ public class API_099_LoadTests {
 
         @Test
         public void joePublisher() throws Exception {
-                Assume.assumeTrue(TckPublisher.isLoadTest());
+                //Assume.assumeTrue(TckPublisher.isLoadTest());
                 List<String> keys = new ArrayList<String>();
                 for (int i = 0; i < 1000; i++) {
                         Holder<List<Subscription>> items = new Holder<List<Subscription>>();
@@ -98,6 +99,10 @@ public class API_099_LoadTests {
                         keys.add(items.value.get(0).getSubscriptionKey());
                 }
                 List<Subscription> subscriptions = sub.getSubscriptions(authInfoJoe);
+                DeleteSubscription ds = new DeleteSubscription();
+                ds.setAuthInfo(authInfoJoe);
+                ds.getSubscriptionKey().addAll(keys);
+                sub.deleteSubscription(ds);
                 Assert.assertEquals(subscriptions.size(), keys.size());
         }
 

@@ -225,9 +225,31 @@ public class InquiryHelper {
 		result.setListDescription(listDesc);
 
 		// Sort and retrieve the final results taking paging into account
-		List<?> queryResults = FetchBusinessEntitiesQuery.select(
-				em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
+		List<?> queryResults = FetchBusinessEntitiesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
+		List<?> serviceResults = null;
+		for (int i = 0; i<queryResults.size(); i++) {
+			org.apache.juddi.model.BusinessEntity be = (org.apache.juddi.model.BusinessEntity) queryResults.get(i);
 			
+			List<Object> keysIn = new ArrayList<Object>();
+			List<org.apache.juddi.model.BusinessService> services = be.getBusinessServices();
+			for (int j = 0; j<services.size(); j++) {
+				keysIn.add(services.get(j).getEntityKey());
+			}
+
+			serviceResults = FindServiceByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), null, keysIn);
+			if (serviceResults == null) {
+				be.setBusinessServices(null);
+			} else { 
+				ListDescription ldesc = new ListDescription();
+				result.setListDescription(listDesc);
+				List<?> srvcs = FetchBusinessServicesQuery.select(em, findQualifiers, serviceResults, body.getMaxRows(), 
+						body.getListHead(), ldesc);
+				be.setBusinessServices((List<org.apache.juddi.model.BusinessService>)srvcs);
+			}
+                }
+
+                
+                
 		if (queryResults != null && queryResults.size() > 0)
 			result.setBusinessInfos(new org.uddi.api_v3.BusinessInfos());
 		

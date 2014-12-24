@@ -29,6 +29,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.BusinessInfo;
 import org.uddi.api_v3.BusinessList;
+import org.uddi.api_v3.DeleteBusiness;
 import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.ServiceInfo;
 import org.uddi.api_v3.TModelBag;
@@ -61,6 +62,7 @@ public class UDDI_110_FindBusinessIntegrationTest {
         protected static TckBusiness tckBusiness = null;
         protected static String authInfoJoe = null;
         private static UDDIInquiryPortType inquiry = null;
+        private static UDDIPublicationPortType publication=null;
         private static UDDIClient manager;
 
         @AfterClass
@@ -85,12 +87,13 @@ public class UDDI_110_FindBusinessIntegrationTest {
                         authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                         //Assert.assertNotNull(authInfoJoe);
                         
-                        UDDIPublicationPortType publication = transport.getUDDIPublishService();
+                        publication = transport.getUDDIPublishService();
                         inquiry = transport.getUDDIInquiryService();
                         if (!TckPublisher.isUDDIAuthMode()){
                                 TckSecurity.setCredentials((BindingProvider) publication, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                                 TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                         }
+                        
 
                         tckTModel = new TckTModel(publication, inquiry);
                         tckTModel01 = new TckTModel(publication, inquiry);
@@ -103,16 +106,42 @@ public class UDDI_110_FindBusinessIntegrationTest {
                 }
         }
 
+        /**
+         * JUDDI-881
+         * "If a tModelBag or find_tModel was used in the search, the resulting serviceInfos structure reflects data only for the businessServices that actually contained a matching bindingTemplate.
+         */
         @Test
         public void findBusinessByTModelBag() {
              Assume.assumeTrue(TckPublisher.isEnabled());
+             System.out.println("##########################################################");
+             System.out.println("##########################################################");
+             System.out.println("##########################################################");
+             System.out.println("##########################################################");
+             System.out.println("##########################################################");
+             System.out.println("##########################################################");
+             System.out.println("##########################################################");
+             System.out.println("##########################################################");
+             System.out.println("##########################################################");
+             System.out.println("##########################################################");
+             System.out.println("##########################################################");
+             System.out.println("##########################################################");
+             System.out.println("##########################################################");
+             System.out.println("##########################################################");
                 try {
                         tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
                         tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
                         tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
 
+                        try{
+                                  // Delete the entity and make sure it is removed
+                                DeleteBusiness db = new DeleteBusiness();
+                                db.setAuthInfo(authInfoJoe);
+                                db.getBusinessKey().add(TOM_BUSINESS_KEY);
+                                publication.deleteBusiness(db);
+                        }       catch (Exception ex){}
                         tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS_XML, TOM_BUSINESS_KEY, 1);
 
+                        String before =TckCommon.DumpAllBusinesses(authInfoJoe, inquiry);
                         try {
                                 int size = 0;
                                 BusinessList bl = null;
@@ -123,17 +152,22 @@ public class UDDI_110_FindBusinessIntegrationTest {
                                 fbb.setTModelBag(tmb);
                                 bl = inquiry.findBusiness(fbb);
                                 size = bl.getBusinessInfos().getBusinessInfo().size();
+                                //JUDDI-881
+                                
                                 if (size != 1) {
+                                        logger.error("Test failed, dumping the business list " + before);
                                         Assert.fail("Should have found one entry on FindBusiness with TModelBag, "
                                                 + "found " + size);
                                 } else {
                                         List<BusinessInfo> biList = bl.getBusinessInfos().getBusinessInfo();
-                                        if (biList.get(0).getServiceInfos().getServiceInfo().size() != 2) {
-                                                Assert.fail("Should have found two ServiceInfos");
+                                        if (biList.get(0).getServiceInfos().getServiceInfo().size() != 1) {
+                                                logger.error("Test failed, dumping the business list " + before);
+                                                Assert.fail("Should have found one ServiceInfos");
                                         } else {
                                                 List<ServiceInfo> siList = biList.get(0).getServiceInfos().getServiceInfo();
                                                 ServiceInfo si = siList.get(0);
                                                 if (!TOM_PUBLISHER_SERVICEINFO_NAME.equals(si.getName().get(0).getValue())) {
+                                                        logger.error("Test failed, dumping the business list " + before);
                                                         Assert.fail("Should have found " + TOM_PUBLISHER_TMODEL01_NAME + " as the "
                                                                 + "ServiceInfo name, found " + si.getName().get(0).getValue());
                                                 }

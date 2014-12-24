@@ -41,7 +41,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class API_040_BusinessServiceTestPerformance
+public class API_040_BusinessServiceLoadTest
 {	
 	private static Log logger                        = LogFactory.getLog(API_040_BusinessServiceTest.class);
 	
