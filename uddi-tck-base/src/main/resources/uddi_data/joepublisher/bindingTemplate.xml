@@ -19,6 +19,7 @@
   <description xml:lang="en">This is the secure access point for service one</description>
   <accessPoint useType="endPoint">https://businessone.com/services/serviceone</accessPoint>
   <tModelInstanceDetails>
+      <!-- required for JUDDI_899 -->
     <tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
   </tModelInstanceDetails>
   <categoryBag>

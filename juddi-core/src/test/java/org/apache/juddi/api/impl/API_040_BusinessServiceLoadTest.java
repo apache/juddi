@@ -20,6 +20,8 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
 import org.apache.juddi.query.util.FindQualifiers;
 import org.apache.juddi.v3.tck.TckBusiness;
 import org.apache.juddi.v3.tck.TckBusinessService;
@@ -29,6 +31,7 @@ import org.apache.juddi.v3.tck.TckTModel;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.uddi.api_v3.BusinessList;
 import org.uddi.api_v3.FindBusiness;
@@ -82,8 +85,14 @@ public class API_040_BusinessServiceLoadTest
         }
         
 	@Test
-	public void find20Businesses() throws DispositionReportFaultMessage {
-		tckTModel.saveJoePublisherTmodel(authInfoJoe);
+        //@Ignore
+	public void find20Businesses() throws DispositionReportFaultMessage, ConfigurationException {
+                //disable TModelBag filtering
+                logger.info("Disabling findBusiness tModelBag filtering....");
+                AppConfig.getConfiguration().setProperty(Property.JUDDI_ENABLE_FIND_BUSINESS_TMODEL_BAG_FILTERING, false);
+                logger.info("findBusiness tModelBag filtering is enabled: " + 
+                AppConfig.getConfiguration().getProperty(Property.JUDDI_ENABLE_FIND_BUSINESS_TMODEL_BAG_FILTERING));
+                tckTModel.saveJoePublisherTmodel(authInfoJoe);
 		long startSave = System.currentTimeMillis();
 		//loading up 100 businesses, with a 100 services each
 		tckBusiness.saveJoePublisherBusinesses(authInfoJoe, numberOfBusinesses);
@@ -92,7 +101,7 @@ public class API_040_BusinessServiceLoadTest
 		}
 		long saveDuration = System.currentTimeMillis() - startSave;
 		System.out.println("Saved " + numberOfBusinesses + " businesses with each " + numberOfServices + " services in " + saveDuration + "ms");
-		
+		System.out.println("Tiggering findBusiness query...");
 		//find 20 businesses by name
 		FindBusiness fb = new FindBusiness();
 		org.uddi.api_v3.FindQualifiers apiFq = new org.uddi.api_v3.FindQualifiers();
@@ -109,7 +118,7 @@ public class API_040_BusinessServiceLoadTest
 		System.out.println("Find 20 businesses took "  +  findDuration + "ms. Size=" + result.getBusinessInfos().getBusinessInfo().size());
 		// it takes less then 1 second, make sure it stays faster then 5 seconds
 		//Assert.assertTrue(findDuration < 5000);
-				
+		System.out.println("Tiggering findService query...");		
 		FindService fs = new FindService();
 		fs.setFindQualifiers(apiFq);
 		name.setValue("Service One%");
@@ -122,6 +131,7 @@ public class API_040_BusinessServiceLoadTest
 		findDuration = System.currentTimeMillis() - startFind;
 		System.out.println("Find " + all + " services took "  +  findDuration + "ms. Size=" + serviceList.getServiceInfos().getServiceInfo().size());
 
+                System.out.println("Tiggering deletion...");
 		long startDelete = System.currentTimeMillis();
 		for (int i=0; i<numberOfBusinesses; i++) {
 			tckBusinessService.deleteJoePublisherServices(authInfoJoe, i, numberOfServices);

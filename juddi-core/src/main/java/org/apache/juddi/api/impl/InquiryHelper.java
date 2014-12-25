@@ -19,12 +19,17 @@ package org.apache.juddi.api.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.xml.ws.Holder;
+import org.apache.commons.configuration.ConfigurationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.query.FetchBindingTemplatesQuery;
 import org.apache.juddi.query.FetchBusinessEntitiesQuery;
@@ -226,28 +231,36 @@ public class InquiryHelper {
 
 		// Sort and retrieve the final results taking paging into account
 		List<?> queryResults = FetchBusinessEntitiesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
-		List<?> serviceResults = null;
-		for (int i = 0; i<queryResults.size(); i++) {
-			org.apache.juddi.model.BusinessEntity be = (org.apache.juddi.model.BusinessEntity) queryResults.get(i);
-			
-			List<Object> keysIn = new ArrayList<Object>();
-			List<org.apache.juddi.model.BusinessService> services = be.getBusinessServices();
-			for (int j = 0; j<services.size(); j++) {
-				keysIn.add(services.get(j).getEntityKey());
-			}
-
-			serviceResults = FindServiceByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), null, keysIn);
-			if (serviceResults == null) {
-				be.setBusinessServices(null);
-			} else { 
-				ListDescription ldesc = new ListDescription();
-				result.setListDescription(listDesc);
-				List<?> srvcs = FetchBusinessServicesQuery.select(em, findQualifiers, serviceResults, body.getMaxRows(), 
-						body.getListHead(), ldesc);
-				be.setBusinessServices((List<org.apache.juddi.model.BusinessService>)srvcs);
-			}
+                
+                boolean enabled = true;
+                try {
+                        AppConfig.getConfiguration().getBoolean(Property.JUDDI_ENABLE_FIND_BUSINESS_TMODEL_BAG_FILTERING, true);
+                } catch (ConfigurationException ex) {
+                        logger.error(ex);
                 }
+                if (enabled) {
+                        List<?> serviceResults = null;
+                        for (int i = 0; i < queryResults.size(); i++) {
+                                org.apache.juddi.model.BusinessEntity be = (org.apache.juddi.model.BusinessEntity) queryResults.get(i);
 
+                                List<Object> keysIn = new ArrayList<Object>();
+                                List<org.apache.juddi.model.BusinessService> services = be.getBusinessServices();
+                                for (int j = 0; j < services.size(); j++) {
+                                        keysIn.add(services.get(j).getEntityKey());
+                                }
+
+                                serviceResults = FindServiceByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), null, keysIn);
+                                if (serviceResults == null) {
+                                        be.setBusinessServices(null);
+                                } else {
+                                        ListDescription ldesc = new ListDescription();
+                                        result.setListDescription(listDesc);
+                                        List<?> srvcs = FetchBusinessServicesQuery.select(em, findQualifiers, serviceResults, body.getMaxRows(),
+                                                body.getListHead(), ldesc);
+                                        be.setBusinessServices((List<org.apache.juddi.model.BusinessService>) srvcs);
+                                }
+                        }
+                }
                 
                 
 		if (queryResults != null && queryResults.size() > 0)

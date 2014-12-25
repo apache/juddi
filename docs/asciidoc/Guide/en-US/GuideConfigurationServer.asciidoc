@@ -156,7 +156,16 @@ Logging properties that can be referenced in the _juddiv3.xml_ file.
 |_juddi/logging/logInquirySearchPayloads| Enables request payload logging for the Inquiry Find apis    |N| false
 |===========================================================================================
 
+=== Performance
 
+.These properties are used to enable or disable certain capabilities based on performance considerations
+
+Perofrmance properties are referenced in the _juddiv3.xm_ file.
+[options="header"]
+|===========================================================================================
+|Property Name                   		|Description         |Required     |Default Value or [Example Value]
+|_juddi/performance/enableFindBusinessTModelBagFiltering| UDDI defines a mechansim to filter findBusiness relates based on tModelInstanceInfo within their service's binding templates. This is an expensive operation and will cause significant performance degredation on larger registries. For spec complliance, it should be set to true. We suspect it's not a commonly used feature and recommend setting this to false.    |N| true
+|===========
 
 === Deploying two or more jUDDI server on the same application server
 

@@ -190,4 +190,10 @@ public interface Property {
      * @since 3.2.1
      */
     public final static String JUDDI_LOGGING_FindApiCalls = "juddi.logging.logInquirySearchPayloads";
+    /**
+     * The UDDI v3 spec specifically calls for supporting this, however it creates significant performance problems in jUDDI when there
+     * are a large number of business and services. Defaults to true if not defined
+     * @since 3.3
+     */
+        public static String JUDDI_ENABLE_FIND_BUSINESS_TMODEL_BAG_FILTERING="juddi.preformance.enableFindBusinessTModelBagFiltering";
 }

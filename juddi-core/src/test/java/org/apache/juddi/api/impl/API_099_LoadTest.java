@@ -34,6 +34,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindQualifiers;
@@ -81,6 +82,11 @@ public class API_099_LoadTest {
                 Registry.stop();
         }
 
+        /**
+         * create 1000 subscriptions
+         * @throws Exception 
+         */
+        //@Ignore
         @Test
         public void joePublisher() throws Exception {
                 //Assume.assumeTrue(TckPublisher.isLoadTest());
