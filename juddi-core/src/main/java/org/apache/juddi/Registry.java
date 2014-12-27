@@ -81,6 +81,7 @@ public class Registry {
                         log.info("Starting jUDDI registry...");
                         registry = new Registry();
                         replicationNotifier = new ReplicationNotifier();
+                        AppConfig.triggerReload();
                         if (AppConfig.getConfiguration().getBoolean(Property.JUDDI_SUBSCRIPTION_NOTIFICATION, true)) {
                                 subscriptionNotifier = new SubscriptionNotifier();
                         }

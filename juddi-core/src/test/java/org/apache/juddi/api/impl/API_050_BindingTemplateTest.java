@@ -150,43 +150,55 @@ public class API_050_BindingTemplateTest {
          *
          * @throws Exception
          */
-        @Test
-        //@Ignore
+        @Test 
         public void testJUDDI_899() throws Exception {
-                UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
+                try {
+                        tckTModel.saveJoePublisherTmodel(authInfoJoe);
+                        tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessService.saveJoePublisherService(authInfoJoe);
+                        tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
+                        
+                        UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
 
-                FindBinding fb = new FindBinding();
-                fb.setAuthInfo(authInfoJoe);
+                        FindBinding fb = new FindBinding();
+                        fb.setAuthInfo(authInfoJoe);
 
-                fb.setTModelBag(new TModelBag());
-                //this is stored in joe's binding template
-                fb.getTModelBag().getTModelKey().add("uddi:uddi.org:protocol:serverauthenticatedssl3");
+                        fb.setTModelBag(new TModelBag());
+                        //this is stored in joe's binding template 
+                        fb.getTModelBag().getTModelKey().add("uddi:uddi.org:protocol:serverauthenticatedssl3");
+                        logger.info("testJUDDI_899 searching...");
+                        BindingDetail findBinding = inquiry.findBinding(fb);
+                        logger.info("testJUDDI_899 searching complete.");
+                        Assert.assertNotNull(findBinding);
+                        Assert.assertNotNull(findBinding.getBindingTemplate());
+                        Assert.assertFalse(findBinding.getBindingTemplate().isEmpty());
 
-                BindingDetail findBinding = inquiry.findBinding(fb);
-                Assert.assertNotNull(findBinding);
-                Assert.assertNotNull(findBinding.getBindingTemplate());
-                Assert.assertFalse(findBinding.getBindingTemplate().isEmpty());
-           
                         for (int i = 0; i < findBinding.getBindingTemplate().size(); i++) {
                                 if (findBinding.getBindingTemplate().get(i).getBindingKey().equals(TckBindingTemplate.JOE_BINDING_KEY)) {
                                         return;
                                 }
                         }
-                        
-              /*  if (findBinding.isTruncated()==null) {
-                        findBinding.setTruncated(false);
-                }
-                //support for paging
-                while (!findBinding.isTruncated() && !findBinding.getBindingTemplate().isEmpty()) {
-                       
-                        findBinding = inquiry.findBinding(fb);
-                        Assert.assertNotNull(findBinding);
-                        
-                         if (findBinding.isTruncated()) {
-                        findBinding.setTruncated(false);
-                }
-                }
 
-                Assert.fail("The expected service wasn't returned");*/
+                        Assert.fail("Binding wasn't returned");
+                } finally {
+                        tckBusinessService.deleteJoePublisherService(authInfoJoe);
+                        tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+                }
+                /*  if (findBinding.isTruncated()==null) {
+                 findBinding.setTruncated(false);
+                 }
+                 //support for paging
+                 while (!findBinding.isTruncated() && !findBinding.getBindingTemplate().isEmpty()) {
+                       
+                 findBinding = inquiry.findBinding(fb);
+                 Assert.assertNotNull(findBinding);
+                        
+                 if (findBinding.isTruncated()) {
+                 findBinding.setTruncated(false);
+                 }
+                 }
+
+                 Assert.fail("The expected service wasn't returned");*/
         }
 }

@@ -68,7 +68,7 @@
 				<plugin>
                   <groupId>org.apache.openjpa</groupId>
                   <artifactId>openjpa-maven-plugin</artifactId>
-                  <version>2.2.1</version>
+                  <version>2.3.0</version>
                   <configuration>
 			         <includes>**/org/apache/juddi/model/*.class</includes>
 			         <addDefaultConstructor>true</addDefaultConstructor>               
@@ -88,10 +88,34 @@
                     <dependency>
                         <groupId>org.apache.openjpa</groupId>
                         <artifactId>openjpa</artifactId>
-                        <version>2.2.1</version>
+                        <version>2.3.0</version>
                     </dependency>
                 </dependencies>
                 </plugin>
+
+                <plugin>
+				    <artifactId>maven-clean-plugin</artifactId>
+				    <version>2.6.1</version>
+				    <configuration>
+				      <filesets>
+				        <fileset>
+				          <directory>src/main/java</directory>
+				          <includes>
+				            <include>**/*</include>
+				          </includes>
+				          <followSymlinks>false</followSymlinks>
+				        </fileset>
+				        <fileset>
+				          <directory>src/test/java</directory>
+				          <includes>
+				            <include>**/*</include>
+				          </includes>
+				          <followSymlinks>false</followSymlinks>
+				        </fileset>
+				      </filesets>
+				    </configuration>
+				  </plugin>
+
 		</plugins>
 	</build>
 	<dependencies>
@@ -123,7 +147,7 @@
                 <dependency>
                     <groupId>org.apache.openjpa</groupId>
                     <artifactId>openjpa</artifactId>
-                    <version>2.2.1</version>
+                    <version>2.3.0</version>
                 </dependency>
 				<dependency>
 				    <groupId>org.apache.geronimo.specs</groupId>

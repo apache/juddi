@@ -21,8 +21,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -31,7 +29,6 @@ import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.MapConfiguration;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
@@ -88,7 +85,7 @@ public class AppConfig
 	}
 	/**
 	 * Does the actual work of reading the configuration from System
-	 * Properties and/or juddiv3.properties file. When the juddiv3.properties
+	 * Properties and/or juddiv3.xml file. When the juddiv3.xml
 	 * file is updated the file will be reloaded. By default the reloadDelay is
 	 * set to 1 second to prevent excessive date stamp checking.
 	 */
@@ -249,6 +246,10 @@ public class AppConfig
 		getInstance().loadConfiguration();
 		Registry.start();
 	}
+        
+        public static void triggerReload() throws ConfigurationException{
+                getInstance().loadConfiguration();
+        }
 	/**
 	 * The object from which property values can be obtained.
 	 * @return the commons Configuration interface

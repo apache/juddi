@@ -234,11 +234,13 @@ public class InquiryHelper {
                 
                 boolean enabled = true;
                 try {
-                        AppConfig.getConfiguration().getBoolean(Property.JUDDI_ENABLE_FIND_BUSINESS_TMODEL_BAG_FILTERING, true);
+                        //AppConfig.reloadConfig();
+                       enabled= AppConfig.getConfiguration().getBoolean(Property.JUDDI_ENABLE_FIND_BUSINESS_TMODEL_BAG_FILTERING, true);
                 } catch (ConfigurationException ex) {
                         logger.error(ex);
                 }
                 if (enabled) {
+                        logger.info("FindBusiness by tModelBag is enabled! Loaded from " + AppConfig.getConfigFileURL());
                         List<?> serviceResults = null;
                         for (int i = 0; i < queryResults.size(); i++) {
                                 org.apache.juddi.model.BusinessEntity be = (org.apache.juddi.model.BusinessEntity) queryResults.get(i);

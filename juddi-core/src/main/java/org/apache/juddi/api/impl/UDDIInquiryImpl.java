@@ -20,6 +20,8 @@ package org.apache.juddi.api.impl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -190,6 +192,14 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
+                        try {
+                                //AppConfig.reloadConfig();
+                                logger.info("FindBusiness with tModel bag filtering is enabled: " +
+                                        AppConfig.getConfiguration().getBoolean(Property.JUDDI_ENABLE_FIND_BUSINESS_TMODEL_BAG_FILTERING,true)
+                                + " loaded from " + AppConfig.getConfigFileURL());
+                        } catch (ConfigurationException ex) {
+                                ex.printStackTrace();
+                        }
 			tx.begin();
 
 			if (isAuthenticated())
