@@ -33,8 +33,10 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModel;
@@ -108,7 +110,7 @@ public class API_070_FindEntityTest {
                         tckFindEntity.findAllSignedBusiness();
                         tckFindEntity.findService(UDDIConstants.SIGNATURE_PRESENT);
                         tckFindEntity.findBinding(UDDIConstants.SIGNATURE_PRESENT);
-			//tckFindEntity.findTModel(UDDIConstants.SIGNATURE_PRESENT);
+                        //tckFindEntity.findTModel(UDDIConstants.SIGNATURE_PRESENT);
 
                         tckFindEntity.findAllBusiness();
                         tckFindEntity.getNonExitingBusiness();
@@ -148,7 +150,7 @@ public class API_070_FindEntityTest {
                 boolean found = false;
                 for (int i = 0; i < findTModel.getTModelInfos().getTModelInfo().size(); i++) {
                         if (findTModel.getTModelInfos().getTModelInfo().get(i).getName().getValue().equalsIgnoreCase("Buenos Dias")
-                             && findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang().equalsIgnoreCase("es-US")) {
+                                && findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang().equalsIgnoreCase("es-US")) {
                                 found = true;
                                 break;
                         }
@@ -157,4 +159,21 @@ public class API_070_FindEntityTest {
 
         }
 
+        @Test
+
+        public void JUDDI_899() throws Exception {
+                UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
+
+                UDDIPublicationImpl pub = new UDDIPublicationImpl();
+
+                FindTModel ftm = new FindTModel();
+                ftm.setAuthInfo(authInfoJoe);
+                ftm.setCategoryBag(new CategoryBag());
+                ftm.getCategoryBag().getKeyedReference().add(new KeyedReference("uddi:uddi.org:categorization:types", "uddi-org:types:keyGenerator", "keyGenerator"));
+                TModelList findTModel = inquiry.findTModel(ftm);
+                Assert.assertNotNull(findTModel);
+                Assert.assertNotNull(findTModel.getTModelInfos());
+                Assert.assertNotNull(findTModel.getTModelInfos().getTModelInfo());
+
+        }
 }
