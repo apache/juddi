@@ -159,17 +159,65 @@ public class API_070_FindEntityTest {
 
         }
 
+        /**
+         * matches for tModel by catbag, default settings, exact match
+         * @throws Exception 
+         */
         @Test
-
         public void JUDDI_899() throws Exception {
+                UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
+
+            
+                FindTModel ftm = new FindTModel();
+                ftm.setAuthInfo(authInfoJoe);
+                ftm.setCategoryBag(new CategoryBag());
+                ftm.getCategoryBag().getKeyedReference().add(new KeyedReference("uddi:uddi.org:categorization:types", "uddi-org:types:keyGenerator", "keyGenerator"));
+                TModelList findTModel = inquiry.findTModel(ftm);
+                Assert.assertNotNull(findTModel);
+                Assert.assertNotNull(findTModel.getTModelInfos());
+                Assert.assertNotNull(findTModel.getTModelInfos().getTModelInfo());
+
+        }
+        
+        /**
+         * matches for tModel by catbag, default settings, approximate match
+         * @throws Exception 
+         */
+        @Test
+        public void JUDDI_899_1() throws Exception {
+                UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
+
+                FindTModel ftm = new FindTModel();
+                ftm.setFindQualifiers(new FindQualifiers());
+                ftm.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                ftm.setAuthInfo(authInfoJoe);
+                ftm.setCategoryBag(new CategoryBag());
+                ftm.getCategoryBag().getKeyedReference().add(new KeyedReference("uddi:uddi.org:categorization:types", "uddi-org:types:keyGenerator", "key%"));
+                TModelList findTModel = inquiry.findTModel(ftm);
+                Assert.assertNotNull(findTModel);
+                Assert.assertNotNull(findTModel.getTModelInfos());
+                Assert.assertNotNull(findTModel.getTModelInfos().getTModelInfo());
+
+        }
+        
+         /**
+         * matches for tModel by catbag, default settings, case insensitive 
+         * @throws Exception 
+         */
+        @Test
+        public void JUDDI_899_2() throws Exception {
                 UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
 
                 UDDIPublicationImpl pub = new UDDIPublicationImpl();
 
                 FindTModel ftm = new FindTModel();
                 ftm.setAuthInfo(authInfoJoe);
+                ftm.setFindQualifiers(new FindQualifiers());
+                ftm.getFindQualifiers().getFindQualifier().add(UDDIConstants.CASE_INSENSITIVE_MATCH);
+                
                 ftm.setCategoryBag(new CategoryBag());
-                ftm.getCategoryBag().getKeyedReference().add(new KeyedReference("uddi:uddi.org:categorization:types", "uddi-org:types:keyGenerator", "keyGenerator"));
+                //all of the defeault installed data is for "keyGenerator"
+                ftm.getCategoryBag().getKeyedReference().add(new KeyedReference("uddi:uddi.org:categorization:types", "uddi-org:types:keyGenerator", "keygenerator"));
                 TModelList findTModel = inquiry.findTModel(ftm);
                 Assert.assertNotNull(findTModel);
                 Assert.assertNotNull(findTModel.getTModelInfos());
