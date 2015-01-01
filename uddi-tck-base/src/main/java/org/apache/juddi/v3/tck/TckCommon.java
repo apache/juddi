@@ -325,4 +325,13 @@ public class TckCommon {
                 return sb.toString();
         }
 
+        static void PrintMarker() {
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> FAILURE MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> FAILURE MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> FAILURE MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> FAILURE MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> FAILURE MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> FAILURE MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        }
+
 }

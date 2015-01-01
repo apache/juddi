@@ -181,6 +181,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
 
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
+                        TckCommon.PrintMarker();
                         Assert.fail("Could not obtain authInfo token.");
                 }
         }
@@ -251,11 +252,12 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                                 logger.warn("Test failed, dumping service list");
                                 logger.warn("BEFORE " + before);
                                 logger.warn("After " + TckCommon.DumpAllServices(authInfoJoe, inquiryJoe));
-                                //if (!UDDISubscriptionListenerImpl.notifcationMap.get(0).contains("<name xml:lang=\"en\">Service One</name>")) {
+                                TckCommon.PrintMarker();
                                 Assert.fail("Notification does not contain the correct service");
                         }
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
+                        TckCommon.PrintMarker();
                         e.printStackTrace();
 
                         Assert.fail();
@@ -299,10 +301,12 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                                 logger.warn("Test failed, dumping business list");
                                 logger.warn("BEFORE " + before);
                                 logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                TckCommon.PrintMarker();
                                 Assert.fail("Notification does not contain the correct service");
                         }
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
+                        TckCommon.PrintMarker();
                         e.printStackTrace();
 
                         Assert.fail();
@@ -359,11 +363,13 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                                 logger.warn("Test failed, dumping business list");
                                 logger.warn("BEFORE " + before);
                                 logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                TckCommon.PrintMarker();
                                 Assert.fail("Notification does not contain the correct service");
                         }
 
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
+                        TckCommon.PrintMarker();
                         e.printStackTrace();
 
                         Assert.fail();
@@ -429,11 +435,13 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                                 logger.warn("Test failed, dumping business list");
                                 logger.warn("BEFORE " + before);
                                 logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                TckCommon.PrintMarker();
                                 Assert.fail("Notification does not contain the correct service.");
                         }
 
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
+                        TckCommon.PrintMarker();
                         e.printStackTrace();
 
                         Assert.fail(e.getMessage());
@@ -505,11 +513,13 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                                 logger.warn("Test failed, dumping business list");
                                 logger.warn("BEFORE " + before);
                                 logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                TckCommon.PrintMarker();
                                 Assert.fail("Notification does not contain the correct service.");
                         }
 
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
+                        TckCommon.PrintMarker();
                         e.printStackTrace();
 
                         Assert.fail();
@@ -619,11 +629,13 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                                 logger.warn("Test failed, dumping business list");
                                 logger.warn("BEFORE " + before);
                                 logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                TckCommon.PrintMarker();
                                 Assert.fail("Notification does not contain the correct service.");
                         }
 
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
+                        TckCommon.PrintMarker();
                         e.printStackTrace();
 
                         Assert.fail();
@@ -714,11 +726,13 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                                 logger.warn("Test failed, dumping business list");
                                 logger.warn("BEFORE " + before);
                                 logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                TckCommon.PrintMarker();
                                 Assert.fail("Notification does not contain the correct service.");
                         }
 
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
+                        TckCommon.PrintMarker();
                         e.printStackTrace();
 
                         Assert.fail();
@@ -745,7 +759,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
          * @throws Exception
          */
         @Test
-        @Ignore
+        // @Ignore
         public void joePublisherUpdate_PUBLISHERASSERTION_DETAIL_TO() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
@@ -788,8 +802,8 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         AddPublisherAssertions pa = new AddPublisherAssertions();
                         pa.setAuthInfo(authInfoMary);
                         PublisherAssertion pas = new PublisherAssertion();
-                        pas.setToKey(TckBusiness.MARY_BUSINESS_KEY);
-                        pas.setFromKey(TckBusiness.JOE_BUSINESS_KEY);
+                        pas.setToKey(TckBusiness.JOE_BUSINESS_KEY);
+                        pas.setFromKey(TckBusiness.MARY_BUSINESS_KEY);
                         pas.setKeyedReference(new KeyedReference(UDDIConstants.RELATIONSHIPS, "parent", "parent-child"));
                         pa.getPublisherAssertion().add(pas);
 
@@ -805,11 +819,13 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                                 logger.warn("Test failed, dumping business list");
                                 logger.warn("BEFORE " + before);
                                 logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                TckCommon.PrintMarker();
                                 Assert.fail("Notification does not contain the correct service.");
                         }
 
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
+                        TckCommon.PrintMarker();
                         e.printStackTrace();
 
                         Assert.fail();
@@ -836,7 +852,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
          * @throws Exception
          */
         @Test
-        @Ignore
+        //@Ignore
         public void joePublisherUpdate_PUBLISHERASSERTION_DETAIL_FROM() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
@@ -879,8 +895,8 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         AddPublisherAssertions pa = new AddPublisherAssertions();
                         pa.setAuthInfo(authInfoMary);
                         PublisherAssertion pas = new PublisherAssertion();
-                        pas.setToKey(TckBusiness.JOE_BUSINESS_KEY);
-                        pas.setFromKey(TckBusiness.MARY_BUSINESS_KEY);
+                        pas.setFromKey(TckBusiness.JOE_BUSINESS_KEY);
+                        pas.setToKey(TckBusiness.MARY_BUSINESS_KEY);
                         pas.setKeyedReference(new KeyedReference(UDDIConstants.RELATIONSHIPS, "parent", "parent-child"));
                         pa.getPublisherAssertion().add(pas);
 
@@ -896,14 +912,16 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                                 logger.warn("Test failed, dumping business list");
                                 logger.warn("BEFORE " + before);
                                 logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                TckCommon.PrintMarker();
                                 Assert.fail("Notification does not contain the correct service.");
                         }
 
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
+                        TckCommon.PrintMarker();
                         e.printStackTrace();
 
-                        Assert.fail();
+                        Assert.fail(e.getMessage());
                 } finally {
                         //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
                         DeleteSubscription ds = new DeleteSubscription();
@@ -985,13 +1003,14 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                                 logger.warn("Test failed, dumping business list");
                                 logger.warn("BEFORE " + before);
                                 logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                TckCommon.PrintMarker();
                                 Assert.fail("Notification does not contain the correct service.");
                         }
 
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
                         e.printStackTrace();
-
+                        TckCommon.PrintMarker();
                         Assert.fail(e.getMessage());
                 } finally {
                         //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
@@ -1076,11 +1095,13 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                                 logger.warn("Test failed, dumping business list");
                                 logger.warn("BEFORE " + before);
                                 logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                TckCommon.PrintMarker();
                                 Assert.fail("Notification does not contain the correct service.");
                         }
 
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
+                        TckCommon.PrintMarker();
                         e.printStackTrace();
 
                         Assert.fail(e.getMessage());
@@ -1177,17 +1198,19 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         deletePublisherAssertions = new DeletePublisherAssertions();
                         deletePublisherAssertions.setAuthInfo(authInfoJoe);
                         deletePublisherAssertions.getPublisherAssertion().add(pas);
-                       // publicationJoe.deletePublisherAssertions(deletePublisherAssertions);
+                        // publicationJoe.deletePublisherAssertions(deletePublisherAssertions);
 
                         if (!found) {
                                 logger.warn("Test failed, dumping business list");
                                 logger.warn("BEFORE " + before);
                                 logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                TckCommon.PrintMarker();
                                 Assert.fail("Notification does not contain the correct service.");
                         }
 
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
+                        TckCommon.PrintMarker();
                         e.printStackTrace();
 
                         Assert.fail(e.getMessage());
@@ -1284,11 +1307,13 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                                 logger.warn("Test failed, dumping business list");
                                 logger.warn("BEFORE " + before);
                                 logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                TckCommon.PrintMarker();
                                 Assert.fail("Notification does not contain the correct service.");
                         }
 
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
+                        TckCommon.PrintMarker();
                         e.printStackTrace();
 
                         Assert.fail(e.getMessage());
@@ -1316,7 +1341,6 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
          * @throws Exception
          */
         @Test
-        //@Ignore
         public void joePublisherUpdate_FIND_BINDING_BY_CATBAG() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
@@ -1378,45 +1402,30 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         Thread.sleep(1000);
                         logger.info("dumping mary's binding before.... ");
                         JAXB.marshal(bs, System.out);
-                        System.out.println("#####################################");
-                        System.out.println("#####################################");
-                        System.out.println("#####################################");
-                        System.out.println("#####################################");
-                        System.out.println("#####################################");
-                        System.out.println("#####################################");
 
                         logger.info("updating Mary's binding ********** ");
                         // BindingDetail after=new BindingDetail();
                         /*GetBindingDetail bindingDetail = new GetBindingDetail();
-                        bindingDetail.setAuthInfo(authInfoMary);
-                        bindingDetail.getBindingKey().add(bs.getBindingTemplates().getBindingTemplate().get(0).getBindingKey());*/
+                         bindingDetail.setAuthInfo(authInfoMary);
+                         bindingDetail.getBindingKey().add(bs.getBindingTemplates().getBindingTemplate().get(0).getBindingKey());*/
                         BindingDetail bindingDetail1 = null;//inquiryMary.getBindingDetail(bindingDetail);
                         bindingDetail1 = updatePublisherBindingAddCategory(authInfoMary, bt, publicationMary, new KeyedReference("uddi:uddi.org:categorization:types", UDDIConstants.CategorizationTypes_Cacheable, "Cacheable"), bindingDetail1);
 
-                        System.out.println("#####################################");
-                        System.out.println("#####################################");
-                        System.out.println("#####################################");
-                        System.out.println("#####################################");
-                        System.out.println("#####################################");
                         logger.info("dumping mary's binding after.... ");
                         JAXB.marshal(bindingDetail1, System.out);
-                        System.out.println("#####################################");
-                        System.out.println("#####################################");
-                        System.out.println("#####################################");
-                        System.out.println("#####################################");
-                        System.out.println("#####################################");
-                        System.out.println("#####################################");
                         boolean found = verifyDelivery(UDDIConstants.CategorizationTypes_Cacheable);
 
                         if (!found) {
                                 logger.warn("Test failed, dumping business list");
                                 logger.warn("BEFORE " + before);
                                 logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
+                                TckCommon.PrintMarker();
                                 Assert.fail("Notification does not contain the correct service.");
                         }
 
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
+                        TckCommon.PrintMarker();
                         e.printStackTrace();
 
                         Assert.fail(e.getMessage());
@@ -1500,7 +1509,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                 }
                 bt.getCategoryBag().getKeyedReference().add(cat);
                 sb.getBindingTemplate().add(bt);
-                return  pub.saveBinding(sb);
+                return pub.saveBinding(sb);
                 //return UDDIConstants.CategorizationTypes_Cacheable;
         }
 
