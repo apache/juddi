@@ -18,6 +18,7 @@ package org.apache.juddi.v3.tck;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.xml.bind.JAXB;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Holder;
@@ -34,6 +35,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.uddi.api_v3.AccessPoint;
 import org.uddi.api_v3.AddPublisherAssertions;
+import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BindingTemplates;
 import org.uddi.api_v3.BusinessEntity;
@@ -419,7 +421,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         //Changing the service we subscribed to "JoePublisherService"
                         Thread.sleep(1000);
                         logger.info("updating Mary's business ********** ");
-                        updatePublisherBusiness(authInfoMary, saveMaryPublisherBusiness, publicationMary);
+                        updatePublisherBusiness(authInfoMary, saveMaryPublisherBusiness, publicationMary, "Updated Name");
 
                         boolean found = verifyDelivery("Updated Name");
 
@@ -434,7 +436,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         logger.error("No exceptions please.");
                         e.printStackTrace();
 
-                        Assert.fail();
+                        Assert.fail(e.getMessage());
                 } finally {
                         //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
                         DeleteSubscription ds = new DeleteSubscription();
@@ -547,8 +549,8 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
          * @param biz
          * @param pub
          */
-        public static void updatePublisherBusiness(String auth, BusinessEntity biz, UDDIPublicationPortType pub) throws Exception {
-                biz.getName().add(new Name("Updated Name", "en"));
+        public static void updatePublisherBusiness(String auth, BusinessEntity biz, UDDIPublicationPortType pub, String name) throws Exception {
+                biz.getName().add(new Name(name, null));
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(auth);
                 sb.getBusinessEntity().add(biz);
@@ -918,10 +920,8 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
 
                 }
         }
-        
-        
-        
-         /**
+
+        /**
          * PUBLISHERASSERTION tests joe want's updates on mary's binding
          *
          * @throws Exception
@@ -957,7 +957,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(5000));
                         sub.setSubscriptionFilter(new SubscriptionFilter());
                         sub.getSubscriptionFilter().setGetAssertionStatusReport(new GetAssertionStatusReport());
-                       
+
                         holder.value.add(sub);
                         subscriptionJoe.saveSubscription(authInfoJoe, holder);
                         logger.info("subscription saved for " + holder.value.get(0).getSubscriptionKey());
@@ -992,7 +992,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         logger.error("No exceptions please.");
                         e.printStackTrace();
 
-                        Assert.fail();
+                        Assert.fail(e.getMessage());
                 } finally {
                         //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
                         DeleteSubscription ds = new DeleteSubscription();
@@ -1083,7 +1083,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         logger.error("No exceptions please.");
                         e.printStackTrace();
 
-                        Assert.fail();
+                        Assert.fail(e.getMessage());
                 } finally {
                         //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
                         DeleteSubscription ds = new DeleteSubscription();
@@ -1103,9 +1103,8 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
 
         //
         /**
-         * find related businesses 
-         * i.e. setup subscriptions for all related businesses to joe's biz
-         * then setup PA between Joe and Mary
+         * find related businesses i.e. setup subscriptions for all related
+         * businesses to joe's biz then setup PA between Joe and Mary
          *
          * @throws Exception
          */
@@ -1122,9 +1121,9 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         String before = TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe);
 
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
-              
+
                         tckTModelMary.saveMaryPublisherTmodel(authInfoMary);
-              
+
                         BusinessEntity saveMaryPublisherBusiness = tckBusinessMary.saveMaryPublisherBusiness(authInfoMary);
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
                         tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
@@ -1147,7 +1146,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         //tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION3_XML);
                         //Changing the service we subscribed to "JoePublisherService"
                         Thread.sleep(1000);
-                        
+
                         logger.info("saving Mary's publisher assertion********** ");
                         AddPublisherAssertions pa = new AddPublisherAssertions();
                         pa.setAuthInfo(authInfoMary);
@@ -1156,8 +1155,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         pas.setFromKey(TckBusiness.MARY_BUSINESS_KEY);
                         pas.setKeyedReference(new KeyedReference(UDDIConstants.RELATIONSHIPS, "parent", "parent-child"));
                         pa.getPublisherAssertion().add(pas);
-                        
-                      
+
                         publicationMary.addPublisherAssertions(pa);
                         logger.info("saving Joe's publisher assertion********** ");
                         pa = new AddPublisherAssertions();
@@ -1169,18 +1167,18 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         pa.getPublisherAssertion().add(pas);
                         publicationJoe.addPublisherAssertions(pa);
 
-                          //expecting that Joe gets notified that joe's and mary's businesses are now "related"
+                        //expecting that Joe gets notified that joe's and mary's businesses are now "related"
                         boolean found = verifyDelivery(TckBusiness.MARY_BUSINESS_KEY);
                         DeletePublisherAssertions deletePublisherAssertions = new DeletePublisherAssertions();
                         deletePublisherAssertions.setAuthInfo(authInfoMary);
                         deletePublisherAssertions.getPublisherAssertion().add(pas);
                         publicationMary.deletePublisherAssertions(deletePublisherAssertions);
-                        
-                         deletePublisherAssertions = new DeletePublisherAssertions();
+
+                        deletePublisherAssertions = new DeletePublisherAssertions();
                         deletePublisherAssertions.setAuthInfo(authInfoJoe);
                         deletePublisherAssertions.getPublisherAssertion().add(pas);
                        // publicationJoe.deletePublisherAssertions(deletePublisherAssertions);
-                        
+
                         if (!found) {
                                 logger.warn("Test failed, dumping business list");
                                 logger.warn("BEFORE " + before);
@@ -1192,7 +1190,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         logger.error("No exceptions please.");
                         e.printStackTrace();
 
-                        Assert.fail();
+                        Assert.fail(e.getMessage());
                 } finally {
                         //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
                         DeleteSubscription ds = new DeleteSubscription();
@@ -1237,7 +1235,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         bs.setBusinessKey(saveMaryPublisherBusiness.getBusinessKey());
                         bs.setServiceKey(TckTModel.MARY_KEY_PREFIX + UUID.randomUUID().toString());
                         bs.getName().add(new Name("Mary's service for " + getTransport(), null));
-                        
+
                         bs.setBindingTemplates(new BindingTemplates());
                         BindingTemplate bt = new BindingTemplate();
                         bt.setAccessPoint(new AccessPoint("http://localhost", "endPoint"));
@@ -1264,11 +1262,10 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(5000));
                         sub.setSubscriptionFilter(new SubscriptionFilter());
                         sub.getSubscriptionFilter().setFindBinding(new FindBinding());
-                       //FAIL sub.getSubscriptionFilter().getFindBinding().setServiceKey(bs.getServiceKey());
+                        //FAIL sub.getSubscriptionFilter().getFindBinding().setServiceKey(bs.getServiceKey());
                         sub.getSubscriptionFilter().getFindBinding().setTModelBag(new TModelBag());
-                         
+
                         //At least one of either a tModelBag or a find_tModel argument SHOULD be supplied, unless a categoryBag based search is being used.
-                        
                         sub.getSubscriptionFilter().getFindBinding().getTModelBag().getTModelKey().add(WSDMQosConstants.METRIC_FAULT_COUNT_KEY);
                         //joe wants updates to mary's binding
 
@@ -1279,7 +1276,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         //Changing the service we subscribed to "JoePublisherService"
                         Thread.sleep(1000);
                         logger.info("updating Mary's binding ********** ");
-                       String newcontent= updatePublisherBindingAddTMI(authInfoMary, bt, publicationMary);
+                        String newcontent = updatePublisherBindingAddTMI(authInfoMary, bt, publicationMary);
 
                         boolean found = verifyDelivery(newcontent);
 
@@ -1294,7 +1291,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         logger.error("No exceptions please.");
                         e.printStackTrace();
 
-                        Assert.fail();
+                        Assert.fail(e.getMessage());
                 } finally {
                         //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
                         DeleteSubscription ds = new DeleteSubscription();
@@ -1311,11 +1308,16 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
 
                 }
         }
-        
-        
+
+        /**
+         * joe wants updates on all services with wsdm qos tmi. mary updates a
+         * binding to trigger the call back
+         *
+         * @throws Exception
+         */
         @Test
-        @Ignore
-         public void joePublisherUpdate_FIND_BINDING_BY_CATBAG() throws Exception {
+        //@Ignore
+        public void joePublisherUpdate_FIND_BINDING_BY_CATBAG() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
                 logger.info("joePublisherUpdate_" + getTransport() + "_FIND_BINDING_BY_CATBAG");
@@ -1336,7 +1338,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         bs.setBusinessKey(saveMaryPublisherBusiness.getBusinessKey());
                         bs.setServiceKey(TckTModel.MARY_KEY_PREFIX + UUID.randomUUID().toString());
                         bs.getName().add(new Name("Mary's service for " + getTransport(), null));
-                        
+
                         bs.setBindingTemplates(new BindingTemplates());
                         BindingTemplate bt = new BindingTemplate();
                         bt.setAccessPoint(new AccessPoint("http://localhost", "endPoint"));
@@ -1363,13 +1365,10 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         sub.setNotificationInterval(DatatypeFactory.newInstance().newDuration(5000));
                         sub.setSubscriptionFilter(new SubscriptionFilter());
                         sub.getSubscriptionFilter().setFindBinding(new FindBinding());
-                        //sub.getSubscriptionFilter().getFindBinding().setServiceKey(bs.getServiceKey());
-                        sub.getSubscriptionFilter().getFindBinding().setTModelBag(new TModelBag());
-                        
+
                         //At least one of either a tModelBag or a find_tModel argument SHOULD be supplied, unless a categoryBag based search is being used.
-                        
-                        sub.getSubscriptionFilter().getFindBinding().getTModelBag().getTModelKey().add("uddi:uddi.org:categorization:types");
-                        
+                        sub.getSubscriptionFilter().getFindBinding().setCategoryBag(new CategoryBag());
+                        sub.getSubscriptionFilter().getFindBinding().getCategoryBag().getKeyedReference().add(new KeyedReference("uddi:uddi.org:categorization:types", UDDIConstants.CategorizationTypes_Cacheable, "Cacheable"));
 
                         holder.value.add(sub);
                         subscriptionJoe.saveSubscription(authInfoJoe, holder);
@@ -1377,10 +1376,37 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         //tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION3_XML);
                         //Changing the service we subscribed to "JoePublisherService"
                         Thread.sleep(1000);
-                        logger.info("updating Mary's binding ********** ");
-                       String newcontent= updatePublisherBindingAddCategory(authInfoMary, bt, publicationMary,"uddi:uddi.org:categorization:types");
+                        logger.info("dumping mary's binding before.... ");
+                        JAXB.marshal(bs, System.out);
+                        System.out.println("#####################################");
+                        System.out.println("#####################################");
+                        System.out.println("#####################################");
+                        System.out.println("#####################################");
+                        System.out.println("#####################################");
+                        System.out.println("#####################################");
 
-                        boolean found = verifyDelivery(newcontent);
+                        logger.info("updating Mary's binding ********** ");
+                        // BindingDetail after=new BindingDetail();
+                        /*GetBindingDetail bindingDetail = new GetBindingDetail();
+                        bindingDetail.setAuthInfo(authInfoMary);
+                        bindingDetail.getBindingKey().add(bs.getBindingTemplates().getBindingTemplate().get(0).getBindingKey());*/
+                        BindingDetail bindingDetail1 = null;//inquiryMary.getBindingDetail(bindingDetail);
+                        bindingDetail1 = updatePublisherBindingAddCategory(authInfoMary, bt, publicationMary, new KeyedReference("uddi:uddi.org:categorization:types", UDDIConstants.CategorizationTypes_Cacheable, "Cacheable"), bindingDetail1);
+
+                        System.out.println("#####################################");
+                        System.out.println("#####################################");
+                        System.out.println("#####################################");
+                        System.out.println("#####################################");
+                        System.out.println("#####################################");
+                        logger.info("dumping mary's binding after.... ");
+                        JAXB.marshal(bindingDetail1, System.out);
+                        System.out.println("#####################################");
+                        System.out.println("#####################################");
+                        System.out.println("#####################################");
+                        System.out.println("#####################################");
+                        System.out.println("#####################################");
+                        System.out.println("#####################################");
+                        boolean found = verifyDelivery(UDDIConstants.CategorizationTypes_Cacheable);
 
                         if (!found) {
                                 logger.warn("Test failed, dumping business list");
@@ -1393,7 +1419,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         logger.error("No exceptions please.");
                         e.printStackTrace();
 
-                        Assert.fail();
+                        Assert.fail(e.getMessage());
                 } finally {
                         //tckSubscriptionListenerJoe.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_KEY);
                         DeleteSubscription ds = new DeleteSubscription();
@@ -1410,8 +1436,6 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
 
                 }
         }
-         
-         
 
         //find binding
         private void updatePublisherService(String authInfo, BusinessService bs, UDDIPublicationPortType pub) throws Exception {
@@ -1424,11 +1448,12 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
 
         /**
          * returns a string used to confirm delivery of an update
+         *
          * @param authInfo
          * @param bt
          * @param pub
          * @return
-         * @throws Exception 
+         * @throws Exception
          */
         private String updatePublisherBinding(String authInfo, BindingTemplate bt, UDDIPublicationPortType pub) throws Exception {
                 SaveBinding sb = new SaveBinding();
@@ -1439,43 +1464,44 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                 pub.saveBinding(sb);
                 return ret;
         }
-        
+
         /**
          * returns a string used to confirm delivery of an update
+         *
          * @param authInfo
          * @param bt
          * @param pub
          * @param cat
          * @return
-         * @throws Exception 
+         * @throws Exception
          */
         private String updatePublisherBindingAddTMI(String authInfo, BindingTemplate bt, UDDIPublicationPortType pub) throws Exception {
                 SaveBinding sb = new SaveBinding();
                 sb.setAuthInfo(authInfo);
-               if (bt.getTModelInstanceDetails()==null)
-                       bt.setTModelInstanceDetails(new TModelInstanceDetails());
-                 TModelInstanceInfo tii = new TModelInstanceInfo();
+                if (bt.getTModelInstanceDetails() == null) {
+                        bt.setTModelInstanceDetails(new TModelInstanceDetails());
+                }
+                TModelInstanceInfo tii = new TModelInstanceInfo();
                 tii.setTModelKey(WSDMQosConstants.METRIC_FAULT_COUNT_KEY);
                 tii.setInstanceDetails(new InstanceDetails());
                 tii.getInstanceDetails().setInstanceParms("400");
-               bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tii);
-               sb.getBindingTemplate().add(bt);
+                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tii);
+                sb.getBindingTemplate().add(bt);
                 pub.saveBinding(sb);
                 return WSDMQosConstants.METRIC_FAULT_COUNT_KEY;
         }
-        
-        //TODO potential test case This argument specifies the filtering criteria which limits the scope of a subscription to a subset of registry records. It is required except when renewing an existing subscription.
 
-        private String updatePublisherBindingAddCategory(String authInfo, BindingTemplate bt, UDDIPublicationPortType pub, String cat)  throws Exception{
-                 SaveBinding sb = new SaveBinding();
+        //TODO potential test case This argument specifies the filtering criteria which limits the scope of a subscription to a subset of registry records. It is required except when renewing an existing subscription.
+        private BindingDetail updatePublisherBindingAddCategory(String authInfo, BindingTemplate bt, UDDIPublicationPortType pub, KeyedReference cat, BindingDetail outSaveBinding) throws Exception {
+                SaveBinding sb = new SaveBinding();
                 sb.setAuthInfo(authInfo);
-             if (bt.getCategoryBag()==null)
-                     bt.setCategoryBag(new CategoryBag());
-             bt.getCategoryBag().getKeyedReference().add(new KeyedReference(cat, UDDIConstants.CategorizationTypes_Cacheable, "Cacheable"));
-               sb.getBindingTemplate().add(bt);
-                pub.saveBinding(sb);
-                return UDDIConstants.CategorizationTypes_Cacheable;
+                if (bt.getCategoryBag() == null) {
+                        bt.setCategoryBag(new CategoryBag());
+                }
+                bt.getCategoryBag().getKeyedReference().add(cat);
+                sb.getBindingTemplate().add(bt);
+                return  pub.saveBinding(sb);
+                //return UDDIConstants.CategorizationTypes_Cacheable;
         }
-        
 
 }

@@ -113,20 +113,6 @@ public class UDDI_110_FindBusinessIntegrationTest {
         @Test
         public void findBusinessByTModelBag() {
              Assume.assumeTrue(TckPublisher.isEnabled());
-             System.out.println("##########################################################");
-             System.out.println("##########################################################");
-             System.out.println("##########################################################");
-             System.out.println("##########################################################");
-             System.out.println("##########################################################");
-             System.out.println("##########################################################");
-             System.out.println("##########################################################");
-             System.out.println("##########################################################");
-             System.out.println("##########################################################");
-             System.out.println("##########################################################");
-             System.out.println("##########################################################");
-             System.out.println("##########################################################");
-             System.out.println("##########################################################");
-             System.out.println("##########################################################");
                 try {
                         tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
                         tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);

@@ -101,8 +101,8 @@ import org.uddi.v3_service.UDDIPublicationPortType;
  * replication and several bug fixes
  */
 @WebService(serviceName = "UDDIPublicationService",
-     endpointInterface = "org.uddi.v3_service.UDDIPublicationPortType",
-     targetNamespace = "urn:uddi-org:v3_service")
+        endpointInterface = "org.uddi.v3_service.UDDIPublicationPortType",
+        targetNamespace = "urn:uddi-org:v3_service")
 public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPublicationPortType {
 
         private static Log log = LogFactory.getLog(UDDIInquiryImpl.class);
@@ -124,7 +124,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
         @Override
         public void addPublisherAssertions(AddPublisherAssertions body)
-             throws DispositionReportFaultMessage {
+                throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -148,8 +148,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                                 boolean persistNewAssertion = true;
                                 if (existingPubAssertion != null) {
                                         if (modelPubAssertion.getTmodelKey().equalsIgnoreCase(existingPubAssertion.getTmodelKey())
-                                             && modelPubAssertion.getKeyName().equalsIgnoreCase(existingPubAssertion.getKeyName())
-                                             && modelPubAssertion.getKeyValue().equalsIgnoreCase(existingPubAssertion.getKeyValue())) {
+                                                && modelPubAssertion.getKeyName().equalsIgnoreCase(existingPubAssertion.getKeyName())
+                                                && modelPubAssertion.getKeyValue().equalsIgnoreCase(existingPubAssertion.getKeyValue())) {
                                                 // This pub assertion is already been "asserted".  Simply need to set the "check" value on the existing (and persistent) assertion
                                                 if (publisher.isOwner(existingPubAssertion.getBusinessEntityByFromKey())) {
                                                         existingPubAssertion.setFromCheck("true");
@@ -160,7 +160,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                                                 persistNewAssertion = false;
                                         } else {
-						// Otherwise, it is a new relationship between these entities.  Remove the old one so the new one can be added.
+                                                // Otherwise, it is a new relationship between these entities.  Remove the old one so the new one can be added.
                                                 // TODO: the model only seems to allow one assertion per two business (primary key is fromKey and toKey). Spec seems to imply as 
                                                 // many relationships as desired (the differentiator would be the keyedRef values).
                                                 em.remove(existingPubAssertion);
@@ -198,7 +198,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.ADD_PUBLISHERASSERTIONS,
-                             QueryStatus.SUCCESS, procTime);
+                                QueryStatus.SUCCESS, procTime);
                 } catch (DispositionReportFaultMessage drfm) {
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.ADD_PUBLISHERASSERTIONS, QueryStatus.FAILED, procTime);
@@ -212,7 +212,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         }
 
         public void deleteBinding(DeleteBinding body)
-             throws DispositionReportFaultMessage {
+                throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -237,7 +237,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.DELETE_BINDING,
-                             QueryStatus.SUCCESS, procTime);
+                                QueryStatus.SUCCESS, procTime);
                 } catch (DispositionReportFaultMessage drfm) {
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.DELETE_BINDING, QueryStatus.FAILED, procTime);
@@ -271,7 +271,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         }
 
         public void deleteBusiness(DeleteBusiness body)
-             throws DispositionReportFaultMessage {
+                throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -322,7 +322,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         }
 
         public void deletePublisherAssertions(DeletePublisherAssertions body)
-             throws DispositionReportFaultMessage {
+                throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -347,7 +347,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.DELETE_PUBLISHERASSERTIONS,
-                             QueryStatus.SUCCESS, procTime);
+                                QueryStatus.SUCCESS, procTime);
                 } catch (DispositionReportFaultMessage drfm) {
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.DELETE_PUBLISHERASSERTIONS, QueryStatus.FAILED, procTime);
@@ -375,7 +375,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         }
 
         public void deleteService(DeleteService body)
-             throws DispositionReportFaultMessage {
+                throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -400,7 +400,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.DELETE_SERVICE,
-                             QueryStatus.SUCCESS, procTime);
+                                QueryStatus.SUCCESS, procTime);
                 } catch (DispositionReportFaultMessage drfm) {
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.DELETE_SERVICE, QueryStatus.FAILED, procTime);
@@ -428,7 +428,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         }
 
         public void deleteTModel(DeleteTModel body)
-             throws DispositionReportFaultMessage {
+                throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -481,8 +481,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         }
 
         public List<AssertionStatusItem> getAssertionStatusReport(String authInfo,
-             CompletionStatus completionStatus)
-             throws DispositionReportFaultMessage {
+                CompletionStatus completionStatus)
+                throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -497,7 +497,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.GET_ASSERTIONSTATUSREPORT,
-                             QueryStatus.SUCCESS, procTime);
+                                QueryStatus.SUCCESS, procTime);
 
                         return result;
                 } catch (DispositionReportFaultMessage drfm) {
@@ -513,7 +513,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         }
 
         public List<PublisherAssertion> getPublisherAssertions(String authInfo)
-             throws DispositionReportFaultMessage {
+                throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -542,12 +542,12 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.GET_PUBLISHERASSERTIONS,
-                             QueryStatus.SUCCESS, procTime);
+                                QueryStatus.SUCCESS, procTime);
                         return result;
                 } catch (DispositionReportFaultMessage drfm) {
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.GET_PUBLISHERASSERTIONS,
-                             QueryStatus.FAILED, procTime);
+                                QueryStatus.FAILED, procTime);
                         throw drfm;
                 } finally {
                         if (tx.isActive()) {
@@ -558,7 +558,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         }
 
         public RegisteredInfo getRegisteredInfo(GetRegisteredInfo body)
-             throws DispositionReportFaultMessage {
+                throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -618,13 +618,13 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.GET_REGISTEREDINFO,
-                             QueryStatus.SUCCESS, procTime);
+                                QueryStatus.SUCCESS, procTime);
 
                         return result;
                 } catch (DispositionReportFaultMessage drfm) {
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.GET_REGISTEREDINFO,
-                             QueryStatus.FAILED, procTime);
+                                QueryStatus.FAILED, procTime);
                         throw drfm;
                 } finally {
                         if (tx.isActive()) {
@@ -635,7 +635,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         }
 
         public BindingDetail saveBinding(SaveBinding body)
-             throws DispositionReportFaultMessage {
+                throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -662,7 +662,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                                 MappingApiToModel.mapBindingTemplate(apiBindingTemplate, modelBindingTemplate, modelBusinessService);
 
-                                setOperationalInfo(em, modelBindingTemplate, publisher, false);
+                                setOperationalInfo(em, modelBindingTemplate, publisher, true);
 
                                 em.persist(modelBindingTemplate);
 
@@ -679,13 +679,13 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_BINDING,
-                             QueryStatus.SUCCESS, procTime);
+                                QueryStatus.SUCCESS, procTime);
 
                         return result;
                 } catch (DispositionReportFaultMessage drfm) {
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_BINDING,
-                             QueryStatus.FAILED, procTime);
+                                QueryStatus.FAILED, procTime);
                         throw drfm;
                 } finally {
                         if (tx.isActive()) {
@@ -696,7 +696,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         }
 
         public BusinessDetail saveBusiness(SaveBusiness body)
-             throws DispositionReportFaultMessage {
+                throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
                 if (!body.getBusinessEntity().isEmpty()) {
                         log.debug("Inbound save business request for key " + body.getBusinessEntity().get(0).getBusinessKey());
@@ -739,13 +739,13 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_BUSINESS,
-                             QueryStatus.SUCCESS, procTime);
+                                QueryStatus.SUCCESS, procTime);
 
                         return result;
                 } catch (DispositionReportFaultMessage drfm) {
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_BUSINESS,
-                             QueryStatus.FAILED, procTime);
+                                QueryStatus.FAILED, procTime);
                         throw drfm;
                 } catch (Exception ex) {
                         StringWriter sw = new StringWriter();
@@ -763,7 +763,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         }
 
         public ServiceDetail saveService(SaveService body)
-             throws DispositionReportFaultMessage {
+                throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -803,13 +803,13 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_SERVICE,
-                             QueryStatus.SUCCESS, procTime);
+                                QueryStatus.SUCCESS, procTime);
 
                         return result;
                 } catch (DispositionReportFaultMessage drfm) {
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_SERVICE,
-                             QueryStatus.FAILED, procTime);
+                                QueryStatus.FAILED, procTime);
                         throw drfm;
                 } finally {
                         if (tx.isActive()) {
@@ -820,7 +820,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         }
 
         public TModelDetail saveTModel(SaveTModel body)
-             throws DispositionReportFaultMessage {
+                throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -857,13 +857,13 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_TMODEL,
-                             QueryStatus.SUCCESS, procTime);
+                                QueryStatus.SUCCESS, procTime);
 
                         return result;
                 } catch (DispositionReportFaultMessage drfm) {
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_TMODEL,
-                             QueryStatus.FAILED, procTime);
+                                QueryStatus.FAILED, procTime);
                         throw drfm;
                 } finally {
                         if (tx.isActive()) {
@@ -875,8 +875,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
         @Override
         public void setPublisherAssertions(String authInfo,
-             Holder<List<PublisherAssertion>> publisherAssertion)
-             throws DispositionReportFaultMessage {
+                Holder<List<PublisherAssertion>> publisherAssertion)
+                throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
 
                 EntityManager em = PersistenceManager.getEntityManager();
@@ -892,7 +892,6 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);
 
                         //TODO this has to be reworked to record what was deleted.
-                        
                         // First, wipe out all previous assertions associated with this publisher
                         DeletePublisherAssertionByBusinessQuery.delete(em, businessKeysFound);
 
@@ -914,7 +913,6 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                                 modelPubAssertion.setFromCheck("false");
                                 modelPubAssertion.setToCheck("false");
 
-                                
                                 if (publisher.isOwner(modelPubAssertion.getBusinessEntityByFromKey())) {
                                         modelPubAssertion.setFromCheck("true");
                                 }
@@ -923,21 +921,21 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                                 }
                                 em.persist(modelPubAssertion);
 
-                                
                                 changes.add(getChangeRecord_NewAssertion(apiPubAssertion, modelPubAssertion, node));
 
                         }
 
                         tx.commit();
-                        for (int i=0; i < changes.size(); i++)
+                        for (int i = 0; i < changes.size(); i++) {
                                 ReplicationNotifier.Enqueue(changes.get(i));
+                        }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SET_PUBLISHERASSERTIONS,
-                             QueryStatus.SUCCESS, procTime);
+                                QueryStatus.SUCCESS, procTime);
                 } catch (DispositionReportFaultMessage drfm) {
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SET_PUBLISHERASSERTIONS,
-                             QueryStatus.FAILED, procTime);
+                                QueryStatus.FAILED, procTime);
                         throw drfm;
                 } finally {
                         if (tx.isActive()) {
@@ -1029,16 +1027,24 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 uddiEntity.setModified(now);
                 uddiEntity.setModifiedIncludingChildren(now);
 
-                if (!isChild) {
-                        org.apache.juddi.model.BusinessService parent = em.find(org.apache.juddi.model.BusinessService.class, uddiEntity.getBusinessService().getEntityKey());
+                //if (!isChild) {
+                org.apache.juddi.model.BusinessService parent = em.find(org.apache.juddi.model.BusinessService.class, uddiEntity.getBusinessService().getEntityKey());
+                if (parent != null) {
                         parent.setModifiedIncludingChildren(now);
                         em.persist(parent);
 
                         // JUDDI-421:  now the businessEntity parent will have it's modifiedIncludingChildren set
                         org.apache.juddi.model.BusinessEntity businessParent = em.find(org.apache.juddi.model.BusinessEntity.class, parent.getBusinessEntity().getEntityKey());
-                        businessParent.setModifiedIncludingChildren(now);
-                        em.persist(businessParent);
+                        if (businessParent != null) {
+                                businessParent.setModifiedIncludingChildren(now);
+                                em.persist(businessParent);
+                        } else {
+                                logger.warn("Parent business is null for saved binding template!");
+                        }
+                } else {
+                        logger.warn("Parent service is null for saved binding template!");
                 }
+                // }
 
                 String nodeId = "";
                 try {
