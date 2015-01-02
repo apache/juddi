@@ -79,6 +79,7 @@ public class App {
                                 org.apache.juddi.v3.tck.UDDI_030_BusinessEntityIntegrationTest.class,
                                 org.apache.juddi.v3.tck.UDDI_030_BusinessEntityLoadIntegrationTest.class,
                                 org.apache.juddi.v3.tck.UDDI_040_BusinessServiceIntegrationTest.class,
+                                org.apache.juddi.v3.tck.UDDI_040_PerformanceIntegrationTest.class,
                                 org.apache.juddi.v3.tck.UDDI_040_BusinessServiceLoadIntegrationTest.class,
                                 org.apache.juddi.v3.tck.UDDI_050_BindingTemplateIntegrationTest.class,
                                 org.apache.juddi.v3.tck.UDDI_060_PublisherAssertionIntegrationTest.class,

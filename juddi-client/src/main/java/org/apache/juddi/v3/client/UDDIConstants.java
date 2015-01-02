@@ -688,4 +688,5 @@ public interface UDDIConstants {
           */
         public static final String  CategorizationTypes="uddi-org:categorization:types";
         
+        public static final String General_Keywords="uddi:uddi.org:categorization:general_keywords";
 }
