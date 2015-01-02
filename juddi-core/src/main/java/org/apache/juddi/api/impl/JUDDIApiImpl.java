@@ -1162,11 +1162,11 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                         tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
-                        serviceCounter.update(JUDDIQuery.ADMIN_SAVE_SUB,
+                        serviceCounter.update(JUDDIQuery.ADMIN_DELETE_SUB,
                                 QueryStatus.SUCCESS, procTime);
                 } catch (DispositionReportFaultMessage drfm) {
                         long procTime = System.currentTimeMillis() - startTime;
-                        serviceCounter.update(JUDDIQuery.ADMIN_SAVE_SUB,
+                        serviceCounter.update(JUDDIQuery.ADMIN_DELETE_SUB,
                                 QueryStatus.FAILED, procTime);
                         throw drfm;
                 } finally {

@@ -1383,27 +1383,31 @@ public class MappingApiToModel {
                 org.apache.juddi.model.ChangeRecord r = new org.apache.juddi.model.ChangeRecord();
                 r.setId(rec.getChangeID().getOriginatingUSN());
                 r.setOriginatingUSN(rec.getChangeID().getOriginatingUSN());
-                if (rec.getChangeRecordNewData()!=null)
-                r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordNewData);
-                else if (rec.getChangeRecordAcknowledgement()!=null)
+                if (rec.getChangeRecordNewData() != null) {
+                        r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordNewData);
+                } else if (rec.getChangeRecordAcknowledgement() != null) {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordAcknowledgement);
-                else if (rec.getChangeRecordConditionFailed()!=null)
+                } else if (rec.getChangeRecordConditionFailed() != null) {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordConditionFailed);
-                else if (rec.getChangeRecordCorrection()!=null)
+                } else if (rec.getChangeRecordCorrection() != null) {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordCorrection);
-                else if (rec.getChangeRecordDelete()!=null)
+                } else if (rec.getChangeRecordDelete() != null) {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordDelete);
-                else if (rec.getChangeRecordDeleteAssertion()!=null)
+                } else if (rec.getChangeRecordDeleteAssertion() != null) {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordDeleteAssertion);
-                else if (rec.getChangeRecordHide()!=null)
+                } else if (rec.getChangeRecordHide() != null) {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordHide);
-                else if (rec.getChangeRecordNewDataConditional()!=null)
+                } else if (rec.getChangeRecordNewDataConditional() != null) {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordNewDataConditional);
-                else if (rec.getChangeRecordNull()!=null)
+                } else if (rec.getChangeRecordNull() != null) {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordNull);
-                else if (rec.getChangeRecordPublisherAssertion()!=null)
+                } else if (rec.getChangeRecordPublisherAssertion() != null) {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordPublisherAssertion);
+                } else {
+                        throw new UnsupportedEncodingException("unknown type!");
+                }
                 r.setNodeID(rec.getChangeID().getNodeID());
+
                 StringWriter sw = new StringWriter();
                 JAXB.marshal(rec, sw);
                 r.setContents(sw.toString().getBytes("UTF8"));
@@ -1428,7 +1432,7 @@ public class MappingApiToModel {
                 model.setNodeId(operationalInfo.getNodeID());
 
         }
-        
+
         public static void mapOperationalInfoIncludingChildren(BusinessEntity model, OperationalInfo operationalInfo) {
                 if (operationalInfo == null || model == null) {
                         return;
@@ -1444,11 +1448,11 @@ public class MappingApiToModel {
                         model.setModifiedIncludingChildren(operationalInfo.getModifiedIncludingChildren().toGregorianCalendar().getTime());
                 }
                 model.setNodeId(operationalInfo.getNodeID());
-                for (int i=0; i < model.getBusinessServices().size(); i++)
-                {
-                       mapOperationalInfo( model.getBusinessServices().get(i), operationalInfo);
-                       for (int k=0; k < model.getBusinessServices().get(i).getBindingTemplates().size(); k++)
-                               mapOperationalInfo( model.getBusinessServices().get(i).getBindingTemplates().get(k), operationalInfo);
+                for (int i = 0; i < model.getBusinessServices().size(); i++) {
+                        mapOperationalInfo(model.getBusinessServices().get(i), operationalInfo);
+                        for (int k = 0; k < model.getBusinessServices().get(i).getBindingTemplates().size(); k++) {
+                                mapOperationalInfo(model.getBusinessServices().get(i).getBindingTemplates().get(k), operationalInfo);
+                        }
                 }
 
         }
@@ -1466,7 +1470,7 @@ public class MappingApiToModel {
                 model.setMaximumTimeToSyncRegistry(replicationConfiguration.getMaximumTimeToSyncRegistry());
                 //this is set by the service when saving
                 model.setSerialNumber(null);
-               
+
                 //the spec doesn't specify what the format should be, however there was an example
                 //2002 03 04 1859Z
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddkkmmZ");
@@ -1475,7 +1479,7 @@ public class MappingApiToModel {
                         model.setContact(mapContact(replicationConfiguration.getRegistryContact().getContact(), model));
                 }
                 mapCommunicationGraph(model, replicationConfiguration.getCommunicationGraph(), em);
-                model.setOperator(mapOperators(replicationConfiguration,model));
+                model.setOperator(mapOperators(replicationConfiguration, model));
                 if (replicationConfiguration.getSignature() != null) {
                         model.setSignatures(mapApiSignaturesToModelSignatures(replicationConfiguration.getSignature()));
                 }
@@ -1494,7 +1498,9 @@ public class MappingApiToModel {
         }
 
         private static List<Operator> mapOperators(ReplicationConfiguration cfg, org.apache.juddi.model.ReplicationConfiguration modelparent) throws DispositionReportFaultMessage {
-                if (cfg==null) return null;
+                if (cfg == null) {
+                        return null;
+                }
                 List<org.uddi.repl_v3.Operator> api = cfg.getOperator();
                 if (api == null) {
                         return null;
@@ -1503,7 +1509,7 @@ public class MappingApiToModel {
                 for (int i = 0; i < api.size(); i++) {
                         Operator op = new Operator();
                         op.setParent(modelparent);
-                       
+
                         op.setSoapReplicationURL(api.get(i).getSoapReplicationURL());
 
                         if (!api.get(i).getContact().isEmpty()) {
@@ -1553,7 +1559,6 @@ public class MappingApiToModel {
                 if (model == null) {
                         return;
                 }
-                
 
                 /**
                  * Following the listing of nodes is the controlledMessage
@@ -1572,11 +1577,11 @@ public class MappingApiToModel {
                         for (int k = 0; k < communicationGraph.getControlledMessage().size(); k++) {
                                 ControlMessage BC = new ControlMessage(communicationGraph.getControlledMessage().get(k));
                                 BC.setReplicationConfiguration(model);
-                                
+
                                 model.getControlMessage().add(BC);
                         }
                 }
-                
+
                 for (int i = 0; i < communicationGraph.getNode().size(); i++) {
                         ReplicationConfigurationNode replicationConfigurationNode = new ReplicationConfigurationNode();
 
@@ -1589,9 +1594,9 @@ public class MappingApiToModel {
                         for (int i = 0; i < communicationGraph.getEdge().size(); i++) {
                                 Edge e = new Edge();
                                 e.setReplicationConfiguration(model);
-                                
+
                                 e.setMessageReceiver(communicationGraph.getEdge().get(i).getMessageReceiver());
-                               e.setMessageSender(communicationGraph.getEdge().get(i).getMessageSender());
+                                e.setMessageSender(communicationGraph.getEdge().get(i).getMessageSender());
 
                                 /**
                                  * The message elements contain the local name
@@ -1612,14 +1617,14 @@ public class MappingApiToModel {
                                 }
                                 if (communicationGraph.getEdge().get(i).getMessageReceiverAlternate() != null) {
                                         List<EdgeReceiverAlternate> eras = new ArrayList<EdgeReceiverAlternate>();
-                                        for (String s: communicationGraph.getEdge().get(i).getMessageReceiverAlternate() ){
+                                        for (String s : communicationGraph.getEdge().get(i).getMessageReceiverAlternate()) {
                                                 EdgeReceiverAlternate x = new EdgeReceiverAlternate();
                                                 x.setParent(e);
                                                 x.setReceiverAlternate(s);
                                                 eras.add(x);
                                         }
                                         e.setMessageReceiverAlternate(eras);
-                                      
+
                                 }
 
                                 ret.add(e);
@@ -1643,11 +1648,11 @@ public class MappingApiToModel {
                         model.setModifiedIncludingChildren(operationalInfo.getModifiedIncludingChildren().toGregorianCalendar().getTime());
                 }
                 model.setNodeId(operationalInfo.getNodeID());
-               
-                       for (int k=0; k < model.getBindingTemplates().size(); k++)
-                               mapOperationalInfo( model.getBindingTemplates().get(k), operationalInfo);
-                
+
+                for (int k = 0; k < model.getBindingTemplates().size(); k++) {
+                        mapOperationalInfo(model.getBindingTemplates().get(k), operationalInfo);
+                }
+
         }
 
-        
 }

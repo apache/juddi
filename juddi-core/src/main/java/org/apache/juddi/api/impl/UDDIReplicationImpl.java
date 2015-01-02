@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.api.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.BindingProvider;
 import org.apache.commons.configuration.ConfigurationException;
 import static org.apache.juddi.api.impl.AuthenticatedService.logger;
+import static org.apache.juddi.api.impl.AuthenticatedService.node;
 import org.apache.juddi.api.util.QueryStatus;
 import org.apache.juddi.api.util.ReplicationQuery;
 import org.apache.juddi.config.AppConfig;
@@ -64,9 +66,11 @@ import org.apache.juddi.validation.ValidateCustodyTransfer;
 import org.apache.juddi.validation.ValidateReplication;
 import org.uddi.api_v3.OperationalInfo;
 import org.uddi.custody_v3.DiscardTransferToken;
+import org.uddi.custody_v3.TransferEntities;
 import org.uddi.repl_v3.ChangeRecord;
 import org.uddi.repl_v3.ChangeRecordAcknowledgement;
 import org.uddi.repl_v3.ChangeRecordIDType;
+import org.uddi.repl_v3.ChangeRecordNewData;
 import org.uddi.repl_v3.ChangeRecords;
 import org.uddi.repl_v3.DoPing;
 import org.uddi.repl_v3.GetChangeRecords;
@@ -635,7 +639,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 }
                 //only time this is allowed is custody transfer
                 if (!modelNodeId.equals(newDataOperationalInfo.getNodeID())) {
-                        throw new Exception("node id mismatch!");
+                        //throw new Exception("node id mismatch!");
+                        logger.info("AUDIT, custory transfer from node, " + modelNodeId + " to " + newDataOperationalInfo.getNodeID() + "/" + newDataOperationalInfo.getAuthorizedName());
                 }
 
                 //if i already have a record and "own it" and the remote node has a record with the same key, reject the update
@@ -790,7 +795,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 }
                         }
 
-                        logger.info("Query db for replication changes, lower index is " + (firstrecord - 1) + " last index " + lastrecord + " record limit " + maxrecords);
+                        logger.debug("Query db for replication changes, lower index is " + (firstrecord - 1) + " last index " + lastrecord + " record limit " + maxrecords);
                         Query createQuery = null;
                         if (lastrecord != null) {
                                 createQuery = em.createQuery("select e from ChangeRecord e where "
@@ -809,7 +814,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                         createQuery.setParameter("node", node);
 
                         List<org.apache.juddi.model.ChangeRecord> records = (List<org.apache.juddi.model.ChangeRecord>) createQuery.getResultList();
-                        logger.info(records.size() + " CR records returned from query");
+                        logger.debug(records.size() + " CR records returned from query");
                         for (int i = 0; i < records.size(); i++) {
                                 ChangeRecord r = MappingModelToApi.mapChangeRecord(records.get(i));
                                 //if (!Excluded(changesAlreadySeen, r)) {
@@ -946,14 +951,15 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
         /**
          * transfers custody of an entity from node1/user1 to node2/user2
-         * 
+         *
          * assume this node is node 2.
-         * 
+         *
          * user1 on node1 requests a transfer token. node 1 issues the token.
-         * 
-         * user1 now has a transfer token for their stuff
-         * user now takes the token to node 2 and calls transferEntities
-         *<img src="http://www.uddi.org/pubs/uddi-v3.0.2-20041019_files/image086.gif"> 
+         *
+         * user1 now has a transfer token for their stuff user now takes the
+         * token to node 2 and calls transferEntities
+         * <img src="http://www.uddi.org/pubs/uddi-v3.0.2-20041019_files/image086.gif">
+         *
          * @param body
          * @throws DispositionReportFaultMessage
          */
@@ -961,79 +967,106 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
         public void transferCustody(TransferCustody body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
-
-                //*this node is transfering data to another node
-                //ValidateReplication.unsupportedAPICall();
-
-                //a remote node just told me to give up control of some of my entities
                 EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                logger.info("Inbound transfer request (via replication api, node to node");
+                try {
+                        tx.begin();
+                //*this node is transfering data to another node
+                        //ValidateReplication.unsupportedAPICall();
+                        //a remote node just told me to give up control of some of my entities
+
                 //EntityTransaction tx = em.getTransaction();
-                //confirm i have a replication config
-                boolean ok =false;
-                ReplicationConfiguration FetchEdges = ReplicationNotifier.FetchEdges();
-                for (int i=0; i<FetchEdges.getOperator().size(); i++){
-                        //confirm that the destination node is in the replication config
-                        if (FetchEdges.getOperator().get(i).getOperatorNodeID().equals(body.getTransferOperationalInfo().getNodeID()))
-                        {
-                                ok = true;
-                                break;
+                        //confirm i have a replication config
+                        boolean ok = false;
+                        ReplicationConfiguration FetchEdges = ReplicationNotifier.FetchEdges();
+                        if (FetchEdges != null) {
+                                for (int i = 0; i < FetchEdges.getOperator().size(); i++) {
+                                        //confirm that the destination node is in the replication config
+                                        if (FetchEdges.getOperator().get(i).getOperatorNodeID().equals(body.getTransferOperationalInfo().getNodeID())) {
+                                                ok = true;
+                                                break;
+                                        }
+                                }
                         }
+                        if (!ok) {
+                                throw new TransferNotAllowedException(new ErrorMessage("E_transferNotAllowedUnknownNode"));
+                        }
+
+                        new ValidateReplication(null).validateTransfer(em, body);
+                       
+                        TransferEntities te = new TransferEntities();
+                        te.setKeyBag(body.getKeyBag());
+                        te.setTransferToken(body.getTransferToken());
+                        te.setAuthInfo(null);
+                        //make the change
+                        //enqueue in replication notifier
+                        //discard the token
+                        logger.info("request validated, processing transfer");
+                        List<ChangeRecord> executeTransfer = new UDDICustodyTransferImpl().executeTransfer(te, em, body.getTransferOperationalInfo().getAuthorizedName(), body.getTransferOperationalInfo().getNodeID());
+                        
+                        for (ChangeRecord c : executeTransfer) {
+                                try {
+                                        c.setChangeID(new ChangeRecordIDType());
+                                        c.getChangeID().setNodeID(node);
+                                        c.getChangeID().setOriginatingUSN(null);
+                                        ReplicationNotifier.Enqueue(MappingApiToModel.mapChangeRecord(c));
+                                } catch (UnsupportedEncodingException ex) {
+                                       logger.error("", ex);
+                                }
+                        }
+                        /**
+                         * The custodial node must verify that it has granted
+                         * permission to transfer the entities identified and
+                         * that this permission is still valid. This operation
+                         * is comprised of two steps:
+                         *
+                         * 1. Verification that the transferToken was issued by
+                         * it, that it has not expired, that it represents the
+                         * authority to transfer no more and no less than those
+                         * entities identified by the businessKey and tModelKey
+                         * elements and that all these entities are still valid
+                         * and not yet transferred. The transferToken is
+                         * invalidated if any of these conditions are not met.
+                         *
+                         * 2. If the conditions above are met, the custodial
+                         * node will prevent any further changes to the entities
+                         * identified by the businessKey and tModelKey elements
+                         * identified. The entity will remain in this state
+                         * until the replication stream indicates it has been
+                         * successfully processed via the replication stream.
+                         * Upon successful verification of the custody transfer
+                         * request by the custodial node, an empty message is
+                         * returned by it indicating the success of the request
+                         * and acknowledging the custody transfer. Following the
+                         * issue of the empty message, the custodial node will
+                         * submit into the replication stream a
+                         * changeRecordNewData providing in the operationalInfo,
+                         * the nodeID accepting custody of the datum and the
+                         * authorizedName of the publisher accepting ownership.
+                         * The acknowledgmentRequested attribute of this change
+                         * record MUST be set to "true".
+                         *
+                         * 
+                         *
+                         * Finally, the custodial node invalidates the
+                         * transferToken in order to prevent additional calls of
+                         * the transfer_entities API.
+                         */
+                        tx.commit();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(ReplicationQuery.TRANSFER_CUSTODY,
+                                QueryStatus.SUCCESS, procTime);
+                } catch (DispositionReportFaultMessage d) {
+                        logger.error("Unable to process node to node custody transfer ", d);
+                        throw d;
+                } finally {
+                        if (em != null && em.isOpen()) {
+                                em.close();
+                        }
+                        if (tx.isActive())
+                                tx.rollback();
                 }
-                if (!ok){
-                        throw new TransferNotAllowedException(new ErrorMessage("E_transferNotAllowedUnknownNode"));
-                }
-                
-                
-                
-                new ValidateReplication(null).validateTransfer(em,body);
-                
-                
-                //make the change
-                //enqueue in replication notifier
-                //discard the token
-                
-                /**
-                 * The custodial node must verify that it has granted permission
-                 * to transfer the entities identified and that this permission
-                 * is still valid. This operation is comprised of two steps:
-                 *
-                 * 1. Verification that the transferToken was issued by it, that
-                 * it has not expired, that it represents the authority to
-                 * transfer no more and no less than those entities identified
-                 * by the businessKey and tModelKey elements and that all these
-                 * entities are still valid and not yet transferred. The
-                 * transferToken is invalidated if any of these conditions are
-                 * not met.
-                 *
-                 * 2. If the conditions above are met, the custodial node will
-                 * prevent any further changes to the entities identified by the
-                 * businessKey and tModelKey elements identified. The entity
-                 * will remain in this state until the replication stream
-                 * indicates it has been successfully processed via the
-                 * replication stream. Upon successful verification of the
-                 * custody transfer request by the custodial node, an empty
-                 * message is returned by it indicating the success of the
-                 * request and acknowledging the custody transfer. Following the
-                 * issue of the empty message, the custodial node will submit
-                 * into the replication stream a changeRecordNewData providing
-                 * in the operationalInfo, the nodeID accepting custody of the
-                 * datum and the authorizedName of the publisher accepting
-                 * ownership. The acknowledgmentRequested attribute of this
-                 * change record MUST be set to "true".
-                 *
-                 * TODO enqueue Replication message
-                 *
-                 * Finally, the custodial node invalidates the transferToken in
-                 * order to prevent additional calls of the transfer_entities
-                 * API.
-                 */
-                DiscardTransferToken dtt = new DiscardTransferToken();
-                dtt.setKeyBag(body.getKeyBag());
-                dtt.setTransferToken(body.getTransferToken());
-                new UDDICustodyTransferImpl().discardTransferToken(dtt);
-                long procTime = System.currentTimeMillis() - startTime;
-                serviceCounter.update(ReplicationQuery.TRANSFER_CUSTODY,
-                        QueryStatus.SUCCESS, procTime);
         }
 
 }

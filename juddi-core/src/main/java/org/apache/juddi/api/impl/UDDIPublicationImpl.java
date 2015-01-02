@@ -1039,10 +1039,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                                 businessParent.setModifiedIncludingChildren(now);
                                 em.persist(businessParent);
                         } else {
-                                logger.warn("Parent business is null for saved binding template!");
+                                logger.debug("Parent business is null for saved binding template!");
                         }
                 } else {
-                        logger.warn("Parent service is null for saved binding template!");
+                        logger.debug("Parent service is null for saved binding template!");
                 }
                 // }
 

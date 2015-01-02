@@ -59,6 +59,7 @@ import org.apache.juddi.replication.ReplicationNotifier;
 import org.apache.juddi.v3.client.UDDIService;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.TransferNotAllowedException;
 import org.apache.juddi.validation.ValidateCustodyTransfer;
 import org.uddi.api_v3.OperationalInfo;
 import org.uddi.custody_v3.DiscardTransferToken;
@@ -72,6 +73,7 @@ import org.uddi.repl_v3.TransferCustody;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
 import org.uddi.v3_service.UDDIReplicationPortType;
+import sun.util.BuddhistCalendar;
 
 /**
  * This implements the UDDI v3 Custody Transfer API web service
@@ -238,7 +240,7 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
-                 List<ChangeRecord> changes = new ArrayList<ChangeRecord>();
+                List<ChangeRecord> changes = new ArrayList<ChangeRecord>();
                 try {
                         tx.begin();
 
@@ -248,7 +250,7 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 
                         //if the destination transfer is to a different node, 
                         if (!verifier.validateTransferEntities(em, body)) {
-                                //i don't own these entities, so tell the ower to transfer to me.
+                                //i don't own these entities, so tell the owner to transfer to me.
 
                                 //look up the replication config endpoint for that node and trigger the transfer, then return
                                 //ok this is a node to node transfer, first up a replication client to the destination node
@@ -258,11 +260,20 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
                                         List<String> keyList = keyBag.getKey();
                                         for (String key : keyList) {
                                                 UddiEntity uddiEntity = em.find(UddiEntity.class, key);
-                                                if (sourceNode != null
-                                                        && !uddiEntity.getNodeId().equals(sourceNode)) {
-                                                        throw new Exception("All entities to be transfer must be transfered to the same source and destination node");
+                                                
+                                                if (uddiEntity!=null) {
+                                                        sourceNode = uddiEntity.getNodeId();
+                                                        break;  //we only need one source node
                                                 }
-                                                sourceNode = uddiEntity.getNodeId();
+                                                else
+                                                {
+                                                        logger.warn("couldn't find a record for key " + key);
+                                                }
+                                        }
+                                        if (sourceNode==null){
+                                                logger.warn("unable to process transfer, could not locate the source node, perhaps it hasn't been replicated to this node yet?")
+                                                        ;
+                                                throw new Exception("unable to process transfer, could not locate the source node for any of the specific keys, perhaps it hasn't been replicated to this node yet?");
                                         }
 
                                         UDDIReplicationPortType replicationClient = getReplicationClient(sourceNode);
@@ -276,76 +287,35 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
                                         transferCustody.getTransferOperationalInfo().setAuthorizedName(publisher.getAuthorizedName());
                                         transferCustody.getTransferOperationalInfo().setNodeID(node);
 
+                                        //and trigger the transfer
+                                        logger.info("AUDIT, transfering " + transferCustody.getKeyBag().getKey().size() + " entities to " + publisher.getAuthorizedName() + " at node " + node + " from source " + sourceNode);
                                         replicationClient.transferCustody(transferCustody);
+                                } catch (DispositionReportFaultMessage df) {
+                                        logger.error("Unable to transfer entities from " + sourceNode + " to node " + node + " to user " + publisher.getAuthorizedName(), df);
+                                        throw new TransferNotAllowedException(new ErrorMessage("E_transferBlocked", df.getMessage()));
                                 } catch (Exception ex) {
-                                        logger.error("Unable to transfer entities to node " + sourceNode + ".", ex);
+                                        logger.error("Unable to transfer entities from " + sourceNode + " to node " + node + " to user " + publisher.getAuthorizedName(), ex);
+                                        throw new TransferNotAllowedException(new ErrorMessage("E_transferBlocked", ex.getMessage()));
                                 }
-                                //and trigger the transfer
+
                         } else {
+                                changes.addAll(executeTransfer(body, em, publisher.getAuthorizedName(), node));
+                                //all of the items to be transfer are owned locally by *this node.
 
-                                // Once validated, the ownership transfer is as simple as switching the publisher
-                                KeyBag keyBag = body.getKeyBag();
-                                List<String> keyList = keyBag.getKey();
-                                //used for the change journal
-                               
-                                for (String key : keyList) {
-                                        UddiEntity uddiEntity = em.find(UddiEntity.class, key);
-                                        uddiEntity.setAuthorizedName(publisher.getAuthorizedName());
-                                        Date now = new Date();
-                                        uddiEntity.setModified(now);
-                                        uddiEntity.setModifiedIncludingChildren(now);
-                                        
-                                        if (uddiEntity instanceof BusinessEntity) {
-                                                BusinessEntity be = (BusinessEntity) uddiEntity;
-
-                                                List<BusinessService> bsList = be.getBusinessServices();
-                                                for (BusinessService bs : bsList) {
-                                                        bs.setAuthorizedName(publisher.getAuthorizedName());
-                                                        bs.setModified(now);
-                                                        bs.setModifiedIncludingChildren(now);
-
-                                                        List<BindingTemplate> btList = bs.getBindingTemplates();
-                                                        for (BindingTemplate bt : btList) {
-                                                                bt.setAuthorizedName(publisher.getAuthorizedName());
-                                                                bt.setModified(now);
-                                                                bt.setModifiedIncludingChildren(now);
-                                                       
-                                                        }
-                                                }
-                                        }
-                                        ChangeRecord cr = new ChangeRecord();
-                                        cr.setChangeRecordNewData(new ChangeRecordNewData());
-                                        if (uddiEntity instanceof BusinessEntity) {
-                                                cr.getChangeRecordNewData().setBusinessEntity(new org.uddi.api_v3.BusinessEntity());
-                                                MappingModelToApi.mapBusinessEntity((BusinessEntity) uddiEntity, cr.getChangeRecordNewData().getBusinessEntity());
-                                        }
-                                        if (uddiEntity instanceof Tmodel) {
-                                                cr.getChangeRecordNewData().setTModel(new org.uddi.api_v3.TModel());
-                                                MappingModelToApi.mapTModel((Tmodel) uddiEntity, cr.getChangeRecordNewData().getTModel());
-                                        }
-                                        changes.add(cr);
-                                        em.persist(uddiEntity);
-
-                                }
-
-                                // After transfer is finished, the token can be removed
-                                org.uddi.custody_v3.TransferToken apiTransferToken = body.getTransferToken();
-                                String transferTokenId = new String(apiTransferToken.getOpaqueToken());
-                                org.apache.juddi.model.TransferToken modelTransferToken = em.find(org.apache.juddi.model.TransferToken.class, transferTokenId);
-                                em.remove(modelTransferToken);
                         }
                         tx.commit();
                         //we need to do something for replication purposes here
                         //enqueue notifications and storage of the changed records
-                        for (ChangeRecord c: changes)
-                                 try {
-                                         c.setChangeID(new ChangeRecordIDType());
-                                         c.getChangeID().setNodeID(node);
-                                         c.getChangeID().setOriginatingUSN(null);
-                                         ReplicationNotifier.Enqueue(MappingApiToModel.mapChangeRecord(c));
+                        for (ChangeRecord c : changes) {
+                                try {
+                                        c.setChangeID(new ChangeRecordIDType());
+                                        c.getChangeID().setNodeID(node);
+                                        c.getChangeID().setOriginatingUSN(null);
+                                        ReplicationNotifier.Enqueue(MappingApiToModel.mapChangeRecord(c));
                                 } catch (UnsupportedEncodingException ex) {
-                                        Logger.getLogger(UDDICustodyTransferImpl.class.getName()).log(Level.SEVERE, null, ex);
+                                        logger.error("", ex);
                                 }
+                        }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(CustodyTransferQuery.TRANSFER_ENTITIES,
                                 QueryStatus.SUCCESS, procTime);
@@ -394,5 +364,88 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
                 //em.close();
                 return null;
 
+        }
+
+        /**
+         * used to factor out the actual execution of custody transfer, used by
+         * both this service and the replication service.
+         *
+         * @since 3.3
+         * @param body
+         * @param em
+         * @param transferToPublisher
+         * @param transferToNode
+         * @return
+         * @throws DispositionReportFaultMessage
+         */
+        protected List<ChangeRecord> executeTransfer(TransferEntities body, EntityManager em, String transferToPublisher, String transferToNode) throws DispositionReportFaultMessage {
+                // Once validated, the ownership transfer is as simple as switching the publisher
+                List<ChangeRecord> changes = new ArrayList<ChangeRecord>();;
+                KeyBag keyBag = body.getKeyBag();
+                List<String> keyList = keyBag.getKey();
+                //used for the change journal
+
+                for (String key : keyList) {
+                        UddiEntity uddiEntity = em.find(UddiEntity.class, key);
+                        uddiEntity.setAuthorizedName(transferToPublisher);
+                        uddiEntity.setNodeId(transferToNode);
+                        Date now = new Date();
+                        uddiEntity.setModified(now);
+                        uddiEntity.setModifiedIncludingChildren(now);
+
+                        if (uddiEntity instanceof BusinessEntity) {
+                                BusinessEntity be = (BusinessEntity) uddiEntity;
+
+                                List<BusinessService> bsList = be.getBusinessServices();
+                                for (BusinessService bs : bsList) {
+                                        bs.setAuthorizedName(transferToPublisher);
+                                        bs.setNodeId(transferToNode);
+                                        bs.setModified(now);
+                                        bs.setModifiedIncludingChildren(now);
+
+                                        List<BindingTemplate> btList = bs.getBindingTemplates();
+                                        for (BindingTemplate bt : btList) {
+                                                bt.setAuthorizedName(transferToPublisher);
+                                                bt.setNodeId(transferToNode);
+                                                bt.setModified(now);
+                                                bt.setModifiedIncludingChildren(now);
+
+                                        }
+                                }
+                        }
+                        ChangeRecord cr = new ChangeRecord();
+                        cr.setChangeRecordNewData(new ChangeRecordNewData());
+                        cr.getChangeRecordNewData().setOperationalInfo(new OperationalInfo());
+                        cr.getChangeRecordNewData().getOperationalInfo().setAuthorizedName(transferToPublisher);
+                        cr.getChangeRecordNewData().getOperationalInfo().setEntityKey(uddiEntity.getEntityKey());
+                        cr.getChangeRecordNewData().getOperationalInfo().setNodeID(transferToNode);
+                        GregorianCalendar gcal = new GregorianCalendar();
+                        gcal.setTime(uddiEntity.getCreated());
+                        cr.getChangeRecordNewData().getOperationalInfo().setCreated(df.newXMLGregorianCalendar(gcal));
+                        gcal = new GregorianCalendar();
+                        gcal.setTime(now);
+                        cr.getChangeRecordNewData().getOperationalInfo().setModified(df.newXMLGregorianCalendar(gcal));
+                        cr.getChangeRecordNewData().getOperationalInfo().setModifiedIncludingChildren(df.newXMLGregorianCalendar(gcal));
+                        cr.getChangeRecordNewData().getOperationalInfo().setEntityKey(uddiEntity.getEntityKey());
+
+                        if (uddiEntity instanceof BusinessEntity) {
+                                cr.getChangeRecordNewData().setBusinessEntity(new org.uddi.api_v3.BusinessEntity());
+                                MappingModelToApi.mapBusinessEntity((BusinessEntity) uddiEntity, cr.getChangeRecordNewData().getBusinessEntity());
+                        }
+                        if (uddiEntity instanceof Tmodel) {
+                                cr.getChangeRecordNewData().setTModel(new org.uddi.api_v3.TModel());
+                                MappingModelToApi.mapTModel((Tmodel) uddiEntity, cr.getChangeRecordNewData().getTModel());
+                        }
+                        changes.add(cr);
+                        em.persist(uddiEntity);
+
+                }
+
+                // After transfer is finished, the token can be removed
+                org.uddi.custody_v3.TransferToken apiTransferToken = body.getTransferToken();
+                String transferTokenId = new String(apiTransferToken.getOpaqueToken());
+                org.apache.juddi.model.TransferToken modelTransferToken = em.find(org.apache.juddi.model.TransferToken.class, transferTokenId);
+                em.remove(modelTransferToken);
+                return changes;
         }
 }
