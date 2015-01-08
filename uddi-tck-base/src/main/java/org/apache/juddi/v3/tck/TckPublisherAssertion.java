@@ -33,10 +33,10 @@ import org.uddi.v3_service.UDDIPublicationPortType;
  */
 public class TckPublisherAssertion 
 {
-	final static String JOE_ASSERT_XML    = "uddi_data/joepublisher/publisherAssertion.xml";
-	final static String MARY_ASSERT_XML    = "uddi_data/marypublisher/publisherAssertion.xml";
-	final static String JOE_ASSERT2_XML    = "uddi_data/joepublisher/publisherAssertion2.xml";
-	final static String SAM_ASSERT_XML    = "uddi_data/samsyndicator/publisherAssertion.xml";
+	public final static String JOE_ASSERT_XML    = "uddi_data/joepublisher/publisherAssertion.xml";
+	public final static String MARY_ASSERT_XML    = "uddi_data/marypublisher/publisherAssertion.xml";
+	public final static String JOE_ASSERT2_XML    = "uddi_data/joepublisher/publisherAssertion2.xml";
+	public final static String SAM_ASSERT_XML    = "uddi_data/samsyndicator/publisherAssertion.xml";
 	
 	private Log logger = LogFactory.getLog(this.getClass());
 	private UDDIPublicationPortType publication = null;

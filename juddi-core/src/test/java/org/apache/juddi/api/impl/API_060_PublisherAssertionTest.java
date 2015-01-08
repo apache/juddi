@@ -24,6 +24,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
+import org.apache.juddi.jaxb.EntityCreator;
 import org.apache.juddi.v3.tck.TckBusiness;
 import org.apache.juddi.v3.tck.TckFindEntity;
 import org.apache.juddi.v3.tck.TckPublisher;
@@ -34,6 +35,9 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uddi.api_v3.DeletePublisherAssertions;
+import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 public class API_060_PublisherAssertionTest {
@@ -152,4 +156,35 @@ public class API_060_PublisherAssertionTest {
 			tckTModel.deleteMaryPublisherTmodel(authInfoMary);
 		}
 	}
+        
+        /**
+         * covers <a href="https://issues.apache.org/jira/browse/JUDDI-908">JUDDI-908</a>
+
+         * @throws Exception 
+         */
+        @Test(expected = DispositionReportFaultMessage.class)
+        public void deleteAssertionNonowner() throws Exception{
+                try {
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+			tckAssertion.saveJoePublisherPublisherAssertion(authInfoJoe);	
+                      
+			DeletePublisherAssertions dp = new DeletePublisherAssertions();
+			dp.setAuthInfo(authInfoMary);
+			
+			PublisherAssertion paIn = (PublisherAssertion)EntityCreator.buildFromDoc(TckPublisherAssertion.JOE_ASSERT_XML, "org.uddi.api_v3");
+			dp.getPublisherAssertion().add(paIn);
+			
+                        new UDDIPublicationImpl().deletePublisherAssertions(dp);
+			//
+		} finally {
+                        tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+		}
+        }
 }
