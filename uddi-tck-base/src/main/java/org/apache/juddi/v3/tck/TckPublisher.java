@@ -247,4 +247,12 @@ public class TckPublisher {
 
                 return 60;
         }
+
+        public static boolean isSMTPEnabled() {
+                String x = tckProperties.getProperty("smtp.notify.enabled");
+                if (x.equalsIgnoreCase("true")) {
+                        return true;
+                }
+                return false;
+        }
 }

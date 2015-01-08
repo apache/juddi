@@ -55,7 +55,9 @@ import org.uddi.api_v3.PublisherAssertion;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
+@XmlType(name = "", 
+        //namespace = "urn:uddi-org:repl_v3", 
+        propOrder = {
     "publisherAssertion",
     "fromBusinessCheck",
     "toBusinessCheck",
@@ -69,7 +71,9 @@ public class ChangeRecordPublisherAssertion implements Serializable{
 	private static final long serialVersionUID = -7934282484968024201L;
 	@XmlElement(namespace = "urn:uddi-org:api_v3", required = true)
     protected PublisherAssertion publisherAssertion;
+   //     @XmlElement(namespace = "urn:uddi-org:api_v3", required = true)
     protected boolean fromBusinessCheck;
+   //     @XmlElement(namespace = "urn:uddi-org:api_v3", required = true)
     protected boolean toBusinessCheck;
     @XmlElement(required = true)
     protected XMLGregorianCalendar modified;

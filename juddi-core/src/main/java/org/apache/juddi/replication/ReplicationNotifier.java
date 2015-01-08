@@ -107,6 +107,11 @@ public class ReplicationNotifier extends TimerTask {
 
                         
                         em.persist(j);
+                        log.debug("CR saved locally, it was from " + j.getNodeID() + 
+                                        " USN:" + j.getOriginatingUSN() + 
+                                        " Type:" + j.getRecordType().name() +
+                                        " Key:"+j.getEntityKey() + 
+                                        " Local id:"+j.getId());
                         tx.commit();
                 } catch (Exception ex) {
                         log.error("error", ex);

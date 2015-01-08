@@ -21,10 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -89,9 +86,9 @@ import org.uddi.repl_v3.ChangeRecordHide;
 import org.uddi.repl_v3.ChangeRecordIDType;
 import org.uddi.repl_v3.ChangeRecordNewData;
 import org.uddi.repl_v3.ChangeRecordPublisherAssertion;
-import org.uddi.repl_v3.FromSignatures;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIPublicationPortType;
+import sun.util.BuddhistCalendar;
 
 /**
  * This class implements the UDDI Publication Service
@@ -337,8 +334,28 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         List<org.uddi.api_v3.PublisherAssertion> entityList = body.getPublisherAssertion();
                         List<ChangeRecord> changes = new ArrayList<ChangeRecord>();
                         for (org.uddi.api_v3.PublisherAssertion entity : entityList) {
-                                deletePublisherAssertion(entity, em);
-                                changes.add(getChangeRecord_deletePublisherAssertion(entity, node));
+                                 org.apache.juddi.model.PublisherAssertion modelPubAssertion = new org.apache.juddi.model.PublisherAssertion();
+
+                                MappingApiToModel.mapPublisherAssertion(entity, modelPubAssertion);
+
+                                org.apache.juddi.model.PublisherAssertion existingPubAssertion = em.find(org.apache.juddi.model.PublisherAssertion.class, 
+                                        modelPubAssertion.getId());
+                                
+                                boolean fromkey =  publisher.isOwner(em.find(BusinessEntity.class, entity.getFromKey()));
+                                boolean tokey =  publisher.isOwner(em.find(BusinessEntity.class, entity.getToKey()));
+                                if (fromkey)
+                                        existingPubAssertion.setFromCheck("false");
+                                if (tokey)
+                                        existingPubAssertion.setToCheck("false");
+                                if ("false".equalsIgnoreCase(existingPubAssertion.getToCheck())
+                                        && "false".equalsIgnoreCase(existingPubAssertion.getFromCheck()))
+                                        em.remove(existingPubAssertion);
+                                else {
+                                        existingPubAssertion.setModified(new Date());
+                                        em.persist(existingPubAssertion);
+                                }
+                                
+                                changes.add(getChangeRecord_deletePublisherAssertion(entity, node, fromkey, tokey, existingPubAssertion.getModified().getTime()));
                         }
 
                         tx.commit();
@@ -362,16 +379,42 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
         /**
          * deletes the referenced object, assuming authorization rules are
-         * already processed and there is already an open transaction
+         * already processed and there is already an open transaction. this is primarily used
+         * to support replication calls, i.e. another node just changed a PA record and let us know
          *
          * @param entityKey
          * @param em
          * @throws DispositionReportFaultMessage
          */
-        protected void deletePublisherAssertion(org.uddi.api_v3.PublisherAssertion entity, EntityManager em) throws DispositionReportFaultMessage {
-                org.apache.juddi.model.PublisherAssertionId pubAssertionId = new org.apache.juddi.model.PublisherAssertionId(entity.getFromKey(), entity.getToKey());
-                Object obj = em.find(org.apache.juddi.model.PublisherAssertion.class, pubAssertionId);
-                em.remove(obj);
+        protected void deletePublisherAssertion(org.uddi.repl_v3.ChangeRecordDeleteAssertion entity, EntityManager em) throws DispositionReportFaultMessage {
+
+                org.apache.juddi.model.PublisherAssertion modelPubAssertion = new org.apache.juddi.model.PublisherAssertion();
+
+                MappingApiToModel.mapPublisherAssertion(entity.getPublisherAssertion(), modelPubAssertion);
+
+                org.apache.juddi.model.PublisherAssertion existingPubAssertion = em.find(org.apache.juddi.model.PublisherAssertion.class,
+                        modelPubAssertion.getId());
+
+                if (existingPubAssertion==null){
+                        log.fatal("Can't delete a Publisher Assertion that isn't persisted int the database!");
+                        return;
+                }
+                boolean fromkey = entity.isFromBusinessCheck();// publisher.isOwner(em.find(BusinessEntity.class, entity.getFromKey()));
+                boolean tokey = entity.isToBusinessCheck();//  publisher.isOwner(em.find(BusinessEntity.class, entity.getToKey()));
+                if (fromkey) {
+                        existingPubAssertion.setFromCheck("false");
+                }
+                if (tokey) {
+                        existingPubAssertion.setToCheck("false");
+                }
+                if ("false".equalsIgnoreCase(existingPubAssertion.getToCheck())
+                        && "false".equalsIgnoreCase(existingPubAssertion.getFromCheck())) {
+                        em.remove(existingPubAssertion);
+                } else {
+                        existingPubAssertion.setModified(new Date());
+                        em.persist(existingPubAssertion);
+                }
+
         }
 
         public void deleteService(DeleteService body)
@@ -423,10 +466,17 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
          */
         protected void deleteService(String key, EntityManager em) throws DispositionReportFaultMessage {
                 Object obj = em.find(org.apache.juddi.model.BusinessService.class, key);
-                ((org.apache.juddi.model.BusinessService) obj).getBusinessEntity().setModifiedIncludingChildren(new Date());
-                em.remove(obj);
+                //((org.apache.juddi.model.BusinessService) obj).getBusinessEntity().setModifiedIncludingChildren(new Date());
+                if (obj!=null)
+                        em.remove(obj);
+                else
+                        logger.warn("Unable to remove service with the key '" + key +"', it doesn't exist in the database");
         }
 
+        /**
+         * {@inheritDoc }
+         */
+        @Override
         public void deleteTModel(DeleteTModel body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -445,7 +495,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         List<ChangeRecord> changes = new ArrayList<ChangeRecord>();
                         for (String entityKey : entityKeyList) {
                                 deleteTModel(entityKey, em);
-                                changes.add(getChangeRecord_deleteTModel(entityKey, node));
+                                changes.add(getChangeRecord_deleteTModelHide(entityKey, node));
                         }
 
                         tx.commit();
@@ -480,6 +530,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 ((org.apache.juddi.model.Tmodel) obj).setDeleted(true);
         }
 
+        /**
+         * {@inheritDoc }
+         */
+        @Override
         public List<AssertionStatusItem> getAssertionStatusReport(String authInfo,
                 CompletionStatus completionStatus)
                 throws DispositionReportFaultMessage {
@@ -557,6 +611,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 }
         }
 
+        /**
+         * {@inheritdoc}
+         * 
+         */
         public RegisteredInfo getRegisteredInfo(GetRegisteredInfo body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -634,6 +692,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 }
         }
 
+        /**
+         * {@inheritdoc}
+         * 
+         */
         public BindingDetail saveBinding(SaveBinding body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -695,6 +757,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 }
         }
 
+        /**
+         * {@inheritdoc}
+         * 
+         */
         public BusinessDetail saveBusiness(SaveBusiness body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -762,6 +828,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 }
         }
 
+        /**
+         * {@inheritdoc}
+         * 
+         */
         public ServiceDetail saveService(SaveService body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -793,8 +863,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                                 em.persist(modelBusinessService);
 
                                 result.getBusinessService().add(apiBusinessService);
-                                changes.add(getChangeRecord(modelBusinessService, apiBusinessService, node));
+                                
                                 validator.validateSaveServiceMax(em, modelBusinessService.getBusinessEntity().getEntityKey());
+                                changes.add(getChangeRecord(modelBusinessService, apiBusinessService, node));
                         }
 
                         tx.commit();
@@ -819,6 +890,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 }
         }
 
+        /**
+         * {@inheritdoc}
+         * 
+         */
+        @Override
         public TModelDetail saveTModel(SaveTModel body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -873,6 +949,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 }
         }
 
+        /**
+         * {@inheritdoc}
+         * 
+         */
         @Override
         public void setPublisherAssertions(String authInfo,
                 Holder<List<PublisherAssertion>> publisherAssertion)
@@ -1184,20 +1264,56 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 return cr;
         }
 
-        public static ChangeRecord getChangeRecord_deleteTModel(String entityKey, String node) {
+        /**
+         * this is for "hiding" a tmodel, not removing it entirely
+         * @param entityKey
+         * @param node
+         * @return 
+         */
+        public static ChangeRecord getChangeRecord_deleteTModelHide(String entityKey, String node) {
                 ChangeRecord cr = new ChangeRecord();
                 cr.setEntityKey(entityKey);
                 cr.setNodeID(node);
-
                 cr.setRecordType(ChangeRecord.RecordType.ChangeRecordHide);
                 org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();
                 crapi.setChangeID(new ChangeRecordIDType(node, -1L));
+                
                 crapi.setChangeRecordHide(new ChangeRecordHide());
                 crapi.getChangeRecordHide().setTModelKey(entityKey);
                 crapi.getChangeRecordHide().setModified(df.newXMLGregorianCalendar(new GregorianCalendar()));
 
                 StringWriter sw = new StringWriter();
                 JAXB.marshal(crapi, sw);
+                //JAXB.marshal(crapi, System.out);
+                try {
+                        cr.setContents(sw.toString().getBytes("UTF8"));
+                } catch (UnsupportedEncodingException ex) {
+                        logger.error(ex);
+                }
+                return cr;
+        }
+        
+        /**
+         * this is for deleting a tmodel, not hiding it
+         * @param entityKey
+         * @param node
+         * @return 
+         */
+        public static ChangeRecord getChangeRecord_deleteTModelDelete(String entityKey, String node) {
+                ChangeRecord cr = new ChangeRecord();
+                cr.setEntityKey(entityKey);
+                cr.setNodeID(node);
+                cr.setRecordType(ChangeRecord.RecordType.ChangeRecordHide);
+                org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();
+                crapi.setChangeID(new ChangeRecordIDType(node, -1L));
+                
+                crapi.setChangeRecordDelete(new ChangeRecordDelete());
+                crapi.getChangeRecordDelete().setTModelKey(entityKey);
+                crapi.getChangeRecordDelete().setModified(df.newXMLGregorianCalendar(new GregorianCalendar()));
+
+                StringWriter sw = new StringWriter();
+                JAXB.marshal(crapi, sw);
+                //JAXB.marshal(crapi, System.out);
                 try {
                         cr.setContents(sw.toString().getBytes("UTF8"));
                 } catch (UnsupportedEncodingException ex) {
@@ -1230,14 +1346,18 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
         public static ChangeRecord getChangeRecord(Tmodel modelBusinessEntity, org.uddi.api_v3.TModel apiBusinessEntity, String node) throws DispositionReportFaultMessage {
                 ChangeRecord cr = new ChangeRecord();
+                if (!apiBusinessEntity.getTModelKey().equals(modelBusinessEntity.getEntityKey()))
+                        throw new FatalErrorException(new ErrorMessage("E_fatalError", "the model and api keys do not match when saving a tmodel!"));
                 cr.setEntityKey(modelBusinessEntity.getEntityKey());
                 cr.setNodeID(node);
+                
 
                 cr.setRecordType(ChangeRecord.RecordType.ChangeRecordNewData);
                 org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();
                 crapi.setChangeID(new ChangeRecordIDType(node, -1L));
                 crapi.setChangeRecordNewData(new ChangeRecordNewData());
                 crapi.getChangeRecordNewData().setTModel(apiBusinessEntity);
+                crapi.getChangeRecordNewData().getTModel().setTModelKey(modelBusinessEntity.getEntityKey());
                 crapi.getChangeRecordNewData().setOperationalInfo(new OperationalInfo());
                 MappingModelToApi.mapOperationalInfo(modelBusinessEntity, crapi.getChangeRecordNewData().getOperationalInfo());
                 StringWriter sw = new StringWriter();
@@ -1272,7 +1392,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 return cr;
         }
 
-        public static ChangeRecord getChangeRecord_deletePublisherAssertion(PublisherAssertion entity, String node) {
+        public static ChangeRecord getChangeRecord_deletePublisherAssertion(PublisherAssertion entity, String node, boolean ToBusinessDelete, boolean FromBusinessDelete, long timestamp) {
                 ChangeRecord cr = new ChangeRecord();
 
                 cr.setNodeID(node);
@@ -1281,8 +1401,12 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();
                 crapi.setChangeID(new ChangeRecordIDType(node, -1L));
                 crapi.setChangeRecordDeleteAssertion(new ChangeRecordDeleteAssertion());
-
-                crapi.getChangeRecordDeleteAssertion().setModified(df.newXMLGregorianCalendar(new GregorianCalendar()));
+                crapi.getChangeRecordDeleteAssertion().setPublisherAssertion(entity);
+                crapi.getChangeRecordDeleteAssertion().setToBusinessCheck(ToBusinessDelete);
+                crapi.getChangeRecordDeleteAssertion().setFromBusinessCheck(FromBusinessDelete);
+                GregorianCalendar gcal = new GregorianCalendar();
+                gcal.setTimeInMillis(timestamp);
+                crapi.getChangeRecordDeleteAssertion().setModified(df.newXMLGregorianCalendar(gcal));
 
                 StringWriter sw = new StringWriter();
                 JAXB.marshal(crapi, sw);

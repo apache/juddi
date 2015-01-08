@@ -1334,7 +1334,7 @@ public class MappingModelToApi {
                 if (cr == null) {
                         return null;
                 }
-                ChangeRecord ret = new ChangeRecord();
+                ChangeRecord ret = null;
 
                 StringReader sr = null;
                 try {

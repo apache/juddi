@@ -61,7 +61,7 @@ The changeRecordHide MUST contain a modified timestamp to allow multi-node regis
 public class ChangeRecordHide implements Serializable{
 	@XmlTransient
 	private static final long serialVersionUID = 161128451954472777L;
-	@XmlElement(namespace = "urn:uddi-org:api_v3", required = true)
+	@XmlElement(namespace = "urn:uddi-org:repl_v3", required = true)
     protected String tModelKey;
     @XmlElement(required = true)
     protected XMLGregorianCalendar modified;

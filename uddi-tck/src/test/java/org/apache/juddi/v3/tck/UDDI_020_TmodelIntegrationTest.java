@@ -48,7 +48,9 @@ public class UDDI_020_TmodelIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
-if (!TckPublisher.isEnabled()) return;
+                if (!TckPublisher.isEnabled()) {
+                        return;
+                }
                 manager = new UDDIClient();
                 manager.start();
                 logger.debug("Getting auth tokens..");
@@ -60,7 +62,6 @@ if (!TckPublisher.isEnabled()) return;
                         authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
                         //Assert.assertNotNull(authInfoJoe);
                         //Assert.assertNotNull(authInfoSam);
-
 
                         UDDIPublicationPortType publication = transport.getUDDIPublishService();
                         UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
@@ -83,11 +84,14 @@ if (!TckPublisher.isEnabled()) return;
                         logger.error(e.getMessage(), e);
                         Assert.fail("Could not obtain authInfo token.");
                 }
+                JUDDI_300_MultiNodeIntegrationTest.testSetupReplicationConfig();
         }
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
-             if (!TckPublisher.isEnabled()) return;
+                if (!TckPublisher.isEnabled()) {
+                        return;
+                }
                 tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 tckTModelSam.deleteCreatedTModels(authInfoSam);
                 manager.stop();
@@ -95,7 +99,7 @@ if (!TckPublisher.isEnabled()) return;
 
         @Test
         public void testJoePublisherTmodel() {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 tckTModelJoe.saveJoePublisherTmodel(authInfoJoe, true);
 
                 //Now if we use a finder it should be found.
@@ -121,7 +125,7 @@ if (!TckPublisher.isEnabled()) return;
 
         @Test
         public void testSamSyndicatorTmodelTest() {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);
                 tckTModelSam.deleteSamSyndicatorTmodel(authInfoSam);
         }

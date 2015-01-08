@@ -55,6 +55,8 @@ import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetClientSubscriptionInfoDetail;
+import org.apache.juddi.api_v3.GetEntityHistoryMessageRequest;
+import org.apache.juddi.api_v3.GetEntityHistoryMessageResponse;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.NodeList;
@@ -72,12 +74,14 @@ import org.apache.juddi.config.Property;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.BusinessEntity;
+import org.apache.juddi.model.ChangeRecord;
 import org.apache.juddi.model.ClientSubscriptionInfo;
 import org.apache.juddi.model.Node;
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.ReplicationConfiguration;
 import org.apache.juddi.model.Tmodel;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.replication.ReplicationNotifier;
 import org.apache.juddi.subscription.NotificationList;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.error.ErrorMessage;
@@ -106,6 +110,8 @@ import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModelInfo;
 import org.uddi.api_v3.TModelInfos;
+import org.uddi.repl_v3.ChangeRecordDelete;
+import org.uddi.repl_v3.ChangeRecords;
 import org.uddi.repl_v3.CommunicationGraph;
 import org.uddi.repl_v3.Operator;
 import org.uddi.repl_v3.OperatorStatusType;
@@ -422,6 +428,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         for (String entityKey : entityKeyList) {
                                 Object obj = em.find(org.apache.juddi.model.Tmodel.class, entityKey);
                                 em.remove(obj);
+                                ChangeRecord cr =UDDIPublicationImpl.getChangeRecord_deleteTModelDelete(entityKey, node);
+                                ReplicationNotifier.Enqueue(cr);
                         }
 
                         tx.commit();
@@ -1525,5 +1533,50 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         em.close();
                 }
 
+        }
+
+        @Override
+        public GetEntityHistoryMessageResponse getEntityHistory(GetEntityHistoryMessageRequest body) throws DispositionReportFaultMessage, RemoteException {
+                long startTime = System.currentTimeMillis();
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+                        UddiEntityPublisher requestor = this.getEntityPublisher(em, body.getAuthInfo());
+                        if (!((Publisher) requestor).isAdmin()) {
+                                throw new UserMismatchException(new ErrorMessage("errors.AdminReqd"));
+                        }
+                        if (body.getMaxRecords()<=0)
+                                body.setMaxRecords(20);
+                        if (body.getOffset() < 0)
+                                body.setOffset(0);
+                        Query createQuery = em.createQuery("select m from ChangeRecord m where m.entityKey = :key order by m.id DESC");
+                        createQuery.setMaxResults((int) body.getMaxRecords());
+                        createQuery.setParameter("key", body.getEntityKey());
+                        createQuery.setFirstResult((int)body.getOffset());
+                        List<ChangeRecord> resultList = createQuery.getResultList();
+                        GetEntityHistoryMessageResponse res = new GetEntityHistoryMessageResponse();
+                        res.setChangeRecords(new ChangeRecords());
+                        for (ChangeRecord cr : resultList) {
+                                res.getChangeRecords().getChangeRecord().add(MappingModelToApi.mapChangeRecord(cr));
+                        }
+                        
+                        tx.rollback();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.ADMIN_GET_HISTORY,
+                                QueryStatus.SUCCESS, procTime);
+                        return res;
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.ADMIN_GET_HISTORY,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
+
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
         }
 }

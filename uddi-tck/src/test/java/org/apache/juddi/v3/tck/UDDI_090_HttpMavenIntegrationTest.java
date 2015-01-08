@@ -15,16 +15,12 @@
  */
 package org.apache.juddi.v3.tck;
 
-import java.net.InetAddress;
 import java.util.Iterator;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.ws.Endpoint;
 import org.apache.commons.configuration.ConfigurationException;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.BeforeClass;
 
 /**
@@ -154,6 +150,11 @@ public class UDDI_090_HttpMavenIntegrationTest extends UDDI_090_SubscriptionList
         @Override
         public String getSubscriptionKey3() {
                 return TckSubscriptionListener.SUBSCRIPTION_KEY;
+        }
+
+        @Override
+        public boolean IsEnabled() {
+                return true;
         }
 
 }

@@ -112,6 +112,7 @@ public class UDDI_040_BusinessServiceIntegrationTest {
                         logger.error(e.getMessage(), e);
                         Assert.fail("Could not obtain authInfo token.");
                 }
+                JUDDI_300_MultiNodeIntegrationTest.testSetupReplicationConfig();
         }
 
         @Test

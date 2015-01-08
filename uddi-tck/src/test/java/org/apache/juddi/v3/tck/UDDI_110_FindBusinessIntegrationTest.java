@@ -104,6 +104,7 @@ public class UDDI_110_FindBusinessIntegrationTest {
                         logger.error(e.getMessage(), e);
                         Assert.fail("Could not obtain authInfo token.");
                 }
+                JUDDI_300_MultiNodeIntegrationTest.testSetupReplicationConfig();
         }
 
         /**

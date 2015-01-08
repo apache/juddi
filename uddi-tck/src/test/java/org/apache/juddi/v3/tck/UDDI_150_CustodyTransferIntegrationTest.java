@@ -141,6 +141,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
                         logger.error(e.getMessage(), e);
                         Assert.fail("Could not obtain authInfo token.");
                 }
+                JUDDI_300_MultiNodeIntegrationTest.testSetupReplicationConfig();
         }
 
         static void HandleException(Exception ex) {

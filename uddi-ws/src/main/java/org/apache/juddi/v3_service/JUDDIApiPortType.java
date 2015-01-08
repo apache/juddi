@@ -22,6 +22,8 @@ import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeleteNode;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
+import org.apache.juddi.api_v3.GetEntityHistoryMessageRequest;
+import org.apache.juddi.api_v3.GetEntityHistoryMessageResponse;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.NodeList;
@@ -454,8 +456,27 @@ public interface JUDDIApiPortType {
         String publisherOrUsername,
         @WebParam(name = "subscriptions", targetNamespace = "urn:juddi-apache-org:api_v3", mode = WebParam.Mode.INOUT)
         Holder<List<Subscription>> subscriptions)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
+    /**
+     * 
+     *     gets a given entities change record history
+     *     @since 3.3
+     *     
+     * 
+     * @param body
+     * @return
+     *     returns org.apache.juddi.api_v3.GetEntityHistoryMessageResponse
+     * @throws DispositionReportFaultMessage
+     */
+    @WebMethod(action = "getEntityHistory")
+    @WebResult(name = "getEntityHistoryMessageResponse", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "response")
+    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    public GetEntityHistoryMessageResponse getEntityHistory(
+        @WebParam(name = "getEntityHistoryMessage", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
+        GetEntityHistoryMessageRequest body)
+        throws DispositionReportFaultMessage
+    ,RemoteException;
 
 }

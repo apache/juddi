@@ -40,6 +40,7 @@ public class UDDI_010_PublisherIntegrationTest {
                 if (!TckPublisher.isJUDDI()) return;
 		manager  = new UDDIClient();
 		manager.start();
+                JUDDI_300_MultiNodeIntegrationTest.testSetupReplicationConfig();
 	}
 	
 	@AfterClass

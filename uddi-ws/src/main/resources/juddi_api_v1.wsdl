@@ -395,7 +395,23 @@ xmlns:uddi="urn:uddi-org:api_v3">
   </xs:complexType>
   
   
-  
+  <xs:element name="getEntityHistoryMessage" nillable="true" type="tns:getEntityHistoryMessageRequest"/>
+  <xs:element name="getEntityHistoryMessageResponse" nillable="true" type="tns:getEntityHistoryMessageResponse"/>
+  <xs:complexType name="getEntityHistoryMessageRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element minOccurs="0" name="entityKey" type="xs:string"/>
+      <xs:element name="maxRecords" type="xs:long"/>
+      <xs:element name="offset" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getEntityHistoryMessageResponse">
+    <xs:sequence >
+    <xs:element  ref="repl:changeRecords"/>
+  </xs:sequence>  
+  </xs:complexType>
+
+
   
   
 </xs:schema>
@@ -577,6 +593,17 @@ xmlns:uddi="urn:uddi-org:api_v3">
   </wsdl:message>
 
 
+  <wsdl:message name="getEntityHistoryMessage">
+    <wsdl:part element="ns1:getEntityHistoryMessage" name="body"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getEntityHistoryMessageResponse">
+    <wsdl:part element="ns1:getEntityHistoryMessageResponse" name="response"></wsdl:part>
+  </wsdl:message>
+
+  
+
+
+
   
   <wsdl:portType name="JUDDI_Api_PortType">
 	<wsdl:documentation> This portType defines all of the jUDDI publisher operations.
@@ -653,8 +680,8 @@ xmlns:uddi="urn:uddi-org:api_v3">
 	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
     </wsdl:operation>
 	
-	<!-- additions since 3.3 -->
 	
+
 	
 	<wsdl:operation name="get_AllNodes">
 	  <wsdl:documentation>
@@ -767,12 +794,27 @@ xmlns:uddi="urn:uddi-org:api_v3">
 	  <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
     </wsdl:operation>	
 	
+
+  <!-- additions since 3.3 -->
+   <wsdl:operation name="getEntityHistory">
+   <wsdl:documentation>
+    gets a given entities change record history
+    @since 3.3
+    </wsdl:documentation>
+        <wsdl:input message="tns:getEntityHistoryMessage" name="getEntityHistory"></wsdl:input>
+      <wsdl:output message="tns:getEntityHistoryMessageResponse" name="getEntityHistoryResponse"></wsdl:output>
+      <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
 	
 	
   </wsdl:portType>
+
+
+
   <wsdl:binding name="JUDDIApiServiceSoapBinding" type="tns:JUDDI_Api_PortType">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 	
+
 	<wsdl:operation name="get_publisherDetail">
       <soap:operation soapAction="get_publisherDetail" style="document"/>
       <wsdl:input name="get_publisherDetail">
@@ -994,6 +1036,20 @@ xmlns:uddi="urn:uddi-org:api_v3">
         <soap:body use="literal"/>
       </wsdl:output>
 	  <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+
+
+   <!-- additions since 3.3 -->
+   <wsdl:operation name="getEntityHistory">
+   
+      <soap:operation soapAction="getEntityHistory" style="document"/>
+      <wsdl:input name="getEntityHistory">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getEntityHistoryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
     </wsdl:operation>
 
   </wsdl:binding>

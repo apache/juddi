@@ -19,22 +19,16 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.MimeMessage;
-import javax.xml.ws.Endpoint;
 import org.apache.commons.codec.net.QuotedPrintableCodec;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.mail.util.MimeMessageParser;
 import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.BeforeClass;
 
 /**
@@ -225,5 +219,12 @@ public class UDDI_090_Smtp_ExternalTest extends UDDI_090_SubscriptionListenerInt
         public String getSubscriptionKey3() {
                 return TckSubscriptionListener.SUBSCRIPTION_SMTP_KEY;
         }
+
+        @Override
+        public boolean IsEnabled() {
+                return TckPublisher.isSMTPEnabled();
+        }
+        
+
 
 }

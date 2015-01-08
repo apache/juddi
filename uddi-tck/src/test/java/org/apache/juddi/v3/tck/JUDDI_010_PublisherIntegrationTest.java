@@ -79,6 +79,7 @@ public class JUDDI_010_PublisherIntegrationTest {
                         logger.error(e.getMessage(), e);
                         Assert.fail("Could not obtain authInfo token.");
                 }
+                JUDDI_300_MultiNodeIntegrationTest.testSetupReplicationConfig();
         }
 
         @AfterClass

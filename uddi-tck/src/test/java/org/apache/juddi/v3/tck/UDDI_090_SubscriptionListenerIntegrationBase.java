@@ -107,6 +107,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                 tckTModelMary.deleteCreatedTModels(authInfoMary);
                 manager.stop();
                 //shutting down the TCK SubscriptionListener
+                JUDDI_300_MultiNodeIntegrationTest.testSetupReplicationConfig();
 
         }
 
@@ -199,6 +200,8 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
          * reform transport specific resets of the listener
          */
         public abstract void reset();
+        
+        public abstract boolean IsEnabled();
 
         public abstract String getXMLLocationOfServiceForDelivery();
 
@@ -227,6 +230,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         public void joePublisherUpdate_FIND_SERVICE() {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
+                Assume.assumeTrue(IsEnabled());
                 logger.info("joePublisherUpdate_" + getTransport() + "_FIND_SERVICE");
                 try {
                         TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
@@ -273,6 +277,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         public void joePublisherUpdate_FIND_BUSINESS() {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
+                Assume.assumeTrue(IsEnabled());
                 logger.info("joePublisherUpdate_" + getTransport() + "_FIND_BUSINESS");
                 try {
                         TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
@@ -336,6 +341,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         public void joePublisherUpdate_FIND_TMODEL() {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
+                Assume.assumeTrue(IsEnabled());
                 logger.info("joePublisherUpdate_" + getTransport() + "_FIND_TMODEL " + getXMLLocationOfServiceForDelivery() + " " + getPort() + " " + getHostame());
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 try {
@@ -391,6 +397,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         public void joePublisherUpdate_GET_BUSINESS_DETAIL() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
+                Assume.assumeTrue(IsEnabled());
                 logger.info("joePublisherUpdate_" + getTransport() + "_GET_BUSINESS_DETAIL");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 Holder<List<Subscription>> holder = null;
@@ -471,6 +478,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         public void joePublisherUpdate_GET_TMODEL_DETAIL() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
+                Assume.assumeTrue(IsEnabled());
                 logger.info("joePublisherUpdate_" + getTransport() + "_GET_TMODEL_DETAIL");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 Holder<List<Subscription>> holder = null;
@@ -576,6 +584,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         public void joePublisherUpdate_GET_SERVICE_DETAIL() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
+                Assume.assumeTrue(IsEnabled());
                 logger.info("joePublisherUpdate_" + getTransport() + "_GET_SERVICE_DETAIL");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 Holder<List<Subscription>> holder = null;
@@ -665,6 +674,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         public void joePublisherUpdate_GET_BINDING_DETAIL() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
+                Assume.assumeTrue(IsEnabled());
                 logger.info("joePublisherUpdate_" + getTransport() + "_GET_BINDING_DETAIL");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 Holder<List<Subscription>> holder = null;
@@ -763,6 +773,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         public void joePublisherUpdate_PUBLISHERASSERTION_DETAIL_TO() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
+                Assume.assumeTrue(IsEnabled());
                 logger.info("joePublisherUpdate_" + getTransport() + "_PUBLISHERASSERTION_DETAIL_TO");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 Holder<List<Subscription>> holder = null;
@@ -856,6 +867,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         public void joePublisherUpdate_PUBLISHERASSERTION_DETAIL_FROM() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
+                Assume.assumeTrue(IsEnabled());
                 logger.info("joePublisherUpdate_" + getTransport() + "_PUBLISHERASSERTION_DETAIL_FROM");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 Holder<List<Subscription>> holder = null;
@@ -948,6 +960,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         public void joePublisherUpdate_PUBLISHERASSERTION_DETAIL_NULL() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
+                Assume.assumeTrue(IsEnabled());
                 logger.info("joePublisherUpdate_" + getTransport() + "_PUBLISHERASSERTION_DETAIL_NULL");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 Holder<List<Subscription>> holder = null;
@@ -1038,6 +1051,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         public void joePublisherUpdate_PUBLISHERASSERTION_DETAIL_COMPLETE() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
+                Assume.assumeTrue(IsEnabled());
                 logger.info("joePublisherUpdate_" + getTransport() + "_PUBLISHERASSERTION_DETAIL_COMPLETE");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 Holder<List<Subscription>> holder = null;
@@ -1133,6 +1147,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         public void joePublisherUpdate_FIND_RELATED_BIZ() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
+                Assume.assumeTrue(IsEnabled());
                 logger.info("joePublisherUpdate_" + getTransport() + "_FIND_RELATED_BIZ");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 Holder<List<Subscription>> holder = null;
@@ -1240,6 +1255,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         public void joePublisherUpdate_FIND_BINDING_BY_SERVICEKEY_AND_TMI() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
+                Assume.assumeTrue(IsEnabled());
                 logger.info("joePublisherUpdate_" + getTransport() + "_FIND_BINDING_BY_SERVICEKEY_AND_TMI");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 Holder<List<Subscription>> holder = null;
@@ -1344,6 +1360,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
         public void joePublisherUpdate_FIND_BINDING_BY_CATBAG() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeNotNull(getHostame());
+                Assume.assumeTrue(IsEnabled());
                 logger.info("joePublisherUpdate_" + getTransport() + "_FIND_BINDING_BY_CATBAG");
                 TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 Holder<List<Subscription>> holder = null;

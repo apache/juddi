@@ -1,4 +1,19 @@
-
+/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package org.apache.juddi.api_v3;
 
 import javax.xml.bind.JAXBElement;
@@ -27,15 +42,14 @@ public class ObjectFactory {
 
     private final static QName _AdminDeleteSubscriptionResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "adminDelete_SubscriptionResponse");
     private final static QName _GetReplicationNodesResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_ReplicationNodesResponse");
-    private final static QName _GetAllPublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_allPublisherDetail");
     private final static QName _SetReplicationNodes_QNAME = new QName("urn:juddi-apache-org:api_v3", "set_ReplicationNodes");
+    private final static QName _GetAllPublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_allPublisherDetail");
     private final static QName _DeleteClerk_QNAME = new QName("urn:juddi-apache-org:api_v3", "delete_Clerk");
     private final static QName _SyncSubscription_QNAME = new QName("urn:juddi-apache-org:api_v3", "sync_subscription");
     private final static QName _AdminSaveTModelResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "adminSave_tModelResponse");
     private final static QName _AdminSaveTModel_QNAME = new QName("urn:juddi-apache-org:api_v3", "adminSave_tModel");
     private final static QName _GetAllNodes_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_AllNodes");
     private final static QName _GetAllClientSubscriptionInfo_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_allClientSubscriptionInfo");
-    private final static QName _SetAllValidValues_QNAME = new QName("urn:juddi-apache-org:api_v3", "set_allValidValues");
     private final static QName _AdminSaveBusinessResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "adminSave_BusinessResponse");
     private final static QName _GetAllClientSubscriptionInfoResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_allClientSubscriptionInfoResponse");
     private final static QName _SyncSubscriptionDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "sync_subscriptionDetail");
@@ -45,10 +59,9 @@ public class ObjectFactory {
     private final static QName _GetAllClerks_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_AllClerks");
     private final static QName _GetPublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_publisherDetail");
     private final static QName _SavePublisher_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_publisher");
-    private final static QName _SetAllValidValuesResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "set_allValidValuesResponse");
     private final static QName _DeletePublisher_QNAME = new QName("urn:juddi-apache-org:api_v3", "delete_publisher");
-    private final static QName _AdminDeleteSubscription_QNAME = new QName("urn:juddi-apache-org:api_v3", "adminDelete_Subscription");
     private final static QName _SaveClerkRequest_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_ClerkRequest");
+    private final static QName _AdminDeleteSubscription_QNAME = new QName("urn:juddi-apache-org:api_v3", "adminDelete_Subscription");
     private final static QName _DeleteClientSubscriptionInfo_QNAME = new QName("urn:juddi-apache-org:api_v3", "delete_ClientSubscriptionInfo");
     private final static QName _SaveNodeRequest_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_NodeRequest");
     private final static QName _GetAllNodesResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_AllNodesResponse");
@@ -61,6 +74,8 @@ public class ObjectFactory {
     private final static QName _PublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "publisherDetail");
     private final static QName _SaveClientSubscriptionInfoRequest_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_ClientSubscriptionInfoRequest");
     private final static QName _Publisher_QNAME = new QName("urn:juddi-apache-org:api_v3", "publisher");
+    private final static QName _GetEntityHistoryMessage_QNAME = new QName("urn:juddi-apache-org:api_v3", "getEntityHistoryMessage");
+    private final static QName _GetEntityHistoryMessageResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "getEntityHistoryMessageResponse");
     private final static QName _AdminDeleteTmodel_QNAME = new QName("urn:juddi-apache-org:api_v3", "adminDelete_tmodel");
 
     /**
@@ -183,6 +198,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link GetEntityHistoryMessageResponse }
+     * 
+     */
+    public GetEntityHistoryMessageResponse createGetEntityHistoryMessageResponse() {
+        return new GetEntityHistoryMessageResponse();
+    }
+
+    /**
      * Create an instance of {@link SaveClientSubscriptionInfo }
      * 
      */
@@ -228,6 +251,14 @@ public class ObjectFactory {
      */
     public GetAllNodesResponse createGetAllNodesResponse() {
         return new GetAllNodesResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetEntityHistoryMessageRequest }
+     * 
+     */
+    public GetEntityHistoryMessageRequest createGetEntityHistoryMessageRequest() {
+        return new GetEntityHistoryMessageRequest();
     }
 
     /**
@@ -294,7 +325,6 @@ public class ObjectFactory {
         return new AdminDeleteSubscriptionResponse();
     }
 
-   
     /**
      * Create an instance of {@link AdminSaveTModelResponse }
      * 
@@ -335,7 +365,6 @@ public class ObjectFactory {
         return new GetReplicationNodes();
     }
 
-  
     /**
      * Create an instance of {@link DeletePublisher }
      * 
@@ -401,14 +430,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ValidValues }
-     * 
-     */
-    public ValidValues createValidValues() {
-        return new ValidValues();
-    }
-
-    /**
      * Create an instance of {@link ClientSubscriptionInfo }
      * 
      */
@@ -459,21 +480,21 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link GetAllPublisherDetail }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "get_allPublisherDetail")
-    public JAXBElement<GetAllPublisherDetail> createGetAllPublisherDetail(GetAllPublisherDetail value) {
-        return new JAXBElement<GetAllPublisherDetail>(_GetAllPublisherDetail_QNAME, GetAllPublisherDetail.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link SetReplicationNodes }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "set_ReplicationNodes")
     public JAXBElement<SetReplicationNodes> createSetReplicationNodes(SetReplicationNodes value) {
         return new JAXBElement<SetReplicationNodes>(_SetReplicationNodes_QNAME, SetReplicationNodes.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetAllPublisherDetail }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "get_allPublisherDetail")
+    public JAXBElement<GetAllPublisherDetail> createGetAllPublisherDetail(GetAllPublisherDetail value) {
+        return new JAXBElement<GetAllPublisherDetail>(_GetAllPublisherDetail_QNAME, GetAllPublisherDetail.class, null, value);
     }
 
     /**
@@ -611,7 +632,6 @@ public class ObjectFactory {
         return new JAXBElement<SavePublisher>(_SavePublisher_QNAME, SavePublisher.class, null, value);
     }
 
-  
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link DeletePublisher }{@code >}}
      * 
@@ -622,21 +642,21 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link AdminDeleteSubscriptionRequest }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "adminDelete_Subscription")
-    public JAXBElement<AdminDeleteSubscriptionRequest> createAdminDeleteSubscription(AdminDeleteSubscriptionRequest value) {
-        return new JAXBElement<AdminDeleteSubscriptionRequest>(_AdminDeleteSubscription_QNAME, AdminDeleteSubscriptionRequest.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link SaveClerk }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "save_ClerkRequest")
     public JAXBElement<SaveClerk> createSaveClerkRequest(SaveClerk value) {
         return new JAXBElement<SaveClerk>(_SaveClerkRequest_QNAME, SaveClerk.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link AdminDeleteSubscriptionRequest }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "adminDelete_Subscription")
+    public JAXBElement<AdminDeleteSubscriptionRequest> createAdminDeleteSubscription(AdminDeleteSubscriptionRequest value) {
+        return new JAXBElement<AdminDeleteSubscriptionRequest>(_AdminDeleteSubscription_QNAME, AdminDeleteSubscriptionRequest.class, null, value);
     }
 
     /**
@@ -745,6 +765,24 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "publisher")
     public JAXBElement<Publisher> createPublisher(Publisher value) {
         return new JAXBElement<Publisher>(_Publisher_QNAME, Publisher.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetEntityHistoryMessageRequest }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "getEntityHistoryMessage")
+    public JAXBElement<GetEntityHistoryMessageRequest> createGetEntityHistoryMessage(GetEntityHistoryMessageRequest value) {
+        return new JAXBElement<GetEntityHistoryMessageRequest>(_GetEntityHistoryMessage_QNAME, GetEntityHistoryMessageRequest.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetEntityHistoryMessageResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "getEntityHistoryMessageResponse")
+    public JAXBElement<GetEntityHistoryMessageResponse> createGetEntityHistoryMessageResponse(GetEntityHistoryMessageResponse value) {
+        return new JAXBElement<GetEntityHistoryMessageResponse>(_GetEntityHistoryMessageResponse_QNAME, GetEntityHistoryMessageResponse.class, null, value);
     }
 
     /**

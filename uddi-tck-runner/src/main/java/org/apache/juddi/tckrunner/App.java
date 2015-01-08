@@ -74,6 +74,8 @@ public class App {
                                 org.apache.juddi.v3.bpel.BPEL_010_IntegrationTest.class,
                                 org.apache.juddi.v3.bpel.BPEL_020_IntegrationTest.class,
                                 org.apache.juddi.v3.tck.JUDDI_010_PublisherIntegrationTest.class,
+                                org.apache.juddi.v3.tck.JUDDI_100_ClientSubscriptionInfoIntegrationTest.class,
+                                org.apache.juddi.v3.tck.JUDDI_300_MultiNodeIntegrationTest.class,
                                 org.apache.juddi.v3.tck.UDDI_010_PublisherIntegrationTest.class,
                                 org.apache.juddi.v3.tck.UDDI_020_TmodelIntegrationTest.class,
                                 org.apache.juddi.v3.tck.UDDI_030_BusinessEntityIntegrationTest.class,
@@ -92,7 +94,7 @@ public class App {
                                 org.apache.juddi.v3.tck.UDDI_090_Smtp_ExternalTest.class,
                                 org.apache.juddi.v3.tck.UDDI_090_RMIIntegrationTest.class,
                                 //org.apache.juddi.v3.tck.JUDDI_091_RMISubscriptionListenerIntegrationTest.class,
-                                org.apache.juddi.v3.tck.JUDDI_100_ClientSubscriptionInfoIntegrationTest.class,
+                                
                                 org.apache.juddi.v3.tck.UDDI_110_FindBusinessIntegrationTest.class,
                                 org.apache.juddi.v3.tck.UDDI_120_CombineCategoryBagsFindServiceIntegrationTest.class,
                                 org.apache.juddi.v3.tck.UDDI_130_CombineCategoryBagsFindBusinessIntegrationTest.class,
@@ -185,7 +187,8 @@ public class App {
                 System.out.println("Failed Test Cases: " + result.getFailureCount());
                 System.out.println("Skipped Test Cases: " + result.getIgnoreCount());
                 System.out.println("Ran Test Cases: " + result.getRunCount());
-                System.out.println("Time: " + result.getRunTime());
+                System.out.println("Time: " + result.getRunTime() + "ms which is " +
+                org.apache.commons.lang.time.DurationFormatUtils.formatDurationHMS(result.getRunTime()));
                 System.out.println("-------------------------------------");
                 System.out.println("Results written to " + filename);
 

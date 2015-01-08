@@ -1385,6 +1385,10 @@ public class MappingApiToModel {
                 r.setOriginatingUSN(rec.getChangeID().getOriginatingUSN());
                 if (rec.getChangeRecordNewData() != null) {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordNewData);
+                        r.setEntityKey(rec.getChangeRecordNewData().getOperationalInfo().getEntityKey());
+                        if (rec.getChangeRecordNewData().getOperationalInfo().getEntityKey() == null) {
+                                throw new UnsupportedEncodingException("entity key is null! make sure it's filled out before saving!");
+                        }
                 } else if (rec.getChangeRecordAcknowledgement() != null) {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordAcknowledgement);
                 } else if (rec.getChangeRecordConditionFailed() != null) {
@@ -1393,10 +1397,23 @@ public class MappingApiToModel {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordCorrection);
                 } else if (rec.getChangeRecordDelete() != null) {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordDelete);
+                        if (rec.getChangeRecordDelete().getTModelKey() != null) {
+                                r.setEntityKey(rec.getChangeRecordDelete().getTModelKey());
+                        }
+                        if (rec.getChangeRecordDelete().getBindingKey() != null) {
+                                r.setEntityKey(rec.getChangeRecordDelete().getBindingKey());
+                        }
+                        if (rec.getChangeRecordDelete().getBusinessKey() != null) {
+                                r.setEntityKey(rec.getChangeRecordDelete().getBusinessKey());
+                        }
+                        if (rec.getChangeRecordDelete().getServiceKey() != null) {
+                                r.setEntityKey(rec.getChangeRecordDelete().getServiceKey());
+                        }
                 } else if (rec.getChangeRecordDeleteAssertion() != null) {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordDeleteAssertion);
                 } else if (rec.getChangeRecordHide() != null) {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordHide);
+                        r.setEntityKey(rec.getChangeRecordHide().getTModelKey());
                 } else if (rec.getChangeRecordNewDataConditional() != null) {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordNewDataConditional);
                 } else if (rec.getChangeRecordNull() != null) {

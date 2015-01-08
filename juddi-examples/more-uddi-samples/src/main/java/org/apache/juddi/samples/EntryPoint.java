@@ -463,6 +463,9 @@ public class EntryPoint {
                         new UddiCreatebulk("default").publishBusiness(null, 1, 1);
                         new UddiCreatebulk("uddi:another.juddi.apache.org:node2").publishBusiness(null, 1, 1);
                 }
+                if (input.equals("rep")) {
+                        new JuddiAdminService().printStatus();
+                }
 
         }
 }

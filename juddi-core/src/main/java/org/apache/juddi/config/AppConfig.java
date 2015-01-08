@@ -19,6 +19,7 @@ package org.apache.juddi.config;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -118,7 +119,7 @@ public class AppConfig
                 //Hey! this may break things
                 propConfig.setAutoSave(true);
 		
-		log.info("Reading from properties file:  " + loadedFrom);
+		log.info("Reading from jUDDI config file from:  " + loadedFrom);
 		long refreshDelay = propConfig.getLong(Property.JUDDI_CONFIGURATION_RELOAD_DELAY, 1000l);
 		log.debug("Setting refreshDelay to " + refreshDelay);
 		FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();
@@ -192,22 +193,32 @@ public class AppConfig
 			
 			// The node Id is defined as the business key of the business entity categorized as a node.  This entity is saved as part of the install.
 			// Only one business entity should be categorized as a node.
-			String nodeId = "";
-			CategoryBag categoryBag = new CategoryBag();
+			String nodeId = config.getString(Property.JUDDI_NODE_ID);
+			/*
+                        CategoryBag categoryBag = new CategoryBag();
 			KeyedReference keyedRef = new KeyedReference();
 			keyedRef.setTModelKey(Constants.NODE_CATEGORY_TMODEL);
 			keyedRef.setKeyValue(Constants.NODE_KEYVALUE);
 			categoryBag.getKeyedReference().add(keyedRef);
 			List<?> keyList = FindBusinessByCategoryQuery.select(em, new FindQualifiers(), categoryBag, null);
 			if (keyList != null && keyList.size() > 1)
-				throw new ConfigurationException("Only one business entity can be categorized as the node.");
-			
+                        {
+                                StringBuilder sb = new StringBuilder();
+                                Iterator<?> iterator = keyList.iterator();
+                                while(iterator.hasNext()){
+                                        sb.append(iterator.next()).append(",");
+                                }
+				//
+                                //throw new ConfigurationException("Only one business entity can be categorized as the node. Config loaded from " + loadedFrom + " Key's listed at the node: " + sb.toString());
+                                //unless of course, we are in a replicated environment
+                        }
 			if (keyList != null && keyList.size() > 0) {
 				nodeId = (String)keyList.get(0);
 			}
 			else
 				throw new ConfigurationException("A node business entity was not found.  Please make sure that the application is properly installed.");
-			result.setProperty(Property.JUDDI_NODE_ID, nodeId);
+			*/
+                        result.setProperty(Property.JUDDI_NODE_ROOT_BUSINESS, nodeId);
                         
                         //result.setProperty(Property.JUDDI_NODE_ROOT_BUSINESS, nodeId);
 			

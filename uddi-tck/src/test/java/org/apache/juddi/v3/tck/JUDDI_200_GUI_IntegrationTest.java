@@ -15,7 +15,6 @@
  */
 package org.apache.juddi.v3.tck;
 
-import java.io.IOException;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,13 +25,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.juddi.v3.client.config.TokenResolver;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
  *
@@ -63,6 +60,7 @@ public class JUDDI_200_GUI_IntegrationTest {
                         }
                         baseurl = TokenResolver.replaceTokens(baseurl, manager.getClientConfig().getUDDINode("default").getProperties());
                 }
+                JUDDI_300_MultiNodeIntegrationTest.testSetupReplicationConfig();
         }
 
         @Test

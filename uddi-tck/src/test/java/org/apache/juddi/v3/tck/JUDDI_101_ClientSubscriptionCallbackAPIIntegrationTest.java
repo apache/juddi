@@ -93,6 +93,7 @@ public class JUDDI_101_ClientSubscriptionCallbackAPIIntegrationTest implements I
                         logger.error(e.getMessage(), e);
                         Assert.fail(e.getMessage());
                 }
+                JUDDI_300_MultiNodeIntegrationTest.testSetupReplicationConfig();
         }
 
         @Test

@@ -72,6 +72,7 @@ public class UDDI_090_HttpExternalTest extends UDDI_090_SubscriptionListenerInte
                                 Assert.fail("unable to bring up endpoint");
                         }
                 }
+                
         }
 
         @Override
@@ -165,6 +166,11 @@ public class UDDI_090_HttpExternalTest extends UDDI_090_SubscriptionListenerInte
         @Override
         public String getSubscriptionKey3() {
                 return TckSubscriptionListener.SUBSCRIPTION_KEY;
+        }
+
+        @Override
+        public boolean IsEnabled() {
+                return true;
         }
 
 }

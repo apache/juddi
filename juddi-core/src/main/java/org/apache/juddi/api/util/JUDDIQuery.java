@@ -46,6 +46,7 @@ public enum JUDDIQuery implements UDDIQuery {
         SET_REPLICATION_NODES("set_replicationNodes"),
         GET_REPLICATION_NODES("get_replicationNodes"),
         ADMIN_SAVE_SUB("admin_saveClientSubscription"),
+        ADMIN_GET_HISTORY("admin_getEntityHistory"),
         INVOKE_SYNCSUB("invoke_synchSubscription");
 
         private String _query;
@@ -85,7 +86,7 @@ public enum JUDDIQuery implements UDDIQuery {
                         _inquiryQueries.put("set_replicationNodes", JUDDIQuery.SET_REPLICATION_NODES);
                         _inquiryQueries.put("get_replicationNodes", JUDDIQuery.GET_REPLICATION_NODES);
                         _inquiryQueries.put("admin_saveClientSubscription", JUDDIQuery.ADMIN_SAVE_SUB);
-                        
+                        _inquiryQueries.put("admin_getEntityHistory", JUDDIQuery.ADMIN_GET_HISTORY);
                         _inquiryQueries.put("invoke_synchSubscription", JUDDIQuery.INVOKE_SYNCSUB);
         
                         

@@ -66,7 +66,9 @@ public class UDDI_160_RESTIntergrationTest {
         @BeforeClass
         public static void startRegistry() throws ConfigurationException {
 
-             if (!TckPublisher.isEnabled()) return;
+                if (!TckPublisher.isEnabled()) {
+                        return;
+                }
                 manager = new UDDIClient();
                 manager.start();
 
@@ -77,11 +79,14 @@ public class UDDI_160_RESTIntergrationTest {
                         logger.error(e.getMessage(), e);
                         Assert.fail("Could not obtain authInfo token.");
                 }
+                JUDDI_300_MultiNodeIntegrationTest.testSetupReplicationConfig();
         }
 
         @AfterClass
         public static void stopRegistry() throws ConfigurationException {
-             if (!TckPublisher.isEnabled()) return;
+                if (!TckPublisher.isEnabled()) {
+                        return;
+                }
                 manager.stop();
         }
 
@@ -99,7 +104,7 @@ public class UDDI_160_RESTIntergrationTest {
          }*/
         @Test
         public void InquiryREST_GET_Business() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isInquiryRestEnabled());
                 FindBusiness fb = new FindBusiness();
                 fb.setMaxRows(1);
@@ -118,7 +123,7 @@ public class UDDI_160_RESTIntergrationTest {
                 HttpGet httpGet = new HttpGet(url + "?businessKey=" + findBusiness.getBusinessInfos().getBusinessInfo().get(0).getBusinessKey());
                 logger.info("Fetching " + httpGet.getURI());
                 HttpResponse response = client.execute(httpGet);
-                
+
                 Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
                 logger.info("Response content: " + response.getEntity().getContent());
                 BusinessEntity unmarshal = JAXB.unmarshal(response.getEntity().getContent(), BusinessEntity.class);
@@ -126,12 +131,11 @@ public class UDDI_160_RESTIntergrationTest {
                 Assert.assertNotNull(unmarshal);
                 Assert.assertEquals(unmarshal.getBusinessKey(), findBusiness.getBusinessInfos().getBusinessInfo().get(0).getBusinessKey());
 
-
         }
 
         @Test
         public void InquiryREST_GET_TModel() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isInquiryRestEnabled());
                 FindTModel fb = new FindTModel();
                 fb.setMaxRows(1);
@@ -146,13 +150,13 @@ public class UDDI_160_RESTIntergrationTest {
                 String url = manager.getClientConfig().getHomeNode().getInquiry_REST_Url();
 
                 Assume.assumeNotNull(url);
-                
+
                 HttpClient client = new DefaultHttpClient();
-                
+
                 HttpGet httpGet = new HttpGet(url + "?tModelKey=" + findTModel.getTModelInfos().getTModelInfo().get(0).getTModelKey());
                 logger.info("Fetching " + httpGet.getURI());
                 HttpResponse response = client.execute(httpGet);
-                
+
                 Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
                 logger.info("Response content: " + response.getEntity().getContent());
                 TModel unmarshal = JAXB.unmarshal(response.getEntity().getContent(), TModel.class);
@@ -160,12 +164,11 @@ public class UDDI_160_RESTIntergrationTest {
                 Assert.assertNotNull(unmarshal);
                 Assert.assertEquals(unmarshal.getTModelKey(), findTModel.getTModelInfos().getTModelInfo().get(0).getTModelKey());
 
-
         }
 
         @Test
         public void InquiryREST_GET_Service() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isInquiryRestEnabled());
                 //find the first service via inquriy soap
                 FindService fb = new FindService();
@@ -181,21 +184,19 @@ public class UDDI_160_RESTIntergrationTest {
                 String url = manager.getClientConfig().getHomeNode().getInquiry_REST_Url();
 
                 Assume.assumeNotNull(url);
-                
+
                 //get the results via inquiry rest
                 HttpClient client = new DefaultHttpClient();
                 HttpGet httpGet = new HttpGet(url + "?serviceKey=" + findService.getServiceInfos().getServiceInfo().get(0).getServiceKey());
                 logger.info("Fetching " + httpGet.getURI());
                 HttpResponse response = client.execute(httpGet);
-                
-                
+
                 Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
                 logger.info("Response content: " + response.getEntity().getContent());
                 BusinessService unmarshal = JAXB.unmarshal(response.getEntity().getContent(), BusinessService.class);
                 client.getConnectionManager().shutdown();
                 Assert.assertNotNull(unmarshal);
                 Assert.assertEquals(unmarshal.getServiceKey(), findService.getServiceInfos().getServiceInfo().get(0).getServiceKey());
-
 
         }
 
@@ -244,12 +245,12 @@ public class UDDI_160_RESTIntergrationTest {
 
         @Test
         public void InquiryREST_GET_Binding() throws Exception {
-             Assume.assumeTrue(TckPublisher.isEnabled());
+                Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isInquiryRestEnabled());
-                
+
                 BindingTemplate bt = getFirstBindingTemplate();
                 Assume.assumeTrue(bt != null);
-                
+
                 String url = manager.getClientConfig().getHomeNode().getInquiry_REST_Url();
 
                 Assume.assumeNotNull(url);
@@ -257,7 +258,7 @@ public class UDDI_160_RESTIntergrationTest {
                 HttpGet httpGet = new HttpGet(url + "?bindingKey=" + bt.getBindingKey());
                 logger.info("Fetching " + httpGet.getURI());
                 HttpResponse response = client.execute(httpGet);
-                
+
                 Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
                 logger.info("Response content: " + response.getEntity().getContent());
                 BindingTemplate unmarshal = JAXB.unmarshal(response.getEntity().getContent(), BindingTemplate.class);
@@ -265,7 +266,6 @@ public class UDDI_160_RESTIntergrationTest {
                 Assert.assertNotNull(unmarshal);
                 Assert.assertEquals(unmarshal.getServiceKey(), bt.getServiceKey());
                 Assert.assertEquals(unmarshal.getBindingKey(), bt.getBindingKey());
-
 
         }
 }

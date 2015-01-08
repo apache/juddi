@@ -32,6 +32,8 @@ import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeleteNode;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
+import org.apache.juddi.api_v3.GetEntityHistoryMessageRequest;
+import org.apache.juddi.api_v3.GetEntityHistoryMessageResponse;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.NodeList;
@@ -169,8 +171,14 @@ public class JUDDIApiService extends UnicastRemoteObject implements JUDDIApiPort
         }
 
         @Override
-        public void adminSaveSubscription(String authInfo, String publisherOrUsername, Holder<List<Subscription>> subscriptions) throws DispositionReportFaultMessage {
+        public void adminSaveSubscription(String authInfo, String publisherOrUsername, Holder<List<Subscription>> subscriptions) throws DispositionReportFaultMessage, RemoteException {
                 juddiAPI.adminSaveSubscription(authInfo, publisherOrUsername, subscriptions);
+        }
+
+        @Override
+        public GetEntityHistoryMessageResponse getEntityHistory(GetEntityHistoryMessageRequest body) throws DispositionReportFaultMessage,RemoteException {
+               return juddiAPI.getEntityHistory(body);
+               
         }
 
       

@@ -19,6 +19,7 @@ import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.util.List;
 import javax.xml.bind.JAXB;
+import javax.xml.ws.BindingProvider;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.api_v3.DeleteNode;
 import org.apache.juddi.api_v3.Node;
@@ -26,14 +27,13 @@ import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.NodeList;
 import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.jaxb.PrintJUDDI;
+import org.apache.juddi.v3.client.UDDIService;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.config.UDDINode;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
-import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.Contact;
 import org.uddi.api_v3.Description;
 import org.uddi.api_v3.DispositionReport;
@@ -41,11 +41,13 @@ import org.uddi.api_v3.Email;
 import org.uddi.api_v3.GetAuthToken;
 import org.uddi.api_v3.PersonName;
 import org.uddi.api_v3.Phone;
+import org.uddi.repl_v3.ChangeRecordIDType;
 import org.uddi.repl_v3.CommunicationGraph;
 import org.uddi.repl_v3.Operator;
 import org.uddi.repl_v3.OperatorStatusType;
 import org.uddi.repl_v3.ReplicationConfiguration;
 import org.uddi.v3_service.UDDIPublicationPortType;
+import org.uddi.v3_service.UDDIReplicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
@@ -481,6 +483,7 @@ public class JuddiAdminService {
                 op.getContact().add(new Contact());
                 op.getContact().get(0).getPersonName().add(new PersonName("bob", "en"));
                 op.getContact().get(0).setUseType("admin");
+                replicationNodes.getOperator().clear();
                 replicationNodes.getOperator().add(op);
 
                 op = new Operator();
@@ -513,5 +516,39 @@ public class JuddiAdminService {
                 juddiApiService.setReplicationNodes(authtoken, replicationNodes);
              
 
+        }
+
+        void printStatus() throws Exception{
+                
+                
+                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
+
+                Transport transport = clerkManager.getTransport("default");
+                String authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
+
+                JUDDIApiPortType juddiApiService = transport.getJUDDIApiService();
+                System.out.println("fetching...");
+
+                ReplicationConfiguration replicationNodes = null;
+                try {
+                        replicationNodes = juddiApiService.getReplicationNodes(authtoken);
+                } catch (Exception ex) {
+                        System.out.println("Error getting replication config");
+                        ex.printStackTrace();
+                        replicationNodes = new ReplicationConfiguration();
+
+                }
+                UDDIReplicationPortType uddiReplicationPort = new UDDIService().getUDDIReplicationPort();
+                
+                for (Operator o: replicationNodes.getOperator()){
+                        System.out.println("*******************\n\rstats for node " + o.getOperatorNodeID());
+                        ((BindingProvider)uddiReplicationPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, o.getSoapReplicationURL());
+                        
+                        List<ChangeRecordIDType> highWaterMarks = uddiReplicationPort.getHighWaterMarks();
+                        for (ChangeRecordIDType cr : highWaterMarks){
+                                JAXB.marshal(cr, System.out);
+                        }
+                }
+                
         }
 }

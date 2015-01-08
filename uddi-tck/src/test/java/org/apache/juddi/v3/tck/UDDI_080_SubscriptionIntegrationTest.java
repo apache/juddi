@@ -160,6 +160,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
                         logger.error(e.getMessage(), e);
                         Assert.fail("Could not obtain authInfo token.");
                 }
+                JUDDI_300_MultiNodeIntegrationTest.testSetupReplicationConfig();
         }
         static final String TRANS = "The transaction has been rolled back";
         static final String MISSING_RESOURCE = "Can't find resource for bundle";

@@ -54,43 +54,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ChangeRecordCorrection }
+     * Create an instance of {@link CommunicationGraph }
      * 
      */
-    public ChangeRecordCorrection createChangeRecordCorrection() {
-        return new ChangeRecordCorrection();
-    }
-
-    /**
-     * Create an instance of {@link GetChangeRecords }
-     * 
-     */
-    public GetChangeRecords createGetChangeRecords() {
-        return new GetChangeRecords();
-    }
-
-    /**
-     * Create an instance of {@link ChangeRecordDelete }
-     * 
-     */
-    public ChangeRecordDelete createChangeRecordDelete() {
-        return new ChangeRecordDelete();
-    }
-
-    /**
-     * Create an instance of {@link TransferCustody }
-     * 
-     */
-    public TransferCustody createTransferCustody() {
-        return new TransferCustody();
-    }
-
-    /**
-     * Create an instance of {@link ChangeRecords }
-     * 
-     */
-    public ChangeRecords createChangeRecords() {
-        return new ChangeRecords();
+    public CommunicationGraph createCommunicationGraph() {
+        return new CommunicationGraph();
     }
 
     /**
@@ -102,19 +70,67 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ChangeRecordNewData }
+     * 
+     */
+    public ChangeRecordNewData createChangeRecordNewData() {
+        return new ChangeRecordNewData();
+    }
+
+    /**
+     * Create an instance of {@link ChangeRecords }
+     * 
+     */
+    public ChangeRecords createChangeRecords() {
+        return new ChangeRecords();
+    }
+
+    /**
+     * Create an instance of {@link ChangeRecord }
+     * 
+     */
+    public ChangeRecord createChangeRecord() {
+        return new ChangeRecord();
+    }
+
+    /**
+     * Create an instance of {@link ChangeRecordIDType }
+     * 
+     */
+    public ChangeRecordIDType createChangeRecordIDType() {
+        return new ChangeRecordIDType();
+    }
+
+    /**
+     * Create an instance of {@link ChangeRecordDelete }
+     * 
+     */
+    public ChangeRecordDelete createChangeRecordDelete() {
+        return new ChangeRecordDelete();
+    }
+
+    /**
+     * Create an instance of {@link ChangeRecordPublisherAssertion }
+     * 
+     */
+    public ChangeRecordPublisherAssertion createChangeRecordPublisherAssertion() {
+        return new ChangeRecordPublisherAssertion();
+    }
+
+    /**
+     * Create an instance of {@link FromSignatures }
+     * 
+     */
+    public FromSignatures createFromSignatures() {
+        return new FromSignatures();
+    }
+
+    /**
      * Create an instance of {@link ToSignatures }
      * 
      */
     public ToSignatures createToSignatures() {
         return new ToSignatures();
-    }
-
-    /**
-     * Create an instance of {@link CommunicationGraph }
-     * 
-     */
-    public CommunicationGraph createCommunicationGraph() {
-        return new CommunicationGraph();
     }
 
     /**
@@ -134,67 +150,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link GetHighWaterMarks }
+     * Create an instance of {@link ChangeRecordAcknowledgement }
      * 
      */
-    public GetHighWaterMarks createGetHighWaterMarks() {
-        return new GetHighWaterMarks();
+    public ChangeRecordAcknowledgement createChangeRecordAcknowledgement() {
+        return new ChangeRecordAcknowledgement();
     }
 
     /**
-     * Create an instance of {@link ChangeRecordPublisherAssertion }
+     * Create an instance of {@link ChangeRecordCorrection }
      * 
      */
-    public ChangeRecordPublisherAssertion createChangeRecordPublisherAssertion() {
-        return new ChangeRecordPublisherAssertion();
-    }
-
-    /**
-     * Create an instance of {@link DoPing }
-     * 
-     */
-    public DoPing createDoPing() {
-        return new DoPing();
-    }
-
-    /**
-     * Create an instance of {@link HighWaterMarkVectorType }
-     * 
-     */
-    public HighWaterMarkVectorType createHighWaterMarkVectorType() {
-        return new HighWaterMarkVectorType();
-    }
-
-    /**
-     * Create an instance of {@link NotifyChangeRecordsAvailable }
-     * 
-     */
-    public NotifyChangeRecordsAvailable createNotifyChangeRecordsAvailable() {
-        return new NotifyChangeRecordsAvailable();
-    }
-
-    /**
-     * Create an instance of {@link ChangeRecord }
-     * 
-     */
-    public ChangeRecord createChangeRecord() {
-        return new ChangeRecord();
-    }
-
-    /**
-     * Create an instance of {@link FromSignatures }
-     * 
-     */
-    public FromSignatures createFromSignatures() {
-        return new FromSignatures();
-    }
-
-    /**
-     * Create an instance of {@link ChangeRecordIDType }
-     * 
-     */
-    public ChangeRecordIDType createChangeRecordIDType() {
-        return new ChangeRecordIDType();
+    public ChangeRecordCorrection createChangeRecordCorrection() {
+        return new ChangeRecordCorrection();
     }
 
     /**
@@ -214,19 +182,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ChangeRecordAcknowledgement }
+     * Create an instance of {@link HighWaterMarkVectorType }
      * 
      */
-    public ChangeRecordAcknowledgement createChangeRecordAcknowledgement() {
-        return new ChangeRecordAcknowledgement();
+    public HighWaterMarkVectorType createHighWaterMarkVectorType() {
+        return new HighWaterMarkVectorType();
     }
 
     /**
-     * Create an instance of {@link ReplicationConfiguration.RegistryContact }
+     * Create an instance of {@link GetChangeRecords }
      * 
      */
-    public ReplicationConfiguration.RegistryContact createReplicationConfigurationRegistryContact() {
-        return new ReplicationConfiguration.RegistryContact();
+    public GetChangeRecords createGetChangeRecords() {
+        return new GetChangeRecords();
     }
 
     /**
@@ -238,6 +206,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ReplicationConfiguration.RegistryContact }
+     * 
+     */
+    public ReplicationConfiguration.RegistryContact createReplicationConfigurationRegistryContact() {
+        return new ReplicationConfiguration.RegistryContact();
+    }
+
+    /**
      * Create an instance of {@link Operator }
      * 
      */
@@ -246,11 +222,35 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ChangeRecordNewData }
+     * Create an instance of {@link GetHighWaterMarks }
      * 
      */
-    public ChangeRecordNewData createChangeRecordNewData() {
-        return new ChangeRecordNewData();
+    public GetHighWaterMarks createGetHighWaterMarks() {
+        return new GetHighWaterMarks();
+    }
+
+    /**
+     * Create an instance of {@link DoPing }
+     * 
+     */
+    public DoPing createDoPing() {
+        return new DoPing();
+    }
+
+    /**
+     * Create an instance of {@link TransferCustody }
+     * 
+     */
+    public TransferCustody createTransferCustody() {
+        return new TransferCustody();
+    }
+
+    /**
+     * Create an instance of {@link NotifyChangeRecordsAvailable }
+     * 
+     */
+    public NotifyChangeRecordsAvailable createNotifyChangeRecordsAvailable() {
+        return new NotifyChangeRecordsAvailable();
     }
 
     /**
@@ -290,4 +290,3 @@ public class ObjectFactory {
     }
 
 }
-

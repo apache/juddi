@@ -31,7 +31,7 @@
 		<sourceReleaseAssemblyDescriptor>source-release</sourceReleaseAssemblyDescriptor>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<cxf.version>2.7.13</cxf.version>
+		<cxf.version>2.7.14</cxf.version>
 		<springframework.version>3.2.2.RELEASE</springframework.version>
 	</properties>
 

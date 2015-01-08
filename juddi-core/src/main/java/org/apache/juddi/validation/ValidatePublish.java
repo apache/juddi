@@ -342,6 +342,13 @@ public class ValidatePublish extends ValidateUDDIApi {
                                         || !pubAssertion.getKeyValue().equalsIgnoreCase(keyedRef.getKeyValue())) {
                                         throw new AssertionNotFoundException(new ErrorMessage("errors.pubassertion.AssertionNotFound", entity.getFromKey() + ", " + entity.getToKey()));
                                 }
+                                //JUDDI-908
+                                if (!publisher.isOwner(pubAssertion.getBusinessEntityByToKey()) &&
+                                        !publisher.isOwner(pubAssertion.getBusinessEntityByFromKey()))
+                                {
+                                         throw new UserMismatchException(new ErrorMessage("errors.usermismatch.assertion"));
+                                }
+                                
 
                         }
 

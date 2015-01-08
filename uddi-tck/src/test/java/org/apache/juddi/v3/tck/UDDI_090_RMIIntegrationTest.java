@@ -157,4 +157,9 @@ public class UDDI_090_RMIIntegrationTest extends UDDI_090_SubscriptionListenerIn
                 return TckSubscriptionListenerRMI.SUBSCRIPTION_KEY_RMI;
         }
 
+        @Override
+        public boolean IsEnabled() {
+                return TckPublisher.isRMI();
+        }
+
 }

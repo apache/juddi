@@ -123,6 +123,7 @@ public class UDDI_040_PerformanceIntegrationTest {
                         logger.error(e.getMessage(), e);
                         Assert.fail("Could not obtain authInfo token.");
                 }
+                JUDDI_300_MultiNodeIntegrationTest.testSetupReplicationConfig();
         }
         long counter = 30;
 
