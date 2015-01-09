@@ -153,6 +153,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
         }
 
         static void refreshTokens() throws Exception {
+                manager.start();
                 Transport node1 = manager.getTransport(CFG_node1_MARY);
 
                 UDDISecurityPortType secNode1 = node1.getUDDISecurityService();
