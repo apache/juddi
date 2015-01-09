@@ -1395,7 +1395,7 @@ public class API_141_JIRATest {
             Assert.assertFalse(entityHistory.getChangeRecords().getChangeRecord().isEmpty());
     }
     
-      @Test(expected = DispositionReportFaultMessage.class)
+      @Test
     public void testJUDDI907_ChangeHistory4() throws Exception{
             
             JUDDIApiImpl j = new JUDDIApiImpl();

@@ -72,6 +72,8 @@ import org.apache.juddi.api_v3.ClerkList;
 import org.apache.juddi.api_v3.ClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeleteClerk;
 import org.apache.juddi.api_v3.DeleteNode;
+import org.apache.juddi.api_v3.GetEntityHistoryMessageRequest;
+import org.apache.juddi.api_v3.GetEntityHistoryMessageResponse;
 import org.apache.juddi.api_v3.NodeList;
 import org.apache.juddi.api_v3.SubscriptionWrapper;
 import org.apache.juddi.model.BindingTemplate;
@@ -395,6 +397,9 @@ public class UddiAdminHub {
                         }
                         if (action.equalsIgnoreCase("admin_SaveSubscription")) {
                                 return adminSaveSubscription(parameters);
+                        }
+                        if (action.equalsIgnoreCase("get_EntityHistory")) {
+                                return getEntityHistory(parameters);
                         }
                 } catch (Exception ex) {
                         return "Error!" + HandleException(ex);
@@ -769,11 +774,41 @@ public class UddiAdminHub {
                                 return HandleException(ex);
                         }
                 }
-                AdminSaveSubscriptionResponse res = new AdminSaveSubscriptionResponse()
-                        ;
+                AdminSaveSubscriptionResponse res = new AdminSaveSubscriptionResponse();
                 res.getSubscriptions().addAll(holder.value);
                 StringWriter sw = new StringWriter();
                 JAXB.marshal(res, sw);
+                return StringEscapeUtils.escapeHtml(sw.toString());
+        }
+
+        private String getEntityHistory(HttpServletRequest parameters) {
+                GetEntityHistoryMessageRequest sn = new GetEntityHistoryMessageRequest();
+                sn.setAuthInfo(GetToken());
+                sn.setEntityKey(parameters.getParameter("get_EntityHistoryKey"));
+                GetEntityHistoryMessageResponse entityHistory = null;
+                try {
+                        sn.setMaxRecords(Long.parseLong(parameters.getParameter("get_EntityHistoryMaxCount")));
+                        sn.setOffset(Long.parseLong(parameters.getParameter("get_EntityHistoryOffset")));
+                        entityHistory = juddi.getEntityHistory(sn);
+                } catch (Exception ex) {
+                        if (isExceptionExpiration(ex)) {
+                                token = null;
+                                sn.setAuthInfo(GetToken());
+                                try {
+                                        entityHistory = juddi.getEntityHistory(sn);
+                                } catch (Exception ex1) {
+                                        return "Error!" + HandleException(ex1);
+                                }
+
+                        } else {
+                                return "Error!" + HandleException(ex);
+                        }
+                }
+                if (entityHistory == null) {
+                        return "Something went wrong!";
+                }
+                StringWriter sw = new StringWriter();
+                JAXB.marshal(entityHistory, sw);
                 return StringEscapeUtils.escapeHtml(sw.toString());
         }
 

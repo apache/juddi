@@ -67,6 +67,7 @@
                                 <option>------ Node Management -----</option>
                                 <option>set_ReplicationNodes</option>
                                 <option>get_ReplicationNodes</option>
+                                <option>get_EntityHistory</option>
 
                                 <option>------ Backup/Restore Management -----</option>
                                 <option>admin_SaveBusiness</option>
@@ -206,6 +207,12 @@
                                         <textarea rows="4" cols="80" id="admin_SaveSubscriptionXML" class="forminput" placeholder="Enter save subscription XML"></textarea>
 
                                 </div>
+                                        <div id="get_EntityHistory" style="display:none">
+                                   Entity Key <input type="text" id="get_EntityHistoryKey"  class="forminput" placeholder="Entity Key"><br>
+                                   Records to fetch <input type="text" id="get_EntityHistoryMaxCount"  class="forminput" value="25"><br>
+                                   Offset <input type="text" id="get_EntityHistoryOffset"  class="forminput" value="0"><br>
+                                </div>
+                                        
                                 
                                
 
@@ -239,6 +246,7 @@
                                         $("#set_ReplicationNodes").hide();
                                         $("#get_ReplicationNodes").hide();
                                         $("#admin_SaveSubscription").hide();
+                                        $("#get_EntityHistory").hide();
                                        
                         
                                         $("#" + x).show();
