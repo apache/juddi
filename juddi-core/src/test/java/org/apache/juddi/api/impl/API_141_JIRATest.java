@@ -26,6 +26,8 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
+import org.apache.juddi.api_v3.GetEntityHistoryMessageRequest;
+import org.apache.juddi.api_v3.GetEntityHistoryMessageResponse;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
@@ -71,6 +73,7 @@ import org.uddi.api_v3.ServiceList;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelDetail;
 import org.uddi.api_v3.TModelList;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
@@ -1354,4 +1357,56 @@ public class API_141_JIRATest {
             Assert.fail("unexpected failure");
         }
     }
+    
+    @Test(expected = DispositionReportFaultMessage.class)
+    public void testJUDDI907_ChangeHistory() throws Exception{
+            JUDDIApiImpl j = new JUDDIApiImpl();
+            j.getEntityHistory(null);
+            Assert.fail();
+    }
+     @Test(expected = DispositionReportFaultMessage.class)
+    public void testJUDDI907_ChangeHistory1() throws Exception{
+            JUDDIApiImpl j = new JUDDIApiImpl();
+            j.getEntityHistory(new GetEntityHistoryMessageRequest());
+            Assert.fail();
+    }
+    
+    @Test(expected = DispositionReportFaultMessage.class)
+    public void testJUDDI907_ChangeHistory2() throws Exception{
+            JUDDIApiImpl j = new JUDDIApiImpl();
+            GetEntityHistoryMessageRequest r = new GetEntityHistoryMessageRequest();
+            r.setEntityKey(TckBusiness.JOE_BUSINESS_KEY);
+            j.getEntityHistory(r);
+            Assert.fail();
+    }
+    
+    @Test
+    public void testJUDDI907_ChangeHistory3() throws Exception{
+            TckBusiness tb = new TckBusiness(publication, inquiry);
+            tb.saveJoePublisherBusiness(authInfoJoe);
+            JUDDIApiImpl j = new JUDDIApiImpl();
+            GetEntityHistoryMessageRequest r = new GetEntityHistoryMessageRequest();
+            r.setEntityKey(TckBusiness.JOE_BUSINESS_KEY);
+            r.setAuthInfo(authInfoJoe);
+            GetEntityHistoryMessageResponse entityHistory = j.getEntityHistory(r);
+            tb.deleteJoePublisherBusiness(authInfoJoe);
+            Assert.assertNotNull(entityHistory);
+            Assert.assertNotNull(entityHistory.getChangeRecords());
+            Assert.assertFalse(entityHistory.getChangeRecords().getChangeRecord().isEmpty());
+    }
+    
+      @Test(expected = DispositionReportFaultMessage.class)
+    public void testJUDDI907_ChangeHistory4() throws Exception{
+            
+            JUDDIApiImpl j = new JUDDIApiImpl();
+            GetEntityHistoryMessageRequest r = new GetEntityHistoryMessageRequest();
+            r.setEntityKey(UUID.randomUUID().toString());
+            r.setAuthInfo(authInfoJoe);
+            GetEntityHistoryMessageResponse entityHistory = j.getEntityHistory(r);
+            Assert.assertNotNull(entityHistory);
+            Assert.assertNotNull(entityHistory.getChangeRecords());
+            Assert.assertTrue(entityHistory.getChangeRecords().getChangeRecord().isEmpty());
+            
+    }
+    
 }

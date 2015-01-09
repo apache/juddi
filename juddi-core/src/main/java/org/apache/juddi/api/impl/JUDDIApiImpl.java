@@ -87,6 +87,7 @@ import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.InvalidValueException;
 import org.apache.juddi.v3.error.UserMismatchException;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.juddi.validation.ValidateClerk;
@@ -1535,9 +1536,18 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
         }
 
+        /**
+         * {@inheritDoc }
+         * @param body
+         * @return item history or null if not found
+         * @throws DispositionReportFaultMessage
+         * @throws RemoteException 
+         */
         @Override
         public GetEntityHistoryMessageResponse getEntityHistory(GetEntityHistoryMessageRequest body) throws DispositionReportFaultMessage, RemoteException {
                 long startTime = System.currentTimeMillis();
+                if (body==null)
+                        throw new InvalidValueException(new ErrorMessage("errors.NullInput"));
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
                 try {
