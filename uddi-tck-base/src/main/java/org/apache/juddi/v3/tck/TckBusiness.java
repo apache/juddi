@@ -184,7 +184,7 @@ public class TckBusiness {
 
                 } catch (Throwable e) {
                         logger.error(e.getMessage(), e);
-                        Assert.fail("No exception should be thrown");
+                        Assert.fail("No exception should be thrown " + e.getMessage());
                 }
         }
 
@@ -204,7 +204,7 @@ public class TckBusiness {
                         }
                 } catch (RemoteException e) {
                         logger.error(e.getMessage(), e);
-                        Assert.fail("No exception should be thrown");
+                        Assert.fail("No exception should be thrown " + e.getMessage());
                 }
         }
 
@@ -224,7 +224,7 @@ public class TckBusiness {
                         publication.saveBusiness(sb);
                 } catch (Throwable e) {
                         logger.error(e.getMessage(), e);
-                        Assert.fail("No exception should be thrown");
+                        Assert.fail("No exception should be thrown " + e.getMessage());
                 }
         }
 
@@ -240,7 +240,7 @@ public class TckBusiness {
                         assertTrue("Signature invalid!", sigOk);
                 } catch (Throwable e) {
                         logger.error(e.getMessage(), e);
-                        Assert.fail("No exception should be thrown");
+                        Assert.fail("No exception should be thrown " + e.getMessage());
                 }
         }
 
@@ -331,7 +331,7 @@ public class TckBusiness {
                         return beOut;
                 } catch (Throwable e) {
                         logger.error(e.getMessage(), e);
-                        Assert.fail("No exception should be thrown");
+                        Assert.fail("No exception should be thrown " + e.getMessage());
                 }
                 return null;
 
@@ -372,7 +372,7 @@ public class TckBusiness {
 
                 } catch (Throwable e) {
                         logger.error(e.getMessage(), e);
-                        Assert.fail("No exception should be thrown");
+                        Assert.fail("No exception should be thrown " + e.getMessage());
                 }
 
         }
@@ -391,7 +391,7 @@ public class TckBusiness {
 
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
-                        Assert.fail("No exception should be thrown");
+                        Assert.fail("No exception should be thrown " + e.getMessage());
                 }
         }
 
@@ -405,7 +405,7 @@ public class TckBusiness {
 
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
-                        Assert.fail("No exception should be thrown");
+                        Assert.fail("No exception should be thrown " + e.getMessage());
                 }
         }
 }

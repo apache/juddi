@@ -88,7 +88,6 @@ import org.uddi.repl_v3.ChangeRecordNewData;
 import org.uddi.repl_v3.ChangeRecordPublisherAssertion;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIPublicationPortType;
-import sun.util.BuddhistCalendar;
 
 /**
  * This class implements the UDDI Publication Service
@@ -334,27 +333,29 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         List<org.uddi.api_v3.PublisherAssertion> entityList = body.getPublisherAssertion();
                         List<ChangeRecord> changes = new ArrayList<ChangeRecord>();
                         for (org.uddi.api_v3.PublisherAssertion entity : entityList) {
-                                 org.apache.juddi.model.PublisherAssertion modelPubAssertion = new org.apache.juddi.model.PublisherAssertion();
+                                org.apache.juddi.model.PublisherAssertion modelPubAssertion = new org.apache.juddi.model.PublisherAssertion();
 
                                 MappingApiToModel.mapPublisherAssertion(entity, modelPubAssertion);
 
-                                org.apache.juddi.model.PublisherAssertion existingPubAssertion = em.find(org.apache.juddi.model.PublisherAssertion.class, 
+                                org.apache.juddi.model.PublisherAssertion existingPubAssertion = em.find(org.apache.juddi.model.PublisherAssertion.class,
                                         modelPubAssertion.getId());
-                                
-                                boolean fromkey =  publisher.isOwner(em.find(BusinessEntity.class, entity.getFromKey()));
-                                boolean tokey =  publisher.isOwner(em.find(BusinessEntity.class, entity.getToKey()));
-                                if (fromkey)
+
+                                boolean fromkey = publisher.isOwner(em.find(BusinessEntity.class, entity.getFromKey()));
+                                boolean tokey = publisher.isOwner(em.find(BusinessEntity.class, entity.getToKey()));
+                                if (fromkey) {
                                         existingPubAssertion.setFromCheck("false");
-                                if (tokey)
+                                }
+                                if (tokey) {
                                         existingPubAssertion.setToCheck("false");
+                                }
                                 if ("false".equalsIgnoreCase(existingPubAssertion.getToCheck())
-                                        && "false".equalsIgnoreCase(existingPubAssertion.getFromCheck()))
+                                        && "false".equalsIgnoreCase(existingPubAssertion.getFromCheck())) {
                                         em.remove(existingPubAssertion);
-                                else {
+                                } else {
                                         existingPubAssertion.setModified(new Date());
                                         em.persist(existingPubAssertion);
                                 }
-                                
+
                                 changes.add(getChangeRecord_deletePublisherAssertion(entity, node, fromkey, tokey, existingPubAssertion.getModified().getTime()));
                         }
 
@@ -379,8 +380,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
         /**
          * deletes the referenced object, assuming authorization rules are
-         * already processed and there is already an open transaction. this is primarily used
-         * to support replication calls, i.e. another node just changed a PA record and let us know
+         * already processed and there is already an open transaction. this is
+         * primarily used to support replication calls, i.e. another node just
+         * changed a PA record and let us know
          *
          * @param entityKey
          * @param em
@@ -395,9 +397,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 org.apache.juddi.model.PublisherAssertion existingPubAssertion = em.find(org.apache.juddi.model.PublisherAssertion.class,
                         modelPubAssertion.getId());
 
-                if (existingPubAssertion==null){
-                        log.fatal("Can't delete a Publisher Assertion that isn't persisted int the database!");
-                        return;
+                if (existingPubAssertion == null) {
+                        throw new FatalErrorException(new ErrorMessage("assertionNotFound"));
                 }
                 boolean fromkey = entity.isFromBusinessCheck();// publisher.isOwner(em.find(BusinessEntity.class, entity.getFromKey()));
                 boolean tokey = entity.isToBusinessCheck();//  publisher.isOwner(em.find(BusinessEntity.class, entity.getToKey()));
@@ -467,10 +468,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         protected void deleteService(String key, EntityManager em) throws DispositionReportFaultMessage {
                 Object obj = em.find(org.apache.juddi.model.BusinessService.class, key);
                 //((org.apache.juddi.model.BusinessService) obj).getBusinessEntity().setModifiedIncludingChildren(new Date());
-                if (obj!=null)
+                if (obj != null) {
                         em.remove(obj);
-                else
-                        logger.warn("Unable to remove service with the key '" + key +"', it doesn't exist in the database");
+                } else {
+                        logger.warn("Unable to remove service with the key '" + key + "', it doesn't exist in the database");
+                }
         }
 
         /**
@@ -613,7 +615,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
         /**
          * {@inheritdoc}
-         * 
+         *
          */
         public RegisteredInfo getRegisteredInfo(GetRegisteredInfo body)
                 throws DispositionReportFaultMessage {
@@ -694,7 +696,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
         /**
          * {@inheritdoc}
-         * 
+         *
          */
         public BindingDetail saveBinding(SaveBinding body)
                 throws DispositionReportFaultMessage {
@@ -759,7 +761,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
         /**
          * {@inheritdoc}
-         * 
+         *
          */
         public BusinessDetail saveBusiness(SaveBusiness body)
                 throws DispositionReportFaultMessage {
@@ -830,7 +832,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
         /**
          * {@inheritdoc}
-         * 
+         *
          */
         public ServiceDetail saveService(SaveService body)
                 throws DispositionReportFaultMessage {
@@ -863,7 +865,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                                 em.persist(modelBusinessService);
 
                                 result.getBusinessService().add(apiBusinessService);
-                                
+
                                 validator.validateSaveServiceMax(em, modelBusinessService.getBusinessEntity().getEntityKey());
                                 changes.add(getChangeRecord(modelBusinessService, apiBusinessService, node));
                         }
@@ -892,7 +894,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
         /**
          * {@inheritdoc}
-         * 
+         *
          */
         @Override
         public TModelDetail saveTModel(SaveTModel body)
@@ -951,7 +953,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
         /**
          * {@inheritdoc}
-         * 
+         *
          */
         @Override
         public void setPublisherAssertions(String authInfo,
@@ -961,6 +963,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
+                List<ChangeRecord> changes = new ArrayList<ChangeRecord>();
                 try {
                         tx.begin();
 
@@ -972,40 +975,81 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);
 
                         //TODO this has to be reworked to record what was deleted.
-                        // First, wipe out all previous assertions associated with this publisher
-                        DeletePublisherAssertionByBusinessQuery.delete(em, businessKeysFound);
+                        // First, identify all previous assertions that need to be removed
+                        List<org.apache.juddi.model.PublisherAssertion> existingAssertions = FindPublisherAssertionByBusinessQuery.select(em, businessKeysFound, null);
+
+                        logger.info(">>>> Existing assertions " + existingAssertions.size() + ", inbound set " + publisherAssertion.value.size());
+                        List<org.apache.juddi.model.PublisherAssertion> deleteMe = diff(publisherAssertion.value, existingAssertions);
+                        logger.info(">>>> DIFF size is " + deleteMe.size());
+                        for (org.apache.juddi.model.PublisherAssertion del : deleteMe) {
+                                logger.info(">>>> PROCESSING " + del.getBusinessEntityByFromKey().getEntityKey() + " " + del.getBusinessEntityByToKey().getEntityKey());
+                                boolean from = false;
+                                if (del.getFromCheck() != null) {
+                                        del.getFromCheck().equalsIgnoreCase("true");
+                                }
+                                boolean to = false;
+                                if (del.getToCheck() != null) {
+                                        del.getToCheck().equalsIgnoreCase("true");
+                                }
+                                if (publisher.isOwner(del.getBusinessEntityByFromKey())) {
+                                        from = false;
+                                }
+                                if (publisher.isOwner(del.getBusinessEntityByToKey())) {
+                                        to = false;
+                                }
+                                PublisherAssertion api = new PublisherAssertion();
+                                MappingModelToApi.mapPublisherAssertion(del, api);
+
+                                if (!to && !from) {
+                                        logger.info(">>>> DELETE ME " + del.getBusinessEntityByFromKey().getEntityKey() + " " + del.getBusinessEntityByToKey().getEntityKey());
+                                        em.remove(del);
+                                } else {
+                                        logger.info(">>>> MERGING ME " + del.getBusinessEntityByFromKey().getEntityKey() + " " + del.getBusinessEntityByToKey().getEntityKey());
+                                        del.setFromCheck(from ? "true" : "false");
+                                        del.setToCheck(to ? "true" : "false");
+                                        del.setModified(new Date());
+                                        em.merge(del);
+                                }
+                                changes.add(getChangeRecord_deletePublisherAssertion(api, node, to, from, System.currentTimeMillis()));
+                        }
+                        //DeletePublisherAssertionByBusinessQuery.delete(em, businessKeysFound);
 
                         // Slate is clean for all assertions involving this publisher, now we simply need to add the new ones (and they will all be "new").
-                        List<org.uddi.api_v3.PublisherAssertion> apiPubAssertionList = publisherAssertion.value;
+                        /*List<org.uddi.api_v3.PublisherAssertion> apiPubAssertionList = publisherAssertion.value;
 
-                        List<ChangeRecord> changes = new ArrayList<ChangeRecord>();
-                        for (org.uddi.api_v3.PublisherAssertion apiPubAssertion : apiPubAssertionList) {
+                        
+                         for (org.uddi.api_v3.PublisherAssertion apiPubAssertion : apiPubAssertionList) {
 
-                                org.apache.juddi.model.PublisherAssertion modelPubAssertion = new org.apache.juddi.model.PublisherAssertion();
+                         org.apache.juddi.model.PublisherAssertion modelPubAssertion = new org.apache.juddi.model.PublisherAssertion();
 
-                                MappingApiToModel.mapPublisherAssertion(apiPubAssertion, modelPubAssertion);
+                         MappingApiToModel.mapPublisherAssertion(apiPubAssertion, modelPubAssertion);
+                                
+                         org.apache.juddi.model.BusinessEntity beFrom = em.find(org.apache.juddi.model.BusinessEntity.class, modelPubAssertion.getId().getFromKey());
+                         org.apache.juddi.model.BusinessEntity beTo = em.find(org.apache.juddi.model.BusinessEntity.class, modelPubAssertion.getId().getToKey());
+                         modelPubAssertion.setBusinessEntityByFromKey(beFrom);
+                         modelPubAssertion.setBusinessEntityByToKey(beTo);
 
-                                org.apache.juddi.model.BusinessEntity beFrom = em.find(org.apache.juddi.model.BusinessEntity.class, modelPubAssertion.getId().getFromKey());
-                                org.apache.juddi.model.BusinessEntity beTo = em.find(org.apache.juddi.model.BusinessEntity.class, modelPubAssertion.getId().getToKey());
-                                modelPubAssertion.setBusinessEntityByFromKey(beFrom);
-                                modelPubAssertion.setBusinessEntityByToKey(beTo);
+                         modelPubAssertion.setFromCheck("false");
+                         modelPubAssertion.setToCheck("false");
 
-                                modelPubAssertion.setFromCheck("false");
-                                modelPubAssertion.setToCheck("false");
+                         if (publisher.isOwner(modelPubAssertion.getBusinessEntityByFromKey())) {
+                         modelPubAssertion.setFromCheck("true");
+                         }
+                         if (publisher.isOwner(modelPubAssertion.getBusinessEntityByToKey())) {
+                         modelPubAssertion.setToCheck("true");
+                         }
+                         em.persist(modelPubAssertion);
 
-                                if (publisher.isOwner(modelPubAssertion.getBusinessEntityByFromKey())) {
-                                        modelPubAssertion.setFromCheck("true");
-                                }
-                                if (publisher.isOwner(modelPubAssertion.getBusinessEntityByToKey())) {
-                                        modelPubAssertion.setToCheck("true");
-                                }
-                                em.persist(modelPubAssertion);
+                         changes.add(getChangeRecord_NewAssertion(apiPubAssertion, modelPubAssertion, node));
 
-                                changes.add(getChangeRecord_NewAssertion(apiPubAssertion, modelPubAssertion, node));
-
-                        }
-
+                         }*/
                         tx.commit();
+                        if (!publisherAssertion.value.isEmpty()) {
+                                AddPublisherAssertions addPublisherAssertions = new AddPublisherAssertions();
+                                addPublisherAssertions.setAuthInfo(authInfo);
+                                addPublisherAssertions.getPublisherAssertion().addAll(publisherAssertion.value);
+                                addPublisherAssertions(addPublisherAssertions);
+                        }
                         for (int i = 0; i < changes.size(); i++) {
                                 ReplicationNotifier.Enqueue(changes.get(i));
                         }
@@ -1266,9 +1310,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
         /**
          * this is for "hiding" a tmodel, not removing it entirely
+         *
          * @param entityKey
          * @param node
-         * @return 
+         * @return
          */
         public static ChangeRecord getChangeRecord_deleteTModelHide(String entityKey, String node) {
                 ChangeRecord cr = new ChangeRecord();
@@ -1277,7 +1322,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 cr.setRecordType(ChangeRecord.RecordType.ChangeRecordHide);
                 org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();
                 crapi.setChangeID(new ChangeRecordIDType(node, -1L));
-                
+
                 crapi.setChangeRecordHide(new ChangeRecordHide());
                 crapi.getChangeRecordHide().setTModelKey(entityKey);
                 crapi.getChangeRecordHide().setModified(df.newXMLGregorianCalendar(new GregorianCalendar()));
@@ -1292,12 +1337,13 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 }
                 return cr;
         }
-        
+
         /**
          * this is for deleting a tmodel, not hiding it
+         *
          * @param entityKey
          * @param node
-         * @return 
+         * @return
          */
         public static ChangeRecord getChangeRecord_deleteTModelDelete(String entityKey, String node) {
                 ChangeRecord cr = new ChangeRecord();
@@ -1306,7 +1352,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 cr.setRecordType(ChangeRecord.RecordType.ChangeRecordHide);
                 org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();
                 crapi.setChangeID(new ChangeRecordIDType(node, -1L));
-                
+
                 crapi.setChangeRecordDelete(new ChangeRecordDelete());
                 crapi.getChangeRecordDelete().setTModelKey(entityKey);
                 crapi.getChangeRecordDelete().setModified(df.newXMLGregorianCalendar(new GregorianCalendar()));
@@ -1346,11 +1392,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
         public static ChangeRecord getChangeRecord(Tmodel modelBusinessEntity, org.uddi.api_v3.TModel apiBusinessEntity, String node) throws DispositionReportFaultMessage {
                 ChangeRecord cr = new ChangeRecord();
-                if (!apiBusinessEntity.getTModelKey().equals(modelBusinessEntity.getEntityKey()))
+                if (!apiBusinessEntity.getTModelKey().equals(modelBusinessEntity.getEntityKey())) {
                         throw new FatalErrorException(new ErrorMessage("E_fatalError", "the model and api keys do not match when saving a tmodel!"));
+                }
                 cr.setEntityKey(modelBusinessEntity.getEntityKey());
                 cr.setNodeID(node);
-                
 
                 cr.setRecordType(ChangeRecord.RecordType.ChangeRecordNewData);
                 org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();
@@ -1441,6 +1487,42 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         logger.error(ex);
                 }
                 return cr;
+        }
+
+        /**
+         *
+         * @param value keep these
+         * @param existingAssertions return a list of these that are NOT in
+         * 'value'
+         * @return
+         * @throws DispositionReportFaultMessage
+         */
+        private List<org.apache.juddi.model.PublisherAssertion> diff(List<PublisherAssertion> value, List<org.apache.juddi.model.PublisherAssertion> existingAssertions) throws DispositionReportFaultMessage {
+                List<org.apache.juddi.model.PublisherAssertion> ret = new ArrayList<org.apache.juddi.model.PublisherAssertion>();
+                if (value == null || value.isEmpty()) {
+                        return existingAssertions;
+                }
+                if (existingAssertions == null) {
+                        return new ArrayList<org.apache.juddi.model.PublisherAssertion>();
+                }
+                for (org.apache.juddi.model.PublisherAssertion model : existingAssertions) {
+
+                        boolean found = false;
+                        for (PublisherAssertion paapi : value) {
+                                if (model.getBusinessEntityByFromKey().getEntityKey().equalsIgnoreCase(paapi.getFromKey())
+                                        && model.getBusinessEntityByToKey().getEntityKey().equalsIgnoreCase(paapi.getToKey())
+                                        && model.getKeyName().equals(paapi.getKeyedReference().getKeyName())
+                                        && model.getKeyValue().equals(paapi.getKeyedReference().getKeyValue())
+                                        && model.getTmodelKey().equalsIgnoreCase(paapi.getKeyedReference().getTModelKey())) {
+                                        found = true;
+                                        break;
+                                }
+                        }
+                        if (!found) {
+                                ret.add(model);
+                        }
+                }
+                return ret;
         }
 
 }

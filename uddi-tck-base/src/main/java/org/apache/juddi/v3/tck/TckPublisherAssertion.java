@@ -46,20 +46,20 @@ public class TckPublisherAssertion
 		this.publication = publication;
 	}
 	
-	public void saveJoePublisherPublisherAssertion(String authInfoJoe) {
-		addPublisherAssertion(authInfoJoe, JOE_ASSERT_XML);
+	public List<PublisherAssertion> saveJoePublisherPublisherAssertion(String authInfoJoe) {
+		return addPublisherAssertion(authInfoJoe, JOE_ASSERT_XML);
 	}
 	
-	public void saveSamPublisherPublisherAssertion(String authInfoSam) {
-		addPublisherAssertion(authInfoSam, SAM_ASSERT_XML);
+	public List<PublisherAssertion> saveSamPublisherPublisherAssertion(String authInfoSam) {
+		return addPublisherAssertion(authInfoSam, SAM_ASSERT_XML);
 	}
 	
-	public void saveMaryPublisherPublisherAssertion(String authInfoMary) {
-		addPublisherAssertion(authInfoMary, MARY_ASSERT_XML);
+	public List<PublisherAssertion> saveMaryPublisherPublisherAssertion(String authInfoMary) {
+		return addPublisherAssertion(authInfoMary, MARY_ASSERT_XML);
 	}
 	
-	public void saveJoePublisherPublisherAssertion2(String authInfoJoe) {
-		addPublisherAssertion(authInfoJoe, JOE_ASSERT2_XML);
+	public List<PublisherAssertion> saveJoePublisherPublisherAssertion2(String authInfoJoe) {
+		return addPublisherAssertion(authInfoJoe, JOE_ASSERT2_XML);
 	}
 	
 	public void deleteJoePublisherPublisherAssertion(String authInfoJoe) {
@@ -79,7 +79,7 @@ public class TckPublisherAssertion
 	}
 
 	
-	public void addPublisherAssertion(String authInfo, String pubassertXML) {
+	public List<PublisherAssertion> addPublisherAssertion(String authInfo, String pubassertXML) {
 		try {
 			AddPublisherAssertions ap = new AddPublisherAssertions();
 			ap.setAuthInfo(authInfo);
@@ -103,13 +103,14 @@ public class TckPublisherAssertion
 				assertEquals(keyRefIn.getKeyName(), keyRefOut.getKeyName());
 				assertEquals(keyRefIn.getKeyValue(), keyRefOut.getKeyValue());
 			}
+                        return paOutList;
 			
 		}
 		catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail("No exception should be thrown");
 		}
-
+                return null;
 	}
 
 	public void deletePublisherAssertion(String authInfo, String pubassertXML) {

@@ -144,7 +144,7 @@
 				<!-- Time in minutes to expire tokes after inactivity-->
 				<Timeout>15</Timeout>
 				<!-- As of 3.1.5 Duration of time for tokens to expire, regardless of inactivity -->
-				<Expiration>15</Expiration>
+				<Expiration>60</Expiration>
 			</token>
 		</auth>
 

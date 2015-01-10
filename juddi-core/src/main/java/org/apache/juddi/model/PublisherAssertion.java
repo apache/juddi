@@ -162,4 +162,10 @@ public class PublisherAssertion implements java.io.Serializable {
 	public void setToCheck(String toCheck) {
 		this.toCheck = toCheck;
 	}
+        
+        @Override
+        public boolean equals(Object compareto){
+                PublisherAssertion rhs = (PublisherAssertion) compareto;
+                return (this.id.equals(rhs.id));
+        }
 }
