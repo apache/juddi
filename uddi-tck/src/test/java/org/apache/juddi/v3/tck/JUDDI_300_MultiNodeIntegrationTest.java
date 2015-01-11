@@ -459,13 +459,31 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         // TModel saveSamSyndicatorTmodel = samTModelNode2.saveSamSyndicatorTmodel(samTokenNode2);
                         BusinessEntity saveSamSyndicatorBusiness = samBizNode2.saveSamSyndicatorBusiness(samTokenNode2);
 
-                        getReplicationStatus();//block until synched
+                       // getReplicationStatus();//block until synched
 
                         //confirm mary's tmodel is on the other node
                         GetTModelDetail findTModel = new GetTModelDetail();
                         findTModel.setAuthInfo(samTokenNode2);
                         findTModel.getTModelKey().add(TckTModel.MARY_PUBLISHER_TMODEL_KEY);
-                        TModelDetail tModelDetail = inquirySam.getTModelDetail(findTModel);
+                        TModelDetail tModelDetail = null;
+                        
+                         int timeout = TckPublisher.getSubscriptionTimeout();
+                        
+                        while (timeout > 0) {
+                                logger.info("Waiting for the update...");
+                                try {
+                                        tModelDetail = inquirySam.getTModelDetail(findTModel);
+                                        break;
+                                } catch (Exception ex) {
+                                        logger.warn(ex.getMessage());
+                                        tModelDetail = null;
+                                       
+                                }
+                                timeout--;
+                                Thread.sleep(1000);
+
+                        }
+                        
                         Assert.assertNotNull(tModelDetail);
                         Assert.assertNotNull(tModelDetail.getTModel());
                         Assert.assertTrue(tModelDetail.getTModel().size() == 1);
@@ -474,7 +492,27 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         GetBusinessDetail gbd = new GetBusinessDetail();
                         gbd.setAuthInfo(samTokenNode2);
                         gbd.getBusinessKey().add(TckBusiness.MARY_BUSINESS_KEY);
-                        BusinessDetail businessDetail = inquirySam.getBusinessDetail(gbd);
+                        
+                        //confirm mary's biz made it too
+                        timeout = TckPublisher.getSubscriptionTimeout();
+                        BusinessDetail businessDetail =null;
+                        while (timeout > 0) {
+                                logger.info("Waiting for the update...");
+                                try {
+                                         businessDetail = inquirySam.getBusinessDetail(gbd);
+                                        break;
+                                } catch (Exception ex) {
+                                        logger.warn(ex.getMessage());
+                                        businessDetail = null;
+                                       
+                                }
+                                timeout--;
+                                Thread.sleep(1000);
+
+                        }
+                        
+                        
+                        
                         Assert.assertNotNull(businessDetail);
                         Assert.assertNotNull(businessDetail.getBusinessEntity());
                         Assert.assertTrue(businessDetail.getBusinessEntity().get(0).getBusinessKey().equals(TckBusiness.MARY_BUSINESS_KEY));
@@ -485,8 +523,8 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         maryBizNode1.deleteMaryPublisherBusiness(maryTokenNode1);
                         maryTModelNode1.deleteMaryPublisherTmodel(maryTokenNode1);
 
-                        //getReplicationStatus();//block until synched
-                        int timeout = TckPublisher.getSubscriptionTimeout();
+                        //delete both
+                         timeout = TckPublisher.getSubscriptionTimeout();
                         businessDetail = null;
                         while (timeout > 0) {
                                 logger.info("Waiting for the update...");
