@@ -198,9 +198,10 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
         /**
          * Deletes publisher(s) from the persistence layer. This method is
-         * specific to jUDDI. Administrative privilege required. Also removes all
-         * registered business entities of the user and marks all created tModels as "deleted"
-         * but not does not remove the tModel from persistence. All subscriptions are also destroyed
+         * specific to jUDDI. Administrative privilege required. Also removes
+         * all registered business entities of the user and marks all created
+         * tModels as "deleted" but not does not remove the tModel from
+         * persistence. All subscriptions are also destroyed
          *
          * @param body
          * @throws DispositionReportFaultMessage
@@ -406,7 +407,10 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * tModel will no longer be able to use the tModel if jUDDI Option
          * Enforce referential Integrity is enabled.<br>
          * Required permission, you must be am administrator
-         * {@link Property#JUDDI_ENFORCE_REFERENTIAL_INTEGRITY}
+         * {@link Property#JUDDI_ENFORCE_REFERENTIAL_INTEGRITY}. In addition, 
+         * tModels that are owned by another node via replication cannot be deleted using 
+         * this method and will throw an exception
+         
          *
          * @param body
          * @throws DispositionReportFaultMessage
@@ -427,9 +431,15 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         //TODO if referiental integrity is turned on, check to see if this is referenced anywhere and prevent the delete
                         List<String> entityKeyList = body.getTModelKey();
                         for (String entityKey : entityKeyList) {
-                                Object obj = em.find(org.apache.juddi.model.Tmodel.class, entityKey);
+                                org.apache.juddi.model.Tmodel obj = em.find(org.apache.juddi.model.Tmodel.class, entityKey);
+
+                                if (obj == null) {
+                                        throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNotFound", entityKey));
+                                }
+                                if (!obj.getNodeId().equals(node))
+                                        throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNodeOwner", entityKey + " this node " + node + " owning node " + obj.getNodeId()));
                                 em.remove(obj);
-                                ChangeRecord cr =UDDIPublicationImpl.getChangeRecord_deleteTModelDelete(entityKey, node);
+                                ChangeRecord cr = UDDIPublicationImpl.getChangeRecord_deleteTModelDelete(entityKey, node);
                                 ReplicationNotifier.Enqueue(cr);
                         }
 
@@ -1198,19 +1208,18 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         if (!((Publisher) requestor).isAdmin()) {
                                 throw new UserMismatchException(new ErrorMessage("errors.AdminReqd"));
                         }
-                               
+
                         for (int i = 0; i < values.size(); i++) {
                                 //impersonate the user
                                 AuthToken authToken = sec.getAuthToken(values.get(i).getPublisherID());
-               
+
                                 SaveBusiness stm = new SaveBusiness();
-                                
+
                                 stm.setAuthInfo(authToken.getAuthInfo());
                                 stm.getBusinessEntity().addAll(values.get(i).getBusinessEntity());
                                 pub.saveBusiness(stm);
                         }
 
-                        
                         tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.ADMIN_SAVE_BUSINESS,
@@ -1230,7 +1239,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                 DispositionReport r = new DispositionReport();
                 return r;
-            
+
         }
 
         @Override
@@ -1244,7 +1253,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         if (!((Publisher) requestor).isAdmin()) {
                                 throw new UserMismatchException(new ErrorMessage("errors.AdminReqd"));
                         }
-                        
+
                         for (int i = 0; i < values.size(); i++) {
                                 //impersonate the user
                                 AuthToken authToken = sec.getAuthToken(values.get(i).getPublisherID());
@@ -1436,9 +1445,9 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         throw drfm;
                 } catch (Exception ex) {
                         //possible that there is no config to return
-                         logger.warn("Error caught, is there a replication config is avaiable? Returning a default config (no replication): " + ex.getMessage());
+                        logger.warn("Error caught, is there a replication config is avaiable? Returning a default config (no replication): " + ex.getMessage());
                         logger.debug("Error caught, is there a replication config is avaiable? Returning a default config (no replication): ", ex);
-                      
+
                         r.setCommunicationGraph(new CommunicationGraph());
                         Operator op = new Operator();
                         op.setOperatorNodeID(node);
@@ -1452,7 +1461,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         r.getOperator().add(op);
                         r.getCommunicationGraph().getNode().add(node);
                         r.getCommunicationGraph().getControlledMessage().add("*");
-                         long procTime = System.currentTimeMillis() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         r.setSerialNumber(0);
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddkkmmZ");
                         r.setTimeOfConfigurationUpdate(sdf.format(new Date()));
@@ -1465,7 +1474,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                                 BusinessEntity rootbiz = em.find(BusinessEntity.class, AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ROOT_BUSINESS));
                                 if (rootbiz != null) {
-                                        
+
                                         for (int i = 0; i < rootbiz.getContacts().size(); i++) {
                                                 Contact c = new Contact();
                                                 MappingModelToApi.mapContact(rootbiz.getContacts().get(i), c);
@@ -1479,7 +1488,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         } catch (Exception ex1) {
                                 logger.warn("unexpected error", ex1);
                         }
-                        if (r.getRegistryContact().getContact()==null){
+                        if (r.getRegistryContact().getContact() == null) {
                                 r.getRegistryContact().setContact(new Contact());
                                 r.getRegistryContact().getContact().getPersonName().add(new PersonName("Unknown", null));
                         }
@@ -1495,7 +1504,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                 r.setMaximumTimeToGetChanges(BigInteger.ONE);
                 r.setMaximumTimeToSyncRegistry(BigInteger.ONE);
-               // JAXB.marshal(r, System.out);
+                // JAXB.marshal(r, System.out);
                 return r;
         }
 
@@ -1538,16 +1547,18 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
         /**
          * {@inheritDoc }
+         *
          * @param body
          * @return item history or null if not found
          * @throws DispositionReportFaultMessage
-         * @throws RemoteException 
+         * @throws RemoteException
          */
         @Override
         public GetEntityHistoryMessageResponse getEntityHistory(GetEntityHistoryMessageRequest body) throws DispositionReportFaultMessage, RemoteException {
                 long startTime = System.currentTimeMillis();
-                if (body==null)
+                if (body == null) {
                         throw new InvalidValueException(new ErrorMessage("errors.NullInput"));
+                }
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
                 try {
@@ -1556,21 +1567,23 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         if (!((Publisher) requestor).isAdmin()) {
                                 throw new UserMismatchException(new ErrorMessage("errors.AdminReqd"));
                         }
-                        if (body.getMaxRecords()<=0)
+                        if (body.getMaxRecords() <= 0) {
                                 body.setMaxRecords(20);
-                        if (body.getOffset() < 0)
+                        }
+                        if (body.getOffset() < 0) {
                                 body.setOffset(0);
+                        }
                         Query createQuery = em.createQuery("select m from ChangeRecord m where m.entityKey = :key order by m.id DESC");
                         createQuery.setMaxResults((int) body.getMaxRecords());
                         createQuery.setParameter("key", body.getEntityKey());
-                        createQuery.setFirstResult((int)body.getOffset());
+                        createQuery.setFirstResult((int) body.getOffset());
                         List<ChangeRecord> resultList = createQuery.getResultList();
                         GetEntityHistoryMessageResponse res = new GetEntityHistoryMessageResponse();
                         res.setChangeRecords(new ChangeRecords());
                         for (ChangeRecord cr : resultList) {
                                 res.getChangeRecords().getChangeRecord().add(MappingModelToApi.mapChangeRecord(cr));
                         }
-                        
+
                         tx.rollback();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.ADMIN_GET_HISTORY,

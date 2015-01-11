@@ -1671,15 +1671,9 @@ public class ValidatePublish extends ValidateUDDIApi {
                         if (!inserted) {
                                 throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
                         }
-
-                        Object obj = em.find(org.apache.juddi.model.Tmodel.class, entityKey);
-                        if (obj == null) {
-                                throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNotFound", entityKey));
-                        }
-
-                        //if (!publisher.isOwner((UddiEntity) obj)) {
-                        //        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
-                        //}
+ 
+                        //removed a check for checking if the entity exists which was moved to the juddi api class
+                        //why? because we were looking up the same object twice in the database and its just not efficient
                 }
         }
         ////////////////////////////////////////////////////////////////////

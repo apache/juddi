@@ -85,6 +85,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         private static String authInfoMary = null;
         private static UDDIClient manager;
         private static boolean VALID = true;
+        static TckTModel maryTmodel=null;
 
         @BeforeClass
         public static void startRegistry() throws ConfigurationException {
@@ -116,10 +117,12 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                         security = transport.getUDDISecurityService();
                         authInfoMary = TckSecurity.getAuthToken(security, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
                         if (!TckPublisher.isUDDIAuthMode()) {
-                                TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                                TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
                                 TckSecurity.setCredentials((BindingProvider) publicationMary, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
                         }
 
+                        maryTmodel = new TckTModel(publicationMary, inquiry);
+                        maryTmodel.saveMaryPublisherTmodel(authInfoMary);
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
                         Assert.fail("Could not obtain authInfo token.");
@@ -132,6 +135,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 if (!TckPublisher.isEnabled()) {
                         return;
                 }
+                maryTmodel.deleteMaryPublisherTmodel(authInfoMary);
                 manager.stop();
         }
         final static String VSV_KEY = "uddi:juddi.apache.org:node1";
@@ -858,6 +862,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("ReplacedByValid6DifferentOwners");
+                
                 BusinessEntity tm = new BusinessEntity();
                 tm.setBusinessKey(TckTModel.MARY_KEY_PREFIX + "testbiz");
                 tm.getName().add(new Name("My old business", "en"));

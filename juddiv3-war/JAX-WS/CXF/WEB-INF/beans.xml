@@ -105,7 +105,7 @@
 
    <jaxws:endpoint id="juddi-api" implementor="org.apache.juddi.api.impl.JUDDIApiImpl" address="/juddi-api">
     <jaxws:properties>
-      <entry key="schema-validation-enabled" value="true"/>
+      <entry key="schema-validation-enabled" value="false"/>
     </jaxws:properties>
   </jaxws:endpoint>
 

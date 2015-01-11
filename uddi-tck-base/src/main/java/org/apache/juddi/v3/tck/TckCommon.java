@@ -326,12 +326,12 @@ public class TckCommon {
         }
 
         public static void PrintMarker() {
-                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> FAILURE MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> FAILURE MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> FAILURE MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> FAILURE MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> FAILURE MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> FAILURE MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         }
 
 }

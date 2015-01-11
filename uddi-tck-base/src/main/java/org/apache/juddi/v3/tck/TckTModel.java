@@ -155,7 +155,7 @@ public class TckTModel {
 
                         } catch (Exception e) {
                                 logger.error(e.getMessage(), e);
-                                Assert.fail("No exception should be thrown");
+                                Assert.fail("No exception should be thrown" + e.getMessage());
                         }
 
                 } else {
