@@ -275,7 +275,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                 recordsreturned = records.size();
                                                         }
                                                 } catch (Exception ex) {
-                                                        logger.error("Error caught fetching replication changes from " + poll, ex);
+                                                        logger.error("Error caught fetching replication changes from " + poll + " @" + ((BindingProvider)replicationClient).getRequestContext().get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY), ex);
                                                 }
                                         }
                                 } else {

@@ -1417,9 +1417,10 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         //tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION3_XML);
                         //Changing the service we subscribed to "JoePublisherService"
                         Thread.sleep(1000);
-                        logger.info("dumping mary's binding before.... ");
-                        JAXB.marshal(bs, System.out);
-
+                        if (TckCommon.isDebug()){
+                                logger.info("dumping mary's binding before.... ");
+                                JAXB.marshal(bs, System.out);
+                        }
                         logger.info("updating Mary's binding ********** ");
                         // BindingDetail after=new BindingDetail();
                         /*GetBindingDetail bindingDetail = new GetBindingDetail();
@@ -1428,8 +1429,10 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         BindingDetail bindingDetail1 = null;//inquiryMary.getBindingDetail(bindingDetail);
                         bindingDetail1 = updatePublisherBindingAddCategory(authInfoMary, bt, publicationMary, new KeyedReference("uddi:uddi.org:categorization:types", UDDIConstants.CategorizationTypes_Cacheable, "Cacheable"), bindingDetail1);
 
-                        logger.info("dumping mary's binding after.... ");
-                        JAXB.marshal(bindingDetail1, System.out);
+                        if (TckCommon.isDebug()){
+                                logger.info("dumping mary's binding after.... ");
+                                JAXB.marshal(bindingDetail1, System.out);
+                        }
                         boolean found = verifyDelivery(UDDIConstants.CategorizationTypes_Cacheable);
 
                         if (!found) {

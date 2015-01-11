@@ -21,14 +21,11 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Iterator;
 import java.util.Random;
-import javax.xml.ws.Endpoint;
 import org.apache.commons.configuration.ConfigurationException;
 import static org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerIntegrationBase.logger;
 import static org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerIntegrationBase.startManager;
 import static org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerIntegrationBase.stopManager;
 import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.BeforeClass;
 
 /**
@@ -45,7 +42,9 @@ public class UDDI_090_RMIIntegrationTest extends UDDI_090_SubscriptionListenerIn
 
         @AfterClass
         public static void stop() throws ConfigurationException {
-                if (!TckPublisher.isEnabled()) return;
+                if (!TckPublisher.isEnabled()) {
+                        return;
+                }
                 stopManager();
 
         }
@@ -53,7 +52,9 @@ public class UDDI_090_RMIIntegrationTest extends UDDI_090_SubscriptionListenerIn
         @BeforeClass
         public static void startup() throws Exception {
 
-                if (!TckPublisher.isEnabled()) return;
+                if (!TckPublisher.isEnabled()) {
+                        return;
+                }
                 startManager();
 
                 randomPort = 19800 + new Random().nextInt(99);
@@ -81,7 +82,7 @@ public class UDDI_090_RMIIntegrationTest extends UDDI_090_SubscriptionListenerIn
                                 Thread.sleep(1000);
                         } catch (InterruptedException ex) {
                         }
-                        System.out.print(".");
+                        System.out.println(".");
                         //if (UDDISubscriptionListenerImpl.notificationCount > 0) {                        }
                 }
                 logger.info("RX " + UDDISubscriptionListenerImpl.notificationCount + " notifications");
@@ -95,6 +96,14 @@ public class UDDI_090_RMIIntegrationTest extends UDDI_090_SubscriptionListenerIn
                         }
                         if (test.toLowerCase().contains(findMe.toLowerCase())) {
                                 found = true;
+                        }
+                }
+
+                if (!found) {
+                        it = UDDISubscriptionListenerImpl.notifcationMap.values().iterator();
+                        Thread.dumpStack();
+                        while (it.hasNext()) {
+                                logger.info("Notification: " + it.next());
                         }
                 }
                 return found;

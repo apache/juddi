@@ -138,6 +138,22 @@ public class ValidateReplication extends ValidateUDDIApi {
                         throw new InvalidValueException(new ErrorMessage("errors.replication.contactNull"));
                 }
 
+                if (replicationConfiguration.getOperator() == null || replicationConfiguration.getOperator().isEmpty()) {
+                        throw new InvalidValueException(new ErrorMessage("errors.replication.contactNull", "Operator is null or empty"));
+                }
+                for (int i = 0; i < replicationConfiguration.getOperator().size(); i++) {
+                        if (replicationConfiguration.getOperator().get(i).getSoapReplicationURL() == null
+                                || "".equals(replicationConfiguration.getOperator().get(i).getSoapReplicationURL())) {
+                                throw new InvalidValueException(new ErrorMessage("errors.replication.contactNull", "Replication URL is null or empty"));
+                        }
+                        if (!replicationConfiguration.getOperator().get(i).getSoapReplicationURL().toLowerCase().startsWith("http")) {
+                                throw new InvalidValueException(new ErrorMessage("errors.replication.contactNull", "Replication URL is invalid, only HTTP is supported"));
+                        }
+                        if (replicationConfiguration.getOperator().get(i).getOperatorNodeID() == null
+                                || replicationConfiguration.getOperator().get(i).getOperatorNodeID().equalsIgnoreCase("")) {
+                                throw new InvalidValueException(new ErrorMessage("errors.replication.contactNull", "Node ID is not defined"));
+                        }
+                }
                 if (replicationConfiguration.getCommunicationGraph() != null) {
                         for (String s : replicationConfiguration.getCommunicationGraph().getNode()) {
                                 if (!Contains(replicationConfiguration.getOperator(), s)) {
@@ -181,32 +197,35 @@ public class ValidateReplication extends ValidateUDDIApi {
         }
 
         public void validateTransfer(EntityManager em, TransferCustody body) throws DispositionReportFaultMessage {
-                
-                 if (body == null)
-			throw new TransferNotAllowedException(new ErrorMessage("errors.NullInput"));
-		if (body.getTransferToken()==null)
+
+                if (body == null) {
                         throw new TransferNotAllowedException(new ErrorMessage("errors.NullInput"));
-                if (body.getKeyBag()==null)
+                }
+                if (body.getTransferToken() == null) {
                         throw new TransferNotAllowedException(new ErrorMessage("errors.NullInput"));
-                if (body.getTransferOperationalInfo()==null)
+                }
+                if (body.getKeyBag() == null) {
                         throw new TransferNotAllowedException(new ErrorMessage("errors.NullInput"));
-                
-                 if (body.getTransferOperationalInfo().getNodeID()==null)
+                }
+                if (body.getTransferOperationalInfo() == null) {
                         throw new TransferNotAllowedException(new ErrorMessage("errors.NullInput"));
-                 if (body.getTransferOperationalInfo().getAuthorizedName()==null)
+                }
+
+                if (body.getTransferOperationalInfo().getNodeID() == null) {
                         throw new TransferNotAllowedException(new ErrorMessage("errors.NullInput"));
-                
-                 
+                }
+                if (body.getTransferOperationalInfo().getAuthorizedName() == null) {
+                        throw new TransferNotAllowedException(new ErrorMessage("errors.NullInput"));
+                }
+
                 //confirm i own the records in question
                 //confirm i issued the transfer token
-                
                 TransferEntities x = new TransferEntities();
                 x.setKeyBag(body.getKeyBag());
                 x.setTransferToken(body.getTransferToken());
                 String transferTokenId = new String(body.getTransferToken().getOpaqueToken());
-                new ValidateCustodyTransfer(null).validateTransferLocalEntities(em, transferTokenId, body.getKeyBag().getKey() );
-                
-               
+                new ValidateCustodyTransfer(null).validateTransferLocalEntities(em, transferTokenId, body.getKeyBag().getKey());
+
         }
 
 }

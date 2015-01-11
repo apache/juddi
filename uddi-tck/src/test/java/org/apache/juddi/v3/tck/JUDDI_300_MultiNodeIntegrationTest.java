@@ -344,7 +344,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                                 beforeNode2 = inquirySam.getOperationalInfo(operationalInfo);
                                 break;
                         } catch (Exception ex) {
-                                logger.warn(ex.getMessage(), ex);
+                                logger.warn(ex.getMessage());
                         }
                         timeout--;
                         Thread.sleep(1000);
@@ -445,8 +445,6 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                 Assume.assumeTrue(TckPublisher.isReplicationEnabled());
                 Assume.assumeTrue(TckPublisher.isJUDDI());
                 try {
-                        TckCommon.PrintMarker();
-                        TckCommon.PrintMarker();
                         TckCommon.PrintMarker();
                         logger.info("testReplicationTModelBusinessPublisherAssertionAddDelete");
 
@@ -554,8 +552,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         Assert.assertEquals(tModelDetail.getTModel().get(0).isDeleted(), true);
 
                         TckCommon.PrintMarker();
-                        TckCommon.PrintMarker();
-                        TckCommon.PrintMarker();
+                       
                 } finally {
                         
                         samBizNode2.deleteSamSyndicatorBusiness(samTokenNode2);
@@ -637,7 +634,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
         }
 
         private void restTmodels() {
-                TckCommon.PrintMarker();
+               
                 logger.info("resting tmodels");
                 DeleteTModel dtm = new DeleteTModel();
                 dtm.setAuthInfo(rootNode1Token);

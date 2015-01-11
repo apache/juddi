@@ -35,7 +35,9 @@ public class UDDI_090_HttpMavenIntegrationTest extends UDDI_090_SubscriptionList
 
         @AfterClass
         public static void stop() throws ConfigurationException {
-                if (!TckPublisher.isEnabled()) return;
+                if (!TckPublisher.isEnabled()) {
+                        return;
+                }
                 stopManager();
                 endPoint.stop();
                 endPoint = null;
@@ -45,7 +47,9 @@ public class UDDI_090_HttpMavenIntegrationTest extends UDDI_090_SubscriptionList
         @BeforeClass
         public static void startup() throws Exception {
 
-                if (!TckPublisher.isEnabled()) return;
+                if (!TckPublisher.isEnabled()) {
+                        return;
+                }
                 startManager();
                 hostname = "localhost";
                 //bring up the TCK SubscriptionListener
@@ -73,7 +77,7 @@ public class UDDI_090_HttpMavenIntegrationTest extends UDDI_090_SubscriptionList
                                 Thread.sleep(1000);
                         } catch (InterruptedException ex) {
                         }
-                        System.out.print(".");
+                        System.out.println(".");
                         //if (UDDISubscriptionListenerImpl.notificationCount > 0) {                        }
                 }
                 logger.info("RX " + UDDISubscriptionListenerImpl.notificationCount + " notifications");
@@ -89,10 +93,14 @@ public class UDDI_090_HttpMavenIntegrationTest extends UDDI_090_SubscriptionList
                                 found = true;
                         }
                 }
-                if (!found){
+                if (!found) {
                         logger.error("_________________________________________________the test failed!!!");
+                        it = UDDISubscriptionListenerImpl.notifcationMap.values().iterator();
                         Thread.dumpStack();
-                                }
+                        while (it.hasNext()) {
+                                logger.info("Notification: " + it.next());
+                        }
+                }
                 return found;
         }
 
