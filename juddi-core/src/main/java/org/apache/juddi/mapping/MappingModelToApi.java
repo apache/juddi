@@ -60,6 +60,7 @@ import org.apache.juddi.model.KeyDataValue;
 import org.apache.juddi.model.Node;
 import org.apache.juddi.model.ReplicationConfiguration;
 import org.apache.juddi.model.ReplicationConfigurationNode;
+import org.apache.juddi.model.Signature;
 import org.apache.juddi.model.SignatureTransformDataValue;
 import org.apache.juddi.subscription.TypeConvertor;
 import org.apache.juddi.v3.error.ErrorMessage;
@@ -1017,7 +1018,13 @@ public class MappingModelToApi {
                 keyedRef.setKeyName(modelPublisherAssertion.getKeyName());
                 keyedRef.setKeyValue(modelPublisherAssertion.getKeyValue());
 
+               /* if (modelPublisherAssertion.getSignatures()!=null &&
+                        !modelPublisherAssertion.getSignatures().isEmpty())
+                {
+                        mapSignature(modelPublisherAssertion.getSignatures(), apiPublisherAssertion.getSignature());
+                }*/
                 apiPublisherAssertion.setKeyedReference(keyedRef);
+               
         }
 
         public static void mapAssertionStatusItem(org.apache.juddi.model.PublisherAssertion modelPublisherAssertion,

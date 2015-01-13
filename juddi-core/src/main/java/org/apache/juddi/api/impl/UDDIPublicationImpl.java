@@ -57,6 +57,7 @@ import org.apache.juddi.query.util.FindQualifiers;
 import org.apache.juddi.replication.ReplicationNotifier;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.InvalidValueException;
 import org.apache.juddi.validation.ValidatePublish;
 import org.uddi.api_v3.AddPublisherAssertions;
 import org.uddi.api_v3.AssertionStatusItem;
@@ -154,12 +155,15 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                                                         existingPubAssertion.setToCheck("true");
                                                 }
 
+                                                em.merge(existingPubAssertion);
                                                 persistNewAssertion = false;
+                                                changes.add(getChangeRecord_deletePublisherAssertion(apiPubAssertion, node, existingPubAssertion.getToCheck().equalsIgnoreCase("false"), existingPubAssertion.getFromCheck().equalsIgnoreCase("false"),  System.currentTimeMillis()));
                                         } else {
                                                 // Otherwise, it is a new relationship between these entities.  Remove the old one so the new one can be added.
                                                 // TODO: the model only seems to allow one assertion per two business (primary key is fromKey and toKey). Spec seems to imply as 
                                                 // many relationships as desired (the differentiator would be the keyedRef values).
                                                 em.remove(existingPubAssertion);
+                                                changes.add(getChangeRecord_deletePublisherAssertion(apiPubAssertion, node, true, true, System.currentTimeMillis()));
                                         }
                                 }
 
@@ -339,6 +343,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                                 org.apache.juddi.model.PublisherAssertion existingPubAssertion = em.find(org.apache.juddi.model.PublisherAssertion.class,
                                         modelPubAssertion.getId());
+                                if (existingPubAssertion==null)
+                                        throw new InvalidValueException(new ErrorMessage("E_assertionNotFound"));
 
                                 boolean fromkey = publisher.isOwner(em.find(BusinessEntity.class, entity.getFromKey()));
                                 boolean tokey = publisher.isOwner(em.find(BusinessEntity.class, entity.getToKey()));
@@ -356,7 +362,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                                         em.persist(existingPubAssertion);
                                 }
 
-                                changes.add(getChangeRecord_deletePublisherAssertion(entity, node, fromkey, tokey, existingPubAssertion.getModified().getTime()));
+                                changes.add(getChangeRecord_deletePublisherAssertion(entity, node, tokey,fromkey, existingPubAssertion.getModified().getTime()));
                         }
 
                         tx.commit();
@@ -398,7 +404,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         modelPubAssertion.getId());
 
                 if (existingPubAssertion == null) {
-                        throw new FatalErrorException(new ErrorMessage("assertionNotFound"));
+                        throw new FatalErrorException(new ErrorMessage("E_assertionNotFound"));
                 }
                 boolean fromkey = entity.isFromBusinessCheck();// publisher.isOwner(em.find(BusinessEntity.class, entity.getFromKey()));
                 boolean tokey = entity.isToBusinessCheck();//  publisher.isOwner(em.find(BusinessEntity.class, entity.getToKey()));
@@ -410,9 +416,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 }
                 if ("false".equalsIgnoreCase(existingPubAssertion.getToCheck())
                         && "false".equalsIgnoreCase(existingPubAssertion.getFromCheck())) {
+                        logger.info("!!!Deletion of publisher assertion from database via replication");
                         em.remove(existingPubAssertion);
                 } else {
                         existingPubAssertion.setModified(new Date());
+                        logger.info("!!!Publisher assertion update database via replication");
                         em.persist(existingPubAssertion);
                 }
 

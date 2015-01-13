@@ -15,15 +15,20 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -45,6 +50,7 @@ public class PublisherAssertion implements java.io.Serializable {
 	private String fromCheck;
 	private String toCheck;
 	private Date modified;
+        private List<Signature> signatures = new ArrayList<Signature>(0);
 
 	public PublisherAssertion() {
 	}
@@ -163,4 +169,14 @@ public class PublisherAssertion implements java.io.Serializable {
                 PublisherAssertion rhs = (PublisherAssertion) compareto;
                 return (this.id.equals(rhs.id));
         }
+        
+        /*
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+        public List<Signature> getSignatures() {
+                return signatures;
+        }
+
+        public void setSignatures(List<Signature> signatures) {
+                this.signatures = signatures;
+        }*/
 }

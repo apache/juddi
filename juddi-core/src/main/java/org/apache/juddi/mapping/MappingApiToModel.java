@@ -149,7 +149,7 @@ public class MappingApiToModel {
                 mapBusinessSignature(apiBusinessEntity.getSignature(), modelBusinessEntity);
         }
 
-        private static List<Signature> mapApiSignaturesToModelSignatures(List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures)
+        public static List<Signature> mapApiSignaturesToModelSignatures(List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures)
                 throws DispositionReportFaultMessage {
                 List<Signature> modelSignatures = new ArrayList<Signature>();
                 modelSignatures.clear();
@@ -975,7 +975,9 @@ public class MappingApiToModel {
         }
 
         /**
-         *
+         * note that when using this, it does not reference the instance of the
+         * specific businesses, it will create new ones. be sure to overwrite them 
+         * with the correct references
          * @param apiPubAssertion
          * @param modelPubAssertion
          * @throws DispositionReportFaultMessage
@@ -999,6 +1001,13 @@ public class MappingApiToModel {
                         modelPubAssertion.setTmodelKey(apiKeyedRef.getTModelKey());
                         modelPubAssertion.setKeyName(apiKeyedRef.getKeyName());
                         modelPubAssertion.setKeyValue(apiKeyedRef.getKeyValue());
+                }
+                if (!apiPubAssertion.getSignature().isEmpty())
+                {
+                      /*  modelPubAssertion.setSignatures(mapApiSignaturesToModelSignatures(apiPubAssertion.getSignature()));
+                        for (Signature s : modelPubAssertion.getSignatures())
+                                s.setPublisherAssertion(modelPubAssertion);
+                        */
                 }
         }
 

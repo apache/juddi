@@ -24,6 +24,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -49,6 +50,7 @@ public class Signature implements java.io.Serializable {
     private ReplicationConfiguration replConfig;
     private Tmodel tmodel;
     private String xmlID;
+    private PublisherAssertion assertion;
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -69,6 +71,19 @@ public class Signature implements java.io.Serializable {
     public void setBindingTemplate(BindingTemplate bindingTemplate) {
         this.bindingTemplate = bindingTemplate;
     }
+    
+    /*@ManyToOne
+    @JoinColumns({  
+        @JoinColumn(name = "fromKey", nullable = true),
+        @JoinColumn(name = "toKey", nullable = true)
+        })
+    public PublisherAssertion getPublisherAssertion() {
+        return assertion;
+    }
+
+    public void setPublisherAssertion(PublisherAssertion item) {
+        this.assertion = item;
+    }*/
  
     
      @ManyToOne

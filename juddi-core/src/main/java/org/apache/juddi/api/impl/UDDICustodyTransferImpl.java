@@ -73,7 +73,6 @@ import org.uddi.repl_v3.TransferCustody;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
 import org.uddi.v3_service.UDDIReplicationPortType;
-import sun.util.BuddhistCalendar;
 
 /**
  * This implements the UDDI v3 Custody Transfer API web service
