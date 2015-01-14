@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-
+<?xml version='1.0' encoding='UTF-8'?>
 <!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -18,7 +17,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:juddi-apache-org:v3_service" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.xmlsoap.org/soap/http" xmlns:ns1="urn:juddi-apache-org:api_v3" name="JUDDIApiService" targetNamespace="urn:juddi-apache-org:v3_service">
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:juddi-apache-org:v3_service" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.xmlsoap.org/soap/http" xmlns:ns1="urn:juddi-apache-org:api_v3" name="JUDDIApiService" targetNamespace="urn:juddi-apache-org:v3_service">
   <wsdl:types>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:uddi-org:sub_v3" xmlns:ns1="urn:uddi-org:api_v3" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:uddi-org:sub_v3">
   <xs:import namespace="urn:uddi-org:api_v3"/>
