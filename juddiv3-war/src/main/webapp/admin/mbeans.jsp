@@ -2,6 +2,22 @@
     Document   : mbeans
     Created on : May 6, 2013, 9:07:43 PM
     Author     : Alex O'Ree
+/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 --%><%@page import="java.util.TreeMap"%><%@page import="java.util.Map"%><%@page import="javax.management.AttributeList"%><%@page import="java.util.Map.Entry"%><%@page import="java.util.Hashtable"%><%@page import="java.util.Iterator"%><%@page import="javax.management.ObjectName"%><%@page import="java.util.Set"%><%@page import="javax.management.MBeanServerFactory"%><%@page import="java.util.ArrayList"%><%@page import="javax.management.MBeanServer"%><%@page import="java.lang.management.MemoryPoolMXBean"%><%@page import="java.lang.management.ManagementFactory"%><%@page import="java.util.List"%><%@page contentType="application/json" pageEncoding="UTF-8"%><%
 
     TreeMap data = new TreeMap<String, String>();

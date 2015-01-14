@@ -1,1 +1,0 @@
-juddi.jndi.registration=true

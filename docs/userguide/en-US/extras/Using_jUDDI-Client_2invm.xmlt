@@ -1,9 +1,0 @@
-<!-- InVM -->
-<proxyTransport>org.apache.juddi.v3.client.transport.InVMTransport</proxyTransport>
-<custodyTransferUrl>org.apache.juddi.api.impl.UDDICustodyTransferImpl</custodyTransferUrl>
-<inquiryUrl>org.apache.juddi.api.impl.UDDIInquiryImpl</inquiryUrl>
-<publishUrl>org.apache.juddi.api.impl.UDDIPublicationImpl</publishUrl>
-<securityUrl>org.apache.juddi.api.impl.UDDISecurityImpl</securityUrl>
-<subscriptionUrl>org.apache.juddi.api.impl.UDDISubscriptionImpl</subscriptionUrl>
-<subscriptionListenerUrl>org.apache.juddi.api.impl.UDDISubscriptionListenerImpl</subscriptionListenerUrl>
-<juddiApiUrl>org.apache.juddi.api.impl.JUDDIApiImpl</juddiApiUrl>

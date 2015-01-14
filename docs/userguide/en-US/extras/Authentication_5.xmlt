@@ -1,2 +1,0 @@
-juddi.authenticator=org.apache.juddi.auth.LdapSimpleAuthenticator
-juddi.authenticator.url=ldap://localhost:389

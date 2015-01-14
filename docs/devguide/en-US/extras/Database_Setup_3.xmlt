@@ -1,1 +1,0 @@
-<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>

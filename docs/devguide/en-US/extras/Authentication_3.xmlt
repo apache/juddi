@@ -1,2 +1,0 @@
-juddi.authenticator=org.apache.juddi.auth.JBossAuthenticator
-juddi.securityDomain=java:/jaas/other

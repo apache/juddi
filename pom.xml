@@ -1,424 +1,543 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- * Copyright 2001-2009 The Apache Software Foundation. * * Licensed under 
-	the Apache License, Version 2.0 (the "License"); * you may not use this file 
-	except in compliance with the License. * You may obtain a copy of the License 
-	at * * http://www.apache.org/licenses/LICENSE-2.0 * * Unless required by 
-	applicable law or agreed to in writing, software * distributed under the 
-	License is distributed on an "AS IS" BASIS, * WITHOUT WARRANTIES OR CONDITIONS 
-	OF ANY KIND, either express or implied. * See the License for the specific 
-	language governing permissions and * limitations under the License. * */ --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.apache</groupId>
-		<artifactId>apache</artifactId>
-		<version>13</version>
-	</parent>
-	<packaging>pom</packaging>
-	<groupId>org.apache.juddi</groupId>
-	<artifactId>juddi-parent</artifactId>
-	<version>3.3.0-SNAPSHOT</version>
-	<name>jUDDI_v3 Parent</name>
-	<description>jUDDI (pronounced "Judy") is an open source Java
-		implementation of the Universal Description, Discovery, and
-		Integration (UDDI) specification for Web Services.</description>
-	<url>http://juddi.apache.org/</url>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
 
-	<prerequisites>
-		<maven>3.0.3</maven>
-	</prerequisites>
+  http://www.apache.org/licenses/LICENSE-2.0
 
-	<properties>
-		<sourceReleaseAssemblyDescriptor>source-release</sourceReleaseAssemblyDescriptor>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<cxf.version>2.7.14</cxf.version>
-		<springframework.version>3.2.2.RELEASE</springframework.version>
-	</properties>
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.apache</groupId>
+        <artifactId>apache</artifactId>
+        <version>13</version>
+    </parent>
+    <packaging>pom</packaging>
+    <groupId>org.apache.juddi</groupId>
+    <artifactId>juddi-parent</artifactId>
+    <version>3.3.0-SNAPSHOT</version>
+    <name>jUDDI_v3 Parent</name>
+    <description>jUDDI (pronounced "Judy") is an open source Java
+        implementation of the Universal Description, Discovery, and
+        Integration (UDDI) specification for Web Services.</description>
+    <url>http://juddi.apache.org/</url>
 
-	<issueManagement>
-		<system>JIRA</system>
-		<url>http://issues.apache.org/jira/browse/JUDDI</url>
-	</issueManagement>
-	<ciManagement>
-		<system>Buildbot</system>
-		<url>http://ci.apache.org/buildbot.html</url>
-		<notifiers>
-			<notifier>
-				<sendOnError>true</sendOnError>
-				<sendOnFailure>true</sendOnFailure>
-				<sendOnSuccess>true</sendOnSuccess>
-				<sendOnWarning>true</sendOnWarning>
-				<configuration>
-					<address>dev@juddi.apache.org</address>
-				</configuration>
-			</notifier>
-		</notifiers>
-	</ciManagement>
-	<inceptionYear>2004</inceptionYear>
-	<mailingLists>
-		<mailingList>
-			<name>jUDDI User List</name>
-			<subscribe>user-subscribe@juddi.apache.org</subscribe>
-			<unsubscribe>user-unsubscribe@juddi.apache.org</unsubscribe>
-			<post>user@juddi.apache.org</post>
-			<archive>http://mail-archives.apache.org/mod_mbox/juddi-user/</archive>
-		</mailingList>
-		<mailingList>
-			<name>jUDDI Developer List</name>
-			<subscribe>dev-subscribe@juddi.apache.org</subscribe>
-			<unsubscribe>dev-unsubscribe@juddi.apache.org</unsubscribe>
-			<post>dev@juddi.apache.org</post>
-			<archive>http://mail-archives.apache.org/mod_mbox/juddi-dev/</archive>
-		</mailingList>
-		<mailingList>
-			<name>jUDDI SVN List</name>
-			<subscribe>cvs-subscribe@juddi.apache.org</subscribe>
-			<unsubscribe>cvs-unsubscribe@juddi.apache.org</unsubscribe>
-			<post>commits@juddi.apache.org</post>
-			<archive>http://mail-archives.apache.org/mod_mbox/juddi-cvs/</archive>
-		</mailingList>
-	</mailingLists>
-	<developers>
-		<developer>
-			<id>kstam</id>
-			<name>Kurt Stam</name>
-			<email>kstam AT apache.org</email>
-			<organization>ASF</organization>
-		</developer>
-		<developer>
-			<id>jfaath</id>
-			<name>Jeffrey Faath</name>
-			<email>jfaath AT apache.org</email>
-			<url>http://www.esigma.com</url>
-			<organization>ESigma</organization>
-		</developer>
-		<developer>
-			<id>tcunning</id>
-			<name>Tom Cunningham</name>
-			<email>tcunning AT apache.org</email>
-			<url>http://www.jboss.org/jbossesb</url>
-			<organization>JBoss/Red Hat</organization>
-		</developer>
-		<developer>
-			<id>sviens</id>
-			<name>Steve Viens</name>
-			<email>steve AT viens.net</email>
-			<url>http://www.viens.net</url>
-			<organization>ASF</organization>
-		</developer>
-		<developer>
-			<id>anil</id>
-			<name>Anil Saldhana</name>
-			<email>anil AT apache.org</email>
-			<url>http://www.jboss.org</url>
-			<organization>JBoss/Red Hat</organization>
-		</developer>
-		<developer>
-			<id>djencks</id>
-			<name>David Jencks</name>
-			<email>djencks AT apache.org</email>
-			<url>http://www.apache.org</url>
-			<organization>ASF</organization>
-		</developer>
-		<developer>
-			<id>alexoree</id>
-			<name>Alex O'Ree</name>
-			<email>alexoree AT apache.org</email>
-			<url>http://www.apache.org</url>
-			<organization>ASF</organization>
-		</developer>
-	</developers>
-	<contributors>
-		<contributor>
-			<name>Ken Wilson</name>
-			<organization>Dynamic Site Design</organization>
-			<url>http://www.dynamicsitedesign.com</url>
-		</contributor>
-		<contributor>
-			<name>Jeremi Thebeau</name>
-			<organization>Xceptance Software Technologies</organization>
-			<url>http://www.xceptance.com</url>
-		</contributor>
-	</contributors>
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-	<scm>
-		<connection>scm:git:https://git-wip-us.apache.org/repos/asf/juddi.git</connection>
-		<developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/juddi.git</developerConnection>
-		<url>https://git-wip-us.apache.org/repos/asf/juddi.git/?p=juddi.git;a=summary</url>
-	</scm>
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.2</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<source>1.6</source>
-						<target>1.6</target>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-release-plugin</artifactId>
-					<version>2.1</version>
-					<configuration>
-						<autoVersionSubmodules>true</autoVersionSubmodules>
-						<preparationGoals>clean install</preparationGoals>
-						<goals>deploy</goals>
-						<releaseProfiles>apache-release</releaseProfiles>
-						<tagNameFormat>juddi-@{project.version}</tagNameFormat>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.felix</groupId>
-					<artifactId>maven-bundle-plugin</artifactId>
-					<version>2.0.1</version>
-					<extensions>true</extensions>
-					<configuration>
-						<classifier>${envClassifier}</classifier>
-						<obrRepository>target/OBRRepository.xml</obrRepository>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>ianal-maven-plugin</artifactId>
-					<version>1.0-alpha-1</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-site-plugin</artifactId>
-					<version>2.0.1</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<configuration>
-						<aggregate>true</aggregate>
-					</configuration>
-					<executions>
-						<execution>
-							<id>aggregate</id>
-							<goals>
-								<goal>aggregate</goal>
-							</goals>
-							<phase>site</phase>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>ianal-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>2.0.1</version>
-			</plugin>
-		</plugins>
-	</build>
-	<reporting>
-		<plugins>
-			<plugin>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.6.1</version>
+    <prerequisites>
+        <maven>3.0.3</maven>
+    </prerequisites>
 
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.1.2</version>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jdepend-maven-plugin</artifactId>
-				<version>2.0-beta-2</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jxr-plugin</artifactId>
-				<version>2.2</version>
-			</plugin>
-		</plugins>
-	</reporting>
-	<modules>
-		<module>uddi-ws</module>
-		<module>uddi-tck-base</module>
-		<module>juddi-client</module>
-		<module>juddi-client-plugins</module>
-		<module>uddi-migration-tool</module>
-		<module>juddi-core</module>
-		<module>juddi-rest-cxf</module>
-		<module>juddi-core-openjpa</module>
-		<module>juddiv3-war</module>
-		<module>juddi-examples</module>
-		<module>juddi-gui-dsig</module>
-		<module>juddi-gui</module>
-		<module>juddi-tomcat</module>
-  </modules>
-	<distributionManagement>
-		<site>
-			<id>website</id>
-			<url>scpexe://people.apache.org/www/juddi.apache.org/</url>
-		</site>
-	</distributionManagement>
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging-api</artifactId>
-			<version>1.1</version>
-		</dependency>
-	</dependencies>
-	<repositories>
-		<repository>
-			<id>maven2-repository.dev.java.net</id>
-			<name>Java.net Maven 2 Repository</name>
-			<url>http://download.java.net/maven/2</url>
-			<layout>default</layout>
-		</repository>
-		<repository>
-			<id>apache.nexus</id>
-			<name>Apache NEXUS Maven 2 Repository</name>
-			<url>https://repository.apache.org/content/repositories/releases/</url>
-			<layout>default</layout>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>jboss</id>
-			<name>JBoss Repository</name>
-			<url>http://repository.jboss.org/nexus/content/groups/public</url>
-			<layout>default</layout>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>maven2-repository.dev.java.net</id>
-			<url>http://download.java.net/maven/2</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>nexus.codehaus</id>
-			<url>https://nexus.codehaus.org/content/repositories/releases/</url>
-		</pluginRepository>
+    <properties>
+        <sourceReleaseAssemblyDescriptor>source-release</sourceReleaseAssemblyDescriptor>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <cxf.version>2.7.14</cxf.version>
+        <springframework.version>3.2.2.RELEASE</springframework.version>
+    </properties>
 
-	</pluginRepositories>
-	<profiles>
-		<!-- inherit from the apache parent: release-profile -->
-		<profile>
-			<id>apache-release</id>
-			<modules>
-				<!-- adding these modules for release only -->
-				<module>uddi-tck</module>
-				<module>uddi-tck-runner</module>
-				<module>juddi-ddl-generator</module>
-				<module>docs</module>
-				<module>juddi-dist</module>
-				<module>uddi-client-dist</module>
-			</modules>
-		</profile>
+    <issueManagement>
+        <system>JIRA</system>
+        <url>http://issues.apache.org/jira/browse/JUDDI</url>
+    </issueManagement>
+    <ciManagement>
+        <system>Buildbot</system>
+        <url>http://ci.apache.org/buildbot.html</url>
+        <notifiers>
+            <notifier>
+                <sendOnError>true</sendOnError>
+                <sendOnFailure>true</sendOnFailure>
+                <sendOnSuccess>true</sendOnSuccess>
+                <sendOnWarning>true</sendOnWarning>
+                <configuration>
+                    <address>dev@juddi.apache.org</address>
+                </configuration>
+            </notifier>
+        </notifiers>
+    </ciManagement>
+    <inceptionYear>2004</inceptionYear>
+    <mailingLists>
+        <mailingList>
+            <name>jUDDI User List</name>
+            <subscribe>user-subscribe@juddi.apache.org</subscribe>
+            <unsubscribe>user-unsubscribe@juddi.apache.org</unsubscribe>
+            <post>user@juddi.apache.org</post>
+            <archive>http://mail-archives.apache.org/mod_mbox/juddi-user/</archive>
+        </mailingList>
+        <mailingList>
+            <name>jUDDI Developer List</name>
+            <subscribe>dev-subscribe@juddi.apache.org</subscribe>
+            <unsubscribe>dev-unsubscribe@juddi.apache.org</unsubscribe>
+            <post>dev@juddi.apache.org</post>
+            <archive>http://mail-archives.apache.org/mod_mbox/juddi-dev/</archive>
+        </mailingList>
+        <mailingList>
+            <name>jUDDI SVN List</name>
+            <subscribe>cvs-subscribe@juddi.apache.org</subscribe>
+            <unsubscribe>cvs-unsubscribe@juddi.apache.org</unsubscribe>
+            <post>commits@juddi.apache.org</post>
+            <archive>http://mail-archives.apache.org/mod_mbox/juddi-cvs/</archive>
+        </mailingList>
+    </mailingLists>
+    <developers>
+        <developer>
+            <id>kstam</id>
+            <name>Kurt Stam</name>
+            <email>kstam AT apache.org</email>
+            <organization>ASF</organization>
+        </developer>
+        <developer>
+            <id>jfaath</id>
+            <name>Jeffrey Faath</name>
+            <email>jfaath AT apache.org</email>
+            <url>http://www.esigma.com</url>
+            <organization>ESigma</organization>
+        </developer>
+        <developer>
+            <id>tcunning</id>
+            <name>Tom Cunningham</name>
+            <email>tcunning AT apache.org</email>
+            <url>http://www.jboss.org/jbossesb</url>
+            <organization>JBoss/Red Hat</organization>
+        </developer>
+        <developer>
+            <id>sviens</id>
+            <name>Steve Viens</name>
+            <email>steve AT viens.net</email>
+            <url>http://www.viens.net</url>
+            <organization>ASF</organization>
+        </developer>
+        <developer>
+            <id>anil</id>
+            <name>Anil Saldhana</name>
+            <email>anil AT apache.org</email>
+            <url>http://www.jboss.org</url>
+            <organization>JBoss/Red Hat</organization>
+        </developer>
+        <developer>
+            <id>djencks</id>
+            <name>David Jencks</name>
+            <email>djencks AT apache.org</email>
+            <url>http://www.apache.org</url>
+            <organization>ASF</organization>
+        </developer>
+        <developer>
+            <id>alexoree</id>
+            <name>Alex O'Ree</name>
+            <email>alexoree AT apache.org</email>
+            <url>http://www.apache.org</url>
+            <organization>ASF</organization>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Ken Wilson</name>
+            <organization>Dynamic Site Design</organization>
+            <url>http://www.dynamicsitedesign.com</url>
+        </contributor>
+        <contributor>
+            <name>Jeremi Thebeau</name>
+            <organization>Xceptance Software Technologies</organization>
+            <url>http://www.xceptance.com</url>
+        </contributor>
+    </contributors>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:git:https://git-wip-us.apache.org/repos/asf/juddi.git</connection>
+        <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/juddi.git</developerConnection>
+        <url>https://git-wip-us.apache.org/repos/asf/juddi.git/?p=juddi.git;a=summary</url>
+    </scm>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.1</version>
+                    <configuration>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <preparationGoals>clean install</preparationGoals>
+                        <goals>deploy</goals>
+                        <releaseProfiles>apache-release</releaseProfiles>
+                        <tagNameFormat>juddi-@{project.version}</tagNameFormat>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>2.0.1</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <classifier>${envClassifier}</classifier>
+                        <obrRepository>target/OBRRepository.xml</obrRepository>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>ianal-maven-plugin</artifactId>
+                    <version>1.0-alpha-1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>2.0.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <configuration>
+                        <aggregate>true</aggregate>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>aggregate</id>
+                            <goals>
+                                <goal>aggregate</goal>
+                            </goals>
+                            <phase>site</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>ianal-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>2.0.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <version>0.11</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.6.1</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>.</directory>
+                            <includes>
+                                <include>*.ddl</include>
+                                <include>*.log</include>
+                            </includes>
+			          
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.6.1</version>
 
-		<!-- same as the apache-release minus signing. CI should use this -->
-		<profile>
-			<id>dist</id>
-			<modules>
-				<!-- adding these module for dist only -->
-				<module>uddi-tck</module>
-				<module>uddi-tck-runner</module>
-				<module>juddi-ddl-generator</module>
-				<module>docs</module>
-				<module>juddi-dist</module>
-				<module>uddi-client-dist</module>
-			</modules>
-			<build>
-				<plugins>
-					<!-- Create a source-release artifact that contains the fully buildable 
-						project directory source structure. This is the artifact which is the official 
-						subject of any release vote. -->
-					<plugin>
-						<artifactId>maven-assembly-plugin</artifactId>
-						<dependencies>
-							<dependency>
-								<groupId>org.apache.apache.resources</groupId>
-								<artifactId>apache-source-release-assembly-descriptor</artifactId>
-								<version>1.0.4</version>
-							</dependency>
-						</dependencies>
-						<executions>
-							<execution>
-								<id>source-release-assembly</id>
-								<phase>package</phase>
-								<goals>
-									<goal>single</goal>
-								</goals>
-								<configuration>
-									<runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
-									<descriptorRefs>
-										<descriptorRef>${sourceReleaseAssemblyDescriptor}</descriptorRef>
-									</descriptorRefs>
-									<tarLongFileFormat>gnu</tarLongFileFormat>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<!-- We want to deploy the artifact to a staging location for perusal -->
-					<plugin>
-						<inherited>true</inherited>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-deploy-plugin</artifactId>
-						<configuration>
-							<updateReleaseInfo>true</updateReleaseInfo>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.1.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jdepend-maven-plugin</artifactId>
+                <version>2.0-beta-2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <version>0.11</version>
+            </plugin>
+        </plugins>
+    </reporting>
+    <modules>
+        <module>uddi-ws</module>
+        <module>uddi-tck-base</module>
+        <module>juddi-client</module>
+        <module>juddi-client-plugins</module>
+        <module>uddi-migration-tool</module>
+        <module>juddi-core</module>
+        <module>juddi-rest-cxf</module>
+        <module>juddi-core-openjpa</module>
+        <module>juddiv3-war</module>
+        <module>juddi-examples</module>
+        <module>juddi-gui-dsig</module>
+        <module>juddi-gui</module>
+        <module>juddi-tomcat</module>
+    </modules>
+    <distributionManagement>
+        <site>
+            <id>website</id>
+            <url>scpexe://people.apache.org/www/juddi.apache.org/</url>
+        </site>
+    </distributionManagement>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
+            <version>1.1</version>
+        </dependency>
+    </dependencies>
+    <repositories>
+        <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Maven 2 Repository</name>
+            <url>http://download.java.net/maven/2</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>apache.nexus</id>
+            <name>Apache NEXUS Maven 2 Repository</name>
+            <url>https://repository.apache.org/content/repositories/releases/</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>jboss</id>
+            <name>JBoss Repository</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven2-repository.dev.java.net</id>
+            <url>http://download.java.net/maven/2</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>nexus.codehaus</id>
+            <url>https://nexus.codehaus.org/content/repositories/releases/</url>
+        </pluginRepository>
+
+    </pluginRepositories>
+    <profiles>
+        <!-- inherit from the apache parent: release-profile -->
+        <profile>
+            <id>apache-release</id>
+            <modules>
+                <!-- adding these modules for release only -->
+                <module>uddi-tck</module>
+                <module>uddi-tck-runner</module>
+                <module>juddi-ddl-generator</module>
+                <module>docs</module>
+                <module>juddi-dist</module>
+                <module>uddi-client-dist</module>
+            </modules>
+        </profile>
+
+        <!-- same as the apache-release minus signing. CI should use this -->
+        <profile>
+            <id>dist</id>
+            <modules>
+                <!-- adding these module for dist only -->
+                <module>uddi-tck</module>
+                <module>uddi-tck-runner</module>
+                <module>juddi-ddl-generator</module>
+                <module>docs</module>
+                <module>juddi-dist</module>
+                <module>uddi-client-dist</module>
+            </modules>
+            <build>
+                <plugins>
+                    <!-- Create a source-release artifact that contains the fully buildable 
+                    project directory source structure. This is the artifact which is the official 
+                    subject of any release vote. -->
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.apache.resources</groupId>
+                                <artifactId>apache-source-release-assembly-descriptor</artifactId>
+                                <version>1.0.4</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>source-release-assembly</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
+                                    <descriptorRefs>
+                                        <descriptorRef>${sourceReleaseAssemblyDescriptor}</descriptorRef>
+                                    </descriptorRefs>
+                                    <tarLongFileFormat>gnu</tarLongFileFormat>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- We want to deploy the artifact to a staging location for perusal -->
+                    <plugin>
+                        <inherited>true</inherited>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <configuration>
+                            <updateReleaseInfo>true</updateReleaseInfo>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.rat</groupId>
+                        <artifactId>apache-rat-plugin</artifactId>
+                        <version>0.11</version>
+                        <configuration>
+                            <excludes>
+
+                                <exclude>**/*.ddl</exclude>
+                                <exclude>Doxyfile</exclude>
+                                <exclude>**/*log</exclude>
+                                <exclude>*.log</exclude>
+                                <exclude>qa/*.*</exclude>
+                                <exclude>qa/**/*.*</exclude>
+                                <exclude>juddi-client.net/packages/NUnit.2.6.2/NUnit.2.6.2.nuspec</exclude>
+                                <exclude>juddi-client.net/clean.txt</exclude>
+                                <exclude>juddi-client.net/input.txt</exclude>
+                                <exclude>juddi-client.net/juddi-client.net/org.apache.juddi.v3.client.mapping/wadl.xsd</exclude>
+                                <exclude>juddi-client.net/juddi-client.net/org.apache.juddi.v3.client.mapping/wsdl.xsd</exclude>
+                                <exclude>juddi-client.net/juddi-client.net/org.apache.juddi.v3.client.mapping/XMLSchema.xsd</exclude>
+                                <exclude>juddi-client.net/packages/NUnit.2.6.2/lib/nunit.framework.xml</exclude>
+                                <exclude>juddi-client.net/example/AspnetServiceLifeCycle/global.asa</exclude>
+                                <!-- uddi-ws-->
+                                <exclude>src/main/resources/inquire_v2.wsdl</exclude>
+                                <exclude>src/main/resources/publish_v2.wsdl</exclude>
+                                <exclude>src/main/resources/uddi_v2.xsd</exclude>
+                                <exclude>src/main/resources/uddi_v2custody.xsd</exclude>
+                                <exclude>src/main/resources/uddi_v2replication.xsd</exclude>
+                                <exclude>**/datatypes.dtd</exclude>
+                                <exclude>**/xml.xsd</exclude>
+                                <exclude>**/XMLSchema.dtd</exclude>
+                                <exclude>**/xmldsig-core-schema.xsd</exclude>
+ 
+                                <!-- TCK BASE -->
+                                <exclude>src/main/resources/uddi_data/bpel/riftsaw/bpel-technote.bpel</exclude>
+                                <exclude>src/main/resources/uddi_data/bpel/riftsaw/bpel-technote.wsdl</exclude>
+                                <!-- juddi-client-->
+                                <exclude>src/test/resources/bpel/bpel-technote.bpel</exclude>
+                                <exclude>src/test/resources/bpel/bpel-technote.wsdl</exclude>
+                                <exclude>**/*.key</exclude>
+                                <exclude>**/log4j.xml</exclude>
+
+                                <exclude>**/spring-beans.xsd</exclude>
+                                <exclude>**/spring-util.xsd</exclude>
+                                <exclude>**/spring-beans.xsd</exclude>
+
+                                <exclude>**/font-awesome*</exclude>
+                                <exclude>**/jquery*.css</exclude>
+                                <exclude>**/*.svg</exclude>
+                                <exclude>**/jquery*.js</exclude>
+                                <exclude>**/log4j.properties</exclude>
+                                <exclude>**/log4j.xml</exclude>
+                                <exclude>**/*.sh</exclude>
+                                <exclude>**/*.bat</exclude>
+                                <exclude>**/*.policy</exclude>
+                                <exclude>**/*.form</exclude>
+                                <exclude>**/jboss-deployment-structure.xml</exclude>
+                                <exclude>**/MANIFEST.MF</exclude>
+                                <exclude>**/license/*.*</exclude>
+                                <exclude>src/main/resources/schemas/orm_1_0.xsd</exclude>
+                                <exclude>src/main/resources/schemas/persistence_1_0.xsd</exclude>
+                                <exclude>src/main/resources/spring-beans.xsd.xml</exclude>
+  
+                                <exclude>**/bootstrap-timepicker.*</exclude>
+                                <exclude>**/test/selenium/*.*</exclude>
+                                <exclude>**/*.properties</exclude>
+                                <exclude>**/*.asciidoc</exclude>
+                                <exclude>**/TermsOfUse.txt</exclude>
+                                <exclude>**/pref-rpt*.txt</exclude>
+                                <exclude>**/asciidoctor.css</exclude>
+                                <exclude>**/Guardfile</exclude>
+
+                            </excludes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
