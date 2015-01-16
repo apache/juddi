@@ -17,6 +17,8 @@ package org.apache.juddi.v3.tck;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.JAXB;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.BindingProvider;
@@ -38,6 +40,7 @@ import org.junit.Test;
 import org.uddi.api_v3.AccessPoint;
 import org.uddi.api_v3.AddPublisherAssertions;
 import org.uddi.api_v3.AssertionStatusItem;
+import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BindingTemplates;
 import org.uddi.api_v3.BusinessDetail;
@@ -46,17 +49,26 @@ import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.BusinessServices;
 import org.uddi.api_v3.CompletionStatus;
 import org.uddi.api_v3.Contact;
+import org.uddi.api_v3.DeleteBinding;
+import org.uddi.api_v3.DeleteBusiness;
 import org.uddi.api_v3.DeletePublisherAssertions;
+import org.uddi.api_v3.DeleteService;
 import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.Description;
+import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.GetBindingDetail;
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetOperationalInfo;
+import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.GetTModelDetail;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.OperationalInfos;
 import org.uddi.api_v3.PersonName;
 import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.api_v3.SaveBinding;
 import org.uddi.api_v3.SaveBusiness;
+import org.uddi.api_v3.ServiceDetail;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelDetail;
 import org.uddi.custody_v3.KeyBag;
@@ -96,14 +108,15 @@ public class JUDDI_300_MultiNodeIntegrationTest {
         private static UDDICustodyTransferPortType custodySam;
         private static UDDICustodyTransferPortType custodyMary;
         private static UDDIPublicationPortType publishMary;
-        private static UDDIPublicationPortType publishSam;
+        private static UDDIPublicationPortType publishSamNode2;
         private static UDDIInquiryPortType inquiryMary;
-        private static UDDIInquiryPortType inquirySam;
+        private static UDDIInquiryPortType inquirySamNode2;
         private static UDDIReplicationPortType replicationMary;
         private static UDDIReplicationPortType replicationSam;
         static TckBusiness maryBizNode1;
         static TckTModel maryTModelNode1;
 
+        static TckBusinessService samServiceNode2;
         static TckBusiness samBizNode2;
         static TckTModel samTModelNode2;
 
@@ -152,11 +165,12 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                 ((BindingProvider) replicationSam).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, manager.getClientConfig().getUDDINode(CFG_node2_SAM).getReplicationUrl());
                 juddiApiServiceNode2 = node2.getJUDDIApiService();
                 custodySam = node2.getUDDICustodyTransferService();
-                inquirySam = node2.getUDDIInquiryService();
-                publishSam = node2.getUDDIPublishService();
+                inquirySamNode2 = node2.getUDDIInquiryService();
+                publishSamNode2 = node2.getUDDIPublishService();
+                samServiceNode2 = new TckBusinessService(publishSamNode2, inquirySamNode2);
 
-                samBizNode2 = new TckBusiness(publishSam, inquirySam);
-                samTModelNode2 = new TckTModel(publishSam, inquirySam);
+                samBizNode2 = new TckBusiness(publishSamNode2, inquirySamNode2);
+                samTModelNode2 = new TckTModel(publishSamNode2, inquirySamNode2);
                 maryBizNode1 = new TckBusiness(publishMary, inquiryMary);
                 maryTModelNode1 = new TckTModel(publishMary, inquiryMary);
 
@@ -169,9 +183,9 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         TckSecurity.setCredentials((BindingProvider) replicationMary, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
 
                         TckSecurity.setCredentials((BindingProvider) custodySam, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
-                        TckSecurity.setCredentials((BindingProvider) inquirySam, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                        TckSecurity.setCredentials((BindingProvider) inquirySamNode2, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
                         TckSecurity.setCredentials((BindingProvider) replicationSam, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
-                        TckSecurity.setCredentials((BindingProvider) publishSam, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                        TckSecurity.setCredentials((BindingProvider) publishSamNode2, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
 
                 }
         }
@@ -302,143 +316,148 @@ public class JUDDI_300_MultiNodeIntegrationTest {
         @Test
         public void testMultiNodeBusinessCustodyTransfer() throws Exception {
                 logger.info("testMultiNodeBusinessCustodyTransfer");
-                Assume.assumeTrue(TckPublisher.isReplicationEnabled() && TckPublisher.isCustodyTransferEnabled());
-                Assume.assumeTrue(TckPublisher.isJUDDI());
-                refreshTokens();
-                testSetupReplicationConfig();
+                try {
+                        Assume.assumeTrue(TckPublisher.isReplicationEnabled() && TckPublisher.isCustodyTransferEnabled());
+                        Assume.assumeTrue(TckPublisher.isJUDDI());
+                        refreshTokens();
+                        testSetupReplicationConfig();
 
-                getReplicationStatus();
+                        getReplicationStatus();
 
-                //create mary's business, node1
-                BusinessEntity mary = new BusinessEntity();
-                mary.getName().add(new Name("Mary's biz on " + CFG_node1_MARY, null));
-                mary.setBusinessServices(new BusinessServices());
-                BusinessService bs = new BusinessService();
-                bs.getName().add(new Name("Mary's service", null));
-                bs.setBindingTemplates(new BindingTemplates());
-                BindingTemplate bt = new BindingTemplate();
-                bt.setAccessPoint(new AccessPoint("http://localhost/mary", "wsdlDeployment"));
-                bs.getBindingTemplates().getBindingTemplate().add(bt);
-                mary.getBusinessServices().getBusinessService().add(bs);
+                        //create mary's business, node1
+                        BusinessEntity mary = new BusinessEntity();
+                        mary.getName().add(new Name("Mary's biz on " + CFG_node1_MARY, null));
+                        mary.setBusinessServices(new BusinessServices());
+                        BusinessService bs = new BusinessService();
+                        bs.getName().add(new Name("Mary's service", null));
+                        bs.setBindingTemplates(new BindingTemplates());
+                        BindingTemplate bt = new BindingTemplate();
+                        bt.setAccessPoint(new AccessPoint("http://localhost/mary", "wsdlDeployment"));
+                        bs.getBindingTemplates().getBindingTemplate().add(bt);
+                        mary.getBusinessServices().getBusinessService().add(bs);
 
-                SaveBusiness sb = new SaveBusiness();
-                sb.setAuthInfo(maryTokenNode1);
-                sb.getBusinessEntity().add(mary);
-                BusinessDetail saveBusiness = publishMary.saveBusiness(sb);
+                        SaveBusiness sb = new SaveBusiness();
+                        sb.setAuthInfo(maryTokenNode1);
+                        sb.getBusinessEntity().add(mary);
+                        BusinessDetail saveBusiness = publishMary.saveBusiness(sb);
 
-                Thread.sleep(5000); //sleep a bit and wait for replication to do it's thing
+                        Thread.sleep(5000); //sleep a bit and wait for replication to do it's thing
 
-                GetOperationalInfo operationalInfo = new GetOperationalInfo();
-                operationalInfo.setAuthInfo(maryTokenNode1);
-                operationalInfo.getEntityKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-                OperationalInfos beforeNode1 = inquiryMary.getOperationalInfo(operationalInfo);
+                        GetOperationalInfo operationalInfo = new GetOperationalInfo();
+                        operationalInfo.setAuthInfo(maryTokenNode1);
+                        operationalInfo.getEntityKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+                        OperationalInfos beforeNode1 = inquiryMary.getOperationalInfo(operationalInfo);
 
-                operationalInfo.setAuthInfo(samTokenNode2);
-                OperationalInfos beforeNode2 = null;
-                int timeout = TckPublisher.getSubscriptionTimeout();
-                while (timeout > 0) {
-                        logger.info("Waiting for the update...");
-                        try {
-                                GetBusinessDetail gbd = new GetBusinessDetail();
-                                gbd.setAuthInfo(samTokenNode2);
-                                gbd.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+                        operationalInfo.setAuthInfo(samTokenNode2);
+                        OperationalInfos beforeNode2 = null;
+                        int timeout = TckPublisher.getSubscriptionTimeout();
+                        while (timeout > 0) {
+                                logger.info("Waiting for the update...");
+                                try {
+                                        GetBusinessDetail gbd = new GetBusinessDetail();
+                                        gbd.setAuthInfo(samTokenNode2);
+                                        gbd.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
 
-                                BusinessDetail businessDetail = inquirySam.getBusinessDetail(gbd);
-                                if (businessDetail != null
-                                        && !businessDetail.getBusinessEntity().isEmpty()) {
-                                        logger.info("Mary's business exists on Sams node, grabbing the operational info to confirm ownership...");
-                                }
-                                beforeNode2 = inquirySam.getOperationalInfo(operationalInfo);
-                                break;
-                        } catch (Exception ex) {
-                                logger.warn(ex.getMessage());
-                        }
-                        timeout--;
-                        Thread.sleep(1000);
-
-                }
-                Assert.assertNotNull(beforeNode1);
-                Assert.assertNotNull(beforeNode2);
-
-                JAXB.marshal(beforeNode1, System.out);
-                JAXB.marshal(beforeNode2, System.out);
-                //confirm we're replicated correctly
-                Assert.assertEquals(beforeNode1.getOperationalInfo().get(0).getAuthorizedName(), beforeNode2.getOperationalInfo().get(0).getAuthorizedName());
-                Assert.assertEquals(beforeNode1.getOperationalInfo().get(0).getEntityKey(), beforeNode2.getOperationalInfo().get(0).getEntityKey());
-                Assert.assertEquals(beforeNode1.getOperationalInfo().get(0).getEntityKey(), saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-                Assert.assertEquals(beforeNode1.getOperationalInfo().get(0).getNodeID(), beforeNode2.getOperationalInfo().get(0).getNodeID());
-
-                //get a transfer token, node1
-                KeyBag kb = new KeyBag();
-                kb.getKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-                Holder<String> sourceNode = new Holder<String>();
-                Holder<XMLGregorianCalendar> expiration = new Holder<XMLGregorianCalendar>();
-                Holder<byte[]> token = new Holder<byte[]>();
-                custodyMary.getTransferToken(maryTokenNode1, kb, sourceNode, expiration, token);
-
-                //sam accepts the transfer token, node 2
-                TransferEntities transferEntities = new TransferEntities();
-                transferEntities.setAuthInfo(samTokenNode2);
-                transferEntities.setKeyBag(kb);
-                transferEntities.setTransferToken(new TransferToken());
-                transferEntities.getTransferToken().setExpirationTime(expiration.value);
-                transferEntities.getTransferToken().setNodeID(sourceNode.value);
-                transferEntities.getTransferToken().setOpaqueToken(token.value);
-                custodySam.transferEntities(transferEntities);
-                //stuff happens
-                //Thread.sleep(5000);
-                //confirm the transfer
-                timeout = TckPublisher.getSubscriptionTimeout();
-                OperationalInfos afterNode1 = null;
-                OperationalInfos afterNode2 = null;
-                while (timeout > 0) {
-                        logger.info("Waiting for the update...");
-                        try {
-                                operationalInfo.setAuthInfo(maryTokenNode1);
-                                //operationalInfo.getEntityKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-                                afterNode1 = inquiryMary.getOperationalInfo(operationalInfo);
-                                if (afterNode1.getOperationalInfo().get(0).getAuthorizedName().equals(TckPublisher.getSamPublisherId())) {
-                                        logger.info("Mary's biz on node 1 is now owned by Sam");
-                                        //node 1 is up to date
-                                        operationalInfo.setAuthInfo(samTokenNode2);
-                                        afterNode2 = inquirySam.getOperationalInfo(operationalInfo);
-                                        if (afterNode2.getOperationalInfo().get(0).getAuthorizedName().equals(TckPublisher.getSamPublisherId())) {
-                                                //node 2 is up to date
-                                                logger.info("Mary's biz on node 2 is now owned by Sam");
-                                                break;
-                                        } else {
-                                                logger.info("Mary's biz on node 2 is still owned by Mary");
+                                        BusinessDetail businessDetail = inquirySamNode2.getBusinessDetail(gbd);
+                                        if (businessDetail != null
+                                                && !businessDetail.getBusinessEntity().isEmpty()) {
+                                                logger.info("Mary's business exists on Sams node, grabbing the operational info to confirm ownership...");
                                         }
-                                } else {
-                                        logger.info("Mary's biz on node 1 is still owned by Mary");
+                                        beforeNode2 = inquirySamNode2.getOperationalInfo(operationalInfo);
+                                        break;
+                                } catch (Exception ex) {
+                                        logger.warn(ex.getMessage());
                                 }
-                        } catch (Exception ex) {
-                                logger.warn(ex.getMessage());
+                                timeout--;
+                                Thread.sleep(1000);
+
                         }
-                        timeout--;
-                        Thread.sleep(1000);
+                        Assert.assertNotNull(beforeNode1);
+                        Assert.assertNotNull(beforeNode2);
 
+                        JAXB.marshal(beforeNode1, System.out);
+                        JAXB.marshal(beforeNode2, System.out);
+                        //confirm we're replicated correctly
+                        Assert.assertEquals(beforeNode1.getOperationalInfo().get(0).getAuthorizedName(), beforeNode2.getOperationalInfo().get(0).getAuthorizedName());
+                        Assert.assertEquals(beforeNode1.getOperationalInfo().get(0).getEntityKey(), beforeNode2.getOperationalInfo().get(0).getEntityKey());
+                        Assert.assertEquals(beforeNode1.getOperationalInfo().get(0).getEntityKey(), saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+                        Assert.assertEquals(beforeNode1.getOperationalInfo().get(0).getNodeID(), beforeNode2.getOperationalInfo().get(0).getNodeID());
+
+                        //get a transfer token, node1
+                        KeyBag kb = new KeyBag();
+                        kb.getKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+                        Holder<String> sourceNode = new Holder<String>();
+                        Holder<XMLGregorianCalendar> expiration = new Holder<XMLGregorianCalendar>();
+                        Holder<byte[]> token = new Holder<byte[]>();
+                        custodyMary.getTransferToken(maryTokenNode1, kb, sourceNode, expiration, token);
+
+                        //sam accepts the transfer token, node 2
+                        TransferEntities transferEntities = new TransferEntities();
+                        transferEntities.setAuthInfo(samTokenNode2);
+                        transferEntities.setKeyBag(kb);
+                        transferEntities.setTransferToken(new TransferToken());
+                        transferEntities.getTransferToken().setExpirationTime(expiration.value);
+                        transferEntities.getTransferToken().setNodeID(sourceNode.value);
+                        transferEntities.getTransferToken().setOpaqueToken(token.value);
+                        custodySam.transferEntities(transferEntities);
+                        //stuff happens
+                        //Thread.sleep(5000);
+                        //confirm the transfer
+                        timeout = TckPublisher.getSubscriptionTimeout();
+                        OperationalInfos afterNode1 = null;
+                        OperationalInfos afterNode2 = null;
+                        while (timeout > 0) {
+                                logger.info("Waiting for the update...");
+                                try {
+                                        operationalInfo.setAuthInfo(maryTokenNode1);
+                                        //operationalInfo.getEntityKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+                                        afterNode1 = inquiryMary.getOperationalInfo(operationalInfo);
+                                        if (afterNode1.getOperationalInfo().get(0).getAuthorizedName().equals(TckPublisher.getSamPublisherId())) {
+                                                logger.info("Mary's biz on node 1 is now owned by Sam");
+                                                //node 1 is up to date
+                                                operationalInfo.setAuthInfo(samTokenNode2);
+                                                afterNode2 = inquirySamNode2.getOperationalInfo(operationalInfo);
+                                                if (afterNode2.getOperationalInfo().get(0).getAuthorizedName().equals(TckPublisher.getSamPublisherId())) {
+                                                        //node 2 is up to date
+                                                        logger.info("Mary's biz on node 2 is now owned by Sam");
+                                                        break;
+                                                } else {
+                                                        logger.info("Mary's biz on node 2 is still owned by Mary");
+                                                }
+                                        } else {
+                                                logger.info("Mary's biz on node 1 is still owned by Mary");
+                                        }
+                                } catch (Exception ex) {
+                                        logger.warn(ex.getMessage());
+                                }
+                                timeout--;
+                                Thread.sleep(1000);
+
+                        }
+                        //operationalInfo.setAuthInfo(maryTokenNode1);
+                        // operationalInfo.getEntityKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+
+                        Assert.assertNotNull(afterNode1);
+                        Assert.assertNotNull(afterNode2);
+                        if (TckCommon.isDebug()) {
+                                JAXB.marshal(afterNode1, System.out);
+                                JAXB.marshal(afterNode2, System.out);
+
+                        }
+                        //confirm we're replicated correctly
+                        Assert.assertEquals(afterNode1.getOperationalInfo().get(0).getAuthorizedName(), afterNode2.getOperationalInfo().get(0).getAuthorizedName());
+                        Assert.assertEquals(afterNode1.getOperationalInfo().get(0).getEntityKey(), afterNode2.getOperationalInfo().get(0).getEntityKey());
+                        Assert.assertEquals(afterNode1.getOperationalInfo().get(0).getEntityKey(), saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+                        Assert.assertEquals(afterNode1.getOperationalInfo().get(0).getNodeID(), afterNode2.getOperationalInfo().get(0).getNodeID());
+                        //confirm that the entity now belongs to sam
+
+                        Assert.assertEquals(afterNode1.getOperationalInfo().get(0).getAuthorizedName(), TckPublisher.getSamPublisherId());
+                        Assert.assertNotEquals(beforeNode1.getOperationalInfo().get(0).getNodeID(), afterNode1.getOperationalInfo().get(0).getNodeID());
+
+                } finally {
+                        resetTmodels();
+                        resetBusinesses();
                 }
-                //operationalInfo.setAuthInfo(maryTokenNode1);
-                // operationalInfo.getEntityKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-
-                Assert.assertNotNull(afterNode1);
-                Assert.assertNotNull(afterNode2);
-                if (TckCommon.isDebug()) {
-                        JAXB.marshal(afterNode1, System.out);
-                        JAXB.marshal(afterNode2, System.out);
-
-                }
-                //confirm we're replicated correctly
-                Assert.assertEquals(afterNode1.getOperationalInfo().get(0).getAuthorizedName(), afterNode2.getOperationalInfo().get(0).getAuthorizedName());
-                Assert.assertEquals(afterNode1.getOperationalInfo().get(0).getEntityKey(), afterNode2.getOperationalInfo().get(0).getEntityKey());
-                Assert.assertEquals(afterNode1.getOperationalInfo().get(0).getEntityKey(), saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-                Assert.assertEquals(afterNode1.getOperationalInfo().get(0).getNodeID(), afterNode2.getOperationalInfo().get(0).getNodeID());
-                //confirm that the entity now belongs to sam
-
-                Assert.assertEquals(afterNode1.getOperationalInfo().get(0).getAuthorizedName(), TckPublisher.getSamPublisherId());
-                Assert.assertNotEquals(beforeNode1.getOperationalInfo().get(0).getNodeID(), afterNode1.getOperationalInfo().get(0).getNodeID());
-
         }
 
         /**
@@ -447,7 +466,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
          * @throws Exception
          */
         @Test
-
+        @Ignore
         public void testReplicationTModelBusinessPublisherAssertionAddDelete() throws Exception {
                 Assume.assumeTrue(TckPublisher.isReplicationEnabled());
                 Assume.assumeTrue(TckPublisher.isJUDDI());
@@ -455,7 +474,8 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         TckCommon.PrintMarker();
                         logger.info("testReplicationTModelBusinessPublisherAssertionAddDelete");
 
-                        restTmodels();
+                        resetTmodels();
+                        resetBusinesses();
 
                         TModel saveMaryPublisherTmodel = maryTModelNode1.saveMaryPublisherTmodel(maryTokenNode1);
 
@@ -476,7 +496,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         while (timeout > 0) {
                                 logger.info("Waiting for the update...");
                                 try {
-                                        tModelDetail = inquirySam.getTModelDetail(findTModel);
+                                        tModelDetail = inquirySamNode2.getTModelDetail(findTModel);
                                         break;
                                 } catch (Exception ex) {
                                         logger.warn(ex.getMessage());
@@ -503,7 +523,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         while (timeout > 0) {
                                 logger.info("Waiting for the update...");
                                 try {
-                                        businessDetail = inquirySam.getBusinessDetail(gbd);
+                                        businessDetail = inquirySamNode2.getBusinessDetail(gbd);
                                         break;
                                 } catch (Exception ex) {
                                         logger.warn(ex.getMessage());
@@ -528,12 +548,12 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         AddPublisherAssertions apa = new AddPublisherAssertions();
                         apa.setAuthInfo(samTokenNode2);
                         apa.getPublisherAssertion().add(pa);
-                        publishSam.addPublisherAssertions(apa);
+                        publishSamNode2.addPublisherAssertions(apa);
 
                         logger.info("Confirming that the assertion is saved on node2 (sam, origin)");
                         List<AssertionStatusItem> assertionStatusReport = null;
                         boolean found = false;
-                        assertionStatusReport = publishSam.getAssertionStatusReport(samTokenNode2, null);
+                        assertionStatusReport = publishSamNode2.getAssertionStatusReport(samTokenNode2, null);
                         logger.info("Publisher assertions returned: " + assertionStatusReport.size());
                         for (int x = 0; x < assertionStatusReport.size(); x++) {
                                 JAXB.marshal(assertionStatusReport.get(x), System.out);
@@ -583,11 +603,11 @@ public class JUDDI_300_MultiNodeIntegrationTest {
 
                         }
                         Assert.assertTrue("Assertion wasn't replicated", found);
-                        
+
                         logger.info("Publisher Assertion replicated...");
                         logger.info("confirming the pa is still on node 2 origin (sam)");
                         found = false;
-                        assertionStatusReport = publishSam.getAssertionStatusReport(samTokenNode2, null);
+                        assertionStatusReport = publishSamNode2.getAssertionStatusReport(samTokenNode2, null);
                         logger.info("Publisher assertions returned: " + assertionStatusReport.size());
                         for (int x = 0; x < assertionStatusReport.size(); x++) {
                                 JAXB.marshal(assertionStatusReport.get(x), System.out);
@@ -602,16 +622,16 @@ public class JUDDI_300_MultiNodeIntegrationTest {
 
                         }
                         Assert.assertTrue("The PA is not found on node 2(origin), very strange", found);
-                        
+
                         //delete the pa
                         DeletePublisherAssertions dpa = new DeletePublisherAssertions();
                         dpa.setAuthInfo(samTokenNode2);
                         dpa.getPublisherAssertion().add(pa);
-                        String sam = TckCommon.DumpAllBusinesses(samTokenNode2, inquirySam);
+                        String sam = TckCommon.DumpAllBusinesses(samTokenNode2, inquirySamNode2);
                         String mary = TckCommon.DumpAllBusinesses(maryTokenNode1, inquiryMary);
                         logger.info("Publisher Assertion deletion...");
                         try {
-                                publishSam.deletePublisherAssertions(dpa);
+                                publishSamNode2.deletePublisherAssertions(dpa);
                         } catch (Exception ex) {
                                 ex.printStackTrace();
                                 logger.info("Sam's businesses " + sam);
@@ -663,7 +683,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         while (timeout > 0) {
                                 logger.info("Waiting for the update...");
                                 try {
-                                        businessDetail = inquirySam.getBusinessDetail(gbd);
+                                        businessDetail = inquirySamNode2.getBusinessDetail(gbd);
 
                                 } catch (Exception ex) {
                                         logger.warn(ex.getMessage());
@@ -681,7 +701,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         }
                         logger.info("Mary's business deletion was replicated");
 
-                        tModelDetail = inquirySam.getTModelDetail(findTModel);
+                        tModelDetail = inquirySamNode2.getTModelDetail(findTModel);
                         Assert.assertNotNull(tModelDetail);
                         Assert.assertNotNull(tModelDetail.getTModel());
                         Assert.assertNotNull(tModelDetail.getTModel().get(0));
@@ -693,7 +713,8 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                 } finally {
 
                         samBizNode2.deleteSamSyndicatorBusiness(samTokenNode2);
-                        restTmodels();
+                        resetTmodels();
+                        resetBusinesses();
 
                 }
                 //check node2 for a "hidden" tmodel should be accessible via getDetails
@@ -706,32 +727,298 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                 logger.info("testReplicationPublisherAssertionSet");
         }
 
+        /**
+         * covers adding and removing a service and a binding
+         *
+         * @throws Exception
+         */
         @Test
-        public void testReplicationServiceAdd() throws Exception {
+        public void testReplicationServiceBindingAddRemove() throws Exception {
                 Assume.assumeTrue(TckPublisher.isReplicationEnabled());
                 Assume.assumeTrue(TckPublisher.isJUDDI());
-                logger.info("testReplicationServiceAdd");
-        }
+                logger.info("testReplicationServiceBindingAddRemove");
 
-        @Test
-        public void testReplicationServiceDelete() throws Exception {
-                Assume.assumeTrue(TckPublisher.isReplicationEnabled());
-                Assume.assumeTrue(TckPublisher.isJUDDI());
-                logger.info("testReplicationServiceDelete");
-        }
+                try {
+                        TckCommon.PrintMarker();
 
-        @Test
-        public void testReplicationBindingAdd() throws Exception {
-                Assume.assumeTrue(TckPublisher.isReplicationEnabled());
-                Assume.assumeTrue(TckPublisher.isJUDDI());
-                logger.info("testReplicationBindingAdd");
-        }
+                        resetBusinesses();
+                        resetTmodels();
 
-        @Test
-        public void testReplicationBindingDelete() throws Exception {
-                Assume.assumeTrue(TckPublisher.isReplicationEnabled());
-                Assume.assumeTrue(TckPublisher.isJUDDI());
-                logger.info("testReplicationBindingDelete");
+                        samTModelNode2.saveSamSyndicatorTmodel(samTokenNode2);
+                        samBizNode2.saveSamSyndicatorBusiness(samTokenNode2);
+
+                        // getReplicationStatus();//block until synched
+                        //confirm sam's tmodel is on the other node
+                        GetTModelDetail findTModel = new GetTModelDetail();
+                        findTModel.setAuthInfo(maryTokenNode1);
+                        findTModel.getTModelKey().add(TckTModel.SAM_SYNDICATOR_TMODEL_KEY);
+                        TModelDetail tModelDetail = null;
+
+                        int timeout = TckPublisher.getSubscriptionTimeout();
+
+                        while (timeout > 0) {
+                                logger.info("Waiting for the update...");
+                                try {
+                                        tModelDetail = inquiryMary.getTModelDetail(findTModel);
+                                        break;
+                                } catch (Exception ex) {
+                                        logger.warn(ex.getMessage());
+                                        tModelDetail = null;
+
+                                }
+                                timeout--;
+                                Thread.sleep(1000);
+
+                        }
+
+                        Assert.assertNotNull(tModelDetail);
+                        Assert.assertNotNull(tModelDetail.getTModel());
+                        Assert.assertTrue(tModelDetail.getTModel().size() == 1);
+                        Assert.assertTrue(tModelDetail.getTModel().get(0).getTModelKey().equals(TckTModel.SAM_SYNDICATOR_TMODEL_KEY));
+
+                        GetBusinessDetail gbd = new GetBusinessDetail();
+                        gbd.setAuthInfo(maryTokenNode1);
+                        gbd.getBusinessKey().add(TckBusiness.SAM_BUSINESS_KEY);
+
+                        //confirm mary's biz made it too
+                        timeout = TckPublisher.getSubscriptionTimeout();
+                        BusinessDetail businessDetail = null;
+                        while (timeout > 0) {
+                                logger.info("Waiting for the update...");
+                                try {
+                                        businessDetail = inquiryMary.getBusinessDetail(gbd);
+                                        break;
+                                } catch (Exception ex) {
+                                        logger.warn(ex.getMessage());
+                                        businessDetail = null;
+
+                                }
+                                timeout--;
+                                Thread.sleep(1000);
+
+                        }
+
+                        Assert.assertNotNull(businessDetail);
+                        Assert.assertNotNull(businessDetail.getBusinessEntity());
+                        Assert.assertTrue(businessDetail.getBusinessEntity().get(0).getBusinessKey().equals(TckBusiness.SAM_BUSINESS_KEY));
+                        logger.info("Business replicated");
+
+                        //save a service
+                        samServiceNode2.saveSamSyndicatorService(samTokenNode2);
+
+                        GetServiceDetail gsd = new GetServiceDetail();
+                        gsd.setAuthInfo(maryTokenNode1);
+                        gsd.getServiceKey().add(TckBusinessService.SAM_SERVICE_KEY);
+
+                        //confirm sam's service made it too
+                        timeout = TckPublisher.getSubscriptionTimeout();
+                        ServiceDetail sd = null;
+                        while (timeout > 0) {
+                                logger.info("Waiting for the update...");
+                                try {
+                                        sd = inquiryMary.getServiceDetail(gsd);
+                                        break;
+                                } catch (Exception ex) {
+                                        logger.warn(ex.getMessage());
+                                        sd = null;
+
+                                }
+                                timeout--;
+                                Thread.sleep(1000);
+
+                        }
+
+                        Assert.assertNotNull(sd);
+                        Assert.assertNotNull(sd.getBusinessService());
+                        Assert.assertTrue(sd.getBusinessService().get(0).getBusinessKey().equals(TckBusiness.SAM_BUSINESS_KEY));
+                        Assert.assertTrue(sd.getBusinessService().get(0).getServiceKey().equals(TckBusinessService.SAM_SERVICE_KEY));
+                        logger.info("Service replicated");
+
+                        BindingTemplate newbt = new BindingTemplate();
+                        newbt.setServiceKey(TckBusinessService.SAM_SERVICE_KEY);
+                        newbt.setAccessPoint(new AccessPoint("http://localhost", "wsdlDeployment"));
+                        newbt.getDescription().add(new Description("a new accesspoint that's replicated!", "en"));
+                        SaveBinding saveBind = new SaveBinding();
+                        saveBind.setAuthInfo(samTokenNode2);
+                        saveBind.getBindingTemplate().add(newbt);
+                        logger.info("Binding saved");
+                        BindingDetail saveBinding = publishSamNode2.saveBinding(saveBind);
+
+                        GetBindingDetail bindingDetail = new GetBindingDetail();
+                        bindingDetail.setAuthInfo(maryTokenNode1);
+                        bindingDetail.getBindingKey().add(saveBinding.getBindingTemplate().get(0).getBindingKey());
+
+                        //confirm sam's binding made it too
+                        timeout = TckPublisher.getSubscriptionTimeout();
+                        BindingDetail savedMary = null;
+                        while (timeout > 0) {
+                                logger.info("Waiting for the update...");
+                                try {
+                                        savedMary = inquiryMary.getBindingDetail(bindingDetail);
+                                        break;
+                                } catch (Exception ex) {
+                                        logger.warn(ex.getMessage());
+                                        savedMary = null;
+
+                                }
+                                timeout--;
+                                Thread.sleep(1000);
+
+                        }
+                        Assert.assertNotNull(savedMary);
+                        Assert.assertNotNull(savedMary.getBindingTemplate());
+                        Assert.assertNotNull(savedMary.getBindingTemplate().get(0));
+                        Assert.assertEquals(savedMary.getBindingTemplate().get(0).getBindingKey(), saveBinding.getBindingTemplate().get(0).getBindingKey());
+                        Assert.assertEquals(savedMary.getBindingTemplate().get(0).getServiceKey(), saveBinding.getBindingTemplate().get(0).getServiceKey());
+                        logger.info("Binding was replicated");
+
+                        //delete the binding
+                        DeleteBinding db = new DeleteBinding();
+                        db.setAuthInfo(samTokenNode2);
+                        db.getBindingKey().add(saveBinding.getBindingTemplate().get(0).getBindingKey());
+                        publishSamNode2.deleteBinding(db);
+                        logger.info("binding deleted");
+
+                        //confirm deletion
+                        timeout = TckPublisher.getSubscriptionTimeout();
+                        BindingDetail gbindd = null;
+                        GetBindingDetail getBindingDetail = new GetBindingDetail();
+                        getBindingDetail.setAuthInfo(maryTokenNode1);
+                        getBindingDetail.getBindingKey().add(saveBinding.getBindingTemplate().get(0).getBindingKey());
+                        while (timeout > 0) {
+                                logger.info("Waiting for the update...");
+                                try {
+                                        gbindd = inquiryMary.getBindingDetail(getBindingDetail);
+
+                                } catch (Exception ex) {
+                                        logger.warn(ex.getMessage());
+                                        gbindd = null;
+                                        break;
+                                }
+                                timeout--;
+                                Thread.sleep(1000);
+
+                        }
+                        //check node2 for delete biz, should be gone
+
+                        if (gbindd != null) {
+                                Assert.fail(saveBinding.getBindingTemplate().get(0).getBindingKey() + " wasn't deleted on node 1");
+                        }
+                        logger.info("binding deletion was replicated");
+
+                        //delete the service
+                        DeleteService delsvc = new DeleteService();
+                        delsvc.setAuthInfo(samTokenNode2);
+                        delsvc.getServiceKey().add(TckBusinessService.SAM_SERVICE_KEY);
+                        publishSamNode2.deleteService(delsvc);
+                        logger.info("service deleted");
+
+                        ServiceDetail sdd = null;
+                        //confirm deletion
+                        GetServiceDetail getServiceDetail = new GetServiceDetail();
+                        getServiceDetail.setAuthInfo(maryTokenNode1);
+                        getServiceDetail.getServiceKey().add(TckBusinessService.SAM_SERVICE_KEY);
+                        timeout = TckPublisher.getSubscriptionTimeout();
+                        while (timeout > 0) {
+                                logger.info("Waiting for the update...");
+                                try {
+                                        sdd = inquiryMary.getServiceDetail(getServiceDetail);
+
+                                } catch (Exception ex) {
+                                        logger.warn(ex.getMessage());
+                                        sdd = null;
+                                        break;
+                                }
+                                timeout--;
+                                Thread.sleep(1000);
+
+                        }
+                        //check node2 for delete biz, should be gone
+
+                        if (sdd != null) {
+                                Assert.fail(TckBusinessService.SAM_SERVICE_KEY + " wasn't deleted on node 1");
+                        }
+                        logger.info("service deletion was replicated");
+
+                        //clean up
+                        samBizNode2.deleteSamSyndicatorBusiness(samTokenNode2);
+                        samTModelNode2.deleteSamSyndicatorTmodel(samTokenNode2);
+
+                        //delete both
+                        timeout = TckPublisher.getSubscriptionTimeout();
+                        businessDetail = null;
+
+                        while (timeout > 0) {
+                                logger.info("Waiting for the update...");
+                                try {
+                                        businessDetail = inquiryMary.getBusinessDetail(gbd);
+
+                                } catch (Exception ex) {
+                                        logger.warn(ex.getMessage());
+                                        businessDetail = null;
+                                        break;
+                                }
+                                timeout--;
+                                Thread.sleep(1000);
+
+                        }
+                        //check node2 for delete biz, should be gone
+
+                        if (businessDetail != null) {
+                                Assert.fail(TckBusiness.SAM_BUSINESS_KEY + " wasn't deleted on node 1");
+                        }
+                        logger.info("sam's business deletion was replicated");
+
+                        tModelDetail = inquiryMary.getTModelDetail(findTModel);
+                        Assert.assertNotNull(tModelDetail);
+                        Assert.assertNotNull(tModelDetail.getTModel());
+                        Assert.assertNotNull(tModelDetail.getTModel().get(0));
+                        Assert.assertEquals(tModelDetail.getTModel().get(0).getTModelKey(), TckTModel.SAM_SYNDICATOR_TMODEL_KEY);
+                        Assert.assertEquals(tModelDetail.getTModel().get(0).isDeleted(), true);
+                        logger.info("sam's tModel was deleted(hidden) replicated");
+                        // TckCommon.PrintMarker();
+
+                } finally {
+                        /*try {
+                                DeleteBusiness db = new DeleteBusiness();
+                                db.setAuthInfo(samTokenNode2);
+                                db.getBusinessKey().add(TckBusiness.SAM_BUSINESS_KEY);
+                                publishSamNode2.deleteBusiness(db);
+                                int timeout = TckPublisher.getSubscriptionTimeout();
+                                GetBusinessDetail findTModel = new GetBusinessDetail();
+                                findTModel.setAuthInfo(maryTokenNode1);
+                                findTModel.getBusinessKey().add(TckBusiness.SAM_BUSINESS_KEY);
+                                BusinessDetail tModelDetail = null;
+                                while (timeout > 0) {
+                                        logger.info("Waiting for the update...");
+                                        try {
+                                                tModelDetail = inquiryMary.getBusinessDetail(findTModel);
+                              //  JAXB.marshal(tModelDetail, System.out);
+                                                //
+                                        } catch (Exception ex) {
+                                                logger.warn(ex.getMessage());
+                                                tModelDetail = null;
+                                                break;
+
+                                        }
+                                        timeout--;
+                                        try {
+                                                Thread.sleep(1000);
+                                        } catch (InterruptedException ex) {
+
+                                        }
+
+                                }
+                                Assert.assertNull(tModelDetail);
+
+                        } catch (Exception ex) {
+                                ex.printStackTrace();
+                                Assert.fail(ex.getMessage());
+                        }*/
+                        resetTmodels();
+
+                }
+
         }
 
         /**
@@ -770,15 +1057,16 @@ public class JUDDI_300_MultiNodeIntegrationTest {
 
         }
 
-        private void restTmodels() {
+        private void resetTmodels() {
 
-                logger.info("resting tmodels");
+                logger.info("resetting tmodels");
                 DeleteTModel dtm = new DeleteTModel();
                 dtm.setAuthInfo(rootNode1Token);
                 dtm.getTModelKey().add(TckTModel.MARY_PUBLISHER_TMODEL_KEY);
                 try {
                         juddiApiServiceNode1.adminDeleteTModel(dtm);
                         logger.info("Node1 mary deleted");
+                        waitForTModelAdminDeletion(dtm.getTModelKey().get(0), inquirySamNode2, samTokenNode2);
                 } catch (Exception ex) {
                         logger.info("unable to delete tmodel " + ex.getMessage());
                 }
@@ -789,6 +1077,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                 try {
                         juddiApiServiceNode1.adminDeleteTModel(dtm);
                         logger.info("Node1 joe deleted");
+                        waitForTModelAdminDeletion(dtm.getTModelKey().get(0), inquirySamNode2, samTokenNode2);
                 } catch (Exception ex) {
                         logger.info("unable to delete tmodel " + ex.getMessage());
                 }
@@ -799,6 +1088,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                 try {
                         juddiApiServiceNode1.adminDeleteTModel(dtm);
                         logger.info("Node1 sam deleted");
+                        waitForTModelAdminDeletion(dtm.getTModelKey().get(0), inquirySamNode2, samTokenNode2);
                 } catch (Exception ex) {
                         logger.info("unable to delete tmodel " + ex.getMessage());
                 }
@@ -809,6 +1099,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                 try {
                         juddiApiServiceNode2.adminDeleteTModel(dtm);
                         logger.info("Node2 mary deleted");
+                        waitForTModelAdminDeletion(dtm.getTModelKey().get(0), inquiryMary, maryTokenNode1);
                 } catch (Exception ex) {
                         logger.info("unable to delete tmodel " + ex.getMessage());
                 }
@@ -819,6 +1110,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                 try {
                         juddiApiServiceNode2.adminDeleteTModel(dtm);
                         logger.info("Node2 joe deleted");
+                        waitForTModelAdminDeletion(dtm.getTModelKey().get(0), inquiryMary, maryTokenNode1);
                 } catch (Exception ex) {
                         logger.info("unable to delete tmodel " + ex.getMessage());
                 }
@@ -829,9 +1121,97 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                 try {
                         juddiApiServiceNode2.adminDeleteTModel(dtm);
                         logger.info("Node2 sam deleted");
+                        waitForTModelAdminDeletion(dtm.getTModelKey().get(0), inquiryMary, maryTokenNode1);
                 } catch (Exception ex) {
                         logger.info("unable to delete tmodel " + ex.getMessage());
                 }
+        }
+
+        private void resetBusinesses() {
+                logger.info("resetting businesses");
+                DeleteBusiness dtm = new DeleteBusiness();
+                dtm.setAuthInfo(rootNode1Token);
+                dtm.getBusinessKey().add(TckBusiness.MARY_BUSINESS_KEY);
+                try {
+                        publishMary.deleteBusiness(dtm);
+                        logger.info("Node1 mary deleted");
+                } catch (Exception ex) {
+                        logger.info("unable to delete business " + ex.getMessage());
+                }
+                dtm.setAuthInfo(rootNode2Token);
+                try {
+                        publishSamNode2.deleteBusiness(dtm);
+                        logger.info("Node2 mary deleted");
+                } catch (Exception ex) {
+                        logger.info("unable to delete business " + ex.getMessage());
+                }
+
+                dtm = new DeleteBusiness();
+                dtm.setAuthInfo(rootNode1Token);
+                dtm.getBusinessKey().add(TckBusiness.JOE_BUSINESS_KEY);
+                try {
+                        publishMary.deleteBusiness(dtm);
+                        logger.info("Node1 joe deleted");
+                } catch (Exception ex) {
+                        logger.info("unable to delete business " + ex.getMessage());
+                }
+                dtm.setAuthInfo(rootNode2Token);
+                try {
+                        publishSamNode2.deleteBusiness(dtm);
+                        logger.info("Node2 joe deleted");
+                } catch (Exception ex) {
+                        logger.info("unable to delete business " + ex.getMessage());
+                }
+
+                dtm = new DeleteBusiness();
+                dtm.setAuthInfo(rootNode1Token);
+                dtm.getBusinessKey().add(TckBusiness.SAM_BUSINESS_KEY);
+                try {
+                        publishMary.deleteBusiness(dtm);
+                        logger.info("Node1 sam deleted");
+                } catch (Exception ex) {
+                        logger.info("unable to delete business " + ex.getMessage());
+                }
+                dtm.setAuthInfo(rootNode2Token);
+                try {
+                        publishSamNode2.deleteBusiness(dtm);
+                        logger.info("Node2 sam deleted");
+                } catch (Exception ex) {
+                        logger.info("unable to delete business " + ex.getMessage());
+                }
+
+        }
+
+        private void waitForTModelAdminDeletion(String tModelKey, UDDIInquiryPortType inquiry, String token) {
+
+                int timeout = TckPublisher.getSubscriptionTimeout();
+                GetTModelDetail findTModel = new GetTModelDetail();
+                findTModel.setAuthInfo(token);
+                findTModel.getTModelKey().add(tModelKey);
+                TModelDetail tModelDetail = null;
+                while (timeout > 0) {
+                        logger.info("Waiting for the update...");
+                        try {
+                                tModelDetail = inquiry.getTModelDetail(findTModel);
+                                //  JAXB.marshal(tModelDetail, System.out);
+                                //
+                        } catch (Exception ex) {
+                                logger.warn(ex.getMessage());
+                                tModelDetail = null;
+                                break;
+
+                        }
+                        timeout--;
+                        try {
+                                Thread.sleep(1000);
+                        } catch (InterruptedException ex) {
+
+                        }
+
+                }
+                Assert.assertNull("the tModel with the key " + tModelKey + " wasn't deleted", tModelDetail);
+                logger.info("******************** " + tModelKey + " confired removed at all nodes");
+
         }
 
 }

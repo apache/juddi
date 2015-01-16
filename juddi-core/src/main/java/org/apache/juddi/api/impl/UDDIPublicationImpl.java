@@ -1357,7 +1357,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 ChangeRecord cr = new ChangeRecord();
                 cr.setEntityKey(entityKey);
                 cr.setNodeID(node);
-                cr.setRecordType(ChangeRecord.RecordType.ChangeRecordHide);
+                cr.setRecordType(ChangeRecord.RecordType.ChangeRecordDelete);
                 org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();
                 crapi.setChangeID(new ChangeRecordIDType(node, -1L));
 

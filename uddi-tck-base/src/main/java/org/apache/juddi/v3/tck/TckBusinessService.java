@@ -45,6 +45,7 @@ public class TckBusinessService
     public final static String JOE_SERVICE_KEY_2 = "uddi:uddi.joepublisher.com:servicetwo";
     public final static String SAM_SERVICE_XML = "uddi_data/samsyndicator/businessService.xml";
     public final static String SAM_SERVICE_KEY = "uddi:www.samco.com:listingservice";
+    public final static String SAM_SERVICE_BINDING_KEY="uddi:www.samco.com:listservice-accesspoint";
     public final static String RIFTSAW_PROCESS_XML = "uddi_data/bpel/riftsaw/WSDLPort.xml";
     public final static String RIFTSAW_PROCESS_KEY = "uddi:riftsaw.jboss.org:ticket-service";
     public final static String JOE_BINDING_KEY_1="uddi:uddi.joepublisher.com:bindingone";

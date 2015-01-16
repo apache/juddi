@@ -485,8 +485,6 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                 try {
                         reset();
 
-                        String before = TckCommon.DumpAllTModels(authInfoJoe, inquiryJoe);
-
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckTModelJoe.saveTModels(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
                         TModel saveMaryPublisherTmodel = tckTModelMary.saveMaryPublisherTmodel(authInfoMary);
@@ -518,9 +516,6 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         boolean found = verifyDelivery("a new description");
 
                         if (!found) {
-                                logger.warn("Test failed, dumping business list");
-                                logger.warn("BEFORE " + before);
-                                logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
                                 TckCommon.PrintMarker();
                                 Assert.fail("Notification does not contain the correct service.");
                         }

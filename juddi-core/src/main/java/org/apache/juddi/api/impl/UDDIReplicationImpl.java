@@ -269,7 +269,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                 //ok now we need to persist the change records
                                                                 logger.info("Change records retrieved from " + poll + ", " + records.size());
                                                                 for (int i = 0; i < records.size(); i++) {
-                                                                        logger.info("Change records retrieved " + records.get(i).getChangeID().getNodeID() + " USN " + records.get(i).getChangeID().getOriginatingUSN());
+                                                                        //logger.info("Change records retrieved " + records.get(i).getChangeID().getNodeID() + " USN " + records.get(i).getChangeID().getOriginatingUSN());
                                                                         PersistChangeRecord(records.get(i));
                                                                 }
                                                                 recordsreturned = records.size();
@@ -325,7 +325,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 mapChangeRecord.setId(null);
                                 em.persist(mapChangeRecord);
                                 tx.commit();
-                                logger.debug("Remote CR saved, it was from " + mapChangeRecord.getNodeID()
+                                logger.info("Remote CR saved, it was from " + mapChangeRecord.getNodeID()
                                         + " USN:" + mapChangeRecord.getOriginatingUSN()
                                         + " Type:" + mapChangeRecord.getRecordType().name()
                                         + " Key:" + mapChangeRecord.getEntityKey()
@@ -359,7 +359,12 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                  * administrative function to
                                                  * permanently remove a tModel.
                                                  */
-                                                pub.deleteTModel(rec.getChangeRecordDelete().getTModelKey(), em);
+                                                Object tm=em.find(Tmodel.class, rec.getChangeRecordDelete().getTModelKey());
+                                                if (tm!=null)
+                                                        em.remove(tm);
+                                                else
+                                                        logger.error("failed to adminstratively delete tmodel because it doesn't exist. " + rec.getChangeRecordDelete().getTModelKey());
+                                                //pub.deleteTModel(rec.getChangeRecordDelete().getTModelKey(), em);
                                         }
                                 }
                                 if (rec.getChangeRecordDeleteAssertion() != null && rec.getChangeRecordDeleteAssertion().getPublisherAssertion() != null) {

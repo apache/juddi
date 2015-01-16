@@ -429,6 +429,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         new ValidatePublish(publisher).validateAdminDeleteTModel(em, body);
 
                         //TODO if referiental integrity is turned on, check to see if this is referenced anywhere and prevent the delete
+                        List<ChangeRecord> changes = new ArrayList<ChangeRecord>();
                         List<String> entityKeyList = body.getTModelKey();
                         for (String entityKey : entityKeyList) {
                                 org.apache.juddi.model.Tmodel obj = em.find(org.apache.juddi.model.Tmodel.class, entityKey);
@@ -439,11 +440,13 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                 if (!obj.getNodeId().equals(node))
                                         throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNodeOwner", entityKey + " this node " + node + " owning node " + obj.getNodeId()));
                                 em.remove(obj);
-                                ChangeRecord cr = UDDIPublicationImpl.getChangeRecord_deleteTModelDelete(entityKey, node);
-                                ReplicationNotifier.Enqueue(cr);
+                                changes.add( UDDIPublicationImpl.getChangeRecord_deleteTModelDelete(entityKey, node));
+                                
                         }
 
                         tx.commit();
+                        for (ChangeRecord cr: changes)
+                                ReplicationNotifier.Enqueue(cr);
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.ADMIN_DELETE_TMODEL,
                                 QueryStatus.SUCCESS, procTime);

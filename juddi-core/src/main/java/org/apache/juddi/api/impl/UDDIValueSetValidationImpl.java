@@ -297,35 +297,7 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
                 return ret;
         }
 
-        private void validateTmodelInstanceDetails(List<TModelInstanceInfo> tModelInstanceInfo, String xpath) {
-                /*
-                 if (tModelInstanceInfo == null) {
-                 return;
-                 }
-                 String err = "";
-                 for (int i = 0; i < tModelInstanceInfo.size(); i++) {
-                 List<String> validValues = getValidValues(tModelInstanceInfo.get(i).getTModelKey());
-                 if (validValues != null) {
-                 //compare against the instance info
-                 if (tModelInstanceInfo.get(i).getInstanceDetails() == null) {
-                 err += xpath + ".(" + i + ").instanceDetails=null ";
-                 } else {
-                 boolean ok = false;
-                 for (int k = 0; k < validValues.size(); k++) {
-                 if (validValues.get(k).equals(tModelInstanceInfo.get(i).getInstanceDetails().getInstanceParms())) {
-                 ok = true;
-                 }
-                 }
-                 if (!ok) {
-                 err += xpath + ".(" + i + ").instanceDetails.instanceParams ";
-                 }
-                 }
-                 }
-                 }
-                 if (err.length() > 0) {
-                 throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", err));
-                 }*/
-        }
+        
 
         public static String ConvertKeyToClass(String tmodelkey) {
 
