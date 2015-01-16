@@ -466,7 +466,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
          * @throws Exception
          */
         @Test
-        @Ignore
+       // @Ignore
         public void testReplicationTModelBusinessPublisherAssertionAddDelete() throws Exception {
                 Assume.assumeTrue(TckPublisher.isReplicationEnabled());
                 Assume.assumeTrue(TckPublisher.isJUDDI());
@@ -478,7 +478,8 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         resetBusinesses();
 
                         TModel saveMaryPublisherTmodel = maryTModelNode1.saveMaryPublisherTmodel(maryTokenNode1);
-
+                        samTModelNode2.saveSamSyndicatorTmodel(samTokenNode2);
+                        
                         BusinessEntity saveMaryPublisherBusiness = maryBizNode1.saveMaryPublisherBusiness(maryTokenNode1);
 
                         // TModel saveSamSyndicatorTmodel = samTModelNode2.saveSamSyndicatorTmodel(samTokenNode2);
