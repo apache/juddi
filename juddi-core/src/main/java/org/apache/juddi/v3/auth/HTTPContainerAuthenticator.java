@@ -47,7 +47,7 @@ public class HTTPContainerAuthenticator implements Authenticator {
         }
 
         @Override
-        public UddiEntityPublisher identify(String authInfo, String authorizedName, WebServiceContext ctx) throws AuthenticationException, FatalErrorException {
+        public UddiEntityPublisher identify(String authInfoNotused, String authorizedNameNotused, WebServiceContext ctx) throws AuthenticationException, FatalErrorException {
                 int MaxBindingsPerService = -1;
                 int MaxServicesPerBusiness = -1;
                 int MaxTmodels = -1;
@@ -62,7 +62,7 @@ public class HTTPContainerAuthenticator implements Authenticator {
                         MaxServicesPerBusiness = -1;
                         MaxTmodels = -1;
                         MaxBusinesses = -1;
-                        log.error("config exception! " + authorizedName, ex);
+                        log.error("config exception! ", ex);
                 }
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
@@ -89,9 +89,9 @@ public class HTTPContainerAuthenticator implements Authenticator {
                         tx.begin();
                         Publisher publisher = em.find(Publisher.class, user);
                         if (publisher == null) {
-                                log.warn("Publisher \"" + authorizedName + "\" was not found, adding the publisher in on the fly.");
+                                log.warn("Publisher \"" + user + "\" was not found, adding the publisher in on the fly.");
                                 publisher = new Publisher();
-                                publisher.setAuthorizedName(authorizedName);
+                                publisher.setAuthorizedName(user);
                                 publisher.setIsAdmin("false");
                                 publisher.setIsEnabled("true");
                                 publisher.setMaxBindingsPerService(MaxBindingsPerService);

@@ -85,6 +85,11 @@ public interface Property {
     public final static String JUDDI_AUTH_TOKEN_ENFORCE_SAME_IP = "juddi.auth.token.enforceSameIPRule";
     
     /**
+     * Whether not the token is used with each transition, default should be true
+     */
+    public final static String JUDDI_AUTHENTICATOR_USE_TOKEN = "juddi.auth.authenticator[@useAuthToken]";
+    
+    /**
      * This points to the class of the authenticator
      */
     public final static String JUDDI_AUTHENTICATOR = "juddi.auth.authenticator.class";
