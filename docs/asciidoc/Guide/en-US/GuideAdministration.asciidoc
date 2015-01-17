@@ -12,6 +12,8 @@ jUDDI Server (Tomcat) - This assumes you are using the jUDDI server bundled with
 - Edit `webapps/juddiv3/WEB-INF/config.properties` and change the port numbers for "securityurl" and "juddipapi".
 - Edit `webapps/juddi-gui/META-INF/config.properties` and change the port numbers for all of the URLs listed.
 
+If these changes are made before jUDDI has been started for the first time, then no further action is required. If jUDDI has been previously started, you'll need to either A) update the URL information for the Node's root business entity URLs or B) turn on "Seed Always" in the juddiv3.xml file to auto update the changes.
+
 === Administering Users and Access Control
 
 As of version 3.2, jUDDI Authentication is handled from two perspectives, administrator and end user access.
@@ -195,20 +197,24 @@ juddi/auth/securityDomain=java:/jaas/other
 ----
 The juddi/auth/authenticator/class property plugs the JbossAuthenticator class into the jUDDI the Authenticator framework. The juddi/sercuityDomain, configures the JBossAuthenticator class where it can lookup the application server's security domain, which it will use to perform the authentication. Note that JBoss creates one security domain for each application policy element on the `$JBOSS_HOME/server/default/conf/login-config.xml` file, which gets bound to the server JNDI tree with name java:/jaas/<application-policy-name></application-policy-name>. If a lookup refers to a non existent application policy it defaults to a policy named other.
 
-===== Contained Based Authentication
+===== Container Based Authentication
 
 Certain security configurations may use HTTP based authentication. In this scenario, jUDDI simply trust's that the container will authenticate the user via some mechanism and uses that username for interactions with jUDDI.  To configure this setup, use the following configuration settings in juddiv3.xml:
 ----
 juddi/auth/authenticator/class=org.apache.juddi.auth.HTTPContainerAuthenticator
+juddi/auth/authenticator@useAuthToken=false
 ----
 
+In addition, you'll have to make whatever changes necessary to the juddiv3.war/WEB-INF/web.xml file in order to use the chosen authentication mechanism. See your appliation server's documentation for details on this.
 
-===== Authentication by Proxy
 
-Certain security configurations that enforce authentication before requests come to the web application, such as via Apache HTTPD or a reverse SSL proxy. In these cases, the proxy provide authenticates the user, then passes along the user's identity via a HTTP header. To configure this setup, use the following configuration settings in juddiv3.xml:
+===== Authentication by Proxy (HTTP Header)
+
+Certain security configurations that enforce authentication before requests come to the web application, such as via Apache HTTPD or a reverse SSL proxy. In these cases, the proxy provided authenticates the user, then passes along the user's identity via a HTTP header. To configure this setup, use the following configuration settings in juddiv3.xml:
 ----
 juddi/auth/authenticator/class=org.apache.juddi.auth.HTTPHeaderAuthenticator
 juddi/auth/authenticator/header=(Some HTTP Header)
+juddi/auth/authenticator@useAuthToken=false
 ----
 
 [[ConfiguringDatabaseConnections]]

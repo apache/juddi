@@ -20,6 +20,7 @@ IMPORTANT: When referring to configuration 'properties', we are really referenci
 |_juddi/auth/token/Timeout_      |Time in minutes to expire tokes after inactivity.|N  |_15_
 |_juddi/auth/token/Expiration_   |As of 3.1.5 Duration of time for tokens to expire, regardless of inactivity.|N  |_15_
 |_juddi/auth/token/enforceSameIPRule_   |As of 3.2 This setting will enable or disable the auth token check to ensure that auth tokens can only be used from the same IP address that they were issued to..|N  |_true_
+|_juddi/auth/authenticator@useAuthToken | Indicates that the authenticator is use requires a UDDI auth token. Set to false when using HTTP based authenticators | N | _true_
 
 |===========================================================================================
 

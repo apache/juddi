@@ -466,7 +466,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
          * @throws Exception
          */
         @Test
-       // @Ignore
+        // @Ignore
         public void testReplicationTModelBusinessPublisherAssertionAddDelete() throws Exception {
                 Assume.assumeTrue(TckPublisher.isReplicationEnabled());
                 Assume.assumeTrue(TckPublisher.isJUDDI());
@@ -479,7 +479,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
 
                         TModel saveMaryPublisherTmodel = maryTModelNode1.saveMaryPublisherTmodel(maryTokenNode1);
                         samTModelNode2.saveSamSyndicatorTmodel(samTokenNode2);
-                        
+
                         BusinessEntity saveMaryPublisherBusiness = maryBizNode1.saveMaryPublisherBusiness(maryTokenNode1);
 
                         // TModel saveSamSyndicatorTmodel = samTModelNode2.saveSamSyndicatorTmodel(samTokenNode2);
@@ -980,7 +980,9 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         // TckCommon.PrintMarker();
 
                 } finally {
-                        /*try {
+                        TckCommon.PrintMarker();
+                        logger.fatal("The test failed, attempting to clean up the business and tModels");
+                        try {
                                 DeleteBusiness db = new DeleteBusiness();
                                 db.setAuthInfo(samTokenNode2);
                                 db.getBusinessKey().add(TckBusiness.SAM_BUSINESS_KEY);
@@ -994,8 +996,6 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                                         logger.info("Waiting for the update...");
                                         try {
                                                 tModelDetail = inquiryMary.getBusinessDetail(findTModel);
-                              //  JAXB.marshal(tModelDetail, System.out);
-                                                //
                                         } catch (Exception ex) {
                                                 logger.warn(ex.getMessage());
                                                 tModelDetail = null;
@@ -1014,8 +1014,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
 
                         } catch (Exception ex) {
                                 ex.printStackTrace();
-                                Assert.fail(ex.getMessage());
-                        }*/
+                        }
                         resetTmodels();
 
                 }
@@ -1212,6 +1211,32 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                 }
                 Assert.assertNull("the tModel with the key " + tModelKey + " wasn't deleted", tModelDetail);
                 logger.info("******************** " + tModelKey + " confired removed at all nodes");
+
+        }
+
+        /**
+         * If the same key is created at two nodes before the replication change
+         * record has been distributed, it's possible for the same record to be
+         * owned by two different nodes. After a short period of time, both
+         * records should be rejected
+         *
+         * <a href="http://www.uddi.org/pubs/uddi-v3.0.2-20041019.htm#_Toc85908178">7.3.9</a>
+         * for more info on collision detection
+         *
+         * @throws Exception
+         */
+        @Test
+        @Ignore
+        public void replicationConflictMaintainOwership() throws Exception {
+                try {
+                        resetTmodels();
+
+                        maryTModelNode1.saveMaryPublisherTmodel(maryTokenNode1);
+                        samTModelNode2.saveMaryPublisherTmodel(samTokenNode2);
+
+                } finally {
+                        resetTmodels();
+                }
 
         }
 
