@@ -292,7 +292,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                         + ", this node: " + nodeID));
                 }
 
-                if (publisher.isOwner((UddiEntity) obj)) {
+                if (publisher.isOwner((UddiEntity) obj) && nodeID.equals(((UddiEntity) obj).getNodeId())) {
                         accessCheck = true;
 
                 }
