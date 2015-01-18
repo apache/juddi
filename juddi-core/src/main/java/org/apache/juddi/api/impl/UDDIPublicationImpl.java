@@ -80,12 +80,14 @@ import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveService;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.ServiceDetail;
+import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelDetail;
 import org.uddi.repl_v3.ChangeRecordDelete;
 import org.uddi.repl_v3.ChangeRecordDeleteAssertion;
 import org.uddi.repl_v3.ChangeRecordHide;
 import org.uddi.repl_v3.ChangeRecordIDType;
 import org.uddi.repl_v3.ChangeRecordNewData;
+import org.uddi.repl_v3.ChangeRecordNewDataConditional;
 import org.uddi.repl_v3.ChangeRecordPublisherAssertion;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIPublicationPortType;
@@ -157,7 +159,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                                                 em.merge(existingPubAssertion);
                                                 persistNewAssertion = false;
-                                                changes.add(getChangeRecord_deletePublisherAssertion(apiPubAssertion, node, existingPubAssertion.getToCheck().equalsIgnoreCase("false"), existingPubAssertion.getFromCheck().equalsIgnoreCase("false"),  System.currentTimeMillis()));
+                                                changes.add(getChangeRecord_deletePublisherAssertion(apiPubAssertion, node, existingPubAssertion.getToCheck().equalsIgnoreCase("false"), existingPubAssertion.getFromCheck().equalsIgnoreCase("false"), System.currentTimeMillis()));
                                         } else {
                                                 // Otherwise, it is a new relationship between these entities.  Remove the old one so the new one can be added.
                                                 // TODO: the model only seems to allow one assertion per two business (primary key is fromKey and toKey). Spec seems to imply as 
@@ -343,8 +345,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                                 org.apache.juddi.model.PublisherAssertion existingPubAssertion = em.find(org.apache.juddi.model.PublisherAssertion.class,
                                         modelPubAssertion.getId());
-                                if (existingPubAssertion==null)
+                                if (existingPubAssertion == null) {
                                         throw new InvalidValueException(new ErrorMessage("E_assertionNotFound"));
+                                }
 
                                 boolean fromkey = publisher.isOwner(em.find(BusinessEntity.class, entity.getFromKey()));
                                 boolean tokey = publisher.isOwner(em.find(BusinessEntity.class, entity.getToKey()));
@@ -362,7 +365,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                                         em.persist(existingPubAssertion);
                                 }
 
-                                changes.add(getChangeRecord_deletePublisherAssertion(entity, node, tokey,fromkey, existingPubAssertion.getModified().getTime()));
+                                changes.add(getChangeRecord_deletePublisherAssertion(entity, node, tokey, fromkey, existingPubAssertion.getModified().getTime()));
                         }
 
                         tx.commit();
@@ -924,6 +927,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         List<ChangeRecord> changes = new ArrayList<ChangeRecord>();
                         for (org.uddi.api_v3.TModel apiTModel : apiTModelList) {
 
+                               // Object obj=em.find( org.apache.juddi.model.Tmodel.class, apiTModel.getTModelKey());
+                                //just making changes to an existing tModel, no worries
                                 org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
 
                                 MappingApiToModel.mapTModel(apiTModel, modelTModel);
@@ -934,6 +939,15 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                                 result.getTModel().add(apiTModel);
                                 changes.add(getChangeRecord(modelTModel, apiTModel, node));
+                                /*
+                                //TODO JUDDI-915
+                                if (obj != null) {
+
+                                        changes.add(getChangeRecord(modelTModel, apiTModel, node));
+                                } else {
+                                        //special case for replication, must setup a new data conditional change record
+                                        changes.add(getChangeRecordConditional(modelTModel, apiTModel, node));
+                                }*/
 
                         }
 
@@ -1531,6 +1545,33 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         }
                 }
                 return ret;
+        }
+
+        private static ChangeRecord getChangeRecordConditional(Tmodel modelTModel, TModel apiTModel, String node) throws DispositionReportFaultMessage {
+                ChangeRecord cr = new ChangeRecord();
+                if (!apiTModel.getTModelKey().equals(modelTModel.getEntityKey())) {
+                        throw new FatalErrorException(new ErrorMessage("E_fatalError", "the model and api keys do not match when saving a tmodel!"));
+                }
+                cr.setEntityKey(modelTModel.getEntityKey());
+                cr.setNodeID(node);
+
+                cr.setRecordType(ChangeRecord.RecordType.ChangeRecordNewDataConditional);
+                org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();
+                crapi.setChangeID(new ChangeRecordIDType(node, -1L));
+                crapi.setChangeRecordNewDataConditional(new ChangeRecordNewDataConditional());
+                crapi.getChangeRecordNewDataConditional().setChangeRecordNewData(new ChangeRecordNewData());
+                crapi.getChangeRecordNewDataConditional().getChangeRecordNewData().setTModel(apiTModel);
+                crapi.getChangeRecordNewDataConditional().getChangeRecordNewData().getTModel().setTModelKey(modelTModel.getEntityKey());
+                crapi.getChangeRecordNewDataConditional().getChangeRecordNewData().setOperationalInfo(new OperationalInfo());
+                MappingModelToApi.mapOperationalInfo(modelTModel, crapi.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo());
+                StringWriter sw = new StringWriter();
+                JAXB.marshal(crapi, sw);
+                try {
+                        cr.setContents(sw.toString().getBytes("UTF8"));
+                } catch (UnsupportedEncodingException ex) {
+                        logger.error(ex);
+                }
+                return cr;
         }
 
 }

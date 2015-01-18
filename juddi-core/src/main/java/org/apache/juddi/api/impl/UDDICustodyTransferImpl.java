@@ -261,8 +261,10 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
                                                 UddiEntity uddiEntity = em.find(UddiEntity.class, key);
                                                 
                                                 if (uddiEntity!=null) {
+                                                        uddiEntity.setIsTransferInProgress(true);
                                                         sourceNode = uddiEntity.getNodeId();
-                                                        break;  //we only need one source node
+                                                        em.merge(uddiEntity);
+                                                        //save the fact we are expecting a transfer
                                                 }
                                                 else
                                                 {

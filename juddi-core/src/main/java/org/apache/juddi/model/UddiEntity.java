@@ -40,6 +40,7 @@ public abstract class UddiEntity implements Comparable<UddiEntity>{
 	protected Date modifiedIncludingChildren;
 	protected String nodeId;
 	protected String authorizedName;
+        protected boolean xfer = false;
 	
 	@Id
 	@Column(name = "entity_key", nullable = false, length = 255)
@@ -115,5 +116,14 @@ public abstract class UddiEntity implements Comparable<UddiEntity>{
 		if (o.getEntityKey().equals(getEntityKey())) return 1;
 		else return 0;
 	}
+
+        public void setIsTransferInProgress(boolean b) {
+                xfer = b;
+        }
+        @Column(name="xfer", nullable=false)
+        public boolean getIsTransferInProgress()
+        {
+                return xfer;
+        }
 
 }
