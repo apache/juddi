@@ -326,7 +326,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 mapChangeRecord.setId(null);
                                 em.persist(mapChangeRecord);
                                 tx.commit();
-                                logger.info("Remote CR saved, it was from " + mapChangeRecord.getNodeID()
+                                logger.debug("Remote CR saved, it was from " + mapChangeRecord.getNodeID()
                                         + " USN:" + mapChangeRecord.getOriginatingUSN()
                                         + " Type:" + mapChangeRecord.getRecordType().name()
                                         + " Key:" + mapChangeRecord.getEntityKey()
