@@ -110,6 +110,10 @@ public class DigSigUtil {
                 this.map = config;
         }
 
+        /**
+         * Creates a new instance of the digital signature utility with no configuration options set.
+         * @throws CertificateException 
+         */
         public DigSigUtil() throws CertificateException {
                 cf = CertificateFactory.getInstance("X.509");
         }
@@ -407,13 +411,13 @@ public class DigSigUtil {
                                 Node sig = childNodes.item(i);
                                 for (int k = 0; k < sig.getChildNodes().getLength(); k++) {
                                         //      System.out.println(sig.getChildNodes().item(k).getNamespaceURI() + " " + sig.getChildNodes().item(k).getNodeName());
-                                        if (sig.getChildNodes().item(k).getLocalName().equalsIgnoreCase("KeyInfo")) {
+                                        if ("KeyInfo".equalsIgnoreCase(sig.getChildNodes().item(k).getLocalName())) {
                                                 //TODO figure out how to reference Subject DN, serial, thumbprint, etc
                                                 for (int j = 0; j < sig.getChildNodes().item(k).getChildNodes().getLength(); j++) {
-                                                        if (sig.getChildNodes().item(k).getChildNodes().item(j).getLocalName().equalsIgnoreCase("X509Data")) {
+                                                        if ("X509Data".equalsIgnoreCase(sig.getChildNodes().item(k).getChildNodes().item(j).getLocalName())) {
                                                                 Node X509Data = sig.getChildNodes().item(k).getChildNodes().item(j);
                                                                 for (int x = 0; x < X509Data.getChildNodes().getLength(); x++) {
-                                                                        if (X509Data.getChildNodes().item(x).getLocalName().equalsIgnoreCase("X509Certificate")) {
+                                                                        if ("X509Certificate".equalsIgnoreCase(X509Data.getChildNodes().item(x).getLocalName())) {
                                         //yay found it!
 
                                                                                 String c
