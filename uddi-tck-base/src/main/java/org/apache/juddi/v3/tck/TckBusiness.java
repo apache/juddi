@@ -15,6 +15,7 @@
 package org.apache.juddi.v3.tck;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.net.URL;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -297,15 +298,20 @@ public class TckBusiness {
                 try {
                         SaveBusiness sb = new SaveBusiness();
                         sb.setAuthInfo(authInfo);
-
+                        
                         BusinessEntity beIn = (BusinessEntity) EntityCreator.buildFromDoc(businessXML, "org.uddi.api_v3");
                         if (beIn == null) {
                                 throw new Exception("Unload to load source xml document from " + businessXML);
+                        }
+                        if (serialize) {
+                                System.out.println("before saving");
+                                JAXB.marshal(beIn, System.out);
                         }
                         sb.getBusinessEntity().add(beIn);
                         BusinessDetail saveBusiness = publication.saveBusiness(sb);
                         logger.info("Business saved with key " + saveBusiness.getBusinessEntity().get(0).getBusinessKey());
                         if (serialize) {
+                                System.out.println("after saving");
                                 JAXB.marshal(saveBusiness, System.out);
                         }
 

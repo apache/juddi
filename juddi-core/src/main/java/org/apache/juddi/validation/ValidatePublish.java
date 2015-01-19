@@ -18,12 +18,16 @@ package org.apache.juddi.validation;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -55,6 +59,8 @@ import org.apache.juddi.query.FindTModelByPublisherQuery;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.UDDIConstantsV2;
 import org.apache.juddi.v3.client.config.TokenResolver;
+import org.apache.juddi.v3.client.cryptor.CryptorFactory;
+import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 import org.apache.juddi.v3.error.AssertionNotFoundException;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
@@ -288,8 +294,8 @@ public class ValidatePublish extends ValidateUDDIApi {
                 if (!((UddiEntity) obj).getNodeId().equals(nodeID)) {
                         //prevent changes to data owned by another node in a replicated environment
                         //even if you're the boss
-                        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidNode", entityKey + " Owning Node: " +((UddiEntity) obj).getNodeId()
-                        + ", this node: " + nodeID));
+                        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidNode", entityKey + " Owning Node: " + ((UddiEntity) obj).getNodeId()
+                                + ", this node: " + nodeID));
                 }
 
                 if (publisher.isOwner((UddiEntity) obj) && nodeID.equals(((UddiEntity) obj).getNodeId())) {
@@ -343,12 +349,10 @@ public class ValidatePublish extends ValidateUDDIApi {
                                         throw new AssertionNotFoundException(new ErrorMessage("errors.pubassertion.AssertionNotFound", entity.getFromKey() + ", " + entity.getToKey()));
                                 }
                                 //JUDDI-908
-                                if (!publisher.isOwner(pubAssertion.getBusinessEntityByToKey()) &&
-                                        !publisher.isOwner(pubAssertion.getBusinessEntityByFromKey()))
-                                {
-                                         throw new UserMismatchException(new ErrorMessage("errors.usermismatch.assertion"));
+                                if (!publisher.isOwner(pubAssertion.getBusinessEntityByToKey())
+                                        && !publisher.isOwner(pubAssertion.getBusinessEntityByFromKey())) {
+                                        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.assertion"));
                                 }
-                                
 
                         }
 
@@ -734,6 +738,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 validateIdentifierBag(businessEntity.getIdentifierBag(), config, false);
                 validateDescriptions(businessEntity.getDescription());
                 validateBusinessServices(em, businessEntity.getBusinessServices(), businessEntity, config, publisher);
+                validateSignaturesBusiness(businessEntity, config);
 
         }
 
@@ -903,6 +908,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                         validateCategoryBag(businessService.getCategoryBag(), config, false);
                         validateDescriptions(businessService.getDescription());
                         validateBindingTemplates(em, businessService.getBindingTemplates(), businessService, config, publisher);
+                        validateSignaturesService(businessService, config);
                 }
 
         }
@@ -1061,6 +1067,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 validateDescriptions(bindingTemplate.getDescription());
                 validateHostingRedirector(em, bindingTemplate.getHostingRedirector(), config);
 
+                validateSignaturesBinding(bindingTemplate, config);
                 //validateCheckedTModels(bindingTemplate, config);
         }
 
@@ -1153,6 +1160,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 validateOverviewDoc(overviewDoc);
                         }
                 }
+                validateSignaturesTModel(tModel, config);
 
         }
 
@@ -1671,7 +1679,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                         if (!inserted) {
                                 throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
                         }
- 
+
                         //removed a check for checking if the entity exists which was moved to the juddi api class
                         //why? because we were looking up the same object twice in the database and its just not efficient
                 }
@@ -2430,6 +2438,109 @@ public class ValidatePublish extends ValidateUDDIApi {
         public void validateGetAllNodes() throws DispositionReportFaultMessage {
                 if (!((Publisher) publisher).isAdmin()) {
                         throw new UserMismatchException(new ErrorMessage("errors.deletepublisher.AdminReqd"));
+                }
+        }
+
+       private org.apache.juddi.v3.client.cryptor.DigSigUtil ds = null;
+
+        private synchronized void initDigSig(Configuration config) {
+                if (ds == null) {
+                        
+                        Properties p = new Properties();
+                        /**
+                         * <trustStorePath>truststore.jks</trustStorePath>
+                         * <trustStoreType>JKS</trustStoreType>
+                         * <trustStorePassword
+                         * isPasswordEncrypted="false"
+                         * cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</trustStorePassword>
+                         *
+                         * <checkTimestamps>true</checkTimestamps>
+                         * <checkTrust>true</checkTrust>
+                         * <checkRevocationCRL>true</checkRevocationCRL>
+                         */
+                        p.put(DigSigUtil.TRUSTSTORE_FILE, config.getString(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "trustStorePath", ""));
+                        p.put(DigSigUtil.TRUSTSTORE_FILETYPE, config.getString(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "trustStoreType", ""));
+
+                        String enc = config.getString(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "trustStorePassword", "");
+                        if (config.getBoolean(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "trustStorePassword[@isPasswordEncrypted]", false)) {
+                                log.info("trust password is encrypted, decrypting...");
+                                
+                                String prov = config.getString(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "trustStorePassword[@cryptoProvider]", "");
+                                try {
+                                        p.setProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, CryptorFactory.getCryptor(prov).decrypt(enc));
+                                } catch (Exception ex) {
+                                        log.warn("unable to decrypt trust store password " + ex.getMessage());
+                                        log.debug("unable to decrypt trust store password " + ex.getMessage(), ex);
+                                }
+
+                        } else if (!"".equals(enc)){
+                                log.warn("Hey, you should consider encrypting your trust store password!");
+                                p.setProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, enc);
+                        }
+
+                        p.put(DigSigUtil.CHECK_REVOCATION_STATUS_CRL, config.getString(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "checkRevocationCRL", "true"));
+                        p.put(DigSigUtil.CHECK_TRUST_CHAIN, config.getString(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "checkTrust", "true"));
+                        p.put(DigSigUtil.CHECK_TIMESTAMPS, config.getString(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "checkTimestamps", "true"));
+
+                        try {
+                                ds = new DigSigUtil(p);
+                        } catch (CertificateException ex) {
+                                log.error("", ex);
+                        }
+                        //System.out.println("loaded from " + AppConfig.getConfigFileURL());
+                        //p.list(System.out);
+                }
+        }
+
+        private void validateSignaturesBinding(BindingTemplate bindingTemplate, Configuration config) throws FatalErrorException {
+                boolean shouldcheck = config.getBoolean(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_ENABLE, false);
+                initDigSig(config);
+                if (shouldcheck && !bindingTemplate.getSignature().isEmpty() && ds != null) {
+                        AtomicReference<String> outmsg = new AtomicReference<String>();
+                        boolean ok = ds.verifySignedUddiEntity(bindingTemplate, outmsg);
+                        if (!ok) {
+                                throw new FatalErrorException(new ErrorMessage("errors.digitalsignature.validationfailure", bindingTemplate.getBindingKey() + " " + outmsg.get()));
+                        }
+
+                }
+        }
+
+        private void validateSignaturesService(BusinessService businessService, Configuration config) throws FatalErrorException {
+                boolean shouldcheck = config.getBoolean(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_ENABLE, false);
+                initDigSig(config);
+                if (shouldcheck && !businessService.getSignature().isEmpty() && ds != null) {
+                        AtomicReference<String> outmsg = new AtomicReference<String>();
+                        boolean ok = ds.verifySignedUddiEntity(businessService, outmsg);
+                        if (!ok) {
+                                throw new FatalErrorException(new ErrorMessage("errors.digitalsignature.validationfailure", businessService.getServiceKey() + " " + outmsg.get()));
+                        }
+
+                }
+        }
+
+        private void validateSignaturesTModel(TModel tModel, Configuration config) throws FatalErrorException {
+                boolean shouldcheck = config.getBoolean(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_ENABLE, false);
+                initDigSig(config);
+                if (shouldcheck && !tModel.getSignature().isEmpty() && ds != null) {
+                        AtomicReference<String> outmsg = new AtomicReference<String>();
+                        boolean ok = ds.verifySignedUddiEntity(tModel, outmsg);
+                        if (!ok) {
+                                throw new FatalErrorException(new ErrorMessage("errors.digitalsignature.validationfailure", tModel.getTModelKey() + " " + outmsg.get()));
+                        }
+
+                }
+        }
+
+        private void validateSignaturesBusiness(BusinessEntity businessEntity, Configuration config) throws FatalErrorException {
+                boolean shouldcheck = config.getBoolean(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_ENABLE, false);
+                initDigSig(config);
+                if (shouldcheck && !businessEntity.getSignature().isEmpty() && ds != null) {
+                        AtomicReference<String> outmsg = new AtomicReference<String>();
+                        boolean ok = ds.verifySignedUddiEntity(businessEntity, outmsg);
+                        if (!ok) {
+                                throw new FatalErrorException(new ErrorMessage("errors.digitalsignature.validationfailure", businessEntity.getBusinessKey() + " " + outmsg.get()));
+                        }
+
                 }
         }
 

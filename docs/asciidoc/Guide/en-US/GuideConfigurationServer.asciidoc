@@ -143,6 +143,15 @@ RMI Proxy properties that can be referenced in the _juddiv3.xml_ file and is onl
 |===========================================================================================
 |Property Name                   |Description         |Required     |Default Value or [Example Value]
 |_juddi/validation/enforceReferentialIntegrity_|As of 3.1.5 This setting will force referential integrity for all tModels (except keyGenerators), category bags, bindingTemplate/AccessPoint/hostingRedirector (referencing another host), tModelInstanceParms and anything else that references a KeyName default value is true. Set to false for backwards compatibility or for a more lax registry.|N|[_true_]
+|_juddi/validation/rejectInvalidSignatures/enable | Enables or Disables the validation of signatures when a publisher attempts to save an entity | N | false
+|_juddi/validation/rejectInvalidSignatures/enable/trustStorePath | Path to the trust store. Can be overridden via system properties. If not specified, the Windows trust store will be used, else the default JRE trust store will be used. | N | [truststore.jks]
+|_juddi/validation/rejectInvalidSignatures/trustStoreType | The type of store to use | N | JKS
+|_juddi/validation/rejectInvalidSignatures/trustStorePassword | The clear text or encrypted password to the trust store | N | 
+|_juddi/validation/rejectInvalidSignatures/trustStorePassword@isPasswordEncrypted | True/False | N | false
+|_juddi/validation/rejectInvalidSignatures/trustStorePassword@cryptoProvider | A cryptographic provider, representing the one that was used to encrypt | 
+|_juddi/validation/rejectInvalidSignatures/checkTimestamps | If true, certificates are checked against the time validity | N | false
+|_juddi/validation/rejectInvalidSignatures/checkTrust | If true, the certificates trust chain is validated against the trust store | N | false
+|_juddi/validation/rejectInvalidSignatures/checkRevocationCRL | If true, the certificate will attempted to be validated using online certificate revocation protocols | N | false
 |===========================================================================================
 
 

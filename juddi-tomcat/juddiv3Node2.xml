@@ -171,6 +171,19 @@
 		<validation>
 			<!-- As of 3.1.5 This setting will force referential integrity for all tModels (except keyGenerators), category bags, bindingTemplate/AccessPoint/hostingRedirector (referencing another host), tModelinstanceparms and anything else that references a KeyName default value is true.  set to false for backwards compatibility or for a more lax registry-->
 			<enforceReferentialIntegrity>true</enforceReferentialIntegrity>
+			<!-- as of 3.3, reject digitally signed items that are invalid-->
+            <rejectInvalidSignatures>
+                <enable>false</enable>
+                <trustStorePath>truststore.jks</trustStorePath>
+                <trustStoreType>JKS</trustStoreType>
+                <trustStorePassword
+                        isPasswordEncrypted="false" 
+                        cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</trustStorePassword>
+
+                <checkTimestamps>true</checkTimestamps>
+                <checkTrust>true</checkTrust>
+                <checkRevocationCRL>true</checkRevocationCRL>
+            </rejectInvalidSignatures>
 		</validation>
 
 		<!--As of 3.1.5 Email delivery options for subscription API functions-->

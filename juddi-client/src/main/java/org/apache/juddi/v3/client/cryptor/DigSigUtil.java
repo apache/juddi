@@ -17,6 +17,7 @@ package org.apache.juddi.v3.client.cryptor;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -149,8 +150,38 @@ public class DigSigUtil {
         public final static String SIGNATURE_KEYSTORE_FILE_PASSWORD = "filePassword";
         public final static String SIGNATURE_KEYSTORE_KEY_PASSWORD = "keyPassword";
         public final static String SIGNATURE_KEYSTORE_KEY_ALIAS = "keyAlias";
+        /**
+         *
+         * trust loaded as follows
+         * system property via file
+         * programmatically specified map via file
+         * programmatically specified map thread classloader lookup
+         * programmatically specified map this class's classloader lookup
+         * windows trust store
+         * JDK provided trust store
+         */
         public final static String TRUSTSTORE_FILE = "trustStorePath";
+        /**
+         *
+         * trust loaded as follows
+         * system property via file
+         * programmatically specified map via file
+         * programmatically specified map thread classloader lookup
+         * programmatically specified map this class's classloader lookup
+         * windows trust store
+         * JDK provided trust store
+         */
         public final static String TRUSTSTORE_FILETYPE = "trustStoreType";
+        /**
+         *
+         * trust loaded as follows
+         * system property via file
+         * programmatically specified map via file
+         * programmatically specified map thread classloader lookup
+         * programmatically specified map this class's classloader lookup
+         * windows trust store
+         * JDK provided trust store
+         */
         public final static String TRUSTSTORE_FILE_PASSWORD = "trustStorePassword";
         /**
          * default is CanonicalizationMethod.EXCLUSIVE
@@ -618,6 +649,17 @@ public class DigSigUtil {
                 }
         }
 
+        /**
+         * trust loaded as follows
+         * system property via file
+         * programmatically specified map via file
+         * programmatically specified map thread classloader lookup
+         * programmatically specified map this class's classloader lookup
+         * windows trust store
+         * JDK provided trust store
+         * @return
+         * @throws Exception 
+         */
         private KeyStore GetTrustStore() throws Exception {
                 String type = map.getProperty(TRUSTSTORE_FILETYPE);
                 if (type == null) {
@@ -626,16 +668,60 @@ public class DigSigUtil {
                 KeyStore ks = KeyStore.getInstance(type);
                 boolean ksLoaded = false;
 
-                //try windows trust store first
-                try {
-                        if (map.getProperty(TRUSTSTORE_FILETYPE).equalsIgnoreCase("WINDOWS-ROOT")) {
-                                ks.load(null, null);
-                                ksLoaded = true;
-                                logger.info("trust store loaded from windows");
+                if (!ksLoaded) {
+                        String truststore = System.getProperty("javax.net.ssl.keyStore");
+                        try {
+                                
+                                String pwd = System.getProperty("javax.net.ssl.keyStorePassword");
+                                if (truststore != null && pwd != null) {
+                                        ks.load(new File(truststore).toURI().toURL().openStream(), pwd.toCharArray());
+                                        ksLoaded = true;
+                                        logger.info("trust store loaded from sysprop " + truststore);
+                                }
+                        } catch (Exception ex) {
+                                logger.warn("unable to load truststore from sysprop " + truststore + " "  + ex.getMessage());
+                                logger.debug("unable to load truststore from sysprop " + ex.getMessage(),ex);
                         }
-                } catch (Exception ex) {
-                        logger.debug("unable to load truststore from windows", ex);
                 }
+                
+                File f=new File(map.getProperty(TRUSTSTORE_FILE));
+                 //load as a file
+                if (!ksLoaded) {
+                        try {
+                                if (f.exists()){
+                                URL url = f.toURI().toURL();
+                                ks.load(url.openStream(), (map.getProperty(TRUSTSTORE_FILE_PASSWORD)).toCharArray());
+                                ksLoaded = true;
+                                logger.info("trust store loaded from file " + map.getProperty(TRUSTSTORE_FILE));
+                                }
+                        } catch (Exception x) {
+                                logger.warn("unable to load truststore from file "+map.getProperty(TRUSTSTORE_FILE)+" "+ x.getMessage());
+                                logger.debug("unable to load truststore from file "+ x.getMessage(), x);
+                                
+                        }
+                }
+                
+                if (!ksLoaded) {
+                        try {
+                                //File f = new File(map.getProperty(TRUSTSTORE_FILE));
+                                if (f.exists())
+                                {
+                                        FileInputStream fis = new FileInputStream(f);
+                                        ks.load(fis, (map.getProperty(TRUSTSTORE_FILE_PASSWORD)).toCharArray());
+                                        fis.close();
+                                        ksLoaded = true;
+                                logger.info("trust store loaded from file " + map.getProperty(TRUSTSTORE_FILE));
+                                }
+                        } catch (Exception x) {
+                                logger.warn("unable to load truststore from file "+map.getProperty(TRUSTSTORE_FILE)+" "+ x.getMessage());
+                                logger.debug("unable to load truststore from file "+ x.getMessage(), x);
+                                
+                        }
+                }
+
+                
+                
+                
 
                 //load from thread classloader
                 if (!ksLoaded) {
@@ -645,6 +731,7 @@ public class DigSigUtil {
                                 ksLoaded = true;
                                 logger.info("trust store loaded from classpath(1) " + map.getProperty(TRUSTSTORE_FILE));
                         } catch (Exception x) {
+                                logger.warn("unable to load truststore from classpath" + map.getProperty(TRUSTSTORE_FILE) + " " +x.getMessage());
                                 logger.debug("unable to load truststore from classpath", x);
                         }
                 }
@@ -657,36 +744,11 @@ public class DigSigUtil {
                                 ksLoaded = true;
                                 logger.info("trust store loaded from classpath(2) " + map.getProperty(TRUSTSTORE_FILE));
                         } catch (Exception x) {
+                                logger.warn("unable to load truststore from classpath "+ map.getProperty(TRUSTSTORE_FILE) + " " +x.getMessage());
                                 logger.debug("unable to load truststore from classpath", x);
                         }
                 }
-                //load as a file
-                if (!ksLoaded) {
-                        try {
-                                URL url = new File(map.getProperty(TRUSTSTORE_FILE)).toURI().toURL();
-                                ks.load(url.openStream(), (map.getProperty(TRUSTSTORE_FILE_PASSWORD)).toCharArray());
-                                ksLoaded = true;
-                                logger.info("trust store loaded from file " + map.getProperty(TRUSTSTORE_FILE));
-                        } catch (Exception x) {
-                                logger.debug("unable to load truststore from file", x);
-                        }
-                }
-
-        //    logger.error("Unable to load user specified trust store! attempting to load the default", ex);
-                //load from system property
-                if (!ksLoaded) {
-                        try {
-                                String truststore = System.getProperty("javax.net.ssl.keyStore");
-                                String pwd = System.getProperty("javax.net.ssl.keyStorePassword");
-                                if (truststore != null && pwd != null) {
-                                        ks.load(new File(truststore).toURI().toURL().openStream(), pwd.toCharArray());
-                                        ksLoaded = true;
-                                        logger.info("trust store loaded from sysprop " + truststore);
-                                }
-                        } catch (Exception ex) {
-                                logger.debug("unable to load truststore from sysprop", ex);
-                        }
-                }
+               
 
                 if (!ksLoaded) {
                         try {
@@ -695,9 +757,23 @@ public class DigSigUtil {
                                 logger.info("trust store loaded from JRE " + cacerts.toExternalForm());
                                 ksLoaded = true;
                         } catch (Exception c) {
-                                logger.debug("unable to load default JDK truststore", c);
+                                logger.warn("unable to load default JDK truststore "+ c.getMessage());
+                                logger.debug("unable to load default JDK truststore",c);
                         }
                 }
+                
+                //try windows trust store first
+                try {
+                        if (map.getProperty(TRUSTSTORE_FILETYPE).equalsIgnoreCase("WINDOWS-ROOT")) {
+                                ks.load(null, null);
+                                ksLoaded = true;
+                                logger.info("trust store loaded from windows");
+                        }
+                } catch (Exception ex) {
+                        logger.warn("unable to load truststore from windows " +ex.getMessage());
+                        logger.debug("unable to load truststore from windows", ex);
+                }
+                
                 if (!ksLoaded) {
                         try {
                                 URL cacerts = new File(System.getenv("JAVA_HOME") + File.separator + "jre" + File.separator + "lib" + File.separator + "security" + File.separator + "cacerts").toURI().toURL();
@@ -705,6 +781,7 @@ public class DigSigUtil {
                                 logger.info("trust store loaded from JRE " + cacerts.toExternalForm());
                                 ksLoaded = true;
                         } catch (Exception c) {
+                                logger.warn("unable to load default jdk/jre truststore " +c.getMessage());
                                 logger.debug("unable to load default jdk/jre truststore", c);
                         }
                 }

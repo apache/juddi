@@ -76,6 +76,9 @@ public class EntryPoint {
                         System.out.println("36) UnRegister a node on a jUDDI server");
                         System.out.println("37) Fetch the replication config from a jUDDI server");
                         System.out.println("38) Set the replication config on a remote jUDDI server");
+                        System.out.println("magic) Sets the replication between two instances of jUDDI on 8080 and 8090");
+                        System.out.println("rep) Prints the current replication status of a given node");
+                        System.out.println("39) Digitally sign a UDDI entity from a file.");
 
                         System.out.println("q) quit");
                         System.out.print("Selection: ");
@@ -465,6 +468,9 @@ public class EntryPoint {
                 }
                 if (input.equals("rep")) {
                         new JuddiAdminService().printStatus();
+                }
+                if (input.equals("39")) {
+                        new UddiDigitalSignatureFile().Fire(null, null, null);
                 }
 
         }
