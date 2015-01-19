@@ -1018,11 +1018,11 @@ public class MappingModelToApi {
                 keyedRef.setKeyName(modelPublisherAssertion.getKeyName());
                 keyedRef.setKeyValue(modelPublisherAssertion.getKeyValue());
 
-               /* if (modelPublisherAssertion.getSignatures()!=null &&
+                if (modelPublisherAssertion.getSignatures()!=null &&
                         !modelPublisherAssertion.getSignatures().isEmpty())
                 {
                         mapSignature(modelPublisherAssertion.getSignatures(), apiPublisherAssertion.getSignature());
-                }*/
+                }
                 apiPublisherAssertion.setKeyedReference(keyedRef);
                
         }

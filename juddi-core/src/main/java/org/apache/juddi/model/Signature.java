@@ -24,7 +24,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -50,7 +49,8 @@ public class Signature implements java.io.Serializable {
     private ReplicationConfiguration replConfig;
     private Tmodel tmodel;
     private String xmlID;
-    private PublisherAssertion assertion;
+    private String assertionFromKey;
+    private String assertionToKey;
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -72,18 +72,23 @@ public class Signature implements java.io.Serializable {
         this.bindingTemplate = bindingTemplate;
     }
     
-    /*@ManyToOne
-    @JoinColumns({  
-        @JoinColumn(name = "fromKey", nullable = true),
-        @JoinColumn(name = "toKey", nullable = true)
-        })
-    public PublisherAssertion getPublisherAssertion() {
-        return assertion;
+    
+    
+    @Column(nullable = true, length = 255, name = "passertionfrom")
+    public String getPublisherAssertionFromKey() {
+        return assertionFromKey;
     }
 
-    public void setPublisherAssertion(PublisherAssertion item) {
-        this.assertion = item;
-    }*/
+    public void setPublisherAssertionFromKey(String item) {
+        this.assertionFromKey = item;
+    }
+    @Column(nullable = true, length = 255, name = "passertionto")
+    public String getPublisherAssertionToKey() {
+        return assertionFromKey;
+    }
+    public void setPublisherAssertionToKey(String item) {
+        this.assertionToKey = item;
+    }
  
     
      @ManyToOne

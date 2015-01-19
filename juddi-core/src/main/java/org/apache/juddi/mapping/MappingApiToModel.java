@@ -1004,10 +1004,14 @@ public class MappingApiToModel {
                 }
                 if (!apiPubAssertion.getSignature().isEmpty())
                 {
-                      /*  modelPubAssertion.setSignatures(mapApiSignaturesToModelSignatures(apiPubAssertion.getSignature()));
+                        modelPubAssertion.setSignatures(mapApiSignaturesToModelSignatures(apiPubAssertion.getSignature()));
                         for (Signature s : modelPubAssertion.getSignatures())
-                                s.setPublisherAssertion(modelPubAssertion);
-                        */
+                        {        s.setPublisherAssertionFromKey(modelPubAssertion.getBusinessEntityByFromKey().getEntityKey());
+                                s.setPublisherAssertionToKey(modelPubAssertion.getBusinessEntityByToKey().getEntityKey());
+                                
+                        }
+                        
+                        
                 }
         }
 

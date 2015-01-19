@@ -28,7 +28,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -95,6 +94,8 @@ public class PublisherAssertion implements java.io.Serializable {
 	public void setId(PublisherAssertionId id) {
 		this.id = id;
 	}
+         
+        
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "to_key", nullable = false, insertable = false, updatable = false)
 
@@ -170,13 +171,15 @@ public class PublisherAssertion implements java.io.Serializable {
                 return (this.id.equals(rhs.id));
         }
         
-        /*
+        
         @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         public List<Signature> getSignatures() {
+                if (signatures==null)
+                        signatures=new ArrayList<Signature>();
                 return signatures;
         }
 
         public void setSignatures(List<Signature> signatures) {
                 this.signatures = signatures;
-        }*/
+        }
 }

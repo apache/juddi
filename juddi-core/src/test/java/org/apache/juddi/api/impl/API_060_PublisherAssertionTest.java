@@ -17,11 +17,13 @@ package org.apache.juddi.api.impl;
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
- * * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 import java.rmi.RemoteException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.xml.bind.JAXB;
 import javax.xml.ws.Holder;
 
@@ -31,6 +33,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
 import org.apache.juddi.jaxb.EntityCreator;
 import org.apache.juddi.v3.client.UDDIConstants;
+import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 import org.apache.juddi.v3.tck.TckBusiness;
 import org.apache.juddi.v3.tck.TckFindEntity;
 import org.apache.juddi.v3.tck.TckPublisher;
@@ -41,6 +44,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uddi.api_v3.AddPublisherAssertions;
 import org.uddi.api_v3.AssertionStatusItem;
 import org.uddi.api_v3.CompletionStatus;
 import org.uddi.api_v3.DeletePublisherAssertions;
@@ -75,7 +79,7 @@ public class API_060_PublisherAssertionTest {
                         authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
                         authInfoMary = TckSecurity.getAuthToken(security, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
                         String root = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
-                         tckTModel.saveTmodels(root);
+                        tckTModel.saveTmodels(root);
                 } catch (RemoteException e) {
                         logger.error(e.getMessage(), e);
                         Assert.fail("Could not obtain authInfo token." + e.getMessage());
@@ -209,58 +213,55 @@ public class API_060_PublisherAssertionTest {
                 //use Set with no inputs
                 //confirm all are deleted
                 try {
-                       
+
                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
                         tckTModel.saveSamSyndicatorTmodel(authInfoSam);
                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
                         tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
-                        Holder<List<PublisherAssertion>> x =  new Holder<List<PublisherAssertion>>();
+                        Holder<List<PublisherAssertion>> x = new Holder<List<PublisherAssertion>>();
                         x.value = new ArrayList<PublisherAssertion>();
                         logger.info("Clearing all Joe's publisher assertions....");
                         pub.setPublisherAssertions(authInfoJoe, x);
-                        
+
                         logger.info("Clearing all Sam's publisher assertions....");
                         pub.setPublisherAssertions(authInfoSam, x);
-                        
-                        
-                        
+
                         logger.info("Confirming we're clear");
-                         List<PublisherAssertion> before = pub.getPublisherAssertions(authInfoJoe);
+                        List<PublisherAssertion> before = pub.getPublisherAssertions(authInfoJoe);
                         Assert.assertNotNull(before);
                         Assert.assertTrue(before.isEmpty());
-                         System.out.println(before.size());
+                        System.out.println(before.size());
                         for (int i = 0; i < before.size(); i++) {
                                 JAXB.marshal(before.get(i), System.out);
                         }
-                        
+
                         before = pub.getPublisherAssertions(authInfoSam);
                         Assert.assertNotNull(before);
                         Assert.assertTrue(before.isEmpty());
-                         System.out.println(before.size());
+                        System.out.println(before.size());
                         for (int i = 0; i < before.size(); i++) {
                                 JAXB.marshal(before.get(i), System.out);
                         }
-                        
+
                         List<AssertionStatusItem> assertionStatusReport = pub.getAssertionStatusReport(authInfoJoe, null);
                         Assert.assertTrue(assertionStatusReport.isEmpty());
-                        
+
                         assertionStatusReport = pub.getAssertionStatusReport(authInfoSam, null);
                         Assert.assertTrue(assertionStatusReport.isEmpty());
-                        
+
                         logger.info("Saving 1/2 publisher assertion....");
                         List<PublisherAssertion> onehalfPA = tckAssertion.saveJoePublisherPublisherAssertion(authInfoJoe);
 
-                        
                         before = pub.getPublisherAssertions(authInfoJoe);
                         Assert.assertNotNull(before);
                         Assert.assertFalse(before.isEmpty());
-                         System.out.println(before.size());
+                        System.out.println(before.size());
                         for (int i = 0; i < before.size(); i++) {
                                 JAXB.marshal(before.get(i), System.out);
                         }
                         //PublisherAssertion paIn = (PublisherAssertion)EntityCreator.buildFromDoc(TckPublisherAssertion.JOE_ASSERT_XML, "org.uddi.api_v3");
                         //dp.getPublisherAssertion().add(paIn);
-                        x =  new Holder<List<PublisherAssertion>>();
+                        x = new Holder<List<PublisherAssertion>>();
                         x.value = new ArrayList<PublisherAssertion>();
                         logger.info("Clearing all publisher assertions....");
                         pub.setPublisherAssertions(authInfoJoe, x);
@@ -269,7 +270,7 @@ public class API_060_PublisherAssertionTest {
                                 JAXB.marshal(x.value.get(i), System.out);
                         }
 
-                         logger.info("Fetch all publisher assertions....there should be none");
+                        logger.info("Fetch all publisher assertions....there should be none");
                         List<PublisherAssertion> publisherAssertions = pub.getPublisherAssertions(authInfoJoe);
                         System.out.println(publisherAssertions.size());
                         for (int i = 0; i < publisherAssertions.size(); i++) {
@@ -323,82 +324,82 @@ public class API_060_PublisherAssertionTest {
                 //create 1/2 PA
                 //use Set with a new PA
                 //confirm first PA is gone and the new PA exists
-                  try {
-                       
+                try {
+
                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
                         tckTModel.saveSamSyndicatorTmodel(authInfoSam);
                         tckTModel.saveMaryPublisherTmodel(authInfoMary);
                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
                         tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
                         tckBusiness.saveMaryPublisherBusiness(authInfoMary);
-                        Holder<List<PublisherAssertion>> x =  new Holder<List<PublisherAssertion>>();
+                        Holder<List<PublisherAssertion>> x = new Holder<List<PublisherAssertion>>();
                         x.value = new ArrayList<PublisherAssertion>();
                         logger.info("Clearing all Joe's publisher assertions....");
                         pub.setPublisherAssertions(authInfoJoe, x);
-                        
+
                         logger.info("Clearing all Sam's publisher assertions....");
                         pub.setPublisherAssertions(authInfoSam, x);
-                        
+
                         logger.info("Clearing all Mary's publisher assertions....");
                         pub.setPublisherAssertions(authInfoMary, x);
-                        
-                        
-                        
+
                         logger.info("Confirming we're clear");
-                         List<PublisherAssertion> before = pub.getPublisherAssertions(authInfoJoe);
+                        List<PublisherAssertion> before = pub.getPublisherAssertions(authInfoJoe);
                         Assert.assertNotNull(before);
-                        
-                         System.out.println(before.size());
+
+                        System.out.println(before.size());
                         for (int i = 0; i < before.size(); i++) {
                                 JAXB.marshal(before.get(i), System.out);
-                        }Assert.assertTrue(before.isEmpty());
-                        
+                        }
+                        Assert.assertTrue(before.isEmpty());
+
                         before = pub.getPublisherAssertions(authInfoSam);
                         Assert.assertNotNull(before);
-                        
-                         System.out.println(before.size());
+
+                        System.out.println(before.size());
                         for (int i = 0; i < before.size(); i++) {
                                 JAXB.marshal(before.get(i), System.out);
-                        }Assert.assertTrue(before.isEmpty());
-                        
+                        }
+                        Assert.assertTrue(before.isEmpty());
+
                         before = pub.getPublisherAssertions(authInfoMary);
                         Assert.assertNotNull(before);
-                        
-                         System.out.println(before.size());
+
+                        System.out.println(before.size());
                         for (int i = 0; i < before.size(); i++) {
                                 JAXB.marshal(before.get(i), System.out);
-                        }Assert.assertTrue(before.isEmpty());
-                        
+                        }
+                        Assert.assertTrue(before.isEmpty());
+
                         List<AssertionStatusItem> assertionStatusReport = pub.getAssertionStatusReport(authInfoJoe, null);
                         Assert.assertTrue(assertionStatusReport.isEmpty());
-                        
+
                         assertionStatusReport = pub.getAssertionStatusReport(authInfoSam, null);
                         Assert.assertTrue(assertionStatusReport.isEmpty());
-                        
+
                         assertionStatusReport = pub.getAssertionStatusReport(authInfoMary, null);
                         Assert.assertTrue(assertionStatusReport.isEmpty());
-                        
+
                         logger.info("Saving 1/2 publisher assertion....");
                         List<PublisherAssertion> onehalfPA = tckAssertion.saveJoePublisherPublisherAssertion(authInfoJoe);
 
-                        
                         before = pub.getPublisherAssertions(authInfoJoe);
                         Assert.assertNotNull(before);
                         Assert.assertFalse(before.isEmpty());
-                         System.out.println(before.size());
+                        System.out.println(before.size());
                         for (int i = 0; i < before.size(); i++) {
                                 JAXB.marshal(before.get(i), System.out);
                         }
                         //PublisherAssertion paIn = (PublisherAssertion)EntityCreator.buildFromDoc(TckPublisherAssertion.JOE_ASSERT_XML, "org.uddi.api_v3");
                         //dp.getPublisherAssertion().add(paIn);
-                        x =  new Holder<List<PublisherAssertion>>();
+                        x = new Holder<List<PublisherAssertion>>();
                         x.value = new ArrayList<PublisherAssertion>();
                         PublisherAssertion pa = new PublisherAssertion();
-                        
+
                         pa.setFromKey(TckBusiness.JOE_BUSINESS_KEY);
                         pa.setToKey(TckBusiness.MARY_BUSINESS_KEY);
                         pa.setKeyedReference(new KeyedReference(UDDIConstants.RELATIONSHIPS, "parent-child", "child"));
-                        
+
                         x.value.add(pa);
                         logger.info("Using set to clear existing and add a new publisher assertion....");
                         pub.setPublisherAssertions(authInfoJoe, x);
@@ -407,7 +408,7 @@ public class API_060_PublisherAssertionTest {
                                 JAXB.marshal(x.value.get(i), System.out);
                         }
 
-                         logger.info("Fetch all publisher assertions....there should be 1");
+                        logger.info("Fetch all publisher assertions....there should be 1");
                         List<PublisherAssertion> publisherAssertions = pub.getPublisherAssertions(authInfoJoe);
                         System.out.println(publisherAssertions.size());
                         for (int i = 0; i < publisherAssertions.size(); i++) {
@@ -418,7 +419,7 @@ public class API_060_PublisherAssertionTest {
                         Assert.assertEquals(publisherAssertions.get(0).getKeyedReference().getKeyName(), pa.getKeyedReference().getKeyName());
                         Assert.assertEquals(publisherAssertions.get(0).getKeyedReference().getKeyValue(), pa.getKeyedReference().getKeyValue());
                         Assert.assertEquals(publisherAssertions.get(0).getKeyedReference().getTModelKey(), pa.getKeyedReference().getTModelKey());
-                        
+
                         //
                 } finally {
                         //tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);
@@ -429,6 +430,73 @@ public class API_060_PublisherAssertionTest {
                         tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
                         tckTModel.deleteMaryPublisherTmodel(authInfoMary);
                 }
-                  
+
+        }
+        DigSigUtil ds;
+
+        void SetCertStoreSettigns() {
+                ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE, "./src/test/resources/keystore.jks");
+                ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE, "JKS");
+                ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, "Test");
+                ds.put(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS, "Test");
+                ds.put(DigSigUtil.TRUSTSTORE_FILE, "./src/test/resources/truststore.jks");
+                ds.put(DigSigUtil.TRUSTSTORE_FILETYPE, "JKS");
+                ds.put(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, "Test");
+        }
+
+        void Default() throws CertificateException {
+                ds = new DigSigUtil();
+                SetCertStoreSettigns();
+                ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "true");
+        }
+
+        @Test
+        public void testPublisherAssertionSignatures() throws Exception {
+                try {
+                        Default();
+                        tckTModel.saveJoePublisherTmodel(authInfoJoe);
+                        tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+                        tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+                        AddPublisherAssertions ap = new AddPublisherAssertions();
+                        ap.setAuthInfo(authInfoJoe);
+
+                        PublisherAssertion paIn = (PublisherAssertion) EntityCreator.buildFromDoc(TckPublisherAssertion.JOE_ASSERT_XML, "org.uddi.api_v3");
+                        paIn = ds.signUddiEntity(paIn);
+
+                        ap.getPublisherAssertion().add(paIn);
+                        Assert.assertFalse(paIn.getSignature().isEmpty());
+                        pub.addPublisherAssertions(ap);
+
+                        List<PublisherAssertion> onehalfPA = tckAssertion.saveJoePublisherPublisherAssertion(authInfoJoe);
+
+                       
+                        Assert.assertNotNull(onehalfPA);
+                        Assert.assertFalse(onehalfPA.get(0).getSignature().isEmpty());
+                        Assert.assertFalse(onehalfPA.isEmpty());
+                        
+                        Assert.assertNotNull(onehalfPA);
+                        Assert.assertFalse(onehalfPA.get(0).getSignature().isEmpty());
+                        Assert.assertFalse(onehalfPA.isEmpty());
+                        Assert.assertEquals(paIn.getSignature().size(),onehalfPA.get(0).getSignature().size());
+                        Assert.assertEquals(paIn.getSignature().get(0).getId(),onehalfPA.get(0).getSignature().get(0).getId());
+                        Assert.assertEquals(paIn.getSignature().get(0).getKeyInfo().getId(),onehalfPA.get(0).getSignature().get(0).getKeyInfo().getId());
+                        Assert.assertEquals(paIn.getSignature().get(0).getKeyInfo().getContent().size(),onehalfPA.get(0).getSignature().get(0).getKeyInfo().getContent().size());
+                        
+                        Assert.assertEquals(paIn.getSignature().get(0).getSignedInfo().getCanonicalizationMethod().getAlgorithm(),onehalfPA.get(0).getSignature().get(0).getSignedInfo().getCanonicalizationMethod().getAlgorithm());
+                        Assert.assertEquals(paIn.getSignature().get(0).getSignedInfo().getId(),onehalfPA.get(0).getSignature().get(0).getSignedInfo().getId());
+                        Assert.assertEquals(paIn.getSignature().get(0).getSignedInfo().getReference().size(),onehalfPA.get(0).getSignature().get(0).getSignedInfo().getReference().size());
+                        AtomicReference<String> outmsg=new AtomicReference<String>();
+                        boolean success=ds.verifySignedUddiEntity(onehalfPA.get(0), outmsg);
+                        Assert.assertTrue(outmsg.get(), success);
+                     
+                        //
+                } finally {
+                        //tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);
+                        tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+                        tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+                        tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+                        tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+                }
         }
 }

@@ -25,6 +25,7 @@ import java.util.List;
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import javax.xml.bind.JAXB;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -43,9 +44,9 @@ import org.apache.juddi.model.BindingTemplate;
 import org.apache.juddi.model.BusinessEntity;
 import org.apache.juddi.model.BusinessService;
 import org.apache.juddi.model.ChangeRecord;
+import org.apache.juddi.model.Signature;
 import org.apache.juddi.model.Tmodel;
 import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.query.DeletePublisherAssertionByBusinessQuery;
 import org.apache.juddi.query.FetchBusinessEntitiesQuery;
 import org.apache.juddi.query.FetchTModelsQuery;
 import org.apache.juddi.query.FindBusinessByPublisherQuery;
@@ -156,6 +157,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                                                 if (publisher.isOwner(existingPubAssertion.getBusinessEntityByToKey())) {
                                                         existingPubAssertion.setToCheck("true");
                                                 }
+                                                //it's also possible that the signatures have changed
+                                                removeExistingPublisherAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(), existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), em);
+                                                savePushliserAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(), existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), modelPubAssertion.getSignatures(), em);
 
                                                 em.merge(existingPubAssertion);
                                                 persistNewAssertion = false;
@@ -164,6 +168,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                                                 // Otherwise, it is a new relationship between these entities.  Remove the old one so the new one can be added.
                                                 // TODO: the model only seems to allow one assertion per two business (primary key is fromKey and toKey). Spec seems to imply as 
                                                 // many relationships as desired (the differentiator would be the keyedRef values).
+                                                removeExistingPublisherAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(), existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), em);
                                                 em.remove(existingPubAssertion);
                                                 changes.add(getChangeRecord_deletePublisherAssertion(apiPubAssertion, node, true, true, System.currentTimeMillis()));
                                         }
@@ -185,6 +190,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                                                 modelPubAssertion.setToCheck("true");
                                         }
                                         modelPubAssertion.setModified(new Date());
+                                         savePushliserAssertionSignatures(modelPubAssertion.getBusinessEntityByFromKey().getEntityKey(), modelPubAssertion.getBusinessEntityByToKey().getEntityKey(), modelPubAssertion.getSignatures(), em);
+
                                         em.persist(modelPubAssertion);
 
                                         changes.add(getChangeRecord_NewAssertion(apiPubAssertion, modelPubAssertion, node));
@@ -359,9 +366,15 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                                 }
                                 if ("false".equalsIgnoreCase(existingPubAssertion.getToCheck())
                                         && "false".equalsIgnoreCase(existingPubAssertion.getFromCheck())) {
+                                        logger.info("Publisher assertion updated database via replication");
+                                        removeExistingPublisherAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(), existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), em);
                                         em.remove(existingPubAssertion);
                                 } else {
                                         existingPubAssertion.setModified(new Date());
+                                        logger.info("Publisher assertion updated database via replication");
+                                        removeExistingPublisherAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(), existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), em);
+                                        savePushliserAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(),
+                                                existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), modelPubAssertion.getSignatures(), em);
                                         em.persist(existingPubAssertion);
                                 }
 
@@ -419,11 +432,15 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 }
                 if ("false".equalsIgnoreCase(existingPubAssertion.getToCheck())
                         && "false".equalsIgnoreCase(existingPubAssertion.getFromCheck())) {
-                        logger.info("!!!Deletion of publisher assertion from database via replication");
+                        logger.info("Deletion of publisher assertion from database via replication");
+                        removeExistingPublisherAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(), existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), em);
                         em.remove(existingPubAssertion);
                 } else {
                         existingPubAssertion.setModified(new Date());
-                        logger.info("!!!Publisher assertion update database via replication");
+                        logger.info("Publisher assertion updated database via replication");
+                        removeExistingPublisherAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(), existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), em);
+                        savePushliserAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(),
+                                existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), modelPubAssertion.getSignatures(), em);
                         em.persist(existingPubAssertion);
                 }
 
@@ -927,7 +944,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         List<ChangeRecord> changes = new ArrayList<ChangeRecord>();
                         for (org.uddi.api_v3.TModel apiTModel : apiTModelList) {
 
-                               // Object obj=em.find( org.apache.juddi.model.Tmodel.class, apiTModel.getTModelKey());
+                                // Object obj=em.find( org.apache.juddi.model.Tmodel.class, apiTModel.getTModelKey());
                                 //just making changes to an existing tModel, no worries
                                 org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
 
@@ -940,14 +957,14 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                                 result.getTModel().add(apiTModel);
                                 changes.add(getChangeRecord(modelTModel, apiTModel, node));
                                 /*
-                                //TODO JUDDI-915
-                                if (obj != null) {
+                                 //TODO JUDDI-915
+                                 if (obj != null) {
 
-                                        changes.add(getChangeRecord(modelTModel, apiTModel, node));
-                                } else {
-                                        //special case for replication, must setup a new data conditional change record
-                                        changes.add(getChangeRecordConditional(modelTModel, apiTModel, node));
-                                }*/
+                                 changes.add(getChangeRecord(modelTModel, apiTModel, node));
+                                 } else {
+                                 //special case for replication, must setup a new data conditional change record
+                                 changes.add(getChangeRecordConditional(modelTModel, apiTModel, node));
+                                 }*/
 
                         }
 
@@ -1572,6 +1589,24 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         logger.error(ex);
                 }
                 return cr;
+        }
+
+        private void removeExistingPublisherAssertionSignatures(String from, String to, EntityManager em) {
+                Query createQuery = em.createQuery("delete from Signature pa where pa.publisherAssertionFromKey=:from and pa.publisherAssertionToKey=:to");
+                createQuery.setParameter("from", from);
+                createQuery.setParameter("to", to);
+                createQuery.executeUpdate();
+        }
+
+        private void savePushliserAssertionSignatures(String from, String to, List<Signature> signatures, EntityManager em) {
+                if (signatures == null) {
+                        return;
+                }
+                for (Signature s : signatures) {
+                        s.setPublisherAssertionFromKey(from);
+                        s.setPublisherAssertionToKey(to);
+                        em.persist(s);
+                }
         }
 
 }
