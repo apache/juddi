@@ -35,6 +35,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.AccessPointType;
@@ -63,13 +64,13 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public class SMTPNotifier implements Notifier {
 
-	Log log = LogFactory.getLog(this.getClass());
+	static final Log log = LogFactory.getLog(SMTPNotifier.class);
 	String notificationEmailAddress = null;
 	//String from = null;
 	Session session = null;
 	Properties properties = null;
 
-	private final static String[] mailProps = {"mail.smtp.from", "mail.smtp.host", "mail.smtp.port", 
+	protected final static String[] mailProps = {"mail.smtp.from", "mail.smtp.host", "mail.smtp.port", 
 		"mail.smtp.socketFactory.class", "mail.smtp.socketFactory.fallback", "mail.smtp.starttls.enable",
 		"mail.smtp.socketFactory.port","mail.smtp.auth","mail.smtp.user","mail.smtp.password","mail.debug"};
 
@@ -160,7 +161,7 @@ public class SMTPNotifier implements Notifier {
 				message.setText(subscriptionResultXML, "UTF-8");
                                 //message.setContent(subscriptionResultXML, "text/xml; charset=UTF-8;");
 				message.setSubject(ResourceConfig.getGlobalMessage("notifications.smtp.default.subject") + " " 
-						+ body.getSubscriptionResultsList().getSubscription().getSubscriptionKey());
+						+ StringEscapeUtils.escapeHtml(body.getSubscriptionResultsList().getSubscription().getSubscriptionKey()));
 				Transport.send(message);
 			}
                         else throw new DispositionReportFaultMessage("Session is null!", null);

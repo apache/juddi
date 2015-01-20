@@ -83,6 +83,8 @@ import org.apache.juddi.model.Tmodel;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.replication.ReplicationNotifier;
 import org.apache.juddi.subscription.NotificationList;
+import org.apache.juddi.subscription.notify.TemporaryMailContainer;
+import org.apache.juddi.subscription.notify.USERFRIENDLYSMTPNotifier;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
@@ -1173,16 +1175,23 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                 throw new UserMismatchException(new ErrorMessage("errors.AdminReqd"));
                         }
                         //new ValidateSubscription(publisher).validateDeleteSubscription(em, body);
-
+                        List<TemporaryMailContainer> notifications = new ArrayList<TemporaryMailContainer>();
                         List<String> subscriptionKeyList = subscriptionKey;
                         for (String key : subscriptionKeyList) {
                                 if (key != null && key.length() > 0) {
-                                        Object obj = em.find(org.apache.juddi.model.Subscription.class, key);
+                                        org.apache.juddi.model.Subscription obj = em.find(org.apache.juddi.model.Subscription.class, key);
+                                        Publisher publisher = em.find(Publisher.class, obj.getAuthorizedName());
+                                        notifications.add(new TemporaryMailContainer(obj, publisher, (Publisher) requestor));
                                         em.remove(obj);
                                 }
                         }
 
                         tx.commit();
+                        for (TemporaryMailContainer t:notifications){
+                                 USERFRIENDLYSMTPNotifier.notifySubscriptionDeleted(t);
+                        }
+                       notifications.clear();
+                       notifications=null;
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.ADMIN_DELETE_SUB,
                                 QueryStatus.SUCCESS, procTime);

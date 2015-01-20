@@ -35,7 +35,6 @@ import org.apache.juddi.v3.auth.AuthenticatorFactory;
 import org.apache.juddi.v3.error.AuthTokenRequiredException;
 import org.apache.juddi.v3.error.AuthTokenExpiredException;
 import org.apache.juddi.v3.error.ErrorMessage;
-import org.apache.juddi.v3.error.UnknownUserException;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
