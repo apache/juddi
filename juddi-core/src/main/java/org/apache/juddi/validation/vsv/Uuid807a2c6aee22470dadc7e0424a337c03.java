@@ -17,9 +17,12 @@
 package org.apache.juddi.validation.vsv;
 
 /**
- *
+ *relationships
  * @author Alex O'Ree
  */
 public class Uuid807a2c6aee22470dadc7e0424a337c03 extends Uddiuddiorgrelationships{
-
+        @Override
+        public String getMyKey(){
+                return "uuid:807A2C6A-EE22-470D-ADC7-E0424A337C03".toLowerCase();
+        }
 }

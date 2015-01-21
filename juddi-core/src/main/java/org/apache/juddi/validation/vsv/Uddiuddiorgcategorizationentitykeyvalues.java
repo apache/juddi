@@ -85,4 +85,9 @@ public class Uddiuddiorgcategorizationentitykeyvalues extends AbstractSimpleVali
                 return ret;
         }
 
+        @Override
+        public String getMyKey() {
+                return "uddi:uddi.org:categorization:entitykeyvalues";
+        }
+
 }

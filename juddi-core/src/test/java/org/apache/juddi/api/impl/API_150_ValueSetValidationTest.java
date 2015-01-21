@@ -15,14 +15,11 @@
  */
 package org.apache.juddi.api.impl;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
-import org.apache.juddi.api_v3.ValidValues;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.apache.juddi.v3.tck.TckPublisher;

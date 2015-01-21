@@ -895,7 +895,7 @@ public class Uddiuddiorgcategorizationtypes implements ValueSetValidator {
                                 for (int k = 0; k < items.get(i).getCategoryBag().getKeyedReference().size(); k++) {
                                         if (items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() != null) {
                                                 if (NotAllowedOnBindings.containsKey(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey().toLowerCase())) {
-                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Value [" + items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() + "] not allowed on bindingtemplates for key " + key));
+                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", xpath+"(" + i + ").catbag.keyedReferences(" +k +").tModelKey " + "Value [" + items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() + "] not allowed on bindingtemplates for key " + key));
                                                 }
                                         }
 
@@ -904,12 +904,12 @@ public class Uddiuddiorgcategorizationtypes implements ValueSetValidator {
                                 for (int k = 0; k < items.get(i).getCategoryBag().getKeyedReferenceGroup().size(); k++) {
                                         if (items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey() != null) {
                                                 if (NotAllowedOnBindings.containsKey(items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey().toLowerCase())) {
-                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Value [" + items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey() + "] not allowed on bindingtemplates for key " + key));
+                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", xpath+"(" + i + ").catbag.keyedReferenceGroup(" +k +").tModelKey " +"Value [" + items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey() + "] not allowed on bindingtemplates for key " + key));
                                                 }
                                                 for (int j = 0; j < items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().size(); j++) {
                                                         if (items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey() != null) {
                                                                 if (NotAllowedOnBindings.containsKey(items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey().toLowerCase())) {
-                                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Value [" + items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey() + "] not allowed on bindingtemplates for key " + key));
+                                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", xpath+"(" + i + ").catbag.keyedReferenceGroup(" +k +").keyedReference(" + j + ").tModel " +"Value [" + items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey() + "] not allowed on bindingtemplates for key " + key));
                                                                 }
                                                         }
                                                 }
@@ -921,7 +921,7 @@ public class Uddiuddiorgcategorizationtypes implements ValueSetValidator {
                                 for (int k = 0; k < items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {
                                         if (items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k) != null) {
                                                 if (key.equalsIgnoreCase(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey())) {
-                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", key + " is not allowed on tModelInstanceInfos"));
+                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", xpath+"tModelInstanceDetails(" + k +").tModelKey " + key + " is not allowed on tModelInstanceInfos"));
                                                 }
                                         }
                                 }
@@ -956,7 +956,7 @@ public class Uddiuddiorgcategorizationtypes implements ValueSetValidator {
 
                         }
                         if (items.get(i).getBindingTemplates() != null) {
-                                validateValuesBindingTemplate(items.get(i).getBindingTemplates().getBindingTemplate(), xpath + xpath + "businessService(" + i + ").identifierBag.");
+                                validateValuesBindingTemplate(items.get(i).getBindingTemplates().getBindingTemplate(), xpath + "businessService(" + i + ").bindingTemplates.");
                         }
                 }
         }

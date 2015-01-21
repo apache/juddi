@@ -124,12 +124,15 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
                 Set<String> validators = new HashSet<String>();
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
+                //for each key to process
                 try {
                         while (iterator.hasNext()) {
 
                                 String key = iterator.next();
+                                //find out if it needs to be validated
                                 Tmodel find = em.find(org.apache.juddi.model.Tmodel.class, key);
                                 if (find != null) {
+                                        //if it is, added it to the list
                                         if (ContainsValidatedKey(find, UDDIConstants.IS_VALIDATED_BY)) {
                                                 validators.add(key);
                                         }
@@ -158,6 +161,7 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
                         } else {
                                 try {
                                         vsv = (ValueSetValidator) Class.forName(clazz).newInstance();
+                                        logger.info("translated " + tmodelkey + " to class " + clazz);
                                         vsv.validateValuesBindingTemplate(body.getBindingTemplate(), "");
                                         vsv.validateValuesBusinessEntity(body.getBusinessEntity());
                                         vsv.validateValuesBusinessService(body.getBusinessService(), "");

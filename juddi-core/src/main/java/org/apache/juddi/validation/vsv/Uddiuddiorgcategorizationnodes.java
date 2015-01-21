@@ -51,11 +51,17 @@ import java.util.List;
  */
 public class Uddiuddiorgcategorizationnodes extends AbstractSimpleValidator {
 
+        
         @Override
         public List<String> getValidValues() {
                 List<String> ret = new ArrayList<String>();
                 ret.add("node");
                 return ret;
+        }
+
+        @Override
+        public String getMyKey() {
+                return "uddi:uddi.org:categorization:nodes";
         }
 
 }

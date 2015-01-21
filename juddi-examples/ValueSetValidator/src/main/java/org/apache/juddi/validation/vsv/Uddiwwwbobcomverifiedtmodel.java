@@ -32,4 +32,9 @@ public class Uddiwwwbobcomverifiedtmodel extends AbstractSimpleValidator{
                 return ret;
         }
 
+        @Override
+        public String getMyKey() {
+                return "uddi:www.bob.com:verified-tmodel";
+        }
+
 }

@@ -22,4 +22,8 @@ package org.apache.juddi.validation.vsv;
  */
 public class Uuid25b22e3e3dfa3024b02a3438b9050b59 extends Uddiuddiorgcategorizationvalidatedby{
 
+        @Override
+        public String getKey(){
+                return "uuid:25b22e3e-3dfa-3024-b02a-3438b9050b59";
+        }
 }

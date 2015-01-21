@@ -82,6 +82,7 @@ public class ValidateValuesFromWebService {
                 {
                         log.warn("Unable to figure out how to use the URL " + url  + " as a Value Set Validation Service transport mechanism.");
                         ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.invalidurl", url));
+                        throw x;
                 }
                 
                 return vsv;
@@ -97,7 +98,8 @@ public class ValidateValuesFromWebService {
                 try {
                         DispositionReport validateValues = vsv.validateValues(req);
                 } catch (Exception ex) {
-                        log.warn(ex);
+                        log.warn(ex.getMessage());
+                        log.debug(ex.getMessage(),ex);
                         ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", ex.getMessage()));
                         throw x;
                 }
@@ -111,7 +113,8 @@ public class ValidateValuesFromWebService {
                 try {
                         DispositionReport validateValues = vsv.validateValues(req);
                 } catch (Exception ex) {
-                        log.warn(ex);
+                        log.warn(ex.getMessage());
+                        log.debug(ex.getMessage(),ex);
                         ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", ex.getMessage()));
                         throw x;
                 }
@@ -125,7 +128,8 @@ public class ValidateValuesFromWebService {
                 try {
                         DispositionReport validateValues = vsv.validateValues(req);
                 } catch (Exception ex) {
-                        log.warn(ex);
+                        log.warn(ex.getMessage());
+                        log.debug(ex.getMessage(),ex);
                         ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", ex.getMessage()));
                         throw x;
                 }
@@ -140,7 +144,8 @@ public class ValidateValuesFromWebService {
                 try {
                         DispositionReport validateValues = vsv.validateValues(req);
                 } catch (Exception ex) {
-                        log.warn(ex);
+                        log.warn(ex.getMessage());
+                        log.debug(ex.getMessage(),ex);
                         ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", ex.getMessage()));
                         throw x;
                 }
@@ -153,7 +158,8 @@ public class ValidateValuesFromWebService {
                 try {
                         DispositionReport validateValues = vsv.validateValues(req);
                 } catch (Exception ex) {
-                        log.warn(ex);
+                        log.warn(ex.getMessage());
+                        log.debug(ex.getMessage(),ex);
                         ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", ex.getMessage()));
                         throw x;
                 }

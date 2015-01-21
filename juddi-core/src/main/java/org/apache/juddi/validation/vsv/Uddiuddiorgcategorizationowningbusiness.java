@@ -15,19 +15,16 @@
  */
 package org.apache.juddi.validation.vsv;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import org.apache.juddi.config.PersistenceManager;
-import org.apache.juddi.model.Tmodel;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.InvalidValueException;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
-import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.PublisherAssertion;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelInstanceInfo;
@@ -57,7 +54,9 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public class Uddiuddiorgcategorizationowningbusiness implements ValueSetValidator {
 
-        public static final String key = "uddi:uddi.org:categorization:owningbusiness";
+        public String getMyKey() {
+                return "uddi:uddi.org:categorization:owningbusiness";
+        }
 
         @Override
         public void validateValuesBindingTemplate(List<BindingTemplate> items, String xpath) throws DispositionReportFaultMessage {
@@ -67,14 +66,15 @@ public class Uddiuddiorgcategorizationowningbusiness implements ValueSetValidato
 
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getCategoryBag() != null) {
-                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), key, "binding");
-                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), key, "binding");
+                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), getMyKey(), "binding");
+                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), getMyKey(), "binding");
                         }
                         if (items.get(i).getTModelInstanceDetails() != null) {
                                 for (int k = 0; k < items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {
-                                        if (items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k) != null) 
-                                        if (key.equalsIgnoreCase(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey())) {
-                                                throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "not allowed on binding templates"));
+                                        if (items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k) != null) {
+                                                if (getMyKey().equalsIgnoreCase(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey())) {
+                                                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "not allowed on binding templates"));
+                                                }
                                         }
                                 }
                         }
@@ -88,11 +88,11 @@ public class Uddiuddiorgcategorizationowningbusiness implements ValueSetValidato
                 }
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getCategoryBag() != null) {
-                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), key, "business");
-                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), key, "business");
+                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), getMyKey(), "business");
+                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), getMyKey(), "business");
                         }
                         if (items.get(i).getIdentifierBag() != null) {
-                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), key, "business");
+                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), getMyKey(), "business");
                         }
                         if (items.get(i).getBusinessServices() != null) {
                                 validateValuesBusinessService(items.get(i).getBusinessServices().getBusinessService(), "businessEntity(" + i + ").");
@@ -107,8 +107,8 @@ public class Uddiuddiorgcategorizationowningbusiness implements ValueSetValidato
                 }
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getCategoryBag() != null) {
-                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), key, "service");
-                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), key, "service");
+                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), getMyKey(), "service");
+                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), getMyKey(), "service");
                         }
                         if (items.get(i).getBindingTemplates() != null) {
                                 validateValuesBindingTemplate(items.get(i).getBindingTemplates().getBindingTemplate(), xpath + xpath + "businessService(" + i + ").identifierBag.");
@@ -122,7 +122,7 @@ public class Uddiuddiorgcategorizationowningbusiness implements ValueSetValidato
                         return;
                 }
                 for (int i = 0; i < items.size(); i++) {
-                        AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getKeyedReference(), key, "publisherAssertion");
+                        AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getKeyedReference(), getMyKey(), "publisherAssertion");
                 }
         }
 
@@ -132,7 +132,7 @@ public class Uddiuddiorgcategorizationowningbusiness implements ValueSetValidato
                         return;
                 }
                 for (int k = 0; k < tModelInstanceInfo.size(); k++) {
-                        if (key.equalsIgnoreCase(tModelInstanceInfo.get(k).getTModelKey())) {
+                        if (getMyKey().equalsIgnoreCase(tModelInstanceInfo.get(k).getTModelKey())) {
                                 throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "not allowed on tModel instance info"));
                         }
                 }
@@ -149,7 +149,7 @@ public class Uddiuddiorgcategorizationowningbusiness implements ValueSetValidato
                         for (int i = 0; i < items.size(); i++) {
                                 if (items.get(i).getCategoryBag() != null) {
                                         for (int k = 0; k < items.get(i).getCategoryBag().getKeyedReference().size(); k++) {
-                                                if (key.equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey())) {
+                                                if (getMyKey().equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey())) {
                                                         //The content of keyValue in keyedReferences that refers to this tModel must be a businessKey. 
                                                         //the referred-to businessEntity must exist, and it must have been published by the same publisher.
                                                         org.apache.juddi.model.BusinessEntity find = em.find(org.apache.juddi.model.BusinessEntity.class, items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue());
@@ -172,7 +172,7 @@ public class Uddiuddiorgcategorizationowningbusiness implements ValueSetValidato
                                         }
                                 }
                                 if (items.get(i).getIdentifierBag() != null) {
-                                        AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getIdentifierBag().getKeyedReference(), key, "tmodel identbag");
+                                        AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getIdentifierBag().getKeyedReference(), getMyKey(), "tmodel identbag");
                                 }
                         }
                 } catch (DispositionReportFaultMessage d) {

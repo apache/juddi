@@ -525,6 +525,7 @@ under the License.
                                 <exclude>**/pref-rpt*.txt</exclude>
                                 <exclude>**/asciidoctor.css</exclude>
                                 <exclude>**/Guardfile</exclude>
+                                <exclude>**/nb-configuration.xml</exclude>
 
                             </excludes>
                         </configuration>

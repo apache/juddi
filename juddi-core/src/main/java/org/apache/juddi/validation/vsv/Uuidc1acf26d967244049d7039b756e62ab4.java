@@ -21,5 +21,7 @@ package org.apache.juddi.validation.vsv;
  * @author Alex O'Ree
  */
 public class Uuidc1acf26d967244049d7039b756e62ab4 extends Uddiuddiorgcategorizationtypes {
-
+        public String getMyKey(){
+                return "uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4".toLowerCase();
+        }
 }

@@ -50,6 +50,11 @@ public class Uddiuddiorgrelationships extends  AbstractSimpleValidator{
                 ret.add("peer-peer");
                 return ret;
         }
+
+        @Override
+        public String getMyKey() {
+                return "uddi:uddi.org:relationships";
+        }
         
 
 }

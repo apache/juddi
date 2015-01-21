@@ -171,7 +171,9 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public class Uddiuddiorgidentifierisreplacedby implements ValueSetValidator {
 
-        public static final String key = "uddi:uddi.org:identifier:isreplacedby";
+        public String getMyKey(){
+                return "uddi:uddi.org:identifier:isreplacedby";
+        }
 
         @Override
         public void validateValuesBindingTemplate(List<BindingTemplate> items, String xpath) throws DispositionReportFaultMessage {
@@ -181,13 +183,13 @@ public class Uddiuddiorgidentifierisreplacedby implements ValueSetValidator {
 
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getCategoryBag() != null) {
-                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), key, "binding");
-                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), key, "binding");
+                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), getMyKey(), "binding");
+                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), getMyKey(), "binding");
                         }
                         if (items.get(i).getTModelInstanceDetails() != null) {
                                 for (int k = 0; k < items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {
                                         if (items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k) != null) {
-                                                if (key.equalsIgnoreCase(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey())) {
+                                                if (getMyKey().equalsIgnoreCase(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey())) {
                                                         throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "not allowed on binding templates"));
                                                 }
                                         }
@@ -209,7 +211,7 @@ public class Uddiuddiorgidentifierisreplacedby implements ValueSetValidator {
                         for (int i = 0; i < items.size(); i++) {
                                 if (items.get(i).getCategoryBag() != null) {
                                         for (int k = 0; k < items.get(i).getCategoryBag().getKeyedReference().size(); k++) {
-                                                if (key.equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey())) {
+                                                if (getMyKey().equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey())) {
                                                         //reference to self; this is invalid
                                                         if (items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey().equalsIgnoreCase(items.get(i).getBusinessKey())) {
                                                                 throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + " can't reference itself"));
@@ -233,7 +235,7 @@ public class Uddiuddiorgidentifierisreplacedby implements ValueSetValidator {
                                 }
                                 if (items.get(i).getIdentifierBag() != null) {
                                         for (int k = 0; k < items.get(i).getIdentifierBag().getKeyedReference().size(); k++) {
-                                                if (key.equalsIgnoreCase(items.get(i).getIdentifierBag().getKeyedReference().get(k).getTModelKey())) {
+                                                if (getMyKey().equalsIgnoreCase(items.get(i).getIdentifierBag().getKeyedReference().get(k).getTModelKey())) {
                                                         //reference to self; this is invalid
                                                         if (items.get(i).getIdentifierBag().getKeyedReference().get(k).getTModelKey().equalsIgnoreCase(items.get(i).getBusinessKey())) {
                                                                 throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue() + " can't reference itself"));
@@ -274,8 +276,8 @@ public class Uddiuddiorgidentifierisreplacedby implements ValueSetValidator {
                 }
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getCategoryBag() != null) {
-                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), key, "service");
-                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), key, "service");
+                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), getMyKey(), "service");
+                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), getMyKey(), "service");
                         }
                         if (items.get(i).getBindingTemplates() != null) {
                                 validateValuesBindingTemplate(items.get(i).getBindingTemplates().getBindingTemplate(), xpath + xpath + "businessService(" + i + ").identifierBag.");
@@ -289,7 +291,7 @@ public class Uddiuddiorgidentifierisreplacedby implements ValueSetValidator {
                         return;
                 }
                 for (int i = 0; i < items.size(); i++) {
-                        AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getKeyedReference(), key, "publisherAssertion");
+                        AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getKeyedReference(), getMyKey(), "publisherAssertion");
                 }
         }
 
@@ -324,7 +326,7 @@ public class Uddiuddiorgidentifierisreplacedby implements ValueSetValidator {
                         return;
                 }
                 for (int k = 0; k < tModelInstanceInfo.size(); k++) {
-                        if (key.equalsIgnoreCase(tModelInstanceInfo.get(k).getTModelKey())) {
+                        if (getMyKey().equalsIgnoreCase(tModelInstanceInfo.get(k).getTModelKey())) {
                                 throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "not allowed on tModel instance info"));
                         }
                 }
@@ -344,7 +346,7 @@ public class Uddiuddiorgidentifierisreplacedby implements ValueSetValidator {
                         for (int i = 0; i < items.size(); i++) {
                                 if (items.get(i).getCategoryBag() != null) {
                                         for (int k = 0; k < items.get(i).getCategoryBag().getKeyedReference().size(); k++) {
-                                                if (key.equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey())) {
+                                                if (getMyKey().equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey())) {
                                                         //reference to self; this is invalid
                                                         if (items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey().equalsIgnoreCase(items.get(i).getTModelKey())) {
                                                                 throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + " can't reference itself"));
@@ -370,7 +372,7 @@ public class Uddiuddiorgidentifierisreplacedby implements ValueSetValidator {
                                 }
                                 if (items.get(i).getIdentifierBag() != null) {
                                         for (int k = 0; k < items.get(i).getIdentifierBag().getKeyedReference().size(); k++) {
-                                                if (key.equalsIgnoreCase(items.get(i).getIdentifierBag().getKeyedReference().get(k).getTModelKey())) {
+                                                if (getMyKey().equalsIgnoreCase(items.get(i).getIdentifierBag().getKeyedReference().get(k).getTModelKey())) {
                                                         //reference to self; this is invalid
                                                         if (items.get(i).getIdentifierBag().getKeyedReference().get(k).getTModelKey().equalsIgnoreCase(items.get(i).getTModelKey())) {
                                                                 throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "Referenced key " + items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue() + " can't reference itself"));

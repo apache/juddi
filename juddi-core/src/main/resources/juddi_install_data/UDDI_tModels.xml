@@ -2357,6 +2357,93 @@
 			  tModelKey="uddi:uddi.org:categorization:types"/> 
         </categoryBag>
 	</tModel>
+        <!--uddi:uddi.org:v3_valuesetvalidation-->
         
+        <tModel tModelKey="uddi:uddi.org:v3_valuesetvalidation">
+            <name>uddi-org:valueSetValidation_v3</name>
+            <description>UDDI Value Set Validation API V3.0</description>
+            <overviewDoc>
+              <overviewURL useType="wsdlInterface">
+                 http://uddi.org/wsdl/uddi_vs_v3_binding.wsdl
+              </overviewURL> 
+            </overviewDoc> 
+            <overviewDoc>
+              <overviewURL useType="text">
+                 http://uddi.org/pubs/uddi_v3.htm#VSValid
+              </overviewURL> 
+            </overviewDoc> 
+            <categoryBag>
+              <keyedReference keyName="uddi-org:types:wsdl"
+                keyValue="wsdlSpec" 
+                tModelKey="uddi:uddi.org:categorization:types"/> 
+              <keyedReference keyName="uddi-org:types:soap"
+                keyValue="soapSpec" 
+                tModelKey="uddi:uddi.org:categorization:types"/>
+              <keyedReference keyName="uddi-org:types:xml"
+                keyValue="xmlSpec" 
+                tModelKey="uddi:uddi.org:categorization:types"/>
+              <keyedReference keyName="uddi-org:types:specification"
+                keyValue="specification" 
+                tModelKey="uddi:uddi.org:categorization:types"/>
+             </categoryBag>
+          </tModel>
+        <!--uddi:uddi-org:valuesetcaching_v3-->
         
+        <tModel tModelKey="uddi:uddi.org:v3_valuesetcaching">
+            <name>uddi-org:valueSetCaching_v3</name>
+            <description>UDDI Value Set Caching API V3.0</description>
+            <overviewDoc>
+              <overviewURL useType="wsdlInterface">
+                 http://uddi.org/wsdl/uddi_vscache_v3_binding.wsdl
+              </overviewURL> 
+            </overviewDoc> 
+            <overviewDoc>
+              <overviewURL useType="text">
+                 http://uddi.org/pubs/uddi_v3.htm#VSCaching
+              </overviewURL> 
+            </overviewDoc> 
+            <categoryBag>
+              <keyedReference keyName="uddi-org:types:wsdl"
+                keyValue="wsdlSpec" 
+                tModelKey="uddi:uddi.org:categorization:types"/> 
+              <keyedReference keyName="uddi-org:types:soap"
+                keyValue="soapSpec" 
+                tModelKey="uddi:uddi.org:categorization:types"/>
+              <keyedReference keyName="uddi-org:types:xml"
+                keyValue="xmlSpec" 
+                tModelKey="uddi:uddi.org:categorization:types"/>
+              <keyedReference keyName="uddi-org:types:specification"
+                keyValue="specification" 
+                tModelKey="uddi:uddi.org:categorization:types"/>
+             </categoryBag>
+          </tModel>
+          
+          
+          <tModel tModelKey="uuid:25b22e3e-3dfa-3024-b02a-3438b9050b59">
+                <name>uddi-org:validatedBy</name>
+                <description>Category system used to point a value set or category
+                             group system tModel to associated value set Web service
+                             implementations.
+                </description>
+                <overviewDoc>
+                  <overviewURL useType="text">
+                       http://uddi.org/pubs/uddi_v3.htm#validatedBy
+                  </overviewURL> 
+                </overviewDoc> 
+                <categoryBag>
+                  <keyedReference keyName="uddi-org:types:categorization"
+                    keyValue="categorization" 
+                    tModelKey="uddi:uddi.org:categorization:types"/> 
+                  <keyedReference keyName="uddi-org:types:checked"
+                    keyValue="checked" 
+                    tModelKey="uddi:uddi.org:categorization:types"/> 
+                  <keyedReference keyName="uddi-org:types:uncacheable"
+                    keyValue="uncacheable" 
+                    tModelKey="uddi:uddi.org:categorization:types"/>
+              <keyedReference keyName="entityKeyValues"
+                keyValue="bindingKey" 
+              tModelKey="uddi:uddi.org:categorization:entitykeyvalues"/>
+                </categoryBag>
+        </tModel>
+
 </save_tModel>

@@ -17,9 +17,13 @@
 package org.apache.juddi.validation.vsv;
 
 /**
- *
+ *dervied from
  * @author Alex O'Ree
  */
 public class Uuid5678dd4ff95d35f99ea6f79a7dd64656 extends Uddiuddiorgcategorizationderivedfrom {
-
+        
+        @Override
+        public String getMyKey(){
+                return "uuid:5678dd4f-f95d-35f9-9ea6-f79a7dd64656";
+        }
 }

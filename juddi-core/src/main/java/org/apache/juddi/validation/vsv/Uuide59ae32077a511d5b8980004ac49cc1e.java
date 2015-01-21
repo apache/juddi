@@ -17,9 +17,12 @@
 package org.apache.juddi.validation.vsv;
 
 /**
- *
+ *replaced by
  * @author Alex O'Ree
  */
 public class Uuide59ae32077a511d5b8980004ac49cc1e extends Uddiuddiorgidentifierisreplacedby {
-
+        @Override
+        public String getMyKey(){
+                return "uuid:E59AE320-77A5-11D5-B898-0004AC49CC1E".toLowerCase();
+        }
 }

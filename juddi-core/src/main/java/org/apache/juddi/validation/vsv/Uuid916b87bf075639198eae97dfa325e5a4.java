@@ -22,4 +22,6 @@ package org.apache.juddi.validation.vsv;
  */
 public class Uuid916b87bf075639198eae97dfa325e5a4 extends Uddiuddiorgcategorizationentitykeyvalues {
 
+        @Override
+        public String getMyKey(){return "uuid:916b87bf-0756-3919-8eae-97dfa325e5a4";}
 }

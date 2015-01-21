@@ -571,7 +571,7 @@ See below for other fields that you may want to edit...
                          <description>UDDI Value Set Caching API Version 3</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/valueset-caching?wsdl</accessPoint>
                          <tModelInstanceDetails>
-                              <tModelInstanceInfo tModelKey="uddi:uddi-org:valueSetCaching_v3" />
+                              <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_valuesetcaching" />
                          </tModelInstanceDetails>
                          <categoryBag>
                               <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
@@ -582,7 +582,7 @@ See below for other fields that you may want to edit...
                          <description>UDDI Value Set caching API Version 3 SSL</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/valueset-caching?wsdl</accessPoint>
                          <tModelInstanceDetails>
-                              <tModelInstanceInfo tModelKey="uddi:uddi-org:valueSetCaching_v3" />
+                              <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_valuesetcaching" />
                          </tModelInstanceDetails>
                          <categoryBag>
                               <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>

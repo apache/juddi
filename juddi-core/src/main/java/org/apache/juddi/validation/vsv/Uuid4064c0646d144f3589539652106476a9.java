@@ -17,9 +17,13 @@
 package org.apache.juddi.validation.vsv;
 
 /**
- *
+ * ownung business
  * @author Alex O'Ree
  */
 public class Uuid4064c0646d144f3589539652106476a9 extends Uddiuddiorgcategorizationowningbusiness {
+        @Override
+        public String getMyKey(){
+                return "uuid:4064C064-6D14-4F35-8953-9652106476A9".toLowerCase();
+        }
 
 }

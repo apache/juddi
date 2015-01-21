@@ -30,13 +30,17 @@ import org.uddi.api_v3.TModelInstanceInfo;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
- * A simple base class for the validator interface that lets you define a simple set of allowed values. 
- * All other values will be rejected. Valid values apply to all UDDI elements
+ * A simple base class for the validator interface that lets you define a simple
+ * set of allowed values. All other values will be rejected. Valid values apply
+ * to all UDDI elements
+ *
  * @author Alex O'Ree
  * @since 3.2.1
- * 
+ *
  */
 public abstract class AbstractSimpleValidator implements ValueSetValidator {
+
+        public abstract String getMyKey();
 
         @Override
         public void validateValuesBindingTemplate(List<BindingTemplate> items, String xpath) throws DispositionReportFaultMessage {
@@ -63,7 +67,7 @@ public abstract class AbstractSimpleValidator implements ValueSetValidator {
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getCategoryBag() != null) {
                                 validatedValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference(), "businessEntity(" + i + ").categoryBag.");
-                                validatedValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), "businessEntity(" + i + ").categoryBag.");
+                                validatedValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), "businessEntity(" + i + ").categoryBagGroup.");
                         }
                         if (items.get(i).getIdentifierBag() != null) {
                                 validatedValuesKeyRef(items.get(i).getIdentifierBag().getKeyedReference(), "businessEntity(" + i + ").identifierBag.");
@@ -85,7 +89,7 @@ public abstract class AbstractSimpleValidator implements ValueSetValidator {
                                 validatedValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), xpath + "businessService(" + i + ").categoryBag.");
                         }
                         if (items.get(i).getBindingTemplates() != null) {
-                                validateValuesBindingTemplate(items.get(i).getBindingTemplates().getBindingTemplate(), xpath + xpath + "businessService(" + i + ").identifierBag.");
+                                validateValuesBindingTemplate(items.get(i).getBindingTemplates().getBindingTemplate(), xpath + xpath + "businessService(" + i + ").");
                         }
                 }
         }
@@ -108,19 +112,25 @@ public abstract class AbstractSimpleValidator implements ValueSetValidator {
                 if (items == null) {
                         return;
                 }
+                //StringBuilder badvalues=new StringBuilder();
                 String err = "";
                 for (int i = 0; i < items.size(); i++) {
-                        List<String> validValues = getValidValues();
-                        if (validValues != null) {
+                        if (items.get(i).getTModelKey().equalsIgnoreCase(getMyKey())) {
+                                List<String> validValues = getValidValues();
+                                if (validValues != null) {
                                 //ok we have some work to do
-                                boolean valid = false;
-                                for (int k = 0; k < validValues.size(); k++) {
-                                        if (validValues.get(k).equals(items.get(i).getKeyValue())) {
-                                                valid = true;
+                                        //boolean valid = false;
+                                        boolean localfound = false;
+                                        for (int k = 0; k < validValues.size(); k++) {
+                                                if (validValues.get(k).equals(items.get(i).getKeyValue())) {
+                                                        //           valid = true;
+                                                        localfound = true;
+                                                }
                                         }
-                                }
-                                if (!valid) {
-                                        err += xpath + "keyedReference(" + i + ") ";
+                                        if (!localfound) {
+                                                //badvalues.append(items.get(i).getKeyValue()).append(" ");
+                                                err += xpath + "keyedReference(" + i + ")=" + items.get(i).getKeyValue() + " ";
+                                        }
                                 }
                         }
                 }
@@ -166,12 +176,8 @@ public abstract class AbstractSimpleValidator implements ValueSetValidator {
                 if (items == null) {
                         return;
                 }
-                String err = "";
                 for (int i = 0; i < items.size(); i++) {
                         validateKeyNotPresentKeyRef(items.get(i), key, itemtype);
-                }
-                if (err.length() > 0) {
-
                 }
         }
 
@@ -180,7 +186,7 @@ public abstract class AbstractSimpleValidator implements ValueSetValidator {
                         return;
                 }
                 if (key.equalsIgnoreCase(item.getTModelKey())) {
-                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "key " + key + " not allowed on " + itemtype) );
+                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", "key " + key + " not allowed on " + itemtype));
                 }
         }
 
@@ -200,10 +206,11 @@ public abstract class AbstractSimpleValidator implements ValueSetValidator {
                 StringBuilder sb = new StringBuilder();
                 sb.append(" Valid Values:[");
                 List<String> validValues = getValidValues();
-                for (int i=0; i < validValues.size(); i++){
+                for (int i = 0; i < validValues.size(); i++) {
                         sb.append(validValues.get(i));
-                        if (i+1< validValues.size())
+                        if (i + 1 < validValues.size()) {
                                 sb.append(",");
+                        }
                 }
                 sb.append("]");
                 return sb.toString();
