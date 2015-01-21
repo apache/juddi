@@ -21,6 +21,8 @@
 --%>
 
 
+<%@page import="org.apache.juddi.config.Property"%>
+<%@page import="org.apache.juddi.config.AppConfig"%>
 <%@page import="org.apache.juddi.api_v3.Publisher"%>
 <%@page import="org.apache.juddi.api_v3.SavePublisher"%>
 <%@page import="org.apache.juddi.api_v3.Clerk"%>
@@ -84,6 +86,7 @@
                                 <option>set_ReplicationNodes</option>
                                 <option>get_ReplicationNodes</option>
                                 <option>get_EntityHistory</option>
+                                <option>change_NodeID</option>
 
                                 <option>------ Backup/Restore Management -----</option>
                                 <option>admin_SaveBusiness</option>
@@ -223,10 +226,18 @@
                                         <textarea rows="4" cols="80" id="admin_SaveSubscriptionXML" class="forminput" placeholder="Enter save subscription XML"></textarea>
 
                                 </div>
-                                        <div id="get_EntityHistory" style="display:none">
+                                <div id="get_EntityHistory" style="display:none">
                                    Entity Key <input type="text" id="get_EntityHistoryKey"  class="forminput" placeholder="Entity Key"><br>
                                    Records to fetch <input type="text" id="get_EntityHistoryMaxCount"  class="forminput" value="25"><br>
                                    Offset <input type="text" id="get_EntityHistoryOffset"  class="forminput" value="0"><br>
+                                </div>
+                                        
+                                <div id="change_NodeID" style="display:none">
+                                    This will change the current node's identifier. During the transaction, no one will be able to modify items stored in the database.
+                                    This option is not available if this node is configured for replication. It must be removed from the replication configuration on all nodes before renaming.
+                                    <br><br>
+                                    Note: Depending on how jUDDI was deployed, you may have to manually edit the juddiv3.xml config file, then restart jUDDI after this process is complete.<br><br>
+                                    New Node ID <input type="text" id="change_NodeIDKey"  class="forminput" placeholder="Node ID" value="<%=StringEscapeUtils.escapeHtml( AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID))%>"><br>
                                 </div>
                                         
                                 
@@ -263,6 +274,7 @@
                                         $("#get_ReplicationNodes").hide();
                                         $("#admin_SaveSubscription").hide();
                                         $("#get_EntityHistory").hide();
+                                        $("#change_NodeID").hide();
                                        
                         
                                         $("#" + x).show();

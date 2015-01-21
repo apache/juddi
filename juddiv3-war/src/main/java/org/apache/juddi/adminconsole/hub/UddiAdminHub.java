@@ -25,6 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -37,6 +42,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Holder;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
@@ -64,6 +70,10 @@ import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.juddi.adminconsole.AES;
 import org.apache.juddi.adminconsole.resources.ResourceLoader;
+import org.apache.juddi.api.impl.JUDDIApiImpl;
+import org.apache.juddi.api.impl.UDDIInquiryImpl;
+import org.apache.juddi.api.impl.UDDIPublicationImpl;
+import org.apache.juddi.api.impl.UDDIReplicationImpl;
 import org.apache.juddi.api_v3.AdminSaveBusiness;
 import org.apache.juddi.api_v3.AdminSaveSubscriptionRequest;
 import org.apache.juddi.api_v3.AdminSaveSubscriptionResponse;
@@ -76,16 +86,25 @@ import org.apache.juddi.api_v3.GetEntityHistoryMessageRequest;
 import org.apache.juddi.api_v3.GetEntityHistoryMessageResponse;
 import org.apache.juddi.api_v3.NodeList;
 import org.apache.juddi.api_v3.SubscriptionWrapper;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.config.Property;
 import org.apache.juddi.model.BindingTemplate;
 import org.apache.juddi.subscription.notify.SMTPNotifier;
 import org.uddi.api_v3.AuthToken;
+import org.uddi.api_v3.BusinessDetail;
+import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.DeleteBusiness;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.api_v3.DiscardAuthToken;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.GetAuthToken;
+import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.Name;
+import org.uddi.api_v3.SaveBusiness;
 import org.uddi.repl_v3.ReplicationConfiguration;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionResultsList;
@@ -333,74 +352,54 @@ public class UddiAdminHub {
                         String action = parameters.getParameter("soapaction");
                         if (action.equalsIgnoreCase("adminDelete_tmodel")) {
                                 return adminDelete_tmodel(parameters);
-                        }
-                        if (action.equalsIgnoreCase("delete_ClientSubscriptionInfo")) {
+                        } else if (action.equalsIgnoreCase("delete_ClientSubscriptionInfo")) {
                                 return delete_ClientSubscriptionInfo(parameters);
-                        }
-                        if (action.equalsIgnoreCase("delete_publisher")) {
+                        } else if (action.equalsIgnoreCase("delete_publisher")) {
                                 return delete_publisher(parameters);
-                        }
-                        if (action.equalsIgnoreCase("getAllPublisherDetail")) {
+                        } else if (action.equalsIgnoreCase("getAllPublisherDetail")) {
                                 return getAllPublisherDetail(parameters);
-                        }
-                        if (action.equalsIgnoreCase("get_publisherDetail")) {
+                        } else if (action.equalsIgnoreCase("get_publisherDetail")) {
                                 return get_publisherDetail(parameters);
-                        }
-                        if (action.equalsIgnoreCase("invoke_SyncSubscription")) {
+                        } else if (action.equalsIgnoreCase("invoke_SyncSubscription")) {
                                 return invoke_SyncSubscription(parameters);
-                        }
-                        if (action.equalsIgnoreCase("save_Clerk")) {
+                        } else if (action.equalsIgnoreCase("save_Clerk")) {
                                 return save_Clerk(parameters);
-                        }
-                        if (action.equalsIgnoreCase("save_ClientSubscriptionInfo")) {
+                        } else if (action.equalsIgnoreCase("save_ClientSubscriptionInfo")) {
                                 return save_ClientSubscriptionInfo(parameters);
-                        }
-                        if (action.equalsIgnoreCase("save_Node")) {
+                        } else if (action.equalsIgnoreCase("save_Node")) {
                                 return save_Node(parameters);
-                        }
-                        if (action.equalsIgnoreCase("save_publisher")) {
+                        } else if (action.equalsIgnoreCase("save_publisher")) {
                                 return save_publisher(parameters);
+                        } else if (action.equalsIgnoreCase("send_EmailTest")) {
+                                return sendTestEmail(parameters);
+                        } else if (action.equalsIgnoreCase("get_AllNodes")) {
+                                return getAllNodes(parameters);
+                        } else if (action.equalsIgnoreCase("get_AllClerks")) {
+                                return getAllClerks(parameters);
+                        } else if (action.equalsIgnoreCase("delete_Node")) {
+                                return deleteNode(parameters);
+                        } else if (action.equalsIgnoreCase("delete_Clerk")) {
+                                return deleteClerk(parameters);
+                        } else if (action.equalsIgnoreCase("admin_DeleteSubscription")) {
+                                return deleteSubscription(parameters);
+                        } else if (action.equalsIgnoreCase("admin_SaveBusiness")) {
+                                return adminSaveBusiness(parameters);
+                        } else if (action.equalsIgnoreCase("admin_SaveTModel")) {
+                                return adminSaveTmodel(parameters);
+                        } else if (action.equalsIgnoreCase("get_AllClientSubscriptionInfo")) {
+                                return getAllClientSubscriptionInfo(parameters);
+                        } else if (action.equalsIgnoreCase("set_ReplicationNodes")) {
+                                return setReplicationConfig(parameters);
+                        } else if (action.equalsIgnoreCase("get_ReplicationNodes")) {
+                                return getReplicationNodes(parameters);
+                        } else if (action.equalsIgnoreCase("admin_SaveSubscription")) {
+                                return adminSaveSubscription(parameters);
+                        } else if (action.equalsIgnoreCase("get_EntityHistory")) {
+                                return getEntityHistory(parameters);
+                        } else if (action.equalsIgnoreCase("change_NodeID")) {
+                                return change_NodeID(parameters);
                         }
 
-                        if (action.equalsIgnoreCase("send_EmailTest")) {
-                                return sendTestEmail(parameters);
-                        }
-                        if (action.equalsIgnoreCase("get_AllNodes")) {
-                                return getAllNodes(parameters);
-                        }
-                        if (action.equalsIgnoreCase("get_AllClerks")) {
-                                return getAllClerks(parameters);
-                        }
-                        if (action.equalsIgnoreCase("delete_Node")) {
-                                return deleteNode(parameters);
-                        }
-                        if (action.equalsIgnoreCase("delete_Clerk")) {
-                                return deleteClerk(parameters);
-                        }
-                        if (action.equalsIgnoreCase("admin_DeleteSubscription")) {
-                                return deleteSubscription(parameters);
-                        }
-                        if (action.equalsIgnoreCase("admin_SaveBusiness")) {
-                                return adminSaveBusiness(parameters);
-                        }
-                        if (action.equalsIgnoreCase("admin_SaveTModel")) {
-                                return adminSaveTmodel(parameters);
-                        }
-                        if (action.equalsIgnoreCase("get_AllClientSubscriptionInfo")) {
-                                return getAllClientSubscriptionInfo(parameters);
-                        }
-                        if (action.equalsIgnoreCase("set_ReplicationNodes")) {
-                                return setReplicationConfig(parameters);
-                        }
-                        if (action.equalsIgnoreCase("get_ReplicationNodes")) {
-                                return getReplicationNodes(parameters);
-                        }
-                        if (action.equalsIgnoreCase("admin_SaveSubscription")) {
-                                return adminSaveSubscription(parameters);
-                        }
-                        if (action.equalsIgnoreCase("get_EntityHistory")) {
-                                return getEntityHistory(parameters);
-                        }
                 } catch (Exception ex) {
                         return "Error!" + HandleException(ex);
                 }
@@ -810,6 +809,104 @@ public class UddiAdminHub {
                 StringWriter sw = new StringWriter();
                 JAXB.marshal(entityHistory, sw);
                 return StringEscapeUtils.escapeHtml(sw.toString());
+        }
+
+        private String change_NodeID(HttpServletRequest parameters) {
+                //check replication config
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+
+                try {
+
+                        ReplicationConfiguration replicationNodes = new JUDDIApiImpl().getReplicationNodes(GetToken());
+                        if (replicationNodes.getOperator().size() > 1) {
+                                throw new Exception("Replication is configured with " + replicationNodes.getOperator() + " nodes. Node rename aborted");
+                        }
+                        Configuration configuration = AppConfig.getConfiguration();
+                        //this is going to break a few design rules.
+                        String currentnode = configuration.getString(Property.JUDDI_NODE_ID);
+                        String newnode = parameters.getParameter("change_NodeIDKey");
+                        if (newnode==null)
+                                throw new Exception("The new node id was not specified");
+                        newnode = newnode.trim();
+                        newnode=newnode.toLowerCase();
+                        log.warn("AUDIT - Renaming Node ID from " + currentnode + " to " + newnode);
+
+                        UDDIPublicationImpl pub = new UDDIPublicationImpl();
+                        UDDIInquiryImpl inquire = new UDDIInquiryImpl();
+
+                        GetBusinessDetail gbd = new GetBusinessDetail();
+                        gbd.setAuthInfo(GetToken());
+                        gbd.getBusinessKey().add(newnode);
+                        BusinessDetail businessDetail = null;
+                        try {
+                                businessDetail = inquire.getBusinessDetail(gbd);
+                        } catch (Exception ex) {
+                                //business doesn't exist
+                        }
+                        if (businessDetail == null || businessDetail.getBusinessEntity().isEmpty()) {
+                                //copy the existing Root Node and rekey it with the new key
+                                //incase the destination key generator is valid, we'll abort.
+                                gbd.getBusinessKey().clear();
+                                gbd.getBusinessKey().add(AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ROOT_BUSINESS));
+                                businessDetail = inquire.getBusinessDetail(gbd);
+                                BusinessEntity get = businessDetail.getBusinessEntity().get(0);
+                                get.setBusinessKey(newnode);
+                                get.getSignature().clear();
+                                if (get.getBusinessServices() != null) {
+                                        for (BusinessService bs : get.getBusinessServices().getBusinessService()) {
+                                                bs.setBusinessKey(newnode);
+                                                bs.getSignature().clear();
+                                                //we also need to rekey all of the services and bindings wait do we?
+                                                //bs.setServiceKey(bs.getServiceKey());
+                                        }
+                                }
+                                SaveBusiness sb = new SaveBusiness();
+                                sb.setAuthInfo(GetToken());
+                                sb.getBusinessEntity().add(get);
+                                //if there's something wrong with the new key, this will throw
+                                BusinessDetail saveBusiness = pub.saveBusiness(sb);
+                                newnode = saveBusiness.getBusinessEntity().get(0).getBusinessKey();
+                        }
+
+                        tx.begin();
+                        //rekey all entities with the new node id
+                        Query createQuery = em.createQuery("Update UddiEntity ue set ue.nodeId=:node where ue.nodeId=:oldnode");
+                        createQuery.setParameter("node", newnode);
+                        createQuery.setParameter("oldnode", currentnode);
+                        int records = createQuery.executeUpdate();
+                        //rekey all the existing change records with the new node id
+                        createQuery = em.createQuery("Update ChangeRecord ue set ue.nodeID=:node where ue.nodeID=:oldnode");
+                        createQuery.setParameter("node", newnode);
+                        createQuery.setParameter("oldnode", currentnode);
+                        records += createQuery.executeUpdate();
+
+                        //rekey is_replaced_by references? nah
+                        tx.commit();
+                        try{
+                                DeleteBusiness db = new DeleteBusiness();
+                                db.setAuthInfo(GetToken());
+                                db.getBusinessKey().add(currentnode);
+                                pub.deleteBusiness(db);
+                        }
+                        catch (Exception ex){
+                                log.warn("Node id change error: ", ex);
+                        }
+                        
+                        //finally update the xml config and resave it
+                        AppConfig.setJuddiProperty(Property.JUDDI_NODE_ID, newnode);
+                        AppConfig.setJuddiProperty(Property.JUDDI_NODE_ROOT_BUSINESS, newnode);
+
+                        return "Sucess, Records update: " + records + " current node id is now " + AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);
+                } catch (Exception ex) {
+                        return HandleException(ex);
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
         }
 
         public enum AuthStyle {

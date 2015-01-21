@@ -19,7 +19,6 @@ package org.apache.juddi.config;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -39,10 +38,6 @@ import org.apache.juddi.ClassUtil;
 import org.apache.juddi.Registry;
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.query.FindBusinessByCategoryQuery;
-import org.apache.juddi.query.util.FindQualifiers;
-import org.uddi.api_v3.CategoryBag;
-import org.uddi.api_v3.KeyedReference;
 
 /**
  * Handles the application level configuration for jUDDI. By default it first
@@ -64,6 +59,7 @@ public class AppConfig
 	private Configuration config;
 	private static AppConfig instance=null;
         private static URL loadedFrom=null;
+        private static XMLConfiguration propConfig=null;
         
         /**
          * Enables an administrator to identify the physical location of the configuration file from which it was loaded.<br>
@@ -84,6 +80,20 @@ public class AppConfig
 	{
 		loadConfiguration();
 	}
+        public static void setJuddiProperty(String key, Object val) throws ConfigurationException{
+                if (instance==null) {
+			instance = new AppConfig();
+		}
+                propConfig.setProperty(key, val);
+                propConfig.save();
+        }
+        
+        public static void saveConfiguration() throws ConfigurationException{
+                Configuration configuration = getConfiguration();
+                propConfig.save();
+        }
+       
+        
 	/**
 	 * Does the actual work of reading the configuration from System
 	 * Properties and/or juddiv3.xml file. When the juddiv3.xml
@@ -97,7 +107,7 @@ public class AppConfig
 		compositeConfig.addConfiguration(new SystemConfiguration());
 		//Properties from file
                 //changed 7-19-2013 AO for JUDDI-627
-		XMLConfiguration propConfig = null;
+		propConfig = null;
 	        final String filename = System.getProperty(JUDDI_CONFIGURATION_FILE_SYSTEM_PROPERTY);
 		if (filename != null) {
                   propConfig = new XMLConfiguration (filename); 
@@ -118,7 +128,7 @@ public class AppConfig
 		}
                 //Hey! this may break things
                 propConfig.setAutoSave(true);
-		
+
 		log.info("Reading from jUDDI config file from:  " + loadedFrom);
 		long refreshDelay = propConfig.getLong(Property.JUDDI_CONFIGURATION_RELOAD_DELAY, 1000l);
 		log.debug("Setting refreshDelay to " + refreshDelay);
@@ -194,6 +204,10 @@ public class AppConfig
 			// The node Id is defined as the business key of the business entity categorized as a node.  This entity is saved as part of the install.
 			// Only one business entity should be categorized as a node.
 			String nodeId = config.getString(Property.JUDDI_NODE_ID);
+                        if (nodeId==null)
+                                log.fatal("Error! " + Property.JUDDI_NODE_ID + " is not defined in the config!");
+                        else
+                                result.setProperty(Property.JUDDI_NODE_ID, nodeId);
 			/*
                         CategoryBag categoryBag = new CategoryBag();
 			KeyedReference keyedRef = new KeyedReference();
@@ -218,9 +232,13 @@ public class AppConfig
 			else
 				throw new ConfigurationException("A node business entity was not found.  Please make sure that the application is properly installed.");
 			*/
-                        result.setProperty(Property.JUDDI_NODE_ROOT_BUSINESS, nodeId);
+                        String rootbiz=config.getString(Property.JUDDI_NODE_ROOT_BUSINESS);
+                        if (rootbiz==null)
+                                log.fatal("Error! " + Property.JUDDI_NODE_ROOT_BUSINESS + " is not defined in the config");
+                        else
+                                result.setProperty(Property.JUDDI_NODE_ROOT_BUSINESS, rootbiz);
                         
-                        //result.setProperty(Property.JUDDI_NODE_ROOT_BUSINESS, nodeId);
+                        
 			
 			tx.commit();
 			return result;
