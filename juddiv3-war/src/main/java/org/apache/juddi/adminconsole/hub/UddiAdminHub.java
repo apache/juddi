@@ -88,6 +88,8 @@ import org.apache.juddi.api_v3.DeleteClerk;
 import org.apache.juddi.api_v3.DeleteNode;
 import org.apache.juddi.api_v3.GetEntityHistoryMessageRequest;
 import org.apache.juddi.api_v3.GetEntityHistoryMessageResponse;
+import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageRequest;
+import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageResponse;
 import org.apache.juddi.api_v3.NodeList;
 import org.apache.juddi.api_v3.SubscriptionWrapper;
 import org.apache.juddi.config.AppConfig;
@@ -310,7 +312,7 @@ public class UddiAdminHub {
                         DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                         log.error(ex.getMessage() + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : ""));
                         log.debug(ex.getMessage(), ex);
-                        return ResourceLoader.GetResource(session, "errors.uddi") + " " + StringEscapeUtils.escapeHtml(ex.getMessage()) + " " + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : "");
+                        return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage()) + " " + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : "");
                 } else if (ex instanceof RemoteException) {
                         RemoteException f = (RemoteException) ex;
                         log.error("RemoteException " + ex.getMessage());
@@ -410,6 +412,8 @@ public class UddiAdminHub {
                                 return change_NodeID(parameters);
                         } else if (action.equalsIgnoreCase("changeRecord")) {
                                 return getChangeRecord(parameters);
+                        } else if (action.equalsIgnoreCase("getFailedReplicationChangeRecords")) {
+                                return getFailedReplicationChangeRecords(parameters);
                         }
 
                 } catch (Exception ex) {
@@ -542,9 +546,12 @@ public class UddiAdminHub {
                                 return HandleException(ex);
                         }
                 }
-                StringWriter sw = new StringWriter();
-                JAXB.marshal(allNodes, sw);
-                return StringEscapeUtils.escapeHtml(sw.toString());
+                try {
+                        return PrettyPrintJaxbObject(allNodes);
+                } catch (Exception ex) {
+                        return HandleException(ex);
+                }
+                
         }
 
         private String getAllClerks(HttpServletRequest parameters) {
@@ -565,9 +572,11 @@ public class UddiAdminHub {
                                 return HandleException(ex);
                         }
                 }
-                StringWriter sw = new StringWriter();
-                JAXB.marshal(allNodes, sw);
-                return StringEscapeUtils.escapeHtml(sw.toString());
+                 try {
+                        return PrettyPrintJaxbObject(allNodes);
+                } catch (Exception ex) {
+                        return HandleException(ex);
+                }
         }
 
         private String getAllClientSubscriptionInfo(HttpServletRequest parameters) {
@@ -588,9 +597,11 @@ public class UddiAdminHub {
                                 return HandleException(ex);
                         }
                 }
-                StringWriter sw = new StringWriter();
-                JAXB.marshal(allClientSubscriptionInfo, sw);
-                return StringEscapeUtils.escapeHtml(sw.toString());
+                 try {
+                        return PrettyPrintJaxbObject(allClientSubscriptionInfo);
+                } catch (Exception ex) {
+                        return HandleException(ex);
+                }
         }
 
         private String getReplicationNodes(HttpServletRequest parameters) {
@@ -611,9 +622,11 @@ public class UddiAdminHub {
                                 return HandleException(ex);
                         }
                 }
-                StringWriter sw = new StringWriter();
-                JAXB.marshal(cfg, sw);
-                return StringEscapeUtils.escapeHtml(sw.toString());
+                 try {
+                        return PrettyPrintJaxbObject(cfg);
+                } catch (Exception ex) {
+                        return HandleException(ex);
+                }
         }
 
         private String deleteNode(HttpServletRequest parameters) {
@@ -708,9 +721,11 @@ public class UddiAdminHub {
                                 return HandleException(ex);
                         }
                 }
-                StringWriter sw = new StringWriter();
-                JAXB.marshal(setReplicationNodes, sw);
-                return StringEscapeUtils.escapeHtml(sw.toString());
+                 try {
+                        return PrettyPrintJaxbObject(setReplicationNodes);
+                } catch (Exception ex) {
+                        return HandleException(ex);
+                }
         }
 
         private String adminSaveBusiness(HttpServletRequest parameters) {
@@ -733,9 +748,11 @@ public class UddiAdminHub {
                                 return HandleException(ex);
                         }
                 }
-                StringWriter sw = new StringWriter();
-                JAXB.marshal(setReplicationNodes, sw);
-                return StringEscapeUtils.escapeHtml(sw.toString());
+                 try {
+                        return PrettyPrintJaxbObject(setReplicationNodes);
+                } catch (Exception ex) {
+                        return HandleException(ex);
+                }
         }
 
         private String adminSaveTmodel(HttpServletRequest parameters) {
@@ -759,9 +776,11 @@ public class UddiAdminHub {
                                 return HandleException(ex);
                         }
                 }
-                StringWriter sw = new StringWriter();
-                JAXB.marshal(setReplicationNodes, sw);
-                return StringEscapeUtils.escapeHtml(sw.toString());
+                 try {
+                        return PrettyPrintJaxbObject(setReplicationNodes);
+                } catch (Exception ex) {
+                        return HandleException(ex);
+                }
         }
 
         private String adminSaveSubscription(HttpServletRequest parameters) {
@@ -787,9 +806,11 @@ public class UddiAdminHub {
                 }
                 AdminSaveSubscriptionResponse res = new AdminSaveSubscriptionResponse();
                 res.getSubscriptions().addAll(holder.value);
-                StringWriter sw = new StringWriter();
-                JAXB.marshal(res, sw);
-                return StringEscapeUtils.escapeHtml(sw.toString());
+                 try {
+                        return PrettyPrintJaxbObject(res);
+                } catch (Exception ex) {
+                        return HandleException(ex);
+                }
         }
 
         private String getEntityHistory(HttpServletRequest parameters) {
@@ -818,9 +839,12 @@ public class UddiAdminHub {
                 if (entityHistory == null) {
                         return "Something went wrong!";
                 }
-                StringWriter sw = new StringWriter();
-                JAXB.marshal(entityHistory, sw);
-                return StringEscapeUtils.escapeHtml(sw.toString());
+                try {
+                        return PrettyPrintJaxbObject(entityHistory);
+                } catch (Exception ex) {
+                        return HandleException(ex);
+                }
+
         }
 
         private String change_NodeID(HttpServletRequest parameters) {
@@ -933,25 +957,66 @@ public class UddiAdminHub {
                                 new ChangeRecordIDType(parameters.getParameter("nodeid"),
                                         Long.parseLong(parameters.getParameter("recordid"))));
                         ChangeRecords changeRecords = new UDDIReplicationImpl().getChangeRecords(req);
+                        return PrettyPrintJaxbObject(changeRecords);
 
-                        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                        DocumentBuilder db = dbf.newDocumentBuilder();
-                        StringWriter sw = new StringWriter();
-                        JAXB.marshal(changeRecords, sw);
-                        InputSource is = new InputSource(new StringReader(sw.toString()));
+                } catch (Exception ex) {
+                        return HandleException(ex);
+                }
+        }
 
-                        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-                        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-                        //initialize StreamResult with File object to save to file
-                        StreamResult result = new StreamResult(new StringWriter());
-                        Document document = db.parse(is);
-                        DOMSource source = new DOMSource(document);
-                        transformer.transform(source, result);
-                        String xmlString = result.getWriter().toString();
-                        //System.out.println(xmlString);
+        /**
+         * returns html/xml escaped, pretty printed pre formated xml string
+         *
+         * @param jaxb
+         * @return
+         * @throws Exception
+         */
+        private String PrettyPrintJaxbObject(Object jaxb) throws Exception {
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                DocumentBuilder db = dbf.newDocumentBuilder();
+                StringWriter sw = new StringWriter();
+                JAXB.marshal(jaxb, sw);
+                InputSource is = new InputSource(new StringReader(sw.toString()));
 
-                        // JAXB.marshal(changeRecords, sw);
-                        return "<pre>"+StringEscapeUtils.escapeXml(xmlString) + "</pre>";
+                Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                //initialize StreamResult with File object to save to file
+                StreamResult result = new StreamResult(new StringWriter());
+                Document document = db.parse(is);
+                DOMSource source = new DOMSource(document);
+                transformer.transform(source, result);
+                String xmlString = result.getWriter().toString();
+               
+                return "<pre>" + StringEscapeUtils.escapeXml(xmlString) + "</pre>";
+        }
+
+        private String getFailedReplicationChangeRecords(HttpServletRequest parameters) {
+                try {
+
+                        GetFailedReplicationChangeRecordsMessageRequest req = new GetFailedReplicationChangeRecordsMessageRequest();
+                        req.setAuthInfo(GetToken());
+                        req.setMaxRecords(Integer.parseInt(parameters.getParameter("getFailedReplicationChangeRecordsMaxCount")));
+                        req.setOffset(0);
+                        req.setOffset(Integer.parseInt(parameters.getParameter("getFailedReplicationChangeRecordsOffset")));
+                        GetFailedReplicationChangeRecordsMessageResponse failedReplicationChangeRecords = null;
+                        try {
+                                failedReplicationChangeRecords = juddi.getFailedReplicationChangeRecords(req);
+                        } catch (Exception ex) {
+                                if (isExceptionExpiration(ex)) {
+                                        token = null;
+                                        req.setAuthInfo(GetToken());
+                                        try {
+                                                failedReplicationChangeRecords = juddi.getFailedReplicationChangeRecords(req);
+                                        } catch (Exception ex1) {
+                                                return "Error!" + HandleException(ex1);
+                                        }
+
+                                } else {
+                                        return "Error!" + HandleException(ex);
+                                }
+                        }
+
+                        return PrettyPrintJaxbObject(failedReplicationChangeRecords);
                 } catch (Exception ex) {
                         return HandleException(ex);
                 }
@@ -1153,11 +1218,12 @@ public class UddiAdminHub {
                         }
                 }
                 if (d != null) {
-                        ret.append("<pre>");
-                        StringWriter sw = new StringWriter();
-                        JAXB.marshal(d, sw);
-                        sw.append(PrettyPrintXML(sw.toString()));
-                        ret.append("</pre>");
+                        try {
+                                ret.append(PrettyPrintJaxbObject(d));
+                        } catch (Exception ex) {
+                                return HandleException(ex);
+                        }
+
                 } else {
                         ret.append("No data returned");
                 }
@@ -1179,7 +1245,7 @@ public class UddiAdminHub {
                 return null;
         }
 
-        public static String getSampleSave_ClientSubscriptionInfo() {
+        public  String getSampleSave_ClientSubscriptionInfo() {
                 SaveClientSubscriptionInfo x = new SaveClientSubscriptionInfo();
                 x.setAuthInfo("");
                 x.getClientSubscriptionInfo().add(new ClientSubscriptionInfo());
@@ -1252,11 +1318,12 @@ public class UddiAdminHub {
                         }
                 }
                 if (d != null) {
-                        ret.append("<pre>");
-                        StringWriter sw = new StringWriter();
-                        JAXB.marshal(d, sw);
-                        sw.append(PrettyPrintXML(sw.toString()));
-                        ret.append("</pre>");
+                        try {
+                                ret.append(PrettyPrintJaxbObject(d));
+                        } catch (Exception ex) {
+                                return HandleException(ex);
+                        }
+
                 } else {
                         ret.append("No data returned");
                 }
@@ -1491,22 +1558,23 @@ public class UddiAdminHub {
 
         public String SendAdvanced(Object request, String method) {
                 StringWriter sw = new StringWriter();
+                Object result=null;
                 try {
                         if (method.equalsIgnoreCase("save_ClientSubscriptionInfo")) {
                                 SaveClientSubscriptionInfo x = (SaveClientSubscriptionInfo) request;
                                 x.setAuthInfo(GetToken());
                                 ClientSubscriptionInfoDetail saveClientSubscriptionInfo = null;
                                 try {
-                                        saveClientSubscriptionInfo = juddi.saveClientSubscriptionInfo(x);
+                                        result = juddi.saveClientSubscriptionInfo(x);
                                         sw.append("Success:<br>");
-                                        JAXB.marshal(saveClientSubscriptionInfo, sw);
+                                        //JAXB.marshal(saveClientSubscriptionInfo, sw);
                                 } catch (Exception ex) {
                                         if (isExceptionExpiration(ex)) {
                                                 token = null;
                                                 x.setAuthInfo(GetToken());
-                                                saveClientSubscriptionInfo = juddi.saveClientSubscriptionInfo(x);
+                                                result = juddi.saveClientSubscriptionInfo(x);
                                                 sw.append("Success:<br>");
-                                                JAXB.marshal(saveClientSubscriptionInfo, sw);
+                                                //JAXB.marshal(saveClientSubscriptionInfo, sw);
 
                                         } else {
                                                 throw ex;
@@ -1519,16 +1587,16 @@ public class UddiAdminHub {
                                 x.setAuthInfo(GetToken());
                                 SyncSubscriptionDetail invokeSyncSubscription = null;
                                 try {
-                                        invokeSyncSubscription = juddi.invokeSyncSubscription(x);
+                                        result = juddi.invokeSyncSubscription(x);
                                         sw.append("Success:<br>");
-                                        JAXB.marshal(invokeSyncSubscription, sw);
+                                        //JAXB.marshal(invokeSyncSubscription, sw);
                                 } catch (Exception ex) {
                                         if (isExceptionExpiration(ex)) {
                                                 token = null;
                                                 x.setAuthInfo(GetToken());
-                                                invokeSyncSubscription = juddi.invokeSyncSubscription(x);
+                                                result = juddi.invokeSyncSubscription(x);
                                                 sw.append("Success:<br>");
-                                                JAXB.marshal(invokeSyncSubscription, sw);
+                                                //JAXB.marshal(invokeSyncSubscription, sw);
 
                                         } else {
                                                 throw ex;
@@ -1542,17 +1610,17 @@ public class UddiAdminHub {
                                 DispositionReport adminSaveBusiness = null;
 
                                 try {
-                                        adminSaveBusiness = juddi.adminSaveBusiness(GetToken(), x.getValues());
+                                        result = juddi.adminSaveBusiness(GetToken(), x.getValues());
                                         sw.append("Success:<br>");
-                                        JAXB.marshal(adminSaveBusiness, sw);
+                                        //JAXB.marshal(adminSaveBusiness, sw);
 
                                 } catch (Exception ex) {
                                         if (isExceptionExpiration(ex)) {
                                                 token = null;
                                                 x.setAuthInfo(GetToken());
-                                                adminSaveBusiness = juddi.adminSaveBusiness(GetToken(), x.getValues());
+                                                result = juddi.adminSaveBusiness(GetToken(), x.getValues());
                                                 sw.append("Success:<br>");
-                                                JAXB.marshal(adminSaveBusiness, sw);
+                                               // JAXB.marshal(adminSaveBusiness, sw);
 
                                         } else {
                                                 throw ex;
@@ -1564,17 +1632,17 @@ public class UddiAdminHub {
 
                                 DispositionReport adminSaveTModel = null;
                                 try {
-                                        adminSaveTModel = juddi.adminSaveTModel(GetToken(), x.getValues());
+                                        result = juddi.adminSaveTModel(GetToken(), x.getValues());
                                         sw.append("Success:<br>");
-                                        JAXB.marshal(adminSaveTModel, sw);
+                                        //JAXB.marshal(adminSaveTModel, sw);
 
                                 } catch (Exception ex) {
                                         if (isExceptionExpiration(ex)) {
                                                 token = null;
                                                 x.setAuthInfo(GetToken());
-                                                adminSaveTModel = juddi.adminSaveTModel(GetToken(), x.getValues());
+                                                result = juddi.adminSaveTModel(GetToken(), x.getValues());
                                                 sw.append("Success:<br>");
-                                                JAXB.marshal(adminSaveTModel, sw);
+                                                //JAXB.marshal(adminSaveTModel, sw);
 
                                         } else {
                                                 throw ex;
@@ -1589,14 +1657,14 @@ public class UddiAdminHub {
                                 try {
                                         juddi.adminSaveSubscription(GetToken(), x.getPublisherOrUsername(), holder);
                                         sw.append("Success:<br>");
-                                        JAXB.marshal(holder, sw);
+                                        result=holder;
                                 } catch (Exception ex) {
                                         if (isExceptionExpiration(ex)) {
                                                 token = null;
 
                                                 juddi.adminSaveSubscription(GetToken(), x.getPublisherOrUsername(), holder);
                                                 sw.append("Success:<br>");
-                                                JAXB.marshal(holder, sw);
+                                                result=holder;
 
                                         } else {
                                                 throw ex;
@@ -1607,16 +1675,16 @@ public class UddiAdminHub {
                                 ReplicationConfiguration x = (ReplicationConfiguration) request;
                                 //    Holder<List<Subscription>> holder = new Holder<List<Subscription>>(x.getSubscriptions());
                                 try {
-                                        DispositionReport setReplicationNodes = juddi.setReplicationNodes(GetToken(), x);
+                                        result = juddi.setReplicationNodes(GetToken(), x);
                                         sw.append("Success:<br>");
-                                        JAXB.marshal(setReplicationNodes, sw);
+                                       // JAXB.marshal(setReplicationNodes, sw);
                                 } catch (Exception ex) {
                                         if (isExceptionExpiration(ex)) {
                                                 token = null;
 
-                                                DispositionReport setReplicationNodes = juddi.setReplicationNodes(GetToken(), x);
+                                                result = juddi.setReplicationNodes(GetToken(), x);
                                                 sw.append("Success:<br>");
-                                                JAXB.marshal(setReplicationNodes, sw);
+                                                //JAXB.marshal(setReplicationNodes, sw);
 
                                         } else {
                                                 throw ex;
@@ -1627,7 +1695,14 @@ public class UddiAdminHub {
                 } catch (Exception ex) {
                         return HandleException(ex);
                 }
-                return null;
+                if (result!=null){
+                        try {
+                                return sw.toString() + "<br>" + PrettyPrintJaxbObject(result);
+                        } catch (Exception ex) {
+                                return HandleException(ex);
+                        }
+                }
+                return "Error! no work was done?";
 
         }
 

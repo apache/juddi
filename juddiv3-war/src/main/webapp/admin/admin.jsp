@@ -87,6 +87,7 @@
                                 <option>get_ReplicationNodes</option>
                                 <option>get_EntityHistory</option>
                                 <option>change_NodeID</option>
+                                <option>getFailedReplicationChangeRecords</option>
 
                                 <option>------ Backup/Restore Management -----</option>
                                 <option>admin_SaveBusiness</option>
@@ -120,7 +121,7 @@
                                 </div>
                                 <div id="save_ClientSubscriptionInfo" style="display:none">
                                         <%=ResourceLoader.GetResource(session, "items.noauthtoken")%><br>
-                                        <textarea rows="4" cols="80" id="ClientSubscriptionInfoDetailXML" class="forminput" placeholder="Enter subscription XML"><%=StringEscapeUtils.escapeHtml(UddiAdminHub.getSampleSave_ClientSubscriptionInfo())%></textarea>
+                                        <textarea rows="4" cols="80" id="ClientSubscriptionInfoDetailXML" class="forminput" placeholder="Enter subscription XML"><%=StringEscapeUtils.escapeHtml(x.getSampleSave_ClientSubscriptionInfo())%></textarea>
                                 </div>
                                 <div id="save_publisher" style="display:none">
                                         <%=ResourceLoader.GetResource(session, "items.name")%> <input type="text" id="savePublisherNAME"  class="forminput" placeholder="Enter name"><br>
@@ -239,11 +240,16 @@
                                     Note: Depending on how jUDDI was deployed, you may have to manually edit the juddiv3.xml config file, then restart jUDDI after this process is complete.<br><br>
                                     New Node ID <input type="text" id="change_NodeIDKey"  class="forminput" placeholder="Node ID" value="<%=StringEscapeUtils.escapeHtml( AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID))%>"><br>
                                 </div>
+                                <div id="getFailedReplicationChangeRecords" style="display:none">
+                                    Records to fetch <input type="text" id="getFailedReplicationChangeRecordsMaxCount"  class="forminput" value="5"><br>
+                                    Offset <input type="text" id="getFailedReplicationChangeRecordsOffset"  class="forminput" value="0"><br>
+                                </div>
                                         
                                 
                                
 
                         </div>
+                            
                         <script type="text/javascript">
                                 function toggledivs()
                                 {
@@ -275,6 +281,7 @@
                                         $("#admin_SaveSubscription").hide();
                                         $("#get_EntityHistory").hide();
                                         $("#change_NodeID").hide();
+                                        $("#getFailedReplicationChangeRecords").hide();
                                        
                         
                                         $("#" + x).show();
@@ -314,7 +321,7 @@
                                             data: postbackdata
                                         });
 
-
+                                        $("#resultsDiv").html("");
                                         request.done(function(msg) {
                                             window.console && console.log('postback done ' + url);
                                             //trim it
@@ -330,6 +337,7 @@
                                 }
                                 toggledivs();//run when the page loads
                                 function submitform() {
+                                    $("#resultsDiv").val("Please wait...");
                                         var url = 'ajax/go.jsp';
 
                                         var postbackdata = new Array();
@@ -380,8 +388,15 @@
 
                                         request.done(function(msg) {
                                                 window.console && console.log('postback done ' + url);
-                                                $("#adminresults").html(msg);
-                                                $('#adminresultsmodal').modal();
+                                                if (StringStartsWith(msg.trim(),"Error")){
+                                                     $("#adminresults").html(msg);
+                                                    $('#adminresultsmodal').modal();
+                                                }
+                                                else
+                                                {
+                                                    $("#resultsDiv").html(msg);
+                                                    location.hash = "#resultsAnchor";
+                                                }
                                         });
 
                                         request.fail(function(jqXHR, textStatus) {
@@ -391,13 +406,22 @@
 
                                         });
                                 }
+                                
+                                function StringStartsWith(source, str){
+                                    
+                                      return source.slice(0, str.length) == str;
+                                    
+                                  }
                         </script>
                         <br>
                         <%=ResourceLoader.GetResource(session, "pages.admin.notes")%>
 
                         <br>
-                        <a href="javascript:submitform();" class="btn btn-primary"><%=ResourceLoader.GetResource(session, "actions.go")%></a><br><br>
-                        <br>
+                        <a href="javascript:submitform();" class="btn btn-primary"><%=ResourceLoader.GetResource(session, "actions.go")%></a><br>
+                        
+                        <hr>
+                        <br><a name="resultsAnchor"></a>
+                            <div id="resultsDiv"></div>
 
                 </div>
         </div>

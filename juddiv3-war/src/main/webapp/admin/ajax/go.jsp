@@ -19,13 +19,11 @@
  *
  */
 --%>
-
 <%@page import="org.apache.juddi.adminconsole.resources.ResourceLoader"%>
 <%@page import="org.apache.juddi.adminconsole.hub.UddiAdminHub"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="java.util.Enumeration"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
 <%@include  file="../csrf.jsp" %>
 <%
     if (request.getMethod().equalsIgnoreCase("POST")) {
