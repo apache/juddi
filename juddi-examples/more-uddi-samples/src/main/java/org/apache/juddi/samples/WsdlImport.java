@@ -64,15 +64,17 @@ public class WsdlImport {
         private static UDDIPublicationPortType publish = null;
 
         public static void main(String[] args) throws Exception {
-                new WsdlImport().Fire("http://svn.apache.org/repos/asf/juddi/trunk/uddi-ws/src/main/resources/juddi_api_v1.wsdl", null, null);
+                new WsdlImport().Fire("http://svn.apache.org/repos/asf/juddi/trunk/uddi-ws/src/main/resources/juddi_api_v1.wsdl", null, null, null);
         }
 
-        public void Fire(String pathOrURL, String businessKey, String token) throws Exception {
+        public void Fire(String pathOrURL, String businessKey, String token, Transport transport) throws Exception {
 
+                if (transport == null) {
                 // create a manager and read the config in the archive; 
-                // you can use your config file name
-                UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
-                Transport transport = clerkManager.getTransport();
+                        // you can use your config file name
+                        UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
+                        transport = clerkManager.getTransport();
+                }
                 // Now you create a reference to the UDDI API
                 security = transport.getUDDISecurityService();
                 publish = transport.getUDDIPublishService();

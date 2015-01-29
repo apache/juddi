@@ -62,12 +62,14 @@ public class WadlImport {
         private static JUDDIApiPortType juddiApi = null;
         private static UDDIPublicationPortType publish = null;
 
-        public void Fire(String pathOrURL, String businessKey, String token) throws Exception {
+        public void Fire(String pathOrURL, String businessKey, String token, Transport transport) throws Exception {
 
+                if (transport == null) {
                 // create a manager and read the config in the archive; 
-                // you can use your config file name
-                UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
-                Transport transport = clerkManager.getTransport();
+                        // you can use your config file name
+                        UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
+                        transport = clerkManager.getTransport();
+                }
                 // Now you create a reference to the UDDI API
                 security = transport.getUDDISecurityService();
                 publish = transport.getUDDIPublishService();
@@ -161,7 +163,7 @@ public class WadlImport {
 
                 System.out.println("here's our new service: " + servicePrinter.print(businessServices));
 
-                if (businessKey == null || businessKey.length()==0) {
+                if (businessKey == null || businessKey.length() == 0) {
                         BusinessEntity be = new BusinessEntity();
                         be.setBusinessKey(businessServices.getBusinessKey());
                         be.getName().add(new Name());
@@ -189,7 +191,7 @@ public class WadlImport {
 
         public static void main(String[] args) throws Exception {
 
-                new WadlImport().Fire("http://svn.apache.org/repos/asf/cxf/trunk/systests/jaxrs/src/test/resources/wadl/bookstoreImportResource.wadl", null, null);
+                new WadlImport().Fire("http://svn.apache.org/repos/asf/cxf/trunk/systests/jaxrs/src/test/resources/wadl/bookstoreImportResource.wadl", null, null, null);
 
         }
 }

@@ -25,9 +25,13 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "j3_chg_record")
+@Table(name = "j3_chg_record"
+        //, uniqueConstraints = @UniqueConstraint(columnNames = {"node_id", "orginating_usn"}) 
+)
+ 
 public class ChangeRecord implements Serializable {
 
         private static final long serialVersionUID = 1L;
@@ -38,6 +42,7 @@ public class ChangeRecord implements Serializable {
         private RecordType e = RecordType.ChangeRecordNull;
         private Long id;
         private String entityKey;
+        private boolean appliedLocally = false;
 
         @Column(name = "change_contents")
         @Lob
@@ -113,5 +118,18 @@ public class ChangeRecord implements Serializable {
 
         public void setOriginatingUSN(Long value) {
                 this.originatingUSN = value;
+        }
+        
+        /**
+         * returns true if the changes represented by this change record were applied successfully at this node
+         * @return 
+         */
+        @Column(name = "appliedlocal")
+        public boolean getIsAppliedLocally() {
+                return appliedLocally;
+        }
+
+        public void setIsAppliedLocally(boolean value) {
+                this.appliedLocally = value;
         }
 }

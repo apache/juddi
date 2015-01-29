@@ -19,6 +19,7 @@ package org.apache.juddi.adminconsole.hub;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.math.BigInteger;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -35,9 +36,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXB;
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.BindingProvider;
@@ -105,6 +109,10 @@ import org.uddi.api_v3.GetAuthToken;
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.SaveBusiness;
+import org.uddi.repl_v3.ChangeRecordIDType;
+import org.uddi.repl_v3.ChangeRecords;
+import org.uddi.repl_v3.GetChangeRecords;
+import org.uddi.repl_v3.HighWaterMarkVectorType;
 import org.uddi.repl_v3.ReplicationConfiguration;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionResultsList;
@@ -112,6 +120,8 @@ import org.uddi.subr_v3.NotifySubscriptionListener;
 
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISecurityPortType;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
 /**
  * UddiHub - The hub acts as a single point for managing browser to uddi
@@ -398,6 +408,8 @@ public class UddiAdminHub {
                                 return getEntityHistory(parameters);
                         } else if (action.equalsIgnoreCase("change_NodeID")) {
                                 return change_NodeID(parameters);
+                        } else if (action.equalsIgnoreCase("changeRecord")) {
+                                return getChangeRecord(parameters);
                         }
 
                 } catch (Exception ex) {
@@ -827,10 +839,11 @@ public class UddiAdminHub {
                         //this is going to break a few design rules.
                         String currentnode = configuration.getString(Property.JUDDI_NODE_ID);
                         String newnode = parameters.getParameter("change_NodeIDKey");
-                        if (newnode==null)
+                        if (newnode == null) {
                                 throw new Exception("The new node id was not specified");
+                        }
                         newnode = newnode.trim();
-                        newnode=newnode.toLowerCase();
+                        newnode = newnode.toLowerCase();
                         log.warn("AUDIT - Renaming Node ID from " + currentnode + " to " + newnode);
 
                         UDDIPublicationImpl pub = new UDDIPublicationImpl();
@@ -884,16 +897,15 @@ public class UddiAdminHub {
 
                         //rekey is_replaced_by references? nah
                         tx.commit();
-                        try{
+                        try {
                                 DeleteBusiness db = new DeleteBusiness();
                                 db.setAuthInfo(GetToken());
                                 db.getBusinessKey().add(currentnode);
                                 pub.deleteBusiness(db);
-                        }
-                        catch (Exception ex){
+                        } catch (Exception ex) {
                                 log.warn("Node id change error: ", ex);
                         }
-                        
+
                         //finally update the xml config and resave it
                         AppConfig.setJuddiProperty(Property.JUDDI_NODE_ID, newnode);
                         AppConfig.setJuddiProperty(Property.JUDDI_NODE_ROOT_BUSINESS, newnode);
@@ -906,6 +918,42 @@ public class UddiAdminHub {
                                 tx.rollback();
                         }
                         em.close();
+                }
+        }
+
+        private String getChangeRecord(HttpServletRequest parameters) {
+                try {
+                        GetChangeRecords req = new GetChangeRecords();
+
+                        req.setRequestingNode(AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID));
+
+                        req.setResponseLimitCount(BigInteger.ONE);
+                        req.setChangesAlreadySeen(new HighWaterMarkVectorType());
+                        req.getChangesAlreadySeen().getHighWaterMark().add(
+                                new ChangeRecordIDType(parameters.getParameter("nodeid"),
+                                        Long.parseLong(parameters.getParameter("recordid"))));
+                        ChangeRecords changeRecords = new UDDIReplicationImpl().getChangeRecords(req);
+
+                        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                        DocumentBuilder db = dbf.newDocumentBuilder();
+                        StringWriter sw = new StringWriter();
+                        JAXB.marshal(changeRecords, sw);
+                        InputSource is = new InputSource(new StringReader(sw.toString()));
+
+                        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                        //initialize StreamResult with File object to save to file
+                        StreamResult result = new StreamResult(new StringWriter());
+                        Document document = db.parse(is);
+                        DOMSource source = new DOMSource(document);
+                        transformer.transform(source, result);
+                        String xmlString = result.getWriter().toString();
+                        //System.out.println(xmlString);
+
+                        // JAXB.marshal(changeRecords, sw);
+                        return "<pre>"+StringEscapeUtils.escapeXml(xmlString) + "</pre>";
+                } catch (Exception ex) {
+                        return HandleException(ex);
                 }
         }
 

@@ -471,7 +471,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                 Assume.assumeTrue(TckPublisher.isReplicationEnabled());
                 Assume.assumeTrue(TckPublisher.isJUDDI());
                 try {
-                        TckCommon.PrintMarker();
+                        //TckCommon.PrintMarker();
                         logger.info("testReplicationTModelBusinessPublisherAssertionAddDelete");
 
                         resetTmodels();
@@ -978,15 +978,19 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         Assert.assertEquals(tModelDetail.getTModel().get(0).isDeleted(), true);
                         logger.info("sam's tModel was deleted(hidden) replicated");
                         // TckCommon.PrintMarker();
+                        logger.info("Test passed");
 
                 } finally {
-                        TckCommon.PrintMarker();
-                        logger.fatal("The test failed, attempting to clean up the business and tModels");
+                        //TckCommon.PrintMarker();
+                        //logger.fatal("The test failed, attempting to clean up the business and tModels");
                         try {
                                 DeleteBusiness db = new DeleteBusiness();
                                 db.setAuthInfo(samTokenNode2);
                                 db.getBusinessKey().add(TckBusiness.SAM_BUSINESS_KEY);
+                                try{
                                 publishSamNode2.deleteBusiness(db);
+                                }
+                                catch (Exception ex){}
                                 int timeout = TckPublisher.getSubscriptionTimeout();
                                 GetBusinessDetail findTModel = new GetBusinessDetail();
                                 findTModel.setAuthInfo(maryTokenNode1);

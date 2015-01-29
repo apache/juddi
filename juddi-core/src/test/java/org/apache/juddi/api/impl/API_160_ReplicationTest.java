@@ -401,4 +401,6 @@ public class API_160_ReplicationTest {
                 Assert.assertNotNull(replicationNodes.getRegistryContact().getContact().getPersonName().get(0));
 
         }
+        
+        //alter a binding, service, business, tmodel that isn't owned by the initiator
 }

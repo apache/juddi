@@ -37,7 +37,7 @@ import org.uddi.api_v3.TModelInstanceDetails;
 import org.uddi.api_v3.TModelInstanceInfo;
 
 /**
- *
+ * doesn't make changes to a remote server, just creates a few businesses and compares the two by qos parameters
  * @author Alex O'Ree
  */
 public class CompareByTModelInstanceInfoQOS {

@@ -26,8 +26,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebResult;
 
 import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
@@ -57,6 +61,8 @@ import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.GetEntityHistoryMessageRequest;
 import org.apache.juddi.api_v3.GetEntityHistoryMessageResponse;
+import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageRequest;
+import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageResponse;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.NodeList;
@@ -113,7 +119,6 @@ import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModelInfo;
 import org.uddi.api_v3.TModelInfos;
-import org.uddi.repl_v3.ChangeRecordDelete;
 import org.uddi.repl_v3.ChangeRecords;
 import org.uddi.repl_v3.CommunicationGraph;
 import org.uddi.repl_v3.Operator;
@@ -409,10 +414,10 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
          * tModel will no longer be able to use the tModel if jUDDI Option
          * Enforce referential Integrity is enabled.<br>
          * Required permission, you must be am administrator
-         * {@link Property#JUDDI_ENFORCE_REFERENTIAL_INTEGRITY}. In addition, 
-         * tModels that are owned by another node via replication cannot be deleted using 
-         * this method and will throw an exception
-         
+         * {@link Property#JUDDI_ENFORCE_REFERENTIAL_INTEGRITY}. In addition,
+         * tModels that are owned by another node via replication cannot be
+         * deleted using this method and will throw an exception
+         *
          *
          * @param body
          * @throws DispositionReportFaultMessage
@@ -439,16 +444,18 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                 if (obj == null) {
                                         throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNotFound", entityKey));
                                 }
-                                if (!obj.getNodeId().equals(node))
+                                if (!obj.getNodeId().equals(node)) {
                                         throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNodeOwner", entityKey + " this node " + node + " owning node " + obj.getNodeId()));
+                                }
                                 em.remove(obj);
-                                changes.add( UDDIPublicationImpl.getChangeRecord_deleteTModelDelete(entityKey, node));
-                                
+                                changes.add(UDDIPublicationImpl.getChangeRecord_deleteTModelDelete(entityKey, node));
+
                         }
 
                         tx.commit();
-                        for (ChangeRecord cr: changes)
+                        for (ChangeRecord cr : changes) {
                                 ReplicationNotifier.Enqueue(cr);
+                        }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.ADMIN_DELETE_TMODEL,
                                 QueryStatus.SUCCESS, procTime);
@@ -1187,11 +1194,11 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
-                        for (TemporaryMailContainer t:notifications){
-                                 USERFRIENDLYSMTPNotifier.notifySubscriptionDeleted(t);
+                        for (TemporaryMailContainer t : notifications) {
+                                USERFRIENDLYSMTPNotifier.notifySubscriptionDeleted(t);
                         }
-                       notifications.clear();
-                       notifications=null;
+                        notifications.clear();
+                        notifications = null;
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.ADMIN_DELETE_SUB,
                                 QueryStatus.SUCCESS, procTime);
@@ -1231,6 +1238,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                 stm.getBusinessEntity().addAll(values.get(i).getBusinessEntity());
                                 pub.saveBusiness(stm);
                         }
+                        //TODO replication?
 
                         tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
@@ -1274,7 +1282,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                 stm.getTModel().addAll(values.get(i).getTModel());
                                 pub.saveTModel(stm);
                         }
-
+                        //TODO replication?
                         tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.ADMIN_SAVE_TMODEL,
@@ -1361,7 +1369,10 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
                         new ValidateReplication(publisher).validateSetReplicationNodes(replicationConfiguration, em, node);
 
+                        //StringWriter sw = new StringWriter();
+                        //JAXB.marshal(replicationConfiguration, sw);
                         org.apache.juddi.model.ReplicationConfiguration model = null;
+                        logger.info(publisher.getAuthorizedName() + " is setting the replication config from " + getRequestorsIPAddress());// + " " + sw.toString());
                         try {
                                 model = (ReplicationConfiguration) em.createQuery("select c FROM ReplicationConfiguration c order by c.serialNumber desc").getSingleResult();
                         } catch (Exception ex) {
@@ -1382,7 +1393,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         } else {
                                 //a config exists, remove it, add the new one
                                 //spec doesn't appear to mention if recording a change history on the config is required
-                                //assuming not.
+                                //assuming we'll keep it for now, might be useful later.
                                 //em.remove(model);
                                 oldConfig = new org.uddi.repl_v3.ReplicationConfiguration();
                                 MappingModelToApi.mapReplicationConfiguration(model, oldConfig);
@@ -1440,7 +1451,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                         StringBuilder sql = new StringBuilder();
                         sql.append("select c from ReplicationConfiguration c order by c.serialNumber desc");
-                        sql.toString();
+                        //sql.toString();
                         Query qry = em.createQuery(sql.toString());
                         qry.setMaxResults(1);
 
@@ -1457,7 +1468,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         throw drfm;
                 } catch (Exception ex) {
                         //possible that there is no config to return
-                        logger.warn("Error caught, is there a replication config is avaiable? Returning a default config (no replication): " + ex.getMessage());
+                        //logger.warn("Error caught, is there a replication config is avaiable? Returning a default config (no replication): " + ex.getMessage());
                         logger.debug("Error caught, is there a replication config is avaiable? Returning a default config (no replication): ", ex);
 
                         r.setCommunicationGraph(new CommunicationGraph());
@@ -1516,7 +1527,9 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                 r.setMaximumTimeToGetChanges(BigInteger.ONE);
                 r.setMaximumTimeToSyncRegistry(BigInteger.ONE);
-                // JAXB.marshal(r, System.out);
+                //StringWriter sw = new StringWriter();
+                //JAXB.marshal(r, sw);
+                //logger.info("dumping returned replication config " + sw.toString());
                 return r;
         }
 
@@ -1604,6 +1617,66 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                 } catch (DispositionReportFaultMessage drfm) {
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.ADMIN_GET_HISTORY,
+                                QueryStatus.FAILED, procTime);
+                        throw drfm;
+
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+        }
+
+        /**
+         * {@inheritDoc }
+         *
+         * @param body
+         * @return
+         * @throws DispositionReportFaultMessage
+         * @throws RemoteException
+         */
+        @Override
+        public GetFailedReplicationChangeRecordsMessageResponse getFailedReplicationChangeRecords(
+                GetFailedReplicationChangeRecordsMessageRequest body)
+                throws DispositionReportFaultMessage, RemoteException {
+                //public GetFailedReplicationChangeRecordsMessageResponse getFailedReplicationChangeRecords(GetFailedReplicationChangeRecordsMessageRequest body) throws DispositionReportFaultMessage, RemoteException {
+                long startTime = System.currentTimeMillis();
+                if (body == null) {
+                        throw new InvalidValueException(new ErrorMessage("errors.NullInput"));
+                }
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+                        UddiEntityPublisher requestor = this.getEntityPublisher(em, body.getAuthInfo());
+                        if (!((Publisher) requestor).isAdmin()) {
+                                throw new UserMismatchException(new ErrorMessage("errors.AdminReqd"));
+                        }
+                        if (body.getMaxRecords() <= 0) {
+                                body.setMaxRecords(20);
+                        }
+                        if (body.getOffset() < 0) {
+                                body.setOffset(0);
+                        }
+                        Query createQuery = em.createQuery("select m from ChangeRecord m where m.isAppliedLocally=false order by m.id DESC ");
+                        createQuery.setMaxResults((int) body.getMaxRecords());
+                        createQuery.setFirstResult((int) body.getOffset());
+                        List<ChangeRecord> resultList = createQuery.getResultList();
+                        GetFailedReplicationChangeRecordsMessageResponse res = new GetFailedReplicationChangeRecordsMessageResponse();
+                        res.setChangeRecords(new ChangeRecords());
+                        for (ChangeRecord cr : resultList) {
+                                res.getChangeRecords().getChangeRecord().add(MappingModelToApi.mapChangeRecord(cr));
+                        }
+
+                        tx.rollback();
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.ADMIN_GET_FAILED_CRS,
+                                QueryStatus.SUCCESS, procTime);
+                        return res;
+                } catch (DispositionReportFaultMessage drfm) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(JUDDIQuery.ADMIN_GET_FAILED_CRS,
                                 QueryStatus.FAILED, procTime);
                         throw drfm;
 

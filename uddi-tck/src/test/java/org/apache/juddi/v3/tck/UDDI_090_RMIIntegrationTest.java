@@ -26,6 +26,7 @@ import static org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerIntegrationBa
 import static org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerIntegrationBase.startManager;
 import static org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerIntegrationBase.stopManager;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 
 /**
@@ -56,23 +57,36 @@ public class UDDI_090_RMIIntegrationTest extends UDDI_090_SubscriptionListenerIn
                         return;
                 }
                 startManager();
-
-                randomPort = 19800 + new Random().nextInt(99);
-                System.out.println("RMI Random port=" + randomPort);
-                //bring up the RMISubscriptionListener
-                URI rmiEndPoint = new URI("rmi://localhost:" + randomPort + "/tck/rmisubscriptionlistener");
-                registry = LocateRegistry.createRegistry(rmiEndPoint.getPort());
-                String path = rmiEndPoint.getPath();
-                hostname = InetAddress.getLocalHost().getHostName();
-                //starting the service
+                int count = 0;
                 rmiSubscriptionListenerService = new UDDISubscriptionListenerImpl(0);
-                //binding to the RMI Registry
-                registry.bind(path, rmiSubscriptionListenerService);
+                UDDISubscriptionListenerImpl.notifcationMap.clear();
+                UDDISubscriptionListenerImpl.notificationCount=0;
+                while (true && count < 5) {
+                        try {
+                                count++;
+                                randomPort = 19800 + new Random().nextInt(99);
+                                System.out.println("RMI Random port=" + randomPort);
+                                //bring up the RMISubscriptionListener
+                                URI rmiEndPoint = new URI("rmi://localhost:" + randomPort + "/tck/rmisubscriptionlistener");
+                                registry = LocateRegistry.createRegistry(rmiEndPoint.getPort());
 
-                //double check that the service is bound in the local Registry
-                Registry registry2 = LocateRegistry.getRegistry(rmiEndPoint.getHost(), rmiEndPoint.getPort());
-                registry2.lookup(rmiEndPoint.getPath());
+                                String path = rmiEndPoint.getPath();
+                                hostname = InetAddress.getLocalHost().getHostName();
+                                //starting the service
 
+                                //binding to the RMI Registry
+                                registry.bind(path, rmiSubscriptionListenerService);
+
+                                //double check that the service is bound in the local Registry
+                                Registry registry2 = LocateRegistry.getRegistry(rmiEndPoint.getHost(), rmiEndPoint.getPort());
+                                registry2.lookup(rmiEndPoint.getPath());
+                                break;
+                        } catch (Exception ex) {
+                                logger.warn("trouble starting rmi endpoint " + ex.getMessage());
+                        }
+                }
+                Assert.assertNotNull(registry);
+                Assert.assertNotNull(hostname);
         }
 
         @Override

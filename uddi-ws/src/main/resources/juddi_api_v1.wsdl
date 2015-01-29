@@ -432,6 +432,24 @@ xmlns:uddi="urn:uddi-org:api_v3">
   </xs:complexType>
 
 
+
+ <xs:element name="getFailedReplicationChangeRecordsMessage" nillable="true" type="tns:getFailedReplicationChangeRecordsMessageRequest"/>
+  <xs:element name="getFailedReplicationChangeRecordsMessageResponse" nillable="true" type="tns:getFailedReplicationChangeRecordsMessageResponse"/>
+  <xs:complexType name="getFailedReplicationChangeRecordsMessageRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element name="maxRecords" type="xs:long"/>
+      <xs:element name="offset" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getFailedReplicationChangeRecordsMessageResponse">
+    <xs:sequence >
+    <xs:element  ref="repl:changeRecords"/>
+  </xs:sequence>  
+  </xs:complexType>
+
+
+
   
   
 </xs:schema>
@@ -618,6 +636,13 @@ xmlns:uddi="urn:uddi-org:api_v3">
   </wsdl:message>
   <wsdl:message name="getEntityHistoryMessageResponse">
     <wsdl:part element="ns1:getEntityHistoryMessageResponse" name="response"></wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="getFailedReplicationChangeRecordsMessage">
+    <wsdl:part element="ns1:getFailedReplicationChangeRecordsMessage" name="body"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFailedReplicationChangeRecordsMessageResponse">
+    <wsdl:part element="ns1:getFailedReplicationChangeRecordsMessageResponse" name="response"></wsdl:part>
   </wsdl:message>
 
   
@@ -823,6 +848,16 @@ xmlns:uddi="urn:uddi-org:api_v3">
     </wsdl:documentation>
         <wsdl:input message="tns:getEntityHistoryMessage" name="getEntityHistory"></wsdl:input>
       <wsdl:output message="tns:getEntityHistoryMessageResponse" name="getEntityHistoryResponse"></wsdl:output>
+      <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getFailedReplicationChangeRecords">
+   <wsdl:documentation>
+    gets a list of change records that were received from another node but failed to save locally, usually due to a key conflict
+    @since 3.3
+    </wsdl:documentation>
+        <wsdl:input message="tns:getFailedReplicationChangeRecordsMessage" name="getFailedReplicationChangeRecords"></wsdl:input>
+      <wsdl:output message="tns:getFailedReplicationChangeRecordsMessageResponse" name="getFailedReplicationChangeRecordsResponse"></wsdl:output>
       <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
     </wsdl:operation>
 	
@@ -1071,6 +1106,21 @@ xmlns:uddi="urn:uddi-org:api_v3">
       </wsdl:output>
     <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
     </wsdl:operation>
+
+
+    <wsdl:operation name="getFailedReplicationChangeRecords">
+   
+      <soap:operation soapAction="getFailedReplicationChangeRecords" style="document"/>
+      <wsdl:input name="getFailedReplicationChangeRecords">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getFailedReplicationChangeRecordsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+
+
 
   </wsdl:binding>
   <wsdl:service name="JUDDIApiService">

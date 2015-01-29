@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2009 The Apache Software Foundation.
+ * Copyright 2001-2008 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ public class ObjectFactory {
 
     private final static QName _AdminDeleteSubscriptionResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "adminDelete_SubscriptionResponse");
     private final static QName _GetReplicationNodesResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_ReplicationNodesResponse");
-    private final static QName _SetReplicationNodes_QNAME = new QName("urn:juddi-apache-org:api_v3", "set_ReplicationNodes");
     private final static QName _GetAllPublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_allPublisherDetail");
+    private final static QName _SetReplicationNodes_QNAME = new QName("urn:juddi-apache-org:api_v3", "set_ReplicationNodes");
     private final static QName _DeleteClerk_QNAME = new QName("urn:juddi-apache-org:api_v3", "delete_Clerk");
     private final static QName _SyncSubscription_QNAME = new QName("urn:juddi-apache-org:api_v3", "sync_subscription");
     private final static QName _AdminSaveTModelResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "adminSave_tModelResponse");
@@ -53,6 +53,8 @@ public class ObjectFactory {
     private final static QName _AdminSaveBusinessResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "adminSave_BusinessResponse");
     private final static QName _GetAllClientSubscriptionInfoResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_allClientSubscriptionInfoResponse");
     private final static QName _SyncSubscriptionDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "sync_subscriptionDetail");
+    private final static QName _GetFailedReplicationChangeRecordsMessageResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "getFailedReplicationChangeRecordsMessageResponse");
+    private final static QName _GetFailedReplicationChangeRecordsMessage_QNAME = new QName("urn:juddi-apache-org:api_v3", "getFailedReplicationChangeRecordsMessage");
     private final static QName _InvokeSyncSubscription_QNAME = new QName("urn:juddi-apache-org:api_v3", "invoke_SyncSubscription");
     private final static QName _AdminSaveSubscriptionResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "adminSave_SubscriptionResponse");
     private final static QName _DeleteNode_QNAME = new QName("urn:juddi-apache-org:api_v3", "delete_Node");
@@ -60,8 +62,8 @@ public class ObjectFactory {
     private final static QName _GetPublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_publisherDetail");
     private final static QName _SavePublisher_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_publisher");
     private final static QName _DeletePublisher_QNAME = new QName("urn:juddi-apache-org:api_v3", "delete_publisher");
-    private final static QName _SaveClerkRequest_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_ClerkRequest");
     private final static QName _AdminDeleteSubscription_QNAME = new QName("urn:juddi-apache-org:api_v3", "adminDelete_Subscription");
+    private final static QName _SaveClerkRequest_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_ClerkRequest");
     private final static QName _DeleteClientSubscriptionInfo_QNAME = new QName("urn:juddi-apache-org:api_v3", "delete_ClientSubscriptionInfo");
     private final static QName _SaveNodeRequest_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_NodeRequest");
     private final static QName _GetAllNodesResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_AllNodesResponse");
@@ -83,46 +85,6 @@ public class ObjectFactory {
      * 
      */
     public ObjectFactory() {
-    }
-
-    /**
-     * Create an instance of {@link ClientSubscriptionInfoDetail }
-     * 
-     */
-    public ClientSubscriptionInfoDetail createClientSubscriptionInfoDetail() {
-        return new ClientSubscriptionInfoDetail();
-    }
-
-    /**
-     * Create an instance of {@link NodeDetail }
-     * 
-     */
-    public NodeDetail createNodeDetail() {
-        return new NodeDetail();
-    }
-
-    /**
-     * Create an instance of {@link ClerkDetail }
-     * 
-     */
-    public ClerkDetail createClerkDetail() {
-        return new ClerkDetail();
-    }
-
-    /**
-     * Create an instance of {@link SyncSubscriptionDetailResponse }
-     * 
-     */
-    public SyncSubscriptionDetailResponse createSyncSubscriptionDetailResponse() {
-        return new SyncSubscriptionDetailResponse();
-    }
-
-    /**
-     * Create an instance of {@link PublisherDetail }
-     * 
-     */
-    public PublisherDetail createPublisherDetail() {
-        return new PublisherDetail();
     }
 
     /**
@@ -198,6 +160,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link GetFailedReplicationChangeRecordsMessageResponse }
+     * 
+     */
+    public GetFailedReplicationChangeRecordsMessageResponse createGetFailedReplicationChangeRecordsMessageResponse() {
+        return new GetFailedReplicationChangeRecordsMessageResponse();
+    }
+
+    /**
      * Create an instance of {@link GetEntityHistoryMessageResponse }
      * 
      */
@@ -219,6 +189,14 @@ public class ObjectFactory {
      */
     public SyncSubscription createSyncSubscription() {
         return new SyncSubscription();
+    }
+
+    /**
+     * Create an instance of {@link PublisherDetail }
+     * 
+     */
+    public PublisherDetail createPublisherDetail() {
+        return new PublisherDetail();
     }
 
     /**
@@ -251,6 +229,14 @@ public class ObjectFactory {
      */
     public GetAllNodesResponse createGetAllNodesResponse() {
         return new GetAllNodesResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetFailedReplicationChangeRecordsMessageRequest }
+     * 
+     */
+    public GetFailedReplicationChangeRecordsMessageRequest createGetFailedReplicationChangeRecordsMessageRequest() {
+        return new GetFailedReplicationChangeRecordsMessageRequest();
     }
 
     /**
@@ -398,6 +384,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link SyncSubscriptionDetailResponse }
+     * 
+     */
+    public SyncSubscriptionDetailResponse createSyncSubscriptionDetailResponse() {
+        return new SyncSubscriptionDetailResponse();
+    }
+
+    /**
      * Create an instance of {@link SubscriptionWrapper }
      * 
      */
@@ -419,6 +413,22 @@ public class ObjectFactory {
      */
     public NodeList createNodeList() {
         return new NodeList();
+    }
+
+    /**
+     * Create an instance of {@link ClientSubscriptionInfoDetail }
+     * 
+     */
+    public ClientSubscriptionInfoDetail createClientSubscriptionInfoDetail() {
+        return new ClientSubscriptionInfoDetail();
+    }
+
+    /**
+     * Create an instance of {@link ClerkDetail }
+     * 
+     */
+    public ClerkDetail createClerkDetail() {
+        return new ClerkDetail();
     }
 
     /**
@@ -462,6 +472,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link NodeDetail }
+     * 
+     */
+    public NodeDetail createNodeDetail() {
+        return new NodeDetail();
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link AdminDeleteSubscriptionResponse }{@code >}}
      * 
      */
@@ -480,21 +498,21 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link SetReplicationNodes }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "set_ReplicationNodes")
-    public JAXBElement<SetReplicationNodes> createSetReplicationNodes(SetReplicationNodes value) {
-        return new JAXBElement<SetReplicationNodes>(_SetReplicationNodes_QNAME, SetReplicationNodes.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link GetAllPublisherDetail }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "get_allPublisherDetail")
     public JAXBElement<GetAllPublisherDetail> createGetAllPublisherDetail(GetAllPublisherDetail value) {
         return new JAXBElement<GetAllPublisherDetail>(_GetAllPublisherDetail_QNAME, GetAllPublisherDetail.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link SetReplicationNodes }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "set_ReplicationNodes")
+    public JAXBElement<SetReplicationNodes> createSetReplicationNodes(SetReplicationNodes value) {
+        return new JAXBElement<SetReplicationNodes>(_SetReplicationNodes_QNAME, SetReplicationNodes.class, null, value);
     }
 
     /**
@@ -579,6 +597,24 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetFailedReplicationChangeRecordsMessageResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "getFailedReplicationChangeRecordsMessageResponse")
+    public JAXBElement<GetFailedReplicationChangeRecordsMessageResponse> createGetFailedReplicationChangeRecordsMessageResponse(GetFailedReplicationChangeRecordsMessageResponse value) {
+        return new JAXBElement<GetFailedReplicationChangeRecordsMessageResponse>(_GetFailedReplicationChangeRecordsMessageResponse_QNAME, GetFailedReplicationChangeRecordsMessageResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetFailedReplicationChangeRecordsMessageRequest }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "getFailedReplicationChangeRecordsMessage")
+    public JAXBElement<GetFailedReplicationChangeRecordsMessageRequest> createGetFailedReplicationChangeRecordsMessage(GetFailedReplicationChangeRecordsMessageRequest value) {
+        return new JAXBElement<GetFailedReplicationChangeRecordsMessageRequest>(_GetFailedReplicationChangeRecordsMessage_QNAME, GetFailedReplicationChangeRecordsMessageRequest.class, null, value);
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link SyncSubscriptionRequest }{@code >}}
      * 
      */
@@ -642,21 +678,21 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link SaveClerk }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "save_ClerkRequest")
-    public JAXBElement<SaveClerk> createSaveClerkRequest(SaveClerk value) {
-        return new JAXBElement<SaveClerk>(_SaveClerkRequest_QNAME, SaveClerk.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link AdminDeleteSubscriptionRequest }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "adminDelete_Subscription")
     public JAXBElement<AdminDeleteSubscriptionRequest> createAdminDeleteSubscription(AdminDeleteSubscriptionRequest value) {
         return new JAXBElement<AdminDeleteSubscriptionRequest>(_AdminDeleteSubscription_QNAME, AdminDeleteSubscriptionRequest.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link SaveClerk }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "save_ClerkRequest")
+    public JAXBElement<SaveClerk> createSaveClerkRequest(SaveClerk value) {
+        return new JAXBElement<SaveClerk>(_SaveClerkRequest_QNAME, SaveClerk.class, null, value);
     }
 
     /**

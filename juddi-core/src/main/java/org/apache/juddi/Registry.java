@@ -78,7 +78,7 @@ public class Registry {
          */
         public synchronized static void start() throws ConfigurationException {
                 if (registry == null) {
-                        log.info("Starting jUDDI registry...");
+                        log.info("Starting jUDDI registry...This is node " + AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID, ""));
                         registry = new Registry();
                         replicationNotifier = new ReplicationNotifier();
                         AppConfig.triggerReload();

@@ -65,6 +65,20 @@ public class UddiSubscribeValidate {
                         e.printStackTrace();
                 }
         }
+        
+          public UddiSubscribeValidate(Transport transport) {
+                try {
+                        // Now you create a reference to the UDDI API
+                        security = transport.getUDDISecurityService();
+                        juddiApi = transport.getJUDDIApiService();
+                        publish = transport.getUDDIPublishService();
+                        uddiInquiryService = transport.getUDDIInquiryService();
+                        uddiSubscriptionService = transport.getUDDISubscriptionService();
+                        uddiSubscriptionListenerService = transport.getUDDISubscriptionListenerService();
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+        }
 
         /**
          * gets subscription results synchronously

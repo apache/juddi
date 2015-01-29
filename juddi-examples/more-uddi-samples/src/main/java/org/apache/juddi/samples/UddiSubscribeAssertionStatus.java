@@ -69,12 +69,26 @@ public class UddiSubscribeAssertionStatus implements ISubscriptionCallback, Runn
                 }
         }
 
-        public static void main(String args[]) throws Exception {
-                UddiSubscribeAssertionStatus sp = new UddiSubscribeAssertionStatus();
-                sp.Fire();
+         public UddiSubscribeAssertionStatus(Transport transport) {
+                try {
+                        // Now you create a reference to the UDDI API
+                        security = transport.getUDDISecurityService();
+                        juddiApi = transport.getJUDDIApiService();
+                        publish = transport.getUDDIPublishService();
+                        uddiInquiryService = transport.getUDDIInquiryService();
+                        uddiSubscriptionService = transport.getUDDISubscriptionService();
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
         }
 
-        public void Fire() throws Exception {
+         
+        public static void main(String args[]) throws Exception {
+                UddiSubscribeAssertionStatus sp = new UddiSubscribeAssertionStatus();
+                sp.Fire("default");
+        }
+
+        public void Fire(String nodename) throws Exception {
 
                 TModel createKeyGenator = UDDIClerk.createKeyGenator("somebusiness", "A test key domain SubscriptionCallbackTest1", "SubscriptionCallbackTest1");
 
@@ -95,7 +109,7 @@ public class UddiSubscribeAssertionStatus implements ISubscriptionCallback, Runn
                 System.out.println("Registered business keygen: " + register.getBusinessKey());
 
                 //start up our listener
-                BindingTemplate start = SubscriptionCallbackListener.start(client, "default");
+                BindingTemplate start = SubscriptionCallbackListener.start(client, nodename);
 
                 //register for callbacks
                 SubscriptionCallbackListener.registerCallback(this);
@@ -118,7 +132,7 @@ public class UddiSubscribeAssertionStatus implements ISubscriptionCallback, Runn
                 
                         System.in.read();
                 
-                SubscriptionCallbackListener.stop(client, "default", start.getBindingKey());
+                SubscriptionCallbackListener.stop(client, nodename, start.getBindingKey());
                 clerk.unRegisterSubscription(subscriptionBiz.getSubscriptionKey());
 
                 clerk.unRegisterTModel(createKeyGenator.getTModelKey());

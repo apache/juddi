@@ -16,13 +16,14 @@
 package org.apache.juddi.samples;
 
 import java.math.BigInteger;
-import java.rmi.RemoteException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXB;
 import javax.xml.ws.BindingProvider;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.v3.client.UDDIService;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.uddi.repl_v3.ChangeRecord;
 import org.uddi.repl_v3.ChangeRecordIDType;
 import org.uddi.repl_v3.ChangeRecords;
@@ -37,13 +38,16 @@ import org.uddi.v3_service.UDDIReplicationPortType;
  */
 class UddiReplication {
 
-        public UddiReplication() {
+        public UddiReplication(UDDIClient client, String nodename) throws ConfigurationException {
+
+                 uddiReplicationPort = new UDDIService().getUDDIReplicationPort();
+                ((BindingProvider) uddiReplicationPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, client.getClientConfig().getUDDINode(nodename).getReplicationUrl());
         }
 
-        String DoPing(String key2) {
+        UDDIReplicationPortType uddiReplicationPort = null;
+
+        String DoPing() {
                 try {
-                        UDDIReplicationPortType uddiReplicationPort = new UDDIService().getUDDIReplicationPort();
-                        ((BindingProvider) uddiReplicationPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, key2);
                         String doPing = uddiReplicationPort.doPing(new DoPing());
                         System.out.println("Ping Success, remote node's id is " + doPing);
                         return doPing;
@@ -53,31 +57,26 @@ class UddiReplication {
                 return null;
         }
 
-        void GetHighWatermarks(String key2) {
+        void GetHighWatermarks() {
                 try {
-                        UDDIReplicationPortType uddiReplicationPort = new UDDIService().getUDDIReplicationPort();
-                        ((BindingProvider) uddiReplicationPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, key2);
-                        List<ChangeRecordIDType> highWaterMarks = uddiReplicationPort.getHighWaterMarks();
+                           List<ChangeRecordIDType> highWaterMarks = uddiReplicationPort.getHighWaterMarks();
                         System.out.println("Success....");
                         System.out.println("Node, USN");
                         for (int i = 0; i < highWaterMarks.size(); i++) {
                                 System.out.println(
-                                     highWaterMarks.get(i).getNodeID() + ", "
-                                     + highWaterMarks.get(i).getOriginatingUSN());
+                                        highWaterMarks.get(i).getNodeID() + ", "
+                                        + highWaterMarks.get(i).getOriginatingUSN());
                         }
                 } catch (Exception ex) {
                         Logger.getLogger(UddiReplication.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
 
-        void GetChangeRecords(String key2, Long record, String sourcenode) {
+        void GetChangeRecords(Long record, String sourcenode) {
                 try {
-                        UDDIReplicationPortType uddiReplicationPort = new UDDIService().getUDDIReplicationPort();
                         HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
-                        
-                        
-                        highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(DoPing(key2), record));
-                        ((BindingProvider) uddiReplicationPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, key2);
+
+                        highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(DoPing(), record));
                         GetChangeRecords req = new GetChangeRecords();
                         req.setRequestingNode(sourcenode);
                         req.setChangesAlreadySeen(highWaterMarkVectorType);
@@ -88,9 +87,9 @@ class UddiReplication {
                         System.out.println("Node, USN, type");
                         for (int i = 0; i < changeRecords.size(); i++) {
                                 System.out.println(
-                                     changeRecords.get(i).getChangeID().getNodeID() + ", "
-                                     + changeRecords.get(i).getChangeID().getOriginatingUSN() + ": "
-                                     + GetChangeType(changeRecords.get(i)));
+                                        changeRecords.get(i).getChangeID().getNodeID() + ", "
+                                        + changeRecords.get(i).getChangeID().getOriginatingUSN() + ": "
+                                        + GetChangeType(changeRecords.get(i)));
                                 JAXB.marshal(changeRecords.get(i), System.out);
                         }
                 } catch (Exception ex) {

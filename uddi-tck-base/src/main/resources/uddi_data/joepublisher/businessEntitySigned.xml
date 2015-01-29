@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ * Copyright 2001-2009 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */ -->
+<businessEntity xmlns="urn:uddi-org:api_v3" xmlns:ns2="http://www.w3.org/2000/09/xmldsig#" businessKey="uddi:uddi.joepublisher.com:businessone">
+    <discoveryURLs>
+        <discoveryURL useType="home">http://www.businessone.com</discoveryURL>
+        <discoveryURL useType="serviceList">http://www.businessone.com/services</discoveryURL>
+    </discoveryURLs>
+    <name xml:lang="en">John Doe Enterprises</name>
+    <name xml:lang="es">Negocio Uno</name>
+    <description xml:lang="en">This is the description for Business One.</description>
+    <contacts>
+        <contact useType="administrator">
+            <description xml:lang="en">This is the administrator of the service offerings.</description>
+            <description xml:lang="es">Éste es el administrador de las ofrendas del servicio.</description>
+            <personName xml:lang="en">John Doe</personName>
+            <personName xml:lang="es">Juan Doe</personName>
+            <phone useType="office">123-456-7890</phone>
+            <phone useType="mobile">987-654-3210</phone>
+            <email useType="work">jdoe@businessone.com</email>
+            <address xml:lang="en" useType="headquarters" sortCode="1" tModelKey="uddi:tmodelKey:address">
+                <addressLine keyName="Suite" keyValue="suite">Suite 1500</addressLine>
+                <addressLine keyName="Street" keyValue="street">1515 Main St.</addressLine>
+                <addressLine keyName="ZipCode" keyValue="citystatezip">Chicago, IL 60614</addressLine>
+                <addressLine keyName="Country" keyValue="country">USA</addressLine>
+            </address>
+        </contact>
+        <contact useType="engineer">
+            <personName xml:lang="en">Steve Smith</personName>
+            <phone useType="office">555-111-2222</phone>
+            <email useType="work">ssmith@businessone.com</email>
+        </contact>
+    </contacts>
+    <identifierBag>
+        <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="identify" keyValue="identity"/>
+    </identifierBag>
+    <categoryBag>
+        <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="apples"/>
+        <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="oranges"/>
+        <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="football"/>
+        <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="blues"/>
+        <keyedReferenceGroup tModelKey="uddi:uddi.org:categorization:types">
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="blank" keyValue="blank"/>
+        </keyedReferenceGroup>
+    </categoryBag>
+    <ns2:Signature>
+        <ns2:SignedInfo>
+            <ns2:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+            <ns2:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+            <ns2:Reference URI="">
+                <ns2:Transforms>
+                    <ns2:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                </ns2:Transforms>
+                <ns2:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                <ns2:DigestValue>rvNogU3NRBPGMKFywVneyEcKY2E=</ns2:DigestValue>
+            </ns2:Reference>
+        </ns2:SignedInfo>
+        <ns2:SignatureValue>fMYrww5viuz3txGgqMkUDdVNLcwt+CHTPsOy9FFYvO8gQQOk+8qQUrjn34cBcNVEZB/jAcfN38Y2BdyLCWfUKL628OhS99anM4jxTM6WmYNLZasemA8ogG2FXIcs4t3ReIQt7yoddKZQIff8CqfCYYmu32PJVLb/r1yXE2WU+WZUBtJIYLbJl8Fobqve2nBBiuqo/IGa4T8OsS0Bp/+T9xDaNNgvSavxRrA2HWru4CAA1x2OL7IDNu9FqKU0Mfd8XLMMElULqn9mkUUz9s9MXr2z9B2xkJg0vKRcjscKAB75O/xekWLpckvInxxyTaVGu9ltIVAYgse0p2f8Q+r8xw==</ns2:SignatureValue>
+        <ns2:KeyInfo>
+            <ns2:X509Data>
+                <ns2:X509SubjectName>CN=Test, OU=JUDDI, O=Apache Software Foundation, ST=MD, C=US, EMAILADDRESS=dev@juddi.apache.org</ns2:X509SubjectName>
+            </ns2:X509Data>
+            <ns2:X509Data>
+                <ns2:X509Certificate>MIIDhDCCAmygAwIBAgIEUbJimDANBgkqhkiG9w0BAQUFADCBgzEjMCEGCSqGSIb3DQEJARYUZGV2QGp1ZGRpLmFwYWNoZS5vcmcxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJNRDEjMCEGA1UECgwaQXBhY2hlIFNvZnR3YXJlIEZvdW5kYXRpb24xDjAMBgNVBAsMBUpVRERJMQ0wCwYDVQQDDARUZXN0MB4XDTEzMDYwNzIyNDcwOVoXDTE4MDYwNzIyNDcwOVowgYMxIzAhBgkqhkiG9w0BCQEWFGRldkBqdWRkaS5hcGFjaGUub3JnMQswCQYDVQQGEwJVUzELMAkGA1UECAwCTUQxIzAhBgNVBAoMGkFwYWNoZSBTb2Z0d2FyZSBGb3VuZGF0aW9uMQ4wDAYDVQQLDAVKVURESTENMAsGA1UEAwwEVGVzdDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJeQKlGDFqJ6MjZE+8VtxDOiYfRnHpIxFGJa/+JVE54ewEtt46ZBjrzusQg7+X+auyWo1dXFsN1T4cfacvlCuEQeC+cli8ODp0BOXMehfMvFwbgDjGqM3dKLPBbCeKUfWuCSE61myaMM4AIzugLysPAc2egTxX5qfahpZn320oN2rBepOUJQjvXFC+KWDgzGOwMiQV9wlYSXo7v2Mpnn/lqjwiBS/LDo0tiZddPUKFtjpLIUmbo7EfOPUEXOWUKrZRVynNVzCA3acNOG0CW5az0dcArC1EwGGsBQXQ9aJMecMxmRjjTnNq7rlmwcQ+jNrKR9rcc/YwY1WobsT4oLDbsCAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAAQrCcu12ywSD2qCI0nOKZ/mAx0oAitUGwY0ISMMcgdSUZqam0bGwXSorQ1QkZM92NDFkY33tSkQh8GUrNQX2FyV+rJHJ3pQ3oqMNzkGne8PQSiTMbwx4S1nCrnp2hUh+0k9ro4pmJKx9FHrp6LvFIbOMhky7UK41pzBaM46xD27kPhVcPWLrcPMrulsmMo4d9fFnriA0/ow4rIilCMh5TcUdvQyX3T7RWTxb8y1eNuYp8uPWz6VwV+vLDQLPU1CDYhG6IbeJyOpEkxXXhXvv+7KXOQXe3EnS0yf90imssutLJNfv389y/alAZHcY8+petAObXmyWTZeULq/RImtZhA==</ns2:X509Certificate>
+            </ns2:X509Data>
+            <ns2:X509Data>
+                <ns2:X509IssuerSerial>
+                    <ns2:X509IssuerName>CN=Test,OU=JUDDI,O=Apache Software Foundation,ST=MD,C=US,1.2.840.113549.1.9.1=#1614646576406a756464692e6170616368652e6f7267</ns2:X509IssuerName>
+                    <ns2:X509SerialNumber>1370645144</ns2:X509SerialNumber>
+                </ns2:X509IssuerSerial>
+            </ns2:X509Data>
+        </ns2:KeyInfo>
+    </ns2:Signature>
+</businessEntity>

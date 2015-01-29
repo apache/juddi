@@ -38,9 +38,9 @@
   
 See below for other fields that you may want to edit...
 -->
-<businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:another.juddi.apache.org:node2">
+<businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:yet.another.juddi.apache.org:node3">
      <!-- Change the name field to represent the name of your registry -->
-     <name xml:lang="en">An Apache jUDDI Node (2)</name>
+     <name xml:lang="en">An Apache jUDDI Node (3)</name>
      <!-- Change the description field to provided a brief description of your registry -->
      <description xml:lang="en">This is a UDDI registry node as implemented by Apache jUDDI.</description>
      <discoveryURLs>
@@ -54,11 +54,11 @@ See below for other fields that you may want to edit...
           <!-- As mentioned above, you may want to provide user-defined keys for these (and the services/bindingTemplates below.  Services that you
           don't intend to support should be removed entirely -->
           <!-- inquiry v3 -->
-          <businessService serviceKey="uddi:another.juddi.apache.org:services-inquiry" businessKey="uddi:another.juddi.apache.org:node2">
+          <businessService serviceKey="uddi:yet.another.juddi.apache.org:services-inquiry" businessKey="uddi:yet.another.juddi.apache.org:node3">
                <name xml:lang="en">UDDI Inquiry Service</name>
                <description xml:lang="en">Web Service supporting UDDI Inquiry API</description>
                <bindingTemplates>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-inquiry-ws" serviceKey="uddi:another.juddi.apache.org:services-inquiry">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-inquiry-ws" serviceKey="uddi:yet.another.juddi.apache.org:services-inquiry">
                          <description>UDDI Inquiry API V3</description>
                          <!-- This should be changed to the WSDL URL of the inquiry API.  An access point inside a bindingTemplate will be found for every service
                          in this file.  They all must point to their API's WSDL URL -->
@@ -87,7 +87,7 @@ See below for other fields that you may want to edit...
                          </categoryBag>
                     </bindingTemplate>
     
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-inquiry-ws-ssl" serviceKey="uddi:another.juddi.apache.org:services-inquiry">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-inquiry-ws-ssl" serviceKey="uddi:yet.another.juddi.apache.org:services-inquiry">
                          <description>UDDI Inquiry API V3 SSL</description>
                          <!-- This should be changed to the WSDL URL of the inquiry API.  An access point inside a bindingTemplate will be found for every service
                          in this file.  They all must point to their API's WSDL URL -->
@@ -124,11 +124,11 @@ See below for other fields that you may want to edit...
                </categoryBag>
           </businessService>
           <!-- inquiry v2 -->
-          <businessService serviceKey="uddi:another.juddi.apache.org:services-inquiryv2" businessKey="uddi:another.juddi.apache.org:node2">
+          <businessService serviceKey="uddi:yet.another.juddi.apache.org:services-inquiryv2" businessKey="uddi:yet.another.juddi.apache.org:node3">
                <name xml:lang="en">UDDIv2 Inquiry Service</name>
                <description xml:lang="en">Web Service supporting UDDIv2 Inquiry API</description>
                <bindingTemplates>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-inquiryv2-ws" serviceKey="uddi:another.juddi.apache.org:services-inquiryv2">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-inquiryv2-ws" serviceKey="uddi:yet.another.juddi.apache.org:services-inquiryv2">
                          <description>UDDI Inquiry API V2</description>
                          <!-- This should be changed to the WSDL URL of the inquiry API.  An access point inside a bindingTemplate will be found for every service
                          in this file.  They all must point to their API's WSDL URL -->
@@ -143,7 +143,7 @@ See below for other fields that you may want to edit...
                          </categoryBag>
                     </bindingTemplate>
     
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-inquiryv2-ws-ssl" serviceKey="uddi:another.juddi.apache.org:services-inquiryv2">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-inquiryv2-ws-ssl" serviceKey="uddi:yet.another.juddi.apache.org:services-inquiryv2">
                          <description>UDDI Inquiry API V3 SSL</description>
                          <!-- This should be changed to the WSDL URL of the inquiry API.  An access point inside a bindingTemplate will be found for every service
                          in this file.  They all must point to their API's WSDL URL -->
@@ -165,11 +165,11 @@ See below for other fields that you may want to edit...
                </categoryBag>
           </businessService>
           <!-- inquiry v3 REST -->
-          <businessService serviceKey="uddi:another.juddi.apache.org:services-inquiry-rest" businessKey="uddi:another.juddi.apache.org:node2">
+          <businessService serviceKey="uddi:yet.another.juddi.apache.org:services-inquiry-rest" businessKey="uddi:yet.another.juddi.apache.org:node3">
                <name xml:lang="en">UDDI Inquiry REST Service</name>
                <description xml:lang="en">Web Service supporting UDDI Inquiry API via HTTP GET</description>
                <bindingTemplates>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-inquiry-rest" serviceKey="uddi:another.juddi.apache.org:services-inquiry-rest">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-inquiry-rest" serviceKey="uddi:yet.another.juddi.apache.org:services-inquiry-rest">
                          <description>UDDI Inquiry API V3 REST</description>
                          <tModelInstanceDetails>
                               <tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
@@ -180,7 +180,7 @@ See below for other fields that you may want to edit...
                               <keyedReference keyName="uddi-org:types:wadl" keyValue="wadlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
                          </categoryBag>
                     </bindingTemplate>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-inquiry-rest-ssl" serviceKey="uddi:another.juddi.apache.org:services-inquiry-rest">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-inquiry-rest-ssl" serviceKey="uddi:yet.another.juddi.apache.org:services-inquiry-rest">
                          <description>UDDI Inquiry API V3 REST SSL</description>
                          <accessPoint useType="wadlDeployment">${juddi.server.baseurlsecure}/services/inquiryRest?_wadl</accessPoint>
                          <tModelInstanceDetails>
@@ -200,11 +200,11 @@ See below for other fields that you may want to edit...
                </categoryBag>
           </businessService>
           <!-- publish v3 -->
-          <businessService serviceKey="uddi:another.juddi.apache.org:services-publish" businessKey="uddi:another.juddi.apache.org:node2">
+          <businessService serviceKey="uddi:yet.another.juddi.apache.org:services-publish" businessKey="uddi:yet.another.juddi.apache.org:node3">
                <name xml:lang="en">UDDI Publish Service</name>
                <description xml:lang="en">Web Service supporting UDDI Publish API</description>
                <bindingTemplates>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-publish-ws" serviceKey="uddi:another.juddi.apache.org:services-publish">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-publish-ws" serviceKey="uddi:yet.another.juddi.apache.org:services-publish">
                          <description>UDDI Publication API V3</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/publish?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -229,7 +229,7 @@ See below for other fields that you may want to edit...
                          </categoryBag>
                     </bindingTemplate>
 		
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-publish-ws-ssl" serviceKey="uddi:another.juddi.apache.org:services-publish">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-publish-ws-ssl" serviceKey="uddi:yet.another.juddi.apache.org:services-publish">
                          <description>UDDI Publication API V3 SSL</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/publish?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -265,11 +265,11 @@ See below for other fields that you may want to edit...
           </businessService>
  
           <!-- publish v2 -->
-          <businessService serviceKey="uddi:another.juddi.apache.org:services-publishv2" businessKey="uddi:another.juddi.apache.org:node2">
+          <businessService serviceKey="uddi:yet.another.juddi.apache.org:services-publishv2" businessKey="uddi:yet.another.juddi.apache.org:node3">
                <name xml:lang="en">UDDIv2 Publish Service</name>
                <description xml:lang="en">Web Service supporting UDDIv2 Publish API</description>
                <bindingTemplates>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-publishv2-ws" serviceKey="uddi:another.juddi.apache.org:services-publishv2">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-publishv2-ws" serviceKey="uddi:yet.another.juddi.apache.org:services-publishv2">
                          <description>UDDIv2 Publication API V2</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/publishv2?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -280,7 +280,7 @@ See below for other fields that you may want to edit...
                               <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
                          </categoryBag>
                     </bindingTemplate>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-publishv2-ws-ssl" serviceKey="uddi:another.juddi.apache.org:services-publishv2">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-publishv2-ws-ssl" serviceKey="uddi:yet.another.juddi.apache.org:services-publishv2">
                          <description>UDDI Publication API V2 SSL</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/publishv2?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -302,11 +302,11 @@ See below for other fields that you may want to edit...
  
           <!-- security v3 -->
 
-          <businessService serviceKey="uddi:another.juddi.apache.org:services-security" businessKey="uddi:another.juddi.apache.org:node2">
+          <businessService serviceKey="uddi:yet.another.juddi.apache.org:services-security" businessKey="uddi:yet.another.juddi.apache.org:node3">
                <name xml:lang="en">UDDI Security Service</name>
                <description xml:lang="en">Web Service supporting UDDI Security API</description>
                <bindingTemplates>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-security-ws" serviceKey="uddi:another.juddi.apache.org:services-security">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-security-ws" serviceKey="uddi:yet.another.juddi.apache.org:services-security">
                          <description>UDDI Security API V3</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/security?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -320,7 +320,7 @@ See below for other fields that you may want to edit...
                               <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
                          </categoryBag>
                     </bindingTemplate>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-security-ws-ssl" serviceKey="uddi:another.juddi.apache.org:services-security">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-security-ws-ssl" serviceKey="uddi:yet.another.juddi.apache.org:services-security">
                          <description>UDDI Security API V3 SSL</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/security?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -342,11 +342,11 @@ See below for other fields that you may want to edit...
                </categoryBag>
           </businessService>
           <!-- custody v3 -->
-          <businessService serviceKey="uddi:another.juddi.apache.org:services-custodytransfer" businessKey="uddi:another.juddi.apache.org:node2">
+          <businessService serviceKey="uddi:yet.another.juddi.apache.org:services-custodytransfer" businessKey="uddi:yet.another.juddi.apache.org:node3">
                <name xml:lang="en">UDDI Custody and Ownership Transfer Service</name>
                <description xml:lang="en">Web Service supporting UDDI Custody and Ownership Transfer API</description>
                <bindingTemplates>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-custodytransfer-ws" serviceKey="uddi:another.juddi.apache.org:services-custodytransfer">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-custodytransfer-ws" serviceKey="uddi:yet.another.juddi.apache.org:services-custodytransfer">
                          <description>UDDI Custody and Ownership Transfer API V3</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/custody-transfer?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -374,7 +374,7 @@ See below for other fields that you may want to edit...
                     </bindingTemplate>
 		
 		
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-custodytransfer-ws-ssl" serviceKey="uddi:another.juddi.apache.org:services-custodytransfer">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-custodytransfer-ws-ssl" serviceKey="uddi:yet.another.juddi.apache.org:services-custodytransfer">
                          <description>UDDI Custody and Ownership Transfer API V3 SSL</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/custody-transfer?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -411,11 +411,11 @@ See below for other fields that you may want to edit...
           </businessService>
                 
           <!-- subscription v3 -->
-          <businessService serviceKey="uddi:another.juddi.apache.org:services-subscription" businessKey="uddi:another.juddi.apache.org:node2">
+          <businessService serviceKey="uddi:yet.another.juddi.apache.org:services-subscription" businessKey="uddi:yet.another.juddi.apache.org:node3">
                <name xml:lang="en">UDDI Subscription Service</name>
                <description xml:lang="en">Web Service supporting UDDI Subscription API</description>
                <bindingTemplates>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-subscription-ws" serviceKey="uddi:another.juddi.apache.org:services-subscription">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-subscription-ws" serviceKey="uddi:yet.another.juddi.apache.org:services-subscription">
                          <description>UDDI Subscription API V3</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/subscription?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -442,7 +442,7 @@ See below for other fields that you may want to edit...
                          </categoryBag>
                     </bindingTemplate>
 		
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-subscription-ws-ssl" serviceKey="uddi:another.juddi.apache.org:services-subscription">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-subscription-ws-ssl" serviceKey="uddi:yet.another.juddi.apache.org:services-subscription">
                          <description>UDDI Subscription API V3 SSL</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/subscription?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -477,11 +477,11 @@ See below for other fields that you may want to edit...
                </categoryBag>
           </businessService>
           <!-- subscription listener v3 -->
-          <businessService serviceKey="uddi:another.juddi.apache.org:services-subscriptionlistener" businessKey="uddi:another.juddi.apache.org:node2">
+          <businessService serviceKey="uddi:yet.another.juddi.apache.org:services-subscriptionlistener" businessKey="uddi:yet.another.juddi.apache.org:node3">
                <name xml:lang="en">UDDI Subscription Listener Service</name>
                <description xml:lang="en">Web Service supporting UDDI Subscription Listener API</description>
                <bindingTemplates>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-subscriptionlistener-ws" serviceKey="uddi:another.juddi.apache.org:services-subscriptionlistener">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-subscriptionlistener-ws" serviceKey="uddi:yet.another.juddi.apache.org:services-subscriptionlistener">
                          <description>UDDI Subscription Listener API V3</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/subscription-listener?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -495,7 +495,7 @@ See below for other fields that you may want to edit...
                          </categoryBag>
                     </bindingTemplate>
 		
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-subscriptionlistener-ws-ssl" serviceKey="uddi:another.juddi.apache.org:services-subscriptionlistener">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-subscriptionlistener-ws-ssl" serviceKey="uddi:yet.another.juddi.apache.org:services-subscriptionlistener">
                          <description>UDDI Subscription Listener API V3 SSL</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/subscription-listener?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -520,12 +520,12 @@ See below for other fields that you may want to edit...
           </businessService>
 	
 
-          <businessService serviceKey="uddi:another.juddi.apache.org:services-valueset" businessKey="uddi:another.juddi.apache.org:node2">
+          <businessService serviceKey="uddi:yet.another.juddi.apache.org:services-valueset" businessKey="uddi:yet.another.juddi.apache.org:node3">
                <name xml:lang="en">UDDI Value Set API Service</name>
                <description xml:lang="en">Web Service supporting UDDI Value Set Validation service. This service provides tModel value validation and is
                     configured using the jUDDI Publisher Service</description>
                <bindingTemplates>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-valueset-ws" serviceKey="uddi:another.juddi.apache.org:services-valueset">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-valueset-ws" serviceKey="uddi:yet.another.juddi.apache.org:services-valueset">
                          <description>UDDI Value Set Validation API Version 3</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/valueset-validation?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -536,7 +536,7 @@ See below for other fields that you may want to edit...
                          </categoryBag>
                     </bindingTemplate>
 		
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-valueset-ws-ssl" serviceKey="uddi:another.juddi.apache.org:services-valueset">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-valueset-ws-ssl" serviceKey="uddi:yet.another.juddi.apache.org:services-valueset">
                          <description>UDDI Value Set Validation API Version 3 SSL</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/valueset-validation?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -549,7 +549,7 @@ See below for other fields that you may want to edit...
                          </categoryBag>
                     </bindingTemplate>
 		
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-valueset-cp" serviceKey="uddi:another.juddi.apache.org:services-valueset">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-valueset-cp" serviceKey="uddi:yet.another.juddi.apache.org:services-valueset">
                          <description>UDDI Value Set Validation API Version 3 using InVM Classpath Transport. Use this endpoint for Value Set Validation when
                               located on the same instance of jUDDI.</description>
                          <accessPoint useType="classpath">classpath:/org.apache.juddi.api.impl.UDDIValueSetValidationImpl</accessPoint>
@@ -562,12 +562,12 @@ See below for other fields that you may want to edit...
           </businessService>
 	
 	
-          <businessService serviceKey="uddi:another.juddi.apache.org:services-valueset-cache" businessKey="uddi:another.juddi.apache.org:node2">
+          <businessService serviceKey="uddi:yet.another.juddi.apache.org:services-valueset-cache" businessKey="uddi:yet.another.juddi.apache.org:node3">
                <name xml:lang="en">UDDI Value Set Caching API Service</name>
                <description xml:lang="en">Web Service supporting UDDI Value Set Caching service. This service provides tModel value validation and is
                     configured using the jUDDI Publisher Service</description>
                <bindingTemplates>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-valueset-cache-ws" serviceKey="uddi:another.juddi.apache.org:services-valueset-cache">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-valueset-cache-ws" serviceKey="uddi:yet.another.juddi.apache.org:services-valueset-cache">
                          <description>UDDI Value Set Caching API Version 3</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/valueset-caching?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -578,7 +578,7 @@ See below for other fields that you may want to edit...
                          </categoryBag>
                     </bindingTemplate>
 		
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-valueset-cache-ws-ssl" serviceKey="uddi:another.juddi.apache.org:services-valueset-cache">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-valueset-cache-ws-ssl" serviceKey="uddi:yet.another.juddi.apache.org:services-valueset-cache">
                          <description>UDDI Value Set caching API Version 3 SSL</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/valueset-caching?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -601,11 +601,11 @@ See below for other fields that you may want to edit...
 	
 
 
-          <businessService serviceKey="uddi:another.juddi.apache.org:replication" businessKey="uddi:another.juddi.apache.org:node2">
+          <businessService serviceKey="uddi:yet.another.juddi.apache.org:replication" businessKey="uddi:yet.another.juddi.apache.org:node3">
                <name xml:lang="en">UDDI Replication API Version 3</name>
                <description xml:lang="en">UDDI Replication API Version 3</description>
                <bindingTemplates>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-replication-ws" serviceKey="uddi:another.juddi.apache.org:replication">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-replication-ws" serviceKey="uddi:yet.another.juddi.apache.org:replication">
                          <description>UDDI Value Set Validation API Version 3</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/replication?wsdl</accessPoint>
 
@@ -625,11 +625,11 @@ See below for other fields that you may want to edit...
 	
                 
           <!-- juddi api service -->
-          <businessService serviceKey="uddi:another.juddi.apache.org:services-publisher" businessKey="uddi:another.juddi.apache.org:node2">
+          <businessService serviceKey="uddi:yet.another.juddi.apache.org:services-publisher" businessKey="uddi:yet.another.juddi.apache.org:node3">
                <name xml:lang="en">jUDDI Publisher Service</name>
                <description xml:lang="en">Web Service supporting jUDDI specific API</description>
                <bindingTemplates>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-publisher-ws" serviceKey="uddi:another.juddi.apache.org:services-publisher">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-publisher-ws" serviceKey="uddi:yet.another.juddi.apache.org:services-publisher">
                          <description>jUDDI Publisher Service API V3</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/publisher?wsdl</accessPoint>
                          <tModelInstanceDetails>
@@ -640,7 +640,7 @@ See below for other fields that you may want to edit...
                               <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
                          </categoryBag>
                     </bindingTemplate>
-                    <bindingTemplate bindingKey="uddi:another.juddi.apache.org:servicebindings-publisher-ws-ssl" serviceKey="uddi:another.juddi.apache.org:services-publisher">
+                    <bindingTemplate bindingKey="uddi:yet.another.juddi.apache.org:servicebindings-publisher-ws-ssl" serviceKey="uddi:yet.another.juddi.apache.org:services-publisher">
                          <description>jUDDI Publisher Service API V3 SSL</description>
                          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/publisher?wsdl</accessPoint>
                          <tModelInstanceDetails>

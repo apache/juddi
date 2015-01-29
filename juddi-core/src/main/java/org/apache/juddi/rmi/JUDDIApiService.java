@@ -34,6 +34,8 @@ import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetEntityHistoryMessageRequest;
 import org.apache.juddi.api_v3.GetEntityHistoryMessageResponse;
+import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageRequest;
+import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageResponse;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.NodeList;
@@ -179,6 +181,11 @@ public class JUDDIApiService extends UnicastRemoteObject implements JUDDIApiPort
         public GetEntityHistoryMessageResponse getEntityHistory(GetEntityHistoryMessageRequest body) throws DispositionReportFaultMessage,RemoteException {
                return juddiAPI.getEntityHistory(body);
                
+        }
+
+        @Override
+        public GetFailedReplicationChangeRecordsMessageResponse getFailedReplicationChangeRecords(GetFailedReplicationChangeRecordsMessageRequest body) throws DispositionReportFaultMessage,RemoteException {
+                return juddiAPI.getFailedReplicationChangeRecords(body);
         }
 
       

@@ -40,14 +40,25 @@ public class UddiCreatebulk {
 
         private static UDDISecurityPortType security = null;
         private static UDDIPublicationPortType publish = null;
-
+        String curretNode = null;
         public UddiCreatebulk(String node) {
                 try {
                         // create a manager and read the config in the archive; 
                         // you can use your config file name
                         UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
                         Transport transport = clerkManager.getTransport(node);
+                        curretNode=node;
                         // Now you create a reference to the UDDI API
+                        security = transport.getUDDISecurityService();
+                        publish = transport.getUDDIPublishService();
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+        }
+        
+        public UddiCreatebulk(Transport transport, boolean notused, String node) {
+                try {
+                       curretNode=node;
                         security = transport.getUDDISecurityService();
                         publish = transport.getUDDIPublishService();
                 } catch (Exception e) {
@@ -80,7 +91,7 @@ public class UddiCreatebulk {
                                 BusinessEntity myBusEntity = new BusinessEntity();
                                 Name myBusName = new Name();
                                 myBusName.setLang("en");
-                                myBusName.setValue("My Business " + i + " " + xcal.toString() + " " + textgen.getWords(5, 2) );
+                                myBusName.setValue("My Business " +curretNode +" " + i + " " + xcal.toString() + " " + textgen.getWords(5, 2) );
                                 myBusEntity.getDescription().add(new Description( textgen.getWords(10, 2), null));
                                 myBusEntity.getName().add(myBusName);
 
@@ -98,7 +109,7 @@ public class UddiCreatebulk {
                                         myService.setBusinessKey(myBusKey);
                                         Name myServName = new Name();
                                         myServName.setLang("en");
-                                        myServName.setValue("My Service " + i + " " + k + " " + xcal.toString()+ " " + textgen.getWords(5, 2) );
+                                        myServName.setValue("My Service " +curretNode+" "+ i + " " + k + " " + xcal.toString()+ " " + textgen.getWords(5, 2) );
                                         myService.getName().add(myServName);
                                         myService.getDescription().add(new Description( textgen.getWords(10, 2), null));
                                         

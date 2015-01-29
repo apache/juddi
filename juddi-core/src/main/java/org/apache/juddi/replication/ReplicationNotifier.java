@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.replication;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,6 +26,8 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
@@ -37,6 +40,7 @@ import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
+import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.ChangeRecord;
 import org.apache.juddi.model.ReplicationConfiguration;
@@ -91,34 +95,50 @@ public class ReplicationNotifier extends TimerTask {
         //ReplicationNotifier.Enqueue(this);
         public synchronized static void Enqueue(org.apache.juddi.model.ChangeRecord change) {
                 if (queue == null) {
-                        queue = new ConcurrentLinkedQueue<ChangeRecord>();
+                        queue = new ConcurrentLinkedQueue<org.apache.juddi.model.ChangeRecord>();
                 }
                 queue.add(change);
         }
-        static Queue<ChangeRecord> queue;
+
+        public synchronized static void EnqueueRetransmit(org.uddi.repl_v3.ChangeRecord change) {
+                if (queue2 == null) {
+                        queue2 = new ConcurrentLinkedQueue<org.uddi.repl_v3.ChangeRecord>();
+                }
+                queue2.add(change);
+        }
+        static Queue<org.apache.juddi.model.ChangeRecord> queue;
+        static Queue<org.uddi.repl_v3.ChangeRecord> queue2;
 
         /**
+         * Note: this is for locally originated changes only, see 
+         * {@link org.apache.juddi.api.impl.UDDIReplicationImpl.PullTimerTask#PersistChangeRecord PersistChangeRecord
+         * } for how remote changes are processed
          *
          * @param j must be one of the UDDI save APIs
+         *
          */
-        protected void ProcessChangeRecord(ChangeRecord j) {
+        protected void ProcessChangeRecord(org.apache.juddi.model.ChangeRecord j) {
                 //store and convert the changes to database model
 
+                //TODO need a switch to send the notification without persisting the record
+                //this is to support multihop notifications
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = null;
                 try {
                         tx = em.getTransaction();
                         tx.begin();
-
+                        j.setIsAppliedLocally(true);
                         em.persist(j);
-                        log.debug("CR saved locally, it was from " + j.getNodeID()
+                        j.setOriginatingUSN(j.getId());
+                        em.merge(j);
+                        log.info("CR saved locally, it was from " + j.getNodeID()
                                 + " USN:" + j.getOriginatingUSN()
                                 + " Type:" + j.getRecordType().name()
                                 + " Key:" + j.getEntityKey()
                                 + " Local id:" + j.getId());
                         tx.commit();
                 } catch (Exception ex) {
-                        log.error("error", ex);
+                        log.fatal("unable to store local change record locally!!", ex);
                         if (tx != null && tx.isActive()) {
                                 tx.rollback();
                         }
@@ -128,6 +148,12 @@ public class ReplicationNotifier extends TimerTask {
                 }
 
                 log.debug("ChangeRecord: " + j.getId() + "," + j.getEntityKey() + "," + j.getNodeID() + "," + j.getOriginatingUSN() + "," + j.getRecordType().toString());
+                SendNotifications(j.getId(), j.getNodeID(), false);
+
+        }
+
+        private void SendNotifications(Long id, String origin_node, boolean isRetrans) {
+
                 org.uddi.repl_v3.ReplicationConfiguration repcfg = FetchEdges();
 
                 //TODO figure out what this statement means 7.5.3
@@ -142,10 +168,16 @@ public class ReplicationNotifier extends TimerTask {
                         return;
 
                 }
+                if (id==null || origin_node==null){
+                        log.fatal("Either the id is null or the origin_node is null. I can't send out this alert!!");
+                        //throw new Exception(node);
+                        return;
+                }
+
                 Set<Object> destinationUrls = new HashSet<Object>();
 
                 if (repcfg.getCommunicationGraph() == null
-                        || repcfg.getCommunicationGraph().getEdge().isEmpty()) {
+                        || repcfg.getCommunicationGraph().getEdge().isEmpty() && !isRetrans) {
                         //no edges or graph defined, default to the operator list
                         for (Operator o : repcfg.getOperator()) {
                                 //no need to tell myself about a change at myself
@@ -177,86 +209,87 @@ public class ReplicationNotifier extends TimerTask {
                                                         }
                                                 }
                                         }
-                                        if (container.primaryUrl!=null)
+                                        if (container.primaryUrl != null) {
                                                 destinationUrls.add(container);
+                                        }
 
                                 }
-                                
+
                         }
 
                 }
 
                 UDDIReplicationPortType x = uddiService.getUDDIReplicationPort();
-                if (destinationUrls.isEmpty())
+                if (destinationUrls.isEmpty()) {
                         log.fatal("Something is bizarre with the replication config. I should have had at least one node to notify, but I have none!");
+                }
                 for (Object s : destinationUrls) {
-                        
+
                         NotifyChangeRecordsAvailable req = new NotifyChangeRecordsAvailable();
 
                         req.setNotifyingNode(node);
                         HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
 
-                        highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(node, j.getId()));
+                        highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(origin_node, id));
                         req.setChangesAvailable(highWaterMarkVectorType);
-                        
-                        
-                        if (s instanceof String)
-                                SendNotification(x,(String)s, req);
-                        else if (s instanceof PrimaryAlternate)
-                        {
+
+                        if (s instanceof String) {
+                                SendNotification(x, (String) s, req);
+                        } else if (s instanceof PrimaryAlternate) {
                                 //more complex directed graph stuff
-                                PrimaryAlternate pa = (PrimaryAlternate)s;
-                                if (!SendNotification(x, pa.primaryUrl, req))
-                                {
-                                        for (String url : pa.alternateUrls){
-                                                if (SendNotification(x, url, req))
+                                PrimaryAlternate pa = (PrimaryAlternate) s;
+                                if (!SendNotification(x, pa.primaryUrl, req)) {
+                                        for (String url : pa.alternateUrls) {
+                                                if (SendNotification(x, url, req)) {
                                                         break;
+                                                }
                                                 //no need to continue to additional alternates
                                         }
-                                }
-                                else
-                                {
+                                } else {
                                         //primary url succeeded, no further action required
                                 }
-                                
+
                         }
-                        
+
                         //TODO the spec talks about control messages, should we even support it? seems pointless
-                        
-                        
                 }
+
         }
 
         /**
          * return true if successful
+         *
          * @param x
          * @param s
          * @param req
-         * @return 
+         * @return
          */
         private boolean SendNotification(UDDIReplicationPortType x, String s, NotifyChangeRecordsAvailable req) {
-                        ((BindingProvider) x).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, s);
-                        try {
-                                x.notifyChangeRecordsAvailable(req);
-                                log.debug("Successfully sent change record available message to " + s);
-                                return true;
-                        } catch (Exception ex) {
-                                log.warn("Unable to send change notification to " + s);
-                                log.debug("Unable to send change notification to " + s, ex);
-                        }
-                        return false;
+                ((BindingProvider) x).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, s);
+                try {
+                        x.notifyChangeRecordsAvailable(req);
+                        log.info("Successfully sent change record available message to " + s + " this node: " + node);
+                        return true;
+                } catch (Exception ex) {
+                        log.warn("Unable to send change notification to " + s + " this node: " + node);
+                        log.debug("Unable to send change notification to " + s, ex);
+                }
+                return false;
         }
 
         class PrimaryAlternate {
 
-                String primaryUrl=null;
-                List<String> alternateUrls=new ArrayList<String>();
+                String primaryUrl = null;
+                List<String> alternateUrls = new ArrayList<String>();
         }
 
         public synchronized void run() {
                 log.debug("Replication thread triggered");
                 if (queue == null) {
                         queue = new ConcurrentLinkedQueue();
+                }
+                if (queue2 == null) {
+                        queue2 = new ConcurrentLinkedQueue();
                 }
                 //TODO revisie this
                 if (!queue.isEmpty()) {
@@ -269,6 +302,22 @@ public class ReplicationNotifier extends TimerTask {
 
                         ChangeRecord j = queue.poll();
                         ProcessChangeRecord(j);
+
+                }
+
+                while (!queue2.isEmpty()) {
+                        //for each change at this node
+
+                        org.uddi.repl_v3.ChangeRecord j = queue2.poll();
+                        
+                        ChangeRecord model = new ChangeRecord();
+                        try {
+                                model=MappingApiToModel.mapChangeRecord(j);
+                        } catch (UnsupportedEncodingException ex) {
+                                Logger.getLogger(ReplicationNotifier.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        log.info("retransmitting CR notificationm entity owner: " + j.getChangeID().getNodeID() + " CR: " + j.getChangeID().getOriginatingUSN() + " key:" + model.getEntityKey() + " " + model.getRecordType().name() + " accepted locally:"+ model.getIsAppliedLocally());
+                        SendNotifications(j.getChangeID().getOriginatingUSN(), j.getChangeID().getNodeID(), true);
 
                 }
         }

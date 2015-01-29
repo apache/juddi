@@ -1281,9 +1281,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 return cr;
         }
 
-        public static ChangeRecord getChangeRecord(BusinessService modelBindingTemplate, org.uddi.api_v3.BusinessService api, String node) throws DispositionReportFaultMessage {
+        public static ChangeRecord getChangeRecord(BusinessService model, org.uddi.api_v3.BusinessService api, String node) throws DispositionReportFaultMessage {
                 ChangeRecord cr = new ChangeRecord();
-                cr.setEntityKey(modelBindingTemplate.getEntityKey());
+                cr.setEntityKey(model.getEntityKey());
                 cr.setNodeID(node);
 
                 cr.setRecordType(ChangeRecord.RecordType.ChangeRecordNewData);
@@ -1292,7 +1292,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 crapi.setChangeRecordNewData(new ChangeRecordNewData());
                 crapi.getChangeRecordNewData().setBusinessService(api);
                 crapi.getChangeRecordNewData().setOperationalInfo(new OperationalInfo());
-                MappingModelToApi.mapOperationalInfo(modelBindingTemplate, crapi.getChangeRecordNewData().getOperationalInfo());
+                MappingModelToApi.mapOperationalInfo(model, crapi.getChangeRecordNewData().getOperationalInfo());
                 StringWriter sw = new StringWriter();
                 JAXB.marshal(crapi, sw);
                 try {

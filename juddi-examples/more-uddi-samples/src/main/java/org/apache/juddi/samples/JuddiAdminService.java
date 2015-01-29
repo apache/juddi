@@ -22,6 +22,8 @@ import javax.xml.bind.JAXB;
 import javax.xml.ws.BindingProvider;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.api_v3.DeleteNode;
+import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageRequest;
+import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageResponse;
 import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.NodeList;
@@ -43,6 +45,7 @@ import org.uddi.api_v3.PersonName;
 import org.uddi.api_v3.Phone;
 import org.uddi.repl_v3.ChangeRecordIDType;
 import org.uddi.repl_v3.CommunicationGraph;
+import org.uddi.repl_v3.CommunicationGraph.Edge;
 import org.uddi.repl_v3.Operator;
 import org.uddi.repl_v3.OperatorStatusType;
 import org.uddi.repl_v3.ReplicationConfiguration;
@@ -56,23 +59,25 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class JuddiAdminService {
 
-        private static UDDISecurityPortType security = null;
-        private static UDDIPublicationPortType publish = null;
+      //  private static UDDISecurityPortType security = null;
+        //  private static UDDIPublicationPortType publish = null;
         static JUDDIApiPortType juddi = null;
-        static UDDIClerk clerk = null;
+        // static UDDIClerk clerk = null;
         static UDDIClient clerkManager = null;
 
-        public JuddiAdminService() {
+        public JuddiAdminService(UDDIClient client, Transport transport) {
                 try {
+                        clerkManager = client;
+                        if (transport==null)
                         // create a manager and read the config in the archive; 
                         // you can use your config file name
-                        clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
-                        clerk = clerkManager.getClerk("default");
+                        // clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
+                        //clerk = clerkManager.getClerk("default");
                         // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
-                        Transport transport = clerkManager.getTransport();
+                                transport = clerkManager.getTransport();
                         // Now you create a reference to the UDDI API
-                        security = transport.getUDDISecurityService();
-                        publish = transport.getUDDIPublishService();
+                        //security = transport.getUDDISecurityService();
+                        //publish = transport.getUDDIPublishService();
                         juddi = transport.getJUDDIApiService();
                 } catch (Exception e) {
                         e.printStackTrace();
@@ -187,17 +192,8 @@ public class JuddiAdminService {
 
         }
 
-        void viewReplicationConfig(String authtoken) throws Exception {
-                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
-                System.out.println();
-                System.out.println("Select a node (from *this config)");
-                for (int i = 0; i < uddiNodeList.size(); i++) {
-                        System.out.print(i + 1);
-                        System.out.println(") " + uddiNodeList.get(i).getName() + uddiNodeList.get(i).getDescription());
-                }
-                System.out.println("Node #: ");
-                int index = Integer.parseInt(System.console().readLine()) - 1;
-                String node = uddiNodeList.get(index).getName();
+        void viewReplicationConfig(String authtoken, String node) throws Exception {
+                
                 Transport transport = clerkManager.getTransport(node);
 
                 JUDDIApiPortType juddiApiService = transport.getJUDDIApiService();
@@ -454,6 +450,189 @@ public class JuddiAdminService {
                 return pn;
         }
 
+        void autoMagic123() throws Exception {
+
+                //1 > 2 >3 >1
+                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
+
+                Transport transport = clerkManager.getTransport("default");
+                String authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
+
+                JUDDIApiPortType juddiApiService = transport.getJUDDIApiService();
+                System.out.println("fetching...");
+
+                ReplicationConfiguration replicationNodes = null;
+                try {
+                        replicationNodes = juddiApiService.getReplicationNodes(authtoken);
+                } catch (Exception ex) {
+                        System.out.println("Error getting replication config");
+                        ex.printStackTrace();
+                        replicationNodes = new ReplicationConfiguration();
+
+                }
+                if (replicationNodes.getCommunicationGraph() == null) {
+                        replicationNodes.setCommunicationGraph(new CommunicationGraph());
+                }
+                Operator op = new Operator();
+                op.setOperatorNodeID("uddi:juddi.apache.org:node1");
+                op.setSoapReplicationURL("http://localhost:8080/juddiv3/services/replication");
+                op.setOperatorStatus(OperatorStatusType.NORMAL);
+                op.getContact().add(new Contact());
+                op.getContact().get(0).getPersonName().add(new PersonName("bob", "en"));
+                op.getContact().get(0).setUseType("admin");
+                replicationNodes.getOperator().clear();
+                replicationNodes.getOperator().add(op);
+
+                op = new Operator();
+                op.setOperatorNodeID("uddi:another.juddi.apache.org:node2");
+                op.setSoapReplicationURL("http://localhost:9080/juddiv3/services/replication");
+                op.setOperatorStatus(OperatorStatusType.NORMAL);
+                op.getContact().add(new Contact());
+                op.getContact().get(0).getPersonName().add(new PersonName("mary", "en"));
+                op.getContact().get(0).setUseType("admin");
+                replicationNodes.getOperator().add(op);
+                op = new Operator();
+
+                op.setOperatorNodeID("uddi:yet.another.juddi.apache.org:node3");
+                op.setSoapReplicationURL("http://localhost:10080/juddiv3/services/replication");
+                op.setOperatorStatus(OperatorStatusType.NORMAL);
+                op.getContact().add(new Contact());
+                op.getContact().get(0).getPersonName().add(new PersonName("mary", "en"));
+                op.getContact().get(0).setUseType("admin");
+                replicationNodes.getOperator().add(op);
+
+                replicationNodes.getCommunicationGraph().getNode().add("uddi:another.juddi.apache.org:node2");
+                replicationNodes.getCommunicationGraph().getNode().add("uddi:juddi.apache.org:node1");
+                replicationNodes.getCommunicationGraph().getNode().add("uddi:yet.another.juddi.apache.org:node3");
+                replicationNodes.setSerialNumber(0L);
+                replicationNodes.setTimeOfConfigurationUpdate("");
+                replicationNodes.setMaximumTimeToGetChanges(BigInteger.ONE);
+                replicationNodes.setMaximumTimeToSyncRegistry(BigInteger.ONE);
+
+                if (replicationNodes.getRegistryContact().getContact() == null) {
+                        replicationNodes.getRegistryContact().setContact(new Contact());
+                        replicationNodes.getRegistryContact().getContact().getPersonName().add(new PersonName("unknown", null));
+                }
+
+                JAXB.marshal(replicationNodes, System.out);
+                juddiApiService.setReplicationNodes(authtoken, replicationNodes);
+
+                transport = clerkManager.getTransport("uddi:another.juddi.apache.org:node2");
+                authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
+
+                juddiApiService = transport.getJUDDIApiService();
+                juddiApiService.setReplicationNodes(authtoken, replicationNodes);
+
+                transport = clerkManager.getTransport("uddi:yet.another.juddi.apache.org:node3");
+                authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
+
+                juddiApiService = transport.getJUDDIApiService();
+                juddiApiService.setReplicationNodes(authtoken, replicationNodes);
+
+        }
+
+        void autoMagicDirected() throws Exception {
+
+                //1 > 2 >3 >1
+                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
+
+                Transport transport = clerkManager.getTransport("default");
+                String authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
+
+                JUDDIApiPortType juddiApiService = transport.getJUDDIApiService();
+                System.out.println("fetching...");
+
+                ReplicationConfiguration replicationNodes = null;
+                try {
+                        replicationNodes = juddiApiService.getReplicationNodes(authtoken);
+                } catch (Exception ex) {
+                        System.out.println("Error getting replication config");
+                        ex.printStackTrace();
+                        replicationNodes = new ReplicationConfiguration();
+
+                }
+                if (replicationNodes.getCommunicationGraph() == null) {
+                        replicationNodes.setCommunicationGraph(new CommunicationGraph());
+                }
+                Operator op = new Operator();
+                op.setOperatorNodeID("uddi:juddi.apache.org:node1");
+                op.setSoapReplicationURL("http://localhost:8080/juddiv3/services/replication");
+                op.setOperatorStatus(OperatorStatusType.NORMAL);
+                op.getContact().add(new Contact());
+                op.getContact().get(0).getPersonName().add(new PersonName("bob", "en"));
+                op.getContact().get(0).setUseType("admin");
+                replicationNodes.getOperator().clear();
+                replicationNodes.getOperator().add(op);
+
+                op = new Operator();
+                op.setOperatorNodeID("uddi:another.juddi.apache.org:node2");
+                op.setSoapReplicationURL("http://localhost:9080/juddiv3/services/replication");
+                op.setOperatorStatus(OperatorStatusType.NORMAL);
+                op.getContact().add(new Contact());
+                op.getContact().get(0).getPersonName().add(new PersonName("mary", "en"));
+                op.getContact().get(0).setUseType("admin");
+                replicationNodes.getOperator().add(op);
+                op = new Operator();
+
+                op.setOperatorNodeID("uddi:yet.another.juddi.apache.org:node3");
+                op.setSoapReplicationURL("http://localhost:10080/juddiv3/services/replication");
+                op.setOperatorStatus(OperatorStatusType.NORMAL);
+                op.getContact().add(new Contact());
+                op.getContact().get(0).getPersonName().add(new PersonName("mary", "en"));
+                op.getContact().get(0).setUseType("admin");
+                replicationNodes.getOperator().add(op);
+                replicationNodes.getCommunicationGraph().getNode().clear();
+                replicationNodes.getCommunicationGraph().getNode().add("uddi:another.juddi.apache.org:node2");
+                replicationNodes.getCommunicationGraph().getNode().add("uddi:juddi.apache.org:node1");
+                replicationNodes.getCommunicationGraph().getNode().add("uddi:yet.another.juddi.apache.org:node3");
+                replicationNodes.getCommunicationGraph().getEdge().clear();
+                Edge e = new CommunicationGraph.Edge();
+                e.setMessageSender("uddi:juddi.apache.org:node1");
+                e.setMessageReceiver("uddi:another.juddi.apache.org:node2");
+                replicationNodes.getCommunicationGraph().getEdge().add(e);
+
+                e = new CommunicationGraph.Edge();
+                e.setMessageSender("uddi:another.juddi.apache.org:node2");
+                e.setMessageReceiver("uddi:yet.another.juddi.apache.org:node3");
+                replicationNodes.getCommunicationGraph().getEdge().add(e);
+
+                e = new CommunicationGraph.Edge();
+                e.setMessageSender("uddi:yet.another.juddi.apache.org:node3");
+                e.setMessageReceiver("uddi:juddi.apache.org:node1");
+                replicationNodes.getCommunicationGraph().getEdge().add(e);
+
+                replicationNodes.setSerialNumber(0L);
+                replicationNodes.setTimeOfConfigurationUpdate("");
+                replicationNodes.setMaximumTimeToGetChanges(BigInteger.ONE);
+                replicationNodes.setMaximumTimeToSyncRegistry(BigInteger.ONE);
+
+                if (replicationNodes.getRegistryContact().getContact() == null) {
+                        replicationNodes.getRegistryContact().setContact(new Contact());
+                        replicationNodes.getRegistryContact().getContact().getPersonName().add(new PersonName("unknown", null));
+                }
+
+                JAXB.marshal(replicationNodes, System.out);
+
+                juddiApiService.setReplicationNodes(authtoken, replicationNodes);
+                System.out.println("Saved to node1");
+                TestEquals(replicationNodes, juddiApiService.getReplicationNodes(authtoken));
+
+                transport = clerkManager.getTransport("uddi:another.juddi.apache.org:node2");
+                authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
+                juddiApiService = transport.getJUDDIApiService();
+                juddiApiService.setReplicationNodes(authtoken, replicationNodes);
+                System.out.println("Saved to node2");
+                TestEquals(replicationNodes, juddiApiService.getReplicationNodes(authtoken));
+
+                transport = clerkManager.getTransport("uddi:yet.another.juddi.apache.org:node3");
+                authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
+                juddiApiService = transport.getJUDDIApiService();
+                juddiApiService.setReplicationNodes(authtoken, replicationNodes);
+                System.out.println("Saved to node3");
+                TestEquals(replicationNodes, juddiApiService.getReplicationNodes(authtoken));
+
+        }
+
         void autoMagic() throws Exception {
 
                 List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
@@ -508,20 +687,45 @@ public class JuddiAdminService {
 
                 JAXB.marshal(replicationNodes, System.out);
                 juddiApiService.setReplicationNodes(authtoken, replicationNodes);
-                
+
                 transport = clerkManager.getTransport("uddi:another.juddi.apache.org:node2");
-                 authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
+                authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
 
                 juddiApiService = transport.getJUDDIApiService();
                 juddiApiService.setReplicationNodes(authtoken, replicationNodes);
-             
 
         }
 
-        void printStatus() throws Exception{
-                
-                
-                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
+        void printStatus(Transport transport, String authtoken) throws Exception {
+
+                JUDDIApiPortType juddiApiService = transport.getJUDDIApiService();
+                System.out.println("fetching...");
+
+                ReplicationConfiguration replicationNodes = null;
+                try {
+                        replicationNodes = juddiApiService.getReplicationNodes(authtoken);
+                } catch (Exception ex) {
+                        System.out.println("Error getting replication config");
+                        ex.printStackTrace();
+                        replicationNodes = new ReplicationConfiguration();
+
+                }
+                UDDIReplicationPortType uddiReplicationPort = new UDDIService().getUDDIReplicationPort();
+
+                for (Operator o : replicationNodes.getOperator()) {
+                        System.out.println("*******************\n\rstats for node " + o.getOperatorNodeID());
+                        ((BindingProvider) uddiReplicationPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, o.getSoapReplicationURL());
+
+                        List<ChangeRecordIDType> highWaterMarks = uddiReplicationPort.getHighWaterMarks();
+                        for (ChangeRecordIDType cr : highWaterMarks) {
+                                JAXB.marshal(cr, System.out);
+                        }
+                }
+        }
+
+        void printStatus() throws Exception {
+
+                //List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
 
                 Transport transport = clerkManager.getTransport("default");
                 String authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
@@ -539,16 +743,61 @@ public class JuddiAdminService {
 
                 }
                 UDDIReplicationPortType uddiReplicationPort = new UDDIService().getUDDIReplicationPort();
-                
-                for (Operator o: replicationNodes.getOperator()){
+
+                for (Operator o : replicationNodes.getOperator()) {
                         System.out.println("*******************\n\rstats for node " + o.getOperatorNodeID());
-                        ((BindingProvider)uddiReplicationPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, o.getSoapReplicationURL());
-                        
+                        ((BindingProvider) uddiReplicationPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, o.getSoapReplicationURL());
+
                         List<ChangeRecordIDType> highWaterMarks = uddiReplicationPort.getHighWaterMarks();
-                        for (ChangeRecordIDType cr : highWaterMarks){
+                        for (ChangeRecordIDType cr : highWaterMarks) {
                                 JAXB.marshal(cr, System.out);
                         }
                 }
-                
+
+        }
+
+        private void TestEquals(ReplicationConfiguration setter, ReplicationConfiguration getter) {
+                if (getter == null) {
+                        l("null getter");
+                        return;
+                }
+                if (setter == null) {
+                        l("null setter");
+                        return;
+                }
+                if (getter.getOperator().size() != setter.getOperator().size()) {
+                        l("operator size mismatch");
+                        return;
+                }
+                if (getter.getCommunicationGraph().getNode().size() != setter.getCommunicationGraph().getNode().size()) {
+                        l("comm/node size mismatch");
+                        return;
+                }
+                if (getter.getCommunicationGraph().getEdge().size() != setter.getCommunicationGraph().getEdge().size()) {
+                        l("comm/node size mismatch");
+                        return;
+                }
+
+        }
+
+        private void l(String msg) {
+                System.out.println(msg);
+        }
+
+        void dumpFailedReplicationRecords(String authtoken) throws Exception {
+                GetFailedReplicationChangeRecordsMessageRequest req = new GetFailedReplicationChangeRecordsMessageRequest();
+                req.setAuthInfo(authtoken);
+                req.setMaxRecords(20);
+                req.setOffset(0);
+                GetFailedReplicationChangeRecordsMessageResponse failedReplicationChangeRecords = juddi.getFailedReplicationChangeRecords(req);
+                while (failedReplicationChangeRecords != null
+                        && failedReplicationChangeRecords.getChangeRecords() != null
+                        && !failedReplicationChangeRecords.getChangeRecords().getChangeRecord().isEmpty()) {
+                        for (int i = 0; i < failedReplicationChangeRecords.getChangeRecords().getChangeRecord().size(); i++) {
+                                JAXB.marshal(failedReplicationChangeRecords.getChangeRecords().getChangeRecord().get(i), System.out);
+                        }
+                        req.setOffset(req.getOffset() + failedReplicationChangeRecords.getChangeRecords().getChangeRecord().size());
+                        failedReplicationChangeRecords = juddi.getFailedReplicationChangeRecords(req);
+                }
         }
 }

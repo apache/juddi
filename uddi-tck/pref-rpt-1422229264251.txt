@@ -1,0 +1,12 @@
+Insert Flat Businesses Bulk = 5.0 tx/ms
+Insert Flat Businesses 1x ManyNames = 0.09740259740259741 tx/ms
+Insert Flat Businesses 1x = 0.1595744680851064 tx/ms
+Delete Flat Businesses Bulk ManyCategories = 1.875 tx/ms
+Insert Flat Businesses Bulk ManyCategories = 0.23255813953488372 tx/ms
+Delete Flat Businesses 1x ManyCategories = 0.11029411764705882 tx/ms
+Delete Flat Businesses Bulk = 5.0 tx/ms
+Insert Flat Businesses 1x ManyCategories = 0.019417475728155338 tx/ms
+Delete Flat Businesses Bulk ManyNames = 3.75 tx/ms
+Delete Flat Businesses 1x = 0.1595744680851064 tx/ms
+Delete Flat Businesses 1x ManyNames = 0.1214574898785425 tx/ms
+Insert Flat Businesses Bulk ManyNames = 3.0 tx/ms

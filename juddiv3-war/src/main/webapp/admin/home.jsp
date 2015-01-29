@@ -52,4 +52,22 @@
         </div>
 
     </div>
+            
+             <div class="row">
+
+
+        <div class="span4">
+            <h2><%=ResourceLoader.GetResource(session, "pages.admin.changes")%></h2>
+            <p><%=ResourceLoader.GetResource(session, "pages.admin.changes.content")%></p>
+            <p><a class="btn btn-primary" href="changes.jsp"><%=ResourceLoader.GetResource(session, "viewdetails")%> &raquo;</a></p>
+        </div>
+        <div class="span4">
+          
+        </div>
+        <div class="span4">
+          
+        </div>
+
+    </div>
+            
 <%@include file="header-bottom.jsp"%>

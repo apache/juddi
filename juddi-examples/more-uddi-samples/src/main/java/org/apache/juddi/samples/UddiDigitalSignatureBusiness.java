@@ -56,6 +56,18 @@ public class UddiDigitalSignatureBusiness {
                         e.printStackTrace();
                 }
         }
+        
+        public UddiDigitalSignatureBusiness(Transport transport) {
+                try {
+                       
+                        // Now you create a reference to the UDDI API
+                        security = transport.getUDDISecurityService();
+                        inquiry = transport.getUDDIInquiryService();
+                        publish = transport.getUDDIPublishService();
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+        }
 
         /**
          * Main entry point

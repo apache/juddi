@@ -68,6 +68,24 @@ public class UddiSubscribe implements ISubscriptionCallback, Runnable {
                         e.printStackTrace();
                 }
         }
+        String nodename = "default";
+        public UddiSubscribe(UDDIClient client, String nodename, Transport transport) {
+                try {
+                        // create a manager and read the config in the archive; 
+                        // you can use your config file name
+                        //client = new UDDIClient("META-INF/simple-publish-uddi.xml");
+                        clerk = client.getClerk(nodename);
+                        this.nodename = nodename;
+                        // Now you create a reference to the UDDI API
+                        security = transport.getUDDISecurityService();
+                        juddiApi = transport.getJUDDIApiService();
+                        publish = transport.getUDDIPublishService();
+                        uddiInquiryService = transport.getUDDIInquiryService();
+                        uddiSubscriptionService = transport.getUDDISubscriptionService();
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+        }
 
         public static void main(String args[]) throws Exception {
                 UddiSubscribe sp = new UddiSubscribe();
@@ -95,7 +113,7 @@ public class UddiSubscribe implements ISubscriptionCallback, Runnable {
                 System.out.println("Registered business keygen: " + register.getBusinessKey());
 
                 //start up our listener
-                BindingTemplate start = SubscriptionCallbackListener.start(client, "default");
+                BindingTemplate start = SubscriptionCallbackListener.start(client, nodename);
 
                 //register for callbacks
                 SubscriptionCallbackListener.registerCallback(this);
@@ -189,7 +207,7 @@ public class UddiSubscribe implements ISubscriptionCallback, Runnable {
 
                 System.in.read();
 
-                SubscriptionCallbackListener.stop(client, "default", start.getBindingKey());
+                SubscriptionCallbackListener.stop(client, nodename, start.getBindingKey());
                 clerk.unRegisterSubscription(subscriptionBiz.getSubscriptionKey());
                 clerk.unRegisterSubscription(subscriptionSvc.getSubscriptionKey());
                 clerk.unRegisterSubscription(subscriptionTM.getSubscriptionKey());

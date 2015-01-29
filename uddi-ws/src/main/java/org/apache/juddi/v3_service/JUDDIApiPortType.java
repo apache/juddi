@@ -1,4 +1,19 @@
-
+/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package org.apache.juddi.v3_service;
 
 import java.rmi.RemoteException;
@@ -24,6 +39,8 @@ import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetEntityHistoryMessageRequest;
 import org.apache.juddi.api_v3.GetEntityHistoryMessageResponse;
+import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageRequest;
+import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageResponse;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.NodeList;
@@ -479,4 +496,24 @@ public interface JUDDIApiPortType {
         throws DispositionReportFaultMessage
     ,RemoteException;
 
+    /**
+     * 
+     *     gets a list of change records that were received from another node but failed to save locally, usually due to a key conflict
+     *     @since 3.3
+     *     
+     * 
+     * @param body
+     * @return
+     *     returns org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageResponse
+     * @throws DispositionReportFaultMessage
+     */
+    @WebMethod(action = "getFailedReplicationChangeRecords")
+    @WebResult(name = "getFailedReplicationChangeRecordsMessageResponse", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "response")
+    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    public GetFailedReplicationChangeRecordsMessageResponse getFailedReplicationChangeRecords(
+        @WebParam(name = "getFailedReplicationChangeRecordsMessage", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
+        GetFailedReplicationChangeRecordsMessageRequest body)
+        throws DispositionReportFaultMessage, RemoteException
+    ;
+    
 }

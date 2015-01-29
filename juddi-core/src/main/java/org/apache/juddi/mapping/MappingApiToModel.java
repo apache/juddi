@@ -1394,8 +1394,14 @@ public class MappingApiToModel {
 
         public static org.apache.juddi.model.ChangeRecord mapChangeRecord(ChangeRecord rec) throws UnsupportedEncodingException {
                 org.apache.juddi.model.ChangeRecord r = new org.apache.juddi.model.ChangeRecord();
-                r.setId(rec.getChangeID().getOriginatingUSN());
+                //r.setId(rec.getChangeID().getOriginatingUSN());
                 r.setOriginatingUSN(rec.getChangeID().getOriginatingUSN());
+                if (r.getOriginatingUSN()==null){
+                        logger.warn("strange, the getOriginatingUSN is null!!");
+                        JAXB.marshal(rec, System.out);
+                        Thread.dumpStack();
+                }
+                r.setNodeID(rec.getChangeID().getNodeID());
                 if (rec.getChangeRecordNewData() != null) {
                         r.setRecordType(org.apache.juddi.model.ChangeRecord.RecordType.ChangeRecordNewData);
                         r.setEntityKey(rec.getChangeRecordNewData().getOperationalInfo().getEntityKey());
@@ -1436,8 +1442,7 @@ public class MappingApiToModel {
                 } else {
                         throw new UnsupportedEncodingException("unknown type!");
                 }
-                r.setNodeID(rec.getChangeID().getNodeID());
-
+                
                 StringWriter sw = new StringWriter();
                 JAXB.marshal(rec, sw);
                 r.setContents(sw.toString().getBytes("UTF8"));

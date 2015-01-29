@@ -128,7 +128,77 @@
 			</fileset>
 		</chmod>
 	</target>
+        
+        
+        <!-- node 3 -->
+        
+        <property name="lib3.dir" value="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/lib"/>
+	<property name="webapps3.dir" value="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/webapps"/>
+	<property name="conf3.dir" value="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/conf"/>
+	<property name="endorsed3.dir" value="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/endorsed"/>
+
+	<target name="unzip-tomcat3">
+		<mkdir dir="${basedir}/target/tomcat3"/>
+		<unzip dest="${basedir}/target/tomcat3" src="${dependency.tomcat.zip}"/>
+		<unzip dest="${webapps3.dir}/juddiv3" src="${dependency.juddiv3.war}"/>
+		<unzip dest="${webapps3.dir}/juddi-gui" src="${dependency.juddi-gui.war}"/>
+	</target>
+	
+	<target name="copy-resources3" depends="unzip-tomcat3">
+		<!-- JUDDI-894 -->
+		<move file="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/webapps/ROOT/index.html" tofile="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/webapps/ROOT/index-tomcat.html" overwrite="true"/>
+		<copy file="${basedir}/index.html" todir="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/webapps/ROOT" overwrite="true"/>
+
+		<copy file="${basedir}/catalina.sh" todir="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
+		<copy file="${basedir}/catalina.bat" todir="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
+		<copy file="${basedir}/truststore.jks" todir="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
+		<copy file="${basedir}/truststore.jks" todir="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/" overwrite="true"/>
+		
+		<copy file="${basedir}/juddi-cryptor.bat" todir="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
+		<copy file="${basedir}/juddi-md5.bat" todir="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
+		<copy file="${basedir}/juddi-cryptor.sh" todir="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
+		<copy file="${basedir}/juddi-md5.sh" todir="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
+		
+		
+		<copy file="${basedir}/juddiv3Node3.xml" tofile="${webapps3.dir}/juddiv3/WEB-INF/classes/juddiv3.xml" overwrite="true"/>
+		<copy file="${basedir}/juddi_install_data_node3/root_BusinessEntity.xml" todir="${webapps3.dir}/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
+		<copy file="${basedir}/juddi_install_data_node3/root_Publisher.xml" todir="${webapps3.dir}/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
+		<copy file="${basedir}/juddi_install_data_node3/root_tModelKeyGen.xml" todir="${webapps3.dir}/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
+		<copy file="${basedir}/juddi_install_data_node3/UDDI_Publisher.xml" todir="${webapps3.dir}/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
+		<copy file="${basedir}/juddi_install_data_node3/UDDI_tModels.xml" todir="${webapps3.dir}/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
+
+		
+		<copy file="${basedir}/uddiNode3.xml" tofile="${webapps3.dir}/juddi-gui/WEB-INF/classes/META-INF/uddi.xml" overwrite="true"/>
+		<copy file="${basedir}/serverNode3.xml" tofile="${conf3.dir}/server.xml" overwrite="true"/>
+		
+		
+		
+        <copy file="${basedir}/tomcat-users.xml" todir="${conf3.dir}" overwrite="true"/>
+		<copy file="${basedir}/context.xml" todir="${webapps3.dir}/juddiv3/META-INF" overwrite="true"/>
+		<copy file="${basedir}/keystore.jks" todir="${conf3.dir}" overwrite="true"/>
+		
+ 		<copy file="${dependency.mysql.jar}" todir="${lib3.dir}"/>
+		<copy file="${dependency.postgres.jar}" todir="${lib3.dir}"/>
+		<copy file="${dependency.log4j.jar}" todir="${lib3.dir}"/>
+		<copy file="${dependency.derby.jar}" todir="${lib3.dir}"/>
+		<copy file="${dependency.commons-discovery.jar}" todir="${lib3.dir}"/>
+		<copy file="${dependency.jaxws.jar}" todir="${endorsed3.dir}"/>
+	</target>
+	
+	<target name="package-tomcat3" depends="copy-resources3">
+		<chmod perm="ugo+x">
+			<fileset dir="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/bin">
+				<include name="*.sh"/>
+			</fileset>
+		</chmod>
+	</target>
+
+
+
 
 	<target name="twonode" depends="package-tomcat,package-tomcat2"/>
+        
+        
+        <target name="threenode" depends="package-tomcat,package-tomcat2,package-tomcat3"/>
 
 </project>

@@ -119,14 +119,16 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                 Set<String> addedNodes = diffNodeList(oldnodes, newNodes);
                 if (queue == null) {
-                        queue = new ConcurrentLinkedQueue<String>();
+                        queue = new ConcurrentLinkedQueue<NotifyChangeRecordsAvailable>();
                 }
                 for (String s : addedNodes) {
                         if (!s.equals(node)) {
                                 logger.info("This node: " + node + ". New replication node queue for synchronization: " + s);
                                 //HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
                                 //highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(s, 0L));
-                                queue.add(s);
+                                HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
+                                highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(s, 0L));
+                                queue.add(new NotifyChangeRecordsAvailable(s, highWaterMarkVectorType));
                         }
                 }
 
@@ -201,7 +203,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
         private synchronized void Init() {
                 if (queue == null) {
-                        queue = new ConcurrentLinkedQueue<String>();
+                        queue = new ConcurrentLinkedQueue<NotifyChangeRecordsAvailable>();
                 }
                 timer = new PullTimerTask();
 
@@ -241,9 +243,9 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                         }
                         //ok someone told me there's a change available
                         while (!queue.isEmpty()) {
-                                String poll = queue.poll();
-                                if (poll != null && !poll.equalsIgnoreCase(node)) {
-                                        UDDIReplicationPortType replicationClient = getReplicationClient(poll);
+                                NotifyChangeRecordsAvailable poll = queue.poll();
+                                if (poll != null && !poll.getNotifyingNode().equalsIgnoreCase(node)) {
+                                        UDDIReplicationPortType replicationClient = getReplicationClient(poll.getNotifyingNode());
                                         if (replicationClient == null) {
                                                 logger.fatal("unable to obtain a replication client to node " + poll);
                                         } else {
@@ -256,31 +258,44 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                         //        logger.info("Node " + poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID()
                                                         //                + " USN " + poll.getChangesAvailable().getHighWaterMark().get(xx).getOriginatingUSN());
                                                         //}
-                                                        int recordsreturned = 1;
-                                                        while (recordsreturned > 0) {
-                                                                GetChangeRecords body = new GetChangeRecords();
-                                                                body.setRequestingNode(node);
-                                                                body.setResponseLimitCount(BigInteger.valueOf(20));
+                                                        Set<String> nodesHitThisCycle=new HashSet<String>();
+                                                        for (int xx = 0; xx < poll.getChangesAvailable().getHighWaterMark().size(); xx++) {
+                                                                int recordsreturned = 21;
+                                                                while (recordsreturned >= 20) {
+                                                                        if (nodesHitThisCycle.contains(poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID()))
+                                                                        {
+                                                                                logger.info("i've already hit the node " + poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID() + " this cycle, skipping");
+                                                                                break;
+                                                                        }
+                                                                        if (poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID().equalsIgnoreCase(node)) {
+                                                                                logger.info("ignoring updates that were generated here " + poll.getChangesAvailable().getHighWaterMark().get(xx).getOriginatingUSN() + " sent by " + poll.getNotifyingNode() + " this node is " + node);
+                                                                                break;
+                                                                        }
+                                                                        nodesHitThisCycle.add(poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID());
+                                                                        GetChangeRecords body = new GetChangeRecords();
+                                                                        body.setRequestingNode(node);
+                                                                        body.setResponseLimitCount(BigInteger.valueOf(100L));
 
-                                                                body.setChangesAlreadySeen(getLastChangeRecordFrom(poll));
-                                                                logger.info("fetching updates from " + poll + " since " + body.getChangesAlreadySeen().getHighWaterMark().get(0).getOriginatingUSN() + " items still in the queue: " + queue.size());
-
-                                                                List<ChangeRecord> records
-                                                                        = replicationClient.getChangeRecords(body).getChangeRecord();
-                                                                //ok now we need to persist the change records
-                                                                logger.info("Change records retrieved from " + poll + ", " + records.size());
-                                                                for (int i = 0; i < records.size(); i++) {
-                                                                        //logger.info("Change records retrieved " + records.get(i).getChangeID().getNodeID() + " USN " + records.get(i).getChangeID().getOriginatingUSN());
-                                                                        PersistChangeRecord(records.get(i));
+                                                                        body.setChangesAlreadySeen(getLastChangeRecordFrom(poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID()));
+                                                                        logger.info("fetching updates from " + poll.getNotifyingNode() + " since " + body.getChangesAlreadySeen().getHighWaterMark().get(0).getNodeID() + ":" + body.getChangesAlreadySeen().getHighWaterMark().get(0).getOriginatingUSN() + ", items still in the queue: " + queue.size());
+                                                                        //JAXB.marshal(body, System.out);
+                                                                        List<ChangeRecord> records
+                                                                                = replicationClient.getChangeRecords(body).getChangeRecord();
+                                                                        //ok now we need to persist the change records
+                                                                        logger.info("Change records retrieved from " + poll.getNotifyingNode() + ", " + records.size());
+                                                                        for (int i = 0; i < records.size(); i++) {
+                                                                                logger.info("Change records retrieved " + records.get(i).getChangeID().getNodeID() + " USN " + records.get(i).getChangeID().getOriginatingUSN());
+                                                                                PersistChangeRecord(records.get(i));
+                                                                        }
+                                                                        recordsreturned = records.size();
                                                                 }
-                                                                recordsreturned = records.size();
                                                         }
                                                 } catch (Exception ex) {
                                                         logger.error("Error caught fetching replication changes from " + poll + " @" + ((BindingProvider) replicationClient).getRequestContext().get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY), ex);
                                                 }
                                         }
                                 } else {
-                                        logger.warn("weird, popped an object from the queue but it was null.");
+                                        logger.warn("strange, popped an object from the queue but it was null or it from myself, ignoring...");
                                 }
                         }
                 }
@@ -293,7 +308,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                 /**
                  * someone told me there's a change available, we retrieved it
-                 * and are processing the changes locally
+                 * and are processing the changes locally.
                  *
                  * @param rec
                  */
@@ -309,6 +324,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                         }
                         EntityManager em = PersistenceManager.getEntityManager();
                         EntityTransaction tx = em.getTransaction();
+                        org.apache.juddi.model.ChangeRecord mapChangeRecord = null;
                         /**
                          * In nodes that support pre-bundled replication
                          * responses, the recipient of the get_changeRecords
@@ -321,16 +337,33 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                         try {
                                 tx.begin();
-                                //the change record rec must also be persisted!!
-                                org.apache.juddi.model.ChangeRecord mapChangeRecord = MappingApiToModel.mapChangeRecord(rec);
+                                //check to see if we have this update already
+                                Query createQuery = em.createQuery("select c from ChangeRecord c where c.nodeID=:node and c.originatingUSN=:oid");
+                                createQuery.setParameter("node", rec.getChangeID().getNodeID());
+                                createQuery.setParameter("oid", rec.getChangeID().getOriginatingUSN());
+                                Object existingrecord = null;
+                                try {
+                                        existingrecord = createQuery.getSingleResult();
+                                } catch (Exception ex) {
+                                        logger.debug("error checking to see if change record exists already (expected failure)", ex);
+                                }
+                                if (existingrecord != null) {
+                                        logger.info("I've already processed change record " + rec.getChangeID().getNodeID() + " " + rec.getChangeID().getOriginatingUSN());
+                                        return;
+                                }
+                                //if it didn't come from here and i haven't seen it yet
+                                ReplicationNotifier.EnqueueRetransmit(rec);
+                                //the remotechange record rec must also be persisted!!
+                                mapChangeRecord = MappingApiToModel.mapChangeRecord(rec);
                                 mapChangeRecord.setId(null);
+                                mapChangeRecord.setIsAppliedLocally(true);
                                 em.persist(mapChangeRecord);
                                 tx.commit();
-                                logger.debug("Remote CR saved, it was from " + mapChangeRecord.getNodeID()
+                                logger.info("Remote CR saved, it was from " + mapChangeRecord.getNodeID() //this is the origin of the change
                                         + " USN:" + mapChangeRecord.getOriginatingUSN()
                                         + " Type:" + mapChangeRecord.getRecordType().name()
                                         + " Key:" + mapChangeRecord.getEntityKey()
-                                        + " Local id:" + mapChangeRecord.getId());
+                                        + " Local id from sender:" + mapChangeRecord.getId());
                                 tx = em.getTransaction();
                                 tx.begin();
                                 //<editor-fold defaultstate="collapsed" desc="delete a record">
@@ -423,6 +456,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                                                         BusinessEntity model = em.find(org.apache.juddi.model.BusinessEntity.class, rec.getChangeRecordNewData().getBusinessEntity().getBusinessKey());
                                                         if (model != null) {
+                                                                //if the owner of the new data is me, and the update didn't originate from me
                                                                 if (rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(node)
                                                                         && !model.getNodeId().equals(node)) {
                                                                         if (model.getIsTransferInProgress()) {
@@ -434,7 +468,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                                 em.merge(model);
                                                                         } else {
                                                                                 //block it, unexpected transfer
-                                                                                throw new Exception("Unexpected entity transfer to this node from " + rec.getChangeID().getNodeID());
+                                                                                throw new Exception("Unexpected entity transfer to to node " + node + " from " + rec.getChangeID().getNodeID());
                                                                         }
 
                                                                 } else if (rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(node)
@@ -455,7 +489,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                         em.merge(model);
 
                                                                 }
-                                                                
+
                                                         } else {
                                                                 model = new BusinessEntity();
                                                                 MappingApiToModel.mapBusinessEntity(rec.getChangeRecordNewData().getBusinessEntity(), model);
@@ -739,10 +773,31 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 tx.commit();
 
                         } catch (Exception drfm) {
-                                logger.warn("Error persisting change record!", drfm);
+
+                                logger.warn("Error applying the change record! ", drfm);
                                 StringWriter sw = new StringWriter();
                                 JAXB.marshal(rec, sw);
                                 logger.warn("This is the record that failed to persist: " + sw.toString());
+                                if (tx.isActive()) {
+                                        tx.rollback();
+                                }
+                                if (mapChangeRecord != null) {
+                                        //set the change record's isApplied to false
+                                        try {
+                                                tx = em.getTransaction();
+                                                tx.begin();
+                                                mapChangeRecord.setIsAppliedLocally(false);
+                                                em.merge(mapChangeRecord);
+                                                tx.commit();
+                                        } catch (Exception e) {
+                                                logger.error("error updating change record!!", e);
+                                                if (tx.isActive()) {
+                                                        tx.rollback();
+                                                }
+                                        }
+                                } else {
+                                        logger.fatal("whoa! change record is null when saving a remote change record, this is unexpected and should be reported");
+                                }
                         } finally {
                                 if (tx.isActive()) {
                                         tx.rollback();
@@ -751,33 +806,35 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                         }
                 }
 
-                private HighWaterMarkVectorType getLastChangeRecordFrom(String notifyingNode) {
+                private HighWaterMarkVectorType getLastChangeRecordFrom(String sourcenode) {
                         HighWaterMarkVectorType ret = new HighWaterMarkVectorType();
                         ChangeRecordIDType cid = new ChangeRecordIDType();
-                        cid.setNodeID(notifyingNode);
+                        cid.setNodeID(sourcenode);
                         cid.setOriginatingUSN(0L);
                         EntityManager em = PersistenceManager.getEntityManager();
                         EntityTransaction tx = em.getTransaction();
                         try {
                                 tx.begin();
-                                Long id = 0L;
+                                //Long id = 0L;
                                 try {
-                                        cid.setOriginatingUSN((Long) em.createQuery("select e.originatingUSN from ChangeRecord e where e.nodeID = :node order by e.originatingUSN desc").setParameter("node", notifyingNode).setMaxResults(1).getSingleResult());
+                                        cid.setOriginatingUSN((Long) em.createQuery("select MAX(e.originatingUSN) from ChangeRecord e where e.nodeID = :node")
+                                                .setParameter("node", sourcenode)
+                                                .getSingleResult());
                                 } catch (Exception ex) {
-                                        logger.info(ex);
+                                        logger.info("unexpected error searching for last record from " + sourcenode, ex);
                                 }
 
                                 tx.rollback();
 
                         } catch (Exception drfm) {
-                                logger.warn("error caught fetching newest record from node " + notifyingNode, drfm);
+                                logger.warn("error caught fetching newest record from node " + sourcenode, drfm);
                         } finally {
                                 if (tx.isActive()) {
                                         tx.rollback();
                                 }
                                 em.close();
                         }
-
+                        logger.info("Highest known record for " + sourcenode + " is " + cid.getOriginatingUSN());
                         ret.getHighWaterMark().add(cid);
 
                         return ret;
@@ -851,9 +908,10 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
                 try {
+                        tx.begin();
                         StringBuilder sql = new StringBuilder();
                         sql.append("select c from ReplicationConfiguration c order by c.serialNumber desc");
-                        sql.toString();
+                        //sql.toString();
                         Query qry = em.createQuery(sql.toString());
                         qry.setMaxResults(1);
 
@@ -933,7 +991,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                  * recent change record that has been successfully processed by
                  * the invocating node
                  */
-                int maxrecords = 100;
+                int maxrecords = 100;   //TODO config this
                 if (responseLimitCount != null) {
                         maxrecords = responseLimitCount.intValue();
                 }
@@ -941,66 +999,83 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                         tx.begin();
                         Long firstrecord = 0L;
                         Long lastrecord = null;
-
+                        Query createQuery = null;
+//SELECT t0.id, t0.change_contents, t0.entity_key, t0.appliedlocal, t0.node_id, t0.orginating_usn, t0.record_type FROM j3_chg_record t0 WHERE (t0.id > NULL AND t0.node_id = ?) ORDER BY t0.id ASC                        
                         if (changesAlreadySeen != null) {
                                 //this is basically a lower limit (i.e. the newest record that was processed by the requestor
                                 //therefore we want the oldest record stored locally to return to the requestor for processing
                                 for (int i = 0; i < changesAlreadySeen.getHighWaterMark().size(); i++) {
+                                        firstrecord = changesAlreadySeen.getHighWaterMark().get(i).getOriginatingUSN();
+                                        if (firstrecord == null) {
+                                                firstrecord = 0L;
+                                        }
                                         if (changesAlreadySeen.getHighWaterMark().get(i).getNodeID().equals(node)) {
-                                                firstrecord = changesAlreadySeen.getHighWaterMark().get(i).getOriginatingUSN();
+                                                //special case, search by database id
+                                                createQuery = em.createQuery("select e from ChangeRecord e where "
+                                                        + "(e.id > :inbound AND e.nodeID = :node) "
+                                                        + "order by e.id ASC");
+
+                                        } else {
+                                                createQuery = em.createQuery("select e from ChangeRecord e where "
+                                                        + "e.originatingUSN > :inbound AND e.nodeID = :node "
+                                                        + "order by e.originatingUSN ASC");
+                                        }
+                                        logger.info("Query db for replication changes, lower index is " + (firstrecord) + " last index " + lastrecord + " record limit " + maxrecords);
+                                        logger.info("This node is" + node + ", request is for data originated from " + changesAlreadySeen.getHighWaterMark().get(i).getNodeID() + " and it's being sent back to " + requestingNode);
+
+                                        createQuery.setMaxResults(maxrecords);
+                                        createQuery.setParameter("inbound", firstrecord);
+                                        createQuery.setParameter("node", changesAlreadySeen.getHighWaterMark().get(i).getNodeID());
+                                        List<org.apache.juddi.model.ChangeRecord> records = (List<org.apache.juddi.model.ChangeRecord>) createQuery.getResultList();
+                                        logger.info(records.size() + " CR records returned from query");
+                                        for (int x = 0; x < records.size(); x++) {
+                                                ChangeRecord r = MappingModelToApi.mapChangeRecord(records.get(x));
+                                                //if (!Excluded(changesAlreadySeen, r)) {
+                                                ret.add(r);
+                                                //}
+
                                         }
                                 }
-                        }
-                        if (responseLimitVector != null) {
-                                //using responseLimitVector, indicating for each node in the graph the first change originating there that he does not wish to be returned.
-                                //upper limit basically
-                                for (int i = 0; i < responseLimitVector.getHighWaterMark().size(); i++) {
-                                        if (responseLimitVector.getHighWaterMark().get(i).getNodeID().equals(node)) {
-                                                lastrecord = responseLimitVector.getHighWaterMark().get(i).getOriginatingUSN();
-                                        }
+                        } /*if (responseLimitVector != null) {
+                         //using responseLimitVector, indicating for each node in the graph the first change originating there that he does not wish to be returned.
+                         //upper limit basically
+                         for (int i = 0; i < responseLimitVector.getHighWaterMark().size(); i++) {
+                         //if (responseLimitVector.getHighWaterMark().get(i).getNodeID().equals(node)) {
+                         lastrecord = responseLimitVector.getHighWaterMark().get(i).getOriginatingUSN();
+                         //}
+                         }
+                         }*/ else {
+                                if (firstrecord == null) {
+                                        firstrecord = 0L;
                                 }
-                        }
+                                //assume that they just want records that originated from here?
+                                logger.info("Query db for replication changes, lower index is " + (firstrecord) + " last index " + lastrecord + " record limit " + maxrecords);
+                                logger.info("This node is" + node + " requesting node " + requestingNode);
 
-                        logger.info("Query db for replication changes, lower index is " + (firstrecord) + " last index " + lastrecord + " record limit " + maxrecords);
-                        Query createQuery = null;
-                        /* 
-                         //this don't work
-                         if (lastrecord != null) {
-                         createQuery = em.createQuery("select e from ChangeRecord e where "
-                         + "((e.id > :inbound AND e.nodeID = :node AND e.id < :lastrecord) OR "
-                         + "(e.originatingUSN > :inbound AND e.nodeID <> :node AND e.originatingUSN < :lastrecord)) "
-                         + "order by e.id ASC");
-                         createQuery.setParameter("lastrecord", lastrecord);
-                         } else {
-                         createQuery = em.createQuery("select e from ChangeRecord e where "
-                         + "((e.id > :inbound AND e.nodeID = :node) OR "
-                         + "(e.originatingUSN > :inbound AND e.nodeID <> :node)) "
-                         + "order by e.id ASC");
-                         }*/
-                        if (lastrecord != null) {
-                                createQuery = em.createQuery("select e from ChangeRecord e where "
-                                        + "(e.id > :inbound AND e.nodeID = :node AND e.id < :lastrecord) "
-                                        + "order by e.id ASC");
-                                createQuery.setParameter("lastrecord", lastrecord);
-                        } else {
-                                createQuery = em.createQuery("select e from ChangeRecord e where "
-                                        + "(e.id > :inbound AND e.nodeID = :node) "
-                                        + "order by e.id ASC");
-                        }
-                        createQuery.setMaxResults(maxrecords);
-                        createQuery.setParameter("inbound", firstrecord);
-                        createQuery.setParameter("node", node);
+                                if (lastrecord != null) {
+                                        createQuery = em.createQuery("select e from ChangeRecord e where "
+                                                + "(e.id > :inbound AND e.nodeID = :node AND e.id < :lastrecord) "
+                                                + "order by e.id ASC");
+                                        createQuery.setParameter("lastrecord", lastrecord);
+                                } else {
+                                        createQuery = em.createQuery("select e from ChangeRecord e where "
+                                                + "(e.id > :inbound AND e.nodeID = :node) "
+                                                + "order by e.id ASC");
+                                }
+                                createQuery.setMaxResults(maxrecords);
+                                createQuery.setParameter("inbound", firstrecord);
+                                createQuery.setParameter("node", node);
 
-                        List<org.apache.juddi.model.ChangeRecord> records = (List<org.apache.juddi.model.ChangeRecord>) createQuery.getResultList();
-                        logger.info(records.size() + " CR records returned from query");
-                        for (int i = 0; i < records.size(); i++) {
-                                ChangeRecord r = MappingModelToApi.mapChangeRecord(records.get(i));
-                                if (!Excluded(changesAlreadySeen, r)) {
+                                List<org.apache.juddi.model.ChangeRecord> records = (List<org.apache.juddi.model.ChangeRecord>) createQuery.getResultList();
+                                logger.info(records.size() + " CR records returned from query");
+                                for (int i = 0; i < records.size(); i++) {
+                                        ChangeRecord r = MappingModelToApi.mapChangeRecord(records.get(i));
+                                        //if (!Excluded(changesAlreadySeen, r)) {
                                         ret.add(r);
+                                        //}
+
                                 }
-
                         }
-
                         tx.rollback();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(ReplicationQuery.GET_CHANGERECORDS,
@@ -1120,14 +1195,14 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 new ValidateReplication(null).validateNotifyChangeRecordsAvailable(body, ctx);
 
                 logger.info(body.getNotifyingNode() + " just told me that there are change records available, enqueuing...size is " + queue.size());
-                if (!queue.contains(body.getNotifyingNode())) {
-                        queue.add(body.getNotifyingNode());
-                }
+                //if (!queue.contains(body.getNotifyingNode())) {
+                queue.add(body);
+                //}
                 long procTime = System.currentTimeMillis() - startTime;
                 serviceCounter.update(ReplicationQuery.NOTIFY_CHANGERECORDSAVAILABLE,
                         QueryStatus.SUCCESS, procTime);
         }
-        private static Queue<String> queue = null;
+        private static Queue<NotifyChangeRecordsAvailable> queue = null;
 
         /**
          * transfers custody of an entity from node1/user1 to node2/user2

@@ -74,6 +74,19 @@ public class UddiSubscriptionManagement {
                         e.printStackTrace();
                 }
         }
+        
+         public UddiSubscriptionManagement(Transport transport) {
+                try {
+                       
+                        // Now you create a reference to the UDDI API
+                        security = transport.getUDDISecurityService();
+                        publish = transport.getUDDIPublishService();
+                        uddiInquiryService = transport.getUDDIInquiryService();
+                        uddiSubscriptionService = transport.getUDDISubscriptionService();
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+        }
 
         public static void main(String args[]) throws Exception {
                 UddiSubscriptionManagement sp = new UddiSubscriptionManagement();

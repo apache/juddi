@@ -20,8 +20,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 /**
- *
- * @author alex
+ * enumerated data type to help with MBean lookups
  */
 public enum JUDDIQuery implements UDDIQuery {
 
@@ -47,8 +46,8 @@ public enum JUDDIQuery implements UDDIQuery {
         GET_REPLICATION_NODES("get_replicationNodes"),
         ADMIN_SAVE_SUB("admin_saveClientSubscription"),
         ADMIN_GET_HISTORY("admin_getEntityHistory"),
-        INVOKE_SYNCSUB("invoke_synchSubscription");
-
+        INVOKE_SYNCSUB("invoke_synchSubscription"),
+        ADMIN_GET_FAILED_CRS("getFailedReplicationChangeRecords");
         private String _query;
         private static Hashtable<String, JUDDIQuery> _inquiryQueries = null;
 
@@ -88,7 +87,8 @@ public enum JUDDIQuery implements UDDIQuery {
                         _inquiryQueries.put("admin_saveClientSubscription", JUDDIQuery.ADMIN_SAVE_SUB);
                         _inquiryQueries.put("admin_getEntityHistory", JUDDIQuery.ADMIN_GET_HISTORY);
                         _inquiryQueries.put("invoke_synchSubscription", JUDDIQuery.INVOKE_SYNCSUB);
-        
+                        _inquiryQueries.put("getFailedReplicationChangeRecords", JUDDIQuery.ADMIN_GET_FAILED_CRS);
+
                         
                 }
         }

@@ -48,7 +48,10 @@
             session.removeAttribute("nonce");
             response.sendRedirect("index.jsp");
             UddiAdminHub.log.warn( "CSRF Test failed, no nonce guid." + request.getRemoteAddr() + request.getRemoteUser());
-            throw new CrossSiteRequestForgeryException();
+            //throw new CrossSiteRequestForgeryException();
+            response.sendRedirect("index.jsp");
+                
+                return;
         } else {
 
             String noncestr = (String) session.getAttribute("nonce");
@@ -56,7 +59,10 @@
                 //no session variable to test against, reject it
                 UddiAdminHub.log.warn( "CSRF Test failed, no session guid." + request.getRemoteAddr() + request.getRemoteUser());
                 session.removeAttribute("nonce");
-                throw new CrossSiteRequestForgeryException("Cross Site Request Forgery");
+                //throw new CrossSiteRequestForgeryException("Cross Site Request Forgery");
+                response.sendRedirect("index.jsp");
+                
+                return;
             }
             String postedstr = request.getParameter("nonce");
 
@@ -74,7 +80,10 @@
                 //mismatch, reject it
                 UddiAdminHub.log.warn( "CSRF Test failed, session did not match nonce guid." + request.getRemoteAddr() + request.getRemoteUser());
                 session.removeAttribute("nonce");
-                throw new CrossSiteRequestForgeryException("Cross Site Request Forgery");
+                //throw new CrossSiteRequestForgeryException("Cross Site Request Forgery");
+                response.sendRedirect("index.jsp");
+                
+                return;
             }
         }
     } else {
