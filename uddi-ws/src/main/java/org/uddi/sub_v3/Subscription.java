@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.Duration;
@@ -169,6 +170,7 @@ Durations</i>.</p>
     "maxEntities",
     "expiresAfter"
 })
+@XmlRootElement
 public class Subscription implements Serializable{
 	@XmlTransient
 	private static final long serialVersionUID = -1016771256986173140L;

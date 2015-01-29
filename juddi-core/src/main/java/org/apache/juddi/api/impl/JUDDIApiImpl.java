@@ -227,9 +227,10 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         new ValidatePublish(publisher).validateDeletePublisher(em, body);
 
                         List<String> entityKeyList = body.getPublisherId();
+                        List<Publisher> deletedPubs = new ArrayList<Publisher>();
                         for (String entityKey : entityKeyList) {
                                 Publisher obj = em.find(org.apache.juddi.model.Publisher.class, entityKey);
-
+                                deletedPubs.add(obj);
                                 //get an authtoken for this publisher so that we can get its registeredInfo
                                 UDDISecurityImpl security = new UDDISecurityImpl();
                                 AuthToken authToken = security.getAuthToken(entityKey);
@@ -277,6 +278,9 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
+                        for (Publisher p: deletedPubs){
+                                USERFRIENDLYSMTPNotifier.notifyAccountDeleted(new TemporaryMailContainer(null, p, (Publisher) publisher));
+                        }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.DELETE_PUBLISHER,
                                 QueryStatus.SUCCESS, procTime);

@@ -75,10 +75,12 @@ public class USERFRIENDLYSMTPNotifier extends SMTPNotifier {
 
         public static void notifySubscriptionDeleted(TemporaryMailContainer container) {
                 try {
-                        Publisher publisher=container.getPublisher();
+                        Publisher publisher = container.getPublisher();
                         Publisher deletedBy = container.getDeletedBy();
                         Subscription obj = container.getObj();
-                                
+                        String emailaddress = publisher.getEmailAddress();
+                        if (emailaddress==null || emailaddress.trim().equals(""))
+                                return;
                         Properties properties = new Properties();
                         Session session = null;
                         String mailPrefix = AppConfig.getConfiguration().getString(Property.JUDDI_EMAIL_PREFIX, Property.DEFAULT_JUDDI_EMAIL_PREFIX);
@@ -92,7 +94,112 @@ public class USERFRIENDLYSMTPNotifier extends SMTPNotifier {
                                         properties.put(key, System.getProperty(mailPrefix + key));
                                 }
                         }
+
+                        boolean auth = (properties.getProperty("mail.smtp.auth", "false")).equalsIgnoreCase("true");
+                        if (auth) {
+                                final String username = properties.getProperty("mail.smtp.user");
+                                String pwd = properties.getProperty("mail.smtp.password");
+                                //decrypt if possible
+                                if (properties.getProperty("mail.smtp.password" + Property.ENCRYPTED_ATTRIBUTE, "false").equalsIgnoreCase("true")) {
+                                        try {
+                                                pwd = CryptorFactory.getCryptor().decrypt(pwd);
+                                        } catch (NoSuchPaddingException ex) {
+                                                log.error("Unable to decrypt settings", ex);
+                                        } catch (NoSuchAlgorithmException ex) {
+                                                log.error("Unable to decrypt settings", ex);
+                                        } catch (InvalidAlgorithmParameterException ex) {
+                                                log.error("Unable to decrypt settings", ex);
+                                        } catch (InvalidKeyException ex) {
+                                                log.error("Unable to decrypt settings", ex);
+                                        } catch (IllegalBlockSizeException ex) {
+                                                log.error("Unable to decrypt settings", ex);
+                                        } catch (BadPaddingException ex) {
+                                                log.error("Unable to decrypt settings", ex);
+                                        }
+                                }
+                                final String password = pwd;
+                                log.debug("SMTP username = " + username + " from address = " + emailaddress);
+                                Properties eMailProperties = properties;
+                                eMailProperties.remove("mail.smtp.user");
+                                eMailProperties.remove("mail.smtp.password");
+                                session = Session.getInstance(properties, new javax.mail.Authenticator() {
+                                        protected PasswordAuthentication getPasswordAuthentication() {
+                                                return new PasswordAuthentication(username, password);
+                                        }
+                                });
+                        } else {
+                                Properties eMailProperties = properties;
+                                eMailProperties.remove("mail.smtp.user");
+                                eMailProperties.remove("mail.smtp.password");
+                                session = Session.getInstance(eMailProperties);
+                        }
+
+                        MimeMessage message = new MimeMessage(session);
+                        InternetAddress address = new InternetAddress(emailaddress);
+                        Address[] to = {address};
+                        message.setRecipients(RecipientType.TO, to);
+                        message.setFrom(new InternetAddress(properties.getProperty("mail.smtp.from", "jUDDI")));
+                        //Hello %s,<br><br>Your subscription UDDI subscription was deleted. Attached is what the subscription was. It was deleted by %s, %s at %s. This node is %s
+                        //maybe nice to use a template rather then sending raw xml.
+                        org.uddi.sub_v3.Subscription api = new org.uddi.sub_v3.Subscription();
+                        MappingModelToApi.mapSubscription(obj, api);
+                        String subscriptionResultXML = JAXBMarshaller.marshallToString(api, JAXBMarshaller.PACKAGE_SUBSCR_RES);
+                        Multipart mp = new MimeMultipart();
+
+                        MimeBodyPart content = new MimeBodyPart();
+                        String msg_content = ResourceConfig.getGlobalMessage("notifications.smtp.subscriptionDeleted");
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd kk:mm:ssZ");
+//Hello %s, %s<br><br>Your subscription UDDI subscription was deleted. Attached is what the subscription was. It was deleted by %s, %s at %s. This node is %s.
+                        msg_content = String.format(msg_content,
+                                StringEscapeUtils.escapeHtml(publisher.getPublisherName()),
+                                StringEscapeUtils.escapeHtml(publisher.getAuthorizedName()),
+                                StringEscapeUtils.escapeHtml(deletedBy.getPublisherName()),
+                                StringEscapeUtils.escapeHtml(deletedBy.getAuthorizedName()),
+                                StringEscapeUtils.escapeHtml(sdf.format(new Date())),
+                                StringEscapeUtils.escapeHtml(AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID, "(unknown node id!)")),
+                                AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL, "(unknown url)"),
+                                AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL_SECURE, "(unknown url)")
+                        );
+
+                        content.setContent(msg_content, "text/html; charset=UTF-8;");
+                        mp.addBodyPart(content);
+
+                        MimeBodyPart attachment = new MimeBodyPart();
+                        attachment.setContent(subscriptionResultXML, "text/xml; charset=UTF-8;");
+                        attachment.setFileName("uddiNotification.xml");
+                        mp.addBodyPart(attachment);
+
+                        message.setContent(mp);
+                        message.setSubject(ResourceConfig.getGlobalMessage("notifications.smtp.userfriendly.subject") + " "
+                                + StringEscapeUtils.escapeHtml(obj.getSubscriptionKey()));
+                        Transport.send(message);
+
+                } catch (Throwable t) {
+                        log.error("Error sending email!" + t.getMessage(), t);
+                }
+        }
+
+        public static void notifyAccountDeleted(TemporaryMailContainer container) {
+                try {
+                        Publisher publisher = container.getPublisher();
+                        Publisher deletedBy = container.getDeletedBy();
                         String emailaddress = publisher.getEmailAddress();
+                        if (emailaddress==null || emailaddress.trim().equals(""))
+                                return;
+                        Properties properties = new Properties();
+                        Session session = null;
+                        String mailPrefix = AppConfig.getConfiguration().getString(Property.JUDDI_EMAIL_PREFIX, Property.DEFAULT_JUDDI_EMAIL_PREFIX);
+                        if (!mailPrefix.endsWith(".")) {
+                                mailPrefix = mailPrefix + ".";
+                        }
+                        for (String key : mailProps) {
+                                if (AppConfig.getConfiguration().containsKey(mailPrefix + key)) {
+                                        properties.put(key, AppConfig.getConfiguration().getProperty(mailPrefix + key));
+                                } else if (System.getProperty(mailPrefix + key) != null) {
+                                        properties.put(key, System.getProperty(mailPrefix + key));
+                                }
+                        }
+                        
                         boolean auth = (properties.getProperty("mail.smtp.auth", "false")).equalsIgnoreCase("true");
                         if (auth) {
                                 final String username = properties.getProperty("mail.smtp.user");
@@ -138,40 +245,33 @@ public class USERFRIENDLYSMTPNotifier extends SMTPNotifier {
                         message.setRecipients(RecipientType.TO, to);
                         message.setFrom(new InternetAddress(properties.getProperty("mail.smtp.from", "jUDDI")));
                                 //Hello %s,<br><br>Your subscription UDDI subscription was deleted. Attached is what the subscription was. It was deleted by %s, %s at %s. This node is %s
-                        //maybe nice to use a template rather then sending raw xml.
-                        org.uddi.sub_v3.Subscription api = new org.uddi.sub_v3.Subscription();
-                        MappingModelToApi.mapSubscription(obj, api);
-                        String subscriptionResultXML = JAXBMarshaller.marshallToString(api, JAXBMarshaller.PACKAGE_SUBSCR_RES);
+
                         Multipart mp = new MimeMultipart();
 
                         MimeBodyPart content = new MimeBodyPart();
-                        String msg_content = ResourceConfig.getGlobalMessage("notifications.smtp.subscriptionDeleted");
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-ddTkk:mm:ssZ");
-//Hello %s,<br><br>Your subscription UDDI subscription was deleted. Attached is what the subscription was. It was deleted by %s, %s at %s. This node is %s
+                        String msg_content = ResourceConfig.getGlobalMessage("notifications.smtp.accountDeleted");
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd kk:mm:ssZ");
+//Hello %s, %s,<br><br>Your account has been deleted by %s, %s at %s. This node is %s.
                         msg_content = String.format(msg_content,
                                 StringEscapeUtils.escapeHtml(publisher.getPublisherName()),
                                 StringEscapeUtils.escapeHtml(publisher.getAuthorizedName()),
                                 StringEscapeUtils.escapeHtml(deletedBy.getPublisherName()),
                                 StringEscapeUtils.escapeHtml(deletedBy.getAuthorizedName()),
                                 StringEscapeUtils.escapeHtml(sdf.format(new Date())),
-                                StringEscapeUtils.escapeHtml(AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID, "(unknown node id!)"))
+                                StringEscapeUtils.escapeHtml(AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID, "(unknown node id!)")),
+                                AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL, "(unknown url)"),
+                                AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL_SECURE, "(unknown url)")
                         );
 
                         content.setContent(msg_content, "text/html; charset=UTF-8;");
                         mp.addBodyPart(content);
 
-                        MimeBodyPart attachment = new MimeBodyPart();
-                        attachment.setContent(subscriptionResultXML, "text/xml; charset=UTF-8;");
-                        attachment.setFileName("uddiNotification.xml");
-                        mp.addBodyPart(attachment);
-
                         message.setContent(mp);
-                        message.setSubject(ResourceConfig.getGlobalMessage("notifications.smtp.userfriendly.subject") + " "
-                                + StringEscapeUtils.escapeHtml(obj.getSubscriptionKey()));
+                        message.setSubject(ResourceConfig.getGlobalMessage("notifications.smtp.accountDeleted.subject"));
                         Transport.send(message);
 
                 } catch (Throwable t) {
-                        log.error(t);
+                        log.error("Error sending email!" + t.getMessage(), t);
                 }
         }
 
