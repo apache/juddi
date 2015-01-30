@@ -1,1 +1,1 @@
-java -cp ..\webapps\juddiv3\WEB-INF\lib;..\webapps\juddiv3\WEB-INF\lib\* org.apache.juddi.v3.auth.CryptorUtil %*
+java -cp ..\webapps\juddiv3\WEB-INF\lib;..\webapps\juddiv3\WEB-INF\lib\* org.apache.juddi.v3.client.cryptor.CryptorUtil %*
