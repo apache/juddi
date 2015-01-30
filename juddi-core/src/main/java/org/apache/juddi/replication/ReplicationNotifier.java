@@ -221,7 +221,7 @@ public class ReplicationNotifier extends TimerTask {
 
                 UDDIReplicationPortType x = uddiService.getUDDIReplicationPort();
                 if (destinationUrls.isEmpty()) {
-                        log.fatal("Something is bizarre with the replication config. I should have had at least one node to notify, but I have none!");
+                        log.debug("Something is bizarre with the replication config. I should have had at least one node to notify, but I have none!");
                 }
                 for (Object s : destinationUrls) {
 

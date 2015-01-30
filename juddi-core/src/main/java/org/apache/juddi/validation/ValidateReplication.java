@@ -17,11 +17,22 @@
 package org.apache.juddi.validation;
 
 import java.math.BigInteger;
+import java.security.cert.CertificateException;
 import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.persistence.EntityManager;
 import javax.xml.ws.WebServiceContext;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
 import org.apache.juddi.model.Node;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.client.cryptor.CryptorFactory;
+import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.InvalidValueException;
@@ -45,9 +56,14 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public class ValidateReplication extends ValidateUDDIApi {
 
+        private final static Log log = LogFactory.getLog(ValidateReplication.class);
         public ValidateReplication(UddiEntityPublisher publisher) {
                 super(publisher);
         }
+        
+       public ValidateReplication(UddiEntityPublisher publisher, String nodeid) {
+		 super(publisher, nodeid);
+	}
 
         public void validateNotifyChangeRecordsAvailable(NotifyChangeRecordsAvailable body, WebServiceContext ctx) throws DispositionReportFaultMessage {
                 //TODO
@@ -120,7 +136,7 @@ public class ValidateReplication extends ValidateUDDIApi {
                 return false;
         }
 
-        public void validateSetReplicationNodes(ReplicationConfiguration replicationConfiguration, EntityManager em, String thisnode) throws DispositionReportFaultMessage {
+        public void validateSetReplicationNodes(ReplicationConfiguration replicationConfiguration, EntityManager em, String thisnode, Configuration config) throws DispositionReportFaultMessage, ConfigurationException {
                 if (replicationConfiguration == null) {
                         throw new InvalidValueException(new ErrorMessage("errors.replication.configNull"));
 
@@ -182,7 +198,70 @@ public class ValidateReplication extends ValidateUDDIApi {
 
                         }
                 }
+                boolean shouldcheck = config.getBoolean(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_ENABLE, false);
+                initDigSig(config);
+                if (shouldcheck && !replicationConfiguration.getSignature().isEmpty() && ds != null) {
+                        AtomicReference<String> outmsg = new AtomicReference<String>();
+                        boolean ok = ds.verifySignedUddiEntity(replicationConfiguration, outmsg);
+                        if (!ok) {
+                                throw new FatalErrorException(new ErrorMessage("errors.digitalsignature.validationfailure" + " " + outmsg.get()));
+                        }
+
+                }
         }
+        
+         private org.apache.juddi.v3.client.cryptor.DigSigUtil ds = null;
+
+        private synchronized void initDigSig(Configuration config) {
+                if (ds == null) {
+                        
+                        Properties p = new Properties();
+                        /**
+                         * <trustStorePath>truststore.jks</trustStorePath>
+                         * <trustStoreType>JKS</trustStoreType>
+                         * <trustStorePassword
+                         * isPasswordEncrypted="false"
+                         * cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</trustStorePassword>
+                         *
+                         * <checkTimestamps>true</checkTimestamps>
+                         * <checkTrust>true</checkTrust>
+                         * <checkRevocationCRL>true</checkRevocationCRL>
+                         */
+                        p.put(DigSigUtil.TRUSTSTORE_FILE, config.getString(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "trustStorePath", ""));
+                        p.put(DigSigUtil.TRUSTSTORE_FILETYPE, config.getString(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "trustStoreType", ""));
+
+                        String enc = config.getString(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "trustStorePassword", "");
+                        if (config.getBoolean(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "trustStorePassword[@isPasswordEncrypted]", false)) {
+                                log.info("trust password is encrypted, decrypting...");
+                                
+                                String prov = config.getString(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "trustStorePassword[@cryptoProvider]", "");
+                                try {
+                                        p.setProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, CryptorFactory.getCryptor(prov).decrypt(enc));
+                                } catch (Exception ex) {
+                                        log.warn("unable to decrypt trust store password " + ex.getMessage());
+                                        log.debug("unable to decrypt trust store password " + ex.getMessage(), ex);
+                                }
+
+                        } else if (!"".equals(enc)){
+                                log.warn("Hey, you should consider encrypting your trust store password!");
+                                p.setProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, enc);
+                        }
+
+                        p.put(DigSigUtil.CHECK_REVOCATION_STATUS_CRL, config.getString(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "checkRevocationCRL", "true"));
+                        p.put(DigSigUtil.CHECK_TRUST_CHAIN, config.getString(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "checkTrust", "true"));
+                        p.put(DigSigUtil.CHECK_TIMESTAMPS, config.getString(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "checkTimestamps", "true"));
+
+                        try {
+                                ds = new DigSigUtil(p);
+                        } catch (CertificateException ex) {
+                                log.error("", ex);
+                        }
+                        //System.out.println("loaded from " + AppConfig.getConfigFileURL());
+                        //p.list(System.out);
+                }
+        }
+
+      
 
         private boolean Contains(List<Operator> operator, String s) {
                 if (operator == null) {

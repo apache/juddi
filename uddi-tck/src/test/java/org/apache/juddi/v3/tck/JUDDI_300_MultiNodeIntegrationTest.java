@@ -744,7 +744,9 @@ public class JUDDI_300_MultiNodeIntegrationTest {
 
                         resetBusinesses();
                         resetTmodels();
-
+                        try{
+                        samTModelNode2.saveTmodels(rootNode2Token);
+                        }catch (Exception ex){}
                         samTModelNode2.saveSamSyndicatorTmodel(samTokenNode2);
                         samBizNode2.saveSamSyndicatorBusiness(samTokenNode2);
 

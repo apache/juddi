@@ -176,8 +176,9 @@
                             <trustStorePath>./src/test/resources/truststore.jks</trustStorePath>
                             <trustStoreType>JKS</trustStoreType>
                             <trustStorePassword
-                                    isPasswordEncrypted="false" 
-                                    cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">Test</trustStorePassword>
+                                    isPasswordEncrypted="true" 
+                                    cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">8133dcd169105875a711e4b8b3e03bce</trustStorePassword>
+                                    <!-- Test -->
 
                             <checkTimestamps>true</checkTimestamps>
                             <checkTrust>true</checkTrust>

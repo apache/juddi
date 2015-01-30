@@ -26,12 +26,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
 
 import javax.jws.WebService;
-import javax.jws.soap.SOAPBinding;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
@@ -1242,7 +1238,6 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                 stm.getBusinessEntity().addAll(values.get(i).getBusinessEntity());
                                 pub.saveBusiness(stm);
                         }
-                        //TODO replication?
 
                         tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
@@ -1286,7 +1281,6 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                 stm.getTModel().addAll(values.get(i).getTModel());
                                 pub.saveTModel(stm);
                         }
-                        //TODO replication?
                         tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.ADMIN_SAVE_TMODEL,
@@ -1371,7 +1365,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         if (!((Publisher) publisher).isAdmin()) {
                                 throw new UserMismatchException(new ErrorMessage("errors.AdminReqd"));
                         }
-                        new ValidateReplication(publisher).validateSetReplicationNodes(replicationConfiguration, em, node);
+                        new ValidateReplication(publisher).validateSetReplicationNodes(replicationConfiguration, em, node, AppConfig.getConfiguration());
 
                         //StringWriter sw = new StringWriter();
                         //JAXB.marshal(replicationConfiguration, sw);
@@ -1472,14 +1466,12 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         throw drfm;
                 } catch (Exception ex) {
                         //possible that there is no config to return
-                        //logger.warn("Error caught, is there a replication config is avaiable? Returning a default config (no replication): " + ex.getMessage());
                         logger.debug("Error caught, is there a replication config is avaiable? Returning a default config (no replication): ", ex);
 
                         r.setCommunicationGraph(new CommunicationGraph());
                         Operator op = new Operator();
                         op.setOperatorNodeID(node);
                         op.setSoapReplicationURL(baseUrlSSL + "/services/replication");
-                        //TODO lookup from the root business
 
                         op.getContact().add(new Contact());
                         op.getContact().get(0).getPersonName().add(new PersonName("Unknown", null));

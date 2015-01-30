@@ -175,7 +175,8 @@ public class USERFRIENDLYSMTPNotifier extends SMTPNotifier {
                         Transport.send(message);
 
                 } catch (Throwable t) {
-                        log.error("Error sending email!" + t.getMessage(), t);
+                        log.warn("Error sending email!" + t.getMessage());
+                        log.debug("Error sending email!" + t.getMessage(),t);
                 }
         }
 
@@ -271,7 +272,8 @@ public class USERFRIENDLYSMTPNotifier extends SMTPNotifier {
                         Transport.send(message);
 
                 } catch (Throwable t) {
-                        log.error("Error sending email!" + t.getMessage(), t);
+                        log.warn("Error sending email!" + t.getMessage());
+                        log.debug("Error sending email!" + t.getMessage(), t);
                 }
         }
 

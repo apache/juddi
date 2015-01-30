@@ -23,6 +23,7 @@ import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -34,6 +35,7 @@ import java.util.jar.JarFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -49,6 +51,8 @@ import org.apache.juddi.api.impl.UDDIInquiryImpl;
 import org.apache.juddi.api.impl.UDDIPublicationImpl;
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.mapping.MappingApiToModel;
+import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.model.ReplicationConfiguration;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.replication.ReplicationNotifier;
 import org.apache.juddi.v3.error.ErrorMessage;
@@ -57,10 +61,12 @@ import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.juddi.v3.error.KeyUnavailableException;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.apache.juddi.validation.ValidatePublish;
+import org.apache.juddi.validation.ValidateReplication;
 import org.apache.juddi.validation.ValidateUDDIKey;
 import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModel;
+import org.uddi.repl_v3.Operator;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
@@ -80,6 +86,7 @@ public class Install {
         public static final String FILE_PERSISTENCE = "persistence.xml";
         public static final String JUDDI_INSTALL_DATA_DIR = "juddi_install_data/";
         public static final String JUDDI_CUSTOM_INSTALL_DATA_DIR = "juddi_custom_install_data/";
+        public static final String FILE_REPLICATION_CONFIG = "_replicationConfiguration.xml";
         public static final Log log = LogFactory.getLog(Install.class);
 
         protected static void install(Configuration config) throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
@@ -109,6 +116,8 @@ public class Install {
                         //getNodeId(rootBusinessEntity.getBusinessKey(), rootPartition);
                         String rootbizkey = getNodeId(rootBusinessEntity.getBusinessKey(), rootPartition);
                         String fileRootPublisher = rootPublisherStr + FILE_PUBLISHER;
+                        String fileReplicationConfig = rootPublisherStr + FILE_REPLICATION_CONFIG;
+                        org.uddi.repl_v3.ReplicationConfiguration replicationCfg = (org.uddi.repl_v3.ReplicationConfiguration) buildInstallEntityAlt(fileReplicationConfig, org.uddi.repl_v3.ReplicationConfiguration.class, config);
                         if (!alreadyInstalled) {
                                 log.info("Loading the root Publisher from file " + fileRootPublisher);
 
@@ -116,6 +125,7 @@ public class Install {
                                 installRootPublisherKeyGen(em, rootTModelKeyGen, rootPartition, rootPublisher, nodeId);
                                 rootBusinessEntity.setBusinessKey(rootbizkey);
                                 installBusinessEntity(true, em, rootBusinessEntity, rootPublisher, rootPartition, config, nodeId);
+                                installReplicationConfiguration(em, replicationCfg, config, nodeId);
                         } else {
                                 log.debug("juddi.seed.always reapplies all seed files except for the root data.");
                         }
@@ -164,7 +174,7 @@ public class Install {
         }
 
         protected static void uninstall() {
-		// Close the open emf, open a new one with Persistence.create...(String, Map) and overwrite the property that handles the table 
+                // Close the open emf, open a new one with Persistence.create...(String, Map) and overwrite the property that handles the table 
                 // generation. The persistence.xml file will have to be read in to determine which property
                 // to overwrite.  The property will be specific to the provider.  
                 // Hibernate:  <property name="hibernate.hbm2ddl.auto" value="update"/> ->use "create-drop" or just "drop"?
@@ -228,7 +238,7 @@ public class Install {
                         throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", result));
                 }
 
-		// Must validate the root partition.  The first component should be a domain key and the any following
+                // Must validate the root partition.  The first component should be a domain key and the any following
                 // tokens should be a valid KSS.
                 result = result.trim();
                 if (result.endsWith(KeyGenerator.PARTITION_SEPARATOR) || result.startsWith(KeyGenerator.PARTITION_SEPARATOR)) {
@@ -269,8 +279,8 @@ public class Install {
         }
 
         private static String installBusinessEntity(boolean isRoot, EntityManager em, org.uddi.api_v3.BusinessEntity rootBusinessEntity,
-             UddiEntityPublisher rootPublisher, String rootPartition, Configuration config, String nodeId)
-             throws JAXBException, DispositionReportFaultMessage, IOException {
+                UddiEntityPublisher rootPublisher, String rootPartition, Configuration config, String nodeId)
+                throws JAXBException, DispositionReportFaultMessage, IOException {
 
                 if (isRoot) {
                         validateRootBusinessEntity(rootBusinessEntity, rootPublisher, rootPartition, config);
@@ -305,7 +315,7 @@ public class Install {
                                 binding.setCreated(now);
                                 binding.setModified(now);
                                 binding.setModifiedIncludingChildren(now);
-				//binding.setNodeId(modelBusinessEntity.getEntityKey());
+                                //binding.setNodeId(modelBusinessEntity.getEntityKey());
                                 //binding.setNodeId(config.getString(Property.JUDDI_NODE_ID,modelBusinessEntity.getEntityKey()));
                                 //JUDDI-645
 
@@ -321,18 +331,18 @@ public class Install {
 
         }
 
-	// A watered down version of ValidatePublish's validateBusinessEntity, designed for the specific condition that this is run upon the initial
+        // A watered down version of ValidatePublish's validateBusinessEntity, designed for the specific condition that this is run upon the initial
         // jUDDI install.
         private static void validateRootBusinessEntity(org.uddi.api_v3.BusinessEntity businessEntity, UddiEntityPublisher rootPublisher,
-             String rootPartition, Configuration config)
-             throws DispositionReportFaultMessage {
+                String rootPartition, Configuration config)
+                throws DispositionReportFaultMessage {
 
                 // A supplied businessService can't be null
                 if (businessEntity == null) {
                         throw new ValueNotAllowedException(new ErrorMessage("errors.businessentity.NullInput"));
                 }
 
-		// The business key should already be set to the previously calculated and validated nodeId.  This validation is unnecessary but kept for 
+                // The business key should already be set to the previously calculated and validated nodeId.  This validation is unnecessary but kept for 
                 // symmetry with the other entity validations.
                 String entityKey = businessEntity.getBusinessKey();
                 if (entityKey == null || entityKey.length() == 0) {
@@ -372,11 +382,11 @@ public class Install {
 
         }
 
-	// A watered down version of ValidatePublish's validateBusinessService, designed for the specific condition that this is run upon the initial
+        // A watered down version of ValidatePublish's validateBusinessService, designed for the specific condition that this is run upon the initial
         // jUDDI install.
         private static void validateRootBusinessService(org.uddi.api_v3.BusinessService businessService, org.uddi.api_v3.BusinessEntity parent,
-             UddiEntityPublisher rootPublisher, String rootPartition, Configuration config)
-             throws DispositionReportFaultMessage {
+                UddiEntityPublisher rootPublisher, String rootPartition, Configuration config)
+                throws DispositionReportFaultMessage {
 
                 // A supplied businessService can't be null
                 if (businessService == null) {
@@ -426,11 +436,11 @@ public class Install {
                 }
         }
 
-	// A watered down version of ValidatePublish's validatBindingTemplate, designed for the specific condition that this is run upon the initial
+        // A watered down version of ValidatePublish's validatBindingTemplate, designed for the specific condition that this is run upon the initial
         // jUDDI install.
         private static void validateRootBindingTemplate(org.uddi.api_v3.BindingTemplate bindingTemplate, org.uddi.api_v3.BusinessService parent,
-             UddiEntityPublisher rootPublisher, String rootPartition, Configuration config)
-             throws DispositionReportFaultMessage {
+                UddiEntityPublisher rootPublisher, String rootPartition, Configuration config)
+                throws DispositionReportFaultMessage {
 
                 // A supplied businessService can't be null
                 if (bindingTemplate == null) {
@@ -491,7 +501,7 @@ public class Install {
                                         modelTModel.setNodeId(nodeId);
 
                                         em.persist(modelTModel);
-                                        
+
                                         SaveTModel stm = new SaveTModel();
                                         stm.getTModel().add(apiTModel);
                                         ReplicationNotifier.Enqueue(UDDIPublicationImpl.getChangeRecord(modelTModel, apiTModel, nodeId));
@@ -503,7 +513,7 @@ public class Install {
         }
 
         private static void installRootPublisherKeyGen(EntityManager em, TModel rootTModelKeyGen, String rootPartition, UddiEntityPublisher publisher, String nodeId)
-             throws DispositionReportFaultMessage {
+                throws DispositionReportFaultMessage {
 
                 rootTModelKeyGen.setTModelKey(rootPartition + KeyGenerator.PARTITION_SEPARATOR + KeyGenerator.KEYGENERATOR_SUFFIX);
 
@@ -605,6 +615,42 @@ public class Install {
                 return publishers;
         }
 
+        private static Object buildInstallEntityAlt(final String fileName, Class outputtype, Configuration config) throws JAXBException, IOException, ConfigurationException {
+                InputStream resourceStream = null;
+
+                // First try the custom install directory
+                URL url = ClassUtil.getResource(JUDDI_CUSTOM_INSTALL_DATA_DIR + fileName, Install.class);
+                if (url != null) {
+                        resourceStream = url.openStream();
+                }
+
+                // If the custom install directory doesn't exist, then use the standard install directory where the resource is guaranteed to exist.
+                if (resourceStream == null) {
+                        url = ClassUtil.getResource(JUDDI_INSTALL_DATA_DIR + fileName, Install.class);
+                        if (url != null) {
+                                resourceStream = url.openStream();
+                        }
+                        // If file still does not exist then return null;
+                        if (url == null || resourceStream == null) {
+                                if (fileName.endsWith(FILE_PUBLISHER)) {
+                                        throw new ConfigurationException("Could not locate " + JUDDI_INSTALL_DATA_DIR + fileName);
+                                } else {
+                                        log.debug("Could not locate: " + url);
+                                }
+                                return null;
+                        }
+                }
+                log.info("Loading the content of file: " + url);
+                StringBuilder xml = new StringBuilder();
+                byte[] b = new byte[4096];
+                for (int n; (n = resourceStream.read(b)) != -1;) {
+                        xml.append(new String(b, 0, n));
+                }
+                log.debug("inserting: " + xml.toString());
+                StringReader reader = new StringReader(xml.toString());
+                return JAXB.unmarshal(reader, outputtype);
+        }
+
         private static Object buildInstallEntity(final String fileName, String packageName, Configuration config) throws JAXBException, IOException, ConfigurationException {
                 InputStream resourceStream = null;
 
@@ -685,7 +731,7 @@ public class Install {
          * @throws ConfigurationException
          */
         public static void installSaveTModel(EntityManager em, String fileName, UddiEntityPublisher publisher, String nodeId, Configuration config)
-             throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
+                throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
 
                 SaveTModel apiSaveTModel = (SaveTModel) buildInstallEntity(fileName, "org.uddi.api_v3", config);
                 if (apiSaveTModel != null) {
@@ -706,7 +752,7 @@ public class Install {
          * @throws ConfigurationException
          */
         public static UddiEntityPublisher installPublisher(EntityManager em, String fileName, Configuration config)
-             throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
+                throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
 
                 org.apache.juddi.api_v3.Publisher apiPub = (org.apache.juddi.api_v3.Publisher) buildInstallEntity(fileName, "org.apache.juddi.api_v3", config);
                 if (apiPub == null) {
@@ -716,6 +762,63 @@ public class Install {
                 MappingApiToModel.mapPublisher(apiPub, modelPub);
                 em.persist(modelPub);
                 return modelPub;
+        }
+
+        public static org.uddi.repl_v3.ReplicationConfiguration applyReplicationTokenChanges(org.uddi.repl_v3.ReplicationConfiguration replicationCfg, Configuration config, String thisnode) {
+                log.info("replacing tokens on repl config");
+                if (replicationCfg == null) {
+                        return null;
+                }
+                //apply any token replacements
+                for (Operator op : replicationCfg.getOperator()) {
+                        op.setOperatorNodeID(op.getOperatorNodeID().replace("${juddi.nodeId}", thisnode));
+                        op.setSoapReplicationURL(op.getSoapReplicationURL().replace("${juddi.server.baseurlsecure}", config.getString("juddi.server.baseurlsecure")));
+                        op.setSoapReplicationURL(op.getSoapReplicationURL().replace("${juddi.server.baseurl}", config.getString("juddi.server.baseurl")));
+                }
+                if (replicationCfg.getCommunicationGraph() != null) {
+                        for (int i = 0; i < replicationCfg.getCommunicationGraph().getNode().size(); i++) {
+                                replicationCfg.getCommunicationGraph().getNode().set(i, replicationCfg.getCommunicationGraph().getNode().get(i).replace("${juddi.nodeId}", thisnode));
+
+                        }
+                        for (int i = 0; i < replicationCfg.getCommunicationGraph().getEdge().size(); i++) {
+                                replicationCfg.getCommunicationGraph().getEdge().get(i).setMessageSender(replicationCfg.getCommunicationGraph().getEdge().get(i).getMessageSender().replace("${juddi.nodeId}", thisnode));
+                                replicationCfg.getCommunicationGraph().getEdge().get(i).setMessageReceiver(replicationCfg.getCommunicationGraph().getEdge().get(i).getMessageReceiver().replace("${juddi.nodeId}", thisnode));
+                                for (int k = 0; k < replicationCfg.getCommunicationGraph().getEdge().get(i).getMessageReceiverAlternate().size(); k++) {
+                                        replicationCfg.getCommunicationGraph().getEdge().get(i).getMessageReceiverAlternate().set(k, replicationCfg.getCommunicationGraph().getEdge().get(i).getMessageReceiverAlternate().get(k).replace("${juddi.nodeId}", thisnode));
+                                }
+                        }
+                }
+
+                for (Operator op : replicationCfg.getOperator()) {
+                        op.setOperatorNodeID(op.getOperatorNodeID().replace("${juddi.nodeId}", thisnode));
+                }
+                log.info("replacing tokens on repl config, done");
+                return replicationCfg;
+        }
+
+        private static void installReplicationConfiguration(EntityManager em, org.uddi.repl_v3.ReplicationConfiguration replicationCfg, Configuration config, String thisnode) throws DispositionReportFaultMessage, ConfigurationException {
+                replicationCfg = applyReplicationTokenChanges(replicationCfg, config, thisnode);
+                new ValidateReplication(null, thisnode).validateSetReplicationNodes(replicationCfg, em, thisnode, config);
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddkkmmZ");
+                replicationCfg.setTimeOfConfigurationUpdate(sdf.format(new Date()));
+
+                org.apache.juddi.model.ReplicationConfiguration model = new ReplicationConfiguration();
+
+                MappingApiToModel.mapReplicationConfiguration(replicationCfg, model, em);
+
+                model.setSerialNumber(System.currentTimeMillis());
+
+                org.apache.juddi.model.ReplicationConfiguration oldstuff = null;
+                // logger.info(publisher.getAuthorizedName() + " is setting the replication config from " + getRequestorsIPAddress());// + " " + sw.toString());
+                try {
+                        oldstuff = (ReplicationConfiguration) em.createQuery("select c FROM ReplicationConfiguration c order by c.serialNumber desc").getSingleResult();
+                } catch (Exception ex) {
+                }
+                if (oldstuff != null) {
+                        em.remove(oldstuff);
+                }
+                em.persist(model);
         }
 
 }
