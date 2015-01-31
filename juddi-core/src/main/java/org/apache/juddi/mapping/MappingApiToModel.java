@@ -1397,9 +1397,9 @@ public class MappingApiToModel {
                 //r.setId(rec.getChangeID().getOriginatingUSN());
                 r.setOriginatingUSN(rec.getChangeID().getOriginatingUSN());
                 if (r.getOriginatingUSN()==null){
-                        logger.warn("strange, the getOriginatingUSN is null!!");
-                        JAXB.marshal(rec, System.out);
-                        Thread.dumpStack();
+                 //       logger.warn("strange, the getOriginatingUSN is null!!");
+                 //       JAXB.marshal(rec, System.out);
+                 //       Thread.dumpStack();
                 }
                 r.setNodeID(rec.getChangeID().getNodeID());
                 if (rec.getChangeRecordNewData() != null) {

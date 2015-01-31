@@ -227,7 +227,7 @@ public interface Property {
          *
          * @since 3.3
          */
-        public static String JUDDI_ENABLE_FIND_BUSINESS_TMODEL_BAG_FILTERING = "juddi.preformance.enableFindBusinessTModelBagFiltering";
+        public static final String JUDDI_ENABLE_FIND_BUSINESS_TMODEL_BAG_FILTERING = "juddi.preformance.enableFindBusinessTModelBagFiltering";
         /**
          * When set to true, juddi with reject publish requests when at least
          * one digitally signed entity cannot be cryptographically validated
@@ -237,9 +237,24 @@ public interface Property {
          *
          * @since 3.3
          */
-        public static String JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX = "juddi.validation.rejectInvalidSignatures.";
+        public static final String JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX = "juddi.validation.rejectInvalidSignatures.";
         /**
          * @since 3.3.
          */
         public static String JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_ENABLE = "juddi.validation.rejectInvalidSignatures.enable";
+        
+        /**
+         * @since 3.3
+         */
+        public  static final String JUDDI_REPLICATION_GET_CHANGE_RECORDS_MAX="juddi.replication.getChangeRecordsMax";
+        
+        /**
+         * @since 3.3
+         */
+        public static final String JUDDI_REPLICATION_START_BUFFER = "juddi.replication.start.buffer";
+        
+        /**
+         * @since 3.3
+         */
+        public static final String JUDDI_REPLICATION_INTERVAL="juddi.replication.interval";
 }

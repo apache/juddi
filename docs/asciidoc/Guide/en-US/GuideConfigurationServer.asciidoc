@@ -118,9 +118,9 @@ RMI Proxy properties that can be referenced in the _juddiv3.xml_ file and is onl
 |Property Name                   |Description         |Required     |Default Value or [Example Value]
 |_juddi/subscription/expiration/days_|Days before a subscription expires|N|[_30_]
 |_juddi/subscription/chunkexpiration/minutes_| Minutes before a "chunked" subscription call expires|N|[_5_]
-|_juddi/notification/interval_|Specifies the interval at which the notification timer triggers. This is the upper boundary set by the registry. Between the user defined endDate of a Subscription and this value, the registry will pick the earliest date.|N|_3000000_
-|_juddi/notification/start/buffer_|Specifies the amount of time to wait before the notification timer initially fires|N|20000
-|_juddi/notification/acceptableLagtime_|Specifies the amount of time (in ms) from which to determine if the server is overload and to skip notifications. Notifications during this cycle will not be repeated (i.e. never be delivered)|N|10000
+|_juddi/notification/interval_|Specifies the interval at which the notification timer triggers. This is the upper boundary set by the registry. Between the user defined endDate of a Subscription and this value, the registry will pick the earliest date. (in ms)|N|_3000000_
+|_juddi/notification/start/buffer_|Specifies the amount of time to wait before the notification timer initially fires. (in ms)|N|20000
+|_juddi/notification/acceptableLagtime_|Specifies the amount of time (in ms) from which to determine if the server is overload and to skip notifications. Notifications during this cycle will not be repeated (i.e. never be delivered). (in ms)|N|10000
 |_juddi/notification/maxTries_|Specifies the number of times to attempt the delivery of messages to subscribers.|N|3
 |_juddi/notification/maxTriesResetInterval_|Once the maximum delivery attempts have been made, the server will add that endpoint to an ignore list, which is reset every N ms.|N|600000
 |_juddi/notification/sendAuthTokenWithResultList_|Sends a valid authentication token for the owning user of the subscription in the subscription notification result message. Unless it is specifically needed, this is recommended to be set to false.|N|false
@@ -176,6 +176,19 @@ Perofrmance properties are referenced in the _juddiv3.xm_ file.
 |Property Name                   		|Description         |Required     |Default Value or [Example Value]
 |_juddi/performance/enableFindBusinessTModelBagFiltering| UDDI defines a mechansim to filter findBusiness relates based on tModelInstanceInfo within their service's binding templates. This is an expensive operation and will cause significant performance degredation on larger registries. For spec complliance, it should be set to true. We suspect it's not a commonly used feature and recommend setting this to false.    |N| true
 |===========================================================================================
+
+=== Replication
+
+.These properties are used to tweak the replication service capabilities.
+
+Perofrmance properties are referenced in the _juddiv3.xm_ file.
+[options="header"]
+|===========================================================================================
+|Property Name                   		|Description         |Required     |Default Value or [Example Value]
+|_juddi/replication/getChangeRecordsMax| The maximum number of records to return from a getChangeRecord request   |N| 100
+|_juddi.replication.start.buffer 		| Specifies the amount of time to wait before the replication timer initially fires. (in ms) | N | 5000
+|_juddi.replication.interval 			| Specifies the interval at which the replication timer triggers (in ms). | N | 5000
+|=========================================================================================== 
 
 
 === Deploying two or more jUDDI server on the same application server

@@ -30,6 +30,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -72,6 +73,7 @@ import org.uddi.repl_v3.ChangeRecord;
 import org.uddi.repl_v3.ChangeRecordAcknowledgement;
 import org.uddi.repl_v3.ChangeRecordIDType;
 import org.uddi.repl_v3.ChangeRecords;
+import org.uddi.repl_v3.CommunicationGraph.Edge;
 import org.uddi.repl_v3.DoPing;
 import org.uddi.repl_v3.GetChangeRecords;
 import org.uddi.repl_v3.HighWaterMarkVectorType;
@@ -180,24 +182,20 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
         private UDDIServiceCounter serviceCounter;
 
         private static PullTimerTask timer = null;
-        private long startBuffer = 5000l;//AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_START_BUFFER, 20000l); // 20s startup delay default 
-        private long interval = 5000l;// AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
+        private long startBuffer;
+        private long interval;
 
         private static UDDIPublicationImpl pub = null;
 
-        public UDDIReplicationImpl() {
+        public UDDIReplicationImpl() throws ConfigurationException {
                 super();
+                this.interval = AppConfig.getConfiguration().getLong(Property.JUDDI_REPLICATION_INTERVAL, 5000L);
+                this.startBuffer = AppConfig.getConfiguration().getLong(Property.JUDDI_REPLICATION_START_BUFFER, 5000L);
                 if (pub == null) {
                         pub = new UDDIPublicationImpl();
                 }
                 serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDIReplicationImpl.class);
                 Init();
-                try {
-                        startBuffer = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_START_BUFFER, 20000l); // 20s startup delay default 
-                        interval = 5000;//AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
-                } catch (ConfigurationException ex) {
-                        logger.fatal(ex);
-                }
 
         }
 
@@ -234,9 +232,14 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                         timer = new Timer(true);
                         timer.scheduleAtFixedRate(this, startBuffer, interval);
                 }
+                boolean firstrun = true;
 
                 @Override
                 public void run() {
+                        if (firstrun) {
+                                enqueueAllReceivingNodes();
+                                firstrun = false;
+                        }
 
                         if (!queue.isEmpty()) {
                                 logger.info("Replication change puller thread started. Queue size: " + queue.size());
@@ -258,12 +261,11 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                         //        logger.info("Node " + poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID()
                                                         //                + " USN " + poll.getChangesAvailable().getHighWaterMark().get(xx).getOriginatingUSN());
                                                         //}
-                                                        Set<String> nodesHitThisCycle=new HashSet<String>();
+                                                        Set<String> nodesHitThisCycle = new HashSet<String>();
                                                         for (int xx = 0; xx < poll.getChangesAvailable().getHighWaterMark().size(); xx++) {
                                                                 int recordsreturned = 21;
                                                                 while (recordsreturned >= 20) {
-                                                                        if (nodesHitThisCycle.contains(poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID()))
-                                                                        {
+                                                                        if (nodesHitThisCycle.contains(poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID())) {
                                                                                 logger.info("i've already hit the node " + poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID() + " this cycle, skipping");
                                                                                 break;
                                                                         }
@@ -763,11 +765,11 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                                 }
                                 if (rec.getChangeRecordCorrection() != null) {
-                                        //TODO
+                                        //TODO implement
 
                                 }
                                 if (rec.getChangeRecordConditionFailed() != null) {
-                                        //TODO
+                                        //TODO implement
 
                                 }
                                 tx.commit();
@@ -838,6 +840,55 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                         ret.getHighWaterMark().add(cid);
 
                         return ret;
+                }
+
+                private void enqueueAllReceivingNodes() {
+                        if (queue == null) {
+                                queue = new ConcurrentLinkedQueue<NotifyChangeRecordsAvailable>();
+                        }
+                        //get the replication config
+                        //get everyone we are expecting to receive data from, then enqueue them for pulling
+                        ReplicationConfiguration repcfg = ReplicationNotifier.FetchEdges();
+                        if (repcfg == null) {
+                                return;
+                        }
+                        Set<String> allnodes = new HashSet<String>();
+                        for (int i = 0; i < repcfg.getOperator().size(); i++) {
+                                allnodes.add(repcfg.getOperator().get(i).getOperatorNodeID());
+                        }
+                        Set<String> receivers = new HashSet<String>();
+                        if (repcfg.getCommunicationGraph() == null
+                                || repcfg.getCommunicationGraph().getEdge().isEmpty()) {
+                                //no edges or graph defined, default to the operator list
+                                for (org.uddi.repl_v3.Operator o : repcfg.getOperator()) {
+                                        //no need to tell myself about a change at myself
+                                        if (!o.getOperatorNodeID().equalsIgnoreCase(node)) {
+                                                receivers.add(o.getOperatorNodeID());
+                                        }
+                                }
+                        } else {
+                                //repcfg.getCommunicationGraph()
+                                Iterator<Edge> iterator = repcfg.getCommunicationGraph().getEdge().iterator();
+                                while (iterator.hasNext()) {
+                                        Edge next = iterator.next();
+
+                                        if (next.getMessageReceiver().equalsIgnoreCase(node)) {
+                                                receivers.add(next.getMessageSender());
+                                        }
+
+                                }
+
+                        }
+                        for (String s : receivers) {
+                                //this is a list of nodes that this node is expecting updates from
+                                //here are we ticking the notification engine to ping the remove service for updates
+                                for (String nodeping : allnodes) {
+                                        queue.add(new NotifyChangeRecordsAvailable(s, getLastChangeRecordFrom(nodeping)));
+                                        //for each node we are expecting data from, go fetch it, along the way, we'll request all data for all nodes
+                                        //that we know about
+                                }
+
+                        }
                 }
 
         }
@@ -991,11 +1042,11 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                  * recent change record that has been successfully processed by
                  * the invocating node
                  */
-                int maxrecords = 100;   //TODO config this
-                if (responseLimitCount != null) {
-                        maxrecords = responseLimitCount.intValue();
-                }
                 try {
+                        int maxrecords = AppConfig.getConfiguration().getInt(Property.JUDDI_REPLICATION_GET_CHANGE_RECORDS_MAX, 100);
+                        if (responseLimitCount != null) {
+                                maxrecords = responseLimitCount.intValue();
+                        }
                         tx.begin();
                         Long firstrecord = 0L;
                         Long lastrecord = null;
