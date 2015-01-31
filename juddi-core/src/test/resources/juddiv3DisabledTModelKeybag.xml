@@ -177,7 +177,7 @@
                             <trustStoreType>JKS</trustStoreType>
                             <trustStorePassword
                                     isPasswordEncrypted="true" 
-                                    cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">8133dcd169105875a711e4b8b3e03bce</trustStorePassword>
+                                    cryptoProvider="org.apache.juddi.v3.client.cryptor.AES128Cryptor">8133dcd169105875a711e4b8b3e03bce</trustStorePassword>
                                     <!-- Test -->
 
                             <checkTimestamps>true</checkTimestamps>

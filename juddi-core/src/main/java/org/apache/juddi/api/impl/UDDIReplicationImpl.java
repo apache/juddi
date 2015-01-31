@@ -186,10 +186,14 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
         private static UDDIPublicationImpl pub = null;
 
-        public UDDIReplicationImpl() throws ConfigurationException {
+        public UDDIReplicationImpl()  {
                 super();
+                try{
                 this.interval = AppConfig.getConfiguration().getLong(Property.JUDDI_REPLICATION_INTERVAL, 5000L);
                 this.startBuffer = AppConfig.getConfiguration().getLong(Property.JUDDI_REPLICATION_START_BUFFER, 5000L);
+                }catch(Exception ex){
+                        logger.warn("Config error!",ex);
+                }
                 if (pub == null) {
                         pub = new UDDIPublicationImpl();
                 }
