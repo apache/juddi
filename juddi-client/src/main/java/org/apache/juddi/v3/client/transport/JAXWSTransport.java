@@ -98,6 +98,9 @@ public class JAXWSTransport extends Transport {
                                 securityService = service.getUDDISecurityPort();
                         }
                         if (endpointURL != null) {
+                                if (endpointURL.toLowerCase().startsWith("http:")){
+                                        logger.warn("You should consider use a secure protocol (https) when sending your password!");
+                                }
                                 Map<String, Object> requestContext = ((BindingProvider) securityService).getRequestContext();
                                 requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
                                 setCredentials(requestContext);

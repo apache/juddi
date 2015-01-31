@@ -149,9 +149,13 @@ public class JAXWSv2TranslationTransport extends JAXWSTransport {
                         }
 
                         if (endpointURL == null) {
+                                
                                 UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
                                 endpointURL = client.getClientConfig().getUDDINode(nodeName).getPublishUrl();
                         }
+                         if (endpointURL.toLowerCase().startsWith("http:")){
+                                        logger.warn("You should consider use a secure protocol (https) when sending your password!");
+                                }
                         Map<String, Object> requestContext = ((BindingProvider) securityv2).getRequestContext();
                         requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
                         setCredentials(requestContext);
