@@ -17,8 +17,6 @@ package org.apache.juddi.v3.tck;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.JAXB;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.BindingProvider;
@@ -47,7 +45,6 @@ import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.BusinessServices;
-import org.uddi.api_v3.CompletionStatus;
 import org.uddi.api_v3.Contact;
 import org.uddi.api_v3.DeleteBinding;
 import org.uddi.api_v3.DeleteBusiness;
@@ -55,7 +52,6 @@ import org.uddi.api_v3.DeletePublisherAssertions;
 import org.uddi.api_v3.DeleteService;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.api_v3.Description;
-import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.GetBindingDetail;
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetOperationalInfo;
@@ -96,7 +92,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class JUDDI_300_MultiNodeIntegrationTest {
 
-        private static Log logger = LogFactory.getLog(JUDDI_300_MultiNodeIntegrationTest.class);
+        private static final Log logger = LogFactory.getLog(JUDDI_300_MultiNodeIntegrationTest.class);
         private static UDDIClient manager;
         private static String rootNode1Token;
         private static String rootNode2Token;
@@ -703,6 +699,26 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         logger.info("Mary's business deletion was replicated");
 
                         tModelDetail = inquirySamNode2.getTModelDetail(findTModel);
+                        while (timeout > 0) {
+                                logger.info("Waiting for the update...");
+                                try {
+                                        
+                                        tModelDetail = inquirySamNode2.getTModelDetail(findTModel);
+                                        Assert.assertNotNull(tModelDetail);
+                                        Assert.assertNotNull(tModelDetail.getTModel());
+                                        Assert.assertNotNull(tModelDetail.getTModel().get(0));
+                                        Assert.assertEquals(tModelDetail.getTModel().get(0).getTModelKey(), TckTModel.MARY_PUBLISHER_TMODEL_KEY);
+                                        if (tModelDetail.getTModel().get(0).isDeleted())
+                                                break;
+                                } catch (Exception ex) {
+                                        logger.warn(ex.getMessage());
+                                        tModelDetail = null;
+                                        break;
+                                }
+                                timeout--;
+                                Thread.sleep(1000);
+
+                        }
                         Assert.assertNotNull(tModelDetail);
                         Assert.assertNotNull(tModelDetail.getTModel());
                         Assert.assertNotNull(tModelDetail.getTModel().get(0));
@@ -1229,6 +1245,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
          * <a href="http://www.uddi.org/pubs/uddi-v3.0.2-20041019.htm#_Toc85908178">7.3.9</a>
          * for more info on collision detection
          *
+         * requires support for conditional new data inserts and concurrence from nodes.
          * @throws Exception
          */
         @Test
@@ -1239,6 +1256,8 @@ public class JUDDI_300_MultiNodeIntegrationTest {
 
                         maryTModelNode1.saveMaryPublisherTmodel(maryTokenNode1);
                         samTModelNode2.saveMaryPublisherTmodel(samTokenNode2);
+                        
+                        //TODO assert both records removed
 
                 } finally {
                         resetTmodels();

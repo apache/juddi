@@ -2461,7 +2461,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
                         String enc = config.getString(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "trustStorePassword", "");
                         if (config.getBoolean(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "trustStorePassword[@isPasswordEncrypted]", false)) {
-                                log.info("trust password is encrypted, decrypting...");
+                                log.debug("trust password is encrypted, decrypting...");
                                 
                                 String prov = config.getString(Property.JUDDI_REJECT_ENTITIES_WITH_INVALID_SIG_PREFIX + "trustStorePassword[@cryptoProvider]", "");
                                 try {
