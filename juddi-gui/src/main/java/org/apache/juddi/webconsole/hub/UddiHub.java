@@ -420,7 +420,7 @@ public class UddiHub implements Serializable {
 
         /**
          * gets a reference to the current juddi client config file. this is a
-         * live instance changes can be stored to disk, usually
+         * live instance changes can be stored to disk
          *
          * @return client config
          * @throws ConfigurationException g
@@ -449,7 +449,7 @@ public class UddiHub implements Serializable {
                                         return true;
                                 }
                         }
-                } catch (ConfigurationException ex) {
+                } catch (Exception ex) {
                         log.error(ex);
                         return false;
                 }

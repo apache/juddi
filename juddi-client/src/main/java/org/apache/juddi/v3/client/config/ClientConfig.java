@@ -460,6 +460,12 @@ public class ClientConfig {
                 throw new ConfigurationException("One of the node elements in the client configuration needs to a 'isHomeJUDDI=\"true\"' attribute.");
         }
 
+        /**
+         * returns the named uddi node from config or throws if one is not found
+         * @param nodeName
+         * @return
+         * @throws ConfigurationException 
+         */
         public UDDINode getUDDINode(String nodeName) throws ConfigurationException {
                 if (!uddiNodes.containsKey(nodeName)) {
                         throw new ConfigurationException("Node '" + nodeName
@@ -578,7 +584,8 @@ public class ClientConfig {
          * adds a new node to the client configuration section. Don't forget to
          * call save to persist the changes
          *
-         * @param n
+         * @param node
+         * @throws org.apache.commons.configuration.ConfigurationException
          * @since 3.3
          */
         public void addUDDINode(UDDINode node) throws ConfigurationException {
@@ -592,7 +599,10 @@ public class ClientConfig {
                         log.info("ClientName wasn't specified, I'll configure it with the defaults");
                         node.setClientName(this.clientName);
                 }
-                this.uddiNodes.put(node.getClientName(), node);
+                if (node.getName() == null || "".equalsIgnoreCase(node.getName())) {
+                       throw new ConfigurationException("Node Name wasn't specified. It cannot be null");
+                }
+                this.uddiNodes.put(node.getName(), node);
 
         }
 

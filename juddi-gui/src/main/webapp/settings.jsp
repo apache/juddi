@@ -19,6 +19,7 @@
  */
 --%>
 
+<%@page import="org.apache.juddi.v3.client.config.UDDINode"%>
 <%@page import="org.apache.juddi.v3.client.config.ClientConfig"%>
 <%@page import="org.apache.commons.configuration.Configuration"%>
 <%@page import="java.util.Iterator"%>
@@ -40,7 +41,7 @@
             <h2><%=ResourceLoader.GetResource(session, "navbar.settings")%></h2>
             <p><%=ResourceLoader.GetResource(session, "items.settings.description")%></p>
             <%
-                UddiHub x = UddiHub.getInstance(application, session);
+                    UddiHub x = UddiHub.getInstance(application, session);
 
 
             %>
@@ -51,117 +52,132 @@
                 <tr><th><%=ResourceLoader.GetResource(session, "items.key")%></th>
                     <th><%=ResourceLoader.GetResource(session, "items.value")%></th></tr>
                         <%
-                            try {
-                                ClientConfig cfg = x.GetJuddiClientConfig();
-                                Configuration cfg2 = cfg.getConfiguration();
-                                Iterator<String> it2 = cfg.getConfiguration().getKeys();
+                                try {
+                                        ClientConfig cfg = x.GetJuddiClientConfig();
+                                        Configuration cfg2 = cfg.getConfiguration();
+                                        Iterator<String> it2 = cfg.getConfiguration().getKeys();
 
-                                String[] nodes2 = cfg2.getStringArray("client.nodes.node.name");
+                                        String[] nodes2 = cfg2.getStringArray("client.nodes.node.name");
 
-                                while (it2.hasNext()) {
+                                        while (it2.hasNext()) {
 
-                                    String key = it2.next();
+                                                String key = it2.next();
 
-                                    String value = cfg.getConfiguration().getString(key);
-                                    if ((key.startsWith("client") || (key.startsWith("config.props"))) && !key.startsWith("client.nodes.node")) {
-                                        out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
-                                        out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
-                                        out.write(StringEscapeUtils.escapeHtml(key));
-                                        out.write("</td><td><div ");
-                                        if ((key.startsWith("client") && !key.startsWith("client.nodes")) || key.startsWith("config.props")) {
-                                            out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\"");
+                                                String value = cfg.getConfiguration().getString(key);
+                                                if ((key.startsWith("client") || (key.startsWith("config.props"))) && !key.startsWith("client.nodes.node")) {
+                                                        out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
+                                                        out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
+                                                        out.write(StringEscapeUtils.escapeHtml(key));
+                                                        out.write("</td><td><div ");
+                                                        if ((key.startsWith("client") && !key.startsWith("client.nodes")) || key.startsWith("config.props")) {
+                                                                out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\"");
+                                                        }
+                                                        out.write(">");
+                                                        out.write(StringEscapeUtils.escapeHtml(value));
+                                                        out.write("</div></td></tr>");
+                                                }
                                         }
-                                        out.write(">");
-                                        out.write(StringEscapeUtils.escapeHtml(value));
-                                        out.write("</div></td></tr>");
-                                    }
-                                }
-
-                                for (int i = 0; i < nodes2.length; i++) {
-
-                                    String key = "client.nodes.node(" + i + ").name";
-                                    out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
-                                    out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
-                                    out.write(StringEscapeUtils.escapeHtml(key));
-                                    out.write("</td><td><div ");
-                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
-                                    out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
-                                    out.write("</div></td></tr>");
-
-                                    key = "client.nodes.node(" + i + ").description";
-                                    out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
-                                    out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
-                                    out.write(StringEscapeUtils.escapeHtml(key));
-                                    out.write("</td><td><div ");
-                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
-                                    out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
-                                    out.write("</div></td></tr>");
-
-                                    key = "client.nodes.node(" + i + ").proxyTransport";
-                                    out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
-                                    out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
-                                    out.write(StringEscapeUtils.escapeHtml(key));
-                                    out.write("</td><td><div ");
-                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
-                                    out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
-                                    out.write("</div></td></tr>");
-
-                                    key = "client.nodes.node(" + i + ").custodyTransferUrl";
-                                    out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
-                                    out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
-                                    out.write(StringEscapeUtils.escapeHtml(key));
-                                    out.write("</td><td><div ");
-                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
-                                    out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
-                                    out.write("</div></td></tr>");
-
-                                    key = "client.nodes.node(" + i + ").inquiryUrl";
-                                    out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
-                                    out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
-                                    out.write(StringEscapeUtils.escapeHtml(key));
-                                    out.write("</td><td><div ");
-                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
-                                    out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
-                                    out.write("</div></td></tr>");
-
-                                    key = "client.nodes.node(" + i + ").publishUrl";
-                                    out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
-                                    out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
-                                    out.write(StringEscapeUtils.escapeHtml(key));
-                                    out.write("</td><td><div ");
-                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
-                                    out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
-                                    out.write("</div></td></tr>");
-
-                                    key = "client.nodes.node(" + i + ").securityUrl";
-                                    out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
-                                    out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
-                                    out.write(StringEscapeUtils.escapeHtml(key));
-                                    out.write("</td><td><div ");
-                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
-                                    out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
-                                    out.write("</div></td></tr>");
-
-                                    key = "client.nodes.node(" + i + ").subscriptionUrl";
-                                    out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
-                                    out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
-                                    out.write(StringEscapeUtils.escapeHtml(key));
-                                    out.write("</td><td><div ");
-                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
-                                    out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
-                                    out.write("</div></td></tr>");
-
-                                }
-
-
-                            } catch (Exception ex) {
-                                x.log.error(ex);
-                            }
                         %>
-            </table>
-
+            </table><br>
             <a class="btn btn-primary" href="javascript:newItem();"><i class="icon-large icon-plus-sign"></i> <%=ResourceLoader.GetResource(session, "actions.add")%></a>
             <a class="btn btn-primary " href="javascript:saveSettings();"><i class="icon-large icon-save"></i> <%=ResourceLoader.GetResource(session, "actions.save")%></a>
+
+            <hr>
+            <h2>Node Management</h2>
+            <a class="btn btn-primary" href="javascript:newNode();"><i class="icon-large icon-plus-sign"></i> <%=ResourceLoader.GetResource(session, "actions.add")%></a>
+            <table class="table table-hover">
+
+
+
+                <%
+
+                                List<Node> nodesist = x.GetJuddiClientConfig().getUDDINodeList();
+                                for (int i = 0; i < nodesist.size(); i++) {
+                                        out.write("<tr><td>");
+                                        out.write(StringEscapeUtils.escapeHtml(nodesist.get(i).getName()));
+                                        out.write("</td><td><a href=\"javascript:editNode('" + StringEscapeUtils.escapeJavaScript(nodesist.get(i).getName()) + "');\">Edit</a></td>"
+                                                + "<td><a href=\"javascript:deleteNode('" + StringEscapeUtils.escapeJavaScript(nodesist.get(i).getName()) + "');\">Delete</a></td></tr>");
+                                        /*
+                                         String key = "client.nodes.node(" + i + ").name";
+                                         out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
+                                         out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
+                                         out.write(StringEscapeUtils.escapeHtml(key));
+                                         out.write("</td><td><div ");
+                                         out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
+                                         out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
+                                         out.write("</div></td></tr>");
+
+                                         key = "client.nodes.node(" + i + ").description";
+                                         out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
+                                         out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
+                                         out.write(StringEscapeUtils.escapeHtml(key));
+                                         out.write("</td><td><div ");
+                                         out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
+                                         out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
+                                         out.write("</div></td></tr>");
+
+                                         key = "client.nodes.node(" + i + ").proxyTransport";
+                                         out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
+                                         out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
+                                         out.write(StringEscapeUtils.escapeHtml(key));
+                                         out.write("</td><td><div ");
+                                         out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
+                                         out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
+                                         out.write("</div></td></tr>");
+
+                                         key = "client.nodes.node(" + i + ").custodyTransferUrl";
+                                         out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
+                                         out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
+                                         out.write(StringEscapeUtils.escapeHtml(key));
+                                         out.write("</td><td><div ");
+                                         out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
+                                         out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
+                                         out.write("</div></td></tr>");
+
+                                         key = "client.nodes.node(" + i + ").inquiryUrl";
+                                         out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
+                                         out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
+                                         out.write(StringEscapeUtils.escapeHtml(key));
+                                         out.write("</td><td><div ");
+                                         out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
+                                         out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
+                                         out.write("</div></td></tr>");
+
+                                         key = "client.nodes.node(" + i + ").publishUrl";
+                                         out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
+                                         out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
+                                         out.write(StringEscapeUtils.escapeHtml(key));
+                                         out.write("</td><td><div ");
+                                         out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
+                                         out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
+                                         out.write("</div></td></tr>");
+
+                                         key = "client.nodes.node(" + i + ").securityUrl";
+                                         out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
+                                         out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
+                                         out.write(StringEscapeUtils.escapeHtml(key));
+                                         out.write("</td><td><div ");
+                                         out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
+                                         out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
+                                         out.write("</div></td></tr>");
+
+                                         key = "client.nodes.node(" + i + ").subscriptionUrl";
+                                         out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(key) + "ROW\"><td>");
+                                         out.write("<a href=\"javascript:removeKey('" + StringEscapeUtils.escapeJavaScript(key) + "');\"><i class=\"icon-trash icon-large\"></i></a>");
+                                         out.write(StringEscapeUtils.escapeHtml(key));
+                                         out.write("</td><td><div ");
+                                         out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
+                                         out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
+                                         out.write("</div></td></tr>");*/
+
+                                }
+
+                        } catch (Exception ex) {
+                                x.log.error(ex);
+                        }
+                %>
+            </table>
+
             <script type="text/javascript">
 
                 Reedit();
@@ -169,7 +185,7 @@
                 {
                     var url = 'ajax/settings.jsp';
                     var postbackdata = new Array();
-                    $("div.edit").each(function()
+                    $("div.edit").each(function ()
                     {
                         var id = $(this).attr("id");
                         var value = $(this).text();
@@ -182,7 +198,7 @@
                         name: "nonce",
                         value: $("#nonce").val()
                     });
-                    $("div.noedit").each(function()
+                    $("div.noedit").each(function ()
                     {
                         var id = $(this).attr("id");
                         var value = $(this).text();
@@ -190,6 +206,11 @@
                             name: id,
                             value: value
                         });
+                    });
+
+                    postbackdata.push({
+                        name: "formaction",
+                        value: "settings"
                     });
 
 
@@ -203,18 +224,18 @@
                     });
 
 
-                        request.done(function(msg) {
-        window.console && console.log('postback done '  + url);                
-        
-        $("#alert_results").html('<i class="icon-2x icon-thumbs-up"></i><br>'  + msg);
-        $("#alert").modal();
-    });
+                    request.done(function (msg) {
+                        window.console && console.log('postback done ' + url);
 
-    request.fail(function(jqXHR, textStatus) {
-        window.console && console.log('postback failed ' + url);                                
-        $("#alert_results").html('<i class="icon-2x icon-thumbs-down"></i><br>'  + jqXHR.responseText + textStatus);
-        $("#alert").modal();
-    });         
+                        $("#alert_results").html('<i class="icon-2x icon-thumbs-up"></i><br>' + msg);
+                        $("#alert").modal();
+                    });
+
+                    request.fail(function (jqXHR, textStatus) {
+                        window.console && console.log('postback failed ' + url);
+                        $("#alert_results").html('<i class="icon-2x icon-thumbs-down"></i><br>' + jqXHR.responseText + textStatus);
+                        $("#alert").modal();
+                    });
 
 
                 }
@@ -233,27 +254,27 @@
                         <th><%=ResourceLoader.GetResource(session, "items.value")%></th></tr>
                             <%
 
-                                try {
-                                    ClientConfig cfg = x.GetJuddiClientConfig();
-                                    Iterator<String> it2 = cfg.getConfiguration().getKeys();
+                                    try {
+                                            ClientConfig cfg = x.GetJuddiClientConfig();
+                                            Iterator<String> it2 = cfg.getConfiguration().getKeys();
 
-                                    while (it2.hasNext()) {
+                                            while (it2.hasNext()) {
 
-                                        String key = it2.next();
+                                                    String key = it2.next();
 
-                                        if (!key.startsWith("config.props.") && !key.startsWith("client")) {
-                                            String value = cfg.getConfiguration().getString(key);
-                                            out.write("<tr><td>");
-                                            out.write(StringEscapeUtils.escapeHtml(key));
-                                            out.write("</td><td><div ");
-                                            out.write(">");
-                                            out.write(StringEscapeUtils.escapeHtml(value));
-                                            out.write("</div></td></tr>");
-                                        }
+                                                    if (!key.startsWith("config.props.") && !key.startsWith("client")) {
+                                                            String value = cfg.getConfiguration().getString(key);
+                                                            out.write("<tr><td>");
+                                                            out.write(StringEscapeUtils.escapeHtml(key));
+                                                            out.write("</td><td><div ");
+                                                            out.write(">");
+                                                            out.write(StringEscapeUtils.escapeHtml(value));
+                                                            out.write("</div></td></tr>");
+                                                    }
+                                            }
+                                    } catch (Exception ex) {
+                                            x.log.error(ex);
                                     }
-                                } catch (Exception ex) {
-                                    x.log.error(ex);
-                                }
 
                             %>
                 </table>
@@ -264,7 +285,201 @@
 
 
     <script type="text/javascript">
+        function deleteNode(node) {
+            var url = 'ajax/settings.jsp';
+            var postbackdata = new Array();
 
+            postbackdata.push({
+                name: "nonce",
+                value: $("#nonce").val()
+            });
+
+            postbackdata.push({
+                name: "nodename",
+                value: node
+            });
+
+
+
+            postbackdata.push({
+                name: "formaction",
+                value: "deleteNode"
+            });
+
+
+            var request = $.ajax({
+                url: url,
+                type: "POST",
+                //  data" + i18n_type + ": "html", 
+                cache: false,
+                //  processData: false,f
+                data: postbackdata
+            });
+
+
+            request.done(function (msg) {
+                window.console && console.log('postback done ' + url);
+
+                $("#alert_results").html('<i class="icon-2x icon-thumbs-up"></i><br>' + msg);
+                $("#alert").modal();
+            });
+
+            request.fail(function (jqXHR, textStatus) {
+                window.console && console.log('postback failed ' + url);
+                $("#alert_results").html('<i class="icon-2x icon-thumbs-down"></i><br>' + jqXHR.responseText + textStatus);
+                $("#alert").modal();
+            });
+        }
+        function editNode(node) {
+            var url = 'ajax/settings.jsp';
+            var postbackdata = new Array();
+
+            postbackdata.push({
+                name: "nonce",
+                value: $("#nonce").val()
+            });
+
+            postbackdata.push({
+                name: "nodename",
+                value: node
+            });
+
+
+
+            postbackdata.push({
+                name: "formaction",
+                value: "getNode"
+            });
+
+
+            var request = $.ajax({
+                url: url,
+                type: "POST",
+                //  data" + i18n_type + ": "html", 
+                cache: false,
+                //  processData: false,f
+                data: postbackdata
+            });
+
+
+            request.done(function (msg) {
+                window.console && console.log('postback done ' + url);
+
+                $("#alterNodeModalContent").html(msg);
+                $("#alterNodeModal").modal();
+            });
+
+            request.fail(function (jqXHR, textStatus) {
+                window.console && console.log('postback failed ' + url);
+                $("#alert_results").html('<i class="icon-2x icon-thumbs-down"></i><br>' + jqXHR.responseText + textStatus);
+                $("#alert").modal();
+            });
+
+        }
+        function newNode() {
+            $("#newNodeModal").modal('show');
+
+        }
+        function saveNewNode() {
+            var url = 'ajax/settings.jsp';
+            var postbackdata = new Array();
+
+            postbackdata.push({
+                name: "nonce",
+                value: $("#nonce").val()
+            });
+            $(".crudnode").each(function ()
+            {
+                var id = $(this).attr("id");
+                var value = $(this).val();
+                postbackdata.push({
+                    name: id,
+                    value: value
+                });
+            });
+
+            postbackdata.push({
+                name: "formaction",
+                value: "newNode"
+            });
+
+
+            var request = $.ajax({
+                url: url,
+                type: "POST",
+                //  data" + i18n_type + ": "html", 
+                cache: false,
+                //  processData: false,f
+                data: postbackdata
+            });
+
+
+            request.done(function (msg) {
+                window.console && console.log('postback done ' + url);
+
+                $("#alert_results").html('<i class="icon-2x icon-thumbs-up"></i><br>' + msg);
+                $('#newNodeModal').modal('hide');
+                $("#alert").modal();
+            });
+
+            request.fail(function (jqXHR, textStatus) {
+                window.console && console.log('postback failed ' + url);
+                $("#alert_results").html('<i class="icon-2x icon-thumbs-down"></i><br>' + jqXHR.responseText + textStatus);
+                $("#alert").modal();
+            });
+
+        }
+        function saveNode(){
+            var url = 'ajax/settings.jsp';
+            var postbackdata = new Array();
+
+            postbackdata.push({
+                name: "nonce",
+                value: $("#nonce").val()
+            });
+            $(".crudnodeAlter").each(function ()
+            {
+                var id = $(this).attr("id");
+                var value = $(this).val();
+                postbackdata.push({
+                    name: id,
+                    value: value
+                });
+            });
+
+            postbackdata.push({
+                name: "formaction",
+                value: "alterNode"
+            });
+
+
+            var request = $.ajax({
+                url: url,
+                type: "POST",
+                //  data" + i18n_type + ": "html", 
+                cache: false,
+                //  processData: false,f
+                data: postbackdata
+            });
+
+
+            request.done(function (msg) {
+                window.console && console.log('postback done ' + url);
+                $('#alterNodeModal').modal('hide');
+                $("#alert_results").html('<i class="icon-2x icon-thumbs-up"></i><br>' + msg);
+                $("#alert").modal();
+               
+                
+            });
+
+            request.fail(function (jqXHR, textStatus) {
+                window.console && console.log('postback failed ' + url);
+                $("#alert_results").html('<i class="icon-2x icon-thumbs-down"></i><br>' + jqXHR.responseText + textStatus);
+                $("#alert").modal();
+            });
+            
+            
+        }
         function newItem() {
             $("#newItemModal").modal('show');
         }
@@ -303,6 +518,54 @@
         </div>
     </div>
 
+    <div class="modal hide fade container" id="newNodeModal">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3><%=ResourceLoader.GetResource(session, "items.settings.add")%></h3>
+        </div>
+        <div class="modal-body" id="newNodeContent">
+            <%
+                    out.write("<table class=\"table table-hover\">");
+                    out.write("<tr><td>Node Name</td><td><input class=\"crudnode\" type=text id=\"nodename\" value=\"" + "\"></td></tr>");
+
+                    out.write("<tr><td>Description</td><td><input class=\"crudnode\" type=text id=\"description\" value=\"" + "\"></td></tr>");
+                    out.write("<tr><td>Transport</td><td><input class=\"crudnode\" type=text id=\"transport\" value=\"\"></td></tr>");
+                    out.write("<tr><td>Inquiry</td><td><input class=\"crudnode\" type=text id=\"inquiry\" value=\"\"></td></tr>");
+                    out.write("<tr><td>Publish</td><td><input class=\"crudnode\" type=text id=\"publish\" value=\"\"></td></tr>");
+                    out.write("<tr><td>Security</td><td><input class=\"crudnode\" type=text id=\"security\" value=\"\"></td></tr>");
+                    out.write("<tr><td>Custody Transfer</td><td><input class=\"crudnode\" type=text id=\"custody\" value=\"\"></td></tr>");
+                    out.write("<tr><td>Subscription</td><td><input class=\"crudnode\" type=text id=\"subscription\" value=\"\"></td></tr>");
+                    out.write("<tr><td colspan=2>Not used by juddi-gui");
+                    out.write("<tr><td>Factory Initial</td><td><input type=text class=\"crudnode\" id=\"factoryinit\" value=\"\"></td></tr>");
+                    out.write("<tr><td>Factory Naming Provider</td><td><input class=\"crudnode\" type=text id=\"factorynaming\" value=\"\"></td></tr>");
+                    out.write("<tr><td>Factor URL Package</td><td><input class=\"crudnode\" type=text id=\"factoryurl\" value=\"\"></td></tr>");
+                    out.write("<tr><td>Inquiry REST</td><td><input class=\"crudnode\" type=text id=\"inquiryrest\" value=\"\"></td></tr>");
+                    out.write("<tr><td>Replication</td><td><input class=\"crudnode\" type=text id=\"replication\" value=\"\"></td></tr>");
+                    out.write("<tr><td>jUDDI API</td><td><input class=\"crudnode\" type=text id=\"juddiapi\" value=\"\"></td></tr>");
+                    out.write("</table>");
+            %>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:saveNewNode();" class="btn btn-primary"><%=ResourceLoader.GetResource(session, "actions.add")%></a>
+            <a href="javascript:$('#newNodeModal').modal('hide');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+        </div>
+    </div>
+
+        <div class="modal hide fade container" id="alterNodeModal">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3><%=ResourceLoader.GetResource(session, "items.settings.edit")%></h3>
+        </div>
+        <div class="modal-body" id="alterNodeModalContent">
+           
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:saveNode();" class="btn btn-primary"><%=ResourceLoader.GetResource(session, "actions.save")%></a>
+            <a href="javascript:$('#alterNodeModal').modal('hide');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+        </div>
+    </div>
+
+        
 
 
     <%@include file="header-bottom.jsp" %>
