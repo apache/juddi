@@ -620,6 +620,8 @@ This section is broken down into guidance for the jUDDI server and for the jUDDI
 
 * Disable sending authentication tokens to subscription notifications (config/juddi/notification/sendAuthTokenWithResultList=false)
 
+* If you're using the replication services, configure your application server to use mutual certification authentication for that deployment (per the specification's recommendation).
+
 ==== jUDDI Client (and developers)
 
 * Never log auth tokens. Protect it as if it was a password
@@ -678,20 +680,20 @@ The jUDDI web services (juddiv3.war) is designed to be scaled to multiple server
 
 ===== Scaling using a common database
 
-The first and simplest mechanism is for the instances of juddiv3.war to share the same database. All of jUDDI's database calls are transactional SQL, meaning that concurrent changes will function just fine from multiple concurrent users. Each instance of juddiv3.war must point to the same database and must use the same Node ID. See the Database Configuration Chapter for more information.
+The first and simplest mechanism is for the instances of juddiv3.war to share the same database. All of jUDDI's database calls are transactional SQL, meaning that concurrent changes will function just fine from multiple concurrent users. Each instance of juddiv3.war must point to the same database and must use the same Node ID and configuration settings. See the Database Configuration Chapter for more information.
 
 ===== Scaling using Subscriptions
 
-The second mechanism is to use the Subscription API to import data and updates from a remote registry. Unfortunately, this scenario isn't quite yet supported for jUDDI, but will be in a future release.
+The second mechanism is to use the Subscription API to import data and updates from a remote registry. Unfortunately, this scenario isn't quite yet supported for jUDDI, but may be in a future release.
 
 ===== Replication API
 
-The third mechanism is the Replication API, which is part of the OASIS UDDIv3 specification. jUDDI unfortunately does not currently implement this specification but may in the future.
+The third mechanism is the Replication API, which is part of the OASIS UDDIv3 specification. Since version 3.3, jUDDI provides support for synchronizating UDDI servers using the techniques described in the specification as Replication. See the Replication Services chapter for additional information,
 
 
 ==== Limitations of jUDDI
 
-jUDDI's web services have no explicit upper bound on the volume of businesses and services registered. Load testing has shown that at least 10,000 are support for each category. The upper limit is more of a function of both the underlying database implementation and hardware (free disk space). In either case, the likelihood of hitting the limit is low for most instances. If you happen to run into scaling issues, please file a bug report at JUDDI's JIRA site at: https://issues.apache.org/jira/browse/JUDDI
+jUDDI's web services have no explicit upper bound on the volume of businesses and services registered. Load testing has shown that at least 10,000 are supported for each category. The upper limit is more of a function of both the underlying database implementation and hardware (free disk space). In either case, the likelihood of hitting the limit is low for most instances. If you happen to run into scaling issues, please file a bug report at JUDDI's JIRA site at: https://issues.apache.org/jira/browse/JUDDI
 
 
 

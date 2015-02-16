@@ -65,9 +65,8 @@ public class ReplicationNotifier extends TimerTask {
 
         private static Log log = LogFactory.getLog(ReplicationNotifier.class);
         private Timer timer = null;
-        private long startBuffer = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_START_BUFFER, 20000l); // 20s startup delay default 
+        private long startBuffer = 5000;//AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_START_BUFFER, 20000l); // 20s startup delay default 
         private long interval = 5000;//AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
-        private long acceptableLagTime = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME, 10000l); //1000 milliseconds
         private static String node = null;
         private static UDDIService uddiService = new UDDIService();
 
@@ -79,6 +78,8 @@ public class ReplicationNotifier extends TimerTask {
         public ReplicationNotifier() throws ConfigurationException {
                 super();
                 timer = new Timer(true);
+                startBuffer=AppConfig.getConfiguration().getLong(Property.JUDDI_REPLICATION_START_BUFFER, 5000l);
+                interval = AppConfig.getConfiguration().getLong(Property.JUDDI_REPLICATION_INTERVAL, 5000l);
                 timer.scheduleAtFixedRate(this, startBuffer, interval);
                 if (queue == null) {
                         queue = new ConcurrentLinkedQueue();

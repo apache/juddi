@@ -159,9 +159,9 @@ public class JUDDIRequestsAsXML {
                         op.setOperatorNodeID(thisnode);
 
                         op.setOperatorStatus(OperatorStatusType.NORMAL);
-                        String url = "http://localhost:8080/juddiv3/services/replication";
+                        String url = "https://localhost:8443/juddiv3replication/services/replication";
                         try {
-                                url = AppConfig.getConfiguration().getString(Property.DEFAULT_BASE_URL_SECURE) + "/services/replication";
+                                url = AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL_SECURE) + "replication/services/replication";
                         } catch (ConfigurationException ex) {
                                 Logger.getLogger(JUDDIRequestsAsXML.class.getName()).log(Level.SEVERE, null, ex);
                         }

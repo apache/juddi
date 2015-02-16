@@ -682,9 +682,9 @@ public class JuddiAdminService {
                         replicationNodes = new ReplicationConfiguration();
 
                 }
-                if (replicationNodes.getCommunicationGraph() == null) {
+                //if (replicationNodes.getCommunicationGraph() == null) {
                         replicationNodes.setCommunicationGraph(new CommunicationGraph());
-                }
+                //}
                 Operator op = new Operator();
                 op.setOperatorNodeID("uddi:juddi.apache.org:node1");
                 op.setSoapReplicationURL("http://localhost:8080/juddiv3/services/replication");

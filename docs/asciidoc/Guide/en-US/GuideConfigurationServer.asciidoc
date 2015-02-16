@@ -20,7 +20,7 @@ IMPORTANT: When referring to configuration 'properties', we are really referenci
 |_juddi/auth/token/Timeout_      |Time in minutes to expire tokes after inactivity.|N  |_15_
 |_juddi/auth/token/Expiration_   |As of 3.1.5 Duration of time for tokens to expire, regardless of inactivity.|N  |_15_
 |_juddi/auth/token/enforceSameIPRule_   |As of 3.2 This setting will enable or disable the auth token check to ensure that auth tokens can only be used from the same IP address that they were issued to..|N  |_true_
-|_juddi/auth/authenticator@useAuthToken | Indicates that the authenticator is use requires a UDDI auth token. Set to false when using HTTP based authenticators | N | _true_
+|_juddi/auth/authenticator@useAuthToken_ | Indicates that the authenticator is use requires a UDDI auth token. Set to false when using HTTP based authenticators | N | _true_
 
 |===========================================================================================
 
@@ -46,7 +46,7 @@ IMPORTANT: When referring to configuration 'properties', we are really referenci
 |_juddi/configuration/reload/delay_ |The time in milliseconds in which juddiv3.xmlis polled for changes.|N|5000
 |===========================================================================================
 
-CAUTION: Take caution in changing the  jUDDI Node ID. If jUDDI has already been started at least once and the Node ID is changed, an existing records will not be editable. If you want to change from the default value, do so before you first start jUDDI by editing the configuration file.
+CAUTION: Take caution in changing the jUDDI Node ID. (Updated at 3.3) jUDDI can now change Node IDs via the Admin console. However care must be taken to prevent changes to data while the rename is in progress. It is recommended to use the Admin console to change the Node ID. It will automatically update the database and the _juddiv3.xml_ configuration file.
 
 === Email
 
@@ -83,7 +83,7 @@ Starting with 3.2.1, jUDDI can now send a test email via the juddiv3.war/admin c
 |_juddi/maxInClause_ | The maximum number of "IN" clause parameters.  Some RDMBS limit the number of parameters allowed in a SQL "IN" clause. |Y|[_1000_]
 |_juddi/maxNameElementsAllowed_| The maximum name size and maximum number of name elements allows in several of the _FindXxxx_ and _SaveXxxx_ UDDI functions |N|[_5_]
 |_juddi/maxNameLength_ | The maximum name size of name elements|N|[_255_]
-|_juddi/maxRows_ | The maximum number of rows returned in a find_* operation.  Each call can set this independently, but this property defines a global maximum. This is related to the _maxInClause_ setting (the same?).|N|1000
+|_juddi/maxRows_ | The maximum number of rows returned in a find* operation.  Each call can set this independently, but this property defines a global maximum. This is related to the _maxInClause_ setting (the same?).|N|1000
 |===========================================================================================
 
 === RMI Proxy 
@@ -107,7 +107,7 @@ RMI Proxy properties that can be referenced in the _juddiv3.xml_ file and is onl
 |Property Name                   |Description         |Required     |Default Value or [Example Value]
 |_juddi/cryptor_ | jUDDI Cryptor implementation class that jUDDI will use to encrypt and decrypt password settings |N|_org.apache.juddi.cryptor.DefaultCryptor_
 |_juddi/keygenerator_ | Key generator implementation that jUDDI will use to create UDDI keys if no key is passed in by the user.|N|_org.apache.juddi.keygen.KeyGenerator_
-|_juddi/uuidgen _ | UUID generator implementation that jUDDI will use to create UUIDs.|N|_org.apache.juddi.uuidgen.DefaultUUIDGen_
+|_juddi/uuidgen_ | UUID generator implementation that jUDDI will use to create UUIDs.|N|_org.apache.juddi.uuidgen.DefaultUUIDGen_
 |===========================================================================================
 
 === Subscription
@@ -128,7 +128,7 @@ RMI Proxy properties that can be referenced in the _juddiv3.xml_ file and is onl
 
 === Custody Transfer
 
-.Transfer properties that can be referenced in the _juddiv3.xml file.
+.Transfer properties that can be referenced in the _juddiv3.xml_ file.
 [options="header"]
 |===========================================================================================
 |Property Name                   |Description         |Required     |Default Value or [Example Value]
@@ -138,20 +138,20 @@ RMI Proxy properties that can be referenced in the _juddiv3.xml_ file and is onl
 
 === Validation
 
-.These settings are for validating the data that users store in jUDDI. They can be referenced in the _juddiv3.xml file.
+.These settings are for validating the data that users store in jUDDI. They can be referenced in the _juddiv3.xml_ file.
 [options="header"]
 |===========================================================================================
 |Property Name                   |Description         |Required     |Default Value or [Example Value]
 |_juddi/validation/enforceReferentialIntegrity_|As of 3.1.5 This setting will force referential integrity for all tModels (except keyGenerators), category bags, bindingTemplate/AccessPoint/hostingRedirector (referencing another host), tModelInstanceParms and anything else that references a KeyName default value is true. Set to false for backwards compatibility or for a more lax registry.|N|[_true_]
-|_juddi/validation/rejectInvalidSignatures/enable | Enables or Disables the validation of signatures when a publisher attempts to save an entity | N | false
-|_juddi/validation/rejectInvalidSignatures/enable/trustStorePath | Path to the trust store. Can be overridden via system properties. If not specified, the Windows trust store will be used, else the default JRE trust store will be used. | N | [truststore.jks]
-|_juddi/validation/rejectInvalidSignatures/trustStoreType | The type of store to use | N | JKS
-|_juddi/validation/rejectInvalidSignatures/trustStorePassword | The clear text or encrypted password to the trust store | N | 
-|_juddi/validation/rejectInvalidSignatures/trustStorePassword@isPasswordEncrypted | True/False | N | false
-|_juddi/validation/rejectInvalidSignatures/trustStorePassword@cryptoProvider | A cryptographic provider, representing the one that was used to encrypt | 
-|_juddi/validation/rejectInvalidSignatures/checkTimestamps | If true, certificates are checked against the time validity | N | false
-|_juddi/validation/rejectInvalidSignatures/checkTrust | If true, the certificates trust chain is validated against the trust store | N | false
-|_juddi/validation/rejectInvalidSignatures/checkRevocationCRL | If true, the certificate will attempted to be validated using online certificate revocation protocols | N | false
+|_juddi/validation/rejectInvalidSignatures/enable_ | Enables or Disables the validation of signatures when a publisher attempts to save an entity | N | false
+|_juddi/validation/rejectInvalidSignatures/enable/trustStorePath_ | Path to the trust store. Can be overridden via system properties. If not specified, the Windows trust store will be used, else the default JRE trust store will be used. | N | [truststore.jks]
+|_juddi/validation/rejectInvalidSignatures/trustStoreType_ | The type of store to use | N | JKS
+|_juddi/validation/rejectInvalidSignatures/trustStorePassword_ | The clear text or encrypted password to the trust store | N | 
+|_juddi/validation/rejectInvalidSignatures/trustStorePassword@isPasswordEncrypted_ | True/False | N | false
+|_juddi/validation/rejectInvalidSignatures/trustStorePassword@cryptoProvider_ | A cryptographic provider, representing the one that was used to encrypt | 
+|_juddi/validation/rejectInvalidSignatures/checkTimestamps_ | If true, certificates are checked against the time validity | N | false
+|_juddi/validation/rejectInvalidSignatures/checkTrust_ | If true, the certificates trust chain is validated against the trust store | N | false
+|_juddi/validation/rejectInvalidSignatures/checkRevocationCRL_ | If true, the certificate will attempted to be validated using online certificate revocation protocols | N | false
 |===========================================================================================
 
 
@@ -163,7 +163,7 @@ Logging properties that can be referenced in the _juddiv3.xml_ file.
 [options="header"]
 |===========================================================================================
 |Property Name                   		|Description         |Required     |Default Value or [Example Value]
-|_juddi/logging/logInquirySearchPayloads| Enables request payload logging for the Inquiry Find apis    |N| false
+|_juddi/logging/logInquirySearchPayloads_| Enables request payload logging for the Inquiry Find apis    |N| false
 |===========================================================================================
 
 === Performance
@@ -174,20 +174,20 @@ Perofrmance properties are referenced in the _juddiv3.xm_ file.
 [options="header"]
 |===========================================================================================
 |Property Name                   		|Description         |Required     |Default Value or [Example Value]
-|_juddi/performance/enableFindBusinessTModelBagFiltering| UDDI defines a mechansim to filter findBusiness relates based on tModelInstanceInfo within their service's binding templates. This is an expensive operation and will cause significant performance degredation on larger registries. For spec complliance, it should be set to true. We suspect it's not a commonly used feature and recommend setting this to false.    |N| true
+|_juddi/performance/enableFindBusinessTModelBagFiltering_ | UDDI defines a mechansim to filter findBusiness relates based on tModelInstanceInfo within their service's binding templates. This is an expensive operation and will cause significant performance degredation on larger registries. For spec complliance, it should be set to true. We suspect it's not a commonly used feature and recommend setting this to false.    |N| true
 |===========================================================================================
 
 === Replication
 
 .These properties are used to tweak the replication service capabilities.
 
-Perofrmance properties are referenced in the _juddiv3.xm_ file.
+These properties are referenced in the _juddiv3.xml_ file.
 [options="header"]
 |===========================================================================================
 |Property Name                   		|Description         |Required     |Default Value or [Example Value]
-|_juddi/replication/getChangeRecordsMax| The maximum number of records to return from a getChangeRecord request   |N| 100
-|_juddi.replication.start.buffer 		| Specifies the amount of time to wait before the replication timer initially fires. (in ms) | N | 5000
-|_juddi.replication.interval 			| Specifies the interval at which the replication timer triggers (in ms). | N | 5000
+|_juddi/replication/getChangeRecordsMax_ | The maximum number of records to return from a getChangeRecord request   |N| 100
+|_juddi/replication/start/buffer_ 		| Specifies the amount of time to wait before the replication timer initially fires. (in ms) | N | 5000
+|_juddi/replication/interval_ 			| Specifies the interval at which the replication timer triggers (in ms). | N | 5000
 |=========================================================================================== 
 
 

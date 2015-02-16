@@ -24,6 +24,8 @@ include::GuideAdministration.asciidoc[]
 
 include::GuideConfigurationServer.asciidoc[]
 
+include::GuideReplication.asciidoc[]
+
 include::GuideRootSeedData.asciidoc[]
 
 include::GuideHowToDeployjUDDITo.asciidoc[]
