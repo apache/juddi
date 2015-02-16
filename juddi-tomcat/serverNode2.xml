@@ -81,7 +81,8 @@
     
     <Connector port="9443" protocol="HTTP/1.1" SSLEnabled="true"
                maxThreads="150" scheme="https" secure="true"
-               clientAuth="false" sslProtocol="TLS" 
+               clientAuth="want" sslProtocol="TLS" 
+               truststoreFile="truststore.jks" truststorePass="password"
 			   keystoreFile="conf/keystore.jks" keystorePass="password"
 			   />
     

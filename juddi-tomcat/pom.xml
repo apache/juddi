@@ -44,6 +44,12 @@
 			<type>war</type>
 		</dependency>
 		<dependency>
+			<artifactId>juddiv3-war-repl</artifactId>
+			<groupId>org.apache.juddi</groupId>
+			<version>${project.parent.version}</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
             <artifactId>juddi-gui-war</artifactId>
             <groupId>org.apache.juddi</groupId>
             <version>${project.parent.version}</version>
@@ -98,7 +104,7 @@
 						<configuration>
 							<stripVersion>true</stripVersion>
 							<includeGroupIds>org.apache.juddi</includeGroupIds>
-							<includeArtifactIds>juddiv3-war,juddi-gui-war</includeArtifactIds>
+							<includeArtifactIds>juddiv3-war,juddiv3-war-repl,juddi-gui-war</includeArtifactIds>
 							<outputDirectory>
 								${project.build.directory}
 							</outputDirectory>
@@ -134,6 +140,7 @@
 								<property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}" />
 								<property name="dependency.tomcat.zip" value="${maven.dependency.org.apache.juddi.bootstrap.apache-tomcat.zip.path}" />
 								<property name="dependency.juddiv3.war" value="${project.build.directory}/juddiv3-war.war" />
+								<property name="dependency.juddiv3replication.war" value="${project.build.directory}/juddiv3-war-repl.war" />
 								<property name="dependency.juddi-gui.war" value="${project.build.directory}/juddi-gui-war.war" />
 								<property name="dependency.jaxws.jar" value="${maven.dependency.org.apache.geronimo.specs.geronimo-jaxws_2.2_spec.jar.path}" />
 								<ant antfile="${basedir}/build.xml">

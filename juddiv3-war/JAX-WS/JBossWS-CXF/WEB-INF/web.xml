@@ -91,8 +91,10 @@
       <param-value>org.apache.juddi.api.impl.UDDISubscriptionListenerImpl</param-value>
     </init-param>
   </servlet>
-  <servlet>
+  
  
+ <!-- 
+  This is covered under the juddiv3replication in order to ensure client-cert auth
   <servlet>
     <servlet-name>UDDIReplicationWS</servlet-name>
 
@@ -101,116 +103,120 @@
       <param-name>jboss.ws.endpoint</param-name>
       <param-value>org.apache.juddi.api.impl.UDDIReplicationImpl</param-value>
 
-    </init-param>
-  </servlet>
-
-  <servlet>
-    <servlet-name>UDDIValueSetWS</servlet-name>
-    <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
-    <init-param>
-      <param-name>jboss.ws.endpoint</param-name>
-      <param-value>org.apache.juddi.api.impl.UDDIValueSetValidationImpl</param-value>
-    </init-param>
-  </servlet>  
+        </init-param>
+      </servlet>
+    -->
+    <servlet>
+        <servlet-name>UDDIValueSetWS</servlet-name>
+        <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
+        <init-param>
+            <param-name>jboss.ws.endpoint</param-name>
+            <param-value>org.apache.juddi.api.impl.UDDIValueSetValidationImpl</param-value>
+        </init-param>
+    </servlet>  
   
     <servlet>
-    <servlet-name>UDDIValueSetCachingWS</servlet-name>
+        <servlet-name>UDDIValueSetCachingWS</servlet-name>
 
-    <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
-    <init-param>
-      <param-name>jboss.ws.endpoint</param-name>
-      <param-value>org.apache.juddi.api.impl.UDDIValueSetCachingImpl</param-value>
+        <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
+        <init-param>
+            <param-name>jboss.ws.endpoint</param-name>
+            <param-value>org.apache.juddi.api.impl.UDDIValueSetCachingImpl</param-value>
 
-    </init-param>
-  </servlet>  
-    <servlet-name>UDDICustodyTransferWS</servlet-name>
-    <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
-    <init-param>
-      <param-name>jboss.ws.endpoint</param-name>
-      <param-value>org.apache.juddi.api.impl.UDDICustodyTransferImpl</param-value>
-    </init-param>
-  </servlet>
-  <servlet>
-    <servlet-name>JUDDIApiWS</servlet-name>
-    <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
-    <init-param>
-      <param-name>jboss.ws.endpoint</param-name>
-      <param-value>org.apache.juddi.api.impl.JUDDIApiImpl</param-value>
-    </init-param>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>UDDISecurityWS</servlet-name>
-    <url-pattern>/services/security/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>UDDIPublishWS</servlet-name>
-    <url-pattern>/services/publish/*</url-pattern>
-  </servlet-mapping>
-   <servlet-mapping>
-    <servlet-name>UDDIValueSetCachingWS</servlet-name>
-    <url-pattern>/services/valueset-caching/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>UDDIValueSetWS</servlet-name>
-    <url-pattern>/services/valueset-validation/*</url-pattern>
-  </servlet-mapping>
-  
-  <servlet-mapping>
-    <servlet-name>UDDIReplicationWS</servlet-name>
-    <url-pattern>/services/replication/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>UDDIPublishWSv2</servlet-name>
-    <url-pattern>/services/publishv2/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>UDDIInquiryWS</servlet-name>
-    <url-pattern>/services/inquiry/*</url-pattern>
-  </servlet-mapping>
+        </init-param>
+    </servlet>  
+
+    <servlet>
+        <servlet-name>UDDICustodyTransferWS</servlet-name>
+        <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
+        <init-param>
+            <param-name>jboss.ws.endpoint</param-name>
+            <param-value>org.apache.juddi.api.impl.UDDICustodyTransferImpl</param-value>
+        </init-param>
+    </servlet>
+    <servlet>
+        <servlet-name>JUDDIApiWS</servlet-name>
+        <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
+        <init-param>
+            <param-name>jboss.ws.endpoint</param-name>
+            <param-value>org.apache.juddi.api.impl.JUDDIApiImpl</param-value>
+        </init-param>
+    </servlet>
     <servlet-mapping>
-    <servlet-name>UDDIInquiryWSv2</servlet-name>
-    <url-pattern>/services/inquire/*</url-pattern>
-  </servlet-mapping>
+        <servlet-name>UDDISecurityWS</servlet-name>
+        <url-pattern>/services/security/*</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
-    <servlet-name>UDDISubscriptionWS</servlet-name>
-    <url-pattern>/services/subscription/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>UDDISubscriptionListenerWS</servlet-name>
-    <url-pattern>/services/subscription-listener/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>UDDICustodyTransferWS</servlet-name>
-    <url-pattern>/services/custody-transfer/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>JUDDIApiWS</servlet-name>
-    <url-pattern>/services/juddi-api/*</url-pattern>
-  </servlet-mapping>
+        <servlet-name>UDDIPublishWS</servlet-name>
+        <url-pattern>/services/publish/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UDDIValueSetCachingWS</servlet-name>
+        <url-pattern>/services/valueset-caching/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UDDIValueSetWS</servlet-name>
+        <url-pattern>/services/valueset-validation/*</url-pattern>
+    </servlet-mapping>
+    <!--
+      This is covered under the juddiv3replication in order to ensure client-cert auth
+      <servlet-mapping>
+        <servlet-name>UDDIReplicationWS</servlet-name>
+        <url-pattern>/services/replication/*</url-pattern>
+      </servlet-mapping>
+    -->
+    <servlet-mapping>
+        <servlet-name>UDDIPublishWSv2</servlet-name>
+        <url-pattern>/services/publishv2/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UDDIInquiryWS</servlet-name>
+        <url-pattern>/services/inquiry/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UDDIInquiryWSv2</servlet-name>
+        <url-pattern>/services/inquire/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UDDISubscriptionWS</servlet-name>
+        <url-pattern>/services/subscription/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UDDISubscriptionListenerWS</servlet-name>
+        <url-pattern>/services/subscription-listener/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UDDICustodyTransferWS</servlet-name>
+        <url-pattern>/services/custody-transfer/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>JUDDIApiWS</servlet-name>
+        <url-pattern>/services/juddi-api/*</url-pattern>
+    </servlet-mapping>
   
-  <security-constraint>
-      <display-name>jUDDI Admin content</display-name>
-      <web-resource-collection>
-          <web-resource-name>admin</web-resource-name>
-          <url-pattern>/admin/*</url-pattern>
+    <security-constraint>
+        <display-name>jUDDI Admin content</display-name>
+        <web-resource-collection>
+            <web-resource-name>admin</web-resource-name>
+            <url-pattern>/admin/*</url-pattern>
           
           
-      </web-resource-collection>
-      <auth-constraint>
-          <role-name>uddiadmin</role-name>
-      </auth-constraint>
-      <!-- uncomment to require SSL <user-data-constraint>
-        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-      </user-data-constraint>
-      -->
-  </security-constraint>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>uddiadmin</role-name>
+        </auth-constraint>
+        <!-- uncomment to require SSL <user-data-constraint>
+          <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+        -->
+    </security-constraint>
     <login-config> 
-	<auth-method>BASIC</auth-method> 
-	<!-- you should consider NOT using BASIC is favor of something more secure, see your web app servers documentation for details -->
-	<realm-name>Apache jUDDI - Make sure you're using HTTPS!</realm-name> 
-  </login-config> 
-  <security-role>
-      <role-name>uddiadmin</role-name>
-  </security-role>
+        <auth-method>BASIC</auth-method> 
+        <!-- you should consider NOT using BASIC is favor of something more secure, see your web app servers documentation for details -->
+        <realm-name>Apache jUDDI - Make sure you're using HTTPS!</realm-name> 
+    </login-config> 
+    <security-role>
+        <role-name>uddiadmin</role-name>
+    </security-role>
 </web-app>
   

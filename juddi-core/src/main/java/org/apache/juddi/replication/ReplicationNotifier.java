@@ -45,6 +45,7 @@ import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.ChangeRecord;
 import org.apache.juddi.model.ReplicationConfiguration;
 import org.apache.juddi.v3.client.UDDIService;
+import org.apache.juddi.v3.client.cryptor.TransportSecurityHelper;
 import org.uddi.repl_v3.ChangeRecordIDType;
 import org.uddi.repl_v3.CommunicationGraph.Edge;
 import org.uddi.repl_v3.HighWaterMarkVectorType;
@@ -110,8 +111,7 @@ public class ReplicationNotifier extends TimerTask {
         static Queue<org.uddi.repl_v3.ChangeRecord> queue2;
 
         /**
-         * Note: this is for locally originated changes only, see 
-         * {@link org.apache.juddi.api.impl.UDDIReplicationImpl.PullTimerTask#PersistChangeRecord PersistChangeRecord
+         * Note: this is for locally originated changes only, see null null null         {@link org.apache.juddi.api.impl.UDDIReplicationImpl.PullTimerTask#PersistChangeRecord PersistChangeRecord
          * } for how remote changes are processed
          *
          * @param j must be one of the UDDI save APIs
@@ -156,19 +156,12 @@ public class ReplicationNotifier extends TimerTask {
 
                 org.uddi.repl_v3.ReplicationConfiguration repcfg = FetchEdges();
 
-                //TODO figure out what this statement means 7.5.3
-                /**
-                 * In the absence of a communicationGraph element from the
-                 * Replication Configuration Structure (although it's mandatory
-                 * in the xsd), all nodes listed in the node element MAY send
-                 * any and all messages to any other node of the registry.
-                 */
                 if (repcfg == null) {
                         log.debug("No replication configuration is defined!");
                         return;
 
                 }
-                if (id==null || origin_node==null){
+                if (id == null || origin_node == null) {
                         log.fatal("Either the id is null or the origin_node is null. I can't send out this alert!!");
                         //throw new Exception(node);
                         return;
@@ -176,17 +169,25 @@ public class ReplicationNotifier extends TimerTask {
 
                 Set<Object> destinationUrls = new HashSet<Object>();
 
+                /**
+                 * In the absence of a communicationGraph element from the
+                 * Replication Configuration Structure (although it's mandatory
+                 * in the xsd), all nodes listed in the node element MAY send
+                 * any and all messages to any other node of the registry.
+                 */
                 if (repcfg.getCommunicationGraph() == null
                         || repcfg.getCommunicationGraph().getEdge().isEmpty() && !isRetrans) {
                         //no edges or graph defined, default to the operator list
+                        //retransmission only applies to non-directed-edge replication, thus the extra check
                         for (Operator o : repcfg.getOperator()) {
-                                //no need to tell myself about a change at myself
-                                if (!o.getOperatorNodeID().equalsIgnoreCase(node)) {
+                                //no need to tell myself about a change at myself or the origin
+                                if (!o.getOperatorNodeID().equalsIgnoreCase(node) && !o.getOperatorNodeID().equalsIgnoreCase(origin_node)) {
                                         destinationUrls.add(o.getSoapReplicationURL());
                                 }
                         }
                 } else {
-                        //repcfg.getCommunicationGraph()
+                        //this is for directed graph replication
+                        //find all nodes that i need to notify
                         Iterator<Edge> iterator = repcfg.getCommunicationGraph().getEdge().iterator();
                         while (iterator.hasNext()) {
                                 Edge next = iterator.next();
@@ -196,21 +197,27 @@ public class ReplicationNotifier extends TimerTask {
                                         //this is my server and i need to transmit the notification to
                                         String messageReceiver = next.getMessageReceiver();
                                         PrimaryAlternate container = new PrimaryAlternate();
-
-                                        for (int x = 0; x < repcfg.getOperator().size(); x++) {
-                                                if (repcfg.getOperator().get(x).getOperatorNodeID().equalsIgnoreCase(messageReceiver)) {
-                                                        container.primaryUrl = repcfg.getOperator().get(x).getSoapReplicationURL();
-                                                }
-                                        }
-                                        for (int y = 0; y < next.getMessageReceiverAlternate().size(); y++) {
+                                        //pointless to send a notification to myself or the origin
+                                        if (!messageReceiver.equalsIgnoreCase(node) && !messageReceiver.equalsIgnoreCase(origin_node)) {
+                                                //look up the endpoint urls
                                                 for (int x = 0; x < repcfg.getOperator().size(); x++) {
-                                                        if (repcfg.getOperator().get(x).getOperatorNodeID().equalsIgnoreCase(next.getMessageReceiverAlternate().get(y))) {
-                                                                container.alternateUrls.add(repcfg.getOperator().get(x).getSoapReplicationURL());
+                                                        if (repcfg.getOperator().get(x).getOperatorNodeID().equalsIgnoreCase(messageReceiver)) {
+                                                                container.primaryUrl = repcfg.getOperator().get(x).getSoapReplicationURL();
+                                                        }
+                                                }
+                                                for (int y = 0; y < next.getMessageReceiverAlternate().size(); y++) {
+                                                        for (int x = 0; x < repcfg.getOperator().size(); x++) {
+                                                                if (repcfg.getOperator().get(x).getOperatorNodeID().equalsIgnoreCase(next.getMessageReceiverAlternate().get(y))) {
+                                                                        container.alternateUrls.add(repcfg.getOperator().get(x).getSoapReplicationURL());
+                                                                }
                                                         }
                                                 }
                                         }
                                         if (container.primaryUrl != null) {
                                                 destinationUrls.add(container);
+                                        } else {
+                                                log.warn("Unable to find primary url for directed edge graph replication from this node " + node + " to "
+                                                        + "destination node " + next.getMessageReceiver() + " it will be ignored!");
                                         }
 
                                 }
@@ -219,10 +226,13 @@ public class ReplicationNotifier extends TimerTask {
 
                 }
 
-                UDDIReplicationPortType x = uddiService.getUDDIReplicationPort();
                 if (destinationUrls.isEmpty()) {
                         log.debug("Something is bizarre with the replication config. I should have had at least one node to notify, but I have none!");
+                        return;
                 }
+                UDDIReplicationPortType x = uddiService.getUDDIReplicationPort();
+                TransportSecurityHelper.applyTransportSecurity((BindingProvider) x);
+
                 for (Object s : destinationUrls) {
 
                         NotifyChangeRecordsAvailable req = new NotifyChangeRecordsAvailable();
@@ -271,7 +281,7 @@ public class ReplicationNotifier extends TimerTask {
                         log.info("Successfully sent change record available message to " + s + " this node: " + node);
                         return true;
                 } catch (Exception ex) {
-                        log.warn("Unable to send change notification to " + s + " this node: " + node);
+                        log.warn("Unable to send change notification to " + s + " this node: " + node + " reason: " + ex.getMessage());
                         log.debug("Unable to send change notification to " + s, ex);
                 }
                 return false;
@@ -309,14 +319,14 @@ public class ReplicationNotifier extends TimerTask {
                         //for each change at this node
 
                         org.uddi.repl_v3.ChangeRecord j = queue2.poll();
-                        
+
                         ChangeRecord model = new ChangeRecord();
                         try {
-                                model=MappingApiToModel.mapChangeRecord(j);
+                                model = MappingApiToModel.mapChangeRecord(j);
                         } catch (UnsupportedEncodingException ex) {
                                 Logger.getLogger(ReplicationNotifier.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        log.info("retransmitting CR notificationm entity owner: " + j.getChangeID().getNodeID() + " CR: " + j.getChangeID().getOriginatingUSN() + " key:" + model.getEntityKey() + " " + model.getRecordType().name() + " accepted locally:"+ model.getIsAppliedLocally());
+                        log.info("retransmitting CR notificationm entity owner: " + j.getChangeID().getNodeID() + " CR: " + j.getChangeID().getOriginatingUSN() + " key:" + model.getEntityKey() + " " + model.getRecordType().name() + " accepted locally:" + model.getIsAppliedLocally());
                         SendNotifications(j.getChangeID().getOriginatingUSN(), j.getChangeID().getNodeID(), true);
 
                 }

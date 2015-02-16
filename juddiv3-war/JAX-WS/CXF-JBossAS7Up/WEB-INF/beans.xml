@@ -69,7 +69,8 @@
     </jaxws:properties>
   </jaxws:endpoint>
 
-<!--  not yet implemented
+<!--  
+  This is covered under the juddiv3replication in order to ensure client-cert auth
   <jaxws:endpoint id="replication" implementor="org.apache.juddi.api.impl.UDDIReplicationImpl" address="/replication">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
@@ -77,7 +78,6 @@
   </jaxws:endpoint>
 -->
 
-<!-- ClientSide APIs
   <jaxws:endpoint id="valueset-validation" implementor="org.apache.juddi.api.impl.UDDIValueSetValidationImpl" address="/valueset-validation">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
@@ -89,7 +89,6 @@
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
--->
 
   <jaxws:endpoint id="inquiryv2" implementor="org.apache.juddi.api.impl.UDDIv2InquiryImpl" address="/inquiryv2">
     <jaxws:properties>

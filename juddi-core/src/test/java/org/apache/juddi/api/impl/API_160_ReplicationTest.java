@@ -358,18 +358,27 @@ public class API_160_ReplicationTest {
                 op.setOperatorStatus(OperatorStatusType.NORMAL);
                 
                 r.getOperator().add(op);
+                 op = new Operator();
+                op.setOperatorNodeID("test_node2");
+                op.setSoapReplicationURL("http://localhost");
+                op.setOperatorStatus(OperatorStatusType.NORMAL);
+                
+                r.getOperator().add(op);
+                
+                
                 r.setCommunicationGraph(new CommunicationGraph());
                 r.setRegistryContact(new ReplicationConfiguration.RegistryContact());
                 r.getRegistryContact().setContact(new Contact());
                 r.getRegistryContact().getContact().getPersonName().add(new PersonName("test", null));
                 //  r.getCommunicationGraph().getEdge().add(new CommunicationGraph.Edge());
                 r.getCommunicationGraph().getNode().add("test_node");
+                r.getCommunicationGraph().getNode().add("test_node2");
                 r.getCommunicationGraph().getControlledMessage().add("doPing");
                 r.getCommunicationGraph().getEdge().add(new CommunicationGraph.Edge());
                 r.getCommunicationGraph().getEdge().get(0).setMessageReceiver("test_node");
-                r.getCommunicationGraph().getEdge().get(0).setMessageSender("test_node");
+                r.getCommunicationGraph().getEdge().get(0).setMessageSender("test_node2");
                 r.getCommunicationGraph().getEdge().get(0).getMessage().add("doPing");
-                r.getCommunicationGraph().getEdge().get(0).getMessageReceiverAlternate().add("test_node");
+                r.getCommunicationGraph().getEdge().get(0).getMessageReceiverAlternate().add("test_node2");
                 
                 DispositionReport setReplicationNodes = juddi.setReplicationNodes(authInfoRoot, r);
 

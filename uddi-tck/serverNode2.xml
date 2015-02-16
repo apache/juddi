@@ -84,6 +84,13 @@
                clientAuth="false" sslProtocol="TLS" />
     -->
 
+    <Connector port="9443" protocol="HTTP/1.1" SSLEnabled="true"
+               maxThreads="150" scheme="https" secure="true"
+               clientAuth="want" sslProtocol="TLS" 
+               truststoreFile="truststore.jks" truststorePass="password"
+         keystoreFile="conf/keystore.jks" keystorePass="password"
+         />
+
     <!-- Define an AJP 1.3 Connector on port 8009 -->
     <Connector port="9009" protocol="AJP/1.3" redirectPort="9443" />
 

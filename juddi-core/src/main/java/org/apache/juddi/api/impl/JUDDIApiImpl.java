@@ -1471,7 +1471,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         r.setCommunicationGraph(new CommunicationGraph());
                         Operator op = new Operator();
                         op.setOperatorNodeID(node);
-                        op.setSoapReplicationURL(baseUrlSSL + "/services/replication");
+                        op.setSoapReplicationURL(baseUrlSSL + "replication/services/replication");
 
                         op.getContact().add(new Contact());
                         op.getContact().get(0).getPersonName().add(new PersonName("Unknown", null));

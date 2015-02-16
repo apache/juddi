@@ -190,6 +190,9 @@ public class ValidateReplication extends ValidateUDDIApi {
                                         throw new InvalidValueException(new ErrorMessage("errors.replication.configNodeNotFound"));
                                         //}
                                 }
+                                if (s.getMessageReceiver().equalsIgnoreCase(s.getMessageSender())){
+                                        throw new InvalidValueException(new ErrorMessage("errors.replication.configNodeLoop"));
+                                }
                                 for (String id : s.getMessageReceiverAlternate()) {
                                         if (!Contains(replicationConfiguration.getOperator(), id)) {
                                                 throw new InvalidValueException(new ErrorMessage("errors.replication.configNodeNotFound"));

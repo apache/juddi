@@ -62,7 +62,7 @@ public abstract class AuthenticatedService {
                         node = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID, "UNDEFINED_NODE_NAME");
                         node = node.trim();
                         baseUrlSSL = AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL_SECURE, Property.DEFAULT_BASE_URL_SECURE);
-                        baseUrlSSL = AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL, Property.DEFAULT_BASE_URL);
+                        baseUrlSSL = baseUrlSSL.trim();
                 } catch (ConfigurationException ex) {
                         logger.fatal(null, ex);
                 }

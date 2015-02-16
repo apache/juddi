@@ -66,7 +66,14 @@ public class UddiCreatebulk {
                 }
         }
 
-        public void publishBusiness(String token, int businesses, int servicesPerBusiness) {
+        /**
+         * bulk creates businesses, services and binding templates
+         * @param token if null, root/root will be used to authenticate
+         * @param businesses
+         * @param servicesPerBusiness
+         * @param user purely for display purposes
+         */
+        public void publishBusiness(String token, int businesses, int servicesPerBusiness, String user) {
                 try {
                         // Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
                         // and can save other publishers).
@@ -91,7 +98,7 @@ public class UddiCreatebulk {
                                 BusinessEntity myBusEntity = new BusinessEntity();
                                 Name myBusName = new Name();
                                 myBusName.setLang("en");
-                                myBusName.setValue("My Business " +curretNode +" " + i + " " + xcal.toString() + " " + textgen.getWords(5, 2) );
+                                myBusName.setValue(user + "'s Business " +curretNode +" " + i + " " + xcal.toString() + " " + textgen.getWords(5, 2) );
                                 myBusEntity.getDescription().add(new Description( textgen.getWords(10, 2), null));
                                 myBusEntity.getName().add(myBusName);
 
@@ -109,7 +116,7 @@ public class UddiCreatebulk {
                                         myService.setBusinessKey(myBusKey);
                                         Name myServName = new Name();
                                         myServName.setLang("en");
-                                        myServName.setValue("My Service " +curretNode+" "+ i + " " + k + " " + xcal.toString()+ " " + textgen.getWords(5, 2) );
+                                        myServName.setValue(user + "'s Service " +curretNode+" "+ i + " " + k + " " + xcal.toString()+ " " + textgen.getWords(5, 2) );
                                         myService.getName().add(myServName);
                                         myService.getDescription().add(new Description( textgen.getWords(10, 2), null));
                                         
@@ -198,6 +205,6 @@ public class UddiCreatebulk {
 
         public static void main(String args[]) {
                 UddiCreatebulk sp = new UddiCreatebulk(null);
-                sp.publishBusiness(null, 15, 20);
+                sp.publishBusiness(null, 15, 20, "root");
         }
 }

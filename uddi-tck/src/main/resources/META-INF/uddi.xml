@@ -32,6 +32,7 @@
                                 <properties>
                                         <property name="serverName" value="localhost" />
                                         <property name="serverPort" value="8880" />
+                                        <property name="serverSSLPort" value="8443" />
                                         <!-- for UDDI nodes that use HTTP u/p, using the following 
                                         <property name="basicAuthUsername" value="root" />
                                         <property name="basicAuthPassword" value="password" />
@@ -48,7 +49,7 @@
                                 <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription</subscriptionUrl>
                                 <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener</subscriptionListenerUrl>
                                 <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api</juddiApiUrl>
-                                <replicationUrl>http://${serverName}:${serverPort}/juddiv3/services/replication</replicationUrl>
+                                <replicationUrl>https://${serverName}:${serverSSLPort}/juddiv3replication/services/replication</replicationUrl>
                                 <!-- this is just for juddi gui tests -->
                                 <juddigui>http://${serverName}:${serverPort}/juddi-gui/</juddigui>
                         </node>
@@ -60,6 +61,7 @@
                                 <properties>
                                         <property name="serverName" value="localhost" />
                                         <property name="serverPort" value="8980" />
+                                        <property name="serverSSLPort" value="9443" />
                                         <!-- for UDDI nodes that use HTTP u/p, using the following 
                                         <property name="basicAuthUsername" value="root" />
                                         <property name="basicAuthPassword" value="password" />
@@ -76,7 +78,7 @@
                                 <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription</subscriptionUrl>
                                 <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener</subscriptionListenerUrl>
                                 <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api</juddiApiUrl>
-                                <replicationUrl>http://${serverName}:${serverPort}/juddiv3/services/replication</replicationUrl>
+                                <replicationUrl>https://${serverName}:${serverSSLPort}/juddiv3replication/services/replication</replicationUrl>
                                 <!-- this is just for juddi gui tests -->
                                 <juddigui>http://${serverName}:${serverPort}/juddi-gui/</juddigui>
                         </node>

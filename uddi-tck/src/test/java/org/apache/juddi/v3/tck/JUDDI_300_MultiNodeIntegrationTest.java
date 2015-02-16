@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.UDDIService;
 import org.apache.juddi.v3.client.config.UDDIClient;
+import org.apache.juddi.v3.client.cryptor.TransportSecurityHelper;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.junit.AfterClass;
@@ -107,8 +108,8 @@ public class JUDDI_300_MultiNodeIntegrationTest {
         private static UDDIPublicationPortType publishSamNode2;
         private static UDDIInquiryPortType inquiryMary;
         private static UDDIInquiryPortType inquirySamNode2;
-        private static UDDIReplicationPortType replicationMary;
-        private static UDDIReplicationPortType replicationSam;
+        //private static UDDIReplicationPortType replicationMary;
+        //private static UDDIReplicationPortType replicationSam;
         static TckBusiness maryBizNode1;
         static TckTModel maryTModelNode1;
 
@@ -144,11 +145,12 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                 custodyMary = node1.getUDDICustodyTransferService();
                 inquiryMary = node1.getUDDIInquiryService();
                 publishMary = node1.getUDDIPublishService();
-                UDDIService uddiService = new UDDIService();
+               // UDDIService uddiService = new UDDIService();
 
-                replicationMary = uddiService.getUDDIReplicationPort();
-
-                ((BindingProvider) replicationMary).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, manager.getClientConfig().getUDDINode(CFG_node1_MARY).getReplicationUrl());
+                //replicationMary = uddiService.getUDDIReplicationPort();
+                //((BindingProvider) replicationMary).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, manager.getClientConfig().getUDDINode(CFG_node1_MARY).getReplicationUrl());
+                //TransportSecurityHelper.applyTransportSecurity((BindingProvider) replicationMary);
+                //logger.info("Using replication endpoint Node1...@" + ((BindingProvider)replicationMary).getRequestContext().get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY));
                 UDDISecurityPortType secNode1 = node1.getUDDISecurityService();
                 rootNode1Token = TckSecurity.getAuthToken(secNode1, TckPublisher.getRootPublisherId(), TckPublisher.getRootPassword());
                 maryTokenNode1 = TckSecurity.getAuthToken(secNode1, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
@@ -157,8 +159,11 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                 UDDISecurityPortType secNode2 = node2.getUDDISecurityService();
                 rootNode2Token = TckSecurity.getAuthToken(secNode2, TckPublisher.getRootPublisherId(), TckPublisher.getRootPassword());
                 samTokenNode2 = TckSecurity.getAuthToken(secNode2, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
-                replicationSam = uddiService.getUDDIReplicationPort();
-                ((BindingProvider) replicationSam).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, manager.getClientConfig().getUDDINode(CFG_node2_SAM).getReplicationUrl());
+                //replicationSam = uddiService.getUDDIReplicationPort();
+                //((BindingProvider) replicationSam).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, manager.getClientConfig().getUDDINode(CFG_node2_SAM).getReplicationUrl());
+                //TransportSecurityHelper.applyTransportSecurity((BindingProvider) replicationSam);
+                //logger.info("Using replication endpoint Node2...@" + ((BindingProvider)replicationSam).getRequestContext().get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY));
+
                 juddiApiServiceNode2 = node2.getJUDDIApiService();
                 custodySam = node2.getUDDICustodyTransferService();
                 inquirySamNode2 = node2.getUDDIInquiryService();
@@ -176,11 +181,11 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         TckSecurity.setCredentials((BindingProvider) custodyMary, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
                         TckSecurity.setCredentials((BindingProvider) inquiryMary, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
                         TckSecurity.setCredentials((BindingProvider) publishMary, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
-                        TckSecurity.setCredentials((BindingProvider) replicationMary, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
+                        //TckSecurity.setCredentials((BindingProvider) replicationMary, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
 
                         TckSecurity.setCredentials((BindingProvider) custodySam, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
                         TckSecurity.setCredentials((BindingProvider) inquirySamNode2, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
-                        TckSecurity.setCredentials((BindingProvider) replicationSam, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                        //TckSecurity.setCredentials((BindingProvider) replicationSam, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
                         TckSecurity.setCredentials((BindingProvider) publishSamNode2, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
 
                 }
@@ -248,9 +253,12 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                                 Assert.fail(ex.getMessage());
 
                         }
-                        if (replicationNode1.getCommunicationGraph() == null) {
-                                replicationNode1.setCommunicationGraph(new CommunicationGraph());
-                        }
+                        //if (replicationNode1.getCommunicationGraph() == null) {
+                        replicationNode1.setCommunicationGraph(new CommunicationGraph());
+                        //}
+
+                        replicationNode1.getOperator().clear();
+                        replicationNode1.getSignature().clear();
 
                         Operator op = new Operator();
                         op.setOperatorNodeID("uddi:juddi.apache.org:node1");
@@ -259,9 +267,9 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         op.getContact().add(new Contact());
                         op.getContact().get(0).getPersonName().add(new PersonName("bob", "en"));
                         op.getContact().get(0).setUseType("admin");
-                        if (!Contains(replicationNode1.getOperator(), op)) {
+                        //if (!Contains(replicationNode1.getOperator(), op)) {
                                 replicationNode1.getOperator().add(op);
-                        }
+                        //}
 
                         op = new Operator();
                         op.setOperatorNodeID("uddi:another.juddi.apache.org:node2");
@@ -270,15 +278,16 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         op.getContact().add(new Contact());
                         op.getContact().get(0).getPersonName().add(new PersonName("mary", "en"));
                         op.getContact().get(0).setUseType("admin");
-                        if (!Contains(replicationNode1.getOperator(), op)) {
+                        //if (!Contains(replicationNode1.getOperator(), op)) 
+                        {
                                 replicationNode1.getOperator().add(op);
                         }
-                        if (!replicationNode1.getCommunicationGraph().getNode().contains("uddi:another.juddi.apache.org:node2")) {
+                        //if (!replicationNode1.getCommunicationGraph().getNode().contains("uddi:another.juddi.apache.org:node2")) {
                                 replicationNode1.getCommunicationGraph().getNode().add("uddi:another.juddi.apache.org:node2");
-                        }
-                        if (!replicationNode1.getCommunicationGraph().getNode().contains("uddi:juddi.apache.org:node1")) {
+                        //}
+                        //if (!replicationNode1.getCommunicationGraph().getNode().contains("uddi:juddi.apache.org:node1")) {
                                 replicationNode1.getCommunicationGraph().getNode().add("uddi:juddi.apache.org:node1");
-                        }
+                        //}
                         replicationNode1.setSerialNumber(0L);
                         replicationNode1.setTimeOfConfigurationUpdate("");
                         replicationNode1.setMaximumTimeToGetChanges(BigInteger.ONE);
@@ -292,9 +301,12 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         if (TckCommon.isDebug()) {
                                 JAXB.marshal(replicationNode1, System.out);
                         }
-                        logger.info("Setting replication config on Node 1...");
+
+                        logger.info(manager.getClientConfig().getConfigurationFile() + " Setting replication config on Node 1...@" + ((BindingProvider) juddiApiServiceNode1).getRequestContext().get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY));
+                        logger.info("Setting replication url on Node 1...@" + manager.getClientConfig().getUDDINode(CFG_node1_MARY).getReplicationUrl());
                         juddiApiServiceNode1.setReplicationNodes(rootNode1Token, replicationNode1);
-                        logger.info("Setting replication config on Node 2...");
+                        logger.info("Setting replication config on Node 2...@" + ((BindingProvider) juddiApiServiceNode2).getRequestContext().get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY));
+                        logger.info("Setting replication url on Node 2...@" + manager.getClientConfig().getUDDINode(CFG_node2_SAM).getReplicationUrl());
                         juddiApiServiceNode2.setReplicationNodes(rootNode2Token, replicationNode1);
 
                 } catch (Exception ex) {
@@ -702,14 +714,15 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         while (timeout > 0) {
                                 logger.info("Waiting for the update...");
                                 try {
-                                        
+
                                         tModelDetail = inquirySamNode2.getTModelDetail(findTModel);
                                         Assert.assertNotNull(tModelDetail);
                                         Assert.assertNotNull(tModelDetail.getTModel());
                                         Assert.assertNotNull(tModelDetail.getTModel().get(0));
                                         Assert.assertEquals(tModelDetail.getTModel().get(0).getTModelKey(), TckTModel.MARY_PUBLISHER_TMODEL_KEY);
-                                        if (tModelDetail.getTModel().get(0).isDeleted())
+                                        if (tModelDetail.getTModel().get(0).isDeleted()) {
                                                 break;
+                                        }
                                 } catch (Exception ex) {
                                         logger.warn(ex.getMessage());
                                         tModelDetail = null;
@@ -760,9 +773,10 @@ public class JUDDI_300_MultiNodeIntegrationTest {
 
                         resetBusinesses();
                         resetTmodels();
-                        try{
-                        samTModelNode2.saveTmodels(rootNode2Token);
-                        }catch (Exception ex){}
+                        try {
+                                samTModelNode2.saveTmodels(rootNode2Token);
+                        } catch (Exception ex) {
+                        }
                         samTModelNode2.saveSamSyndicatorTmodel(samTokenNode2);
                         samBizNode2.saveSamSyndicatorBusiness(samTokenNode2);
 
@@ -1005,10 +1019,10 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                                 DeleteBusiness db = new DeleteBusiness();
                                 db.setAuthInfo(samTokenNode2);
                                 db.getBusinessKey().add(TckBusiness.SAM_BUSINESS_KEY);
-                                try{
-                                publishSamNode2.deleteBusiness(db);
+                                try {
+                                        publishSamNode2.deleteBusiness(db);
+                                } catch (Exception ex) {
                                 }
-                                catch (Exception ex){}
                                 int timeout = TckPublisher.getSubscriptionTimeout();
                                 GetBusinessDetail findTModel = new GetBusinessDetail();
                                 findTModel.setAuthInfo(maryTokenNode1);
@@ -1049,10 +1063,10 @@ public class JUDDI_300_MultiNodeIntegrationTest {
          * @throws Exception
          */
         private void getReplicationStatus() throws Exception {
-                logger.info("Getting replication status....Mary's node1...");
-                waitUntilSynched(replicationMary);
-                logger.info("Getting replication status....Sam's node2...");
-                waitUntilSynched(replicationSam);
+              //  logger.info("Getting replication status....Mary's node1...");
+                //  waitUntilSynched(replicationMary);
+                //  logger.info("Getting replication status....Sam's node2...");
+                //  waitUntilSynched(replicationSam);
         }
 
         private void waitUntilSynched(UDDIReplicationPortType repl) throws Exception {
@@ -1245,7 +1259,9 @@ public class JUDDI_300_MultiNodeIntegrationTest {
          * <a href="http://www.uddi.org/pubs/uddi-v3.0.2-20041019.htm#_Toc85908178">7.3.9</a>
          * for more info on collision detection
          *
-         * requires support for conditional new data inserts and concurrence from nodes.
+         * requires support for conditional new data inserts and concurrence
+         * from nodes.
+         *
          * @throws Exception
          */
         @Test
@@ -1256,9 +1272,8 @@ public class JUDDI_300_MultiNodeIntegrationTest {
 
                         maryTModelNode1.saveMaryPublisherTmodel(maryTokenNode1);
                         samTModelNode2.saveMaryPublisherTmodel(samTokenNode2);
-                        
-                        //TODO assert both records removed
 
+                        //TODO assert both records removed
                 } finally {
                         resetTmodels();
                 }

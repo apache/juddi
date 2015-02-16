@@ -55,7 +55,7 @@ public class TckPublisher {
                                 logger.info("Loading tck.properties from " + f.getAbsolutePath());
                         } else {
                                 inputSteam = TckPublisher.class.getResourceAsStream("/tck.properties");
-                                logger.info("Loading tck.properties as a classpath resource, probable within uddi-tck-base.jar");
+                                logger.info("Loading tck.properties as a classpath resource, probably within uddi-tck-base.jar");
                         }
                         tckProperties.load(inputSteam);
                 } catch (IOException ioe) {

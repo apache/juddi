@@ -15,6 +15,7 @@
  */
 package org.apache.juddi.samples;
 
+import java.io.File;
 import java.util.List;
 import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.v3.client.config.UDDIClient;
@@ -32,6 +33,72 @@ public class EntryPoint {
 
         public static void main(String[] args) throws Exception {
 
+                if (System.getProperty("javax.net.ssl.trustStore") == null) {
+                        File f = new File("../../juddi-tomcat/truststore.jks");
+                        if (f.exists()) {
+                                System.setProperty("javax.net.ssl.trustStore", f.getAbsolutePath());
+
+                        } else {
+                                f = new File("../juddi-tomcat/truststore.jks");
+                                if (f.exists()) {
+                                        System.setProperty("javax.net.ssl.trustStore", f.getAbsolutePath());
+
+                                } else {
+                                        f = new File("./juddi-tomcat/truststore.jks");
+                                        if (f.exists()) {
+                                                System.setProperty("javax.net.ssl.trustStore", f.getAbsolutePath());
+
+                                        }
+                                }
+                        }
+
+                        System.setProperty("javax.net.ssl.trustStorePassword", "password");
+                        //System.setProperty("javax.net.ssl.keyStore", "keystore.jks");
+
+                        //System.setProperty("javax.net.ssl.keyStorePassword", "changeit");
+                }
+                //set up trust store
+
+                String trustStore = System.getProperty("javax.net.ssl.trustStore");
+                if (trustStore == null) {
+                        System.out.println("javax.net.ssl.trustStore is not defined");
+                } else {
+                        System.out.println("javax.net.ssl.trustStore = " + trustStore);
+                }
+                
+                
+                if (System.getProperty("javax.net.ssl.keyStore") == null) {
+                        File f = new File("../../juddi-tomcat/keystore.jks");
+                        if (f.exists()) {
+                                System.setProperty("javax.net.ssl.keyStore", f.getAbsolutePath());
+
+                        } else {
+                                f = new File("../juddi-tomcat/keyStore.jks");
+                                if (f.exists()) {
+                                        System.setProperty("javax.net.ssl.keyStore", f.getAbsolutePath());
+
+                                } else {
+                                        f = new File("./juddi-tomcat/keystore.jks");
+                                        if (f.exists()) {
+                                                System.setProperty("javax.net.ssl.keyStore", f.getAbsolutePath());
+
+                                        }
+                                }
+                        }
+
+                        System.setProperty("javax.net.ssl.keyStorePassword", "password");
+                        //System.setProperty("javax.net.ssl.keyStore", "keystore.jks");
+
+                        //System.setProperty("javax.net.ssl.keyStorePassword", "changeit");
+                }
+                //set up trust store
+
+                String keyStore = System.getProperty("javax.net.ssl.trustStore");
+                if (keyStore == null) {
+                        System.out.println("javax.net.ssl.keyStore is not defined");
+                } else {
+                        System.out.println("javax.net.ssl.keyStore = " + trustStore);
+                }
                 //first menu
                 //connect to a node and do work on it
                 //multinode 
@@ -74,7 +141,8 @@ public class EntryPoint {
                         System.out.println(" 1) Compare Two Binding/tModelInstanceInfo - QOS Code Example");
                         System.out.println("2) Digitally sign a UDDI entity from a file.");
                         System.out.println(" q) Quit/exit");
-
+                        System.out.print("#");
+                        input=System.console().readLine();
                         processOffline(input);
                 } while (!"q".equalsIgnoreCase(input));
 

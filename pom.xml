@@ -305,6 +305,7 @@ under the License.
         <module>juddi-rest-cxf</module>
         <module>juddi-core-openjpa</module>
         <module>juddiv3-war</module>
+        <module>juddiv3-war-repl</module>
         <module>juddi-examples</module>
         <module>juddi-gui-dsig</module>
         <module>juddi-gui</module>

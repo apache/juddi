@@ -41,9 +41,6 @@ import javax.persistence.Query;
 import javax.xml.bind.JAXB;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.BindingProvider;
-import org.apache.commons.configuration.ConfigurationException;
-import static org.apache.juddi.api.impl.AuthenticatedService.logger;
-import static org.apache.juddi.api.impl.AuthenticatedService.node;
 import org.apache.juddi.api.util.QueryStatus;
 import org.apache.juddi.api.util.ReplicationQuery;
 import org.apache.juddi.config.AppConfig;
@@ -62,11 +59,11 @@ import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.replication.ReplicationNotifier;
 import static org.apache.juddi.replication.ReplicationNotifier.FetchEdges;
 import org.apache.juddi.v3.client.UDDIService;
+import org.apache.juddi.v3.client.cryptor.TransportSecurityHelper;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.TransferNotAllowedException;
 import org.apache.juddi.validation.ValidateReplication;
-import org.uddi.api_v3.OperationalInfo;
 import org.uddi.custody_v3.TransferEntities;
 import org.uddi.repl_v3.ChangeRecord;
 import org.uddi.repl_v3.ChangeRecordAcknowledgement;
@@ -82,17 +79,15 @@ import org.uddi.repl_v3.TransferCustody;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIReplicationPortType;
 
-//@WebService(serviceName="UDDIReplicationService", 
-//			endpointInterface="org.uddi.v3_service.UDDIReplicationPortType",
-//			targetNamespace = "urn:uddi-org:v3_service")
 /**
  * UDDI Replication defines four APIs. The first two presented here are used to
  * perform replication and issue notifications. The latter ancillary APIs
  * provide support for other aspects of UDDI Replication.
- * <ul><li>get_changeRecords</li>
+ * <ul>
+ * <li>get_changeRecords</li>
  * <li>notify_changeRecordsAvailable</li>
  * <li>do_ping</li>
- * <li>get_highWaterMarks</li>
+ * <li>get_highWaterMarks</li></ul>
  *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
@@ -125,8 +120,6 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 for (String s : addedNodes) {
                         if (!s.equals(node)) {
                                 logger.info("This node: " + node + ". New replication node queue for synchronization: " + s);
-                                //HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
-                                //highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(s, 0L));
                                 HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
                                 highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(s, 0L));
                                 queue.add(new NotifyChangeRecordsAvailable(s, highWaterMarkVectorType));
@@ -186,13 +179,13 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
         private static UDDIPublicationImpl pub = null;
 
-        public UDDIReplicationImpl()  {
+        public UDDIReplicationImpl() {
                 super();
-                try{
-                this.interval = AppConfig.getConfiguration().getLong(Property.JUDDI_REPLICATION_INTERVAL, 5000L);
-                this.startBuffer = AppConfig.getConfiguration().getLong(Property.JUDDI_REPLICATION_START_BUFFER, 5000L);
-                }catch(Exception ex){
-                        logger.warn("Config error!",ex);
+                try {
+                        this.interval = AppConfig.getConfiguration().getLong(Property.JUDDI_REPLICATION_INTERVAL, 5000L);
+                        this.startBuffer = AppConfig.getConfiguration().getLong(Property.JUDDI_REPLICATION_START_BUFFER, 5000L);
+                } catch (Exception ex) {
+                        logger.warn("Config error!", ex);
                 }
                 if (pub == null) {
                         pub = new UDDIPublicationImpl();
@@ -300,7 +293,11 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                 }
                                         }
                                 } else {
-                                        logger.warn("strange, popped an object from the queue but it was null or it from myself, ignoring...");
+                                        if (poll == null) {
+                                                logger.warn("strange, popped a null object");
+                                        } else if (poll.getNotifyingNode().equalsIgnoreCase(node)) {
+                                                logger.warn("strange, popped an object from the queue but it was from myself. This probably indicates a configuration error! ignoring...first record: " + poll.getChangesAvailable().getHighWaterMark().get(0).getNodeID()+":" + poll.getChangesAvailable().getHighWaterMark().get(0).getOriginatingUSN());
+                                        }
                                 }
                         }
                 }
@@ -958,6 +955,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 }
                 UDDIService svc = new UDDIService();
                 UDDIReplicationPortType replicationClient = svc.getUDDIReplicationPort();
+                TransportSecurityHelper.applyTransportSecurity((BindingProvider) replicationClient);
 
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
@@ -1248,7 +1246,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 //getChangeRecords from the remote node asynch
                 new ValidateReplication(null).validateNotifyChangeRecordsAvailable(body, ctx);
 
-                logger.info(body.getNotifyingNode() + " just told me that there are change records available, enqueuing...size is " + queue.size());
+                logger.info(body.getNotifyingNode() + " just told me that there are change records available, enqueuing...size is " + queue.size() + " this node is " + node);
                 //if (!queue.contains(body.getNotifyingNode())) {
                 queue.add(body);
                 //}
