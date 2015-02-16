@@ -15,7 +15,6 @@
  */
 package org.apache.juddi.samples;
 
-//import com.sun.xml.internal.ws.developer.JAXWSProperties;
 import java.io.File;
 import java.io.FileInputStream;
 import java.math.BigInteger;
@@ -38,6 +37,7 @@ import org.apache.juddi.jaxb.PrintJUDDI;
 import org.apache.juddi.v3.client.UDDIService;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDINode;
+import org.apache.juddi.v3.client.cryptor.TransportSecurityHelper;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
@@ -505,7 +505,7 @@ public class JuddiAdminService {
                 }
                 Operator op = new Operator();
                 op.setOperatorNodeID("uddi:juddi.apache.org:node1");
-                op.setSoapReplicationURL("http://localhost:8080/juddiv3/services/replication");
+                op.setSoapReplicationURL(clerkManager.getClientConfig().getUDDINode("default").getReplicationUrl());
                 op.setOperatorStatus(OperatorStatusType.NORMAL);
                 op.getContact().add(new Contact());
                 op.getContact().get(0).getPersonName().add(new PersonName("bob", "en"));
@@ -515,7 +515,7 @@ public class JuddiAdminService {
 
                 op = new Operator();
                 op.setOperatorNodeID("uddi:another.juddi.apache.org:node2");
-                op.setSoapReplicationURL("http://localhost:9080/juddiv3/services/replication");
+                op.setSoapReplicationURL(clerkManager.getClientConfig().getUDDINode("uddi:another.juddi.apache.org:node2").getReplicationUrl());
                 op.setOperatorStatus(OperatorStatusType.NORMAL);
                 op.getContact().add(new Contact());
                 op.getContact().get(0).getPersonName().add(new PersonName("mary", "en"));
@@ -524,7 +524,7 @@ public class JuddiAdminService {
                 op = new Operator();
 
                 op.setOperatorNodeID("uddi:yet.another.juddi.apache.org:node3");
-                op.setSoapReplicationURL("http://localhost:10080/juddiv3/services/replication");
+                op.setSoapReplicationURL(clerkManager.getClientConfig().getUDDINode("uddi:yet.another.juddi.apache.org:node3").getReplicationUrl());
                 op.setOperatorStatus(OperatorStatusType.NORMAL);
                 op.getContact().add(new Contact());
                 op.getContact().get(0).getPersonName().add(new PersonName("mary", "en"));
@@ -586,7 +586,7 @@ public class JuddiAdminService {
                 }
                 Operator op = new Operator();
                 op.setOperatorNodeID("uddi:juddi.apache.org:node1");
-                op.setSoapReplicationURL("http://localhost:8080/juddiv3/services/replication");
+                op.setSoapReplicationURL(clerkManager.getClientConfig().getUDDINode("default").getReplicationUrl());
                 op.setOperatorStatus(OperatorStatusType.NORMAL);
                 op.getContact().add(new Contact());
                 op.getContact().get(0).getPersonName().add(new PersonName("bob", "en"));
@@ -596,7 +596,7 @@ public class JuddiAdminService {
 
                 op = new Operator();
                 op.setOperatorNodeID("uddi:another.juddi.apache.org:node2");
-                op.setSoapReplicationURL("http://localhost:9080/juddiv3/services/replication");
+                op.setSoapReplicationURL(clerkManager.getClientConfig().getUDDINode("uddi:another.juddi.apache.org:node2").getReplicationUrl());
                 op.setOperatorStatus(OperatorStatusType.NORMAL);
                 op.getContact().add(new Contact());
                 op.getContact().get(0).getPersonName().add(new PersonName("mary", "en"));
@@ -605,7 +605,7 @@ public class JuddiAdminService {
                 op = new Operator();
 
                 op.setOperatorNodeID("uddi:yet.another.juddi.apache.org:node3");
-                op.setSoapReplicationURL("http://localhost:10080/juddiv3/services/replication");
+                op.setSoapReplicationURL(clerkManager.getClientConfig().getUDDINode("uddi:yet.another.juddi.apache.org:node3").getReplicationUrl());
                 op.setOperatorStatus(OperatorStatusType.NORMAL);
                 op.getContact().add(new Contact());
                 op.getContact().get(0).getPersonName().add(new PersonName("mary", "en"));
@@ -687,7 +687,7 @@ public class JuddiAdminService {
                 //}
                 Operator op = new Operator();
                 op.setOperatorNodeID("uddi:juddi.apache.org:node1");
-                op.setSoapReplicationURL("http://localhost:8080/juddiv3/services/replication");
+                op.setSoapReplicationURL(clerkManager.getClientConfig().getUDDINode("default").getReplicationUrl());
                 op.setOperatorStatus(OperatorStatusType.NORMAL);
                 op.getContact().add(new Contact());
                 op.getContact().get(0).getPersonName().add(new PersonName("bob", "en"));
@@ -697,7 +697,7 @@ public class JuddiAdminService {
 
                 op = new Operator();
                 op.setOperatorNodeID("uddi:another.juddi.apache.org:node2");
-                op.setSoapReplicationURL("http://localhost:9080/juddiv3/services/replication");
+                op.setSoapReplicationURL(clerkManager.getClientConfig().getUDDINode("uddi:another.juddi.apache.org:node2").getReplicationUrl());
                 op.setOperatorStatus(OperatorStatusType.NORMAL);
                 op.getContact().add(new Contact());
                 op.getContact().get(0).getPersonName().add(new PersonName("mary", "en"));
@@ -750,7 +750,7 @@ public class JuddiAdminService {
                 }
                 Operator op = new Operator();
                 op.setOperatorNodeID("uddi:juddi.apache.org:node1");
-                op.setSoapReplicationURL("http://localhost:8080/juddiv3/services/replication");
+                op.setSoapReplicationURL(clerkManager.getClientConfig().getUDDINode("default").getReplicationUrl());
                 op.setOperatorStatus(OperatorStatusType.NORMAL);
                 op.getContact().add(new Contact());
                 op.getContact().get(0).getPersonName().add(new PersonName("bob", "en"));
@@ -760,7 +760,7 @@ public class JuddiAdminService {
 
                 op = new Operator();
                 op.setOperatorNodeID("uddi:another.juddi.apache.org:node2");
-                op.setSoapReplicationURL("http://localhost:9080/juddiv3/services/replication");
+                op.setSoapReplicationURL(clerkManager.getClientConfig().getUDDINode("uddi:another.juddi.apache.org:node2").getReplicationUrl());
                 op.setOperatorStatus(OperatorStatusType.NORMAL);
                 op.getContact().add(new Contact());
                 op.getContact().get(0).getPersonName().add(new PersonName("mary", "en"));
@@ -769,7 +769,7 @@ public class JuddiAdminService {
 
                 op = new Operator();
                 op.setOperatorNodeID("uddi:yet.another.juddi.apache.org:node3");
-                op.setSoapReplicationURL("http://localhost:10080/juddiv3/services/replication");
+                op.setSoapReplicationURL(clerkManager.getClientConfig().getUDDINode("uddi:yet.another.juddi.apache.org:node3").getReplicationUrl());
                 op.setOperatorStatus(OperatorStatusType.NORMAL);
                 op.getContact().add(new Contact());
                 op.getContact().get(0).getPersonName().add(new PersonName("mary", "en"));
@@ -965,7 +965,7 @@ public class JuddiAdminService {
                 //}
                 Operator op = new Operator();
                 op.setOperatorNodeID("uddi:juddi.apache.org:node1");
-                op.setSoapReplicationURL("https://localhost:8443/juddiv3replication/services/replication");
+                op.setSoapReplicationURL(clerkManager.getClientConfig().getUDDINode("default").getReplicationUrl());
                 op.setOperatorStatus(OperatorStatusType.NORMAL);
                 op.getContact().add(new Contact());
                 op.getContact().get(0).getPersonName().add(new PersonName("bob", "en"));
@@ -975,7 +975,7 @@ public class JuddiAdminService {
 
                 op = new Operator();
                 op.setOperatorNodeID("uddi:another.juddi.apache.org:node2");
-                op.setSoapReplicationURL("https://localhost:9443/juddiv3replication/services/replication");
+                op.setSoapReplicationURL(clerkManager.getClientConfig().getUDDINode("uddi:another.juddi.apache.org:node2").getReplicationUrl());
                 op.setOperatorStatus(OperatorStatusType.NORMAL);
                 op.getContact().add(new Contact());
                 op.getContact().get(0).getPersonName().add(new PersonName("mary", "en"));
@@ -984,7 +984,7 @@ public class JuddiAdminService {
                 op = new Operator();
 
                 op.setOperatorNodeID("uddi:yet.another.juddi.apache.org:node3");
-                op.setSoapReplicationURL("https://localhost:10443/juddiv3replication/services/replication");
+                op.setSoapReplicationURL(clerkManager.getClientConfig().getUDDINode("uddi:yet.another.juddi.apache.org:node3").getReplicationUrl());
                 op.setOperatorStatus(OperatorStatusType.NORMAL);
                 op.getContact().add(new Contact());
                 op.getContact().get(0).getPersonName().add(new PersonName("mary", "en"));
@@ -1045,25 +1045,7 @@ public class JuddiAdminService {
                 List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
 
                 UDDIReplicationPortType uddiReplicationPort = new UDDIService().getUDDIReplicationPort();
-                File currentdir = new File(".");
-                System.out.println("Using keystore from " + System.getProperty("javax.net.ssl.keyStore") + " current dir is " + currentdir.getAbsolutePath());
-                System.out.println("Using truststure from " + System.getProperty("javax.net.ssl.trustStore") + " current dir is " + currentdir.getAbsolutePath());
-                SSLContext sc = SSLContext.getInstance("SSLv3");
-
-                KeyManagerFactory kmf
-                        = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-
-                KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-                ks.load(new FileInputStream(System.getProperty("javax.net.ssl.keyStore")), System.getProperty("javax.net.ssl.keyStorePassword").toCharArray());
-
-                kmf.init(ks, System.getProperty("javax.net.ssl.keyStorePassword").toCharArray());
-
-                sc.init(kmf.getKeyManagers(), null, null);
-
-                ((BindingProvider) uddiReplicationPort).getRequestContext()
-                        .put(
-                                "com.sun.xml.internal.ws.transport.https.client.SSLSocketFactory",
-                                sc.getSocketFactory());
+                TransportSecurityHelper.applyTransportSecurity((BindingProvider) uddiReplicationPort);
 
                 for (Node currenteNode : uddiNodeList) {
                         try {

@@ -43,15 +43,12 @@ public class EntryPoitMultiNode {
                 List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
                 String input = null;
                 do {
-                        System.out.println("1) Replication - Setup replication between two nodes");
-
-                        System.out.println("2) Sets undirected replication two instances of jUDDI on 8080 and 9080");
-                        System.out.println("3) Sets undirected replication 3 instances of jUDDI on 8080 and 9080 and 10080");
-                        System.out.println("4) Sets directed replication between 3 instances of jUDDI on 8080 and 9080, 10080");
-                        System.out.println("5) Sets directed replication between 3 instances of jUDDI on 8443 and 9443, 10443 over two way ssl");
-                        System.out.println("6) Prints the replication status for all nodes");
-                        System.out.println("7) Prints the business, service, and tmodels counts");
-                        System.out.println("8) Ping all nodes");
+                        System.out.println("1) Sets undirected replication two instances of jUDDI");
+                        System.out.println("2) Sets undirected replication 3 instances of jUDDI");
+                        System.out.println("3) Sets directed replication between 3 instances of jUDDI");
+                        System.out.println("4) Prints the replication status for all nodes");
+                        System.out.println("5) Prints the business, service, and tmodels counts");
+                        System.out.println("6) Ping all nodes");
 
                         System.out.println("q) quit");
                         System.out.print("Selection: ");
@@ -64,10 +61,6 @@ public class EntryPoitMultiNode {
 
         private static void processInput(String input, UDDIClient clerkManager) throws Exception {
                 if (input.equals("1")) {
-                        // System.out.println("30) Replication - Setup replication between two nodes");
-                        new JuddiAdminService(clerkManager, null).setupReplication();
-
-                } else if (input.equals("2")) {
 
                         new JuddiAdminService(clerkManager, null).autoMagic();
                         List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
@@ -75,8 +68,7 @@ public class EntryPoitMultiNode {
                                 new UddiCreatebulk(uddiNodeList.get(i).getName()).publishBusiness(null, 1, 1, "root@" + uddiNodeList.get(i).getName());
                         }
                         //new UddiCreatebulk("uddi:another.juddi.apache.org:node2").publishBusiness(null, 1, 1);
-                }
-                else if (input.equals("3")) {
+                } else if (input.equals("2")) {
 
                         new JuddiAdminService(clerkManager, null).autoMagic3();
                         List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
@@ -84,24 +76,16 @@ public class EntryPoitMultiNode {
                                 new UddiCreatebulk(uddiNodeList.get(i).getName()).publishBusiness(null, 1, 1, "root@" + uddiNodeList.get(i).getName());
                         }
                         //new UddiCreatebulk("uddi:another.juddi.apache.org:node2").publishBusiness(null, 1, 1);
-                }
-                else if (input.equals("4")) {
+                } else if (input.equals("3")) {
                         new JuddiAdminService(clerkManager, null).autoMagicDirected();
 
                         List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
                         for (int i = 0; i < uddiNodeList.size(); i++) {
                                 new UddiCreatebulk(uddiNodeList.get(i).getName()).publishBusiness(null, 1, 1, "root@" + uddiNodeList.get(i).getName());
                         }
-                } else if (input.equals("5")) {
-                        new JuddiAdminService(clerkManager, null).autoMagicDirectedSSL();
-
-                        List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
-                        for (int i = 0; i < uddiNodeList.size(); i++) {
-                                new UddiCreatebulk(uddiNodeList.get(i).getName()).publishBusiness(null, 1, 1, "root@" + uddiNodeList.get(i).getName());
-                        }
-                } else if (input.equals("6")) {
+                } else if (input.equals("4")) {
                         new JuddiAdminService(clerkManager, null).printStatus();
-                } else if (input.equals("7")) {
+                } else if (input.equals("5")) {
                         List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
                         for (Node n : uddiNodeList) {
                                 UDDIInquiryPortType uddiInquiryService = clerkManager.getTransport(n.getName()).getUDDIInquiryService();
@@ -126,21 +110,21 @@ public class EntryPoitMultiNode {
                                 ServiceList findService = uddiInquiryService.findService(fs);
                                 System.out.println(n.getName() + " service count "
                                         + findService.getListDescription().getActualCount());
-                                
-                                FindTModel ft= new FindTModel();
+
+                                FindTModel ft = new FindTModel();
                                 ft.setName(new Name(UDDIConstants.WILDCARD, null));
                                 ft.setFindQualifiers(new FindQualifiers());
                                 ft.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
                                 ft.setMaxRows(1);
                                 ft.setListHead(0);
                                 TModelList findTModel = uddiInquiryService.findTModel(ft);
-                                 System.out.println(n.getName() + " tModel count "
+                                System.out.println(n.getName() + " tModel count "
                                         + findTModel.getListDescription().getActualCount());
 
                         }
                         System.out.println();
-                } else if (input.equals("8")){
-                         new JuddiAdminService(clerkManager, null).pingAll();
+                } else if (input.equals("6")) {
+                        new JuddiAdminService(clerkManager, null).pingAll();
                 }
 
         }
