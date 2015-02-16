@@ -1017,11 +1017,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         // First, identify all previous assertions that need to be removed
                         List<org.apache.juddi.model.PublisherAssertion> existingAssertions = FindPublisherAssertionByBusinessQuery.select(em, businessKeysFound, null);
 
-                        logger.info(">>>> Existing assertions " + existingAssertions.size() + ", inbound set " + publisherAssertion.value.size());
+                        logger.debug(">>>> Existing assertions " + existingAssertions.size() + ", inbound set " + publisherAssertion.value.size());
                         List<org.apache.juddi.model.PublisherAssertion> deleteMe = diff(publisherAssertion.value, existingAssertions);
-                        logger.info(">>>> DIFF size is " + deleteMe.size());
+                        logger.debug(">>>> DIFF size is " + deleteMe.size());
                         for (org.apache.juddi.model.PublisherAssertion del : deleteMe) {
-                                logger.info(">>>> PROCESSING " + del.getBusinessEntityByFromKey().getEntityKey() + " " + del.getBusinessEntityByToKey().getEntityKey());
+                                logger.debug(">>>> PROCESSING " + del.getBusinessEntityByFromKey().getEntityKey() + " " + del.getBusinessEntityByToKey().getEntityKey());
                                 boolean from = false;
                                 if (del.getFromCheck() != null) {
                                         del.getFromCheck().equalsIgnoreCase("true");
@@ -1040,10 +1040,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                                 MappingModelToApi.mapPublisherAssertion(del, api);
 
                                 if (!to && !from) {
-                                        logger.info(">>>> DELETE ME " + del.getBusinessEntityByFromKey().getEntityKey() + " " + del.getBusinessEntityByToKey().getEntityKey());
+                                        logger.debug(">>>> DELETE ME " + del.getBusinessEntityByFromKey().getEntityKey() + " " + del.getBusinessEntityByToKey().getEntityKey());
                                         em.remove(del);
                                 } else {
-                                        logger.info(">>>> MERGING ME " + del.getBusinessEntityByFromKey().getEntityKey() + " " + del.getBusinessEntityByToKey().getEntityKey());
+                                        logger.debug(">>>> MERGING ME " + del.getBusinessEntityByFromKey().getEntityKey() + " " + del.getBusinessEntityByToKey().getEntityKey());
                                         del.setFromCheck(from ? "true" : "false");
                                         del.setToCheck(to ? "true" : "false");
                                         del.setModified(new Date());
