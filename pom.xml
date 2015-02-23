@@ -359,7 +359,12 @@ under the License.
             <url>http://central.maven.org/maven2</url>
             <layout>default</layout>
         </repository>
-
+        <repository>
+            <id>jboss3</id>
+            <name>JBoss 3rd Party</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/</url>
+            <layout>default</layout>
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
