@@ -21,6 +21,7 @@
 --%>
 
 
+<%@page import="java.util.Map.Entry"%>
 <%@page import="javax.persistence.EntityTransaction"%>
 <%@page import="org.uddi.api_v3.BusinessEntity"%>
 <%@page import="org.apache.juddi.config.Property"%> 
@@ -318,10 +319,11 @@
                     <pre><%
                         try {
                             Properties sysProps = System.getProperties();
-                            SortedSet sortedProperties = new TreeSet(sysProps.keySet());
-                            for (Iterator keys = sortedProperties.iterator(); keys.hasNext();) {
-                                String key = (String) keys.next();
-                                out.println("<b>" + key + "</b>: " + sysProps.getProperty(key));
+                            Iterator<Entry<Object,Object>> it = sysProps.entrySet().iterator();
+                            while (it.hasNext()){
+                                    Entry<Object,Object> x = it.next();
+                                    
+                                out.println("<b>" + StringEscapeUtils.escapeHtml((String)x.getKey()) + "</b>: " + StringEscapeUtils.escapeHtml((String)x.getValue()) + "<br>");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
