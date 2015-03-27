@@ -24,7 +24,7 @@
 	</parent>
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>juddi-rest-cxf</artifactId>
-	<packaging>bundle</packaging>
+	<packaging>jar</packaging>
 	<name>jUDDI REST Services using Apache CXF</name>
 	<dependencies>
 		<dependency>

@@ -79,7 +79,10 @@ public class JAXWSTransport extends Transport {
                                 inquiryService = service.getUDDIInquiryPort();
                         }
                         Map<String, Object> requestContext = ((BindingProvider) inquiryService).getRequestContext();
+                        if (endpointURL != null) {
+                        
                         requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+                        }
                         setCredentials(requestContext);
                 } catch (Exception e) {
                         throw new TransportException(e.getMessage(), e);
@@ -123,6 +126,7 @@ public class JAXWSTransport extends Transport {
                                 publishService = service.getUDDIPublicationPort();
                         }
                         Map<String, Object> requestContext = ((BindingProvider) publishService).getRequestContext();
+                        if (endpointURL != null)
                         requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
                         setCredentials(requestContext);
                 } catch (Exception e) {

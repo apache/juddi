@@ -81,10 +81,9 @@ import org.uddi.v3_service.UDDIPublicationPortType;
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  * @since 3.2
  */
-
-@WebService(serviceName="UDDISubscriptionListenerClientService", 
-			endpointInterface="org.uddi.v3_service.UDDISubscriptionListenerPortType",
-			targetNamespace = "urn:uddi-org:v3_service")
+@WebService(serviceName = "UDDISubscriptionListenerClientService",
+        endpointInterface = "org.uddi.v3_service.UDDISubscriptionListenerPortType",
+        targetNamespace = "urn:uddi-org:v3_service")
 public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISubscriptionListenerPortType, Runnable {
 
         /**
@@ -120,7 +119,7 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
          * connect to the client's subscription listener service Recommend
          * specifying a port that is firewall friendly
          * @param keydomain
-         
+         *
          * @param autoregister
          * @param behavior
          * @param serviceKey
@@ -133,7 +132,8 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
          * @throws TransportException
          * @throws DispositionReportFaultMessage
          * @throws java.rmi.UnexpectedException
-         * @throws org.apache.juddi.v3.client.subscription.RegistrationAbortedException
+         * @throws
+         * org.apache.juddi.v3.client.subscription.RegistrationAbortedException
          * @throws java.net.MalformedURLException
          * @throws org.apache.juddi.v3.client.subscription.UnableToSignException
          * @see Endpoint
@@ -158,7 +158,7 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
                         url = new URL("http://" + GetHostname() + ":" + GetRandomPort(4000) + "/" + UUID.randomUUID().toString());
                 }
                 endpoint = url.toString();
-        //if (endpoint == null || endpoint.equals("")) {
+                //if (endpoint == null || endpoint.equals("")) {
                 //    endpoint = "http://" + GetHostname() + ":" + GetRandomPort(url.getPort()) + "/" + UUID.randomUUID().toString();
 
                 int attempts = 5;
@@ -210,7 +210,8 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
 
         /**
          * Starts a subscription callback service using the juddi client config
-         * file's settings. This will use the config setting PROPERTY_NODE, or default if not defined
+         * file's settings. This will use the config setting PROPERTY_NODE, or
+         * default if not defined
          *
          * @param client
          * @return a bindingtemplate populated with the relevant information for
@@ -222,19 +223,22 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
          * @throws DispositionReportFaultMessage
          * @throws UnexpectedException
          * @throws RemoteException
-         * @throws org.apache.juddi.v3.client.subscription.RegistrationAbortedException
+         * @throws
+         * org.apache.juddi.v3.client.subscription.RegistrationAbortedException
          * @throws org.apache.juddi.v3.client.subscription.UnableToSignException
          * @throws java.net.MalformedURLException
          */
         public static synchronized BindingTemplate start(UDDIClient client) throws ServiceAlreadyStartedException, SecurityException, ConfigurationException, TransportException, DispositionReportFaultMessage, UnexpectedException, RemoteException, RegistrationAbortedException, UnableToSignException, MalformedURLException {
-                return start(client, client.getClientConfig().getConfiguration().getString(PROPERTY_NODE,"default"));
+                return start(client, client.getClientConfig().getConfiguration().getString(PROPERTY_NODE, "default"));
         }
+
         /**
          * Starts a subscription callback service using the juddi client config
          * file's settings. This will use the specified node
          *
          * @param client
-         * @param cfg_node_name the node to connect to and perform all operations on
+         * @param cfg_node_name the node to connect to and perform all
+         * operations on
          * @return a bindingtemplate populated with the relevant information for
          * most UDDI servers for asynchronous callbacks.
          * @throws ServiceAlreadyStartedException
@@ -244,25 +248,31 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
          * @throws DispositionReportFaultMessage
          * @throws UnexpectedException
          * @throws RemoteException
-         * @throws org.apache.juddi.v3.client.subscription.RegistrationAbortedException
+         * @throws
+         * org.apache.juddi.v3.client.subscription.RegistrationAbortedException
          * @throws org.apache.juddi.v3.client.subscription.UnableToSignException
          * @throws java.net.MalformedURLException
          */
         public static synchronized BindingTemplate start(UDDIClient client, String cfg_node_name) throws ServiceAlreadyStartedException, SecurityException, ConfigurationException, TransportException, DispositionReportFaultMessage, UnexpectedException, RemoteException, RegistrationAbortedException, UnableToSignException, MalformedURLException {
 
-                boolean reg = (client.getClientConfig().getConfiguration().getBoolean(PROPERTY_AUTOREG_BT, false));
-                String endpoint = client.getClientConfig().getConfiguration().getString(PROPERTY_LISTENURL);
-                String kd = client.getClientConfig().getConfiguration().getString(PROPERTY_KEYDOMAIN);
-                String key = client.getClientConfig().getConfiguration().getString(PROPERTY_AUTOREG_SERVICE_KEY);
-                String sbs = client.getClientConfig().getConfiguration().getString(PROPERTY_SIGNATURE_BEHAVIOR);
-                SignatureBehavior sb = SignatureBehavior.DoNothing;
                 try {
-                        sb = SignatureBehavior.valueOf(sbs);
-                } catch (Exception ex) {
-                        log.warn("Unable to parse config setting for SignatureBehavior, defaulting to DoNothing", ex);
+                        boolean reg = (client.getClientConfig().getConfiguration().getBoolean(PROPERTY_AUTOREG_BT, false));
+
+                        String endpoint = client.getClientConfig().getConfiguration().getString(PROPERTY_LISTENURL);
+                        String kd = client.getClientConfig().getConfiguration().getString(PROPERTY_KEYDOMAIN);
+                        String key = client.getClientConfig().getConfiguration().getString(PROPERTY_AUTOREG_SERVICE_KEY);
+                        String sbs = client.getClientConfig().getConfiguration().getString(PROPERTY_SIGNATURE_BEHAVIOR);
+                        SignatureBehavior sb = SignatureBehavior.DoNothing;
+                        try {
+                                sb = SignatureBehavior.valueOf(sbs);
+                        } catch (Exception ex) {
+                                log.warn("Unable to parse config setting for SignatureBehavior, defaulting to DoNothing", ex);
+                        }
+                        return start(client, cfg_node_name, endpoint, kd, reg, key, sb);
+                } catch (ConfigurationException ex) {
+                        throw new ConfigurationException("failed to some critical settings from the juddi client config file. I won't be able to fire up the subscription callback endpoint ", ex);
                 }
 
-                return start(client, cfg_node_name, endpoint, kd, reg, key, sb);
         }
         private static String callback = null;
 
@@ -308,7 +318,7 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
          * config parameter
          */
         public static final String PROPERTY_LISTENURL = "client.subscriptionCallbacks.listenUrl";
-                /**
+        /**
          * config parameter, if not defined, default will be used
          */
         public static final String PROPERTY_NODE = "client.subscriptionCallbacks.node";
@@ -547,10 +557,11 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
         /**
          * This effectively stops the endpoint address and notifies all
          * ISubscriptionCallback clients that the endpoint as been stopped.
-         * After it has been stopped, all ISubscriptionCallback are removed
-         * from the callback list. If the configuration file is set to automatically
-         * register binding templates, the binding template will be unregistered from
-         * the UDDI server
+         * After it has been stopped, all ISubscriptionCallback are removed from
+         * the callback list. If the configuration file is set to automatically
+         * register binding templates, the binding template will be unregistered
+         * from the UDDI server
+         *
          * @param client
          * @param cfg_node_name
          * @param bindingKey
@@ -569,7 +580,7 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
                 }
                 unregisterAllCallbacks();
                 if (client.getClientConfig().getConfiguration().getBoolean(PROPERTY_AUTOREG_BT, false) && bindingKey != null) {
-                        
+
                         try {
                                 UDDIClerk clerk = client.getClerk(cfg_node_name);
                                 Transport tp = client.getTransport(cfg_node_name);
@@ -585,7 +596,7 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
                         }
                 }
 
-        //TODO optionally kill the subscription?
+                //TODO optionally kill the subscription?
                 //get all subscriptions from the uddi node, 
                 //loop through and deduce which ones are pointed at this endpoint
                 //then remove them

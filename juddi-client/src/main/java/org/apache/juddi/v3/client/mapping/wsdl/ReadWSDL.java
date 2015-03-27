@@ -51,12 +51,15 @@ public class ReadWSDL {
                         File f = new File(fileName);
                         URL url = null;
                         if (f.exists()) {
+                                log.info(fileName + " as a local file doesn't exist.");
                                 url = f.toURI().toURL();
                         } else {
                                 url = ClassUtil.getResource(fileName, this.getClass());
                         }
-                        if (url==null)
+                        if (url==null){
+                                log.info(fileName + " as a class path resource doesn't exist.");
                                 throw new WSDLException("null input", fileName);
+                        }
                         URI uri = url.toURI();
                         WSDLLocator locator = new WSDLLocatorImpl(uri);
                         wsdlDefinition = reader.readWSDL(locator);

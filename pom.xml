@@ -299,6 +299,7 @@ under the License.
         <module>uddi-ws</module>
         <module>uddi-tck-base</module>
         <module>juddi-client</module>
+        <module>juddi-client-cli</module>
         <module>juddi-client-plugins</module>
         <module>uddi-migration-tool</module>
         <module>juddi-core</module>
