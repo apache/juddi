@@ -843,4 +843,3 @@ public interface UDDIInquiryPortType extends Remote {
             @WebParam(name = "get_tModelDetail", targetNamespace = "urn:uddi-org:api_v3", partName = "body") GetTModelDetail body)
             throws DispositionReportFaultMessage, RemoteException;
 }
-

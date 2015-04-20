@@ -77,4 +77,3 @@ public class HostingRedirector implements Serializable{
     }
 
 }
-

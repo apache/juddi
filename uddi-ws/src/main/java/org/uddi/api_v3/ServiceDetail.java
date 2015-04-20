@@ -115,4 +115,3 @@ public class ServiceDetail implements Serializable{
     }
 
 }
-

@@ -91,4 +91,3 @@ public class InstanceDetails implements Serializable {
     }
 
 }
-

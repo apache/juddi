@@ -167,4 +167,3 @@ public interface UDDISubscriptionListenerPortType extends Remote {
             @WebParam(name = "notify_subscriptionListener", targetNamespace = "urn:uddi-org:subr_v3", partName = "body") NotifySubscriptionListener body)
             throws DispositionReportFaultMessage, RemoteException;
 }
-

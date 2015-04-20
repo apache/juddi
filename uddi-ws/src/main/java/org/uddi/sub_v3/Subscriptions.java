@@ -85,4 +85,3 @@ public class Subscriptions implements Serializable{
     }
 
 }
-

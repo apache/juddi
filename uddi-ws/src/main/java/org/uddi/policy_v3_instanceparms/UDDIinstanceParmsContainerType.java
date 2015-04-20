@@ -89,4 +89,3 @@ public class UDDIinstanceParmsContainerType implements Serializable{
     }
 
 }
-

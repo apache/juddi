@@ -115,4 +115,3 @@ public class TModelDetail implements Serializable{
     }
 
 }
-

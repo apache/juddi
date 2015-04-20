@@ -112,4 +112,3 @@ public class ValidValuesList implements Serializable{
     }
 
 }
-

@@ -209,4 +209,3 @@ public class ChangeRecordPublisherAssertion implements Serializable{
     }
 
 }
-

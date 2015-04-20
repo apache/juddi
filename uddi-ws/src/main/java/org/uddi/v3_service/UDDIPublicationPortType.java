@@ -2388,4 +2388,3 @@ clearly indicate which assertion caused the error.</p>
             @WebParam(name = "publisherAssertion", targetNamespace = "urn:uddi-org:api_v3", mode = WebParam.Mode.INOUT) Holder<List<PublisherAssertion>> publisherAssertion)
             throws DispositionReportFaultMessage, RemoteException;
 }
-

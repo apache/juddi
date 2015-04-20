@@ -343,4 +343,3 @@ public class SubscriptionFilter implements Serializable{
     }
 
 }
-

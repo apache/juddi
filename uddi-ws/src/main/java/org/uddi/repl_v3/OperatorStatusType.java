@@ -72,4 +72,3 @@ public enum OperatorStatusType implements Serializable{
     }
 
 }
-

@@ -68,4 +68,3 @@ public enum FilterUsingFindAPIType implements Serializable{
     }
 
 }
-

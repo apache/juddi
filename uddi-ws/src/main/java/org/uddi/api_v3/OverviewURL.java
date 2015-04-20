@@ -123,4 +123,3 @@ public class OverviewURL implements Serializable {
         this.useType = value;
     }
 }
-

@@ -67,4 +67,3 @@ public class GetAllClientSubscriptionInfoDetail implements Serializable{
     }
 
 }
-

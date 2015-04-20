@@ -136,4 +136,3 @@ public class RegisteredInfo implements Serializable{
     }
 
 }
-

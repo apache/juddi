@@ -115,4 +115,3 @@ public class ChangeRecordHide implements Serializable{
     }
 
 }
-

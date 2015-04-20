@@ -198,4 +198,3 @@ public class ChangeRecordDelete implements Serializable{
     }
 
 }
-

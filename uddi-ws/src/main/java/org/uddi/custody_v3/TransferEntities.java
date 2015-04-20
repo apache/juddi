@@ -137,4 +137,3 @@ public class TransferEntities implements Serializable{
     }
 
 }
-

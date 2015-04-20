@@ -87,4 +87,3 @@ public class BusinessInfos implements Serializable{
     }
 
 }
-

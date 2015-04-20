@@ -115,4 +115,3 @@ public class GetBindingDetail implements Serializable{
     }
 
 }
-

@@ -208,4 +208,3 @@ public class ChangeRecordNewData implements Serializable{
     }
 
 }
-

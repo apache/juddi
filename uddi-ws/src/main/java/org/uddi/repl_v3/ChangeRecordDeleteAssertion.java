@@ -179,4 +179,3 @@ public class ChangeRecordDeleteAssertion implements Serializable{
     }
 
 }
-

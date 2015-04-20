@@ -107,4 +107,3 @@ public class GetRegisteredInfo implements Serializable{
     }
 
 }
-

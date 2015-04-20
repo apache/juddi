@@ -115,4 +115,3 @@ public class GetTModelDetail implements Serializable{
     }
 
 }
-

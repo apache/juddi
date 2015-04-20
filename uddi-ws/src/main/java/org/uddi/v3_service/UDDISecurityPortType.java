@@ -165,4 +165,3 @@ public interface UDDISecurityPortType extends Remote {
             @WebParam(name = "get_authToken", targetNamespace = "urn:uddi-org:api_v3", partName = "body") GetAuthToken body)
             throws DispositionReportFaultMessage, RemoteException;
 }
-

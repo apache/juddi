@@ -71,4 +71,3 @@ public enum AuthInfoUseType implements Serializable{
     }
 
 }
-

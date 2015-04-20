@@ -195,4 +195,3 @@ public class AssertionStatusItem implements Serializable{
     }
 
 }
-

@@ -136,4 +136,3 @@ public class BusinessList implements Serializable{
     }
 
 }
-

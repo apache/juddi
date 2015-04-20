@@ -112,4 +112,3 @@ public class SetPublisherAssertions implements Serializable{
     }
 
 }
-

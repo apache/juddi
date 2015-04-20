@@ -138,4 +138,3 @@ public class TransferToken implements Serializable{
     }
 
 }
-

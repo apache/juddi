@@ -71,4 +71,3 @@ public enum InfoSelection implements Serializable{
     }
 
 }
-

@@ -287,4 +287,3 @@ public class BindingTemplate implements Serializable{
     }
 
 }
-

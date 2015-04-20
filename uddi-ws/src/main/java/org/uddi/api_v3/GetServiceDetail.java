@@ -114,4 +114,3 @@ public class GetServiceDetail implements Serializable{
     }
 
 }
-

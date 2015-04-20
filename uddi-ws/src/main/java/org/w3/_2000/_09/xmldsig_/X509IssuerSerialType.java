@@ -106,4 +106,3 @@ public class X509IssuerSerialType {
     }
 
 }
-

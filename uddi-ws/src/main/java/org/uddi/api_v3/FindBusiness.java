@@ -469,4 +469,3 @@ public class FindBusiness implements Serializable{
     }
 
 }
-

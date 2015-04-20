@@ -119,4 +119,3 @@ NO change record MAY have a USN equal to 0 (zero).
                 this.originatingUSN = value;
         }
 }
-

@@ -728,4 +728,3 @@ renewed. The request has been denied due to either node or registry policy.</p>
             @WebParam(name = "subscription", targetNamespace = "urn:uddi-org:sub_v3", mode = WebParam.Mode.INOUT) Holder<List<Subscription>> subscription)
             throws DispositionReportFaultMessage, RemoteException;
 }
-

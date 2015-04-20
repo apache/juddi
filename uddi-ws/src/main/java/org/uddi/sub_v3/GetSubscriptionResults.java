@@ -164,4 +164,3 @@ public class GetSubscriptionResults implements Serializable{
     }
 
 }
-

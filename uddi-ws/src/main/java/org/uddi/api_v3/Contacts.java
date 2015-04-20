@@ -87,4 +87,3 @@ public class Contacts implements Serializable{
     }
 
 }
-

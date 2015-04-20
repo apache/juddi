@@ -462,4 +462,3 @@ public class SubscriptionResultsList implements Serializable{
     }
 
 }
-

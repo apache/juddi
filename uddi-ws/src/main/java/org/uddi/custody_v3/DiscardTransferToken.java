@@ -137,4 +137,3 @@ public class DiscardTransferToken implements Serializable{
     }
 
 }
-

@@ -52,4 +52,3 @@ public class DoPing implements Serializable{
 	@XmlTransient
 	private static final long serialVersionUID = 2553480490233010262L;
 }
-

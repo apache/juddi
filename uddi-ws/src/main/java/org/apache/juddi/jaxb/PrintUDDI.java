@@ -17,11 +17,6 @@ package org.apache.juddi.jaxb;
 import java.io.StringWriter;
 import javax.xml.bind.JAXB;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.namespace.QName;
 
 /**
  * This is for printing UDDI v3 objects from the spec.<br><br>

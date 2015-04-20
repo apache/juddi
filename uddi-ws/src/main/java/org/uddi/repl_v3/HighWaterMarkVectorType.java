@@ -86,4 +86,3 @@ public class HighWaterMarkVectorType implements Serializable{
     }
 
 }
-

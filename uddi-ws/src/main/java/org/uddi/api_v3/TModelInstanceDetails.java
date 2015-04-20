@@ -87,4 +87,3 @@ public class TModelInstanceDetails implements Serializable{
     }
 
 }
-

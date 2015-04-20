@@ -85,4 +85,3 @@ public class DiscardAuthToken implements Serializable{
     }
 
 }
-

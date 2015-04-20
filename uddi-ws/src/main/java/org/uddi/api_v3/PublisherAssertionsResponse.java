@@ -87,4 +87,3 @@ public class PublisherAssertionsResponse implements Serializable{
     }
 
 }
-

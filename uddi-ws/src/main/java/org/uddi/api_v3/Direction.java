@@ -68,4 +68,3 @@ public enum Direction implements Serializable{
     }
 
 }
-

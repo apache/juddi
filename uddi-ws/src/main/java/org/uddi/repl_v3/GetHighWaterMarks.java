@@ -52,4 +52,3 @@ public class GetHighWaterMarks implements Serializable{
 	@XmlTransient
 	private static final long serialVersionUID = 6871793356516130202L;
 }
-

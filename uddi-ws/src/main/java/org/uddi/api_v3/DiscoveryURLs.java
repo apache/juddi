@@ -87,4 +87,3 @@ public class DiscoveryURLs implements Serializable{
     }
 
 }
-

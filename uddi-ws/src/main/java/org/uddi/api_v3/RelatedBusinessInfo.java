@@ -180,4 +180,3 @@ public class RelatedBusinessInfo implements Serializable{
     }
 
 }
-

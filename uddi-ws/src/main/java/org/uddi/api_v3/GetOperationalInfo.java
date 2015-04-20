@@ -115,4 +115,3 @@ public class GetOperationalInfo implements Serializable{
     }
 
 }
-

@@ -222,4 +222,3 @@ public class OperationalInfo implements Serializable{
     }
 
 }
-

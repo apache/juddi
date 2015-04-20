@@ -112,4 +112,3 @@ public class CategoryBag implements Serializable {
     	return this.keyedReferenceGroup;
     }
 }
-

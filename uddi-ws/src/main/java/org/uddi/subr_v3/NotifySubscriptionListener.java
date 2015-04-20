@@ -112,4 +112,3 @@ public class NotifySubscriptionListener implements Serializable{
     }
 
 }
-

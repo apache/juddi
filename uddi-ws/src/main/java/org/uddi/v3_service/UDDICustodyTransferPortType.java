@@ -525,4 +525,3 @@ public interface UDDICustodyTransferPortType extends Remote {
             @WebParam(name = "transfer_entities", targetNamespace = "urn:uddi-org:custody_v3", partName = "body") TransferEntities body)
             throws DispositionReportFaultMessage, RemoteException;
 }
-
