@@ -12,11 +12,11 @@
 	<parent>
 		<groupId>org.apache.juddi.example</groupId>
 		<artifactId>juddi-examples</artifactId>
-		<version>3.3.0</version>
+		<version>3.3.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>example-vsv-validator</artifactId>
-	<version>3.3.0</version>
+	<version>3.2.1</version>
 	<name>jUDDI Example Value Set Validator</name>
 	<dependencies>
 		<dependency>
