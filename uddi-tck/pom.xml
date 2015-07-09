@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.3.0-SNAPSHOT</version>
+		<version>3.3.0</version>
 	</parent>
 	<artifactId>uddi-tck</artifactId>
 	<packaging>bundle</packaging>
@@ -170,16 +170,16 @@
 								<copy file="${basedir}/serverNode2.xml" tofile="target/node2/juddi-tomcat-${project.parent.version}/conf/server.xml" overwrite="true" />
 								<copy file="${basedir}/log4j.properties" todir="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddiv3/WEB-INF/classes" overwrite="true" />
 
-								<copy file="${basedir}/juddi_install_data_node2/root_BusinessEntity.xml" todir="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
-								<copy file="${basedir}/juddi_install_data_node2/root_Publisher.xml" todir="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
-								<copy file="${basedir}/juddi_install_data_node2/root_tModelKeyGen.xml" todir="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
-								<copy file="${basedir}/juddi_install_data_node2/UDDI_Publisher.xml" todir="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
-								<copy file="${basedir}/juddi_install_data_node2/UDDI_tModels.xml" todir="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true"/>
+								<copy file="${basedir}/juddi_install_data_node2/root_BusinessEntity.xml" todir="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true" />
+								<copy file="${basedir}/juddi_install_data_node2/root_Publisher.xml" todir="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true" />
+								<copy file="${basedir}/juddi_install_data_node2/root_tModelKeyGen.xml" todir="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true" />
+								<copy file="${basedir}/juddi_install_data_node2/UDDI_Publisher.xml" todir="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true" />
+								<copy file="${basedir}/juddi_install_data_node2/UDDI_tModels.xml" todir="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddiv3/WEB-INF/classes/juddi_custom_install_data/" overwrite="true" />
 
-								<copy file="${basedir}/context.xml" todir="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddiv3/META-INF" overwrite="true"/>
-								<copy file="${basedir}/context.xml" todir="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddiv3replication/META-INF" overwrite="true"/>
+								<copy file="${basedir}/context.xml" todir="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddiv3/META-INF" overwrite="true" />
+								<copy file="${basedir}/context.xml" todir="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddiv3replication/META-INF" overwrite="true" />
 
-								<copy file="${basedir}/uddiNode2.xml" tofile="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddi-gui/WEB-INF/classes/META-INF/uddi.xml" overwrite="true"/>
+								<copy file="${basedir}/uddiNode2.xml" tofile="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddi-gui/WEB-INF/classes/META-INF/uddi.xml" overwrite="true" />
 
 								<copy file="${basedir}/juddiv3Node2.xml" tofile="target/node2/juddi-tomcat-${project.parent.version}/webapps/juddiv3/WEB-INF/classes/juddiv3.xml" overwrite="true" />
 
