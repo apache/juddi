@@ -73,7 +73,7 @@
               <configuration>
                 <archive>
                   <manifest>
-                    <mainClass>org.apache.juddi.samples.EntryPoint</mainClass>
+                    <mainClass>org.apache.juddi.v3.client.cli.EntryPoint</mainClass>
                   </manifest>
                 </archive>
                 <descriptorRefs>
@@ -125,7 +125,7 @@
                                     <goal>java</goal>
                                 </goals>
                                 <configuration>
-                                    <mainClass>org.apache.juddi.samples.EntryPoint</mainClass>
+                                    <mainClass>org.apache.juddi.v3.client.cli.EntryPoint</mainClass>
                                 </configuration>
                             </execution>
                         </executions>

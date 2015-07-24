@@ -25,12 +25,14 @@
 			<outputDirectory>bin</outputDirectory>
 			<includes>
 				<include>org.apache.juddi:juddi-client:jar</include>
+				<include>org.apache.juddi:juddi-client-cli:jar</include>
 				<include>org.apache.juddi:uddi-ws:jar</include>
 				<include>org.apache.juddi:uddi-migration-tool:jar</include>
 				<include>org.apache.juddi:juddi-gui-dsig:jar</include>
 			</includes>
 			<excludes>
 				<exclude>org.apache.juddi:juddi-client:jar:sources</exclude>
+				<exclude>org.apache.juddi:juddi-client:-clijar:sources</exclude>
 				<exclude>org.apache.juddi:uddi-ws:jar:sources</exclude>
 				<exclude>org.apache.juddi:uddi-migration-tool:jar:sources</exclude>
 				<exclude>org.apache.juddi:juddi-gui-dsig:jar:sources</exclude>
@@ -52,6 +54,7 @@
 			<outputDirectory>tck</outputDirectory>
 			<includes>
 				<include>org.apache.juddi:juddi-client:jar</include>
+				<include>org.apache.juddi:juddi-client-cli:jar</include>
 				<include>org.apache.juddi:uddi-tck:jar</include>
 				<include>org.apache.juddi:uddi-tck-runner:jar</include>
 				<include>org.apache.juddi:uddi-tck:test-jar</include>
@@ -60,6 +63,7 @@
 			</includes>
 			<excludes>
 				<exclude>org.apache.juddi:juddi-client:jar:sources</exclude>
+				<exclude>org.apache.juddi:juddi-client-cli:jar:sources</exclude>
 				<exclude>org.apache.juddi:uddi-tck:jar:sources</exclude>
 				<exclude>org.apache.juddi:uddi-tck:jar:test-sources</exclude>
 				<exclude>org.apache.juddi:uddi-tck-base:jar:sources</exclude>
@@ -100,6 +104,7 @@
 			<scope>test</scope>
 			<includes>
 				<include>org.apache.juddi:juddi-client:jar:sources</include>
+				<include>org.apache.juddi:juddi-client-cli:jar:sources</include>
 				<include>org.apache.juddi:uddi-tck:jar:sources</include>
 				<include>org.apache.juddi:uddi-tck-runner:jar:sources</include>
 				<include>org.apache.juddi:uddi-tck:jar:test-sources</include>
@@ -142,6 +147,7 @@
 			<scope>test</scope>
 			<includes>
 				<include>org.apache.juddi:juddi-client:jar:javadoc</include>
+				<include>org.apache.juddi:juddi-client-cli:jar:javadoc</include>
 				<include>org.apache.juddi:uddi-tck-base:jar:javadoc</include>
 				<include>org.apache.juddi:uddi-tck:jar:javadoc</include>
 				<include>org.apache.juddi:uddi-tck-runner:jar:javadoc</include>
