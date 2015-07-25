@@ -18,13 +18,17 @@
 package org.apache.juddi.v3.auth;
 
 import java.io.IOException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.xml.bind.JAXBException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
+import org.apache.juddi.model.Publisher;
 import org.apache.juddi.v3.error.AuthenticationException;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
@@ -61,6 +65,7 @@ public class MD5XMLDocAuthenticator extends XMLDocAuthenticator {
 	/**
 	 *
 	 */
+	@Override
 	public String authenticate(String userID, String credential)
 	throws AuthenticationException, FatalErrorException {
 		preProcess(userID, credential);
@@ -116,6 +121,47 @@ public class MD5XMLDocAuthenticator extends XMLDocAuthenticator {
 			throw new UnknownUserException(new ErrorMessage(
 					"errors.auth.InvalidUserId", userID));
 		}
+		int MaxBindingsPerService = -1;
+                int MaxServicesPerBusiness = -1;
+                int MaxTmodels = -1;
+                int MaxBusinesses = -1;
+                try {
+                        MaxBindingsPerService = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_BINDINGS_PER_SERVICE, -1);
+                        MaxServicesPerBusiness = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_SERVICES_PER_BUSINESS, -1);
+                        MaxTmodels = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_TMODELS_PER_PUBLISHER, -1);
+                        MaxBusinesses = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_BUSINESSES_PER_PUBLISHER, -1);
+                } catch (Exception ex) {
+                        MaxBindingsPerService = -1;
+                        MaxServicesPerBusiness = -1;
+                        MaxTmodels = -1;
+                        MaxBusinesses = -1;
+                        log.error("config exception! " + userID, ex);
+                }
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+                        Publisher publisher = em.find(Publisher.class, userID);
+                        if (publisher == null) {
+                                log.warn("Publisher \"" + userID + "\" was not found in the database, adding the publisher in on the fly.");
+                                publisher = new Publisher();
+                                publisher.setAuthorizedName(userID);
+                                publisher.setIsAdmin("false");
+                                publisher.setIsEnabled("true");
+                                publisher.setMaxBindingsPerService(MaxBindingsPerService);
+                                publisher.setMaxBusinesses(MaxBusinesses);
+                                publisher.setMaxServicesPerBusiness(MaxServicesPerBusiness);
+                                publisher.setMaxTmodels(MaxTmodels);
+                                publisher.setPublisherName("Unknown");
+                                em.persist(publisher);
+                                tx.commit();
+                        }
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
 		return userID;
 	}
         

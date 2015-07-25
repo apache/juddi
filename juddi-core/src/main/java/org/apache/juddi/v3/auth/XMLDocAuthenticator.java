@@ -69,7 +69,7 @@ import org.apache.juddi.v3.error.UnknownUserException;
  */
 public class XMLDocAuthenticator implements Authenticator
 {
-	private static Log log = LogFactory.getLog(AuthenticatorFactory.class);
+	protected static Log log = LogFactory.getLog(AuthenticatorFactory.class);
 	/** Container for the user credentials */
 	Map<String,User> userTable;
 	
@@ -152,9 +152,51 @@ public class XMLDocAuthenticator implements Authenticator
 		else
 			throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidUserId", userID));
 
+		int MaxBindingsPerService = -1;
+                int MaxServicesPerBusiness = -1;
+                int MaxTmodels = -1;
+                int MaxBusinesses = -1;
+                try {
+                        MaxBindingsPerService = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_BINDINGS_PER_SERVICE, -1);
+                        MaxServicesPerBusiness = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_SERVICES_PER_BUSINESS, -1);
+                        MaxTmodels = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_TMODELS_PER_PUBLISHER, -1);
+                        MaxBusinesses = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_BUSINESSES_PER_PUBLISHER, -1);
+                } catch (Exception ex) {
+                        MaxBindingsPerService = -1;
+                        MaxServicesPerBusiness = -1;
+                        MaxTmodels = -1;
+                        MaxBusinesses = -1;
+                        log.error("config exception! " + userID, ex);
+                }
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+                        Publisher publisher = em.find(Publisher.class, userID);
+                        if (publisher == null) {
+                                log.warn("Publisher \"" + userID + "\" was not found in the database, adding the publisher in on the fly.");
+                                publisher = new Publisher();
+                                publisher.setAuthorizedName(userID);
+                                publisher.setIsAdmin("false");
+                                publisher.setIsEnabled("true");
+                                publisher.setMaxBindingsPerService(MaxBindingsPerService);
+                                publisher.setMaxBusinesses(MaxBusinesses);
+                                publisher.setMaxServicesPerBusiness(MaxServicesPerBusiness);
+                                publisher.setMaxTmodels(MaxTmodels);
+                                publisher.setPublisherName("Unknown");
+                                em.persist(publisher);
+                                tx.commit();
+                        }
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
 		return userID;
 	}
 	
+	@Override
 	public UddiEntityPublisher identify(String authInfo, String authorizedName, WebServiceContext ctx) throws AuthenticationException {
 
 		EntityManager em = PersistenceManager.getEntityManager();

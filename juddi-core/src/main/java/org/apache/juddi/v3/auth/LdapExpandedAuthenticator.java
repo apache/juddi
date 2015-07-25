@@ -169,7 +169,7 @@ public class LdapExpandedAuthenticator implements Authenticator {
                 tx.begin();
                 Publisher publisher = em.find(Publisher.class, authorizedName);
                 if (publisher == null) {
-                    logger.warn("Publisher was not found, adding the publisher in on the fly.");
+                    logger.warn("Publisher was not found in the database, adding the publisher in on the fly.");
                     publisher = new Publisher();
                     publisher.setAuthorizedName(authorizedName);
                     publisher.setIsAdmin("false");

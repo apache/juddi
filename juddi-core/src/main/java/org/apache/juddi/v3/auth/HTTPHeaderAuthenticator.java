@@ -94,7 +94,7 @@ public class HTTPHeaderAuthenticator implements Authenticator {
                         tx.begin();
                         Publisher publisher = em.find(Publisher.class, user);
                         if (publisher == null) {
-                                log.warn("Publisher \"" + user + "\" was not found, adding the publisher in on the fly.");
+                                log.warn("Publisher \"" + user + "\" was not found in the database, adding the publisher in on the fly.");
                                 publisher = new Publisher();
                                 publisher.setAuthorizedName(user);
                                 publisher.setIsAdmin("false");
