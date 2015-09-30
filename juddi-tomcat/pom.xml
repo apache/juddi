@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.3.1-SNAPSHOT</version>
+		<version>3.3.1</version>
 	</parent>
 	<artifactId>juddi-tomcat</artifactId>
 	<name>jUDDI Tomcat Packaging</name>
@@ -153,7 +153,7 @@
 								<property name="dependency.juddiv3replication.war" value="${project.build.directory}/juddiv3-war-repl.war" />
 								<property name="dependency.juddi-gui.war" value="${project.build.directory}/juddi-gui-war.war" />
 								<property name="dependency.jaxws.jar" value="${maven.dependency.org.apache.geronimo.specs.geronimo-jaxws_2.2_spec.jar.path}" />
-								<property name="apache.tomcat.version" value="7.0.64"/>
+								<property name="apache.tomcat.version" value="7.0.64" />
 								<ant antfile="${basedir}/build.xml">
 									<property name="dependency.tomcat.zip" value="${dependency.tomcat.zip}" />
 									<target name="threenode" />
