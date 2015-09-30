@@ -31,12 +31,22 @@
 			<artifactId>commons-discovery</artifactId>
 			<version>0.2</version>
 		</dependency>
-		<dependency>
+<!--		<dependency>
 			<artifactId>apache-tomcat</artifactId>
 			<groupId>org.apache.juddi.bootstrap</groupId>
-			<version>6.0.26</version>
+			<version>6.0.44</version>
 			<type>zip</type>
 		</dependency>
+-->
+<dependency>
+	<groupId>org.apache.tomcat</groupId>
+	<artifactId>tomcat</artifactId>
+	<version>7.0.64</version>
+<type>zip</type>
+
+</dependency>
+
+
 		<dependency>
 			<artifactId>juddiv3-war</artifactId>
 			<groupId>org.apache.juddi</groupId>
@@ -138,11 +148,12 @@
 								<property name="dependency.postgres.jar" value="${maven.dependency.postgresql.postgresql.jar.path}" />
 								<property name="dependency.commons-discovery.jar" value="${maven.dependency.commons-discovery.commons-discovery.jar.path}" />
 								<property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}" />
-								<property name="dependency.tomcat.zip" value="${maven.dependency.org.apache.juddi.bootstrap.apache-tomcat.zip.path}" />
+								<property name="dependency.tomcat.zip" value="${maven.dependency.org.apache.tomcat.tomcat.zip.path}" />
 								<property name="dependency.juddiv3.war" value="${project.build.directory}/juddiv3-war.war" />
 								<property name="dependency.juddiv3replication.war" value="${project.build.directory}/juddiv3-war-repl.war" />
 								<property name="dependency.juddi-gui.war" value="${project.build.directory}/juddi-gui-war.war" />
 								<property name="dependency.jaxws.jar" value="${maven.dependency.org.apache.geronimo.specs.geronimo-jaxws_2.2_spec.jar.path}" />
+								<property name="apache.tomcat.version" value="7.0.64"/>
 								<ant antfile="${basedir}/build.xml">
 									<property name="dependency.tomcat.zip" value="${dependency.tomcat.zip}" />
 									<target name="threenode" />

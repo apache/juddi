@@ -372,11 +372,12 @@ under the License.
             <id>maven2-repository.dev.java.net</id>
             <url>http://download.java.net/maven/2</url>
         </pluginRepository>
-        <pluginRepository>
+       <!--  this repo is dead jim
+	<pluginRepository>
             <id>nexus.codehaus</id>
             <url>https://nexus.codehaus.org/content/repositories/releases/</url>
         </pluginRepository>
-
+-->
     </pluginRepositories>
     <profiles>
         <!-- inherit from the apache parent: release-profile -->

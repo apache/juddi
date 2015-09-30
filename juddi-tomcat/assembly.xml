@@ -22,7 +22,7 @@
   </formats>
   <fileSets>
     <fileSet>
-	  <directory>${project.build.directory}/tomcat/apache-tomcat-6.0.26</directory>
+	  <directory>${project.build.directory}/tomcat/apache-tomcat-7.0.64</directory>
 	  <outputDirectory></outputDirectory>
     </fileSet>
   </fileSets>
