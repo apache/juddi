@@ -15,161 +15,22 @@
  *
  * -->
  
-        <h1>Release Notes - jUDDI - Version 3.3</h1>
+        <h1>Release Notes - jUDDI - Version 3.3.1</h1>
     
-<h2>        Sub-task
-</h2>
-<ul>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-753'>JUDDI-753</a>] -         Add jpa classes for the uddi replication data structures
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-895'>JUDDI-895</a>] -         add install data for replication config
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-901'>JUDDI-901</a>] -         update admin user interface
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-906'>JUDDI-906</a>] -         Create tck test cases for replication
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-910'>JUDDI-910</a>] -         Implement directed graph replication
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-916'>JUDDI-916</a>] -         reduce logout of replication related activities
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-917'>JUDDI-917</a>] -         juddi api adminSaveBusiness/TModel changes should be added for replicatation
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-919'>JUDDI-919</a>] -         investigate security options for the replication processes
-</li>
-</ul>
-                        
 <h2>        Bug
 </h2>
 <ul>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-242'>JUDDI-242</a>] -         Expand UDDI_090_SubscriptionListenerIntegrationTest to more elements
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-934'>JUDDI-934</a>] -         jUDDI CLI client is not included in the distribution zips
 </li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-256'>JUDDI-256</a>] -         We need a test for CustodyTransfer
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-644'>JUDDI-644</a>] -         Subscription Integration Listener SMTP Tests fail intermittently on Windows
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-653'>JUDDI-653</a>] -         Build fails on Ubuntu using OpenJDK
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-708'>JUDDI-708</a>] -         juddi-client .NET mono compatibility
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-734'>JUDDI-734</a>] -         Handle when a Node changes it ID
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-735'>JUDDI-735</a>] -         juddi api wsdls do not have fault information listed
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-739'>JUDDI-739</a>] -         juddi-gui businessEditor throws up
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-743'>JUDDI-743</a>] -         UDDI_001_UDDIServiceTest has some invalid tests
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-747'>JUDDI-747</a>] -         Expand jUDDI API test cases
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-749'>JUDDI-749</a>] -         juddi-gui may throw NPE on redeploy
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-752'>JUDDI-752</a>] -         UDDI_040_BusinessServiceLoadTest fails to run
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-870'>JUDDI-870</a>] -         ORA-00910: specified length too long for its datatype in openjpa
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-873'>JUDDI-873</a>] -         Subscription Listener doesn&#39;t work for publisher assertion updates
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-881'>JUDDI-881</a>] -         find_business does not filter services when providing a tModelBag
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-891'>JUDDI-891</a>] -         revise juddi install data to match the root node id per spec
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-892'>JUDDI-892</a>] -         Broken links on juddi tomcat page
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-896'>JUDDI-896</a>] -         Fix miscellaneous miscellaneous typos and formatting issues
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-897'>JUDDI-897</a>] -         listDescription is not set for subscription result sets
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-898'>JUDDI-898</a>] -         Fix/update UDDIConstants class and default tmodel install data
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-899'>JUDDI-899</a>] -         findBinding by category bag doesn&#39;t work
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-902'>JUDDI-902</a>] -         When removing a publisher, subscriptions are orphaned
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-903'>JUDDI-903</a>] -         SQL Injection on JUDDI API service, delete_publisher
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-908'>JUDDI-908</a>] -         Enforce access control rules on deleting publisher assertions
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-913'>JUDDI-913</a>] -         Publisher Assertion digital signatures are not persisted in the database
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-920'>JUDDI-920</a>] -         jUDDI&#39;s support for HTTP based authentication doesn&#39;t work
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-921'>JUDDI-921</a>] -         Digital Signature Util can fail to validate with a NPE under certain conditions
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-922'>JUDDI-922</a>] -         ValueSetValidation rule processing is incorrect
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-924'>JUDDI-924</a>] -         CryptoUtil scripts main class is incorrect
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-926'>JUDDI-926</a>] -         juddi-gui save configuration isn&#39;t working correctly
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-935'>JUDDI-935</a>] -         AdminUI/Statistics page fails to render under JDK8
 </li>
 </ul>
-                    
+                        
 <h2>        Improvement
 </h2>
 <ul>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-605'>JUDDI-605</a>] -         Add configurable subscription callback trust stores for SSL
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-726'>JUDDI-726</a>] -         add source/wiki documentation for using Subscription for node replication
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-900'>JUDDI-900</a>] -         search results for find binding should go to the binding editor
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-925'>JUDDI-925</a>] -         add a flag to warn on non-ssl communication for security apis
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-933'>JUDDI-933</a>] -         File based authentication mechanisms do not auto insert to the database
 </li>
 </ul>
-            
-<h2>        New Feature
-</h2>
-<ul>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-608'>JUDDI-608</a>] -         add support for tModels with encrypted values
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-706'>JUDDI-706</a>] -         Add more soap methods to juddi-api service
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-725'>JUDDI-725</a>] -         Add/support subscription api to synchronize two instances of juddi using callbacks
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-744'>JUDDI-744</a>] -         Add tck tests for uddi rest services
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-755'>JUDDI-755</a>] -         juddi-client add tModel helper functions
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-825'>JUDDI-825</a>] -         add value set validation rules
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-861'>JUDDI-861</a>] -         send smtp email confirmations when subscriptions/publisher accounts are removed
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-862'>JUDDI-862</a>] -         option to reject signed entities with invalid signatures
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-905'>JUDDI-905</a>] -         Add basic performance counters to the TCK
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-907'>JUDDI-907</a>] -         create juddi api methods to get an item&#39;s change history
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-923'>JUDDI-923</a>] -         change record browser for administrators
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-931'>JUDDI-931</a>] -         jUDDI CLI Client
-</li>
-</ul>
-                                                    
-<h2>        Task
-</h2>
-<ul>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-241'>JUDDI-241</a>] -         Implement Replication API
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-272'>JUDDI-272</a>] -         FInish implementation of Custody transfer
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-733'>JUDDI-733</a>] -         Remove juddi-console project
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-736'>JUDDI-736</a>] -         Identify if the UDDI specs allows for node id changes or rename
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-748'>JUDDI-748</a>] -         Complete documentation of the 3.3.0 release functionality
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-760'>JUDDI-760</a>] -         correct links for mailing list
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-894'>JUDDI-894</a>] -         juddi-tomcat main page should be replaced
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-912'>JUDDI-912</a>] -         Update documentation for 3.3 release
-</li>
-</ul>
-        
-<h2>        Test
-</h2>
-<ul>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-927'>JUDDI-927</a>] -         Can not access status and statistic of admin
-</li>
-</ul>
+                                                                                    
         
