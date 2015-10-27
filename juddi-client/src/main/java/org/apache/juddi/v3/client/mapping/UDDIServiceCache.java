@@ -61,7 +61,7 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
  * the UDDIClientSubscriptionListenerService which is a WebService Endpoint brought
  * up by this cache.
  * 
- * The Cache also registers an MBean which allows the 
+ * The Cache also registers an MBean which allows for managing and monitoring via JMX.
  * 
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  * @see UDDIClientSubscriptionListenerImpl
