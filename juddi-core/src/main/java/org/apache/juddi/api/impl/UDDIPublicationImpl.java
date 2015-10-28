@@ -102,7 +102,7 @@ import org.uddi.v3_service.UDDIPublicationPortType;
  */
 @WebService(serviceName = "UDDIPublicationService",
         endpointInterface = "org.uddi.v3_service.UDDIPublicationPortType",
-        targetNamespace = "urn:uddi-org:v3_service")
+        targetNamespace = "urn:uddi-org:api_v3_portType")
 public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPublicationPortType {
 
         private static Log log = LogFactory.getLog(UDDIInquiryImpl.class);

@@ -311,7 +311,7 @@ changes an existing one.&nbsp; Also used to renew existing subscriptions.</p>
 containing the data that changed since notify_subscriptionListener was last
 invoked for a particular subscription.</p>
  */
-@WebService(name = "UDDI_Subscription_PortType", targetNamespace = "urn:uddi-org:v3_service")
+@WebService(name = "UDDI_Subscription_PortType", targetNamespace = "urn:uddi-org:api_v3_portType")
 @XmlSeeAlso({
     org.uddi.custody_v3.ObjectFactory.class,
     org.uddi.repl_v3.ObjectFactory.class,

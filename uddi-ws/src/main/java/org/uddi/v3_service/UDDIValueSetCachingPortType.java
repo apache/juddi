@@ -126,7 +126,7 @@ Set Caching API tModel </i>or Section <a href="#_Ref8979938 ">11.2.8</a> <i>Valu
 Set Validation API tModel</i>) as well tModels for all of the value sets the
 service applies to.&nbsp; </p>
  */
-@WebService(name = "UDDI_ValueSetCaching_PortType", targetNamespace = "urn:uddi-org:v3_service")
+@WebService(name = "UDDI_ValueSetCaching_PortType", targetNamespace = "urn:uddi-org:api_v3_portType")
 @XmlSeeAlso({
     org.uddi.custody_v3.ObjectFactory.class,
     org.uddi.repl_v3.ObjectFactory.class,

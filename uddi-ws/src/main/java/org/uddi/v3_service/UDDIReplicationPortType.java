@@ -66,7 +66,7 @@ import org.uddi.repl_v3.TransferCustody;
  * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  * </span></span>get_highWaterMarks</p>
  */
-@WebService(name = "UDDI_Replication_PortType", targetNamespace = "urn:uddi-org:repl_v3_portType")
+@WebService(name = "UDDI_Replication_PortType", targetNamespace = "urn:uddi-org:api_v3_portType")
 @XmlSeeAlso({
     org.uddi.custody_v3.ObjectFactory.class,
     org.uddi.repl_v3.ObjectFactory.class,

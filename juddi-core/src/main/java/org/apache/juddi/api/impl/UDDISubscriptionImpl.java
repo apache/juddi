@@ -42,7 +42,6 @@ import org.apache.juddi.config.Property;
 import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
-import org.apache.juddi.model.PublisherAssertion;
 import org.apache.juddi.model.SubscriptionChunkToken;
 import org.apache.juddi.model.SubscriptionMatch;
 import org.apache.juddi.model.UddiEntityPublisher;
@@ -52,7 +51,6 @@ import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.InvalidValueException;
 import org.apache.juddi.validation.ValidateSubscription;
-import org.uddi.api_v3.AssertionStatusItem;
 import org.uddi.api_v3.AssertionStatusReport;
 import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BusinessDetail;
@@ -86,7 +84,7 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  */
 @WebService(serviceName="UDDISubscriptionService", 
 			endpointInterface="org.uddi.v3_service.UDDISubscriptionPortType",
-			targetNamespace = "urn:uddi-org:v3_service")
+			targetNamespace = "urn:uddi-org:api_v3_portType")
 public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISubscriptionPortType {
 
 	private static Log logger = LogFactory.getLog(UDDISubscriptionImpl.class);

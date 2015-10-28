@@ -67,7 +67,7 @@ import org.uddi.v3_service.UDDIInquiryPortType;
  */
 @WebService(serviceName="UDDIInquiryService",   
 			endpointInterface="org.uddi.v3_service.UDDIInquiryPortType",
-			targetNamespace = "urn:uddi-org:v3_service")
+			targetNamespace = "urn:uddi-org:api_v3_portType")
 public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiryPortType {
 
 

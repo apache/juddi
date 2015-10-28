@@ -25,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api.util.QueryStatus;
 import org.apache.juddi.api.util.ValueSetCachingQuery;
-import org.apache.juddi.validation.ValidateValueSetCaching;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIValueSetCachingPortType;
 import org.uddi.vscache_v3.ValidValue;

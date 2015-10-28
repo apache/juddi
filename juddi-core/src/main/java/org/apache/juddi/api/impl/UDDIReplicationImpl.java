@@ -91,7 +91,7 @@ import org.uddi.v3_service.UDDIReplicationPortType;
  *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
-@WebService(serviceName = "UDDI_Replication_PortType", targetNamespace = "urn:uddi-org:repl_v3_portType",
+@WebService(serviceName = "UDDI_Replication_PortType", targetNamespace = "urn:uddi-org:api_v3_portType",
         endpointInterface = "org.uddi.v3_service.UDDIReplicationPortType")
 @XmlSeeAlso({
         org.uddi.custody_v3.ObjectFactory.class,

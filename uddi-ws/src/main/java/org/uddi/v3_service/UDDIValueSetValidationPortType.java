@@ -130,7 +130,7 @@ Set Validation API tModel</i>) as well tModels for all of the value sets the
 service applies to.&nbsp; </p>
  * 
  */
-@WebService(name = "UDDI_ValueSetValidation_PortType", targetNamespace = "urn:uddi-org:v3_service")
+@WebService(name = "UDDI_ValueSetValidation_PortType", targetNamespace = "urn:uddi-org:api_v3_portType")
 @XmlSeeAlso({
     org.uddi.custody_v3.ObjectFactory.class,
     org.uddi.repl_v3.ObjectFactory.class,

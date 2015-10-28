@@ -680,7 +680,7 @@ import org.uddi.api_v3.TModelDetail;
  * reasserted to be removed from the registry.</p>
  *
  */
-@WebService(name = "UDDI_Publication_PortType", targetNamespace = "urn:uddi-org:v3_service")
+@WebService(name = "UDDI_Publication_PortType", targetNamespace = "urn:uddi-org:api_v3_portType")
 @XmlSeeAlso({
     org.uddi.custody_v3.ObjectFactory.class,
     org.uddi.repl_v3.ObjectFactory.class,

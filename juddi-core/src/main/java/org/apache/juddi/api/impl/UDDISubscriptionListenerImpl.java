@@ -48,7 +48,7 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
  */
 @WebService(serviceName="UDDISubscriptionListenerService", 
 			endpointInterface="org.uddi.v3_service.UDDISubscriptionListenerPortType",
-			targetNamespace = "urn:uddi-org:v3_service")
+			targetNamespace = "urn:uddi-org:api_v3_portType")
 public class UDDISubscriptionListenerImpl extends AuthenticatedService implements
 		UDDISubscriptionListenerPortType {
 	

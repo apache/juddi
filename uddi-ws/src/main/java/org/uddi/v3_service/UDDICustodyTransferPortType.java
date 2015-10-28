@@ -242,7 +242,7 @@ import org.uddi.custody_v3.TransferEntities;
  * 2.1.5-b03- Generated source version: 2.1
  *
  */
-@WebService(name = "UDDI_CustodyTransfer_PortType", targetNamespace = "urn:uddi-org:v3_service")
+@WebService(name = "UDDI_CustodyTransfer_PortType", targetNamespace = "urn:uddi-org:api_v3_portType")
 @XmlSeeAlso({
     org.uddi.custody_v3.ObjectFactory.class,
     org.uddi.repl_v3.ObjectFactory.class,

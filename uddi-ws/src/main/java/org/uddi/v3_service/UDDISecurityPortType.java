@@ -72,7 +72,7 @@ import org.uddi.api_v3.GetAuthToken;
  * MAY provide an alternative mechanism for obtaining authInfo elements.&nbsp;
  * </p>
  */
-@WebService(name = "UDDI_Security_PortType", targetNamespace = "urn:uddi-org:v3_service")
+@WebService(name = "UDDI_Security_PortType", targetNamespace = "urn:uddi-org:api_v3_portType")
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
 @XmlSeeAlso({
     org.uddi.custody_v3.ObjectFactory.class,
