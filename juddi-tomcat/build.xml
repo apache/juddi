@@ -35,9 +35,9 @@
 		<!-- JUDDI-894 -->
 		<move file="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/webapps/ROOT/index.jsp" tofile="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/webapps/ROOT/index-tomcat.html" overwrite="true"/>
 		<copy file="${basedir}/index.html" todir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/webapps/ROOT" overwrite="true"/>
-<!--
+
 		<copy file="${basedir}/catalina.sh" todir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
-		<copy file="${basedir}/catalina.bat" todir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>-->
+		<copy file="${basedir}/catalina.bat" todir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
 		<copy file="${basedir}/truststore.jks" todir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
 		<copy file="${basedir}/truststore.jks" todir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/" overwrite="true"/>
 		
@@ -49,7 +49,7 @@
         <copy file="${basedir}/tomcat-users.xml" todir="${conf.dir}" overwrite="true"/>
 		<copy file="${basedir}/context.xml" todir="${webapps.dir}/juddiv3/META-INF" overwrite="true"/>
 		<copy file="${basedir}/context.xml" todir="${webapps.dir}/juddiv3replication/META-INF" overwrite="true"/>
-		<!--<copy file="${basedir}/server.xml" todir="${conf.dir}" overwrite="true"/>-->
+		<copy file="${basedir}/server.xml" todir="${conf.dir}" overwrite="true"/>
 		<copy file="${basedir}/keystore.jks" todir="${conf.dir}" overwrite="true"/>
 		
  		<copy file="${dependency.mysql.jar}" todir="${lib.dir}"/>
@@ -87,10 +87,10 @@
 		<!-- JUDDI-894 -->
 		<move file="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/webapps/ROOT/index.jsp" tofile="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/webapps/ROOT/index-tomcat.html" overwrite="true"/>
 		<copy file="${basedir}/index.html" todir="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/webapps/ROOT" overwrite="true"/>
-<!--
+
 		<copy file="${basedir}/catalina.sh" todir="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
 		<copy file="${basedir}/catalina.bat" todir="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
-		-->
+
 		<copy file="${basedir}/truststore.jks" todir="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
 		<copy file="${basedir}/truststore.jks" todir="${basedir}/target/tomcat2/apache-tomcat-${apache.tomcat.version}/" overwrite="true"/>
 		
@@ -156,10 +156,10 @@
 		<!-- JUDDI-894 -->
 		<move file="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/webapps/ROOT/index.jsp" tofile="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/webapps/ROOT/index-tomcat.html" overwrite="true"/>
 		<copy file="${basedir}/index.html" todir="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/webapps/ROOT" overwrite="true"/>
-<!--
+
 		<copy file="${basedir}/catalina.sh" todir="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
 		<copy file="${basedir}/catalina.bat" todir="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
-		-->
+
 		<copy file="${basedir}/truststore.jks" todir="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
 		<copy file="${basedir}/truststore.jks" todir="${basedir}/target/tomcat3/apache-tomcat-${apache.tomcat.version}/" overwrite="true"/>
 		

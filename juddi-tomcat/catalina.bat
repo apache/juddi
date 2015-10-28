@@ -93,9 +93,11 @@ rem ---------------------------------------------------------------------------
 
 setlocal
 
+
 rem these are jUDDI specific settings
 set JAVA_OPTS=%JAVA_OPTS% -Xms1024m -Xmx1024m -XX:MaxPermSize=512m -XX:PermSize=256M
 set JAVA_OPTS=%JAVA_OPTS% -Djavax.net.ssl.trustStore=truststore.jks -Djavax.net.ssl.trustStorePassword=password
+set JAVA_OPTS=%JAVA_OPTS% -Djavax.net.ssl.trustStore=truststore.jks -Djavax.net.ssl.trustStorePassword=password -Djavax.net.ssl.keyStore=../conf/keystore.jks -Djavax.net.ssl.keyStorePassword=password
 rem end custom settings
 
 
