@@ -165,6 +165,7 @@ public class ServiceLocator {
 	private UDDIServiceCache initCache(URL baseCallbackURL) throws ConfigurationException {
 		if (clerk==null) throw new ConfigurationException("The UDDIClerk is needed to use the UDDIServiceCache and is null");
 		if (urlLocalizer==null) urlLocalizer = new URLLocalizerDefaultImpl(baseCallbackURL);
+                if (properties==null) properties = new Properties();
 		try {
 			log.info("Creating a UDDICLientCache");
 			return new UDDIServiceCache(clerk, urlLocalizer, properties);

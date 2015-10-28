@@ -66,6 +66,30 @@
                 <javaNamingProviderUrl>jnp://localhost:1099</javaNamingProviderUrl>
                 -->
             </node>
+            
+            <node isHomeJUDDI="false" >
+                <!-- required 'default' node -->
+                <name>default8080</name> 
+                <description>Main jUDDI node</description>
+                <properties>
+                    <property name="serverName" value="localhost" />
+                    <property name="serverPort" value="8080" />
+                  
+                </properties>
+                <!-- JAX-WS Transport -->
+                <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
+                <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
+                <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry?wsdl</inquiryUrl>
+				<inquiryRESTUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiryRest</inquiryRESTUrl>
+                <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish?wsdl</publishUrl>
+                <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security?wsdl</securityUrl>
+                <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription?wsdl</subscriptionUrl>
+                <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
+                <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
+               
+            </node>
+            
+            
             <node>
                 <name>med</name>
                 <description>jUDDI node in other Department</description>
@@ -85,6 +109,12 @@
                 <wsdl businessKey="uddi:org.apache.juddi:test" businessName="test" keyDomain="uddi:org.apache.juddi">some.wsdl</wsdl>
                 <class></class>
             </clerk>
+            
+             <clerk name="default8080" node="default8080" publisher="userjoe" password="******" >
+                <wsdl businessKey="uddi:org.apache.juddi:test" businessName="test" keyDomain="uddi:org.apache.juddi">some.wsdl</wsdl>
+                <class></class>
+             </clerk>
+       
             <clerk name="medroot" node="med"     publisher="root" password="root"/> 
             <xregister>
                 <service entityKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>
