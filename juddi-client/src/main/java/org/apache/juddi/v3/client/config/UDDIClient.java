@@ -134,6 +134,9 @@ public class UDDIClient {
          */
         public synchronized ServiceLocator getServiceLocator(String clerkName) throws ConfigurationException {
                 UDDIClerk clerk = getClerk(clerkName);
+                if (clerk==null){
+                    throw new ConfigurationException("could not locate the UDDI Clerk '" + clerkName +"'.");
+                }
                 if (!serviceLocators.containsKey(clerk.getName())) {
                         ServiceLocator serviceLocator = new ServiceLocator(clerk, new URLLocalizerDefaultImpl(), properties);
                         serviceLocators.put(clerk.getName(), serviceLocator);
