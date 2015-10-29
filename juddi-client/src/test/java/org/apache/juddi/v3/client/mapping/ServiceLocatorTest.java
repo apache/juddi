@@ -14,9 +14,13 @@
  */
 package org.apache.juddi.v3.client.mapping;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.v3.client.config.UDDIClient;
 
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -47,7 +51,50 @@ public class ServiceLocatorTest {
 		}
 		
 	}
-	
-	
+
+    @Test
+    public void testJUDDI_939() throws Exception {
+            UDDIClient uddiClient = new UDDIClient();
+            ServiceLocator serviceLocator = uddiClient.getServiceLocator("default");
+            Assert.assertNotNull(serviceLocator);
+            serviceLocator.setPolicy(PolicyRoundRobin.class.getName());
+            //serviceLocator.withCache(new URL("http", "0.0.0.0", 0, ""));
+    }
+    
+     @Test(expected = ConfigurationException.class)
+    public void testJUDDI_939_1() throws Exception {
+            UDDIClient uddiClient = new UDDIClient();
+            ServiceLocator serviceLocator = uddiClient.getServiceLocator(UUID.randomUUID().toString());
+            Assert.fail();
+    }
+    
+    
+    /**
+     * this test requires a running juddi node on port 8080 and is therefore disabled from this context
+     * @throws Exception 
+     */
+    @Ignore
+    @Test
+    public void testJUDDI_939_2() throws Exception {
+        String uddiServiceId = "uddi:juddi.apache.org:services-inquiry";
+        try {
+            UDDIClient uddiClient = new UDDIClient();
+            ServiceLocator serviceLocator = uddiClient.getServiceLocator("default8080");
+            serviceLocator.setPolicy(PolicyRoundRobin.class.getName());
+            //serviceLocator.withCache(new URL("http://localhost:8080/juddiv3/services/"));
+            String endpoint = serviceLocator.lookupEndpoint(uddiServiceId);
+            Assert.assertNotNull(endpoint);
+            
+            String endpoint2 = serviceLocator.lookupEndpoint(uddiServiceId);
+            Assert.assertNotNull(endpoint2);
+            Assert.assertNotEquals(endpoint2, endpoint);
+
+        } catch (Exception e) {
+            throw new Exception("Could not resolve endpoint '" + uddiServiceId + "'.", e);
+        }
+
+    }
+
+
 	
 }

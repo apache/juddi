@@ -38,7 +38,7 @@ public class UDDIClientTest {
                         UDDIClient client = new UDDIClient();
                         client.start();
                         client.getClientConfig().getUDDINode("default");
-                        assertEquals(2, client.getClientConfig().getUDDIClerks().size());
+                        assertEquals(3, client.getClientConfig().getUDDIClerks().size());
                         Thread.sleep(500);
                         client.stop();
                 } catch (Exception e) {

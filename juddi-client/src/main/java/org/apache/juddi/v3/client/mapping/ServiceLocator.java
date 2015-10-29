@@ -257,11 +257,19 @@ public class ServiceLocator {
 				//Loop over all bindingTemplates found and get the endpoints.
 				for (BindingTemplate bindingTemplate : bindingTemplates.getBindingTemplate()) {
 					AccessPoint accessPoint = bindingTemplate.getAccessPoint();
+                                        if (accessPoint!=null){
 					if (AccessPointType.END_POINT.toString().equals(accessPoint.getUseType())) {
 						String url = accessPoint.getValue();
 						log.debug("epr= " + url);
 						eprs.add(url);
+					} else if(AccessPointType.WSDL_DEPLOYMENT.toString().equals(accessPoint.getUseType())) {
+					//do something here
+                                            //try to open that wsdl, then grab the endpoints
+					}  else if(AccessPointType.BINDING_TEMPLATE.toString().equals(accessPoint.getUseType())) {
+					//do something here
+                                            //grab that binding template and use that address
 					}
+                                                }
 				}
 				if (eprs.size()>0) {
 					topology = new Topology(eprs);
