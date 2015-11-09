@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.3.2-SNAPSHOT</version>
+		<version>3.3.2</version>
 	</parent>
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>juddi-rest-cxf</artifactId>
