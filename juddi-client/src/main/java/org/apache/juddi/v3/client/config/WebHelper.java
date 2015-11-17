@@ -81,6 +81,7 @@ public class WebHelper {
 			}
 			if (client.getName()!=null) {
 				logger.info("Starting Client " + client.getName() + "...");
+                    clientName = client.getName();
 			} else {
 				throw new ConfigurationException("A client name needs to be specified in the client config file.");
 			}

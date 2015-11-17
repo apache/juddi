@@ -4,3 +4,7 @@ target
 **/.project
 **/.classpath
 **/.settings/
+.gradle/
+.svn/
+docs/db/ddl/*.ddl
+uddi-tck/pref-rpt-*.txt
