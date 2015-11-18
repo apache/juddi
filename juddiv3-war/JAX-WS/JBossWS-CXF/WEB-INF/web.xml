@@ -25,10 +25,15 @@
     <param-value>/WEB-INF/classes/log4j.properties</param-value>
   </context-param>
   <listener>
-		 <!-- this class setups the encryption key for the session-->
-    <listener-class>org.apache.juddi.adminconsole.StartupServlet</listener-class>
+        <listener-class>
+            org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
+    <listener>
+        <!-- this class setups the encryption key for the session-->
+        <listener-class>org.apache.juddi.adminconsole.StartupServlet</listener-class>
     
-  </listener>
+    </listener>
   <servlet>
     <servlet-name>RegistryServlet</servlet-name>
     <display-name>Registry Servlet</display-name>

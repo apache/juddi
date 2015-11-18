@@ -29,6 +29,7 @@
         <param-value>/WEB-INF/classes/log4j.properties</param-value>
     </context-param>
 
+
     <listener>
         <!-- this class setups the encryption key for the session-->
         <listener-class>org.apache.juddi.adminconsole.StartupServlet</listener-class>
