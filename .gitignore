@@ -6,5 +6,8 @@ target
 **/.settings/
 .gradle/
 .svn/
+.idea
+**/*.iml
 docs/db/ddl/*.ddl
+*.ddl
 uddi-tck/pref-rpt-*.txt
