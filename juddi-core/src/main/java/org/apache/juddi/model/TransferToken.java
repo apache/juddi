@@ -17,18 +17,10 @@
 
 package org.apache.juddi.model;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -61,6 +53,7 @@ public class TransferToken implements java.io.Serializable{
 		this.transferToken = transferToken;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
     @Column(name="expiration_date", nullable = false, updatable = false)
 	public Date getExpirationDate() {
 		return expirationDate;

@@ -15,8 +15,8 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -32,8 +32,8 @@ public class TempKey implements java.io.Serializable {
 	
 	public TempKey(){
 	}
-	
-	@Id
+
+	@EmbeddedId
 	public TempKeyPK getPk() {
 		return pk;
 	}
