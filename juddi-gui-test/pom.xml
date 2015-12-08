@@ -1,0 +1,277 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+     <!--
+     * Copyright 2001-2009 The Apache Software Foundation.
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     * 
+     *      http://www.apache.org/licenses/LICENSE-2.0
+     * 
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     *
+     */ -->
+
+     <modelVersion>4.0.0</modelVersion>
+     <parent>
+	  <groupId>org.apache.juddi</groupId>
+	  <artifactId>juddi-parent</artifactId>
+	  <version>3.3.3-SNAPSHOT</version>
+     </parent>
+     <properties>
+	  <cargo.version>1.4.16</cargo.version>
+	  <selenium.version>2.48.2</selenium.version>
+		
+     </properties>
+     <artifactId>juddi-gui-test</artifactId>
+     <name>jUDDI GUI UI Tests</name>
+     <description>Unit and integration tests for jUDDI's user interface</description>
+     <packaging>jar</packaging>
+     <dependencies>
+	  <dependency>
+	       <groupId>org.seleniumhq.selenium</groupId>
+	       <artifactId>selenium-firefox-driver</artifactId>
+	       <version>${selenium.version}</version>
+	  </dependency>
+	  <dependency>
+	       <groupId>org.seleniumhq.selenium</groupId>
+	       <artifactId>selenium-chrome-driver</artifactId>
+	       <version>${selenium.version}</version>
+	  </dependency>
+	  <dependency>
+	       <groupId>org.seleniumhq.selenium</groupId>
+	       <artifactId>selenium-ie-driver</artifactId>
+	       <version>${selenium.version}</version>
+	  </dependency>
+	  <dependency>
+	       <groupId>org.seleniumhq.selenium</groupId>
+	       <artifactId>selenium-safari-driver</artifactId>
+	       <version>${selenium.version}</version>
+	  </dependency>
+	  <dependency>
+	       <groupId>org.seleniumhq.selenium</groupId>
+	       <artifactId>selenium-java</artifactId>
+	       <version>${selenium.version}</version>
+	  </dependency>
+
+     </dependencies>
+     <build>
+	  <plugins>
+	       <plugin>
+		    <artifactId>maven-clean-plugin</artifactId>
+		    <version>2.6.1</version>
+		    <configuration>
+			 <filesets>
+			      <fileset>
+				   <directory>.</directory>
+				   <includes>
+					<include>pref-rpt-*.txt</include>
+				   </includes>
+				   <followSymlinks>false</followSymlinks>
+			      </fileset>
+			 </filesets>
+		    </configuration>
+	       </plugin>
+
+	       <plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-dependency-plugin</artifactId>
+		    <version>2.1</version>
+		    <executions>
+			 <execution>
+			      <id>copy</id>
+			      <phase>package</phase>
+			      <goals>
+				   <goal>copy</goal>
+			      </goals>
+			      <configuration>
+				   <artifactItems>
+					<artifactItem>
+					     <groupId>org.apache.juddi</groupId>
+					     <artifactId>juddi-tomcat</artifactId>
+					     <version>${project.parent.version}</version>
+					     <type>zip</type>
+					     <outputDirectory>${basedir}/target</outputDirectory>
+					</artifactItem>
+				   </artifactItems>
+			      </configuration>
+			 </execution>
+		    </executions>
+	       </plugin>
+	       <plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-antrun-plugin</artifactId>
+		    <version>1.3</version>
+		    <executions>
+			 <execution>
+			      <id>test</id>
+			      <phase>pre-integration-test</phase>
+			      <configuration>
+				   <tasks>
+					<unzip dest="target" src="target/juddi-tomcat-${project.parent.version}.zip" />
+					<copy file="${basedir}/server.xml" todir="target/juddi-tomcat-${project.parent.version}/conf" overwrite="true" />
+					<copy file="${basedir}/log4j.properties" todir="target/juddi-tomcat-${project.parent.version}/webapps/juddiv3/WEB-INF/classes" overwrite="true" />
+
+					<unzip dest="target/node2" src="target/juddi-tomcat-${project.parent.version}.zip" />
+
+					<copy file="${basedir}/juddiv3Node1.xml" tofile="target/juddi-tomcat-${project.parent.version}/webapps/juddiv3/WEB-INF/classes/juddiv3.xml" overwrite="true" />
+					<copy file="${basedir}/uddiNode.xml" tofile="target/juddi-tomcat-${project.parent.version}/webapps/juddi-gui/WEB-INF/classes/META-INF/uddi.xml" overwrite="true" />
+
+
+
+
+
+				   </tasks>
+			      </configuration>
+			      <goals>
+				   <goal>run</goal>
+			      </goals>
+			 </execution>
+		    </executions>
+	       </plugin>
+	       <plugin>
+		    <groupId>org.codehaus.cargo</groupId>
+		    <artifactId>cargo-maven2-plugin</artifactId>
+		    <version>${cargo.version}</version>
+				
+		    <executions>
+			 <execution>
+			      <id>start-container1</id>
+			      <phase>pre-integration-test</phase>
+			      <configuration>
+				   <wait>false</wait>
+				   <container>
+					<containerId>tomcat7x</containerId>
+					<home>${basedir}/target/juddi-tomcat-${project.parent.version}</home>
+				   </container>
+				   <configuration>
+					<type>existing</type>
+					<home>${project.build.directory}/juddi-tomcat-${project.parent.version}</home>
+					<properties>
+					     <cargo.logging>high</cargo.logging>
+					     <cargo.hostname>localhost</cargo.hostname>
+					     <cargo.servlet.port>8880</cargo.servlet.port>
+					     <cargo.jvmargs>-Xms256m -Xmx256m -XX:MaxPermSize=256M -Djava.endorsed.dirs=${basedir}/target/juddi-tomcat-${project.parent.version}/endorsed -Djavax.net.ssl.keyStore=${basedir}/../juddi-tomcat/keystore.jks -Djavax.net.ssl.keyStorePassword=password -Djavax.net.ssl.trustStore=${basedir}/../juddi-tomcat/truststore.jks -Djavax.net.ssl.trustStorePassword=password</cargo.jvmargs>
+					</properties>
+				   </configuration>
+			      </configuration>
+			      <goals>
+				   <goal>start</goal>
+			      </goals>
+			 </execution>
+
+
+
+			 <execution>
+			      <id>stop-container1</id>
+			      <phase>post-integration-test</phase>
+			      <configuration>
+				   <container>
+					<containerId>tomcat7x</containerId>
+				   </container>
+				   <configuration>
+					<properties>
+					     <cargo.servlet.port>8880</cargo.servlet.port>
+					</properties>
+					<home>${project.build.directory}/juddi-tomcat-${project.parent.version}</home>
+				   </configuration>
+			      </configuration>
+			      <goals>
+				   <goal>stop</goal>
+			      </goals>
+			 </execution>
+
+
+		    </executions>
+	       </plugin>
+	       <plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-surefire-plugin</artifactId>
+		    <version>2.4</version>
+		    <configuration>
+			 <skip>true</skip>
+			 <includes>
+			      <include>**/*IntegrationTest.java</include>
+			 </includes>
+			 <systemProperties>
+			      <property>
+				   <name>derby.stream.error.file</name>
+				   <value>target/derby.log</value>
+			      </property>
+			      <property>
+				   <name>java.io.tmpdir</name>
+				   <value>${basedir}/temp</value>
+			      </property>
+			 </systemProperties>
+		    </configuration>
+		    <executions>
+			 <execution>
+			      <id>surefire-it</id>
+			      <phase>integration-test</phase>
+			      <goals>
+				   <goal>test</goal>
+			      </goals>
+			      <configuration>
+				   <skip>false</skip>
+				   <systemProperties>
+					<property>
+					     <name>cactus.contextURL</name>
+					     <value>http://localhost:8880/juddi</value>
+					</property>
+					<property>
+					     <name>java.io.tmpdir</name>
+					     <value>${basedir}/temp</value>
+					</property>
+				   </systemProperties>
+			      </configuration>
+			 </execution>
+		    </executions>
+	       </plugin>
+	       <plugin>
+		    <!-- deploying test-jar -->
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-jar-plugin</artifactId>
+		    <executions>
+			 <execution>
+			      <goals>
+				   <goal>jar</goal> 
+				   <goal>test-jar</goal>
+			      </goals>
+			 </execution>
+		    </executions>
+	       </plugin>
+	       <plugin>
+		    <!-- deploying test-jar src -->
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-source-plugin</artifactId>
+		    <executions>
+			 <execution>
+			      <id>attach-sources</id>
+			      <phase>verify</phase>
+			      <goals>
+				   <goal>jar</goal>
+				   <goal>generated-test-jar</goal>
+			      </goals>
+			 </execution>
+		    </executions>
+	       </plugin>
+	       <plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-javadoc-plugin</artifactId>
+		    <executions>
+			 <execution>
+			      <id>attach-javadocs</id>
+			      <goals>
+				   <goal>test-jar</goal>
+				   <goal>jar</goal>
+			      </goals>
+			 </execution>
+		    </executions>
+	       </plugin>
+	  </plugins>
+     </build>
+</project>
