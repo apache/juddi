@@ -15,25 +15,15 @@
  */
 package org.apache.juddi.config;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.StringWriter;
-import java.util.Properties;
-import javax.persistence.EntityManager;
-import javax.xml.bind.JAXB;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.MapConfiguration;
-import org.apache.juddi.model.UddiEntityPublisher;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.uddi.api_v3.BusinessEntity;
-import org.uddi.api_v3.TModel;
+import org.junit.*;
 import org.uddi.repl_v3.ReplicationConfiguration;
+
+import javax.xml.bind.JAXB;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.util.Properties;
 
 /**
  *
@@ -66,7 +56,7 @@ public class InstallTest {
         @Test
         public void testApplyReplicationTokenChanges() throws Exception {
                 System.out.println("applyReplicationTokenChanges");
-                FileInputStream fis = new FileInputStream("./src/main/resources/juddi_install_data/root_replicationConfiguration.xml");
+                InputStream fis = getClass().getClassLoader().getResourceAsStream("juddi_install_data/root_replicationConfiguration.xml");
                 
                 ReplicationConfiguration replicationCfg = JAXB.unmarshal(fis, ReplicationConfiguration.class);
                 Properties props = new Properties();
