@@ -51,7 +51,7 @@ language governing permissions and * limitations under the License. * */ -->
                         </goals>
                         <phase>package</phase>
                         <configuration>
-							
+
                             <archive>${project.build.directory}/${artifactId}-${version}-jar-with-dependencies.jar</archive>
                             <keystore>src/main/keystore/signing-jar.keystore</keystore>
                             <alias>applet</alias>
@@ -98,6 +98,24 @@ language governing permissions and * limitations under the License. * */ -->
         </dependency>
     </dependencies>
     </profile>
+     <profile>
+         <id>standard-with-plugin-in-jre-folder</id>
+         <activation>
+             <file>
+                 <exists>${java.home}/jre/lib/plugin.jar</exists>
+             </file>
+         </activation>
+         <dependencies>
+             <dependency>
+                 <groupId>com.sun.jdk</groupId>
+                 <artifactId>plugin</artifactId>
+                 <version>1.6.0</version>
+                 <type>jar</type>
+                 <scope>system</scope>
+                 <systemPath>${java.home}/jre/lib/plugin.jar</systemPath>
+             </dependency>
+         </dependencies>
+     </profile>
     <profile>
       <id>icedtea-web</id>
       <activation>
