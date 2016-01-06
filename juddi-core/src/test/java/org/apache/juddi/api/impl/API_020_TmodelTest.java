@@ -27,6 +27,10 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uddi.api_v3.CategoryBag;
+import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.Name;
+import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelDetail;
 import org.uddi.api_v3.TModelInfo;
 import org.uddi.api_v3.TModelList;
@@ -97,4 +101,25 @@ public class API_020_TmodelTest {
 		tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
 	}	
 	
+     
+     @Test
+     public void testJUDDI956Test(){
+          tckTModel.saveJoePublisherTmodel(authInfoJoe, true);
+          TModel one = new TModel();
+          one.setTModelKey("uddi:uddi.joepublisher.com:juddi956");
+          one.setName(new Name("JUDDI-956 Test case", "EN"));
+          
+          tckTModel.saveTModel(authInfoJoe, one, false);
+          TModel two = new TModel();
+          two.setTModelKey("uddi:uddi.joepublisher.com:juddi956-2");
+          two.setName(new Name("JUDDI-956 Test case", "EN"));
+          two.setCategoryBag(new CategoryBag());
+          two.getCategoryBag().getKeyedReference().add(new KeyedReference("uddi:uddi.joepublisher.com:juddi956", "juddi956", "a value"));
+          tckTModel.saveTModel(authInfoJoe, one, false);
+          
+          tckTModel.deleteTModel(authInfoJoe, null, "uddi:uddi.joepublisher.com:juddi956-2");
+          tckTModel.deleteTModel(authInfoJoe, null, "uddi:uddi.joepublisher.com:juddi956");
+          tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+          
+     }
 }

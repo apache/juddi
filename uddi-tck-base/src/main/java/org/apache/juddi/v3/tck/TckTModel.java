@@ -105,7 +105,7 @@ public class TckTModel {
                 }
         }
 
-        private TModel saveTModel(String authInfo, TModel tmIn, boolean force) {
+        public TModel saveTModel(String authInfo, TModel tmIn, boolean force) {
                 boolean exists = false;
                 GetTModelDetail gt1 = new GetTModelDetail();
                 gt1.getTModelKey().add(tmIn.getTModelKey());

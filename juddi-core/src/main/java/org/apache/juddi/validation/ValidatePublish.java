@@ -1955,6 +1955,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                                 if (modelTModel == null) {
                                                         checked = false;
                                                 } else {
+                                                     if (modelTModel.getCategoryBag()!=null)
                                                         for (org.apache.juddi.model.KeyedReference ref : modelTModel.getCategoryBag().getKeyedReferences()) {
                                                                 if ("uddi-org:types:unchecked".equalsIgnoreCase(ref.getKeyName())) {
                                                                         checked = false;
