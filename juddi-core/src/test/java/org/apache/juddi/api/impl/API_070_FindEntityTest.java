@@ -64,6 +64,7 @@ public class API_070_FindEntityTest {
                 Registry.start();
                 logger.debug("Getting auth token..");
                 try {
+                         tckTModel.saveUDDIPublisherTmodel(authInfoJoe);
                         api010.saveJoePublisher();
                         authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                 } catch (RemoteException e) {
@@ -83,6 +84,7 @@ public class API_070_FindEntityTest {
                         tckTModel.saveJoePublisherTmodel(authInfoJoe, true);
                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
                         tckBusinessService.saveJoePublisherService(authInfoJoe);
+                        //uddi:tmodelkey:categories:bindings
                         tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
                         tckFindEntity.findBusiness();
                         tckFindEntity.findService(null);
