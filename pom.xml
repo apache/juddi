@@ -476,7 +476,8 @@ under the License.
                         <version>0.11</version>
                         <configuration>
                             <excludes>
-
+                                <exclude>**/*.nupkg</exclude>
+                                <exclude>**/*.psd</exclude>
                                 <exclude>**/*.ddl</exclude>
                                 <exclude>Doxyfile</exclude>
                                 <exclude>**/*log</exclude>
