@@ -39,6 +39,7 @@ under the License.
     </prerequisites>
 
     <properties>
+        <javadoc.extra.settings></javadoc.extra.settings>
         <sourceReleaseAssemblyDescriptor>source-release</sourceReleaseAssemblyDescriptor>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -216,6 +217,7 @@ under the License.
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <configuration>
                         <aggregate>true</aggregate>
+			<additionalparam>${javadoc.extra.settings}</additionalparam>
                     </configuration>
                     <executions>
                         <execution>
@@ -379,7 +381,18 @@ under the License.
         </pluginRepository>
 -->
     </pluginRepositories>
+    
     <profiles>
+	<profile>
+	  <id>doclint-java8-disable</id>
+	  <activation>
+	    <jdk>[1.8,)</jdk>
+	  </activation>
+	  <properties>
+		  <javadoc.extra.settings>-Xdoclint:none</javadoc.extra.settings>
+	  </properties>
+	</profile>
+
         <!-- inherit from the apache parent: release-profile -->
         <profile>
             <id>apache-release</id>
