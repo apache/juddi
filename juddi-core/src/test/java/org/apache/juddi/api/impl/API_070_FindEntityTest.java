@@ -64,7 +64,7 @@ public class API_070_FindEntityTest {
                 Registry.start();
                 logger.debug("Getting auth token..");
                 try {
-                         tckTModel.saveUDDIPublisherTmodel(authInfoJoe);
+                         tckTModel.saveUDDIPublisherTmodel(TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword()));
                         api010.saveJoePublisher();
                         authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                 } catch (RemoteException e) {

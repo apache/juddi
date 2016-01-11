@@ -17,6 +17,7 @@ package org.apache.juddi.v3.bpel;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -124,18 +125,23 @@ public class BPEL_020_IntegrationTest {
                 String ns = wsdlDefinition.getTargetNamespace();
                 System.out.println("Namespace: " + ns);
 
-                int i = 0;
-                for (QName qName : portTypes.keySet()) {
+                boolean foundInterfaceOfTravelAgent=false;
+                boolean foundInterfaceOfCustomer=false;
+          
+                Iterator<QName> iterator = portTypes.keySet().iterator();
+                while (iterator.hasNext()) {
+                        QName qName = iterator.next();
                         String nsp = qName.getNamespaceURI();
                         String localpart = qName.getLocalPart();
                         System.out.println("Namespace: " + nsp);
                         System.out.println("LocalPart: " + localpart);
-                        if (i++ == 0) {
-                                Assert.assertEquals("InterfaceOfTravelAgent", localpart);
-                        } else {
-                                Assert.assertEquals("InterfaceOfCustomer", localpart);
-                        }
+                        if (localpart.equals("InterfaceOfTravelAgent"))
+                                foundInterfaceOfTravelAgent=true;
+                        if (localpart.equals("InterfaceOfCustomer"))
+                                foundInterfaceOfCustomer=true;
                 }
+                org.junit.Assert.assertTrue("InterfaceOfCustomer wasn't found, wsdl parsing error", foundInterfaceOfCustomer);
+                org.junit.Assert.assertTrue("InterfaceOfTravelAgent wasn't found, wsdl parsing error", foundInterfaceOfTravelAgent);
         }
 
         @Test
