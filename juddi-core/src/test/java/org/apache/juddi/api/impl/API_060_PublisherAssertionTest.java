@@ -35,6 +35,7 @@ import org.apache.juddi.jaxb.EntityCreator;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 import org.apache.juddi.v3.tck.TckBusiness;
+import org.apache.juddi.v3.tck.TckCommon;
 import org.apache.juddi.v3.tck.TckFindEntity;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckPublisherAssertion;
@@ -68,7 +69,7 @@ public class API_060_PublisherAssertionTest {
         private static UDDIPublicationImpl pub = new UDDIPublicationImpl();
 
         @BeforeClass
-        public static void setup() throws ConfigurationException {
+        public static void setup() throws Exception {
                 Registry.start();
                 logger.debug("Getting auth token..");
                 try {
@@ -81,6 +82,8 @@ public class API_060_PublisherAssertionTest {
                         String root = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
                         tckTModel.saveTmodels(root);
                 } catch (RemoteException e) {
+                        System.out.println("the test failed, dumping ownership information for all tmodels....");
+                        TckCommon.DumpAllTModelsOpInfo(authInfoJoe, new UDDIInquiryImpl());
                         logger.error(e.getMessage(), e);
                         Assert.fail("Could not obtain authInfo token." + e.getMessage());
                 }

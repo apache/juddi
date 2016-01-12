@@ -15,6 +15,7 @@
  */
 package org.apache.juddi.v3.tck;
 
+import java.rmi.RemoteException;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,8 +31,10 @@ import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.GetOperationalInfo;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.Name;
+import org.uddi.api_v3.OperationalInfos;
 import org.uddi.api_v3.ServiceInfos;
 import org.uddi.api_v3.ServiceList;
 import org.uddi.api_v3.TModelList;
@@ -332,6 +335,30 @@ public class TckCommon {
                 System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
                 System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
                 System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> MARKER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        }
+
+        public static void DumpAllTModelsOpInfo(String authInfoJoe, UDDIInquiryPortType uddiInquiryImpl) throws Exception {
+                FindTModel ftm = new FindTModel();
+                ftm.setAuthInfo(authInfoJoe);
+                //org.apache.juddi.v3.client.UDDIConstants.WILDCARD
+                ftm.setName(new Name("%", null));
+                ftm.setFindQualifiers(new FindQualifiers());
+                ftm.getFindQualifiers().getFindQualifier().add("approximateMatch");
+                TModelList findTModel = uddiInquiryImpl.findTModel(ftm);
+
+                GetOperationalInfo req = new GetOperationalInfo();
+                req.setAuthInfo(authInfoJoe);
+
+                for (int i = 0; i < findTModel.getTModelInfos().getTModelInfo().size(); i++) {
+                        req.getEntityKey().add(
+                             findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey());
+                }
+                OperationalInfos operationalInfo = uddiInquiryImpl.getOperationalInfo(req);
+
+                for (int i = 0; i < operationalInfo.getOperationalInfo().size(); i++) {
+                        System.out.println(operationalInfo.getOperationalInfo().get(i).getEntityKey() + " on node "
+                             + operationalInfo.getOperationalInfo().get(i).getNodeID() + " is owned by " + operationalInfo.getOperationalInfo().get(i).getAuthorizedName());
+                }
         }
 
 }
