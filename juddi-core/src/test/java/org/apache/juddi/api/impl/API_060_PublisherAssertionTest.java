@@ -81,6 +81,7 @@ public class API_060_PublisherAssertionTest {
                         authInfoMary = TckSecurity.getAuthToken(security, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
                         TckCommon.DumpAllTModelsOpInfo(authInfoJoe, new UDDIInquiryImpl());
                         String root = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+                        tckTModel.saveUDDIPublisherTmodel(root);
                         tckTModel.saveTmodels(root);
                 } catch (RemoteException e) {
                         System.out.println("the test failed, dumping ownership information for all tmodels....");
