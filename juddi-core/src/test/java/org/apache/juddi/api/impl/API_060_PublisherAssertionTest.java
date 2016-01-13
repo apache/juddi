@@ -79,11 +79,12 @@ public class API_060_PublisherAssertionTest {
                         authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                         authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
                         authInfoMary = TckSecurity.getAuthToken(security, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
+                        TckCommon.DumpAllTModelsOpInfo(authInfoJoe, new UDDIInquiryImpl());
                         String root = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
                         tckTModel.saveTmodels(root);
                 } catch (RemoteException e) {
                         System.out.println("the test failed, dumping ownership information for all tmodels....");
-                        TckCommon.DumpAllTModelsOpInfo(authInfoJoe, new UDDIInquiryImpl());
+                        
                         logger.error(e.getMessage(), e);
                         Assert.fail("Could not obtain authInfo token." + e.getMessage());
                 }
