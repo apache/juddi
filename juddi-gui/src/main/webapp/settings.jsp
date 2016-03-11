@@ -23,7 +23,6 @@
 <%@page import="org.apache.juddi.v3.client.config.ClientConfig"%>
 <%@page import="org.apache.commons.configuration.Configuration"%>
 <%@page import="java.util.Iterator"%>
-<%@page import="java.util.Map.Entry"%>
 <%@page import="java.util.Set"%>
 <%@page import="java.util.Properties"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
