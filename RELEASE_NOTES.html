@@ -16,18 +16,45 @@
  * -->
  
 
-        Release Notes - jUDDI - Version 3.3.2
+        
+        Release Notes - jUDDI - Version 3.3.3
                                 
 <h2>        Bug
 </h2>
 <ul>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-936'>JUDDI-936</a>] -         OutOfMemoryError accessing admin interface.
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-945'>JUDDI-945</a>] -         Validation error in the JUDDI web.xml (non-Tomcat containers)
 </li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-938'>JUDDI-938</a>] -         Javadoc incorrect (UDDIServiceCache)
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-946'>JUDDI-946</a>] -         Incorrect annotation on JPA entity classes
 </li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-939'>JUDDI-939</a>] -         NullPointerException when using service cache
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-951'>JUDDI-951</a>] -         EntityManagerFactory not closed when undeploying juddi
 </li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-940'>JUDDI-940</a>] -         Wrong namespace for portType: &quot;UDDI_Inquiry_PortType&quot; (not compliant with UDDI V3 !)
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-953'>JUDDI-953</a>] -         juddi-core and juddi-core-openjpa do not use the same JPA version
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-956'>JUDDI-956</a>] -         Adding a tModel without category as Keyed Reference Groups to another tModel generates an exception.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-958'>JUDDI-958</a>] -         Running mvn clean install -Pdist fails (validation of apache licences by rat plugin fails)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-959'>JUDDI-959</a>] -         Running mvn clean install -Pdist fails with java 1.8 (javadocs generation problem)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-965'>JUDDI-965</a>] -         DispositionReportFaultMessage is hiding exception messages
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-966'>JUDDI-966</a>] -         sources jars are no longer installed while building juddi
 </li>
 </ul>
-                                                                                                            
+                        
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-947'>JUDDI-947</a>] -         Avoid copying the source juddi-core in juddi-core-openjpa
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-952'>JUDDI-952</a>] -         Add unit test code coverage reports
+</li>
+</ul>
+                                                                    
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-944'>JUDDI-944</a>] -         update the gitignore file
+</li>
+</ul>
+                
