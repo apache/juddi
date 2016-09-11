@@ -29,6 +29,8 @@ import javax.xml.ws.soap.SOAPFaultException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.uddi.api_v3.DispositionReport;
+import org.uddi.api_v3.ErrInfo;
+import org.uddi.api_v3.Result;
 
 
 /**
@@ -109,7 +111,8 @@ public class DispositionReportFaultMessage
 	    		report = faultMsg.getFaultInfo();
     		}
     	} else {
-    		log.error("Unsupported Exception: " + e.getClass());
+    		log.error("Unsupported Exception: It's not a known instance of DispositionReport. ",e);
+          
     	}
     	return report;
     }

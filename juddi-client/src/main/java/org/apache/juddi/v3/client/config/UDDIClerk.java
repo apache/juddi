@@ -784,6 +784,8 @@ public class UDDIClerk implements Serializable {
                 } catch (UndeclaredThrowableException ute) {
                         DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
                         checkForErrorInDispositionReport(report, null, null);
+                }catch (Throwable t){
+                     throw new RemoteException("Unhandled exception", t);
                 }
                 return null;
         }
@@ -846,6 +848,8 @@ public class UDDIClerk implements Serializable {
                 } catch (UndeclaredThrowableException ute) {
                         DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
                         checkForErrorInDispositionReport(report, null, null);
+                }catch (Throwable t){
+                     throw new RemoteException("Unhandled exception", t);
                 }
                 return null;
         }
@@ -930,6 +934,8 @@ public class UDDIClerk implements Serializable {
                 } catch (UndeclaredThrowableException ute) {
                         DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
                         checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, serviceKey);
+                }catch (Throwable t){
+                     throw new RemoteException("Unhandled exception", t);
                 }
                 return null;
         }
@@ -1015,6 +1021,8 @@ public class UDDIClerk implements Serializable {
                 } catch (UndeclaredThrowableException ute) {
                         DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
                         checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, bindingKey);
+                }catch (Throwable t){
+                     throw new RemoteException("Unhandled exception", t);
                 }
                 return null;
         }
@@ -1096,6 +1104,8 @@ public class UDDIClerk implements Serializable {
                 } catch (UndeclaredThrowableException ute) {
                         DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
                         checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);
+                }catch (Throwable t){
+                     throw new RemoteException("Unhandled exception", t);
                 }
                 return null;
         }
@@ -1131,6 +1141,8 @@ public class UDDIClerk implements Serializable {
                 } catch (UndeclaredThrowableException ute) {
                         DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
                         checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);
+                }catch (Throwable t){
+                     throw new RemoteException("Unhandled exception", t);
                 }
                 return null;
         }
@@ -1843,8 +1855,11 @@ public class UDDIClerk implements Serializable {
                 } catch (UndeclaredThrowableException ute) {
                         DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
                         checkForErrorInDispositionReport(report, null, null);
+                } catch (Throwable t){
+                     throw new RemoteException("Unhandled exception", t);
                 }
                 return null;
+
         }
 
 }
