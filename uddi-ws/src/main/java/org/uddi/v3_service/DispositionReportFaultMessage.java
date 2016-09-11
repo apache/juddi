@@ -18,6 +18,7 @@
 
 package org.uddi.v3_service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.rmi.RemoteException;
 
@@ -110,7 +111,10 @@ public class DispositionReportFaultMessage
     			DispositionReportFaultMessage faultMsg = (DispositionReportFaultMessage) ute.getUndeclaredThrowable().getCause().getCause();
 	    		report = faultMsg.getFaultInfo();
     		}
-    	} else {
+    	} else if (e instanceof InvocationTargetException){
+          //https://issues.apache.org/jira/browse/JUDDI-965
+          log.error("InvocationTargetException: It's not a known instance of DispositionReport. Target: ",((InvocationTargetException)e).getTargetException());
+     } else{
     		log.error("Unsupported Exception: It's not a known instance of DispositionReport. ",e);
           
     	}
