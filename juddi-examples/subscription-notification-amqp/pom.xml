@@ -12,24 +12,24 @@
 	<parent>
 		<groupId>org.apache.juddi.example</groupId>
 		<artifactId>juddi-examples</artifactId>
-		<version>3.3.3</version>
+		<version>3.3.4-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>subscription-notification-amqp</artifactId>
-	<version>3.3.3</version>
+	<version>3.2.1</version>
 	<name>jUDDI Example AMQP Notifier for Subscription callbacks</name>
 	<description>Demonstrates how to write a custom notifier for subscriptions</description>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-ws</artifactId>
-			<version>${project.parent.version}</version>
+			<version>3.3.4-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-client</artifactId>
-			<version>${project.parent.version}</version>
+			<version>3.3.4-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -50,7 +50,7 @@
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-core</artifactId>
-			<version>${project.parent.version}</version>
+			<version>3.3.4-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
