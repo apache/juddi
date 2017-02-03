@@ -147,7 +147,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>2.0.1</version>
 				<configuration>
 					<dependentWarExcludes>WEB-INF/classes/RENAME4SALES_juddi_custom_install_data/*,
 						WEB-INF/classes/RENAME4MARKETING_juddi_custom_install_data/*</dependentWarExcludes>
