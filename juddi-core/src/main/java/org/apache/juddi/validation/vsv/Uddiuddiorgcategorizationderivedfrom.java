@@ -15,7 +15,6 @@
  */
 package org.apache.juddi.validation.vsv;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -28,7 +27,6 @@ import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.KeyedReference;
-import org.uddi.api_v3.KeyedReferenceGroup;
 import org.uddi.api_v3.PublisherAssertion;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelInstanceInfo;
@@ -157,7 +155,7 @@ public class Uddiuddiorgcategorizationderivedfrom implements ValueSetValidator {
                                 //ok we have some work to do
                                 boolean valid = false;
                                 for (int k = 0; k < validValues.size(); k++) {
-                                        if (validValues.get(i).equals(items.get(i).getKeyValue())) {
+                                        if (validValues.get(k).equals(items.get(i).getKeyValue())) {
                                                 valid = true;
                                         }
                                 }

@@ -306,7 +306,7 @@ public class Uddiuddiorgidentifierisreplacedby implements ValueSetValidator {
                                 //ok we have some work to do
                                 boolean valid = false;
                                 for (int k = 0; k < validValues.size(); k++) {
-                                        if (validValues.get(i).equals(items.get(i).getKeyValue())) {
+                                        if (validValues.get(k).equals(items.get(i).getKeyValue())) {
                                                 valid = true;
                                         }
                                 }
