@@ -68,12 +68,10 @@
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
-			<version>10.4.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.6</version>
 		</dependency>
 		<dependency>
           <groupId>org.apache.geronimo.specs</groupId>
@@ -82,9 +80,8 @@
           <type>jar</type>
         </dependency>
 		<dependency>
-            <groupId>postgresql</groupId>
+            <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>8.2-504.jdbc3</version>
         </dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -145,7 +142,7 @@
 								
 								<property name="dependency.log4j.jar" value="${maven.dependency.log4j.log4j.jar.path}" />
 								<property name="dependency.mysql.jar" value="${maven.dependency.mysql.mysql-connector-java.jar.path}" />
-								<property name="dependency.postgres.jar" value="${maven.dependency.postgresql.postgresql.jar.path}" />
+								<property name="dependency.postgres.jar" value="${maven.dependency.org.postgresql.postgresql.jar.path}" />
 								<property name="dependency.commons-discovery.jar" value="${maven.dependency.commons-discovery.commons-discovery.jar.path}" />
 								<property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}" />
 								<property name="dependency.tomcat.zip" value="${maven.dependency.org.apache.tomcat.tomcat.zip.path}" />

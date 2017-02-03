@@ -62,13 +62,11 @@
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
-			<version>3.2</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-bundle-jaxrs</artifactId>
-			<version>2.7.5</version>
+			<version>${cxf.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -151,7 +149,6 @@
 		<dependency>
 			<groupId>org.apache.geronimo.javamail</groupId>
 			<artifactId>geronimo-javamail_1.4_mail</artifactId>
-			<version>1.8.3</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -163,20 +160,16 @@
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
-			<version>10.5.3.0_1</version>
 			<scope>test</scope>
-			
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.6</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>postgresql</groupId>
+			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>8.2-504.jdbc3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -199,7 +192,7 @@
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-rs-extension-providers</artifactId>
-			<version>2.7.5</version>
+			<version>${cxf.version}</version>
 		</dependency>
 
 		<dependency>

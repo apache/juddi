@@ -244,7 +244,6 @@
 				<dependency>
 					<groupId>org.apache.geronimo.javamail</groupId>
 					<artifactId>geronimo-javamail_1.4_mail</artifactId>
-					<version>1.8.3</version>
 				</dependency>
 			</dependencies>
 		</profile>
@@ -299,7 +298,7 @@
 				<dependency>
 					<groupId>org.apache.cxf</groupId>
 					<artifactId>cxf-rt-rs-extension-providers</artifactId>
-					<version>2.7.5</version>
+					<version>${cxf.version}</version>
 				</dependency>
 				
 				<dependency>
@@ -337,7 +336,6 @@
 				<dependency>
 					<groupId>org.apache.geronimo.javamail</groupId>
 					<artifactId>geronimo-javamail_1.4_mail</artifactId>
-					<version>1.8.3</version>
 				</dependency>
 			</dependencies>
 		</profile>
@@ -431,7 +429,6 @@
 				<dependency>
 					<groupId>org.apache.geronimo.javamail</groupId>
 					<artifactId>geronimo-javamail_1.4_mail</artifactId>
-					<version>1.8.3</version>
 				</dependency>
 			</dependencies>
 		</profile>
