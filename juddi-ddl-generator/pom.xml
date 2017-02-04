@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.3.4-SNAPSHOT</version>
+		<version>3.3.5-SNAPSHOT</version>
 	</parent>
 	<groupId>org.apache.juddi.client.plugins</groupId>
 	<artifactId>juddi-ddl-generator</artifactId>
@@ -39,7 +39,7 @@
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-core</artifactId>
-			<version>${project.parent.version}</version>
+			<version>3.3.5-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.derby</groupId>
