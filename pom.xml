@@ -27,7 +27,7 @@ under the License.
     <packaging>pom</packaging>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-parent</artifactId>
-    <version>3.3.5-SNAPSHOT</version>
+    <version>3.3.4-SNAPSHOT</version>
     <name>jUDDI_v3 Parent</name>
     <description>jUDDI (pronounced "Judy") is an open source Java
         implementation of the Universal Description, Discovery, and
