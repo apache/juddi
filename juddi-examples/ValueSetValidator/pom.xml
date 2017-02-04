@@ -16,7 +16,7 @@
 	</parent>
 
 	<artifactId>example-vsv-validator</artifactId>
-	<version>3.2.1</version>
+	<version>3.3.4-SNAPSHOT</version>
 	<name>jUDDI Example Value Set Validator</name>
 	<dependencies>
 		<dependency>

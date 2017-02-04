@@ -24,7 +24,7 @@
 	</parent>
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>service-version</artifactId>
-	<version>3.2.1-SNAPSHOP</version>
+	<version>3.3.4-SNAPSHOP</version>
 	<name>jUDDI Example Service Versioning</name>
 	<url>http://maven.apache.org</url>
 	<properties>
@@ -34,13 +34,12 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>juddi-client</artifactId>
-			<version>3.3.4-SNAPSHOT</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -80,7 +79,6 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>exec-maven-plugin</artifactId>
-						<version>1.1.1</version>
 						<executions>
 							<execution>
 								<phase>test</phase>

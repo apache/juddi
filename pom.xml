@@ -163,11 +163,37 @@ under the License.
         <connection>scm:git:https://git-wip-us.apache.org/repos/asf/juddi.git</connection>
         <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/juddi.git</developerConnection>
         <url>https://git-wip-us.apache.org/repos/asf/juddi.git/?p=juddi.git;a=summary</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jarsigner-plugin</artifactId>
+                    <version>1.4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.sling</groupId>
+                    <artifactId>maven-jspc-plugin</artifactId>
+                    <version>2.0.8</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.asciidoctor</groupId>
+                    <artifactId>asciidoctor-maven-plugin</artifactId>
+                    <version>0.1.4</version>
+                </plugin>
+                <plugin>
+                    <!-- Entry needed to enable jdocbook unzipping -->
+                    <groupId>org.jboss.maven.plugins</groupId>
+                    <artifactId>maven-jdocbook-plugin</artifactId>
+                    <version>2.3.8</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.1.1</version>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
@@ -223,7 +249,7 @@ under the License.
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <configuration>
                         <aggregate>true</aggregate>
-			<additionalparam>${javadoc.extra.settings}</additionalparam>
+                        <additionalparam>${javadoc.extra.settings}</additionalparam>
                     </configuration>
                     <executions>
                         <execution>
@@ -235,16 +261,36 @@ under the License.
                         </execution>
                     </executions>
                 </plugin>
-		<plugin>
-			<groupId>org.apache.rat</groupId>
-			<artifactId>apache-rat-plugin</artifactId>
-			<version>0.11</version>
-		</plugin>
-		<plugin>
-			<groupId>org.jacoco</groupId>
-			<artifactId>jacoco-maven-plugin</artifactId>
-			<version>0.7.5.201505241946</version>
-		</plugin>
+                <plugin>
+                    <groupId>org.apache.rat</groupId>
+                    <artifactId>apache-rat-plugin</artifactId>
+                    <version>0.11</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.7.5.201505241946</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>2.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>2.6.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.4</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -315,7 +361,7 @@ under the License.
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
-		<version>0.11</version>
+                <version>0.11</version>
             </plugin>
             <plugin>
                 <groupId>org.owasp</groupId>
@@ -369,6 +415,113 @@ under the License.
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymock</artifactId>
+                <version>2.0</version>
+
+            </dependency>
+            <dependency>
+                <groupId>dumbster</groupId>
+                <artifactId>dumbster</artifactId>
+                <version>1.5</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>3.3</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>mail</artifactId>
+                <version>1.4.7</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-email</artifactId>
+                <version>1.3.2</version>
+            </dependency>
+
+            <dependency>
+                <!-- Entry needed to enable jdocbook unzipping -->
+                <groupId>org.jboss.maven.plugins</groupId>
+                <artifactId>maven-jdocbook-plugin</artifactId>
+                <version>2.3.10</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate.javax.persistence</groupId>
+                <artifactId>hibernate-jpa-2.1-api</artifactId>
+                <version>1.0.0.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.10</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jta_1.1_spec</artifactId>
+                <version>1.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jaxrs_1.1_spec</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jms_1.1_spec</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.qpid</groupId>
+                <artifactId>qpid-client</artifactId>
+                <version>0.24</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.qpid</groupId>
+                <artifactId>qpid-amqp-1-0-client-jms</artifactId>
+                <version>0.24</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>2.5</version>
+
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.security</groupId>
+                <artifactId>jboss-security-spi</artifactId>
+                <version>2.0.1.GA</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.javaee</groupId>
+                <artifactId>jboss-jaspi-api</artifactId>
+                <version>1.0.0.GA</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.jmdns</groupId>
+                <artifactId>jmdns</artifactId>
+                <version>3.4.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jgroups</groupId>
+                <artifactId>jgroups</artifactId>
+                <version>3.4.1.Final</version>
+            </dependency>
+            <!-- a lorem ipsum generator MIT license-->
+            <dependency>
+                <groupId>de.sven-jacobs</groupId>
+                <artifactId>loremipsum</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-cli</groupId>
+                <artifactId>commons-cli</artifactId>
+                <version>1.3.1</version>
+            </dependency>
+            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
@@ -409,19 +562,91 @@ under the License.
                 <version>1.8.4</version>
             </dependency>
             <dependency>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient</artifactId>
-                    <version>4.5.2</version>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.2</version>
             </dependency>
             <dependency>
-                    <groupId>commons-configuration</groupId>
-                    <artifactId>commons-configuration</artifactId>
-                    <version>1.10</version>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>20090211</version>
             </dependency>
             <dependency>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-lang3</artifactId>
-                    <version>3.5</version>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>1.2.17</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.persistence</groupId>
+                <artifactId>persistence-api</artifactId>
+                <version>1.0</version>
+
+            </dependency>
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib-nodep</artifactId>
+                <version>2.1_3</version>
+					
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate</artifactId>
+                <version>3.2.5.ga</version>
+
+            </dependency>
+             <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>4.2.21.Final</version>
+          
+        </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-entitymanager</artifactId>
+                <version>4.2.21.Final</version>
+
+            </dependency>
+                                
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2</artifactId>
+                <version>1.6.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-jaxws</artifactId>
+                <version>1.6.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-transport-http</artifactId>
+                <version>1.6.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-transport-local</artifactId>
+                <version>1.6.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.xmlbeans</groupId>
+                <artifactId>xmlbeans</artifactId>
+                <version>2.4.0</version>
+            </dependency>
+                                
+            <dependency>
+                <groupId>org.codehaus.jettison</groupId>
+                <artifactId>jettison</artifactId>
+                <version>1.3.4</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-configuration</groupId>
+                <artifactId>commons-configuration</artifactId>
+                <version>1.10</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.5</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -443,7 +668,7 @@ under the License.
             <layout>default</layout>
         </repository>
 
-         <repository>
+        <repository>
             <id>central</id>
             <name>Maven Central Repository</name>
             <url>http://central.maven.org/maven2</url>
@@ -464,15 +689,15 @@ under the License.
     </pluginRepositories>
     
     <profiles>
-	<profile>
-	  <id>doclint-java8-disable</id>
-	  <activation>
-	    <jdk>[1.8,)</jdk>
-	  </activation>
-	  <properties>
-		  <javadoc.extra.settings>-Xdoclint:none</javadoc.extra.settings>
-	  </properties>
-	</profile>
+        <profile>
+            <id>doclint-java8-disable</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <javadoc.extra.settings>-Xdoclint:none</javadoc.extra.settings>
+            </properties>
+        </profile>
 
         <!-- inherit from the apache parent: release-profile -->
         <profile>
@@ -543,7 +768,7 @@ under the License.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-				    <version>2.0.3</version>
+                        <version>2.0.3</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -650,46 +875,46 @@ under the License.
                             </execution>
                         </executions>
                     </plugin>
-		    <plugin>
-			    <groupId>org.jacoco</groupId>
-			    <artifactId>jacoco-maven-plugin</artifactId>
-			    <executions>
-				    <execution>
-					    <id>jacoco-prepare-agent</id>
-					    <goals>
-						    <goal>prepare-agent</goal>
-					    </goals>
-				    </execution>
-				    <execution>
-					    <id>jacoco-prepare-agent-integration</id>
-					    <goals>
-						    <goal>prepare-agent-integration</goal>
-					    </goals>
-				    </execution>
-				    <execution>
-					    <id>jacoco-report</id>
-					    <goals>
-						    <goal>report</goal>
-					    </goals>
-				    </execution>
-				    <execution>
-					    <id>jacoco-integration</id>
-					    <goals>
-						    <goal>report-integration</goal>
-					    </goals>
-				    </execution>
-				    <execution>
-					    <id>jacoco-check</id>
-					    <goals>
-						    <goal>check</goal>
-					    </goals>
-					    <configuration>
-						    <rules />
-					    </configuration>
-				    </execution>
-			    </executions>
-		    </plugin>
-		</plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>jacoco-prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>jacoco-prepare-agent-integration</id>
+                                <goals>
+                                    <goal>prepare-agent-integration</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>jacoco-report</id>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>jacoco-integration</id>
+                                <goals>
+                                    <goal>report-integration</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>jacoco-check</id>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <rules />
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
             </build>
         </profile>
     </profiles>

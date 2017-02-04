@@ -16,41 +16,38 @@
 	</parent>
 
 	<artifactId>subscription-notification-amqp</artifactId>
-	<version>3.2.1</version>
+	<version>3.3.4-SNAPSHOT</version>
 	<name>jUDDI Example AMQP Notifier for Subscription callbacks</name>
 	<description>Demonstrates how to write a custom notifier for subscriptions</description>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-ws</artifactId>
-			<version>3.3.4-SNAPSHOT</version>
+			<version>${project.parent.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-client</artifactId>
-			<version>3.3.4-SNAPSHOT</version>
+			<version>${project.parent.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.geronimo.specs</groupId>
 			<artifactId>geronimo-jms_1.1_spec</artifactId>
-			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.qpid</groupId>
 			<artifactId>qpid-client</artifactId>
-			<version>0.24</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.qpid</groupId>
 			<artifactId>qpid-amqp-1-0-client-jms</artifactId>
-			<version>0.24</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-core</artifactId>
-			<version>3.3.4-SNAPSHOT</version>
+			<version>${project.parent.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -58,7 +55,6 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4</version>
 				<configuration>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
@@ -114,7 +110,6 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>exec-maven-plugin</artifactId>
-						<version>1.1.1</version>
 						<executions>
 							<execution>
 								<phase>test</phase>
