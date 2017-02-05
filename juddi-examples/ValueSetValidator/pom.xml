@@ -12,30 +12,30 @@
 	<parent>
 		<groupId>org.apache.juddi.example</groupId>
 		<artifactId>juddi-examples</artifactId>
-		<version>3.3.5-SNAPSHOT</version>
+		<version>3.3.4</version>
 	</parent>
 
 	<artifactId>example-vsv-validator</artifactId>
-	<version>3.3.5-SNAPSHOT</version>
+	<version>3.3.4</version>
 	<name>jUDDI Example Value Set Validator</name>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-ws</artifactId>
-			<version>3.3.5-SNAPSHOT</version>
+			<version>3.3.4</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-client</artifactId>
-			<version>3.3.5-SNAPSHOT</version>
+			<version>3.3.4</version>
 			<scope>provided</scope>
 		</dependency>
 	
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-core</artifactId>
-			<version>3.3.5-SNAPSHOT</version>
+			<version>3.3.4</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
