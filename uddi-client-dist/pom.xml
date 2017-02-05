@@ -12,7 +12,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.3.5-SNAPSHOT</version>
+		<version>3.3.4-SNAPSHOT</version>
 	</parent>
 	<artifactId>uddi-client-dist</artifactId>
 	<name>UDDI Client Distribution Assembly</name>
