@@ -819,6 +819,7 @@ under the License.
                                 <exclude>src/main/resources/uddi_v2replication.xsd</exclude>
                                 <exclude>**/datatypes.dtd</exclude>
                                 <exclude>**/xml.xsd</exclude>
+								<exclude>**/*.pfx</exclude>
                                 <exclude>**/XMLSchema.dtd</exclude>
                                 <exclude>**/xmldsig-core-schema.xsd</exclude>
  
