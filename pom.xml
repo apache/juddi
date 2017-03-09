@@ -323,18 +323,7 @@ under the License.
                     </filesets>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <version>1.4.5</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            
         </plugins>
     </build>
     <reporting>
@@ -549,7 +538,7 @@ under the License.
             <dependency>
                 <groupId>org.apache.derby</groupId>
                 <artifactId>derby</artifactId>
-                <version>10.13.1.1</version>
+                <version>10.10.1.1</version>
             </dependency>
             <dependency>
                 <groupId>org.postgresql</groupId>
