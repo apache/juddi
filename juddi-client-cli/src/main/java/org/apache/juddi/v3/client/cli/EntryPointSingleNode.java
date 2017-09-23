@@ -19,7 +19,6 @@ import java.util.List;
 import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDINode;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.api_v3.BusinessList;
 import org.uddi.api_v3.DeleteBusiness;
@@ -227,21 +226,21 @@ public class EntryPointSingleNode {
                 } else if (input.equals("15")) {
                         SearchByQos.doFindService(authtoken, transport);
                 } else if (input.equals("16")) {
-                        new UddiFindBinding().Fire(authtoken);
+                        new UddiFindBinding().fire(authtoken);
                 } else if (input.equals("17")) {
                         System.out.print("Service key to parse the endpoints: ");
                         String key = (System.console().readLine());
-                        new UddiFindEndpoints().Fire(authtoken, key);
+                        new UddiFindEndpoints().fire(authtoken, key);
                 } else if (input.equals("18")) {
                         System.out.print("Service key: ");
                         String key = (System.console().readLine());
-                        new UddiGetServiceDetails().Fire(authtoken, key);
+                        new UddiGetServiceDetails().fire(authtoken, key);
                 } else if (input.equals("19")) {
-                        new UddiDigitalSignatureSearch().Fire(authtoken);
+                        new UddiDigitalSignatureSearch().fire(authtoken);
                 } else if (input.equals("20")) {
                         System.out.print("Get FQDN: ");
                         String key = (System.console().readLine());
-                        new UddiKeyGenerator().Fire(authtoken, key);
+                        new UddiKeyGenerator().fire(authtoken, key);
                 } else if (input.equals("21")) {
 
                         System.out.print("businesses: ");
@@ -254,13 +253,13 @@ public class EntryPointSingleNode {
                         String url = (System.console().readLine());
                         System.out.print("Business key to attach to: ");
                         String key = (System.console().readLine());
-                        new WsdlImport().Fire(url, key, authtoken, transport);
+                        new WsdlImport().fire(url, key, authtoken, transport);
                 } else if (input.equals("23")) {
                         System.out.print("Path or URL to WADL file: ");
                         String url = (System.console().readLine());
                         System.out.print("Business key to attach to: ");
                         String key = (System.console().readLine());
-                        new WadlImport().Fire(url, key, authtoken, transport);
+                        new WadlImport().fire(url, key, authtoken, transport);
                 } else if (input.equals("24")) {
                         UDDISecurityPortType security = null;
                         security = transport.getUDDISecurityService();
@@ -284,19 +283,19 @@ public class EntryPointSingleNode {
                         System.out.println("Success!");
                         System.out.print("business/tModel key to transfer: ");
                         String key = (System.console().readLine());
-                        new UddiCustodyTransfer().TransferBusiness(uname, authtokenFrom, uname2, authtokenFrom2, key);
+                        new UddiCustodyTransfer().transferBusiness(uname, authtokenFrom, uname2, authtokenFrom2, key);
                 } else if (input.equals("25")) {
                         System.out.print("Business key to sign: ");
                         String key = (System.console().readLine());
-                        new UddiDigitalSignatureBusiness().Fire(authtoken, key);
+                        new UddiDigitalSignatureBusiness().fire(authtoken, key);
                 } else if (input.equals("26")) {
                         System.out.print("Service key to sign: ");
                         String key = (System.console().readLine());
-                        new UddiDigitalSignatureService().Fire(authtoken, key);
+                        new UddiDigitalSignatureService().fire(authtoken, key);
                 } else if (input.equals("27")) {
                         System.out.print("tModel key to sign: ");
                         String key = (System.console().readLine());
-                        new UddiDigitalSignatureTmodel().Fire(authtoken, key);
+                        new UddiDigitalSignatureTmodel().fire(authtoken, key);
                 } else if (input.equals("28")) {
                         UDDISecurityPortType security = null;
 
@@ -328,9 +327,9 @@ public class EntryPointSingleNode {
 
                         System.out.print("relationship (parent-child, peer-peer,or identity) : ");
                         String relationship = (System.console().readLine());
-                        new UddiRelatedBusinesses().Fire(key, authtokenFrom, key2, authtokenFrom2, relationship);
+                        new UddiRelatedBusinesses().fire(key, authtokenFrom, key2, authtokenFrom2, relationship);
                 } else if (input.equals("29")) {
-                        new UddiSubscribe(client, currentNode, transport).Fire();
+                        new UddiSubscribe(client, currentNode, transport).fire();
 
                 } else if (input.equals("30")) {
                         System.out.print("Subscription key: ");
@@ -338,23 +337,23 @@ public class EntryPointSingleNode {
                         System.out.println("Fetching results for the past 30 days...");
                         new UddiSubscribeValidate(transport).go(authtoken, input);
                 } else if (input.equals("31")) {
-                        new UddiSubscriptionManagement(transport).PrintSubscriptions(authtoken);
+                        new UddiSubscriptionManagement(transport).printSubscriptions(authtoken);
                 } else if (input.equals("32")) {
                         System.out.print("Subscription key: ");
                         String key2 = (System.console().readLine());
-                        new UddiSubscriptionManagement(transport).DeleteSubscription(authtoken, key2);
+                        new UddiSubscriptionManagement(transport).deleteSubscription(authtoken, key2);
                 } else if (input.equals("33")) {
-                        new UddiSubscriptionManagement(transport).DeleteAllSubscriptions(authtoken);
+                        new UddiSubscriptionManagement(transport).deleteAllSubscriptions(authtoken);
                 } else if (input.equals("34")) {
                         new UddiSubscribeAssertionStatus(transport).Fire(currentNode);
 
                 } else if (input.equals("35")) {
 
-                        new UddiReplication(client, currentNode).DoPing();
+                        new UddiReplication(client, currentNode).doPing();
 
                 } else if (input.equals("36")) {
                         //System.out.println("28) Replication - get high watermarks");
-                        new UddiReplication(client, currentNode).GetHighWatermarks();
+                        new UddiReplication(client, currentNode).getHighWatermarks();
 
                 } else if (input.equals("37")) {
                         //System.out.println("29) Replication - get change records");
@@ -365,7 +364,7 @@ public class EntryPointSingleNode {
                         System.out.print("Node id of something in the replication graph: ");
                         String src = (System.console().readLine());
 
-                        new UddiReplication(client, currentNode).GetChangeRecords(Long.parseLong(id), src);
+                        new UddiReplication(client, currentNode).getChangeRecords(Long.parseLong(id), src);
 
                 } else if ("38".equals(input)) {
                         new JuddiAdminService(client, transport).dumpFailedReplicationRecords(authtoken);

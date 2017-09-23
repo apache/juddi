@@ -79,7 +79,7 @@ public class UddiCustodyTransfer {
                 // Making API call that retrieves the authentication token for the 'root' user.
                 AuthToken uddiAuthToken = security.getAuthToken(getAuthTokenRoot);
                 System.out.println("uddi AUTHTOKEN = " + "don't log auth tokens!");
-                BusinessEntity biz = sp.CreateBusiness("uddi");
+                BusinessEntity biz = sp.createBusiness("uddi");
 
                 //save user uddi's business
                 SaveBusiness sb = new SaveBusiness();
@@ -87,10 +87,10 @@ public class UddiCustodyTransfer {
                 sb.getBusinessEntity().add(biz);
                 BusinessDetail saveBusiness = publish.saveBusiness(sb);
 
-                sp.TransferBusiness(uddiAuthToken.getAuthInfo(), "uddi", rootAuthToken.getAuthInfo(), "root", saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+                sp.transferBusiness(uddiAuthToken.getAuthInfo(), "uddi", rootAuthToken.getAuthInfo(), "root", saveBusiness.getBusinessEntity().get(0).getBusinessKey());
         }
 
-        public void TransferBusiness(String fromUser, String fromUserAuthToken, String toUser, String toUserAuthToken,
+        public void transferBusiness(String fromUser, String fromUserAuthToken, String toUser, String toUserAuthToken,
                 String BusinessKey) throws Exception {
 
                 System.out.println("Transfering business key " + BusinessKey);
@@ -157,7 +157,7 @@ public class UddiCustodyTransfer {
                 System.out.println("Transfer " + (ok ? "success" : " failed"));
         }
 
-        private BusinessEntity CreateBusiness(String user) {
+        private BusinessEntity createBusiness(String user) {
                 BusinessEntity be = new BusinessEntity();
                 be.getName().add(new Name(user + "'s business", null));
                 return be;

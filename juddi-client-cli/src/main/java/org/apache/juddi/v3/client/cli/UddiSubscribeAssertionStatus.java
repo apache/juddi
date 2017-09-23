@@ -18,21 +18,15 @@ package org.apache.juddi.v3.client.cli;
 
 import javax.xml.datatype.DatatypeFactory;
 import org.apache.juddi.jaxb.PrintUDDI;
-import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.subscription.ISubscriptionCallback;
 import org.apache.juddi.v3.client.subscription.SubscriptionCallbackListener;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.*;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionFilter;
 import org.uddi.sub_v3.SubscriptionResultsList;
-import org.uddi.v3_service.UDDIInquiryPortType;
-import org.uddi.v3_service.UDDIPublicationPortType;
-import org.uddi.v3_service.UDDISecurityPortType;
-import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
  * Thie class shows you how to create a business and a subscription using UDDI
@@ -40,13 +34,9 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
-public class UddiSubscribeAssertionStatus implements ISubscriptionCallback, Runnable {
+public class UddiSubscribeAssertionStatus implements ISubscriptionCallback {
 
-        private static UDDISecurityPortType security = null;
-        private static JUDDIApiPortType juddiApi = null;
-        private static UDDIPublicationPortType publish = null;
-        private static UDDIInquiryPortType uddiInquiryService = null;
-        private static UDDISubscriptionPortType uddiSubscriptionService = null;
+     
         boolean callbackRecieved = false;
         private UDDIClerk clerk = null;
         private UDDIClient client = null;
@@ -59,11 +49,6 @@ public class UddiSubscribeAssertionStatus implements ISubscriptionCallback, Runn
                         clerk = client.getClerk("default");
                         Transport transport = client.getTransport();
                         // Now you create a reference to the UDDI API
-                        security = transport.getUDDISecurityService();
-                        juddiApi = transport.getJUDDIApiService();
-                        publish = transport.getUDDIPublishService();
-                        uddiInquiryService = transport.getUDDIInquiryService();
-                        uddiSubscriptionService = transport.getUDDISubscriptionService();
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
@@ -72,11 +57,7 @@ public class UddiSubscribeAssertionStatus implements ISubscriptionCallback, Runn
          public UddiSubscribeAssertionStatus(Transport transport) {
                 try {
                         // Now you create a reference to the UDDI API
-                        security = transport.getUDDISecurityService();
-                        juddiApi = transport.getJUDDIApiService();
-                        publish = transport.getUDDIPublishService();
-                        uddiInquiryService = transport.getUDDIInquiryService();
-                        uddiSubscriptionService = transport.getUDDISubscriptionService();
+
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
@@ -142,7 +123,6 @@ public class UddiSubscribeAssertionStatus implements ISubscriptionCallback, Runn
                 //Runtime.getRuntime().removeShutdownHook(hook);
         }
 
-        private boolean running = true;
         PrintUDDI<SubscriptionResultsList> p = new PrintUDDI<SubscriptionResultsList>();
 
         @Override
@@ -156,8 +136,5 @@ public class UddiSubscribeAssertionStatus implements ISubscriptionCallback, Runn
                 System.out.println("The endpoint was stopped!");
         }
 
-        @Override
-        public void run() {
-                running = false;
-        }
+       
 }

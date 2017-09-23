@@ -56,7 +56,7 @@ public class UddiRelatedBusinesses {
                 }
         }
 
-        public void Fire(String businessKey, String authInfo, String businessKey1, String authInfo1, String relationship) throws Exception {
+        public void fire(String businessKey, String authInfo, String businessKey1, String authInfo1, String relationship) throws Exception {
                 try {
 
                         DatatypeFactory df = DatatypeFactory.newInstance();
@@ -118,7 +118,7 @@ public class UddiRelatedBusinesses {
                 // Making API call that retrieves the authentication token for the 'root' user.
                 AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
                 System.out.println("root AUTHTOKEN = " + "don't log auth tokens!");
-                BusinessEntity rootbiz = sp.CreateBusiness("root");
+                BusinessEntity rootbiz = sp.createBusiness("root");
 
                 getAuthTokenRoot = new GetAuthToken();
                 getAuthTokenRoot.setUserID("uddi");
@@ -127,7 +127,7 @@ public class UddiRelatedBusinesses {
                 // Making API call that retrieves the authentication token for the 'root' user.
                 AuthToken uddiAuthToken = security.getAuthToken(getAuthTokenRoot);
                 System.out.println("uddi AUTHTOKEN = " + "don't log auth tokens!");
-                BusinessEntity uddibiz = sp.CreateBusiness("uddi");
+                BusinessEntity uddibiz = sp.createBusiness("uddi");
 
                 //save user uddi's business
                 SaveBusiness sb = new SaveBusiness();
@@ -140,12 +140,12 @@ public class UddiRelatedBusinesses {
                 sb.getBusinessEntity().add(rootbiz);
                 BusinessDetail rootbize = publish.saveBusiness(sb);
 
-                sp.Fire(rootbize.getBusinessEntity().get(0).getBusinessKey(), rootAuthToken.getAuthInfo(),
+                sp.fire(rootbize.getBusinessEntity().get(0).getBusinessKey(), rootAuthToken.getAuthInfo(),
                         uddibize.getBusinessEntity().get(0).getBusinessKey(), uddiAuthToken.getAuthInfo(),
                         "parent-child");
         }
 
-        private BusinessEntity CreateBusiness(String user) {
+        private BusinessEntity createBusiness(String user) {
                 BusinessEntity be = new BusinessEntity();
                 be.getName().add(new Name(user + "'s business", null));
                 return be;

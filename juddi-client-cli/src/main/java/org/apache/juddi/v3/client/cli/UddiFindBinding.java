@@ -18,12 +18,9 @@ package org.apache.juddi.v3.client.cli;
 
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.*;
 import org.uddi.v3_service.UDDIInquiryPortType;
-import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
@@ -35,8 +32,6 @@ import org.uddi.v3_service.UDDISecurityPortType;
 public class UddiFindBinding {
 
         private static UDDISecurityPortType security = null;
-        private static JUDDIApiPortType juddiApi = null;
-        private static UDDIPublicationPortType publish = null;
         private static UDDIInquiryPortType inquiry = null;
 
         public UddiFindBinding() {
@@ -47,15 +42,13 @@ public class UddiFindBinding {
                         Transport transport = clerkManager.getTransport();
                         // Now you create a reference to the UDDI API
                         security = transport.getUDDISecurityService();
-                        juddiApi = transport.getJUDDIApiService();
-                        publish = transport.getUDDIPublishService();
                         inquiry = transport.getUDDIInquiryService();
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
         }
 
-        public void Fire(String token) {
+        public void fire(String token) {
                 try {
                         // Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
                         // and can save other publishers).
@@ -101,6 +94,6 @@ public class UddiFindBinding {
 
         public static void main(String args[]) {
                 UddiFindBinding sp = new UddiFindBinding();
-                sp.Fire(null);
+                sp.fire(null);
         }
 }

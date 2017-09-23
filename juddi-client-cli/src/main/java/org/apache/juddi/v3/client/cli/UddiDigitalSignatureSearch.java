@@ -19,7 +19,6 @@ package org.apache.juddi.v3.client.cli;
 import java.util.List;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.api_v3.*;
 import org.uddi.v3_service.UDDIInquiryPortType;
@@ -35,7 +34,6 @@ public class UddiDigitalSignatureSearch {
 
         private static UDDISecurityPortType security = null;
         private static UDDIInquiryPortType inquiry = null;
-        private static UDDIPublicationPortType publish = null;
 
         /**
          * This sets up the ws proxies using uddi.xml in META-INF
@@ -49,7 +47,6 @@ public class UddiDigitalSignatureSearch {
                         // Now you create a reference to the UDDI API
                         security = transport.getUDDISecurityService();
                         inquiry = transport.getUDDIInquiryService();
-                        publish = transport.getUDDIPublishService();
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
@@ -63,10 +60,10 @@ public class UddiDigitalSignatureSearch {
         public static void main(String args[]) {
 
                 UddiDigitalSignatureSearch sp = new UddiDigitalSignatureSearch();
-                sp.Fire(null);
+                sp.fire(null);
         }
 
-        public void Fire(String token) {
+        public void fire(String token) {
                 try {
 
                         FindService fs = new FindService();
@@ -85,7 +82,7 @@ public class UddiDigitalSignatureSearch {
                         ServiceList findService = inquiry.findService(fs);
                         if (findService != null && findService.getServiceInfos() != null) {
                                 for (int i = 0; i < findService.getServiceInfos().getServiceInfo().size(); i++) {
-                                        System.out.println(ListToString(findService.getServiceInfos().getServiceInfo().get(i).getName()));
+                                        System.out.println(listToString(findService.getServiceInfos().getServiceInfo().get(i).getName()));
                                 }
                         } else
                                 System.out.println("no results found.");
@@ -120,7 +117,7 @@ public class UddiDigitalSignatureSearch {
                 return null;
         }
 
-        private String ListToString(List<Name> name) {
+        private String listToString(List<Name> name) {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < name.size(); i++) {
                         sb.append(name.get(i).getValue()).append(" ");

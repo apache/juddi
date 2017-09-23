@@ -19,7 +19,6 @@ package org.apache.juddi.v3.client.cli;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.api_v3.*;
@@ -77,10 +76,10 @@ public class UddiDigitalSignatureBusiness {
         public static void main(String args[]) {
 
                 UddiDigitalSignatureBusiness sp = new UddiDigitalSignatureBusiness();
-                sp.Fire(null, null);
+                sp.fire(null, null);
         }
 
-        public void Fire(String token, String key) {
+        public void fire(String token, String key) {
                 try {
 
                         DigSigUtil ds = null;
@@ -104,7 +103,7 @@ public class UddiDigitalSignatureBusiness {
                         //login
                         if (token == null) //option, load from juddi config
                         {
-                                token = GetAuthKey(clerkManager.getClerk("default").getPublisher(),
+                                token = getAuthKey(clerkManager.getClerk("default").getPublisher(),
                                         clerkManager.getClerk("default").getPassword());
                         }
 
@@ -177,7 +176,7 @@ public class UddiDigitalSignatureBusiness {
          * @param style
          * @return
          */
-        private String GetAuthKey(String username, String password) {
+        private String getAuthKey(String username, String password) {
                 try {
 
                         GetAuthToken getAuthTokenRoot = new GetAuthToken();

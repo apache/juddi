@@ -28,7 +28,6 @@ import javax.xml.namespace.QName;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
 import org.apache.juddi.v3.client.mapping.wsdl.ReadWSDL;
 import org.apache.juddi.v3.client.mapping.wsdl.WSDL2UDDI;
@@ -37,7 +36,6 @@ import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
-import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.BusinessServices;
 import org.uddi.api_v3.GetAuthToken;
 import org.uddi.api_v3.Name;
@@ -64,10 +62,10 @@ public class WsdlImport {
         private static UDDIPublicationPortType publish = null;
 
         public static void main(String[] args) throws Exception {
-                new WsdlImport().Fire("http://svn.apache.org/repos/asf/juddi/trunk/uddi-ws/src/main/resources/juddi_api_v1.wsdl", null, null, null);
+                new WsdlImport().fire("http://svn.apache.org/repos/asf/juddi/trunk/uddi-ws/src/main/resources/juddi_api_v1.wsdl", null, null, null);
         }
 
-        public void Fire(String pathOrURL, String businessKey, String token, Transport transport) throws Exception {
+        public void fire(String pathOrURL, String businessKey, String token, Transport transport) throws Exception {
 
                 if (transport == null) {
                 // create a manager and read the config in the archive; 

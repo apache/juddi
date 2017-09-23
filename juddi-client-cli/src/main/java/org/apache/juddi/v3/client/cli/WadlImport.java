@@ -27,7 +27,6 @@ import javax.xml.namespace.QName;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
 import org.apache.juddi.v3.client.mapping.wadl.Application;
 import org.apache.juddi.v3.client.mapping.wadl.WADL2UDDI;
@@ -62,7 +61,7 @@ public class WadlImport {
         private static JUDDIApiPortType juddiApi = null;
         private static UDDIPublicationPortType publish = null;
 
-        public void Fire(String pathOrURL, String businessKey, String token, Transport transport) throws Exception {
+        public void fire(String pathOrURL, String businessKey, String token, Transport transport) throws Exception {
 
                 if (transport == null) {
                 // create a manager and read the config in the archive; 
@@ -191,7 +190,7 @@ public class WadlImport {
 
         public static void main(String[] args) throws Exception {
 
-                new WadlImport().Fire("http://svn.apache.org/repos/asf/cxf/trunk/systests/jaxrs/src/test/resources/wadl/bookstoreImportResource.wadl", null, null, null);
+                new WadlImport().fire("http://svn.apache.org/repos/asf/cxf/trunk/systests/jaxrs/src/test/resources/wadl/bookstoreImportResource.wadl", null, null, null);
 
         }
 }

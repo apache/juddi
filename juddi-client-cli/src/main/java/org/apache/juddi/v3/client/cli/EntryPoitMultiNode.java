@@ -19,7 +19,6 @@ import java.util.List;
 import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.api_v3.BusinessList;
 import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindQualifiers;
@@ -37,10 +36,10 @@ import org.uddi.v3_service.UDDIInquiryPortType;
 public class EntryPoitMultiNode {
 
         static void goMultiNode() throws Exception {
-                String currentNode = "default";
+                
                 UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
 
-                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
+                
                 String input = null;
                 do {
                         System.out.println("1) Sets undirected replication two instances of jUDDI");

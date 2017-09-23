@@ -85,14 +85,14 @@ public class FindBusinessBugHunt {
 
         System.out.println("killing mary's business if it exists");
         //first check is Mary's business exists and delete
-        DeleteIfExists("uddi:uddi.marypublisher.com:marybusinessone", uddi);
+        deleteIfExists("uddi:uddi.marypublisher.com:marybusinessone", uddi);
 
         System.out.println("making mary's tmodel key gen");
         //make the key gen since our test case uses some custom keys
         TModel createKeyGenator = UDDIClerk.createKeyGenator("uddi.marypublisher.com", "mary key gen", "en");
         //clerk.register(createKeyGenator);
         System.out.println("saving...");
-        SaveTM(createKeyGenator, uddi);
+        saveTM(createKeyGenator, uddi);
 
 
         System.out.println("fetching business list");
@@ -105,7 +105,7 @@ public class FindBusinessBugHunt {
         }
 
         System.out.println("saving mary");
-        SaveMary(uddi);
+        saveMary(uddi);
 
         BusinessList after = getBusinessList(uddi);
         if (after.getBusinessInfos() == null) {
@@ -118,7 +118,7 @@ public class FindBusinessBugHunt {
         if (before.getBusinessInfos().getBusinessInfo().size()
                 < after.getBusinessInfos().getBusinessInfo().size()) {
             System.out.println("hey it worked as advertised, double checking");
-            if (CheckFor(after, "uddi:uddi.marypublisher.com:marybusinessone")) {
+            if (checkFor(after, "uddi:uddi.marypublisher.com:marybusinessone")) {
                 System.out.println("ok!");
             } else {
                 System.out.println("no good!");
@@ -132,7 +132,7 @@ public class FindBusinessBugHunt {
 
     }
 
-    private static void DeleteIfExists(String key, String authInfo) {
+    private static void deleteIfExists(String key, String authInfo) {
         GetBusinessDetail gbd = new GetBusinessDetail();
         gbd.setAuthInfo(authInfo);
         gbd.getBusinessKey().add(key);
@@ -168,7 +168,7 @@ public class FindBusinessBugHunt {
         return inquiry.findBusiness(fb);
     }
 
-    private static void SaveMary(String rootAuthToken) throws Exception {
+    private static void saveMary(String rootAuthToken) throws Exception {
         BusinessEntity be = new BusinessEntity();
         be.setBusinessKey("uddi:uddi.marypublisher.com:marybusinessone");
         be.setDiscoveryURLs(new DiscoveryURLs());
@@ -190,7 +190,7 @@ public class FindBusinessBugHunt {
         publish.saveBusiness(sb);
     }
 
-    private static boolean CheckFor(BusinessList list, String key) {
+    private static boolean checkFor(BusinessList list, String key) {
         for (int i = 0; i < list.getBusinessInfos().getBusinessInfo().size(); i++) {
             if (list.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey().equalsIgnoreCase(key)) {
                 return true;
@@ -199,7 +199,7 @@ public class FindBusinessBugHunt {
         return false;
     }
 
-    private static void SaveTM(TModel createKeyGenator, String uddi) throws Exception {
+    private static void saveTM(TModel createKeyGenator, String uddi) throws Exception {
         SaveTModel stm = new SaveTModel();
         stm.setAuthInfo(uddi);
         stm.getTModel().add(createKeyGenator);

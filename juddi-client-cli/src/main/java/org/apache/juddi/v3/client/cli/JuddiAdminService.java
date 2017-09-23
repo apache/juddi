@@ -15,7 +15,6 @@
  */
 package org.apache.juddi.v3.client.cli;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.math.BigInteger;
 import java.rmi.RemoteException;
@@ -83,8 +82,6 @@ public class JuddiAdminService {
                                 juddi = transport.getJUDDIApiService();
                         }
                         // Now you create a reference to the UDDI API
-                        //security = transport.getUDDISecurityService();
-                        //publish = transport.getUDDIPublishService();
 
                 } catch (Exception e) {
                         e.printStackTrace();

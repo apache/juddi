@@ -64,10 +64,10 @@ public class UddiDigitalSignatureService {
         public static void main(String args[]) {
 
                 UddiDigitalSignatureService sp = new UddiDigitalSignatureService();
-                sp.Fire(null, null);
+                sp.fire(null, null);
         }
 
-        public void Fire(String token, String key) {
+        public void fire(String token, String key) {
                 try {
 
                         DigSigUtil ds = null;
@@ -92,7 +92,7 @@ public class UddiDigitalSignatureService {
                         //login
                         if (token == null) //option, load from juddi config
                         {
-                                token = GetAuthKey(clerkManager.getClerk("default").getPublisher(),
+                                token = getAuthKey(clerkManager.getClerk("default").getPublisher(),
                                         clerkManager.getClerk("default").getPassword());
                         }
 
@@ -117,7 +117,7 @@ public class UddiDigitalSignatureService {
                         }
 
                         BusinessService be = null;
-                        be = GetServiceDetails(key);
+                        be = getServiceDetails(key);
                         if (!be.getSignature().isEmpty())
                         {
                                 System.out.println("WARN, the entity with the key " + key + " is already signed! aborting");
@@ -136,7 +136,7 @@ public class UddiDigitalSignatureService {
                         publish.saveService(sb);
                         System.out.println("saved, fetching");
 
-                        be = GetServiceDetails(key);
+                        be = getServiceDetails(key);
                         DigSigUtil.JAXB_ToStdOut(be);
                         System.out.println("verifing");
                         AtomicReference<String> msg = new AtomicReference<String>();
@@ -153,7 +153,7 @@ public class UddiDigitalSignatureService {
                 }
         }
 
-        private BusinessService GetServiceDetails(String key) throws Exception {
+        private BusinessService getServiceDetails(String key) throws Exception {
                 //   BusinessInfo get
                 GetServiceDetail r = new GetServiceDetail();
                 //GetBusinessDetail r = new GetBusinessDetail();
@@ -170,7 +170,7 @@ public class UddiDigitalSignatureService {
          * @param style
          * @return
          */
-        private String GetAuthKey(String username, String password) {
+        private String getAuthKey(String username, String password) {
                 try {
 
                         GetAuthToken getAuthTokenRoot = new GetAuthToken();

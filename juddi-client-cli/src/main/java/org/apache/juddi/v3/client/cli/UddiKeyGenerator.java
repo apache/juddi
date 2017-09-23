@@ -18,11 +18,8 @@ package org.apache.juddi.v3.client.cli;
 
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.*;
-import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
@@ -35,9 +32,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 public class UddiKeyGenerator {
 
         private static UDDISecurityPortType security = null;
-        private static JUDDIApiPortType juddiApi = null;
         private static UDDIPublicationPortType publish = null;
-        private static UDDIInquiryPortType inquiry = null;
 
         public UddiKeyGenerator() {
                 try {
@@ -47,15 +42,13 @@ public class UddiKeyGenerator {
                         Transport transport = clerkManager.getTransport();
                         // Now you create a reference to the UDDI API
                         security = transport.getUDDISecurityService();
-                        juddiApi = transport.getJUDDIApiService();
                         publish = transport.getUDDIPublishService();
-                        inquiry = transport.getUDDIInquiryService();
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
         }
 
-        public void Fire(String token, String domain) {
+        public void fire(String token, String domain) {
                 try {
             // Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
                         // and can save other publishers).
@@ -99,6 +92,6 @@ public class UddiKeyGenerator {
 
         public static void main(String args[]) {
                 UddiKeyGenerator sp = new UddiKeyGenerator();
-                sp.Fire(null, "www.juddi.is.cool.org");
+                sp.fire(null, "www.juddi.is.cool.org");
         }
 }

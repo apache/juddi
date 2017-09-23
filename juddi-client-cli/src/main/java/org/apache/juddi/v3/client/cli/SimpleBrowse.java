@@ -88,7 +88,7 @@ public class SimpleBrowse {
         public static void main(String args[]) {
 
                 SimpleBrowse sp = new SimpleBrowse();
-                sp.Browse(args);
+                sp.browse(args);
         }
 
         public SimpleBrowse(Transport transport) {
@@ -102,14 +102,14 @@ public class SimpleBrowse {
                 }
         }
 
-        public void Browse(String[] args) {
+        public void browse(String[] args) {
                 try {
 
-                        String token = GetAuthKey("uddi", "uddi");
-                        BusinessList findBusiness = GetBusinessList(token, null, 0, 100);
-                        PrintBusinessInfo(findBusiness.getBusinessInfos());
-                        PrintBusinessDetails(findBusiness.getBusinessInfos(), token);
-                        PrintServiceDetailsByBusiness(findBusiness.getBusinessInfos(), token);
+                        String token = getAuthKey("uddi", "uddi");
+                        BusinessList findBusiness = getBusinessList(token, null, 0, 100);
+                        printBusinessInfo(findBusiness.getBusinessInfos());
+                        printBusinessDetails(findBusiness.getBusinessInfos(), token);
+                        printServiceDetailsByBusiness(findBusiness.getBusinessInfos(), token);
 
                         security.discardAuthToken(new DiscardAuthToken(token));
 
@@ -126,7 +126,7 @@ public class SimpleBrowse {
          * @return
          * @throws Exception
          */
-        private BusinessList GetBusinessList(String token, String query, int offset, int maxrecords) throws Exception {
+        private BusinessList getBusinessList(String token, String query, int offset, int maxrecords) throws Exception {
                 FindBusiness fb = new FindBusiness();
                 fb.setAuthInfo(token);
                 org.uddi.api_v3.FindQualifiers fq = new org.uddi.api_v3.FindQualifiers();
@@ -153,24 +153,24 @@ public class SimpleBrowse {
          * @param categoryBag
          * @return
          */
-        private String CatBagToString(CategoryBag categoryBag) {
+        private String catBagToString(CategoryBag categoryBag) {
                 StringBuilder sb = new StringBuilder();
                 if (categoryBag == null) {
                         return "no data";
                 }
                 for (int i = 0; i < categoryBag.getKeyedReference().size(); i++) {
-                        sb.append(KeyedReferenceToString(categoryBag.getKeyedReference().get(i)));
+                        sb.append(keyedReferenceToString(categoryBag.getKeyedReference().get(i)));
                 }
                 for (int i = 0; i < categoryBag.getKeyedReferenceGroup().size(); i++) {
                         sb.append("Key Ref Grp: TModelKey=");
                         for (int k = 0; k < categoryBag.getKeyedReferenceGroup().get(i).getKeyedReference().size(); k++) {
-                                sb.append(KeyedReferenceToString(categoryBag.getKeyedReferenceGroup().get(i).getKeyedReference().get(k)));
+                                sb.append(keyedReferenceToString(categoryBag.getKeyedReferenceGroup().get(i).getKeyedReference().get(k)));
                         }
                 }
                 return sb.toString();
         }
 
-        private String KeyedReferenceToString(KeyedReference item) {
+        private String keyedReferenceToString(KeyedReference item) {
                 StringBuilder sb = new StringBuilder();
                 sb.append("Key Ref: Name=").
                         append(item.getKeyName()).
@@ -182,7 +182,7 @@ public class SimpleBrowse {
                 return sb.toString();
         }
 
-        private void PrintContacts(Contacts contacts) {
+        private void printContacts(Contacts contacts) {
                 if (contacts == null) {
                         return;
                 }
@@ -214,20 +214,20 @@ public class SimpleBrowse {
 
         }
 
-        private void PrintServiceDetail(BusinessService get) {
+        private void printServiceDetail(BusinessService get) {
                 if (get == null) {
                         return;
                 }
-                System.out.println("Name " + ListToString(get.getName()));
-                System.out.println("Desc " + ListToDescString(get.getDescription()));
+                System.out.println("Name " + listToString(get.getName()));
+                System.out.println("Desc " + listToDescString(get.getDescription()));
                 System.out.println("Key " + (get.getServiceKey()));
-                System.out.println("Cat bag " + CatBagToString(get.getCategoryBag()));
+                System.out.println("Cat bag " + catBagToString(get.getCategoryBag()));
                 if (!get.getSignature().isEmpty()) {
                         System.out.println("Item is digitally signed");
                 } else {
                         System.out.println("Item is not digitally signed");
                 }
-                PrintBindingTemplates(get.getBindingTemplates());
+                printBindingTemplates(get.getBindingTemplates());
         }
 
         /**
@@ -236,7 +236,7 @@ public class SimpleBrowse {
          *
          * @param bindingTemplates
          */
-        private void PrintBindingTemplates(BindingTemplates bindingTemplates) {
+        private void printBindingTemplates(BindingTemplates bindingTemplates) {
                 if (bindingTemplates == null) {
                         return;
                 }
@@ -276,19 +276,19 @@ public class SimpleBrowse {
 
                 int offset=0;
                 int maxrecords=100;
-                BusinessList findBusiness = GetBusinessList(authtoken, searchString, offset, maxrecords);
+                BusinessList findBusiness = getBusinessList(authtoken, searchString, offset, maxrecords);
                 while (findBusiness != null && findBusiness.getBusinessInfos() != null
                         && !findBusiness.getBusinessInfos().getBusinessInfo().isEmpty()) {
                         if (rawXml) {
                                 JAXB.marshal(findBusiness, System.out);
                         } else {
-                                PrintBusinessInfo(findBusiness.getBusinessInfos());
-                                PrintBusinessDetails(findBusiness.getBusinessInfos(), authtoken);
-                                PrintServiceDetailsByBusiness(findBusiness.getBusinessInfos(), authtoken);
+                                printBusinessInfo(findBusiness.getBusinessInfos());
+                                printBusinessDetails(findBusiness.getBusinessInfos(), authtoken);
+                                printServiceDetailsByBusiness(findBusiness.getBusinessInfos(), authtoken);
                         }
                         offset = offset + maxrecords;
                                 
-                        findBusiness = GetBusinessList(authtoken, searchString, offset, maxrecords);
+                        findBusiness = getBusinessList(authtoken, searchString, offset, maxrecords);
                 }
         }
         
@@ -297,23 +297,23 @@ public class SimpleBrowse {
 
                 int offset=0;
                 int maxrecords=100;
-                ServiceList findBusiness = GetServiceList(authtoken, searchString, offset, maxrecords);
+                ServiceList findBusiness = getServiceList(authtoken, searchString, offset, maxrecords);
                 while (findBusiness != null && findBusiness.getServiceInfos()!= null
                         && !findBusiness.getServiceInfos().getServiceInfo().isEmpty()) {
                         if (rawXml) {
                                 JAXB.marshal(findBusiness, System.out);
                         } else {
-                                PrintServiceInfo(findBusiness.getServiceInfos());
+                                printServiceInfo(findBusiness.getServiceInfos());
                                 //PrintBusinessDetails(findBusiness.getBusinessInfos(), authtoken);
                                 //PrintServiceDetailsByBusiness(findBusiness.getBusinessInfos(), authtoken);
                         }
                         offset = offset + maxrecords;
                                 
-                        findBusiness = GetServiceList(authtoken, searchString, offset, maxrecords);
+                        findBusiness = getServiceList(authtoken, searchString, offset, maxrecords);
                 }
         }
 
-        private ServiceList GetServiceList(String authtoken, String searchString, int offset, int maxrecords) throws Exception {
+        private ServiceList getServiceList(String authtoken, String searchString, int offset, int maxrecords) throws Exception {
                 FindService fs = new FindService();
                 fs.setAuthInfo(authtoken);
                 fs.setListHead(offset);
@@ -332,23 +332,23 @@ public class SimpleBrowse {
         void printTModelList(String authtoken, String searchString, boolean rawXml) throws Exception{
                   int offset=0;
                 int maxrecords=100;
-                TModelList findBusiness = GetTmodelList(authtoken, searchString, offset, maxrecords);
+                TModelList findBusiness = getTmodelList(authtoken, searchString, offset, maxrecords);
                 while (findBusiness != null && findBusiness.getTModelInfos()!= null
                         && !findBusiness.getTModelInfos().getTModelInfo().isEmpty()) {
                         if (rawXml) {
                                 JAXB.marshal(findBusiness, System.out);
                         } else {
-                                PrintTModelInfo(findBusiness.getTModelInfos());
+                                printTModelInfo(findBusiness.getTModelInfos());
                                 //PrintBusinessDetails(findBusiness.getBusinessInfos(), authtoken);
                                 //PrintServiceDetailsByBusiness(findBusiness.getBusinessInfos(), authtoken);
                         }
                         offset = offset + maxrecords;
                                 
-                        findBusiness = GetTmodelList(authtoken, searchString, offset, maxrecords);
+                        findBusiness = getTmodelList(authtoken, searchString, offset, maxrecords);
                 }
         }
 
-        private void PrintTModelInfo(TModelInfos tModelInfos) {
+        private void printTModelInfo(TModelInfos tModelInfos) {
                 if (tModelInfos==null){
                         System.out.println("No data returned");
                         return;
@@ -363,7 +363,7 @@ public class SimpleBrowse {
                 }
         }
 
-        private TModelList GetTmodelList(String authtoken, String searchString, int offset, int maxrecords) throws Exception {
+        private TModelList getTmodelList(String authtoken, String searchString, int offset, int maxrecords) throws Exception {
                  FindTModel fs = new FindTModel();
                 fs.setAuthInfo(authtoken);
                 fs.setListHead(offset);
@@ -397,7 +397,7 @@ public class SimpleBrowse {
          * @param style
          * @return
          */
-        private String GetAuthKey(String username, String password) {
+        private String getAuthKey(String username, String password) {
                 try {
 
                         GetAuthToken getAuthTokenRoot = new GetAuthToken();
@@ -414,23 +414,23 @@ public class SimpleBrowse {
                 return null;
         }
 
-        private void PrintBusinessInfo(BusinessInfos businessInfos) {
+        private void printBusinessInfo(BusinessInfos businessInfos) {
                 if (businessInfos == null) {
                         System.out.println("No data returned");
                 } else {
                         for (int i = 0; i < businessInfos.getBusinessInfo().size(); i++) {
                                 System.out.println("===============================================");
                                 System.out.println("Business Key: " + businessInfos.getBusinessInfo().get(i).getBusinessKey());
-                                System.out.println("Name: " + ListToString(businessInfos.getBusinessInfo().get(i).getName()));
+                                System.out.println("Name: " + listToString(businessInfos.getBusinessInfo().get(i).getName()));
 
-                                System.out.println("Description: " + ListToDescString(businessInfos.getBusinessInfo().get(i).getDescription()));
+                                System.out.println("Description: " + listToDescString(businessInfos.getBusinessInfo().get(i).getDescription()));
                                 System.out.println("Services:");
-                                PrintServiceInfo(businessInfos.getBusinessInfo().get(i).getServiceInfos());
+                                printServiceInfo(businessInfos.getBusinessInfo().get(i).getServiceInfos());
                         }
                 }
         }
 
-        private String ListToString(List<Name> name) {
+        private String listToString(List<Name> name) {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < name.size(); i++) {
                         sb.append(name.get(i).getValue()).append(" ");
@@ -438,7 +438,7 @@ public class SimpleBrowse {
                 return sb.toString();
         }
 
-        private String ListToDescString(List<Description> name) {
+        private String listToDescString(List<Description> name) {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < name.size(); i++) {
                         sb.append(name.get(i).getValue()).append(" ");
@@ -446,16 +446,16 @@ public class SimpleBrowse {
                 return sb.toString();
         }
 
-        private void PrintServiceInfo(ServiceInfos serviceInfos) {
+        private void printServiceInfo(ServiceInfos serviceInfos) {
                 for (int i = 0; i < serviceInfos.getServiceInfo().size(); i++) {
                         System.out.println("-------------------------------------------");
                         System.out.println("Service Key: " + serviceInfos.getServiceInfo().get(i).getServiceKey());
                         System.out.println("Owning Business Key: " + serviceInfos.getServiceInfo().get(i).getBusinessKey());
-                        System.out.println("Name: " + ListToString(serviceInfos.getServiceInfo().get(i).getName()));
+                        System.out.println("Name: " + listToString(serviceInfos.getServiceInfo().get(i).getName()));
                 }
         }
 
-        private void PrintBusinessDetails(BusinessInfos businessInfos, String token) throws Exception {
+        private void printBusinessDetails(BusinessInfos businessInfos, String token) throws Exception {
                 GetBusinessDetail gbd = new GetBusinessDetail();
                 gbd.setAuthInfo(token);
                 for (int i = 0; i < businessInfos.getBusinessInfo().size(); i++) {
@@ -464,13 +464,13 @@ public class SimpleBrowse {
                 BusinessDetail businessDetail = inquiry.getBusinessDetail(gbd);
                 for (int i = 0; i < businessDetail.getBusinessEntity().size(); i++) {
                         System.out.println("Business Detail - key: " + businessDetail.getBusinessEntity().get(i).getBusinessKey());
-                        System.out.println("Name: " + ListToString(businessDetail.getBusinessEntity().get(i).getName()));
-                        System.out.println("CategoryBag: " + CatBagToString(businessDetail.getBusinessEntity().get(i).getCategoryBag()));
-                        PrintContacts(businessDetail.getBusinessEntity().get(i).getContacts());
+                        System.out.println("Name: " + listToString(businessDetail.getBusinessEntity().get(i).getName()));
+                        System.out.println("CategoryBag: " + catBagToString(businessDetail.getBusinessEntity().get(i).getCategoryBag()));
+                        printContacts(businessDetail.getBusinessEntity().get(i).getContacts());
                 }
         }
 
-        private void PrintServiceDetailsByBusiness(BusinessInfos businessInfos, String token) throws Exception {
+        private void printServiceDetailsByBusiness(BusinessInfos businessInfos, String token) throws Exception {
                 for (int i = 0; i < businessInfos.getBusinessInfo().size(); i++) {
                         GetServiceDetail gsd = new GetServiceDetail();
                         for (int k = 0; k < businessInfos.getBusinessInfo().get(i).getServiceInfos().getServiceInfo().size(); k++) {
@@ -480,7 +480,7 @@ public class SimpleBrowse {
                         System.out.println("Fetching data for business " + businessInfos.getBusinessInfo().get(i).getBusinessKey());
                         ServiceDetail serviceDetail = inquiry.getServiceDetail(gsd);
                         for (int k = 0; k < serviceDetail.getBusinessService().size(); k++) {
-                                PrintServiceDetail(serviceDetail.getBusinessService().get(k));
+                                printServiceDetail(serviceDetail.getBusinessService().get(k));
                         }
                         System.out.println("................");
 

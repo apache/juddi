@@ -202,7 +202,7 @@ public class EntryPoint {
                         CompareByTModelInstanceInfoQOS.main(null);
                 }
                 if (input.equals("2")) {
-                        new UddiDigitalSignatureFile().Fire(null, null, null);
+                        new UddiDigitalSignatureFile().fire(null, null, null);
                 }
         }
 
