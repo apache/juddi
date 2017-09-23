@@ -45,6 +45,7 @@ under the License.
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <cxf.version>2.7.18</cxf.version>
         <springframework.version>3.2.18.RELEASE</springframework.version>
+		<apache.tomcat.version>7.0.81</apache.tomcat.version>
     </properties>
 
     <issueManagement>
