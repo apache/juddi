@@ -86,7 +86,7 @@ language governing permissions and * limitations under the License. * */ -->
                 <executions>
                     <execution>
                         <id>copy</id>
-                        <phase>compile</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>copy</goal>
                         </goals>
@@ -106,23 +106,7 @@ language governing permissions and * limitations under the License. * */ -->
                 </executions>
             </plugin>
 			
-			<!-- precompile the jsp files for speed and error catching at build time -->
-			<plugin>
-                <groupId>org.apache.sling</groupId>
-                <artifactId>maven-jspc-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>compile-jsp</id>
-                        <goals>
-                            <goal>jspc</goal>
-                        </goals>
-                    </execution>
-                </executions>
-				<configuration>
-					<sourceDirectory>${project.build.directory}/juddi-gui</sourceDirectory>
-					<outputDirectory>${project.build.directory}/juddi-gui-precompiled</outputDirectory>
-				</configuration>
-            </plugin>
+		
 			
 			
         </plugins>

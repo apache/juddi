@@ -243,7 +243,7 @@ under the License.
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.6</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -365,6 +365,16 @@ under the License.
                     </reportSet>
                 </reportSets>
             </plugin>
+			 <plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.5</version>
+				  <configuration>
+				  <xmlOutput>true</xmlOutput>
+				  <!-- Optional directory to put findbugs xdoc xml report -->
+				  <xmlOutputDirectory>target/site</xmlOutputDirectory>
+				</configuration>
+			  </plugin>
         </plugins>
     </reporting>
     <modules>

@@ -28,14 +28,30 @@
     <bannerRight>
     <src>images/juddi.gif</src>
   </bannerRight>
-    <skin>
-	    <groupId>org.apache.juddi</groupId>
-	    <artifactId>juddi-site-style</artifactId>
-		<version>1.0</version>
-	</skin>
+		<skin>
+		<groupId>org.apache.maven.skins</groupId>
+		<artifactId>maven-fluido-skin</artifactId>
+		<version>1.6</version>
+	  </skin>
 
     <publishDate format="dd MMM yyyy" position="right"/>
-
+	 <custom>
+    <fluidoSkin>
+		<googleSearch>
+			<sitesearch/>
+		  </googleSearch>
+		   <sourceLineNumbersEnabled>true</sourceLineNumbersEnabled>
+		   <gitHub>
+			<projectId>apache/maven-skins</projectId>
+			<ribbonOrientation>right</ribbonOrientation>
+			<ribbonColor>black</ribbonColor>
+		  </gitHub>
+		  <topBarEnabled>false</topBarEnabled>
+		  <sideBarEnabled>true</sideBarEnabled>
+    </fluidoSkin>
+  </custom>
+  
+  
     <body>
         <breadcrumbs>
       		<item name="Apache" href="http://www.apache.org/"/>
@@ -47,7 +63,7 @@
                 <item name="Releases" href="releases.html"/>
                 <item name="Source Code" href="source-repository.html"/>
             </item>
-            <item name="Participation" href="participate.html" description="Participation"/>
+            <item name="Participation" href="participate.html" />
             <item name="Documentation">
                 <item name="jUDDI Docs" href="docs.html"/>
                 <item name="Wiki" href="http://wiki.apache.org/juddi"/>
@@ -66,14 +82,14 @@
                 <item name="Project Summary" href="project-summary.html"/>
             </item>
             <item name="Subprojects">
-    			<item name="Apache Scout" href="http://juddi.apache.org/scout/" description="Apache Scout"/>
+    			<item name="Apache Scout" href="http://juddi.apache.org/scout/" />
   			</item>
   			<item name="Misc">
-    			<item name="Who We Are" href="who.html" description="Who We Are"/>
-    			<item name="Committer Notes" href="committers.html" description="Committer Notes"/>
-    			<item name="Sponsors" href="thanks.html" description="Thank you"/>
-    			<item name="Legal" href="legal.html" description="Legal Stuff"/>
-    			<item name="License" href="license.html" description="Apache 2.0 License"/>
+    			<item name="Who We Are" href="who.html"/>
+    			<item name="Committer Notes" href="committers.html" />
+    			<item name="Sponsors" href="thanks.html"/>
+    			<item name="Legal" href="legal.html" />
+    			<item name="License" href="license.html" />
   			</item>
         </menu>
 
