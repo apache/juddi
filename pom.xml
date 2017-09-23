@@ -50,7 +50,7 @@ under the License.
 
     <issueManagement>
         <system>JIRA</system>
-        <url>http://issues.apache.org/jira/browse/JUDDI</url>
+        <url>https://issues.apache.org/jira/browse/JUDDI</url>
     </issueManagement>
     <ciManagement>
         <system>Buildbot</system>
@@ -348,11 +348,34 @@ under the License.
                 <artifactId>maven-jxr-plugin</artifactId>
                 <version>2.5</version>
             </plugin>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
                 <version>0.11</version>
-            </plugin>
+            </plugin>-->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.5</version>
+				  <configuration>
+				  <xmlOutput>true</xmlOutput>
+				  <!-- Optional directory to put findbugs xdoc xml report -->
+				  <xmlOutputDirectory>target/site</xmlOutputDirectory>
+				</configuration>
+			  </plugin>
+			  <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-changes-plugin</artifactId>
+				<version>2.12.1</version>
+				<reportSets>
+				  <reportSet>
+					<reports>
+					   <report>jira-report</report>
+					</reports>
+				  </reportSet>
+				</reportSets>
+			  </plugin>
+			  <!--
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
@@ -365,16 +388,7 @@ under the License.
                     </reportSet>
                 </reportSets>
             </plugin>
-			 <plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.5</version>
-				  <configuration>
-				  <xmlOutput>true</xmlOutput>
-				  <!-- Optional directory to put findbugs xdoc xml report -->
-				  <xmlOutputDirectory>target/site</xmlOutputDirectory>
-				</configuration>
-			  </plugin>
+			 -->
         </plugins>
     </reporting>
     <modules>
@@ -681,12 +695,7 @@ under the License.
             <layout>default</layout>
         </repository>
     </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>maven2-repository.dev.java.net</id>
-            <url>http://download.java.net/maven/2</url>
-        </pluginRepository>
-    </pluginRepositories>
+  
     
     <profiles>
         <profile>

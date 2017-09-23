@@ -20,79 +20,86 @@
 
 <project name="Apache jUDDI">
 
-    <bannerLeft>
-        <name>Apache jUDDI</name>
-        <src>images/project-logo.gif</src>
-        <href>juddi.apache.org</href>
-    </bannerLeft>
-    <bannerRight>
-    <src>images/juddi.gif</src>
-  </bannerRight>
-		<skin>
+	<version position="right"/>
+	<bannerLeft>
+		<name>Apache jUDDI</name>
+		<src>images/logo.png</src>
+		<href>http://juddi.apache.org</href>
+	</bannerLeft>
+	<bannerRight>
+		<src>images/apache_feather.gif</src>
+	</bannerRight>
+	<skin>
 		<groupId>org.apache.maven.skins</groupId>
 		<artifactId>maven-fluido-skin</artifactId>
 		<version>1.6</version>
-	  </skin>
+	</skin>
 
-    <publishDate format="dd MMM yyyy" position="right"/>
-	 <custom>
-    <fluidoSkin>
-		<googleSearch>
-			<sitesearch/>
-		  </googleSearch>
-		   <sourceLineNumbersEnabled>true</sourceLineNumbersEnabled>
-		   <gitHub>
-			<projectId>apache/maven-skins</projectId>
-			<ribbonOrientation>right</ribbonOrientation>
-			<ribbonColor>black</ribbonColor>
-		  </gitHub>
-		  <topBarEnabled>false</topBarEnabled>
-		  <sideBarEnabled>true</sideBarEnabled>
-    </fluidoSkin>
-  </custom>
-  
-  
-    <body>
-        <breadcrumbs>
-      		<item name="Apache" href="http://www.apache.org/"/>
-    	</breadcrumbs>
+	<publishDate format="dd MMM yyyy" position="right"/>
+	<custom>
+		<fluidoSkin>
+			<googleSearch>
+				<sitesearch/>
+			</googleSearch>
+			<sourceLineNumbersEnabled>true</sourceLineNumbersEnabled>
+			<gitHub>
+				<projectId>apache/maven-skins</projectId>
+				<ribbonOrientation>right</ribbonOrientation>
+				<ribbonColor>black</ribbonColor>
+				<projectId>apache/juddi</projectId>
+			</gitHub>
+			<topBarEnabled>true</topBarEnabled>
+			<sideBarEnabled>true</sideBarEnabled>
+		</fluidoSkin>
+	</custom>
 
-        <menu name="Apache jUDDI">
-            <item name="Welcome" href="index.html"/>
-            <item name="Get jUDDI">
-                <item name="Releases" href="releases.html"/>
-                <item name="Source Code" href="source-repository.html"/>
-            </item>
-            <item name="Participation" href="participate.html" />
-            <item name="Documentation">
-                <item name="jUDDI Docs" href="docs.html"/>
-                <item name="Wiki" href="http://wiki.apache.org/juddi"/>
-                <item name="UDDI Library" href="library.html" />
-                <item name="Javadocs v2" href="apidocs2/index.html"/>
-                <item name="Javadocs v3" href="apidocs/index.html"/>
-                <item name="XRef v3" href="xref/index.html"/>
-            </item>
-            <item name="Project Information">
-                <item name="Project Information" href="project-info.html"/>
-                <item name="Mailing Lists" href="mail-lists.html"/>
-                <item name="jUDDI Blog" href="http://apachejuddi.blogspot.com/" />
-                <item name="Issue Tracking" href="issue-tracking.html"/>
-                <item name="Dependencies" href="dependencies.html"/>
-                <item name="Project Team" href="team-list.html"/>
-                <item name="Project Summary" href="project-summary.html"/>
-            </item>
-            <item name="Subprojects">
-    			<item name="Apache Scout" href="http://juddi.apache.org/scout/" />
-  			</item>
-  			<item name="Misc">
-    			<item name="Who We Are" href="who.html"/>
-    			<item name="Committer Notes" href="committers.html" />
-    			<item name="Sponsors" href="thanks.html"/>
-    			<item name="Legal" href="legal.html" />
-    			<item name="License" href="license.html" />
-  			</item>
-        </menu>
 
-    </body>
+	<body>
+		<breadcrumbs>
+			<item name="Apache" href="http://www.apache.org/"/>
+		</breadcrumbs>
+		<menu name="Apache jUDDI">
+			<item name="Welcome" href="index.html"/>
+			<item name="Live Demos">
+				<item name="Prod UI" href="http://uddi-jbossoverlord.rhcloud.com/"/>
+				<item name="Prod SVC" href="http://uddi-jbossoverlord.rhcloud.com/juddiv3/"/>
+				<item name="Sandbox UI" href="http://uddiconsole-jbossoverlord.rhcloud.com/" />
+				<item name="Sandbox SVC" href="http://uddiconsole-jbossoverlord.rhcloud.com/juddiv3/"/>
+			</item>
+		</menu>
+		<menu name="Downloads">
+			<item name="Releases" href="releases.html"/>
+			<item name="Source Code" href="source-repository.html"/>
+		</menu>
+
+
+
+		<menu name="Documentation">
+
+			<item name="jUDDI Docs" href="docs.html"/>
+			<item name="Wiki" href="http://wiki.apache.org/juddi"/>
+			<item name="UDDI Library" href="library.html" />
+			<item name="Javadocs v2" href="apidocs2/index.html"/>
+			<item name="Javadocs v3" href="apidocs/index.html"/>
+			<item name="XRef v3" href="xref/index.html"/>
+			<item name="jUDDI Blog" href="http://apachejuddi.blogspot.com/" />
+		</menu>
+
+		<menu name="Subprojects">
+			<item name="Apache Scout" href="http://juddi.apache.org/scout/" />
+		</menu>
+		<menu name="Misc">
+			<item name="Participation" href="participation.html" />
+			<item name="Who We Are" href="who.html"/>
+			<item name="Committer Notes" href="committers.html" />
+			<item name="Sponsors" href="thanks.html"/>
+			<item name="Legal" href="legal.html" />
+			<item name="License" href="license.html" />
+		</menu>
+
+		<menu ref="parent" inherit="top"/>
+		<menu ref="modules" />
+		<menu ref="reports"  inherit="top"/>
+	</body>
 </project>
 
