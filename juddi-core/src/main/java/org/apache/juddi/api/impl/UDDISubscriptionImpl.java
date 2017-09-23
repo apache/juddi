@@ -194,7 +194,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 				
 				if (chunkToken == null)
 					throw new InvalidValueException(new ErrorMessage("errors.getsubscriptionresult.InvalidChunkToken", body.getChunkToken()));
-				if (!chunkToken.getSubscriptionKey().equals(chunkToken.getSubscriptionKey()))
+				if (!chunkToken.getSubscriptionKey().equals(body.getSubscriptionKey()))
 					throw new InvalidValueException(new ErrorMessage("errors.getsubscriptionresult.NonMatchingChunkToken", body.getChunkToken()));
 				if (chunkToken.getStartPoint() != null && chunkToken.getStartPoint().getTime() != startPointDate.getTime())
 					throw new InvalidValueException(new ErrorMessage("errors.getsubscriptionresult.NonMatchingChunkToken", body.getChunkToken()));
