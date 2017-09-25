@@ -37,3 +37,22 @@ The Git client can go through a HTTP proxy, if you configure it to do so.
 	$ git config --global http.proxy (server)
 
 See the [http://git-scm.com/docs](Manual) for more information.
+
+
+### Approximate build times
+
+Often (well, not really that often) we get asked about how long it takes to build jUDDI. Here you go.
+
+Numbers below are on Windows 10, SSD, AMD 8 core CPU and with linear surefire execution.
+
+| Configuration						   | Build time (hh:mm:ss)  | Description |
+| ------------------------------------ | ---------------------- | --------------------------------------------- |
+| mvn clean install -DskipTests=true   | 00:01:16               | skipping the tests
+| mvn clean install				       | 00:27:25               | the normal build with tests
+| nvn clean install -T 1C 			   | 00:15:33               | the normal build with one thread per CPU core
+| mvn clean install -Pdist			   | 00:41:02               | just like the release profile but without sigatures, includes integration tests
+| mvn clean install -Pdist -T 1C 	   | 00:40:30               | just like the release profile but without sigatures, includes integration tests
+| mvn release:prepare -Papache-release |                        | this happens when we cut a release (the whole 9 yards), includes integration tests
+| mvn site							   | 00:16:37               | generate the website
+| mvn site:stage					   | 00:00:28               | prepare the site for upload
+

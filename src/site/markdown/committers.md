@@ -51,6 +51,8 @@ All jUDDI committers are encouraged to create public/ private key pairs and plac
 
 ### Release Procedure
 
+**TIP:** produce the release artifacts with JRE/JDK7
+
 1. Ensure the build works (mvn clean install -Pdist)
 2. Grab the current version's release notes using JIRA. Goto JIRA, Versions, pick the version, then Release notes. Replace the release notes html file within the source with the contents from JIRA.
 3. mvn release:prepare -Papache-release

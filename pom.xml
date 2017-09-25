@@ -808,6 +808,54 @@ under the License.
 
 
 	<profiles>
+            <profile>
+                <id>prepare-site</id>
+                <activation>
+                    <file>
+                        <exists>src/site/site.xml</exists>
+                    </file>
+                </activation>
+                <build>
+                    <plugins>
+                         <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-antrun-plugin</artifactId>
+                                <dependencies>
+                                    <!-- force the juddi docs module to build -->
+                                    <dependency>
+                                        <groupId>org.apache.juddi.juddi-docs</groupId>
+                                        <artifactId>juddi-docs</artifactId>
+                                        <version>${project.version}</version>
+										<type>pom</type>
+                                    </dependency>
+                                                                        
+                                </dependencies>
+                                <executions>
+                                    <execution>
+                                      <phase>site</phase>
+                                      <configuration>
+                                        <target>
+                                            
+                                            
+                                            <copy todir="target/site/docs/3.3/juddi-client-guide/">
+                                                <fileset dir="docs/asciidoc/ClientGuide/target/docbook/publish/en-US"/>
+                                              </copy>
+                                              
+                                              <copy todir="target/site/docs/3.3/juddi-guide/">
+                                                <fileset dir="docs/asciidoc/Guide/target/docbook/publish/en-US"/>
+                                              </copy>
+                                            
+                                        </target>
+                                      </configuration>
+                                      <goals>
+                                        <goal>run</goal>
+                                      </goals>
+                                    </execution>
+                                  </executions>
+                        </plugin>
+                    </plugins>
+                </build>
+            </profile>
 		<profile>
 			<id>doclint-java8-disable</id>
 			<activation>
@@ -965,6 +1013,7 @@ under the License.
 								<exclude>**/*.sh</exclude>
 								<exclude>**/*.bat</exclude>
 								<exclude>**/*.policy</exclude>
+								<exclude>**/*.md</exclude>
 								<exclude>**/*.form</exclude>
 								<exclude>**/jboss-deployment-structure.xml</exclude>
 								<exclude>**/MANIFEST.MF</exclude>
