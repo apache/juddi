@@ -47,7 +47,7 @@ public class FindBindingByCategoryGroupQuery {
 	
 	private static final String ENTITY_NAME_CHILD = "BindingCategoryBag";
 	
-	private static FindEntityByCategoryGroupQuery findQuery;
+	private static final FindEntityByCategoryGroupQuery findQuery;
 	
 	static {
 		findQuery = new FindEntityByCategoryGroupQuery(BindingTemplateQuery.ENTITY_NAME, 

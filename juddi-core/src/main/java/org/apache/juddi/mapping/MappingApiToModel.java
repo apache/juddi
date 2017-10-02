@@ -30,6 +30,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.transform.dom.DOMResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.impl.AuthenticatedService;
 import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.apache.juddi.model.Address;
 import org.apache.juddi.model.BindingTemplate;
@@ -976,8 +977,9 @@ public class MappingApiToModel {
 
         /**
          * note that when using this, it does not reference the instance of the
-         * specific businesses, it will create new ones. be sure to overwrite them 
-         * with the correct references
+         * specific businesses, it will create new ones. be sure to overwrite
+         * them with the correct references
+         *
          * @param apiPubAssertion
          * @param modelPubAssertion
          * @throws DispositionReportFaultMessage
@@ -1002,16 +1004,14 @@ public class MappingApiToModel {
                         modelPubAssertion.setKeyName(apiKeyedRef.getKeyName());
                         modelPubAssertion.setKeyValue(apiKeyedRef.getKeyValue());
                 }
-                if (!apiPubAssertion.getSignature().isEmpty())
-                {
+                if (!apiPubAssertion.getSignature().isEmpty()) {
                         modelPubAssertion.setSignatures(mapApiSignaturesToModelSignatures(apiPubAssertion.getSignature()));
-                        for (Signature s : modelPubAssertion.getSignatures())
-                        {        s.setPublisherAssertionFromKey(modelPubAssertion.getBusinessEntityByFromKey().getEntityKey());
+                        for (Signature s : modelPubAssertion.getSignatures()) {
+                                s.setPublisherAssertionFromKey(modelPubAssertion.getBusinessEntityByFromKey().getEntityKey());
                                 s.setPublisherAssertionToKey(modelPubAssertion.getBusinessEntityByToKey().getEntityKey());
-                                
+
                         }
-                        
-                        
+
                 }
         }
 
@@ -1348,14 +1348,18 @@ public class MappingApiToModel {
                 if (xform instanceof String) {
                         sdv.setContentType(String.class.getSimpleName());
                         String xformStr = xform.toString();
-                        byte[] xformBytes = xformStr.getBytes();
-                        sdv.setContentBytes(xformBytes);
+                        try {
+                                byte[] xformBytes = xformStr.getBytes(AuthenticatedService.UTF8);
+                                sdv.setContentBytes(xformBytes);
+                        } catch (Exception e) {
+                                throw new RuntimeException("Failed to encode string due to: " + e.getMessage(), e);
+                        }
                 } else if (xform instanceof Element) {
                         sdv.setContentType(Element.class.getCanonicalName());
                         Element xformEl = (Element) xform;
                         String str = serializeTransformElement(xformEl);
                         try {
-                                sdv.setContentBytes(str.getBytes("UTF-8"));
+                                sdv.setContentBytes(str.getBytes(AuthenticatedService.UTF8));
                         } catch (Exception e) {
                                 throw new RuntimeException("Failed to encode string due to: " + e.getMessage(), e);
                         }
@@ -1370,7 +1374,7 @@ public class MappingApiToModel {
                         Element xformEl = ((Document) domResult.getNode()).getDocumentElement();
                         String str = serializeTransformElement(xformEl);
                         try {
-                                sdv.setContentBytes(str.getBytes("UTF-8"));
+                                sdv.setContentBytes(str.getBytes(AuthenticatedService.UTF8));
                         } catch (Exception e) {
                                 throw new RuntimeException("Failed to encode string due to: " + e.getMessage(), e);
                         }
@@ -1396,10 +1400,10 @@ public class MappingApiToModel {
                 org.apache.juddi.model.ChangeRecord r = new org.apache.juddi.model.ChangeRecord();
                 //r.setId(rec.getChangeID().getOriginatingUSN());
                 r.setOriginatingUSN(rec.getChangeID().getOriginatingUSN());
-                if (r.getOriginatingUSN()==null){
-                 //       logger.warn("strange, the getOriginatingUSN is null!!");
-                 //       JAXB.marshal(rec, System.out);
-                 //       Thread.dumpStack();
+                if (r.getOriginatingUSN() == null) {
+                        //       logger.warn("strange, the getOriginatingUSN is null!!");
+                        //       JAXB.marshal(rec, System.out);
+                        //       Thread.dumpStack();
                 }
                 r.setNodeID(rec.getChangeID().getNodeID());
                 if (rec.getChangeRecordNewData() != null) {
@@ -1442,10 +1446,10 @@ public class MappingApiToModel {
                 } else {
                         throw new UnsupportedEncodingException("unknown type!");
                 }
-                
+
                 StringWriter sw = new StringWriter();
                 JAXB.marshal(rec, sw);
-                r.setContents(sw.toString().getBytes("UTF8"));
+                r.setContents(sw.toString().getBytes(AuthenticatedService.UTF8));
                 return r;
 
         }
@@ -1489,11 +1493,6 @@ public class MappingApiToModel {
                                 mapOperationalInfo(model.getBusinessServices().get(i).getBindingTemplates().get(k), operationalInfo);
                         }
                 }
-
-        }
-
-        public static void mapSaveBindingToChangeRecord(SaveBinding recordIn, List<org.apache.juddi.model.ChangeRecord> recordsOut) {
-                List<org.apache.juddi.model.ChangeRecord> r = new ArrayList<org.apache.juddi.model.ChangeRecord>();
 
         }
 

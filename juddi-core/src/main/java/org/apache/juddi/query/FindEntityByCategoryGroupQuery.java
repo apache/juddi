@@ -54,7 +54,7 @@ import org.uddi.api_v3.KeyedReferenceGroup;
 public class FindEntityByCategoryGroupQuery extends EntityQuery {
 	
 	@SuppressWarnings("unused")
-	private static Log log = LogFactory.getLog(FindEntityByCategoryGroupQuery.class);
+	private final static Log log = LogFactory.getLog(FindEntityByCategoryGroupQuery.class);
 
 	private static final String ENTITY_KEYEDREFERENCEGROUP = "KeyedReferenceGroup";
 	private static final String ALIAS_KEYEDREFERENCEGROUP = "krg";
@@ -64,13 +64,13 @@ public class FindEntityByCategoryGroupQuery extends EntityQuery {
 	private static final String ALIAS_KEYEDREFERENCE = buildAlias(ENTITY_KEYEDREFERENCE);
 	private static final String FIELD_KEYEDREFERENCEGROUP = "keyedReferenceGroup";
 	
-	private String entityName;
-	private String entityAlias;
-	private String keyName;
-	private String entityField;
-	private String entityNameChild;
-	private String entityAliasChild;
-	private String selectSQL;
+	private final String entityName;
+	private final String entityAlias;
+	private final String keyName;
+	private final String entityField;
+	private final String entityNameChild;
+	private final String entityAliasChild;
+	private final String selectSQL;
 	private String signaturePresent;
 
 	public FindEntityByCategoryGroupQuery(String entityName, String entityAlias, String keyName, 

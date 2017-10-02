@@ -75,7 +75,7 @@ public class WebHelper {
 			
 			logger.info("Reading the clientName from the clientConfig file " + clientConfigFile);
 			UDDIClient client = new UDDIClient(clientConfigFile);
-			if (clientConfigFile==null && client.getName()==null) {
+			if (client.getName()==null) {
 				logger.warn("Deprecated, client name set to 'default', however it should be provided in the uddi.xml");
 				clientName = "default";
 			}

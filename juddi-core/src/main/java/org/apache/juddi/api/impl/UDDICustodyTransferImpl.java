@@ -59,6 +59,7 @@ import org.apache.juddi.replication.ReplicationNotifier;
 import org.apache.juddi.v3.client.UDDIService;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.InvalidValueException;
 import org.apache.juddi.v3.error.TransferNotAllowedException;
 import org.apache.juddi.validation.ValidateCustodyTransfer;
 import org.uddi.api_v3.OperationalInfo;
@@ -94,6 +95,10 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
         public UDDICustodyTransferImpl() {
                 super();
                 serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());
+                init();
+        }
+        
+        private static synchronized void init() {
                 if (df == null) {
                         try {
                                 df = DatatypeFactory.newInstance();
@@ -120,7 +125,12 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 
                         org.uddi.custody_v3.TransferToken apiTransferToken = body.getTransferToken();
                         if (apiTransferToken != null) {
-                                String transferTokenId = new String(apiTransferToken.getOpaqueToken());
+                                String transferTokenId;
+                                try {
+                                    transferTokenId = new String(apiTransferToken.getOpaqueToken(), UTF8);
+                                } catch (UnsupportedEncodingException ex) {
+                                    throw new InvalidValueException(new ErrorMessage("errors.stringEncoding"));
+                                }
                                 org.apache.juddi.model.TransferToken modelTransferToken = em.find(org.apache.juddi.model.TransferToken.class, transferTokenId);
                                 if (modelTransferToken != null) {
                                         em.remove(modelTransferToken);
@@ -194,8 +204,12 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
                         String transferKey = TRANSFER_TOKEN_PREFIX + UUID.randomUUID();
                         org.apache.juddi.model.TransferToken transferToken = new org.apache.juddi.model.TransferToken();
                         transferToken.setTransferToken(transferKey);
-                        // For output
-                        opaqueToken.value = transferKey.getBytes();
+                        try {
+                            // For output
+                            opaqueToken.value = transferKey.getBytes(UTF8);
+                        } catch (UnsupportedEncodingException ex) {
+                            throw new InvalidValueException(new ErrorMessage("errors.stringEncoding"));
+                        }
 
                         GregorianCalendar gc = new GregorianCalendar();
                         gc.add(GregorianCalendar.DAY_OF_MONTH, transferExpirationDays);
@@ -286,21 +300,21 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
                                         transferCustody.setKeyBag(body.getKeyBag());
                                         transferCustody.setTransferOperationalInfo(new TransferOperationalInfo());
                                         transferCustody.getTransferOperationalInfo().setAuthorizedName(publisher.getAuthorizedName());
-                                        transferCustody.getTransferOperationalInfo().setNodeID(node);
+                                        transferCustody.getTransferOperationalInfo().setNodeID(getNode());
 
                                         //and trigger the transfer
-                                        logger.info("AUDIT, transfering " + transferCustody.getKeyBag().getKey().size() + " entities to " + publisher.getAuthorizedName() + " at node " + node + " from source " + sourceNode);
+                                        logger.info("AUDIT, transfering " + transferCustody.getKeyBag().getKey().size() + " entities to " + publisher.getAuthorizedName() + " at node " + getNode() + " from source " + sourceNode);
                                         replicationClient.transferCustody(transferCustody);
                                 } catch (DispositionReportFaultMessage df) {
-                                        logger.error("Unable to transfer entities from " + sourceNode + " to node " + node + " to user " + publisher.getAuthorizedName(), df);
+                                        logger.error("Unable to transfer entities from " + sourceNode + " to node " + getNode() + " to user " + publisher.getAuthorizedName(), df);
                                         throw new TransferNotAllowedException(new ErrorMessage("E_transferBlocked", df.getMessage()));
                                 } catch (Exception ex) {
-                                        logger.error("Unable to transfer entities from " + sourceNode + " to node " + node + " to user " + publisher.getAuthorizedName(), ex);
+                                        logger.error("Unable to transfer entities from " + sourceNode + " to node " + getNode() + " to user " + publisher.getAuthorizedName(), ex);
                                         throw new TransferNotAllowedException(new ErrorMessage("E_transferBlocked", ex.getMessage()));
                                 }
 
                         } else {
-                                changes.addAll(executeTransfer(body, em, publisher.getAuthorizedName(), node));
+                                changes.addAll(executeTransfer(body, em, publisher.getAuthorizedName(), getNode()));
                                 //all of the items to be transfer are owned locally by *this node.
 
                         }
@@ -310,7 +324,7 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
                         for (ChangeRecord c : changes) {
                                 try {
                                         c.setChangeID(new ChangeRecordIDType());
-                                        c.getChangeID().setNodeID(node);
+                                        c.getChangeID().setNodeID(getNode());
                                         c.getChangeID().setOriginatingUSN(null);
                                         ReplicationNotifier.Enqueue(MappingApiToModel.mapChangeRecord(c));
                                 } catch (UnsupportedEncodingException ex) {
@@ -444,7 +458,12 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 
                 // After transfer is finished, the token can be removed
                 org.uddi.custody_v3.TransferToken apiTransferToken = body.getTransferToken();
-                String transferTokenId = new String(apiTransferToken.getOpaqueToken());
+                String transferTokenId;
+                try {
+                    transferTokenId = new String(apiTransferToken.getOpaqueToken(), UTF8);
+                } catch (UnsupportedEncodingException ex) {
+                    throw new InvalidValueException(new ErrorMessage("errors.stringEncoding"));
+                }
                 org.apache.juddi.model.TransferToken modelTransferToken = em.find(org.apache.juddi.model.TransferToken.class, transferTokenId);
                 em.remove(modelTransferToken);
                 return changes;

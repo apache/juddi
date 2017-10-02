@@ -73,6 +73,13 @@ public enum InquiryQuery implements UDDIQuery {
         return list;
     }
         
+    /**
+     * this doesn't appear to be used anywhere and will be removed in a future version
+     * @param query
+     * @return
+     * @deprecated
+     */
+    @Deprecated
     public static InquiryQuery fromQuery(final String query) {
         if (_inquiryQueries == null) {
             initInquiryQueries();

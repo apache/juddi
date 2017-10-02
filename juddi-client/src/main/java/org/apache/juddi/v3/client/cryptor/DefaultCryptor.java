@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.v3.client.cryptor;
 
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -95,10 +96,11 @@ public class DefaultCryptor implements Cryptor {
              InvalidAlgorithmParameterException,
              InvalidKeyException,
              IllegalBlockSizeException,
-             BadPaddingException {
+             BadPaddingException,
+             UnsupportedEncodingException {
                 byte[] encs = crypt(Cipher.ENCRYPT_MODE, str.getBytes());
                 encs = Base64.encodeBase64(encs);
-                return new String(encs);
+                return new String(encs, "UTF-8");
         }
 
         public String decrypt(String str) throws NoSuchPaddingException,
@@ -106,9 +108,10 @@ public class DefaultCryptor implements Cryptor {
              InvalidAlgorithmParameterException,
              InvalidKeyException,
              IllegalBlockSizeException,
-             BadPaddingException {
-                byte[] encs = crypt(Cipher.DECRYPT_MODE, Base64.decodeBase64(str.getBytes()));
-                return new String(encs);
+             BadPaddingException,
+             UnsupportedEncodingException {
+                byte[] encs = crypt(Cipher.DECRYPT_MODE, Base64.decodeBase64(str.getBytes("UTF-8")));
+                return new String(encs, "UTF-8");
         }
 
         @Override

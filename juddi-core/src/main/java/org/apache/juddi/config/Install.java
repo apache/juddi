@@ -47,6 +47,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.ClassUtil;
+import org.apache.juddi.api.impl.AuthenticatedService;
 import org.apache.juddi.api.impl.UDDIInquiryImpl;
 import org.apache.juddi.api.impl.UDDIPublicationImpl;
 import org.apache.juddi.keygen.KeyGenerator;
@@ -559,12 +560,13 @@ public class Install {
                 if (dir.exists()) {
                         log.debug("Discovering the Publisher XML data files in directory: " + path);
                         File[] files = dir.listFiles(new PublisherFileFilter());
-                        for (File f : files) {
-                                String publisher = f.getName().substring(0, f.getName().indexOf(FILE_PUBLISHER));
-                                if (!rootPublisherStr.equalsIgnoreCase(publisher)) {
-                                        publishers.add(publisher);
+                        if (files!=null)
+                                for (File f : files) {
+                                        String publisher = f.getName().substring(0, f.getName().indexOf(FILE_PUBLISHER));
+                                        if (!rootPublisherStr.equalsIgnoreCase(publisher)) {
+                                                publishers.add(publisher);
+                                        }
                                 }
-                        }
                 } else {
                         String[] paths = {};
                         Enumeration<JarEntry> en = null;
@@ -644,7 +646,7 @@ public class Install {
                 StringBuilder xml = new StringBuilder();
                 byte[] b = new byte[4096];
                 for (int n; (n = resourceStream.read(b)) != -1;) {
-                        xml.append(new String(b, 0, n));
+                        xml.append(new String(b, 0, n, AuthenticatedService.UTF8));
                 }
                 log.debug("inserting: " + xml.toString());
                 StringReader reader = new StringReader(xml.toString());
@@ -680,7 +682,7 @@ public class Install {
                 StringBuilder xml = new StringBuilder();
                 byte[] b = new byte[4096];
                 for (int n; (n = resourceStream.read(b)) != -1;) {
-                        xml.append(new String(b, 0, n));
+                        xml.append(new String(b, 0, n, AuthenticatedService.UTF8));
                 }
                 log.debug("inserting: " + xml.toString());
                 StringReader reader = new StringReader(xml.toString());

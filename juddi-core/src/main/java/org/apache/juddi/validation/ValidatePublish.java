@@ -2166,11 +2166,15 @@ public class ValidatePublish extends ValidateUDDIApi {
          */
         private List<String> TModelContains(String key, TModel ref) {
 
-                log.debug("looking for key=" + key + " from tModel " + ref.getTModelKey());
-                List<String> ret = new ArrayList<String>();
-                if (ref == null) {
+                if (key == null) {
                         return null;
                 }
+                if (ref == null || ref.getTModelKey()==null) {
+                        return null;
+                }
+                log.debug("looking for key=" + key + " from tModel " + ref.getTModelKey());
+                List<String> ret = new ArrayList<String>();
+                
                 if (ref.getCategoryBag() != null) {
                         for (int i = 0; i < ref.getCategoryBag().getKeyedReference().size(); i++) {
                                 if (ref.getCategoryBag().getKeyedReference().get(i).getTModelKey().equalsIgnoreCase(key)) {
@@ -2209,24 +2213,24 @@ public class ValidatePublish extends ValidateUDDIApi {
          * @param addressLine
          */
         private void validatedAddressLinesIfKeyDefined(List<AddressLine> addressLine) throws ValueNotAllowedException {
-                String err = "";
+                StringBuilder err = new StringBuilder();
                 for (int i = 0; i < addressLine.size(); i++) {
 
                         if (addressLine.get(i).getKeyName() == null
                                 || addressLine.get(i).getKeyName().trim().length() == 0) {
-                                err += "addressLine(" + i + ").keyName,";
+                                err.append("addressLine(").append(i).append(").keyName,");
                         }
                         if (addressLine.get(i).getKeyValue() == null
                                 || addressLine.get(i).getKeyValue().trim().length() == 0) {
-                                err += "addressLine(" + i + ").keyValue,";
+                                err.append("addressLine(").append(i).append(").keyValue,");
                         }
                         if (addressLine.get(i).getValue() == null
                                 || addressLine.get(i).getValue().trim().length() == 0) {
-                                err += "addressLine(" + i + ").value,";
+                                 err.append("addressLine(").append(i).append(").value,");
                         }
                 }
                 if (err.length() > 0) {
-                        throw new ValueNotAllowedException(new ErrorMessage("E_invalidValueAddressLine", err));
+                        throw new ValueNotAllowedException(new ErrorMessage("E_invalidValueAddressLine", err.toString()));
                 }
         }
 

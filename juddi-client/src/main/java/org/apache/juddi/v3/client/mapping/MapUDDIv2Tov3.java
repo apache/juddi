@@ -286,7 +286,7 @@ public class MapUDDIv2Tov3 {
         }
 
         private static TModelInstanceDetails MapTModelInstanceDetails(org.uddi.api_v2.TModelInstanceDetails tModelInstanceDetails) {
-                if (tModelInstanceDetails == null | tModelInstanceDetails.getTModelInstanceInfo().isEmpty()) {
+                if (tModelInstanceDetails == null || tModelInstanceDetails.getTModelInstanceInfo()==null || tModelInstanceDetails.getTModelInstanceInfo().isEmpty()) {
                         return null;
                 }
                 TModelInstanceDetails r = new TModelInstanceDetails();
@@ -618,7 +618,6 @@ public class MapUDDIv2Tov3 {
                                 if (next instanceof DispositionReport) {
 
                                         DispositionReport z = (DispositionReport) next;
-                                        Result x = new Result();
                                         r.addAll(MapResult(z.getFaultInfo().getResult()));
 
                                 }
@@ -1085,6 +1084,7 @@ public class MapUDDIv2Tov3 {
                                      assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getKeyName(),
                                      assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getKeyValue()));
                         }
+                        r.add(x);
                 }
                 return r;
         }

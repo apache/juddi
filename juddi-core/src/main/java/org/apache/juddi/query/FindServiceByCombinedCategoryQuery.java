@@ -61,7 +61,7 @@ public class FindServiceByCombinedCategoryQuery {
 	private static final String ENTITY_FIELD2      = "bindingTemplate." + BusinessServiceQuery.ENTITY_FIELD;
 	private static final String ENTITY_NAME_CHILD2 = "BindingCategoryBag";
 	
-	private static FindEntityByCombinedCategoryQuery findQuery;
+	private static final FindEntityByCombinedCategoryQuery findQuery;
 	
 	static {
 		findQuery = new FindEntityByCombinedCategoryQuery(BusinessServiceQuery.ENTITY_NAME, 

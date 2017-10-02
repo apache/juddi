@@ -35,10 +35,10 @@ public class FindEntityByPublisherQuery extends EntityQuery {
 
 	public static final String AUTHORIZED_NAME_FIELD = "authorizedName";
 	
-	private String entityName;
-	private String entityAlias;
-	private String keyName;
-	private String selectSQL;
+	private final String entityName;
+	private final String entityAlias;
+	private final String keyName;
+	private final String selectSQL;
 	private String signaturePresent;
 	
 	public FindEntityByPublisherQuery(String entityName, String entityAlias, String keyName, String signaturePresent) {

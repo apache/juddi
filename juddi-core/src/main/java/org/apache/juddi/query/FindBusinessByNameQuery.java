@@ -47,7 +47,7 @@ public class FindBusinessByNameQuery {
 
 	public static final String ENTITY_NAME_CHILD = "BusinessName";
 	
-	private static FindEntityByNamesQuery findQuery;
+	private final static FindEntityByNamesQuery findQuery;
 	
 	static {
 		findQuery = new FindEntityByNamesQuery(BusinessEntityQuery.ENTITY_NAME, 

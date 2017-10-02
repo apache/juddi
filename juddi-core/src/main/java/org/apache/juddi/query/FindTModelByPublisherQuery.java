@@ -34,7 +34,7 @@ import org.apache.juddi.model.UddiEntityPublisher;
 public class FindTModelByPublisherQuery {
 	
 	
-	private static FindEntityByPublisherQuery findQuery;
+	private static final FindEntityByPublisherQuery findQuery;
 	
 	static {
 		findQuery = new FindEntityByPublisherQuery(

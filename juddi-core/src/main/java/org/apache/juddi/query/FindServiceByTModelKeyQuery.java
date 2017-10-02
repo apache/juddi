@@ -56,7 +56,7 @@ public class FindServiceByTModelKeyQuery extends BusinessServiceQuery {
 
 	public static final String ENTITY_NAME_CHILD = "TmodelInstanceInfo";
 
-	protected static String entityAliasChild;
+	protected static final String entityAliasChild;
 	
 	static {
 		entityAliasChild = buildAlias(ENTITY_NAME_CHILD);

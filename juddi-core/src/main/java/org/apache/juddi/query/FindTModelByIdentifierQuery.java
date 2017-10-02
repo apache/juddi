@@ -40,7 +40,7 @@ public class FindTModelByIdentifierQuery {
 	
 	private static final String ENTITY_NAME_CHILD = "TmodelIdentifier";
 	
-	private static FindEntityByIdentifierQuery findQuery;
+	private static final FindEntityByIdentifierQuery findQuery;
 	
 	static {
 		findQuery = new FindEntityByIdentifierQuery(TModelQuery.ENTITY_NAME, 

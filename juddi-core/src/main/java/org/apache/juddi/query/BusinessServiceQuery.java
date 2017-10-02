@@ -30,7 +30,7 @@ public class BusinessServiceQuery extends EntityQuery {
 			ENTITY_ALIAS + "." + EntityQuery.SIGNATURE_FIELD + " IS NOT EMPTY OR " +
 			ENTITY_ALIAS + ".businessEntity." + EntityQuery.SIGNATURE_FIELD + " IS NOT EMPTY ";
 	
-	protected static String selectSQL;
+	protected static final String selectSQL;
 
 	static {
 		StringBuilder sql = new StringBuilder(200);

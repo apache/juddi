@@ -33,12 +33,16 @@ public class PolicyLocalFirst extends PolicyRoundRobin {
 	 */
 	public PolicyLocalFirst(Properties properties) {
 		super(properties);
-		if (properties!=null) {
+		init(properties);
+	}
+        
+        private static synchronized void init(Properties properties){
+                if (properties!=null) {
 			local = properties.getProperty(JUDDI_CLIENT_LOCAL, DEFAULT_CLIENT_LOCAL);
 		} else {
 			local = DEFAULT_CLIENT_LOCAL;
 		}
-	}
+        }
 	
 	public String select(Topology topology) {
 		

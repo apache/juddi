@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.v3.client.cryptor;
 
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -83,13 +84,14 @@ public abstract class AESCryptorAbstract implements Cryptor {
             InvalidAlgorithmParameterException,
             InvalidKeyException,
             IllegalBlockSizeException,
-            BadPaddingException {
+            BadPaddingException,
+            UnsupportedEncodingException {
         byte[] raw = hexToBytes(getKey()); //
         SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
         // Instantiate the cipher
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
-        byte[] encrypted = cipher.doFinal(cleartext.getBytes());
+        byte[] encrypted = cipher.doFinal(cleartext.getBytes("UTF-8"));
         return asHex(encrypted);
     }
     
@@ -103,7 +105,8 @@ public abstract class AESCryptorAbstract implements Cryptor {
             InvalidAlgorithmParameterException,
             InvalidKeyException,
             IllegalBlockSizeException,
-            BadPaddingException {
+            BadPaddingException,
+            UnsupportedEncodingException{
         byte[] raw = hexToBytes(getKey()); //
         SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
         // Instantiate the cipher
@@ -111,7 +114,7 @@ public abstract class AESCryptorAbstract implements Cryptor {
         cipher.init(Cipher.DECRYPT_MODE, skeySpec);
         byte[] original = cipher.doFinal(hexToBytes(str));
         
-        return new String(original);
+        return new String(original, "UTF-8");
     }
 
     private static String asHex(byte buf[]) {

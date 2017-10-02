@@ -1228,7 +1228,6 @@ public class MappingModelToApi {
                 List<SignatureType> sigs = new ArrayList<SignatureType>();
                 mapSignature(find.getSignatures(), sigs);
                 item.getSignature().addAll(sigs);
-                List<Operator> ops = new ArrayList<Operator>();
                 mapOperator(find.getOperator(), item.getOperator());
 
                 List<org.apache.juddi.model.Contact> modelContactList = new ArrayList<org.apache.juddi.model.Contact>();

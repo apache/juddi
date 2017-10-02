@@ -36,8 +36,8 @@ public class ValidateUDDIKey {
 		if (key == null)
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NullKey"));
 		if (key.toLowerCase().startsWith("uuid:")) {
-               return;
-          }
+                        return;
+                }
 		if (! key.contains(KeyGenerator.PARTITION_SEPARATOR)) return; //v2 style key; no other validation rules apply
 		
 		String keyToTest = key.trim();

@@ -218,7 +218,7 @@
 									<cargo.logging>high</cargo.logging>
 									<cargo.hostname>localhost</cargo.hostname>
 									<cargo.servlet.port>8880</cargo.servlet.port>
-									<cargo.jvmargs>-Xms256m -Xmx256m -XX:MaxPermSize=256M -Djava.endorsed.dirs=${basedir}/target/juddi-tomcat-${project.parent.version}/endorsed -Djavax.net.ssl.keyStore=${basedir}/../juddi-tomcat/keystore.jks -Djavax.net.ssl.keyStorePassword=password -Djavax.net.ssl.trustStore=${basedir}/../juddi-tomcat/truststore.jks -Djavax.net.ssl.trustStorePassword=password</cargo.jvmargs>
+									<cargo.jvmargs>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5000 -Xms256m -Xmx256m -XX:MaxPermSize=256M -Djava.endorsed.dirs=${basedir}/target/juddi-tomcat-${project.parent.version}/endorsed -Djavax.net.ssl.keyStore=${basedir}/../juddi-tomcat/keystore.jks -Djavax.net.ssl.keyStorePassword=password -Djavax.net.ssl.trustStore=${basedir}/../juddi-tomcat/truststore.jks -Djavax.net.ssl.trustStorePassword=password</cargo.jvmargs>
 								</properties>
 							</configuration>
 						</configuration>
@@ -244,7 +244,7 @@
 									<cargo.logging>high</cargo.logging>
 									<cargo.hostname>localhost</cargo.hostname>
 									<cargo.servlet.port>8980</cargo.servlet.port>
-									<cargo.jvmargs>-Xms256m -Xmx256m -XX:MaxPermSize=256M -Djava.endorsed.dirs=${basedir}/target/node2/juddi-tomcat-${project.parent.version}/endorsed -Djavax.net.ssl.keyStore=${basedir}/../juddi-tomcat/keystore.jks -Djavax.net.ssl.keyStorePassword=password  -Djavax.net.ssl.trustStore=${basedir}/../juddi-tomcat/truststore.jks -Djavax.net.ssl.trustStorePassword=password</cargo.jvmargs>
+									<cargo.jvmargs>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5001 -Xms256m -Xmx256m -XX:MaxPermSize=256M -Djava.endorsed.dirs=${basedir}/target/node2/juddi-tomcat-${project.parent.version}/endorsed -Djavax.net.ssl.keyStore=${basedir}/../juddi-tomcat/keystore.jks -Djavax.net.ssl.keyStorePassword=password  -Djavax.net.ssl.trustStore=${basedir}/../juddi-tomcat/truststore.jks -Djavax.net.ssl.trustStorePassword=password</cargo.jvmargs>
 								</properties>
 							</configuration>
 						</configuration>
@@ -321,6 +321,7 @@
 						</goals>
 						<configuration>
 							<skip>false</skip>
+                                                        <skipAfterFailureCount>1</skipAfterFailureCount>
 							<systemProperties>
 								<property>
 									<name>cactus.contextURL</name>

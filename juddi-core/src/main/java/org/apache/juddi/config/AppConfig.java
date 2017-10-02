@@ -89,7 +89,7 @@ public class AppConfig
         }
         
         public static void saveConfiguration() throws ConfigurationException{
-                Configuration configuration = getConfiguration();
+                getConfiguration(); //findbugs will flag this as useless, but its not
                 propConfig.save();
         }
        

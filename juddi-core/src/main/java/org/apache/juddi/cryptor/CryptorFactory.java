@@ -40,7 +40,7 @@ import org.apache.juddi.v3.client.cryptor.Cryptor;
 
 public abstract class CryptorFactory {
 
-    private static Log log = LogFactory.getLog(CryptorFactory.class);
+    private static final Log log = LogFactory.getLog(CryptorFactory.class);
     // the shared Cryptor instance
     private static Cryptor cryptor = null;
 

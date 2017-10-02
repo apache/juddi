@@ -39,13 +39,13 @@ public class FindEntityByNamesQuery extends EntityQuery {
 	@SuppressWarnings("unused")
 	private static Log log = LogFactory.getLog(FindEntityByNamesQuery.class);
 
-	private String entityName;
-	private String entityAlias;
-	private String keyName;
-	private String entityField;
-	private String entityNameChild;
-	private String entityAliasChild;
-	private String selectSQL;
+	private final String entityName;
+	private final String entityAlias;
+	private final String keyName;
+	private final String entityField;
+	private final String entityNameChild;
+	private final String entityAliasChild;
+	private final String selectSQL;
 	private String signaturePresent;
 	
 	public FindEntityByNamesQuery(String entityName, String entityAlias, String keyName, String entityField, 

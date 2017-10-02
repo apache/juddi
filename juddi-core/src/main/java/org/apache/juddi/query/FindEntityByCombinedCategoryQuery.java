@@ -76,7 +76,7 @@ import org.uddi.api_v3.KeyedReference;
 public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery {
 	
 	@SuppressWarnings("unused")
-	private static Log log = LogFactory.getLog(FindEntityByCombinedCategoryQuery.class);
+	private final static Log log = LogFactory.getLog(FindEntityByCombinedCategoryQuery.class);
 	
 	protected String entityField2;
 	protected String entityNameChild2;
@@ -86,7 +86,6 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 	protected String entityNameChild3;
 	protected String entityAliasChild3;
 	
-	protected String signaturePresent;
 
 	public FindEntityByCombinedCategoryQuery(String entityName, String entityAlias, String keyName,
 			String entityField, String entityNameChild, String signaturePresent) {
@@ -179,6 +178,7 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 					resultingEntityKeys = map.get(keyValue);
 					firstTime = false;
 				} else {
+                                        //FIXME this is wrong
 					resultingEntityKeys.retainAll(map.get(keyValue));
 				}
 			}

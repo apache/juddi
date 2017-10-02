@@ -119,7 +119,7 @@ public class RequestHandler {
                 Transformer trans = transFactory.newTransformer();
                 StringWriter sw = new StringWriter();
                 trans.transform(new DOMSource(element), new StreamResult(sw));
-                return new String(sw.toString());
+                return sw.toString();
         }
 
         @SuppressWarnings("unchecked")

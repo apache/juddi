@@ -50,11 +50,11 @@ import org.uddi.api_v3.TModelBag;
 public class FindBusinessByTModelKeyQuery extends BusinessEntityQuery {
 	
 	@SuppressWarnings("unused")
-	private static Log log = LogFactory.getLog(FindBusinessByTModelKeyQuery.class);
+	private final static Log log = LogFactory.getLog(FindBusinessByTModelKeyQuery.class);
 
 	public static final String ENTITY_NAME_CHILD = "TmodelInstanceInfo";
 
-	protected static String entityAliasChild;
+	protected static final String entityAliasChild;
 	
 	static {
 		entityAliasChild = buildAlias(ENTITY_NAME_CHILD);

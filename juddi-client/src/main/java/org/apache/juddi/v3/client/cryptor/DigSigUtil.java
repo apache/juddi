@@ -582,7 +582,7 @@ public class DigSigUtil {
                                                 TrustAnchor ta = pkixResult.getTrustAnchor();
                                                 X509Certificate cert = ta.getTrustedCert();
 
-                                                logger.info("trust chain validated X509 public key " + signingcert.getSubjectDN().toString());
+                                                logger.info("trust chain validated X509 public key " + signingcert.getSubjectDN().toString() + " issued by " + cert.getPublicKey().toString());
                                         } catch (Exception ex) {
                                                 OutErrorMessage.set("Certificate status Trust validation failed: " + ex.getMessage() + "." + OutErrorMessage.get());
                                         }
@@ -702,11 +702,12 @@ public class DigSigUtil {
                 }
                 
                 if (!ksLoaded) {
+                        FileInputStream fis=null;
                         try {
                                 //File f = new File(map.getProperty(TRUSTSTORE_FILE));
                                 if (f.exists())
                                 {
-                                        FileInputStream fis = new FileInputStream(f);
+                                        fis = new FileInputStream(f);
                                         ks.load(fis, (map.getProperty(TRUSTSTORE_FILE_PASSWORD)).toCharArray());
                                         fis.close();
                                         ksLoaded = true;
@@ -715,7 +716,10 @@ public class DigSigUtil {
                         } catch (Exception x) {
                                 logger.warn("unable to load truststore from file "+map.getProperty(TRUSTSTORE_FILE)+" "+ x.getMessage());
                                 logger.debug("unable to load truststore from file "+ x.getMessage(), x);
-                                
+                        }
+                        finally {
+                                if (fis!=null)
+                                        fis.close();
                         }
                 }
 

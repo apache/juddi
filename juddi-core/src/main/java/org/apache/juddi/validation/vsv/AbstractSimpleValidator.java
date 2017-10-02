@@ -113,7 +113,7 @@ public abstract class AbstractSimpleValidator implements ValueSetValidator {
                         return;
                 }
                 //StringBuilder badvalues=new StringBuilder();
-                String err = "";
+                StringBuilder err = new StringBuilder();
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getTModelKey().equalsIgnoreCase(getMyKey())) {
                                 List<String> validValues = getValidValues();
@@ -129,13 +129,13 @@ public abstract class AbstractSimpleValidator implements ValueSetValidator {
                                         }
                                         if (!localfound) {
                                                 //badvalues.append(items.get(i).getKeyValue()).append(" ");
-                                                err += xpath + "keyedReference(" + i + ")=" + items.get(i).getKeyValue() + " ";
+                                                err.append(xpath).append("keyedReference(").append(i).append(")=").append(items.get(i).getKeyValue()).append(" ");
                                         }
                                 }
                         }
                 }
                 if (err.length() > 0) {
-                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", err + getPrintableValidValues()));
+                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", err.toString() + getPrintableValidValues()));
                 }
         }
 

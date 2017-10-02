@@ -41,7 +41,7 @@ public class FindTModelByCategoryQuery {
 	
 	private static final String ENTITY_NAME_CHILD = "TmodelCategoryBag";
 	
-	private static FindEntityByCategoryQuery findQuery;
+	private static final FindEntityByCategoryQuery findQuery;
 	
 	static {
 		findQuery = new FindEntityByCategoryQuery(TModelQuery.ENTITY_NAME, 

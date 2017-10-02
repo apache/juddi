@@ -28,7 +28,6 @@ import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
-import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.PublisherAssertion;
 import org.uddi.api_v3.TModel;
 import org.uddi.v3_service.UDDIValueSetValidationPortType;
@@ -51,7 +50,7 @@ import org.uddi.vs_v3.ValidateValues;
  */
 public class ValidateValuesFromWebService {
 
-        static final Log log = LogFactory.getLog(ValidateValuesFromWebService.class);
+        private static final Log log = LogFactory.getLog(ValidateValuesFromWebService.class);
 
         private static UDDIValueSetValidationPortType getPort(String url) throws ValueNotAllowedException {
                 UDDIService svc = new UDDIService();
@@ -96,7 +95,7 @@ public class ValidateValuesFromWebService {
                 req.getTModel().addAll(obj);
 
                 try {
-                        DispositionReport validateValues = vsv.validateValues(req);
+                        vsv.validateValues(req);
                 } catch (Exception ex) {
                         log.warn(ex.getMessage());
                         log.debug(ex.getMessage(),ex);
@@ -111,7 +110,7 @@ public class ValidateValuesFromWebService {
                 req.getBindingTemplate().addAll(obj);
 
                 try {
-                        DispositionReport validateValues = vsv.validateValues(req);
+                        vsv.validateValues(req);
                 } catch (Exception ex) {
                         log.warn(ex.getMessage());
                         log.debug(ex.getMessage(),ex);
@@ -126,7 +125,7 @@ public class ValidateValuesFromWebService {
                 req.getBusinessService().addAll(obj);
 
                 try {
-                        DispositionReport validateValues = vsv.validateValues(req);
+                        vsv.validateValues(req);
                 } catch (Exception ex) {
                         log.warn(ex.getMessage());
                         log.debug(ex.getMessage(),ex);
@@ -142,7 +141,7 @@ public class ValidateValuesFromWebService {
                 req.getBusinessEntity().addAll(obj);
 
                 try {
-                        DispositionReport validateValues = vsv.validateValues(req);
+                        vsv.validateValues(req);
                 } catch (Exception ex) {
                         log.warn(ex.getMessage());
                         log.debug(ex.getMessage(),ex);
@@ -156,7 +155,7 @@ public class ValidateValuesFromWebService {
                 ValidateValues req = new ValidateValues();
                 req.getPublisherAssertion().add(obj);
                 try {
-                        DispositionReport validateValues = vsv.validateValues(req);
+                        vsv.validateValues(req);
                 } catch (Exception ex) {
                         log.warn(ex.getMessage());
                         log.debug(ex.getMessage(),ex);

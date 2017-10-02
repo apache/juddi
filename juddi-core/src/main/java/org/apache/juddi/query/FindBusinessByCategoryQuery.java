@@ -40,7 +40,7 @@ public class FindBusinessByCategoryQuery {
 	
 	private static final String ENTITY_NAME_CHILD = "BusinessCategoryBag";
 	
-	private static FindEntityByCategoryQuery findQuery;
+	private static final FindEntityByCategoryQuery findQuery;
 	
 	static {
 		findQuery = new FindEntityByCategoryQuery(BusinessEntityQuery.ENTITY_NAME, 

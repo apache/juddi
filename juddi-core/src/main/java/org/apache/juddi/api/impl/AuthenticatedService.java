@@ -47,13 +47,21 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public abstract class AuthenticatedService {
 
+        /**
+         * @return the node
+         */
+        public static String getNode() {
+            return node;
+        }
+
+        public static final String UTF8 = "UTF-8";
         public static final int AUTHTOKEN_ACTIVE = 1;
         public static final int AUTHTOKEN_RETIRED = 0;
         static final Log logger = LogFactory.getLog(AuthenticatedService.class);
         /**
          * the node id of this server instance, as loaded from the config file
          */
-        protected static String node = "UNDEFINED_NODE_NAME";
+        private static String node = "UNDEFINED_NODE_NAME";
         protected String baseUrlSSL = "UNDEFINED";
         protected String baseUrl = "UNDEFINED";
 

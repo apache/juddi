@@ -82,6 +82,8 @@ public class UDDIValueSetCachingImpl extends AuthenticatedService implements UDD
                                 ret.value.add(x);
                         }
                 }
+                //findbugs will flag the following as "UC_USELESS_OBJECT" when in fact
+                //it is returned as part of the service call
                 chunkToken = new Holder<String>();
                 chunkToken.value ="0";
 

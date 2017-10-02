@@ -148,7 +148,7 @@ public class Uddiuddiorgcategorizationderivedfrom implements ValueSetValidator {
                 if (items == null) {
                         return;
                 }
-                String err = "";
+                StringBuilder err = new StringBuilder();
                 for (int i = 0; i < items.size(); i++) {
                         List<String> validValues = getValidValues();
                         if (validValues != null) {
@@ -160,12 +160,12 @@ public class Uddiuddiorgcategorizationderivedfrom implements ValueSetValidator {
                                         }
                                 }
                                 if (!valid) {
-                                        err += xpath + "keyedReference(" + i + ") ";
+                                        err.append(xpath + "keyedReference(" + i + ") ");
                                 }
                         }
                 }
                 if (err.length() > 0) {
-                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", err));
+                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", err.toString()));
                 }
         }
 

@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.juddi.v3.auth;
 
 import java.io.File;
@@ -49,110 +48,122 @@ import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.UnknownUserException;
 
 /**
- * This is a simple implementation of jUDDI's Authenticator interface. The credential
- * store is simply an unencrypted xml document called 'juddi.users' that can be
- * found in jUDDI's config directory. Below is an example of what you might find
- * in this document.
+ * This is a simple implementation of jUDDI's Authenticator interface. The
+ * credential store is simply an unencrypted xml document called 'juddi.users'
+ * that can be found in jUDDI's config directory. Below is an example of what
+ * you might find in this document.
  *
- *     Example juddi.users document:
- *     =============================
- *     <?xml version="1.0" encoding="UTF-8"?>
- *     <juddi-users>
- *       <user userid="sviens" password="password" />
- *       <user userid="griddell" password="password" />
- *       <user userid="bhablutzel" password="password" />
- *     </juddi-users>
+ * Example juddi.users document: =============================
+ * <?xml version="1.0" encoding="UTF-8"?>
+ * <juddi-users>
+ * <user userid="sviens" password="password" />
+ * <user userid="griddell" password="password" />
+ * <user userid="bhablutzel" password="password" />
+ * </juddi-users>
  *
  * @author Steve Viens (sviens@apache.org)
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-public class XMLDocAuthenticator implements Authenticator
-{
-	protected static Log log = LogFactory.getLog(AuthenticatorFactory.class);
-	/** Container for the user credentials */
-	Map<String,User> userTable;
-	
-	/**
-	 *
-	 */
-	public XMLDocAuthenticator() throws JAXBException, IOException, ConfigurationException {
-		readUserFile();
-	}
-        
-        /**
-	 * an empty constructor
-	 */
-	public XMLDocAuthenticator(boolean b) {
-		
-	}
-	
-	protected String getFilename() throws ConfigurationException {
-		return AppConfig.getConfiguration().getString(Property.JUDDI_USERSFILE, Property.DEFAULT_XML_USERSFILE);
-	}
-	/**
-	 * Read user data from the juddi-users file.
-	 * 
-	 * @throws IOException when the file cannot be opened
-	 *         JAXBException when the content is misformed.
-	 * @throws ConfigurationException 
-	 */
-	public synchronized void readUserFile() throws JAXBException, IOException, ConfigurationException
-	{
-            
-		userTable = new HashMap<String, User> ();
-        String usersFileName = getFilename();
-        if (usersFileName==null || usersFileName.length()==0)
-           throw new ConfigurationException("usersFileName value is null!");
-        File file = new File(usersFileName);
-        InputStream stream = null;
-        if (file.exists()) {
-        	log.info("Reading jUDDI Users File: " + usersFileName + "...");
-        	stream = new FileInputStream(file);
-        } else {
-            URL resource = ClassUtil.getResource(usersFileName, this.getClass());
-            if (resource!=null)
-                log.info("Reading jUDDI Users File: " + usersFileName + "...from " + resource.toExternalForm());
-            else
-                log.info("Reading jUDDI Users File: " + usersFileName + "...");
-            stream = ClassUtil.getResource(usersFileName, this.getClass()).openStream();
-        }
-		JAXBContext jaxbContext=JAXBContext.newInstance(JuddiUsers.class);
-		Unmarshaller unMarshaller = jaxbContext.createUnmarshaller();
-		JAXBElement<JuddiUsers> element = unMarshaller.unmarshal(new StreamSource(stream),JuddiUsers.class);
-		JuddiUsers users = element.getValue();
-		for (User user : users.getUser()) {
-			userTable.put(user.getUserid(), user);
-			log.debug("Loading user credentials for user: " + user.getUserid());
-		}
-	}
+public class XMLDocAuthenticator implements Authenticator {
 
-	/**
-	 *
+        protected final static Log log = LogFactory.getLog(AuthenticatorFactory.class);
+        /**
+         * Container for the user credentials
+         */
+        Map<String, User> userTable;
+
+        /**
+         *
+         */
+        public XMLDocAuthenticator() throws JAXBException, IOException, ConfigurationException {
+                readUserFile();
+        }
+
+        /**
+         * an empty constructor
+         */
+        public XMLDocAuthenticator(boolean b) {
+
+        }
+
+        protected String getFilename() throws ConfigurationException {
+                return AppConfig.getConfiguration().getString(Property.JUDDI_USERSFILE, Property.DEFAULT_XML_USERSFILE);
+        }
+
+        /**
+         * Read user data from the juddi-users file.
+         *
+         * @throws IOException when the file cannot be opened JAXBException when
+         * the content is malformed.
+         * @throws ConfigurationException
+         */
+        public synchronized void readUserFile() throws JAXBException, IOException, ConfigurationException {
+
+                userTable = new HashMap<String, User>();
+                String usersFileName = getFilename();
+                if (usersFileName == null || usersFileName.length() == 0) {
+                        throw new ConfigurationException("usersFileName value is null!");
+                }
+                File file = new File(usersFileName);
+                InputStream stream = null;
+                try {
+                        if (file.exists()) {
+                                log.info("Reading jUDDI Users File: " + usersFileName + "...");
+                                stream = new FileInputStream(file);
+                        } else {
+                                URL resource = ClassUtil.getResource(usersFileName, this.getClass());
+                                if (resource != null) {
+                                        log.info("Reading jUDDI Users File: " + usersFileName + "...from " + resource.toExternalForm());
+                                } else {
+                                        log.info("Reading jUDDI Users File: " + usersFileName + "...");
+                                }
+                                stream = ClassUtil.getResource(usersFileName, this.getClass()).openStream();
+                        }
+                        JAXBContext jaxbContext = JAXBContext.newInstance(JuddiUsers.class);
+                        Unmarshaller unMarshaller = jaxbContext.createUnmarshaller();
+                        JAXBElement<JuddiUsers> element = unMarshaller.unmarshal(new StreamSource(stream), JuddiUsers.class);
+                        JuddiUsers users = element.getValue();
+                        for (User user : users.getUser()) {
+                                userTable.put(user.getUserid(), user);
+                                log.debug("Loading user credentials for user: " + user.getUserid());
+                        }
+                } catch (IOException ex) {
+                        log.warn("io exception", ex);
+                } finally {
+                        if (stream != null) {
+                                stream.close();
+                        }
+                }
+        }
+
+        /**
+         *
          * @param userID
          * @param credential
-	 */
-	public String authenticate(String userID,String credential)
-	throws AuthenticationException, FatalErrorException
-	{
-		// a userID must be specified.
-		if (userID == null)
-			throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidUserId"));
+         */
+        public String authenticate(String userID, String credential)
+                throws AuthenticationException, FatalErrorException {
+                // a userID must be specified.
+                if (userID == null) {
+                        throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidUserId"));
+                }
 
-		// credential (password) must be specified.
-		if (credential == null)
-			throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidCredentials"));
+                // credential (password) must be specified.
+                if (credential == null) {
+                        throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidCredentials"));
+                }
 
-		if (userTable.containsKey(userID))
-		{
-			User user = (User)userTable.get(userID);
-			if ((user.getPassword() == null) || (!credential.equals(user.getPassword())))
-				throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidCredentials"));
-		}
-		else
-			throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidUserId", userID));
+                if (userTable.containsKey(userID)) {
+                        User user = (User) userTable.get(userID);
+                        if ((user.getPassword() == null) || (!credential.equals(user.getPassword()))) {
+                                throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidCredentials"));
+                        }
+                } else {
+                        throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidUserId", userID));
+                }
 
-		int MaxBindingsPerService = -1;
+                int MaxBindingsPerService = -1;
                 int MaxServicesPerBusiness = -1;
                 int MaxTmodels = -1;
                 int MaxBusinesses = -1;
@@ -193,28 +204,29 @@ public class XMLDocAuthenticator implements Authenticator
                         }
                         em.close();
                 }
-		return userID;
-	}
-	
-	@Override
-	public UddiEntityPublisher identify(String authInfo, String authorizedName, WebServiceContext ctx) throws AuthenticationException {
+                return userID;
+        }
 
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-			Publisher publisher = em.find(Publisher.class, authorizedName);
-			if (publisher == null)
-				throw new UnknownUserException(new ErrorMessage("errors.auth.NoPublisher", authorizedName));
-			
-			return publisher;
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
-		
-	}
+        @Override
+        public UddiEntityPublisher identify(String authInfo, String authorizedName, WebServiceContext ctx) throws AuthenticationException {
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+                        Publisher publisher = em.find(Publisher.class, authorizedName);
+                        if (publisher == null) {
+                                throw new UnknownUserException(new ErrorMessage("errors.auth.NoPublisher", authorizedName));
+                        }
+
+                        return publisher;
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+
+        }
 
 }

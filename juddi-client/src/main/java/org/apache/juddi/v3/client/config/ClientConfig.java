@@ -238,7 +238,7 @@ public class ClientConfig {
                                         UDDIClerk.WSDL[] wsdls = new UDDIClerk.WSDL[numberOfWslds];
                                         for (int w = 0; w < wsdls.length; w++) {
 
-                                                UDDIClerk.WSDL wsdl = uddiClerk.new WSDL();
+                                                UDDIClerk.WSDL wsdl = new UDDIClerk.WSDL();
                                                 String fileName = config.getString("client.clerks.clerk(" + i + ").wsdl(" + w + ")");
                                                 wsdl.setFileName(fileName);
                                                 if (!new File(fileName).exists()) {

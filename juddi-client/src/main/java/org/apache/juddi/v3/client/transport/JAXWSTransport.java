@@ -102,7 +102,7 @@ public class JAXWSTransport extends Transport {
                         }
                         if (endpointURL != null) {
                                 if (endpointURL.toLowerCase().startsWith("http:")){
-                                        logger.warn("You should consider use a secure protocol (https) when sending your password!");
+                                        logger.warn("You should consider using a secure protocol (https) when sending your password!");
                                 }
                                 Map<String, Object> requestContext = ((BindingProvider) securityService).getRequestContext();
                                 requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);

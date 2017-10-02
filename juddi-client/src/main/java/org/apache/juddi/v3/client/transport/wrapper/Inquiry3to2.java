@@ -169,6 +169,7 @@ public class Inquiry3to2 implements UDDIInquiryPortType, BindingProvider {
                                 oi.setNodeID(z.getOperator());
                                 oi.setAuthorizedName(z.getBusinessEntity().get(0).getAuthorizedName());
                         } catch (Exception ex) {
+                                logger.warn(ex.getMessage(), ex);
                         }
                         if (oi.getAuthorizedName() != null) {
                                 continue;
@@ -181,6 +182,7 @@ public class Inquiry3to2 implements UDDIInquiryPortType, BindingProvider {
                                 oi.setNodeID(z.getOperator());
                                 oi.setAuthorizedName(z.getTModel().get(0).getAuthorizedName());
                         } catch (Exception ex) {
+                                logger.warn(ex.getMessage(), ex);
                         }
                         if (oi.getAuthorizedName() != null) {
                                 continue;
@@ -201,6 +203,7 @@ public class Inquiry3to2 implements UDDIInquiryPortType, BindingProvider {
                                 oi.setNodeID(z.getOperator());
                                 oi.setAuthorizedName(z2.getBusinessEntity().get(0).getAuthorizedName());
                         } catch (Exception ex) {
+                                logger.warn(ex.getMessage(), ex);
                         }
                         ret.getOperationalInfo().add(oi);
                         ret.setTruncated(false);

@@ -28,7 +28,7 @@ public class BusinessEntityQuery extends EntityQuery {
 	public static final String ENTITY_FIELD = "businessEntity";
 	public static final String SIGNATURE_PRESENT = ENTITY_ALIAS + "." + SIGNATURE_FIELD + " IS NOT EMPTY ";
 
-	protected static String selectSQL;
+	protected static final String selectSQL;
 
 	static {
 		StringBuilder sql = new StringBuilder(200);

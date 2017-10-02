@@ -154,7 +154,7 @@ public class JAXWSv2TranslationTransport extends JAXWSTransport {
                                 endpointURL = client.getClientConfig().getUDDINode(nodeName).getPublishUrl();
                         }
                          if (endpointURL.toLowerCase().startsWith("http:")){
-                                        logger.warn("You should consider use a secure protocol (https) when sending your password!");
+                                        logger.warn("You should consider using a secure protocol (https) when sending your password!");
                                 }
                         Map<String, Object> requestContext = ((BindingProvider) securityv2).getRequestContext();
                         requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);

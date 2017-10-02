@@ -50,15 +50,15 @@ import org.uddi.api_v3.KeyedReference;
 public class FindEntityByIdentifierQuery extends EntityQuery {
 	
 	@SuppressWarnings("unused")
-	private static Log log = LogFactory.getLog(FindEntityByIdentifierQuery.class);
+	private final static Log log = LogFactory.getLog(FindEntityByIdentifierQuery.class);
 
-	private String entityName;
-	private String entityAlias;
-	private String keyName;
-	private String entityField;
-	private String entityNameChild;
-	private String entityAliasChild;
-	private String selectSQL;
+	private final String entityName;
+	private final String entityAlias;
+	private final String keyName;
+	private final String entityField;
+	private final String entityNameChild;
+	private final String entityAliasChild;
+	private final String selectSQL;
 	private String signaturePresent;
 
 	public FindEntityByIdentifierQuery(String entityName, String entityAlias, String keyName, 
@@ -71,8 +71,8 @@ public class FindEntityByIdentifierQuery extends EntityQuery {
 		this.entityAliasChild = buildAlias(entityNameChild);
 		this.signaturePresent = signaturePresent;
 		
-		StringBuffer sql = new StringBuffer(200);
-		sql.append("select distinct " + entityAlias + "." + keyName + " from " + entityName + " " + entityAlias + " ");
+		StringBuilder sql = new StringBuilder(200);
+		sql.append("select distinct ").append(entityAlias).append(".").append(keyName).append(" from ").append(entityName).append(" ").append(entityAlias).append(" ");
 		selectSQL = sql.toString();
 	}
 	

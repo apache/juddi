@@ -157,7 +157,9 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
         			org.apache.juddi.model.BusinessService modelBusinessService = null;
         			try {
         				modelBusinessService=em.find(org.apache.juddi.model.BusinessService.class, serviceKey);
-        			} catch (Exception e) {}
+        			} catch (Exception e) {
+                                        log.debug(e.getMessage(), e);
+                                }
 	                if (modelBusinessService == null)
 	                    throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ServiceNotFound", serviceKey));
 

@@ -61,23 +61,23 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public class SubscriptionNotifier extends TimerTask {
 
-        private Log log = LogFactory.getLog(this.getClass());
+        private static final Log log = LogFactory.getLog(SubscriptionNotifier.class);
         private Timer timer = null;
-        private long startBuffer = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_START_BUFFER, 20000l); // 20s startup delay default 
-        private long interval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
-        private long acceptableLagTime = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME, 1000l); //1000 milliseconds
-        private int maxTries = AppConfig.getConfiguration().getInt(Property.JUDDI_NOTIFICATION_MAX_TRIES, 3);
-        private long badListResetInterval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_LIST_RESET_INTERVAL, 1000l * 3600); //one hour
+        private final long startBuffer = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_START_BUFFER, 20000l); // 20s startup delay default 
+        private final long interval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
+        private final long acceptableLagTime = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME, 1000l); //1000 milliseconds
+        private final int maxTries = AppConfig.getConfiguration().getInt(Property.JUDDI_NOTIFICATION_MAX_TRIES, 3);
+        private final long badListResetInterval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_LIST_RESET_INTERVAL, 1000l * 3600); //one hour
         /**
          * @since 3.2
          */
-        private boolean sendToken = AppConfig.getConfiguration().getBoolean(Property.JUDDI_NOTIFICATION_SENDAUTHTOKEN, false);
-        private UDDISubscriptionImpl subscriptionImpl = new UDDISubscriptionImpl();
-        private Boolean alwaysNotify = false;
+        private final boolean sendToken = AppConfig.getConfiguration().getBoolean(Property.JUDDI_NOTIFICATION_SENDAUTHTOKEN, false);
+        private final UDDISubscriptionImpl subscriptionImpl = new UDDISubscriptionImpl();
+        private final Boolean alwaysNotify = false;
         private Date desiredDate = null;
         private int lastUpdateCounter;
-        private UDDIServiceCounter serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDIPublicationImpl.class);
-        private String[] attributes = {
+        private final UDDIServiceCounter serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDIPublicationImpl.class);
+        private final String[] attributes = {
                 "save_business", "save_service", "save_binding", "save_tmodel",
                 "delete_business", "delete_service", "delete_binding", "delete_tmodel",
                 "add_publisherassertions", "set_publisherassertions", "delete_publisherassertions"
@@ -137,6 +137,7 @@ public class SubscriptionNotifier extends TimerTask {
                 return isUpdated;
         }
 
+        @Override
         public synchronized void run() {
                 if (badListResetInterval > 0 && new Date().getTime() > lastBadNotificationReset.getTime() + badListResetInterval) {
                         badNotifications = new ConcurrentHashMap<String, Integer>();

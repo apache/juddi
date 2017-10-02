@@ -1,4 +1,5 @@
 package org.apache.juddi.model;
+
 /*
  * Copyright 2001-2008 The Apache Software Foundation.
  * 
@@ -35,147 +36,149 @@ import javax.persistence.TemporalType;
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
  */
-        @Entity
+@Entity
 @Table(name = "j3_publisher_assertion")
 public class PublisherAssertion implements java.io.Serializable {
 
-	private static final long serialVersionUID = -5285434317957104272L;
-	private PublisherAssertionId id;
-	private BusinessEntity businessEntityByToKey;
-	private BusinessEntity businessEntityByFromKey;
-	private String tmodelKey;
-	private String keyName;
-	private String keyValue;
-	private String fromCheck;
-	private String toCheck;
-	private Date modified;
+        private static final long serialVersionUID = -5285434317957104272L;
+        private PublisherAssertionId id;
+        private BusinessEntity businessEntityByToKey;
+        private BusinessEntity businessEntityByFromKey;
+        private String tmodelKey;
+        private String keyName;
+        private String keyValue;
+        private String fromCheck;
+        private String toCheck;
+        private Date modified;
         private List<Signature> signatures = new ArrayList<Signature>(0);
 
-	public PublisherAssertion() {
-	}
-
-	public PublisherAssertion(PublisherAssertionId id,
-			BusinessEntity businessEntityByToKey,
-			BusinessEntity businessEntityByFromKey, String tmodelKey,
-			String keyName, String keyValue, String fromCheck, String toCheck) {
-		this.id = id;
-		this.businessEntityByToKey = businessEntityByToKey;
-		this.businessEntityByFromKey = businessEntityByFromKey;
-		this.tmodelKey = tmodelKey;
-		this.keyName = keyName;
-		this.keyValue = keyValue;
-		this.fromCheck = fromCheck;
-		this.toCheck = toCheck;
-	}
-        
-	public void setModified(Date created) {
-		this.modified = created;
-	}
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "modified", nullable = false, length = 29)
-	public Date getModified() {
-		if (modified!=null) {
-			return new Date(modified.getTime());
-		} else {
-			return null;
-		}
-	}
-
-	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "fromKey", column = @Column(name = "from_key", nullable = false, length = 255)),
-			@AttributeOverride(name = "toKey", column = @Column(name = "to_key", nullable = false, length = 255))})
-
-	public PublisherAssertionId getId() {
-		return this.id;
-	}
-
-	public void setId(PublisherAssertionId id) {
-		this.id = id;
-	}
-         
-        
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "to_key", nullable = false, insertable = false, updatable = false)
-
-	public BusinessEntity getBusinessEntityByToKey() {
-		return this.businessEntityByToKey;
-	}
-
-	public void setBusinessEntityByToKey(BusinessEntity businessEntityByToKey) {
-		this.businessEntityByToKey = businessEntityByToKey;
-	}
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "from_key", nullable = false, insertable = false, updatable = false)
-
-	public BusinessEntity getBusinessEntityByFromKey() {
-		return this.businessEntityByFromKey;
-	}
-
-	public void setBusinessEntityByFromKey(
-			BusinessEntity businessEntityByFromKey) {
-		this.businessEntityByFromKey = businessEntityByFromKey;
-	}
-
-	@Column(name = "tmodel_key", nullable = false, length = 255)
-	public String getTmodelKey() {
-		return this.tmodelKey;
-	}
-
-	public void setTmodelKey(String tmodelKey) {
-		this.tmodelKey = tmodelKey;
-	}
-
-	@Column(name = "key_name", nullable = false)
-
-	public String getKeyName() {
-		return this.keyName;
-	}
-
-	public void setKeyName(String keyName) {
-		this.keyName = keyName;
-	}
-
-	@Column(name = "key_value", nullable = false)
-
-	public String getKeyValue() {
-		return this.keyValue;
-	}
-
-	public void setKeyValue(String keyValue) {
-		this.keyValue = keyValue;
-	}
-
-	@Column(name = "from_check", nullable = false, length = 5)
-	public String getFromCheck() {
-		return this.fromCheck;
-	}
-
-	public void setFromCheck(String fromCheck) {
-		this.fromCheck = fromCheck;
-	}
-
-	@Column(name = "to_check", nullable = false, length = 5)
-	public String getToCheck() {
-		return this.toCheck;
-	}
-
-	public void setToCheck(String toCheck) {
-		this.toCheck = toCheck;
-	}
-        
-        @Override
-        public boolean equals(Object compareto){
-                PublisherAssertion rhs = (PublisherAssertion) compareto;
-                return (this.id.equals(rhs.id));
+        public PublisherAssertion() {
         }
-        
-        
+
+        public PublisherAssertion(PublisherAssertionId id,
+                BusinessEntity businessEntityByToKey,
+                BusinessEntity businessEntityByFromKey, String tmodelKey,
+                String keyName, String keyValue, String fromCheck, String toCheck) {
+                this.id = id;
+                this.businessEntityByToKey = businessEntityByToKey;
+                this.businessEntityByFromKey = businessEntityByFromKey;
+                this.tmodelKey = tmodelKey;
+                this.keyName = keyName;
+                this.keyValue = keyValue;
+                this.fromCheck = fromCheck;
+                this.toCheck = toCheck;
+        }
+
+        public void setModified(Date created) {
+                this.modified = created;
+        }
+
+        @Temporal(TemporalType.TIMESTAMP)
+        @Column(name = "modified", nullable = false, length = 29)
+        public Date getModified() {
+                if (modified != null) {
+                        return new Date(modified.getTime());
+                } else {
+                        return null;
+                }
+        }
+
+        @EmbeddedId
+        @AttributeOverrides({
+                @AttributeOverride(name = "fromKey", column = @Column(name = "from_key", nullable = false, length = 255)),
+        	@AttributeOverride(name = "toKey", column = @Column(name = "to_key", nullable = false, length = 255))})
+        public PublisherAssertionId getId() {
+                return this.id;
+        }
+
+        public void setId(PublisherAssertionId id) {
+                this.id = id;
+        }
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "to_key", nullable = false, insertable = false, updatable = false)
+
+        public BusinessEntity getBusinessEntityByToKey() {
+                return this.businessEntityByToKey;
+        }
+
+        public void setBusinessEntityByToKey(BusinessEntity businessEntityByToKey) {
+                this.businessEntityByToKey = businessEntityByToKey;
+        }
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "from_key", nullable = false, insertable = false, updatable = false)
+
+        public BusinessEntity getBusinessEntityByFromKey() {
+                return this.businessEntityByFromKey;
+        }
+
+        public void setBusinessEntityByFromKey(
+                BusinessEntity businessEntityByFromKey) {
+                this.businessEntityByFromKey = businessEntityByFromKey;
+        }
+
+        @Column(name = "tmodel_key", nullable = false, length = 255)
+        public String getTmodelKey() {
+                return this.tmodelKey;
+        }
+
+        public void setTmodelKey(String tmodelKey) {
+                this.tmodelKey = tmodelKey;
+        }
+
+        @Column(name = "key_name", nullable = false)
+
+        public String getKeyName() {
+                return this.keyName;
+        }
+
+        public void setKeyName(String keyName) {
+                this.keyName = keyName;
+        }
+
+        @Column(name = "key_value", nullable = false)
+
+        public String getKeyValue() {
+                return this.keyValue;
+        }
+
+        public void setKeyValue(String keyValue) {
+                this.keyValue = keyValue;
+        }
+
+        @Column(name = "from_check", nullable = false, length = 5)
+        public String getFromCheck() {
+                return this.fromCheck;
+        }
+
+        public void setFromCheck(String fromCheck) {
+                this.fromCheck = fromCheck;
+        }
+
+        @Column(name = "to_check", nullable = false, length = 5)
+        public String getToCheck() {
+                return this.toCheck;
+        }
+
+        public void setToCheck(String toCheck) {
+                this.toCheck = toCheck;
+        }
+
+        @Override
+        public boolean equals(Object compareto) {
+                if (compareto instanceof PublisherAssertion) {
+                        PublisherAssertion rhs = (PublisherAssertion) compareto;
+                        return (this.id.equals(rhs.id));
+                }
+                return false;
+        }
+
         @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         public List<Signature> getSignatures() {
-                if (signatures==null)
-                        signatures=new ArrayList<Signature>();
+                if (signatures == null) {
+                        signatures = new ArrayList<Signature>();
+                }
                 return signatures;
         }
 

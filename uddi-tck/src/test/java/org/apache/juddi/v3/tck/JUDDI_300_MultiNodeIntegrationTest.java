@@ -769,7 +769,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                 logger.info("testReplicationServiceBindingAddRemove");
 
                 try {
-                        TckCommon.PrintMarker();
+                        //TckCommon.PrintMarker();
 
                         resetBusinesses();
                         resetTmodels();

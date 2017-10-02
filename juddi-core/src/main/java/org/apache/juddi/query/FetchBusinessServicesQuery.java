@@ -46,9 +46,9 @@ import org.uddi.api_v3.ListDescription;
  */
 public class FetchBusinessServicesQuery extends BusinessServiceQuery {
 
-	private static Log log = LogFactory.getLog(FetchBusinessServicesQuery.class);
+	private static final Log log = LogFactory.getLog(FetchBusinessServicesQuery.class);
 
-	protected static String selectSQL;
+	protected static final String selectSQL;
 
 	static {
 		StringBuilder sql = new StringBuilder(200);

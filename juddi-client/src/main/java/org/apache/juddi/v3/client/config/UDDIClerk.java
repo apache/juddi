@@ -1489,7 +1489,7 @@ public class UDDIClerk implements Serializable {
         /**
          * Internal classed used for wsdl registration
          */
-        public class WSDL {
+        public static class WSDL {
 
                 private String businessKey;
                 private String keyDomain;

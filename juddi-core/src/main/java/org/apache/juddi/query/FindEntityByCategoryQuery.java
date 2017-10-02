@@ -51,7 +51,7 @@ import org.uddi.api_v3.KeyedReference;
 public class FindEntityByCategoryQuery extends EntityQuery {
 	
 	@SuppressWarnings("unused")
-	private static Log log = LogFactory.getLog(FindEntityByCategoryQuery.class);
+	private final static Log log = LogFactory.getLog(FindEntityByCategoryQuery.class);
 
 	private static final String ENTITY_KEYEDREFERENCE = "KeyedReference";
 	private static final String ALIAS_KEYEDREFERENCE = buildAlias(ENTITY_KEYEDREFERENCE);

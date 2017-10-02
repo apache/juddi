@@ -59,12 +59,20 @@ public enum CustodyTransferQuery implements UDDIQuery {
         return list;
     }
 
+    /**
+     * this doesn't appear to be used anywhere and will be removed in a future version
+     * @param query
+     * @return
+     * @deprecated
+     */
+    @Deprecated
     public static CustodyTransferQuery fromQuery(final String query) {
         if (_custodyTransferQueries == null) {
             initCustodyTransferQueries();
         }
         
-        if (_custodyTransferQueries.contains(query)) {
+        //note: at one point this was just .contains(query) which shouldn't work
+        if (_custodyTransferQueries.containsKey(query)) {
             return _custodyTransferQueries.get(query);
         } else {
             throw new IllegalArgumentException("Unrecognized query " + query);

@@ -48,7 +48,7 @@ public class FindBusinessByDiscoveryURLQuery extends BusinessEntityQuery {
 
 	private static final String ENTITY_NAME_CHILD = "DiscoveryUrl";
 
-	private static String entityAliasChild;;
+	private static final String entityAliasChild;;
 	
 	static {
 		entityAliasChild = buildAlias(ENTITY_NAME_CHILD);

@@ -213,9 +213,7 @@ public class UDDIServiceCache implements UDDIServiceCacheMBean {
 	
 	public void removeAll() {
 		log.info("Flushing the client side " + clerk.getManagerName() + " UDDIServiceCache ");
-		for (String key : serviceLocationMap.keySet()) {
-			serviceLocationMap.get(key);
-		}
+                serviceLocationMap.clear();
 	}
 	/**
 	 * Adds or updates epr information for the given serviceKey.
