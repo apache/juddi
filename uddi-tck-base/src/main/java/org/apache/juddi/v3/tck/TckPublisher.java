@@ -58,12 +58,13 @@ public class TckPublisher {
                         }
                         tckProperties.load(inputSteam);
                 } catch (IOException ioe) {
-                        ioe.printStackTrace();
+                        logger.warn(ioe);
                 } finally {
                         if (inputSteam != null) {
                                 try {
                                         inputSteam.close();
                                 } catch (Exception ex) {
+                                    logger.debug(ex);
                                 }
                         }
                 }
@@ -135,82 +136,52 @@ public class TckPublisher {
 
         public static boolean isUDDIAuthMode() {
                 String x = tckProperties.getProperty("auth_mode");
-                if (x != null && x.equalsIgnoreCase("uddi")) {
-                        return true;
-                }
-                return false;
+                return "uddi".equalsIgnoreCase(x);
         }
 
         public static boolean isReplicationEnabled() {
                 String x = tckProperties.getProperty("replication.enabled");
-                if (x != null && x.equalsIgnoreCase("true")) {
-                        return true;
-                }
-                return false;
+                return "true".equalsIgnoreCase(x);
         }
 
         public static boolean isInquiryRestEnabled() {
                 String x = tckProperties.getProperty("rest.enabled");
-                if (x != null && x.equalsIgnoreCase("true")) {
-                        return true;
-                }
-                return false;
+                return "true".equalsIgnoreCase(x);
         }
 
         public static boolean isValueSetAPIEnabled() {
                 String x = tckProperties.getProperty("vsv.enabled");
-                if (x != null && x.equalsIgnoreCase("true")) {
-                        return true;
-                }
-                return false;
+                return "true".equalsIgnoreCase(x);
         }
 
         public static boolean isSubscriptionEnabled() {
                 String x = tckProperties.getProperty("sub.enabled");
-                if (x != null && x.equalsIgnoreCase("true")) {
-                        return true;
-                }
-                return false;
+                return "true".equalsIgnoreCase(x);
         }
 
         public static boolean isCustodyTransferEnabled() {
                 String x = tckProperties.getProperty("transfer.enabled");
-                if (x != null && x.equalsIgnoreCase("true")) {
-                        return true;
-                }
-                return false;
+                return "true".equalsIgnoreCase(x);
         }
 
         public static boolean isJUDDI() {
                 String x = tckProperties.getProperty("isJuddi");
-                if (x.equalsIgnoreCase("true")) {
-                        return true;
-                }
-                return false;
+                return "true".equalsIgnoreCase(x);
         }
 
         public static boolean isRMI() {
                 String x = tckProperties.getProperty("rmi.enabled");
-                if (x.equalsIgnoreCase("true")) {
-                        return true;
-                }
-                return false;
+                return "true".equalsIgnoreCase(x);
         }
 
         public static boolean isLoadTest() {
                 String x = tckProperties.getProperty("loadtest.enable");
-                if (x.equalsIgnoreCase("true")) {
-                        return true;
-                }
-                return false;
+                return "true".equalsIgnoreCase(x);
         }
 
         public static boolean isBPEL() {
                 String x = tckProperties.getProperty("bpel.enable");
-                if (x.equalsIgnoreCase("true")) {
-                        return true;
-                }
-                return false;
+                return "true".equalsIgnoreCase(x);
         }
 
         public static int getMaxLoadServices() {
@@ -250,9 +221,6 @@ public class TckPublisher {
 
         public static boolean isSMTPEnabled() {
                 String x = tckProperties.getProperty("smtp.notify.enabled");
-                if (x.equalsIgnoreCase("true")) {
-                        return true;
-                }
-                return false;
+                return "true".equalsIgnoreCase(x);
         }
 }
