@@ -1059,6 +1059,7 @@ under the License.
 								<exclude>**/nb-configuration.xml</exclude>
 
 							</excludes>
+							<consoleOutput>true</consoleOutput>
 						</configuration>
 						<executions>
 							<execution>
