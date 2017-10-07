@@ -268,7 +268,7 @@ under the License.
 				<plugin>
 					<groupId>org.apache.rat</groupId>
 					<artifactId>apache-rat-plugin</artifactId>
-					<version>0.11</version>
+					<version>0.12</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>
