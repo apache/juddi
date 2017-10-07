@@ -1057,6 +1057,7 @@ under the License.
 								<exclude>**/Guardfile</exclude>
 								<exclude>**/target/**/*</exclude>
 								<exclude>**/nb-configuration.xml</exclude>
+								<exclude>.travis.yml</exclude>
 
 							</excludes>
 							<consoleOutput>true</consoleOutput>
