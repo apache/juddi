@@ -45,7 +45,7 @@ under the License.
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<cxf.version>2.7.18</cxf.version>
 		<springframework.version>3.2.18.RELEASE</springframework.version>
-		<apache.tomcat.version>7.0.81</apache.tomcat.version>
+		<apache.tomcat.version>7.0.82</apache.tomcat.version>
 		<jacoco.it.execution.data.file>${project.build.directory}/coverage-reports/jacoco-it.exec</jacoco.it.execution.data.file>
 		<jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file>
 
@@ -246,7 +246,7 @@ under the License.
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.6</version>
+                    <version>3.6</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -298,6 +298,31 @@ under the License.
 			</plugins>
 		</pluginManagement>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.0.0-M1</version>
+				<executions>
+				  <execution>
+					<id>enforce-versions</id>
+					<goals>
+					  <goal>enforce</goal>
+					</goals>
+					<phase>validate</phase>
+					<configuration>
+					  <rules>
+						
+						<requireMavenVersion>
+						  <version>[3.0.3,)</version>
+						</requireMavenVersion>
+						<requireJavaVersion>
+						  <version>[1.6,)</version>
+						</requireJavaVersion>
+					  </rules>
+					</configuration>
+				  </execution>
+				</executions>
+			  </plugin>
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
