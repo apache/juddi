@@ -1059,6 +1059,7 @@ under the License.
 								<exclude>**/target/**/*</exclude>
 								<exclude>**/nb-configuration.xml</exclude>
 								<exclude>.travis.yml</exclude>
+								<exclude>**/*.mwb</exclude>
 
 							</excludes>
 							<consoleOutput>true</consoleOutput>
