@@ -116,28 +116,6 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         return;
                 }
                 try {
-                        /*                 smtpPort = 9700 + new Random().nextInt(99);
-                         httpPort = 9600 + new Random().nextInt(99);
-                         Properties properties = new Properties();
-                         properties.setProperty("juddi.mail.smtp.host", "localhost");
-                         properties.setProperty("juddi.mail.smtp.port", String.valueOf(smtpPort));
-                         properties.setProperty("juddi.mail.smtp.from", "jUDDI@example.org");
-                         String version = Release.getRegistryVersion().replaceAll(".SNAPSHOT", "-SNAPSHOT");
-                         String curDir = System.getProperty("user.dir");
-                         if (!curDir.endsWith("uddi-tck")) {
-                         curDir += "/uddi-tck";
-                         }
-                         String path = curDir + "/target/juddi-tomcat-" + version + "/temp/";
-                         System.out.println("Saving jUDDI email properties to " + path);
-                         File tmpDir = new File(path);
-                         File tmpFile = new File(tmpDir + "/juddi-mail.properties");
-                         if (!tmpFile.createNewFile()) {
-                         tmpFile.delete();
-                         tmpFile.createNewFile();
-                         }
-                         properties.store(new FileOutputStream(tmpFile), "tmp email settings");
-                         */
-
                         manager = new UDDIClient();
                         manager.start();
 
@@ -513,7 +491,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         logger.info("updating Mary's tModel ********** ");
                         updateTModel(authInfoMary, saveMaryPublisherTmodel, publicationMary);
 
-                        boolean found = verifyDelivery("a new description");
+                        boolean found = verifyDelivery(TckTModel.MARY_PUBLISHER_TMODEL_KEY);
 
                         if (!found) {
                                 TckCommon.PrintMarker();
