@@ -83,7 +83,45 @@
 			<item name="Javadocs v3" href="apidocs/index.html"/>
 			<item name="XRef v3" href="xref/index.html"/>
 			<item name="jUDDI Blog" href="http://apachejuddi.blogspot.com/" />
+			
+			<item name="Client Guide">
+
+				<item name="Introduction" href="ClientGuide.html"/>
+				<item name="Simple Publishing" href="ClientGuideSimplePublishingUsingthejUDDIAPI.html"/>
+				<item name="Client Config Guide" href="ClientGuidejUDDIClientConfigurationGuide.html"/>
+				<item name="Key Formats" href="ClientGuideKeyFormatTemplates.html"/>
+				<item name="Using the jUDDI GUI" href="ClientGuideUsingthejUDDIGUI.html"/>
+				<item name="WADL and WSDL to UDDI" href="ClientGuideMappingWADLandWSDLtoUDDI.html"/>
+				<item name="UDDI Annotations" href="ClientGuideUsingUDDIAnnotationstoAutomateRegistration.html"/>
+				<item name="UDDI v2 Services" href="ClientGuideUDDIv2Services.html"/>
+				<item name="UDDI Migration Tool" href="ClientGuideUDDIMigrationTool.html"/>
+				<item name="jUDDI REST Services" href="ClientGuideUsingjUDDIRestServices.html"/>
+				<item name="jUDDI for .NET" href="ClientGuidejUDDIClientforNET.html"/>
+				<item name="TCK Runner" href="ClientGuideTCKRunner.html"/>
+
+			</item>
+			
+			<item name="Admin Guide">
+				<item name="UDDI Registry Introduction" href="Guide.html"/>
+				<item name="UDDI Registry Introduction" href="GuideUDDIRegistryIntroduction.html"/>
+				<item name="Getting Started" href="GuideGettingStarted.html"/>
+				<item name="Architecture" href="GuideArchitecture.html"/>
+				<item name="Administration" href="GuideAdministration.html"/>
+				<item name="Server Configuration" href="GuideConfigurationServer.html"/>
+				<item name="Replication" href="GuideReplication.html"/>
+				<item name="Root Seed Data" href="GuideRootSeedData.html"/>
+				<item name="How to Deploy jUDDI" href="GuideHowToDeployjUDDITo.html"/>
+				<item name="Extending jUDDI" href="GuideExtendingUDDI.html"/>
+				<item name="Troubleshooting jUDDI" href="GuideTroubleshootingjUDDI.html"/>
+				<item name="Contributing to jUDDI" href="GuideContributingtojUDDI.html"/>
+				<item name="UDDI Subscriptions" href="GuideUDDISubscriptions.html"/>
+				<item name="Digital Signatures in UDDI" href="GuideUsingDigitalSignaturesinUDDI.html"/>
+
+			</item>
+			
 		</menu>
+		
+		
 
 		<menu name="Subprojects">
 			<item name="Apache Scout" href="http://juddi.apache.org/scout/" />

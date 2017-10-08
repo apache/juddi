@@ -48,7 +48,8 @@ under the License.
 		<apache.tomcat.version>7.0.82</apache.tomcat.version>
 		<jacoco.it.execution.data.file>${project.build.directory}/coverage-reports/jacoco-it.exec</jacoco.it.execution.data.file>
 		<jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file>
-
+		<timestamp>${maven.build.timestamp}</timestamp>
+		<maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 	</properties>
 
 	<issueManagement>
@@ -311,7 +312,12 @@ under the License.
 					<phase>validate</phase>
 					<configuration>
 					  <rules>
-						
+						<requireProperty>
+						  <property>java.vendor</property>
+						  <message>Oracle JDK is required, sorry</message>
+						  <regex>Oracle Corporation</regex>
+						  <regexMessage>Oracle JDK is required</regexMessage>
+						</requireProperty>
 						<requireMavenVersion>
 						  <version>[3.0.3,)</version>
 						</requireMavenVersion>
@@ -447,6 +453,83 @@ under the License.
 
 				</configuration>
 			</plugin>
+			
+			<plugin>
+				<groupId>com.github.spyhunter99</groupId>
+				<artifactId>maven-pdf-plugin</artifactId>
+				<version>1.5.0.5</version>
+				<executions>
+					<execution>
+					  <id>pdf-user</id>
+					  <phase>site</phase>
+					  <goals>
+						<goal>pdf</goal>
+					  </goals>
+					  <configuration>
+						<outputDirectory>${project.reporting.outputDirectory}</outputDirectory>
+						<includeReports>false</includeReports>
+						<docDescriptor>src/site/pdf-client.xml</docDescriptor>
+						
+						<!-- optional, the title of a doc defined in pdf-user that is rendered before the TOC 
+						<executiveSummaryName>EXSUM</executiveSummaryName>-->
+						<!-- optional, a header only on the title page-->
+						<titleHeader>Apache Software Foundation</titleHeader>
+						
+						<!-- optional, the distribution statement is printed on the title page towards the bottom, common use case:
+								confidentiality statements, limited distribution, legalese and other mumbo jumbo.
+						<distributionStatement>DISTRIBUTION STATEMENT: Feel free to give this document to anyone you will take it.</distributionStatement>
+							-->
+						<!-- optional, these header/footer definitions are used on all pages exception the title page -->
+						<pdfFooter>Apache jUDDI
+							Version ${project.version} 
+							${timestamp}</pdfFooter>
+						<pdfHeader>Apache jUDDI
+							Version ${project.version} 
+							${timestamp}</pdfHeader>
+							
+						
+						<!-- optional, the max depth of the TOC -->
+						<tocMaxDepthToPrint>4</tocMaxDepthToPrint>
+					  </configuration>
+					</execution>
+					<execution>
+					  <id>pdf-server</id>
+					  <phase>site</phase>
+					  <goals>
+						<goal>pdf</goal>
+					  </goals>
+					  <configuration>
+						<outputDirectory>${project.reporting.outputDirectory}</outputDirectory>
+						<includeReports>false</includeReports>
+						<docDescriptor>src/site/pdf-server.xml</docDescriptor>
+						
+						<!-- optional, the title of a doc defined in pdf-user that is rendered before the TOC 
+						<executiveSummaryName>EXSUM</executiveSummaryName>-->
+						<!-- optional, a header only on the title page-->
+						<titleHeader>Apache Software Foundation</titleHeader>
+						
+						<!-- optional, the distribution statement is printed on the title page towards the bottom, common use case:
+								confidentiality statements, limited distribution, legalese and other mumbo jumbo.
+						<distributionStatement>DISTRIBUTION STATEMENT: Feel free to give this document to anyone you will take it.</distributionStatement>
+							-->
+						<!-- optional, these header/footer definitions are used on all pages exception the title page -->
+						<pdfFooter>Apache jUDDI
+							Version ${project.version} 
+							${timestamp}</pdfFooter>
+						<pdfHeader>Apache jUDDI
+							Version ${project.version} 
+							${timestamp}</pdfHeader>
+							
+						
+						<!-- optional, the max depth of the TOC -->
+						<tocMaxDepthToPrint>4</tocMaxDepthToPrint>
+					  </configuration>
+					</execution>
+				  
+				</executions>
+			</plugin>
+			
+		
 		</plugins>
 	</build>
 	<reporting>
@@ -833,54 +916,6 @@ under the License.
 
 
 	<profiles>
-            <profile>
-                <id>prepare-site</id>
-                <activation>
-                    <file>
-                        <exists>src/site/site.xml</exists>
-                    </file>
-                </activation>
-                <build>
-                    <plugins>
-                         <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-antrun-plugin</artifactId>
-                                <dependencies>
-                                    <!-- force the juddi docs module to build -->
-                                    <dependency>
-                                        <groupId>org.apache.juddi.juddi-docs</groupId>
-                                        <artifactId>juddi-docs</artifactId>
-                                        <version>${project.version}</version>
-										<type>pom</type>
-                                    </dependency>
-                                                                        
-                                </dependencies>
-                                <executions>
-                                    <execution>
-                                      <phase>site</phase>
-                                      <configuration>
-                                        <target>
-                                            
-                                            
-                                            <copy todir="target/site/docs/3.3/juddi-client-guide/">
-                                                <fileset dir="docs/asciidoc/ClientGuide/target/docbook/publish/en-US"/>
-                                              </copy>
-                                              
-                                              <copy todir="target/site/docs/3.3/juddi-guide/">
-                                                <fileset dir="docs/asciidoc/Guide/target/docbook/publish/en-US"/>
-                                              </copy>
-                                            
-                                        </target>
-                                      </configuration>
-                                      <goals>
-                                        <goal>run</goal>
-                                      </goals>
-                                    </execution>
-                                  </executions>
-                        </plugin>
-                    </plugins>
-                </build>
-            </profile>
 		<profile>
 			<id>doclint-java8-disable</id>
 			<activation>
