@@ -1367,8 +1367,6 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
                         new ValidateReplication(publisher).validateSetReplicationNodes(replicationConfiguration, em, node, AppConfig.getConfiguration());
 
-                        //StringWriter sw = new StringWriter();
-                        //JAXB.marshal(replicationConfiguration, sw);
                         org.apache.juddi.model.ReplicationConfiguration model = null;
                         logger.info(publisher.getAuthorizedName() + " is setting the replication config from " + getRequestorsIPAddress());// + " " + sw.toString());
                         try {
@@ -1417,7 +1415,6 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         throw drfm;
                 } catch (Exception ex) {
                         logger.error(ex, ex);
-                        JAXB.marshal(replicationConfiguration, System.out);
                         throw new FatalErrorException(new ErrorMessage("E_fatalError", ex.getMessage()));
                 } finally {
                         if (tx.isActive()) {
