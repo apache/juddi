@@ -32,6 +32,7 @@ import org.apache.juddi.v3.tck.TckSecurity;
 import org.apache.juddi.v3.tck.TckTModel;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -102,6 +103,7 @@ public class API_040_BusinessServiceLoadTest {
         //@Ignore
         public void find20Businesses() throws DispositionReportFaultMessage, ConfigurationException {
                 //disable TModelBag filtering
+                Assume.assumeTrue(TckPublisher.isLoadTest());
                 try {
                         //logger.info("Disabling findBusiness tModelBag filtering....");
                         //AppConfig.getConfiguration().setProperty(Property.JUDDI_ENABLE_FIND_BUSINESS_TMODEL_BAG_FILTERING, false);

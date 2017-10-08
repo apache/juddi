@@ -57,7 +57,13 @@ public class TckTModel {
         final static String SAM_SYNDICATOR_TMODEL_XML = "uddi_data/samsyndicator/tModelKeyGen.xml";
         final static String SAM_SYNDICATOR_TMODEL_KEY = "uddi:www.samco.com:keygenerator";
         final static String TMODEL_PUBLISHER_TMODEL_XML = "uddi_data/tmodels/tModelKeyGen.xml";
+
+        final static String TMODEL_PUBLISHER_TMODEL_KEY_ROOT = "uddi:tmodelkey:keygenerator";
+        final static String TMODEL_PUBLISHER_TMODEL_XML_PARENT = "uddi_data/tmodels/tmodelsKeyGenParent.xml";
+        
         final static String TMODEL_PUBLISHER_TMODEL_KEY = "uddi:tmodelkey:categories:keygenerator";
+        
+
         final static String FIND_TMODEL_XML = "uddi_data/find/findTModel1.xml";
         final static String FIND_TMODEL_XML_BY_CAT = "uddi_data/find/findTModelByCategoryBag.xml";
         public final static String TMODELS_XML = "uddi_data/tmodels/tmodels.xml";
@@ -174,7 +180,7 @@ public class TckTModel {
                 try {
                         tmIn = (org.uddi.api_v3.TModel) EntityCreator.buildFromDoc(tModelXml, "org.uddi.api_v3");
                 } catch (Exception ex) {
-                        Assert.fail("unable to load tmodel from file!");
+                        Assert.fail("unable to load tmodel from file!" + ex.getMessage());
                 }
                 if (tmIn == null) {
                         Assert.fail("unable to load tmodel from file!");
@@ -266,6 +272,10 @@ public class TckTModel {
                 return saveTModel(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY, force);
         }
 
+        /**
+         * creates key generator
+         * @param authInfoTM 
+         */
         public void saveUDDIPublisherTmodel(String authInfoTM) {
                 saveTModel(authInfoTM, TMODEL_PUBLISHER_TMODEL_XML, TMODEL_PUBLISHER_TMODEL_KEY, false);
         }
