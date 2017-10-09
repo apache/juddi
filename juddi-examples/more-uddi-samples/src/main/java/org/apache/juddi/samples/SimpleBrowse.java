@@ -49,18 +49,18 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class SimpleBrowse {
 
-        private static UDDISecurityPortType security = null;
-        private static UDDIInquiryPortType inquiry = null;
+        private UDDISecurityPortType security = null;
+        private UDDIInquiryPortType inquiry = null;
 
         /**
          * This sets up the ws proxies using uddi.xml in META-INF
          */
         public SimpleBrowse() {
                 try {
-        	// create a manager and read the config in the archive; 
+                        // create a manager and read the config in the archive; 
                         // you can use your config file name
                         UDDIClient client = new UDDIClient("META-INF/simple-browse-uddi.xml");
-        	// a UDDIClient can be a client to multiple UDDI nodes, so 
+                        // a UDDIClient can be a client to multiple UDDI nodes, so 
                         // supply the nodeName (defined in your uddi.xml.
                         // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
                         Transport transport = client.getTransport("default");
@@ -217,7 +217,7 @@ public class SimpleBrowse {
                 }
                 for (int i = 0; i < bindingTemplates.getBindingTemplate().size(); i++) {
                         System.out.println("Binding Key: " + bindingTemplates.getBindingTemplate().get(i).getBindingKey());
-            //TODO The UDDI spec is kind of strange at this point.
+                        //TODO The UDDI spec is kind of strange at this point.
                         //An access point could be a URL, a reference to another UDDI binding key, a hosting redirector (which is 
                         //esscentially a pointer to another UDDI registry) or a WSDL Deployment
                         //From an end client's perspective, all you really want is the endpoint.
@@ -281,8 +281,6 @@ public class SimpleBrowse {
                 }
                 return null;
         }
-
-        
 
         private void PrintBusinessInfo(BusinessInfos businessInfos) {
                 if (businessInfos == null) {

@@ -220,38 +220,38 @@ public class EntryPointSingleNode {
                 if (input.equals("9")) {
                         System.out.print("Business key to sign: ");
                         String key = (System.console().readLine());
-                        new UddiDigitalSignatureBusiness().Fire(authtoken, key);
+                        new UddiDigitalSignatureBusiness().fire(authtoken, key);
                 }
                 if (input.equals("10")) {
                         System.out.print("Service key to sign: ");
                         String key = (System.console().readLine());
-                        new UddiDigitalSignatureService().Fire(authtoken, key);
+                        new UddiDigitalSignatureService().fire(authtoken, key);
                 }
                 if (input.equals("11")) {
                         System.out.print("tModel key to sign: ");
                         String key = (System.console().readLine());
-                        new UddiDigitalSignatureTmodel().Fire(authtoken, key);
+                        new UddiDigitalSignatureTmodel().fire(authtoken, key);
                 }
                 if (input.equals("12")) {
-                        new UddiDigitalSignatureSearch().Fire(authtoken);
+                        new UddiDigitalSignatureSearch().fire(authtoken);
                 }
                 if (input.equals("13")) {
-                        new UddiFindBinding().Fire(authtoken);
+                        new UddiFindBinding().fire(authtoken);
                 }
                 if (input.equals("14")) {
                         System.out.print("Service key to parse the endpoints: ");
                         String key = (System.console().readLine());
-                        new UddiFindEndpoints().Fire(authtoken, key);
+                        new UddiFindEndpoints().fire(authtoken, key);
                 }
                 if (input.equals("15")) {
                         System.out.print("Service key: ");
                         String key = (System.console().readLine());
-                        new UddiGetServiceDetails().Fire(authtoken, key);
+                        new UddiGetServiceDetails().fire(authtoken, key);
                 }
                 if (input.equals("16")) {
                         System.out.print("Get FQDN: ");
                         String key = (System.console().readLine());
-                        new UddiKeyGenerator().Fire(authtoken, key);
+                        new UddiKeyGenerator().fire(authtoken, key);
                 }
                 if (input.equals("17")) {
                         UDDISecurityPortType security = null;
@@ -284,10 +284,10 @@ public class EntryPointSingleNode {
 
                         System.out.print("relationship (parent-child, peer-peer,or identity) : ");
                         String relationship = (System.console().readLine());
-                        new UddiRelatedBusinesses().Fire(key, authtokenFrom, key2, authtokenFrom2, relationship);
+                        new UddiRelatedBusinesses().fire(key, authtokenFrom, key2, authtokenFrom2, relationship);
                 }
                 if (input.equals("18")) {
-                        new UddiSubscribe(client, currentNode, transport).Fire();
+                        new UddiSubscribe(client, currentNode, transport).fire();
 
                 }
                 if (input.equals("19")) {
@@ -302,40 +302,40 @@ public class EntryPointSingleNode {
                         String url = (System.console().readLine());
                         System.out.print("Business key to attach to: ");
                         String key = (System.console().readLine());
-                        new WsdlImport().Fire(url, key, authtoken, transport);
+                        new WsdlImport().fire(url, key, authtoken, transport);
                 }
                 if (input.equals("21")) {
                         System.out.print("Path or URL to WADL file: ");
                         String url = (System.console().readLine());
                         System.out.print("Business key to attach to: ");
                         String key = (System.console().readLine());
-                        new WadlImport().Fire(url, key, authtoken, transport);
+                        new WadlImport().fire(url, key, authtoken, transport);
                 }
 
                 if (input.equals("22")) {
-                        new UddiSubscriptionManagement(transport).PrintSubscriptions(authtoken);
+                        new UddiSubscriptionManagement(transport).printSubscriptions(authtoken);
                 }
                 if (input.equals("23")) {
                         System.out.print("Subscription key: ");
                         String key2 = (System.console().readLine());
-                        new UddiSubscriptionManagement(transport).DeleteSubscription(authtoken, key2);
+                        new UddiSubscriptionManagement(transport).deleteSubscription(authtoken, key2);
                 }
                 if (input.equals("24")) {
-                        new UddiSubscriptionManagement(transport).DeleteAllSubscriptions(authtoken);
+                        new UddiSubscriptionManagement(transport).deleteAllSubscriptions(authtoken);
                 }
                 if (input.equals("25")) {
-                        new UddiSubscribeAssertionStatus(transport).Fire(currentNode);
+                        new UddiSubscribeAssertionStatus().fire(currentNode);
 
                 }
                 if (input.equals("26")) {
                         //System.out.println("27) Replication - do_ping");
 
-                        new UddiReplication(client, currentNode).DoPing();
+                        new UddiReplication(client, currentNode).doPing();
 
                 }
                 if (input.equals("27")) {
                         //System.out.println("28) Replication - get high watermarks");
-                        new UddiReplication(client, currentNode).GetHighWatermarks();
+                        new UddiReplication(client, currentNode).getHighWatermarks();
 
                 }
                 if (input.equals("28")) {
@@ -347,7 +347,7 @@ public class EntryPointSingleNode {
                         System.out.print("Node id of something in the replication graph: ");
                         String src = (System.console().readLine());
 
-                        new UddiReplication(client, currentNode).GetChangeRecords(Long.parseLong(id), src);
+                        new UddiReplication(client, currentNode).getChangeRecords(Long.parseLong(id), src);
 
                 }
                 if ("29".equals(input)) {
@@ -552,9 +552,8 @@ public class EntryPointSingleNode {
                         System.out.println("after business counts "
                                 + afterfindBusiness.getListDescription().getActualCount());
                         System.out.println("actual created " + createdBusinesses);
-                        System.out.println("Delta = " + (afterfindBusiness.getListDescription().getActualCount()  - findBusiness.getListDescription().getActualCount()));
-                        
-                        
+                        System.out.println("Delta = " + (afterfindBusiness.getListDescription().getActualCount() - findBusiness.getListDescription().getActualCount()));
+
                         System.out.println("before service counts "
                                 + findService.getListDescription().getActualCount());
 
@@ -564,9 +563,11 @@ public class EntryPointSingleNode {
                                 + afterfindService.getListDescription().getActualCount());
                         System.out.println("actual created " + createdServices);
                         System.out.println("delta = " + (afterfindService.getListDescription().getActualCount() - findService.getListDescription().getActualCount()));
-                        if ((afterfindService.getListDescription().getActualCount() - findService.getListDescription().getActualCount()) == createdServices)
+                        if ((afterfindService.getListDescription().getActualCount() - findService.getListDescription().getActualCount()) == createdServices) {
                                 System.out.println("success");
-                        else System.out.println("failure!");
+                        } else {
+                                System.out.println("failure!");
+                        }
 
                 }
 

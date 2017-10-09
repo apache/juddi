@@ -27,7 +27,6 @@ import javax.xml.namespace.QName;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
 import org.apache.juddi.v3.client.mapping.wadl.Application;
 import org.apache.juddi.v3.client.mapping.wadl.WADL2UDDI;
@@ -55,17 +54,16 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class WadlImport {
 
-        static PrintUDDI<TModel> pTModel = new PrintUDDI<TModel>();
-        static Properties properties = new Properties();
+        
+        private Properties properties = new Properties();
 
-        private static UDDISecurityPortType security = null;
-        private static JUDDIApiPortType juddiApi = null;
-        private static UDDIPublicationPortType publish = null;
+        private UDDISecurityPortType security = null;
+        private UDDIPublicationPortType publish = null;
 
-        public void Fire(String pathOrURL, String businessKey, String token, Transport transport) throws Exception {
+        public void fire(String pathOrURL, String businessKey, String token, Transport transport) throws Exception {
 
                 if (transport == null) {
-                // create a manager and read the config in the archive; 
+                        // create a manager and read the config in the archive; 
                         // you can use your config file name
                         UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
                         transport = clerkManager.getTransport();
@@ -191,7 +189,7 @@ public class WadlImport {
 
         public static void main(String[] args) throws Exception {
 
-                new WadlImport().Fire("http://svn.apache.org/repos/asf/cxf/trunk/systests/jaxrs/src/test/resources/wadl/bookstoreImportResource.wadl", null, null, null);
+                new WadlImport().fire("http://svn.apache.org/repos/asf/cxf/trunk/systests/jaxrs/src/test/resources/wadl/bookstoreImportResource.wadl", null, null, null);
 
         }
 }

@@ -210,13 +210,13 @@ public class UddiSubscribe implements ISubscriptionCallback {
       
 
         @Override
-        public void HandleCallback(SubscriptionResultsList body) {
+        public void handleCallback(SubscriptionResultsList body) {
                 System.out.println("Callback received!");
                 System.out.println(p.print(body));
         }
 
         @Override
-        public void NotifyEndpointStopped() {
+        public void notifyEndpointStopped() {
                 System.out.println("The endpoint was stopped!");
         }
 

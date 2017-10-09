@@ -200,7 +200,7 @@ public class JUDDI_101_ClientSubscriptionCallbackAPIIntegrationTest implements I
         private static List<SubscriptionResultsList> notificationsMessages = new ArrayList<SubscriptionResultsList>();
 
         @Override
-        public void HandleCallback(SubscriptionResultsList body) {
+        public void handleCallback(SubscriptionResultsList body) {
                 if (TckCommon.isDebug()) {
                         PrintUDDI<SubscriptionResultsList> p2 = new PrintUDDI<SubscriptionResultsList>();
                         logger.info(p2.print(body));
@@ -213,7 +213,7 @@ public class JUDDI_101_ClientSubscriptionCallbackAPIIntegrationTest implements I
         }
 
         @Override
-        public void NotifyEndpointStopped() {
+        public void notifyEndpointStopped() {
                 logger.info("Notify endpoints stopped");
         }
 

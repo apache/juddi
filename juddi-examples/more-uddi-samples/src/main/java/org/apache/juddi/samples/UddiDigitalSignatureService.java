@@ -18,7 +18,6 @@ package org.apache.juddi.samples;
 
 import java.util.concurrent.atomic.AtomicReference;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.api_v3.*;
@@ -33,17 +32,17 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiDigitalSignatureService {
 
-        private static UDDISecurityPortType security = null;
-        private static UDDIInquiryPortType inquiry = null;
-        private static UDDIPublicationPortType publish = null;
-        private static UDDIClient clerkManager = null;
+        private UDDISecurityPortType security = null;
+        private UDDIInquiryPortType inquiry = null;
+        private UDDIPublicationPortType publish = null;
+        private UDDIClient clerkManager = null;
 
         /**
          * This sets up the ws proxies using uddi.xml in META-INF
          */
         public UddiDigitalSignatureService() {
                 try {
-            // create a manager and read the config in the archive; 
+                        // create a manager and read the config in the archive; 
                         // you can use your config file name
                         clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
                         Transport transport = clerkManager.getTransport();
@@ -64,10 +63,10 @@ public class UddiDigitalSignatureService {
         public static void main(String args[]) {
 
                 UddiDigitalSignatureService sp = new UddiDigitalSignatureService();
-                sp.Fire(null, null);
+                sp.fire(null, null);
         }
 
-        public void Fire(String token, String key) {
+        public void fire(String token, String key) {
                 try {
 
                         DigSigUtil ds = null;
@@ -86,13 +85,12 @@ public class UddiDigitalSignatureService {
                         ds.put(DigSigUtil.TRUSTSTORE_FILETYPE, "JKS");
                         ds.put(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, "Test");
 
-
-            //option 2), load it from the juddi config file
+                        //option 2), load it from the juddi config file
                         //ds = new DigSigUtil(clerkManager.getClientConfig().getDigitalSignatureConfiguration());
                         //login
                         if (token == null) //option, load from juddi config
                         {
-                                token = GetAuthKey(clerkManager.getClerk("default").getPublisher(),
+                                token = getAuthKey(clerkManager.getClerk("default").getPublisher(),
                                         clerkManager.getClerk("default").getPassword());
                         }
 
@@ -117,13 +115,12 @@ public class UddiDigitalSignatureService {
                         }
 
                         BusinessService be = null;
-                        be = GetServiceDetails(key);
-                        if (!be.getSignature().isEmpty())
-                        {
+                        be = getServiceDetails(key);
+                        if (!be.getSignature().isEmpty()) {
                                 System.out.println("WARN, the entity with the key " + key + " is already signed! aborting");
                                 return;
                         }
-                        
+
                         //DigSigUtil.JAXB_ToStdOut(be);
                         System.out.println("signing");
                         BusinessService signUDDI_JAXBObject = ds.signUddiEntity(be);
@@ -136,7 +133,7 @@ public class UddiDigitalSignatureService {
                         publish.saveService(sb);
                         System.out.println("saved, fetching");
 
-                        be = GetServiceDetails(key);
+                        be = getServiceDetails(key);
                         DigSigUtil.JAXB_ToStdOut(be);
                         System.out.println("verifing");
                         AtomicReference<String> msg = new AtomicReference<String>();
@@ -153,7 +150,7 @@ public class UddiDigitalSignatureService {
                 }
         }
 
-        private BusinessService GetServiceDetails(String key) throws Exception {
+        private BusinessService getServiceDetails(String key) throws Exception {
                 //   BusinessInfo get
                 GetServiceDetail r = new GetServiceDetail();
                 //GetBusinessDetail r = new GetBusinessDetail();
@@ -170,7 +167,7 @@ public class UddiDigitalSignatureService {
          * @param style
          * @return
          */
-        private String GetAuthKey(String username, String password) {
+        private String getAuthKey(String username, String password) {
                 try {
 
                         GetAuthToken getAuthTokenRoot = new GetAuthToken();

@@ -138,11 +138,11 @@ public class SubscriptionCallbackTest implements ISubscriptionCallback {
 
         SubscriptionCallbackListener.unRegisterCallback(new ISubscriptionCallback() {
             @Override
-            public void HandleCallback(SubscriptionResultsList body) {
+            public void handleCallback(SubscriptionResultsList body) {
             }
 
             @Override
-            public void NotifyEndpointStopped() {
+            public void notifyEndpointStopped() {
             }
         });
 
@@ -197,12 +197,12 @@ public class SubscriptionCallbackTest implements ISubscriptionCallback {
 
         SubscriptionCallbackListener.registerCallback(new ISubscriptionCallback() {
             @Override
-            public void HandleCallback(SubscriptionResultsList body) {
+            public void handleCallback(SubscriptionResultsList body) {
                 log.info("bogus callback received");
             }
 
             @Override
-            public void NotifyEndpointStopped() {
+            public void notifyEndpointStopped() {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
@@ -226,12 +226,12 @@ public class SubscriptionCallbackTest implements ISubscriptionCallback {
 
         SubscriptionCallbackListener.registerCallback(new ISubscriptionCallback() {
             @Override
-            public void HandleCallback(SubscriptionResultsList body) {
+            public void handleCallback(SubscriptionResultsList body) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
-            public void NotifyEndpointStopped() {
+            public void notifyEndpointStopped() {
                 log.info("bogus callback received");
 
             }
@@ -262,13 +262,13 @@ public class SubscriptionCallbackTest implements ISubscriptionCallback {
     }
 
     @Override
-    public void HandleCallback(SubscriptionResultsList body) {
+    public void handleCallback(SubscriptionResultsList body) {
         log.info("HandleCallback received");
         Test2_NoAutoRegisterAndShortCircuitReceive_ = true;
     }
 
     @Override
-    public void NotifyEndpointStopped() {
+    public void notifyEndpointStopped() {
         log.info("NotifyEndpointStopped received");
         Test4_NotifyEndpointStopped_ = true;
     }

@@ -38,16 +38,17 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiCreatebulk {
 
-        private static UDDISecurityPortType security = null;
-        private static UDDIPublicationPortType publish = null;
-        String curretNode = null;
+        private UDDISecurityPortType security = null;
+        private UDDIPublicationPortType publish = null;
+        private String curretNode = null;
+
         public UddiCreatebulk(String node) {
                 try {
                         // create a manager and read the config in the archive; 
                         // you can use your config file name
                         UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
                         Transport transport = clerkManager.getTransport(node);
-                        curretNode=node;
+                        curretNode = node;
                         // Now you create a reference to the UDDI API
                         security = transport.getUDDISecurityService();
                         publish = transport.getUDDIPublishService();
@@ -55,10 +56,10 @@ public class UddiCreatebulk {
                         e.printStackTrace();
                 }
         }
-        
+
         public UddiCreatebulk(Transport transport, boolean notused, String node) {
                 try {
-                       curretNode=node;
+                        curretNode = node;
                         security = transport.getUDDISecurityService();
                         publish = transport.getUDDIPublishService();
                 } catch (Exception e) {
@@ -68,6 +69,7 @@ public class UddiCreatebulk {
 
         /**
          * bulk creates businesses, services and binding templates
+         *
          * @param token if null, root/root will be used to authenticate
          * @param businesses
          * @param servicesPerBusiness
@@ -98,8 +100,8 @@ public class UddiCreatebulk {
                                 BusinessEntity myBusEntity = new BusinessEntity();
                                 Name myBusName = new Name();
                                 myBusName.setLang("en");
-                                myBusName.setValue(user + "'s Business " +curretNode +" " + i + " " + xcal.toString() + " " + textgen.getWords(5, 2) );
-                                myBusEntity.getDescription().add(new Description( textgen.getWords(10, 2), null));
+                                myBusName.setValue(user + "'s Business " + curretNode + " " + i + " " + xcal.toString() + " " + textgen.getWords(5, 2));
+                                myBusEntity.getDescription().add(new Description(textgen.getWords(10, 2), null));
                                 myBusEntity.getName().add(myBusName);
 
                                 // Adding the business entity to the "save" structure, using our publisher's authentication info and saving away.
@@ -116,10 +118,10 @@ public class UddiCreatebulk {
                                         myService.setBusinessKey(myBusKey);
                                         Name myServName = new Name();
                                         myServName.setLang("en");
-                                        myServName.setValue(user + "'s Service " +curretNode+" "+ i + " " + k + " " + xcal.toString()+ " " + textgen.getWords(5, 2) );
+                                        myServName.setValue(user + "'s Service " + curretNode + " " + i + " " + k + " " + xcal.toString() + " " + textgen.getWords(5, 2));
                                         myService.getName().add(myServName);
-                                        myService.getDescription().add(new Description( textgen.getWords(10, 2), null));
-                                        
+                                        myService.getDescription().add(new Description(textgen.getWords(10, 2), null));
+
                                         // Add binding templates, etc...
                                         BindingTemplate myBindingTemplate = new BindingTemplate();
                                         myBindingTemplate.setCategoryBag(new CategoryBag());
@@ -169,11 +171,11 @@ public class UddiCreatebulk {
                                         tii.getDescription().add(d);
                                         tii.setTModelKey(UDDIConstants.TRANSPORT_HTTP);
                                         tii.setInstanceDetails(new InstanceDetails());
-                                        tii.getInstanceDetails().setInstanceParms("heres some useful stuff describing this endpoint, up to 4KB of data"+ " " + textgen.getWords(20, 2) );
+                                        tii.getInstanceDetails().setInstanceParms("heres some useful stuff describing this endpoint, up to 4KB of data" + " " + textgen.getWords(20, 2));
                                         tii.getInstanceDetails().getDescription().add(d);
                                         OverviewDoc od = new OverviewDoc();
                                         d = new Description();
-                                        d.setValue("ovweview doc description"+ " " + textgen.getWords(5, 2) );
+                                        d.setValue("ovweview doc description" + " " + textgen.getWords(5, 2));
                                         od.getDescription().add(d);
                                         od.setOverviewURL(new OverviewURL());
                                         od.getOverviewURL().setUseType("www");
