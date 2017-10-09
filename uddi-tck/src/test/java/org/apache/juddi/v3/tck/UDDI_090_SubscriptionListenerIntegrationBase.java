@@ -703,7 +703,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         logger.info("updating Mary's binding ********** ");
                         updatePublisherBinding(authInfoMary, bt, publicationMary);
 
-                        boolean found = verifyDelivery("wsdlDeployment");
+                        boolean found = verifyDelivery(bt.getBindingKey());
 
                         if (!found) {
                                 logger.warn("Test failed, dumping business list");
