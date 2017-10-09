@@ -31,7 +31,6 @@ import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
-import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.ws.Holder;
@@ -448,13 +447,13 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                         throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNodeOwner", entityKey + " this node " + getNode() + " owning node " + obj.getNodeId()));
                                 }
                                 em.remove(obj);
-                                changes.add(UDDIPublicationImpl.getChangeRecord_deleteTModelDelete(entityKey, getNode()));
+                                changes.add(UDDIPublicationImpl.getChangeRecord_deleteTModelDelete(entityKey, getNode(), df));
 
                         }
 
                         tx.commit();
                         for (ChangeRecord cr : changes) {
-                                ReplicationNotifier.Enqueue(cr);
+                                ReplicationNotifier.enqueue(cr);
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.ADMIN_DELETE_TMODEL,
@@ -788,7 +787,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                         NodeDetail result = new NodeDetail();
 
-                        List<org.apache.juddi.api_v3.Node> apiNodeList = body.getNode();;
+                        List<org.apache.juddi.api_v3.Node> apiNodeList = body.getNode();
                         for (org.apache.juddi.api_v3.Node apiNode : apiNodeList) {
 
                                 org.apache.juddi.model.Node modelNode = new org.apache.juddi.model.Node();
@@ -1404,7 +1403,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
-                        UDDIReplicationImpl.notifyConfigurationChange(oldConfig, replicationConfiguration);
+                        UDDIReplicationImpl.notifyConfigurationChange(oldConfig, replicationConfiguration, this);
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.SET_REPLICATION_NODES,
                                 QueryStatus.SUCCESS, procTime);

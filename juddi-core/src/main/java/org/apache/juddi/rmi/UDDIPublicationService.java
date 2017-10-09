@@ -52,7 +52,7 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 public class UDDIPublicationService extends UnicastRemoteObject implements UDDIPublicationPortType {
 
 	private static final long serialVersionUID = 8342463046574333026L;
-	private UDDIPublicationPortType publication = new UDDIPublicationImpl();
+	private transient UDDIPublicationPortType publication = new UDDIPublicationImpl();
 	
 	protected UDDIPublicationService(int port) throws RemoteException {
 		super(port);

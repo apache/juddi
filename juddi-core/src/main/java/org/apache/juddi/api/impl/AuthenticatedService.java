@@ -17,10 +17,14 @@
 package org.apache.juddi.api.impl;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 
@@ -50,7 +54,7 @@ public abstract class AuthenticatedService {
         /**
          * @return the node
          */
-        public static String getNode() {
+        public String getNode() {
             return node;
         }
 
@@ -61,9 +65,10 @@ public abstract class AuthenticatedService {
         /**
          * the node id of this server instance, as loaded from the config file
          */
-        private static String node = "UNDEFINED_NODE_NAME";
+        private String node = "UNDEFINED_NODE_NAME";
         protected String baseUrlSSL = "UNDEFINED";
         protected String baseUrl = "UNDEFINED";
+        protected DatatypeFactory df = null;
 
         public AuthenticatedService() {
                 try {
@@ -74,6 +79,14 @@ public abstract class AuthenticatedService {
                 } catch (ConfigurationException ex) {
                         logger.fatal(null, ex);
                 }
+                init();
+        }
+        private synchronized  void init() {
+            try {
+                df = DatatypeFactory.newInstance();
+            } catch (DatatypeConfigurationException ex) {
+                logger.fatal(null, ex);
+            }
         }
 
         @Resource
@@ -153,7 +166,7 @@ public abstract class AuthenticatedService {
                                                         req = (HttpServletRequest) mc.get(MessageContext.SERVLET_REQUEST);
                                                 }
                                                 if (req != null
-                                                        && modelAuthToken.getIPAddress() != null
+                                                        && req.getRemoteAddr() != null
                                                         && modelAuthToken.getIPAddress() != null
                                                         && !modelAuthToken.getIPAddress().equalsIgnoreCase(req.getRemoteAddr())) {
                                                         modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);

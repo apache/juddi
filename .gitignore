@@ -12,3 +12,4 @@ docs/db/ddl/*.ddl
 *.ddl
 uddi-tck/pref-rpt-*.txt
 nb-configuration.xml
+*.orig

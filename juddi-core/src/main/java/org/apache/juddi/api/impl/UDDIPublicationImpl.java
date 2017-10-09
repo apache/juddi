@@ -108,18 +108,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         private static Log log = LogFactory.getLog(UDDIInquiryImpl.class);
         private UDDIServiceCounter serviceCounter;
 
-        private static DatatypeFactory df = null;
-
+     
         public UDDIPublicationImpl() {
                 super();
                 serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDIPublicationImpl.class);
-                if (df == null) {
-                        try {
-                                df = DatatypeFactory.newInstance();
-                        } catch (DatatypeConfigurationException ex) {
-                                logger.fatal(ex);
-                        }
-                }
+                
         }
 
         @Override
@@ -202,7 +195,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         tx.commit();
                         for (int i = 0; i < changes.size(); i++) {
-                                ReplicationNotifier.Enqueue(changes.get(i));
+                                ReplicationNotifier.enqueue(changes.get(i));
                         }
 
                         long procTime = System.currentTimeMillis() - startTime;
@@ -241,7 +234,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         }
                         tx.commit();
                         for (int i = 0; i < changes.size(); i++) {
-                                ReplicationNotifier.Enqueue(changes.get(i));
+                                ReplicationNotifier.enqueue(changes.get(i));
                         }
 
                         long procTime = System.currentTimeMillis() - startTime;
@@ -301,7 +294,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         tx.commit();
                         for (int i = 0; i < changes.size(); i++) {
-                                ReplicationNotifier.Enqueue(changes.get(i));
+                                ReplicationNotifier.enqueue(changes.get(i));
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.DELETE_BUSINESS, QueryStatus.SUCCESS, procTime);
@@ -383,7 +376,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         tx.commit();
                         for (int i = 0; i < changes.size(); i++) {
-                                ReplicationNotifier.Enqueue(changes.get(i));
+                                ReplicationNotifier.enqueue(changes.get(i));
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.DELETE_PUBLISHERASSERTIONS,
@@ -468,7 +461,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         tx.commit();
                         for (int i = 0; i < changes.size(); i++) {
-                                ReplicationNotifier.Enqueue(changes.get(i));
+                                ReplicationNotifier.enqueue(changes.get(i));
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.DELETE_SERVICE,
@@ -531,7 +524,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                         tx.commit();
 
                         for (int i = 0; i < changes.size(); i++) {
-                                ReplicationNotifier.Enqueue(changes.get(i));
+                                ReplicationNotifier.enqueue(changes.get(i));
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.DELETE_TMODEL, QueryStatus.SUCCESS, procTime);
@@ -767,7 +760,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         tx.commit();
                         for (int i = 0; i < changes.size(); i++) {
-                                ReplicationNotifier.Enqueue(changes.get(i));
+                                ReplicationNotifier.enqueue(changes.get(i));
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_BINDING,
@@ -794,9 +787,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         public BusinessDetail saveBusiness(SaveBusiness body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
-                if (!body.getBusinessEntity().isEmpty()) {
-                        log.debug("Inbound save business request for key " + body.getBusinessEntity().get(0).getBusinessKey());
-                }
+                
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
                 try {
@@ -831,7 +822,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         tx.commit();
                         for (int i = 0; i < changes.size(); i++) {
-                                ReplicationNotifier.Enqueue(changes.get(i));
+                                ReplicationNotifier.enqueue(changes.get(i));
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_BUSINESS,
@@ -900,7 +891,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         tx.commit();
                         for (int i = 0; i < changes.size(); i++) {
-                                ReplicationNotifier.Enqueue(changes.get(i));
+                                ReplicationNotifier.enqueue(changes.get(i));
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_SERVICE,
@@ -970,7 +961,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         tx.commit();
                         for (int i = 0; i < changes.size(); i++) {
-                                ReplicationNotifier.Enqueue(changes.get(i));
+                                ReplicationNotifier.enqueue(changes.get(i));
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_TMODEL,
@@ -1090,7 +1081,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                                 addPublisherAssertions(addPublisherAssertions);
                         }
                         for (int i = 0; i < changes.size(); i++) {
-                                ReplicationNotifier.Enqueue(changes.get(i));
+                                ReplicationNotifier.enqueue(changes.get(i));
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SET_PUBLISHERASSERTIONS,
@@ -1303,7 +1294,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 return cr;
         }
 
-        public static ChangeRecord getChangeRecord_deleteBusiness(String entityKey, String node) {
+        public ChangeRecord getChangeRecord_deleteBusiness(String entityKey, String node) {
                 ChangeRecord cr = new ChangeRecord();
                 cr.setEntityKey(entityKey);
                 cr.setNodeID(node);
@@ -1325,7 +1316,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 return cr;
         }
 
-        public static ChangeRecord getChangeRecord_deleteService(String entityKey, String node) {
+        public ChangeRecord getChangeRecord_deleteService(String entityKey, String node) {
                 ChangeRecord cr = new ChangeRecord();
                 cr.setEntityKey(entityKey);
                 cr.setNodeID(node);
@@ -1354,7 +1345,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
          * @param node
          * @return
          */
-        public static ChangeRecord getChangeRecord_deleteTModelHide(String entityKey, String node) {
+        public ChangeRecord getChangeRecord_deleteTModelHide(String entityKey, String node) {
                 ChangeRecord cr = new ChangeRecord();
                 cr.setEntityKey(entityKey);
                 cr.setNodeID(node);
@@ -1384,7 +1375,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
          * @param node
          * @return
          */
-        public static ChangeRecord getChangeRecord_deleteTModelDelete(String entityKey, String node) {
+        public static ChangeRecord getChangeRecord_deleteTModelDelete(String entityKey, String node, DatatypeFactory df) {
                 ChangeRecord cr = new ChangeRecord();
                 cr.setEntityKey(entityKey);
                 cr.setNodeID(node);
@@ -1455,7 +1446,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 return cr;
         }
 
-        public static ChangeRecord getChangeRecord_deleteBinding(String entityKey, String node) {
+        public ChangeRecord getChangeRecord_deleteBinding(String entityKey, String node) {
                 ChangeRecord cr = new ChangeRecord();
                 cr.setEntityKey(entityKey);
                 cr.setNodeID(node);
@@ -1477,7 +1468,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 return cr;
         }
 
-        public static ChangeRecord getChangeRecord_deletePublisherAssertion(PublisherAssertion entity, String node, boolean ToBusinessDelete, boolean FromBusinessDelete, long timestamp) {
+        public ChangeRecord getChangeRecord_deletePublisherAssertion(PublisherAssertion entity, String node, boolean ToBusinessDelete, boolean FromBusinessDelete, long timestamp) {
                 ChangeRecord cr = new ChangeRecord();
 
                 cr.setNodeID(node);
@@ -1503,7 +1494,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 return cr;
         }
 
-        public static ChangeRecord getChangeRecord_NewAssertion(PublisherAssertion apiPubAssertion, org.apache.juddi.model.PublisherAssertion modelPubAssertion, String node) {
+        public ChangeRecord getChangeRecord_NewAssertion(PublisherAssertion apiPubAssertion, org.apache.juddi.model.PublisherAssertion modelPubAssertion, String node) {
                 ChangeRecord cr = new ChangeRecord();
 
                 cr.setNodeID(node);

@@ -326,7 +326,7 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
                                         c.setChangeID(new ChangeRecordIDType());
                                         c.getChangeID().setNodeID(getNode());
                                         c.getChangeID().setOriginatingUSN(null);
-                                        ReplicationNotifier.Enqueue(MappingApiToModel.mapChangeRecord(c));
+                                        ReplicationNotifier.enqueue(MappingApiToModel.mapChangeRecord(c));
                                 } catch (UnsupportedEncodingException ex) {
                                         logger.error("", ex);
                                 }

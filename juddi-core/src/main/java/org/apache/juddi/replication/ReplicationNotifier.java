@@ -98,7 +98,7 @@ public class ReplicationNotifier extends TimerTask {
         }
 
         //ReplicationNotifier.Enqueue(this);
-        public synchronized static void Enqueue(org.apache.juddi.model.ChangeRecord change) {
+        public synchronized static void enqueue(org.apache.juddi.model.ChangeRecord change) {
                 if (queue == null) {
                         queue = new ConcurrentLinkedQueue<org.apache.juddi.model.ChangeRecord>();
                 }

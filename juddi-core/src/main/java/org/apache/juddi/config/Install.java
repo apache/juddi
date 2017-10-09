@@ -326,7 +326,7 @@ public class Install {
                 em.persist(modelBusinessEntity);
                 SaveBusiness sb = new SaveBusiness();
                 sb.getBusinessEntity().add(rootBusinessEntity);
-                ReplicationNotifier.Enqueue(UDDIPublicationImpl.getChangeRecord(modelBusinessEntity, rootBusinessEntity, modelBusinessEntity.getNodeId()));
+                ReplicationNotifier.enqueue(UDDIPublicationImpl.getChangeRecord(modelBusinessEntity, rootBusinessEntity, modelBusinessEntity.getNodeId()));
 
                 return modelBusinessEntity.getEntityKey();
 
@@ -505,7 +505,7 @@ public class Install {
 
                                         SaveTModel stm = new SaveTModel();
                                         stm.getTModel().add(apiTModel);
-                                        ReplicationNotifier.Enqueue(UDDIPublicationImpl.getChangeRecord(modelTModel, apiTModel, nodeId));
+                                        ReplicationNotifier.enqueue(UDDIPublicationImpl.getChangeRecord(modelTModel, apiTModel, nodeId));
                                 }
 
                         }

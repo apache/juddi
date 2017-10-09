@@ -41,7 +41,6 @@ import javax.persistence.Query;
 import javax.xml.bind.JAXB;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.BindingProvider;
-import static org.apache.juddi.api.impl.AuthenticatedService.getNode;
 import org.apache.juddi.api.util.QueryStatus;
 import org.apache.juddi.api.util.ReplicationQuery;
 import org.apache.juddi.config.AppConfig;
@@ -108,7 +107,7 @@ import org.uddi.v3_service.UDDIReplicationPortType;
 })
 public class UDDIReplicationImpl extends AuthenticatedService implements UDDIReplicationPortType {
 
-        static void notifyConfigurationChange(ReplicationConfiguration oldConfig, ReplicationConfiguration newConfig) {
+        static void notifyConfigurationChange(ReplicationConfiguration oldConfig, ReplicationConfiguration newConfig, AuthenticatedService service) {
 
                 //if the config is different
                 Set<String> oldnodes = getNodes(oldConfig);
@@ -119,8 +118,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                         queue = new ConcurrentLinkedQueue<NotifyChangeRecordsAvailable>();
                 }
                 for (String s : addedNodes) {
-                        if (!s.equals(getNode())) {
-                                logger.info("This node: " + getNode() + ". New replication node queue for synchronization: " + s);
+                        if (!s.equals(service.getNode())) {
+                                logger.info("This node: " + service.getNode() + ". New replication node queue for synchronization: " + s);
                                 HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
                                 highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(s, 0L));
                                 queue.add(new NotifyChangeRecordsAvailable(s, highWaterMarkVectorType));
@@ -365,18 +364,18 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                         if (rec.getChangeRecordDelete() != null && rec.getChangeRecordDelete().getBindingKey() != null && !"".equalsIgnoreCase(rec.getChangeRecordDelete().getBindingKey())) {
                                                 //delete a binding template
                                                 UddiEntity ue = em.find(BindingTemplate.class, rec.getChangeRecordDelete().getBindingKey());
-                                                ValidateNodeIdMisMatches(ue, getNode());
+                                                validateNodeIdMisMatches(ue, getNode());
                                                 pub.deleteBinding(rec.getChangeRecordDelete().getBindingKey(), em);
                                         }
                                         if (rec.getChangeRecordDelete() != null && rec.getChangeRecordDelete().getBusinessKey() != null && !"".equalsIgnoreCase(rec.getChangeRecordDelete().getBusinessKey())) {
                                                 //delete a business 
                                                 UddiEntity ue = em.find(BusinessEntity.class, rec.getChangeRecordDelete().getBindingKey());
-                                                ValidateNodeIdMisMatches(ue, getNode());
+                                                validateNodeIdMisMatches(ue, getNode());
                                                 pub.deleteBusiness(rec.getChangeRecordDelete().getBusinessKey(), em);
                                         }
                                         if (rec.getChangeRecordDelete() != null && rec.getChangeRecordDelete().getServiceKey() != null && !"".equalsIgnoreCase(rec.getChangeRecordDelete().getServiceKey())) {
                                                 UddiEntity ue = em.find(BusinessService.class, rec.getChangeRecordDelete().getBindingKey());
-                                                ValidateNodeIdMisMatches(ue, getNode());
+                                                validateNodeIdMisMatches(ue, getNode());
                                                 //delete a service 
                                                 pub.deleteService(rec.getChangeRecordDelete().getServiceKey(), em);
                                         }
@@ -394,7 +393,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                  */
                                                 UddiEntity tm = em.find(Tmodel.class, rec.getChangeRecordDelete().getTModelKey());
                                                 if (tm != null) {
-                                                        ValidateNodeIdMisMatches(tm, getNode());
+                                                        validateNodeIdMisMatches(tm, getNode());
                                                         em.remove(tm);
                                                 } else {
                                                         logger.error("failed to adminstratively delete tmodel because it doesn't exist. " + rec.getChangeRecordDelete().getTModelKey());
@@ -431,7 +430,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                         if (model == null) {
                                                                 logger.error("Replication error, attempting to insert a binding where the service doesn't exist yet");
                                                         } else {
-                                                                ValidateNodeIdMatches(rec.getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
+                                                                validateNodeIdMatches(rec.getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
 
                                                                 org.apache.juddi.model.BindingTemplate bt = em.find(org.apache.juddi.model.BindingTemplate.class, rec.getChangeRecordNewData().getBindingTemplate().getBindingKey());
                                                                 if (bt != null) {
@@ -499,7 +498,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                 org.apache.juddi.model.BusinessService model = null;
                                                                 model = em.find(org.apache.juddi.model.BusinessService.class, rec.getChangeRecordNewData().getBusinessService().getServiceKey());
                                                                 if (model != null) {
-                                                                        ValidateNodeIdMatches(rec.getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
+                                                                        validateNodeIdMatches(rec.getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
                                                                         em.remove(model);
                                                                 }
 
@@ -585,7 +584,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                 logger.error("Unexpected delete/hide tmodel message received for non existing key " + key);
                                         } else {
                                                 //no one else can delete/hide my tmodel
-                                                ValidateNodeIdMisMatches(existing, getNode());
+                                                validateNodeIdMisMatches(existing, getNode());
                                                 existing.setDeleted(true);
                                                 existing.setModified(rec.getChangeRecordHide().getModified().toGregorianCalendar().getTime());
                                                 existing.setModifiedIncludingChildren(rec.getChangeRecordHide().getModified().toGregorianCalendar().getTime());
@@ -659,7 +658,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                         posack.setChangeRecordAcknowledgement(new ChangeRecordAcknowledgement());
                                         posack.getChangeRecordAcknowledgement().setAcknowledgedChange(rec.getChangeID());
                                         posack.setAcknowledgementRequested(false);
-                                        ReplicationNotifier.Enqueue(MappingApiToModel.mapChangeRecord(posack));
+                                        ReplicationNotifier.enqueue(MappingApiToModel.mapChangeRecord(posack));
                                 }
                                 if (rec.getChangeRecordNewDataConditional() != null) {
 
@@ -684,7 +683,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                                                                 org.apache.juddi.model.BindingTemplate bt = em.find(org.apache.juddi.model.BindingTemplate.class, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBindingTemplate().getBindingKey());
                                                                 if (bt != null) {
-                                                                        ValidateNodeIdMatches(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID(), bt.getNodeId());
+                                                                        validateNodeIdMatches(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID(), bt.getNodeId());
 
                                                                         em.remove(bt);
                                                                 }
@@ -699,7 +698,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                                                         BusinessEntity model = em.find(org.apache.juddi.model.BusinessEntity.class, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBusinessEntity().getBusinessKey());
                                                         if (model != null) {
-                                                                ValidateNodeIdMatches(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
+                                                                validateNodeIdMatches(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
                                                                 //TODO revisit access control rules
                                                                 em.remove(model);
                                                         }
@@ -721,7 +720,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                 org.apache.juddi.model.BusinessService model = null;
                                                                 model = em.find(org.apache.juddi.model.BusinessService.class, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBusinessService().getServiceKey());
                                                                 if (model != null) {
-                                                                        ValidateNodeIdMatches(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
+                                                                        validateNodeIdMatches(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
                                                                         em.remove(model);
                                                                 }
 
@@ -737,7 +736,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                                                         Tmodel model = em.find(org.apache.juddi.model.Tmodel.class, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getTModel().getTModelKey());
                                                         if (model != null) {
-                                                                ValidateNodeIdMatches(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
+                                                                validateNodeIdMatches(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
                                                                 em.remove(model);
                                                         }
                                                         model = new Tmodel();
@@ -892,7 +891,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
          * @param node
          * @throws Exception
          */
-        private static void ValidateNodeIdMisMatches(UddiEntity ue, String node) throws Exception {
+        private static void validateNodeIdMisMatches(UddiEntity ue, String node) throws Exception {
                 if (ue == null) {
                         return;//object doesn't exist
                 }
@@ -909,7 +908,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
          * @param currentOwningNode
          * @throws Exception
          */
-        private static void ValidateNodeIdMatches(String newNodeId, String currentOwningNode) throws Exception {
+        private  void validateNodeIdMatches(String newNodeId, String currentOwningNode) throws Exception {
                 if (newNodeId == null || currentOwningNode == null) {
                         throw new Exception("either the local node ID is null or the inbound replication data's node id is null");
                 }
@@ -1308,7 +1307,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                         c.setChangeID(new ChangeRecordIDType());
                                         c.getChangeID().setNodeID(getNode());
                                         c.getChangeID().setOriginatingUSN(null);
-                                        ReplicationNotifier.Enqueue(MappingApiToModel.mapChangeRecord(c));
+                                        ReplicationNotifier.enqueue(MappingApiToModel.mapChangeRecord(c));
                                 } catch (UnsupportedEncodingException ex) {
                                         logger.error("", ex);
                                 }
