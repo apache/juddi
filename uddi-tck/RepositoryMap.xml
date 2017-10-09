@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!--
+ * Copyright 2001-2009 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */ -->
+<root>
+    <windows>
+        <driver id="internetexplorer">
+            <version id="3.4.0">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>http://selenium-release.storage.googleapis.com/3.4/IEDriverServer_x64_3.4.0.zip</filelocation>
+                    <hash>3e79d5cf2acdd91d0ddab9f2044ce51057ff77fe</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+                <bitrate thirtytwobit="true">
+                    <filelocation>http://selenium-release.storage.googleapis.com/3.4/IEDriverServer_Win32_3.4.0.zip</filelocation>
+                    <hash>8657fb63344f6e26198b860bc089a7a651e43441</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+        <driver id="edge">
+            <version id="4.15063">
+                <bitrate sixtyfourbit="true" thirtytwobit="true">
+                    <filelocation>https://download.microsoft.com/download/3/4/2/342316D7-EBE0-4F10-ABA2-AE8E0CDF36DD/MicrosoftWebDriver.exe</filelocation>
+                    <hash>31e80ae4fd88ed3097a1c4d3fe763539ee88e560</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+        <driver id="googlechrome">
+            <version id="2.29">
+                <bitrate thirtytwobit="true" sixtyfourbit="true">
+                    <filelocation>https://chromedriver.storage.googleapis.com/2.29/chromedriver_win32.zip</filelocation>
+                    <hash>2f02f28d3ff1b8f2a63cb3bc32c26ade60ac4737</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+        <driver id="operachromium">
+            <version id="0.2.2">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_win64.zip</filelocation>
+                    <hash>8b84d334ca6dc5e30c168d8df080c1827e4c6fdb</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+                <bitrate thirtytwobit="true">
+                    <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_win32.zip</filelocation>
+                    <hash>daa9ba52eeca5ea3cb8a9020b85642ec047e9890</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+        <driver id="phantomjs">
+            <version id="2.1.1">
+                <bitrate thirtytwobit="true" sixtyfourbit="true">
+                    <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-windows.zip</filelocation>
+                    <hash>eb61e6dc49832a3d60f708a92fa7299c57cad7db</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+            <version id="1.9.8">
+                <bitrate thirtytwobit="true" sixtyfourbit="true">
+                    <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-windows.zip</filelocation>
+                    <hash>4531bd64df101a689ac7ac7f3e11bb7e77af8eff</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+        <driver id="marionette">
+            <version id="0.16.1">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.16.1/geckodriver-v0.16.1-win64.zip</filelocation>
+                    <hash>f49aa6de084ce82b546868992b646e57e3bf3de8</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+                <bitrate thirtytwobit="true">
+                    <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.16.1/geckodriver-v0.16.1-win32.zip</filelocation>
+                    <hash>37b75297a9c316226bf3814d9908b044e21b43a3</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+    </windows>
+    <linux>
+        <driver id="googlechrome">
+            <version id="2.29">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>https://chromedriver.storage.googleapis.com/2.29/chromedriver_linux64.zip</filelocation>
+                    <hash>025a098cde0a6ad8aef53d6734979c9845bf49b5</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+                <bitrate thirtytwobit="true">
+                    <filelocation>https://chromedriver.storage.googleapis.com/2.29/chromedriver_linux32.zip</filelocation>
+                    <hash>36d4082a6fb3b3cbb31b013a08b1900baf13743d</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+        <driver id="operachromium">
+            <version id="0.2.2">
+                <bitrate thirtytwobit="true">
+                    <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_linux32.zip</filelocation>
+                    <hash>8b0b92a870a1b4ba619eb0b85ec587caa2942e5b</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+                <bitrate sixtyfourbit="true">
+                    <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_linux64.zip</filelocation>
+                    <hash>c207c6916e20ecbbc7157e3bdeb4737f14f15fe3</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+        <driver id="phantomjs">
+            <version id="2.1.1">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2</filelocation>
+                    <hash>f8afc8a24eec34c2badccc93812879a3d6f2caf3</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+                <bitrate thirtytwobit="true">
+                    <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-i686.tar.bz2</filelocation>
+                    <hash>9870663f5c2826501508972b8a201d9210d27b59</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+            <version id="1.9.8">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2</filelocation>
+                    <hash>d29487b2701bcbe3c0a52bc176247ceda4d09d2d</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+                <bitrate thirtytwobit="true">
+                    <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-i686.tar.bz2</filelocation>
+                    <hash>efac5ae5b84a4b2b3fa845e8390fca39e6e637f2</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+        <driver id="marionette">
+            <version id="0.16.1">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.16.1/geckodriver-v0.16.1-linux64.tar.gz</filelocation>
+                    <hash>95276285b65987b6e94e57be55fdc60b95423016</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+                <bitrate arm="true">
+                    <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.16.1/geckodriver-v0.16.1-arm7hf.tar.gz</filelocation>
+                    <hash>6f013de184c8f3dba3ec39ea49de2a166cb18efb</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+    </linux>
+    <osx>
+        <driver id="googlechrome">
+            <version id="2.29">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>https://chromedriver.storage.googleapis.com/2.29/chromedriver_mac64.zip</filelocation>
+                    <hash>cec18df4ef736d6712593faf91b462352217214a</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+        <driver id="operachromium">
+            <version id="0.2.2">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_mac64.zip</filelocation>
+                    <hash>d58a3b676dda7ede5c38e5df218e7c619495c4ed</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+        <driver id="phantomjs">
+            <version id="2.1.1">
+                <bitrate thirtytwobit="true" sixtyfourbit="true">
+                    <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-macosx.zip</filelocation>
+                    <hash>c6e1a16bb9e89ce1e392a4768e99177797c93350</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+            <version id="1.9.8">
+                <bitrate thirtytwobit="true" sixtyfourbit="true">
+                    <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-macosx.zip</filelocation>
+                    <hash>d70bbefd857f21104c5961b9dd081781cb4d999a</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+        <driver id="marionette">
+            <version id="0.15.0">
+                <bitrate thirtytwobit="true" sixtyfourbit="true">
+                    <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.16.1/geckodriver-v0.16.1-macos.tar.gz</filelocation>
+                    <hash>f687a69521b22640080ea87920b358c7498bdf31</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+    </osx>
+</root>

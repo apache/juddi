@@ -104,10 +104,56 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-email</artifactId>
 		</dependency>
+                <dependency>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-firefox-driver</artifactId>
+                    <version>3.4.0</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-java</artifactId>
+                    <version>3.4.0</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-chrome-driver</artifactId>
+                    <version>3.4.0</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </dependency>
+        
 					
 	</dependencies>
 	<build>
 		<plugins>
+                         <plugin>
+                            <groupId>com.lazerycode.selenium</groupId>
+                            <artifactId>driver-binary-downloader-maven-plugin</artifactId>
+                            <version>1.0.14</version>
+                            <configuration>
+                                <!-- root directory that downloaded driver binaries will be stored in -->
+                                <rootStandaloneServerDirectory>drivers</rootStandaloneServerDirectory>
+                                <!-- Where you want to store downloaded zip files -->
+                                <downloadedZipFileDirectory>drivers/zip</downloadedZipFileDirectory>
+                                <!-- last synched 2017-10-08 -->
+                                <!-- https://raw.githubusercontent.com/Ardesco/selenium-standalone-server-plugin/master/src/main/resources/RepositoryMap.xml -->
+                                <customRepositoryMap>RepositoryMap.xml</customRepositoryMap>
+                      
+                                <onlyGetDriversForHostOperatingSystem>true</onlyGetDriversForHostOperatingSystem>
+              
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>selenium</goal>
+                                    </goals>
+                                    <phase>process-resources</phase>
+                                </execution>
+                            </executions>
+                        </plugin>
 			<plugin>
 			    <artifactId>maven-clean-plugin</artifactId>
 			    <configuration>

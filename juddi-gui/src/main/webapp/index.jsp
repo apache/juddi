@@ -99,7 +99,7 @@
                     </select>
                     <br>
                     <input type="checkbox" name="setcookie" checked> Remember my decision<br>
-                    <button type="submit" value="Go" class="btn btn-primary">Go</button>
+                    <button type="submit" value="Go" class="btn btn-primary" id="login_page_go">Go</button>
                 </form>
                 <b>We welcome help internationalizing jUDDI!</b>
                 <noscript>Your browser does not support JavaScript! Functionality will be so severely reduced, that you might as well give up, sorry!</noscript>

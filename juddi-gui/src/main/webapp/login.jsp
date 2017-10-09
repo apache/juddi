@@ -35,7 +35,7 @@
     <script type="text/javascript">
         loggedin = true;
     </script>
-    <a class="btn" title="<%=ResourceLoader.GetResource(session, "navbar.login.logout")%>" href="javascript:logout();">
+    <a class="btn" title="<%=ResourceLoader.GetResource(session, "navbar.login.logout")%>" href="javascript:logout();" id="logout_button">
         <%
                 if (!request.isSecure() ||  !UddiHub.getInstance(application, session).isSecure()) {
             %>

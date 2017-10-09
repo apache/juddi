@@ -38,7 +38,19 @@ It currently does not use the ValueSet, jUDDI, Replication, or REST APIs
                 <securityUrl>http://localhost:8080/juddiv3/services/security</securityUrl>
                 <subscriptionUrl>http://localhost:8080/juddiv3/services/subscription</subscriptionUrl>
             </node>
-			<node>
+            <node>
+                <!-- required 'default' node -->
+                <name>integrationTest</name> 
+                <description>UDDIv3 CI (localhost)</description>
+                <!-- JAX-WS Transport -->
+                <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
+                <custodyTransferUrl>http://localhost:8880/juddiv3/services/custody-transfer</custodyTransferUrl>
+                <inquiryUrl>http://localhost:8880/juddiv3/services/inquiry</inquiryUrl>
+                <publishUrl>http://localhost:8880/juddiv3/services/publish</publishUrl>
+                <securityUrl>http://localhost:8880/juddiv3/services/security</securityUrl>
+                <subscriptionUrl>http://localhost:8880/juddiv3/services/subscription</subscriptionUrl>
+            </node>
+            <node>
                 <!-- for jUDDI v0.9 to 2.0.1 -->
                 <name>juddiv2</name> 
                 <description>UDDIv2 Node (localhost)</description>
