@@ -54,12 +54,10 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class WsdlImport {
 
-        static PrintUDDI<TModel> pTModel = new PrintUDDI<TModel>();
-        static Properties properties = new Properties();
-        static String wsdlURL = null;
-        private static UDDISecurityPortType security = null;
-        private static JUDDIApiPortType juddiApi = null;
-        private static UDDIPublicationPortType publish = null;
+        private Properties properties = new Properties();
+        private String wsdlURL = null;
+        private UDDISecurityPortType security = null;
+        private UDDIPublicationPortType publish = null;
 
         public static void main(String[] args) throws Exception {
                 new WsdlImport().fire("http://svn.apache.org/repos/asf/juddi/trunk/uddi-ws/src/main/resources/juddi_api_v1.wsdl", null, null, null);

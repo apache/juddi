@@ -33,10 +33,10 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiDigitalSignatureBusiness {
 
-        private static UDDISecurityPortType security = null;
-        private static UDDIInquiryPortType inquiry = null;
-        private static UDDIPublicationPortType publish = null;
-        private static UDDIClient clerkManager = null;
+        private UDDISecurityPortType security = null;
+        private UDDIInquiryPortType inquiry = null;
+        private UDDIPublicationPortType publish = null;
+        private UDDIClient clerkManager = null;
 
         /**
          * This sets up the ws proxies using uddi.xml in META-INF

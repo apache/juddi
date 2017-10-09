@@ -38,12 +38,12 @@ import org.uddi.v3_service.UDDIReplicationPortType;
  */
 class UddiReplication {
 
-
         private UDDIReplicationPortType uddiReplicationPort = null;
+
         public UddiReplication(UDDIClient client, String nodename) throws ConfigurationException {
-            
-            uddiReplicationPort = new UDDIService().getUDDIReplicationPort();
-            ((BindingProvider) uddiReplicationPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, client.getClientConfig().getUDDINode(nodename).getReplicationUrl());
+
+                uddiReplicationPort = new UDDIService().getUDDIReplicationPort();
+                ((BindingProvider) uddiReplicationPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, client.getClientConfig().getUDDINode(nodename).getReplicationUrl());
         }
 
         protected String doPing() {
@@ -59,7 +59,7 @@ class UddiReplication {
 
         protected void getHighWatermarks() {
                 try {
-                           List<ChangeRecordIDType> highWaterMarks = uddiReplicationPort.getHighWaterMarks();
+                        List<ChangeRecordIDType> highWaterMarks = uddiReplicationPort.getHighWaterMarks();
                         System.out.println("Success....");
                         System.out.println("Node, USN");
                         for (int i = 0; i < highWaterMarks.size(); i++) {

@@ -22,7 +22,6 @@ import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.api_v3.*;
 import org.uddi.v3_service.UDDIInquiryPortType;
-import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
@@ -32,8 +31,8 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiDigitalSignatureSearch {
 
-        private static UDDISecurityPortType security = null;
-        private static UDDIInquiryPortType inquiry = null;
+        private UDDISecurityPortType security = null;
+        private UDDIInquiryPortType inquiry = null;
 
         /**
          * This sets up the ws proxies using uddi.xml in META-INF

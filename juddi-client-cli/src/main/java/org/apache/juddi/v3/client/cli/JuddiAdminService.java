@@ -63,20 +63,13 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class JuddiAdminService {
 
-        //  private static UDDISecurityPortType security = null;
-        //  private static UDDIPublicationPortType publish = null;
-        static JUDDIApiPortType juddi = null;
-        // static UDDIClerk clerk = null;
-        static UDDIClient clerkManager = null;
+        private JUDDIApiPortType juddi = null;
+        private UDDIClient clerkManager = null;
 
         public JuddiAdminService(UDDIClient client, Transport transport) {
                 try {
                         clerkManager = client;
                         if (transport != null) // create a manager and read the config in the archive; 
-                        // you can use your config file name
-                        // clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
-                        //clerk = clerkManager.getClerk("default");
-                        // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
                         {
                                 transport = clerkManager.getTransport();
                                 juddi = transport.getJUDDIApiService();
@@ -130,7 +123,8 @@ public class JuddiAdminService {
 
         /**
          * registers juddi's cloud node at another node
-         * @param token 
+         *
+         * @param token
          */
         public void quickRegisterRemoteCloud(String token) {
                 try {
@@ -303,7 +297,7 @@ public class JuddiAdminService {
                 }
                 if (input.equalsIgnoreCase("d")) {
                         //save the changes
-                        DispositionReport setReplicationNodes = juddiApiService.setReplicationNodes(authtoken, replicationNodes);
+                        juddiApiService.setReplicationNodes(authtoken, replicationNodes);
                         System.out.println("Saved!, dumping config from the server");
                         replicationNodes = juddiApiService.getReplicationNodes(authtoken);
                         JAXB.marshal(replicationNodes, System.out);
@@ -483,9 +477,6 @@ public class JuddiAdminService {
 
         void autoMagic123() throws Exception {
 
-                //1 > 2 >3 >1
-                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
-
                 Transport transport = clerkManager.getTransport("default");
                 String authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
 
@@ -563,9 +554,6 @@ public class JuddiAdminService {
         }
 
         void autoMagicDirected() throws Exception {
-
-                //1 > 2 >3 >1
-                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
 
                 Transport transport = clerkManager.getTransport("default");
                 String authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
@@ -646,29 +634,34 @@ public class JuddiAdminService {
 
                 juddiApiService.setReplicationNodes(authtoken, replicationNodes);
                 System.out.println("Saved to node1");
-                TestEquals(replicationNodes, juddiApiService.getReplicationNodes(authtoken));
+                testEquals(replicationNodes, juddiApiService.getReplicationNodes(authtoken));
 
                 transport = clerkManager.getTransport("uddi:another.juddi.apache.org:node2");
                 authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
                 juddiApiService = transport.getJUDDIApiService();
                 juddiApiService.setReplicationNodes(authtoken, replicationNodes);
                 System.out.println("Saved to node2");
-                TestEquals(replicationNodes, juddiApiService.getReplicationNodes(authtoken));
+                testEquals(replicationNodes, juddiApiService.getReplicationNodes(authtoken));
 
                 transport = clerkManager.getTransport("uddi:yet.another.juddi.apache.org:node3");
                 authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
                 juddiApiService = transport.getJUDDIApiService();
                 juddiApiService.setReplicationNodes(authtoken, replicationNodes);
                 System.out.println("Saved to node3");
-                TestEquals(replicationNodes, juddiApiService.getReplicationNodes(authtoken));
+                testEquals(replicationNodes, juddiApiService.getReplicationNodes(authtoken));
 
         }
 
+        /**
+         * sets up replication between "default" and
+         * "uddi:another.juddi.apache.org:node2" from the config file
+         *
+         * @throws Exception
+         */
         void autoMagic() throws Exception {
 
-                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
-
                 Transport transport = clerkManager.getTransport("default");
+                //FIXME get username/password for default node
                 String authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
 
                 JUDDIApiPortType juddiApiService = transport.getJUDDIApiService();
@@ -684,7 +677,7 @@ public class JuddiAdminService {
 
                 }
                 //if (replicationNodes.getCommunicationGraph() == null) {
-                        replicationNodes.setCommunicationGraph(new CommunicationGraph());
+                replicationNodes.setCommunicationGraph(new CommunicationGraph());
                 //}
                 Operator op = new Operator();
                 op.setOperatorNodeID("uddi:juddi.apache.org:node1");
@@ -719,6 +712,7 @@ public class JuddiAdminService {
                 JAXB.marshal(replicationNodes, System.out);
                 juddiApiService.setReplicationNodes(authtoken, replicationNodes);
 
+                //FIXME get username/password for uddi:another.juddi.apache.org:node2 node
                 transport = clerkManager.getTransport("uddi:another.juddi.apache.org:node2");
                 authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
 
@@ -727,11 +721,15 @@ public class JuddiAdminService {
 
         }
 
+        /**
+         * sets up replication between default, node2 and node3
+         *
+         * @throws Exception
+         */
         void autoMagic3() throws Exception {
 
-                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
-
                 Transport transport = clerkManager.getTransport("default");
+                //FIXME get username/password for uddi:another.juddi.apache.org:node2 node
                 String authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
 
                 JUDDIApiPortType juddiApiService = transport.getJUDDIApiService();
@@ -793,12 +791,14 @@ public class JuddiAdminService {
                 JAXB.marshal(replicationNodes, System.out);
                 juddiApiService.setReplicationNodes(authtoken, replicationNodes);
 
+                //FIXME get username/password for uddi:another.juddi.apache.org:node2 node
                 transport = clerkManager.getTransport("uddi:another.juddi.apache.org:node2");
                 authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
 
                 juddiApiService = transport.getJUDDIApiService();
                 juddiApiService.setReplicationNodes(authtoken, replicationNodes);
 
+                //FIXME get username/password for uddi:another.juddi.apache.org:node2 node
                 transport = clerkManager.getTransport("uddi:yet.another.juddi.apache.org:node3");
                 authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
 
@@ -809,9 +809,10 @@ public class JuddiAdminService {
 
         /**
          * gets replication high water mark values
+         *
          * @param transport
          * @param authtoken
-         * @throws Exception 
+         * @throws Exception
          */
         void printStatus(Transport transport, String authtoken) throws Exception {
 
@@ -872,7 +873,7 @@ public class JuddiAdminService {
 
         }
 
-        private void TestEquals(ReplicationConfiguration setter, ReplicationConfiguration getter) {
+        private void testEquals(ReplicationConfiguration setter, ReplicationConfiguration getter) {
                 if (getter == null) {
                         l("null getter");
                         return;
@@ -926,8 +927,17 @@ public class JuddiAdminService {
                         = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 
                 KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-                ks.load(new FileInputStream(System.getProperty("javax.net.ssl.keyStore")), System.getProperty("javax.net.ssl.keyStorePassword").toCharArray());
-
+                FileInputStream fis = null;
+                try {
+                        fis = new FileInputStream(System.getProperty("javax.net.ssl.keyStore"));
+                        ks.load(fis, System.getProperty("javax.net.ssl.keyStorePassword").toCharArray());
+                } catch (Exception ex) {
+                        ex.printStackTrace();
+                } finally {
+                        if (fis != null) {
+                                fis.close();
+                        }
+                }
                 kmf.init(ks, System.getProperty("javax.net.ssl.keyStorePassword").toCharArray());
 
                 sc.init(kmf.getKeyManagers(), null, null);
@@ -949,8 +959,6 @@ public class JuddiAdminService {
         }
 
         void autoMagicDirectedSSL() throws Exception {
-                //1 > 2 >3 >1
-                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
 
                 Transport transport = clerkManager.getTransport("default");
                 String authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
@@ -1031,21 +1039,21 @@ public class JuddiAdminService {
 
                 juddiApiService.setReplicationNodes(authtoken, replicationNodes);
                 System.out.println("Saved to node1");
-                TestEquals(replicationNodes, juddiApiService.getReplicationNodes(authtoken));
+                testEquals(replicationNodes, juddiApiService.getReplicationNodes(authtoken));
 
                 transport = clerkManager.getTransport("uddi:another.juddi.apache.org:node2");
                 authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
                 juddiApiService = transport.getJUDDIApiService();
                 juddiApiService.setReplicationNodes(authtoken, replicationNodes);
                 System.out.println("Saved to node2");
-                TestEquals(replicationNodes, juddiApiService.getReplicationNodes(authtoken));
+                testEquals(replicationNodes, juddiApiService.getReplicationNodes(authtoken));
 
                 transport = clerkManager.getTransport("uddi:yet.another.juddi.apache.org:node3");
                 authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
                 juddiApiService = transport.getJUDDIApiService();
                 juddiApiService.setReplicationNodes(authtoken, replicationNodes);
                 System.out.println("Saved to node3");
-                TestEquals(replicationNodes, juddiApiService.getReplicationNodes(authtoken));
+                testEquals(replicationNodes, juddiApiService.getReplicationNodes(authtoken));
         }
 
         void pingAll() throws Exception {

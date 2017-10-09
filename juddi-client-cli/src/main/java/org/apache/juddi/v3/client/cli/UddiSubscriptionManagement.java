@@ -30,7 +30,7 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  */
 public class UddiSubscriptionManagement {
 
-        private static UDDISubscriptionPortType uddiSubscriptionService = null;
+        private UDDISubscriptionPortType uddiSubscriptionService = null;
 
         private UDDIClerk clerk = null;
         private UDDIClient client = null;

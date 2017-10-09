@@ -37,9 +37,8 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiRelatedBusinesses {
 
-        private static UDDISecurityPortType security = null;
-        private static JUDDIApiPortType juddiApi = null;
-        private static UDDIPublicationPortType publish = null;
+        private UDDISecurityPortType security = null;
+        private UDDIPublicationPortType publish = null;
 
         public UddiRelatedBusinesses() {
                 try {
@@ -49,7 +48,6 @@ public class UddiRelatedBusinesses {
                         Transport transport = clerkManager.getTransport();
                         // Now you create a reference to the UDDI API
                         security = transport.getUDDISecurityService();
-                        juddiApi = transport.getJUDDIApiService();
                         publish = transport.getUDDIPublishService();
                 } catch (Exception e) {
                         e.printStackTrace();
@@ -59,12 +57,9 @@ public class UddiRelatedBusinesses {
         public void fire(String businessKey, String authInfo, String businessKey1, String authInfo1, String relationship) throws Exception {
                 try {
 
-                        DatatypeFactory df = DatatypeFactory.newInstance();
                         GregorianCalendar gcal = new GregorianCalendar();
                         gcal.setTimeInMillis(System.currentTimeMillis());
-                        XMLGregorianCalendar xcal = df.newXMLGregorianCalendar(gcal);
-
-                                //ROOT creates half of the relationship
+                        //ROOT creates half of the relationship
                         //create a business relationship (publisher assertion)
                         Holder<List<PublisherAssertion>> x = new Holder<List<PublisherAssertion>>();
                         PublisherAssertion pa = new PublisherAssertion();
@@ -116,7 +111,7 @@ public class UddiRelatedBusinesses {
                 getAuthTokenRoot.setCred("root");
 
                 // Making API call that retrieves the authentication token for the 'root' user.
-                AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
+                AuthToken rootAuthToken = sp.security.getAuthToken(getAuthTokenRoot);
                 System.out.println("root AUTHTOKEN = " + "don't log auth tokens!");
                 BusinessEntity rootbiz = sp.createBusiness("root");
 
@@ -125,7 +120,7 @@ public class UddiRelatedBusinesses {
                 getAuthTokenRoot.setCred("uddi");
 
                 // Making API call that retrieves the authentication token for the 'root' user.
-                AuthToken uddiAuthToken = security.getAuthToken(getAuthTokenRoot);
+                AuthToken uddiAuthToken = sp.security.getAuthToken(getAuthTokenRoot);
                 System.out.println("uddi AUTHTOKEN = " + "don't log auth tokens!");
                 BusinessEntity uddibiz = sp.createBusiness("uddi");
 
@@ -133,12 +128,12 @@ public class UddiRelatedBusinesses {
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(uddiAuthToken.getAuthInfo());
                 sb.getBusinessEntity().add(uddibiz);
-                BusinessDetail uddibize = publish.saveBusiness(sb);
+                BusinessDetail uddibize = sp.publish.saveBusiness(sb);
 
                 sb = new SaveBusiness();
                 sb.setAuthInfo(rootAuthToken.getAuthInfo());
                 sb.getBusinessEntity().add(rootbiz);
-                BusinessDetail rootbize = publish.saveBusiness(sb);
+                BusinessDetail rootbize = sp.publish.saveBusiness(sb);
 
                 sp.fire(rootbize.getBusinessEntity().get(0).getBusinessKey(), rootAuthToken.getAuthInfo(),
                         uddibize.getBusinessEntity().get(0).getBusinessKey(), uddiAuthToken.getAuthInfo(),

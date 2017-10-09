@@ -31,8 +31,8 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiKeyGenerator {
 
-        private static UDDISecurityPortType security = null;
-        private static UDDIPublicationPortType publish = null;
+        private UDDISecurityPortType security = null;
+        private UDDIPublicationPortType publish = null;
 
         public UddiKeyGenerator() {
                 try {
