@@ -525,6 +525,23 @@ under the License.
 					</reportSet>
 				</reportSets>
 			</plugin>
+			 <plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.5</version>
+			  </plugin>
+			<plugin>
+                <groupId>com.github.spyhunter99</groupId>
+                <artifactId>findbugs-report-plugin</artifactId>
+                <version>1.0.0</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>findbugs-aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
 		</plugins>
 	</reporting>
 	<modules>

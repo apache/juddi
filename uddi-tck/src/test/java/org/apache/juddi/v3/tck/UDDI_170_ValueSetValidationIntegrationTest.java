@@ -156,24 +156,24 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 BusinessEntity SaveBusiness = null;
                 BusinessEntity SaveVSVCallbackService = null;
                 try {
-                        Reset();
+                        reset();
                         VALID = true;
-                        SaveVSVCallbackService = SaveVSVCallbackService(authInfoJoe, publicationJoe);
-                        SaveCheckedTModel(TckTModel.JOE_PUBLISHER_KEY_PREFIX + TMODEL, SaveVSVCallbackService.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getBindingKey());
+                        SaveVSVCallbackService = saveVSVCallbackService(authInfoJoe, publicationJoe);
+                        saveCheckedTModel(TckTModel.JOE_PUBLISHER_KEY_PREFIX + TMODEL, SaveVSVCallbackService.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getBindingKey());
                         logger.info("Saving a business using those values");
-                        SaveBusiness = SaveBusiness(authInfoJoe, true, TckTModel.JOE_PUBLISHER_KEY_PREFIX + TMODEL);
+                        SaveBusiness = saveBusiness(authInfoJoe, true, TckTModel.JOE_PUBLISHER_KEY_PREFIX + TMODEL);
 
-                        DeleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_KEY_PREFIX + TMODEL, publicationJoe);
+                        deleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_KEY_PREFIX + TMODEL, publicationJoe);
 
                 } catch (Exception ex) {
                         logger.error(ex);
                         Assert.fail("unexpected failure " + ex.getMessage());
                 } finally {
                         if (SaveBusiness != null) {
-                                DeleteBusiness(authInfoJoe, SaveBusiness.getBusinessKey(), publicationJoe);
+                                deleteBusiness(authInfoJoe, SaveBusiness.getBusinessKey(), publicationJoe);
                         }
                         if (SaveVSVCallbackService != null) {
-                                DeleteBusiness(authInfoJoe, SaveVSVCallbackService.getBusinessKey(), publicationJoe);
+                                deleteBusiness(authInfoJoe, SaveVSVCallbackService.getBusinessKey(), publicationJoe);
                         }
 
                 }
@@ -188,29 +188,29 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 BusinessEntity SaveBusiness = null;
                 BusinessEntity SaveVSVCallbackService = null;
                 try {
-                        Reset();
+                        reset();
                         VALID = false;
-                        SaveVSVCallbackService = SaveVSVCallbackService(authInfoJoe, publicationJoe);
-                        SaveCheckedTModel(TckTModel.JOE_PUBLISHER_KEY_PREFIX + TMODEL, SaveVSVCallbackService.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getBindingKey());
+                        SaveVSVCallbackService = saveVSVCallbackService(authInfoJoe, publicationJoe);
+                        saveCheckedTModel(TckTModel.JOE_PUBLISHER_KEY_PREFIX + TMODEL, SaveVSVCallbackService.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getBindingKey());
                         logger.info("Saving a business using those values");
-                        SaveBusiness = SaveBusiness(authInfoJoe, false, TckTModel.JOE_PUBLISHER_KEY_PREFIX + TMODEL);
+                        SaveBusiness = saveBusiness(authInfoJoe, false, TckTModel.JOE_PUBLISHER_KEY_PREFIX + TMODEL);
                         Assert.assertTrue(messagesReceived == 1);
                         Assert.fail("unexpected success");
                 } catch (Exception ex) {
                         logger.info("Expected failure " + ex.getMessage());
                 } finally {
                         if (SaveBusiness != null) {
-                                DeleteBusiness(authInfoJoe, SaveBusiness.getBusinessKey(), publicationJoe);
+                                deleteBusiness(authInfoJoe, SaveBusiness.getBusinessKey(), publicationJoe);
                         }
                         if (SaveVSVCallbackService != null) {
-                                DeleteBusiness(authInfoJoe, SaveVSVCallbackService.getBusinessKey(), publicationJoe);
+                                deleteBusiness(authInfoJoe, SaveVSVCallbackService.getBusinessKey(), publicationJoe);
                         }
-                        DeleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_KEY_PREFIX + TMODEL, publicationJoe);
+                        deleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_KEY_PREFIX + TMODEL, publicationJoe);
 
                 }
         }
 
-        private BusinessEntity SaveBusiness(String authInfoJoe, boolean isValid, String key) throws Exception {
+        private BusinessEntity saveBusiness(String authInfoJoe, boolean isValid, String key) throws Exception {
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -226,7 +226,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 return saveBusiness.getBusinessEntity().get(0);
         }
 
-        private void SaveCheckedTModel(String key, String binding) throws Exception {
+        private void saveCheckedTModel(String key, String binding) throws Exception {
                 TModel tm = new TModel();
                 tm.setTModelKey(key);
                 tm.setCategoryBag(new CategoryBag());
@@ -265,7 +265,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 throw new DispositionReportFaultMessage("error", dispositionReport);
         }
 
-        private BusinessEntity SaveVSVCallbackService(String auth, UDDIPublicationPortType port) throws Exception {
+        private BusinessEntity saveVSVCallbackService(String auth, UDDIPublicationPortType port) throws Exception {
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(auth);
                 BusinessEntity be = new BusinessEntity();
@@ -283,14 +283,14 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 return port.saveBusiness(sb).getBusinessEntity().get(0);
         }
 
-        private void DeleteTModel(String auth, String key, UDDIPublicationPortType port) throws Exception {
+        private void deleteTModel(String auth, String key, UDDIPublicationPortType port) throws Exception {
                 DeleteTModel db = new DeleteTModel();
                 db.setAuthInfo(auth);
                 db.getTModelKey().add(key);
                 port.deleteTModel(db);
         }
 
-        private void DeleteBusiness(String auth, String key, UDDIPublicationPortType port) throws Exception {
+        private void deleteBusiness(String auth, String key, UDDIPublicationPortType port) throws Exception {
                 DeleteBusiness db = new DeleteBusiness();
                 db.setAuthInfo(auth);
                 db.getBusinessKey().add(key);
@@ -300,7 +300,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         String url = null;
         int messagesReceived = 0;
 
-        private void Reset() throws Exception {
+        private void reset() throws Exception {
                 messagesReceived = 0;
                 if (ep == null || !ep.isPublished()) {
                         int httpPort = 9600 + new Random().nextInt(99);
@@ -343,7 +343,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         //TODO maybe? ·         E_unsupported: Signifies that the Web service does not support this API.
         //this may be untestable unless the endpoint exists but isn't implemented
 
-        public void DerviedFromValid() throws Exception {
+        public void derviedFromValid() throws Exception {
 
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
@@ -358,11 +358,11 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 stm.setAuthInfo(authInfoJoe);
                 stm.getTModel().add(tm);
                 TModelDetail saveTModel = publicationJoe.saveTModel(stm);
-                DeleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
+                deleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
         }
 
         @Test
-        public void DerviedFromInValid() throws Exception {
+        public void derviedFromInValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                   System.out.println("DerviedFromInValid");
@@ -377,7 +377,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                         stm.setAuthInfo(authInfoJoe);
                         stm.getTModel().add(tm);
                         TModelDetail saveTModel = publicationJoe.saveTModel(stm);
-                        DeleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
+                        deleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
                         Assert.fail("unexpected success");
                 } catch (Exception ex) {
                         logger.info("Expected failure " + ex.getMessage());
@@ -388,7 +388,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         }
 
         @Test
-        public void EntitKeyValuesValid() throws Exception {
+        public void entitKeyValuesValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("EntitKeyValuesValid");
@@ -402,12 +402,12 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 stm.setAuthInfo(authInfoJoe);
                 stm.getTModel().add(tm);
                 TModelDetail saveTModel = publicationJoe.saveTModel(stm);
-                DeleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
+                deleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
 
         }
 
         @Test
-        public void EntitKeyValuesInValid() throws Exception {
+        public void entitKeyValuesInValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("EntitKeyValuesInValid");
@@ -422,7 +422,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                         stm.setAuthInfo(authInfoJoe);
                         stm.getTModel().add(tm);
                         TModelDetail saveTModel = publicationJoe.saveTModel(stm);
-                        DeleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
+                        deleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
                         Assert.fail("unexpected success");
                 } catch (Exception ex) {
                         logger.info("Expected failure " + ex.getMessage());
@@ -434,7 +434,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
 
         @Test
         @Ignore
-        public void UDDINodeValid() throws Exception {
+        public void uddiNodeValid() throws Exception {
                 //This test should be ignored, only one business per node is allowed to be the node
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
@@ -447,11 +447,11 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 sb.setAuthInfo(authInfoJoe);
                 sb.getBusinessEntity().add(be);
                 BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
-                DeleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
+                deleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
         }
 
         @Test
-        public void UDDINodeInValid1() throws Exception {
+        public void uddiNodeInValid1() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("UDDINodeInValid1");
@@ -464,7 +464,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                         sb.setAuthInfo(authInfoJoe);
                         sb.getBusinessEntity().add(be);
                         BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
-                        DeleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
+                        deleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
                         Assert.fail("unexpected success");
                 } catch (Exception ex) {
                         logger.info("Expected failure " + ex.getMessage());
@@ -475,7 +475,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         }
 
         @Test
-        public void UDDINodeInValid2() throws Exception {
+        public void uddiNodeInValid2() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("UDDINodeInValid2");
@@ -493,7 +493,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                         sb.setAuthInfo(authInfoJoe);
                         sb.getBusinessEntity().add(be);
                         BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
-                        DeleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
+                        deleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
                         Assert.fail("unexpected success");
                 } catch (Exception ex) {
                         logger.info("Expected failure " + ex.getMessage());
@@ -504,7 +504,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         }
 
         @Test
-        public void OwningBusinessValid() throws Exception {
+        public void owningBusinessValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("OwningBusinessValid");
@@ -518,11 +518,11 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 stm.setAuthInfo(authInfoJoe);
                 stm.getTModel().add(tm);
                 TModelDetail saveTModel = publicationJoe.saveTModel(stm);
-                DeleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
+                deleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
         }
 
         @Test
-        public void OwningBusinessInValid() throws Exception {
+        public void owningBusinessInValid() throws Exception {
                 System.out.println("OwningBusinessInValid");
                 try {
                         Assume.assumeTrue(TckPublisher.isEnabled());
@@ -535,7 +535,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                         sb.setAuthInfo(authInfoJoe);
                         sb.getBusinessEntity().add(be);
                         BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
-                        DeleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
+                        deleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
                         Assert.fail("unexpected success");
                 } catch (Exception ex) {
                         logger.info("Expected failure " + ex.getMessage());
@@ -546,7 +546,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         }
 
         @Test
-        public void OwningBusinessInValid2() throws Exception {
+        public void owningBusinessInValid2() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("OwningBusinessInValid2");
@@ -561,7 +561,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                         stm.setAuthInfo(authInfoJoe);
                         stm.getTModel().add(tm);
                         TModelDetail saveTModel = publicationJoe.saveTModel(stm);
-                        DeleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
+                        deleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
                         Assert.fail("unexpected success");
                 } catch (Exception ex) {
                         logger.info("Expected failure " + ex.getMessage());
@@ -572,7 +572,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         }
 
         @Test
-        public void TypeTmodelValid() throws Exception {
+        public void typeTmodelValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("TypeTmodelValid");
@@ -586,12 +586,12 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 stm.setAuthInfo(authInfoJoe);
                 stm.getTModel().add(tm);
                 TModelDetail saveTModel = publicationJoe.saveTModel(stm);
-                DeleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
+                deleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
 
         }
 
         @Test
-        public void TypeTModelInValid() throws Exception {
+        public void typeTModelInValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("TypeTModelInValid");
@@ -606,7 +606,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                         stm.setAuthInfo(authInfoJoe);
                         stm.getTModel().add(tm);
                         TModelDetail saveTModel = publicationJoe.saveTModel(stm);
-                        DeleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
+                        deleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
                         Assert.fail("unexpected success");
                 } catch (Exception ex) {
                         logger.info("Expected failure " + ex.getMessage());
@@ -617,7 +617,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         }
 
         @Test
-        public void TypeBindingInValid() throws Exception {
+        public void typeBindingInValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("TypeBindingInValid");
@@ -640,7 +640,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                         bt.setCategoryBag(new CategoryBag());
                         bt.getCategoryBag().getKeyedReference().add(new KeyedReference("uddi:uddi.org:categorization:types", "", "namespace"));
                         publicationJoe.saveBinding(sbb);
-                        DeleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
+                        deleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
                         Assert.fail("unexpected success");
                 } catch (Exception ex) {
                         logger.info("Expected failure " + ex.getMessage());
@@ -651,7 +651,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         }
 
         @Test
-        public void TypeBindingValid() throws Exception {
+        public void rypeBindingValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("TypeBindingValid");
@@ -674,17 +674,17 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 bt.getCategoryBag().getKeyedReference().add(new KeyedReference("uddi:uddi.org:categorization:types", "", "wsdlDeployment"));
                 sbb.getBindingTemplate().add(bt);
                 publicationJoe.saveBinding(sbb);
-                DeleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
+                deleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
         }
 
         @Test
-        public void ValidatedByInValid() throws Exception {
+        public void ralidatedByInValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("ValidatedByInValid");
                 BusinessEntity SaveVSVCallbackService = null;
                 try {
-                        SaveVSVCallbackService = SaveVSVCallbackService(authInfoJoe, publicationJoe);
+                        SaveVSVCallbackService = saveVSVCallbackService(authInfoJoe, publicationJoe);
 
                         TModel tm = new TModel();
                         //tm.setTModelKey();
@@ -696,23 +696,23 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                         stm.setAuthInfo(authInfoJoe);
                         stm.getTModel().add(tm);
                         TModelDetail saveTModel = publicationJoe.saveTModel(stm);
-                        DeleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
+                        deleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
                         Assert.fail("unexpected success");
                 } catch (Exception ex) {
                         logger.info("Expected failure " + ex.getMessage());
                         logger.debug("Expected failure " + ex.getMessage(), ex);
                 } finally {
-                        DeleteBusiness(authInfoJoe, SaveVSVCallbackService.getBusinessKey(), publicationJoe);
+                        deleteBusiness(authInfoJoe, SaveVSVCallbackService.getBusinessKey(), publicationJoe);
                 }
         }
 
         @Test
-        public void ValidatedByValid() throws Exception {
+        public void ralidatedByValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
 
                 System.out.println("ValidatedByValid");
-                BusinessEntity SaveVSVCallbackService = SaveVSVCallbackService(authInfoJoe, publicationJoe);
+                BusinessEntity SaveVSVCallbackService = saveVSVCallbackService(authInfoJoe, publicationJoe);
 
                 TModel tm = new TModel();
                 //tm.setTModelKey();
@@ -724,13 +724,13 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 stm.setAuthInfo(authInfoJoe);
                 stm.getTModel().add(tm);
                 TModelDetail saveTModel = publicationJoe.saveTModel(stm);
-                DeleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
-                DeleteBusiness(authInfoJoe, SaveVSVCallbackService.getBusinessKey(), publicationJoe);
+                deleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
+                deleteBusiness(authInfoJoe, SaveVSVCallbackService.getBusinessKey(), publicationJoe);
 
         }
 
         @Test
-        public void ReplacedByValid() throws Exception {
+        public void replacedByValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("ReplacedByValid");
@@ -751,12 +751,12 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 stm.setAuthInfo(authInfoJoe);
                 stm.getTModel().add(tm);
                 TModelDetail saveTModel1 = publicationJoe.saveTModel(stm);
-                DeleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
-                DeleteTModel(authInfoJoe, saveTModel1.getTModel().get(0).getTModelKey(), publicationJoe);
+                deleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
+                deleteTModel(authInfoJoe, saveTModel1.getTModel().get(0).getTModelKey(), publicationJoe);
         }
 
         @Test
-        public void ReplacedByValid2() throws Exception {
+        public void replacedByValid2() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("ReplacedByValid2");
@@ -777,12 +777,12 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 stm.setAuthInfo(authInfoJoe);
                 stm.getTModel().add(tm);
                 TModelDetail saveTModel1 = publicationJoe.saveTModel(stm);
-                DeleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
-                DeleteTModel(authInfoJoe, saveTModel1.getTModel().get(0).getTModelKey(), publicationJoe);
+                deleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
+                deleteTModel(authInfoJoe, saveTModel1.getTModel().get(0).getTModelKey(), publicationJoe);
         }
 
         @Test
-        public void ReplacedByValid3() throws Exception {
+        public void replacedByValid3() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("ReplacedByValid3");
@@ -803,12 +803,12 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 stm.setAuthInfo(authInfoJoe);
                 stm.getBusinessEntity().add(tm);
                 BusinessDetail saveBusiness1 = publicationJoe.saveBusiness(stm);
-                DeleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
-                DeleteBusiness(authInfoJoe, saveBusiness1.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
+                deleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
+                deleteBusiness(authInfoJoe, saveBusiness1.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
         }
 
         @Test
-        public void ReplacedByValid4() throws Exception {
+        public void replacedByValid4() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("ReplacedByValid4");
@@ -829,12 +829,12 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 stm.setAuthInfo(authInfoJoe);
                 stm.getBusinessEntity().add(tm);
                 BusinessDetail saveBusiness1 = publicationJoe.saveBusiness(stm);
-                DeleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
-                DeleteBusiness(authInfoJoe, saveBusiness1.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
+                deleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
+                deleteBusiness(authInfoJoe, saveBusiness1.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
         }
 
         @Test
-        public void ReplacedByValid5Projected() throws Exception {
+        public void replacedByValid5Projected() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("ReplacedByValid5Projected");
@@ -854,11 +854,11 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 tm.getCategoryBag().getKeyedReference().add(new KeyedReference(UDDIConstants.IS_REPLACED_BY, "", TckTModel.JOE_PUBLISHER_KEY_PREFIX + "testbiz"));
                 stm.getBusinessEntity().add(tm);
                 BusinessDetail saveBusiness = publicationJoe.saveBusiness(stm);
-                DeleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
+                deleteBusiness(authInfoJoe, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
         }
 
         @Test
-        public void ReplacedByValid6DifferentOwners() throws Exception {
+        public void replacedByValid6DifferentOwners() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("ReplacedByValid6DifferentOwners");
@@ -883,14 +883,18 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 stm.getBusinessEntity().add(tm);
                 BusinessDetail saveBusiness1 = publicationJoe.saveBusiness(stm);
 
-                DeleteBusiness(authInfoJoe, saveBusiness1.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
-                DeleteBusiness(authInfoMary, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationMary);
+                deleteBusiness(authInfoJoe, saveBusiness1.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
+                deleteBusiness(authInfoMary, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationMary);
         }
 
         @Test
-        public void ReplacedByValid7DifferentOwners() throws Exception {
+        public void replacedByValid7DifferentOwners() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
+                
+                TckTModel tmodel = new TckTModel(publicationJoe, inquiry);
+                tmodel.saveJoePublisherTmodel(authInfoJoe);
+                
                 System.out.println("ReplacedByValid7DifferentOwners");
                 BusinessEntity tm = new BusinessEntity();
                 tm.setBusinessKey(TckTModel.MARY_KEY_PREFIX + "testbiz");
@@ -912,8 +916,8 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 stm.getBusinessEntity().add(tm);
                 BusinessDetail saveBusiness1 = publicationJoe.saveBusiness(stm);
 
-                DeleteBusiness(authInfoJoe, saveBusiness1.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
-                DeleteBusiness(authInfoMary, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationMary);
+                deleteBusiness(authInfoJoe, saveBusiness1.getBusinessEntity().get(0).getBusinessKey(), publicationJoe);
+                deleteBusiness(authInfoMary, saveBusiness.getBusinessEntity().get(0).getBusinessKey(), publicationMary);
         }
 
         /**
@@ -922,7 +926,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
          * @throws Exception
          */
         @Test
-        public void ReplacedByInValid() throws Exception {
+        public void replacedByInValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("ReplacedByInValid");
@@ -936,7 +940,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                         stm.setAuthInfo(authInfoJoe);
                         stm.getTModel().add(tm);
                         TModelDetail saveTModel = publicationJoe.saveTModel(stm);
-                        DeleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
+                        deleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
                         Assert.fail("unexpected success");
                 } catch (Exception ex) {
                         logger.info("Expected failure " + ex.getMessage());
@@ -952,7 +956,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
          * @throws Exception
          */
         @Test
-        public void ReplacedByInValid2() throws Exception {
+        public void replacedByInValid2() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("ReplacedByInValid2");
@@ -966,7 +970,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                         stm.setAuthInfo(authInfoJoe);
                         stm.getTModel().add(tm);
                         TModelDetail saveTModel = publicationJoe.saveTModel(stm);
-                        DeleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
+                        deleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
                         Assert.fail("unexpected success");
                 } catch (Exception ex) {
                         logger.info("Expected failure " + ex.getMessage());
@@ -977,7 +981,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         }
 
         @Test
-        public void RelationshipsValid() throws Exception {
+        public void relationshipsValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("RelationshipsValid");
@@ -990,12 +994,12 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 stm.setAuthInfo(authInfoJoe);
                 stm.getTModel().add(tm);
                 TModelDetail saveTModel = publicationJoe.saveTModel(stm);
-                DeleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
+                deleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
 
         }
 
         @Test
-        public void RelationshipsInValid() throws Exception {
+        public void relationshipsInValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 System.out.println("RelationshipsInValid");
@@ -1010,7 +1014,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                         stm.setAuthInfo(authInfoJoe);
                         stm.getTModel().add(tm);
                         TModelDetail saveTModel = publicationJoe.saveTModel(stm);
-                        DeleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
+                        deleteTModel(authInfoJoe, saveTModel.getTModel().get(0).getTModelKey(), publicationJoe);
                         Assert.fail("unexpected success");
                 } catch (Exception ex) {
                         logger.info("Expected failure " + ex.getMessage());

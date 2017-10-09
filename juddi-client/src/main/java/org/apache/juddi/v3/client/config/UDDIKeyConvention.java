@@ -91,6 +91,7 @@ public class UDDIKeyConvention
 	 * @param properties
 	 * @param serviceName
 	 * @param portName
+         * @param bindingUrl
 	 * @return the bindingKey
 	 */
 	public static String getBindingKey(Properties properties, QName serviceName, String portName, URI bindingUrl) {
@@ -108,7 +109,7 @@ public class UDDIKeyConvention
 		}
 		tempProperties.put("serverPort", String.valueOf(port));
 		//Constructing the binding Key
-		String keyFormat = properties.getProperty(Property.BINDING_KEY_FORMAT, DEFAULT_BINDING_KEY_FORMAT);
+		String keyFormat = tempProperties.getProperty(Property.BINDING_KEY_FORMAT, DEFAULT_BINDING_KEY_FORMAT);
 		String bindingKey = TokenResolver.replaceTokens(keyFormat, tempProperties).toLowerCase();
 		return bindingKey;
 	}

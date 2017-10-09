@@ -129,7 +129,7 @@ public class UDDIClerk implements Serializable {
 
         private static final long serialVersionUID = -8597375975981358134L;
 
-        private Log log = LogFactory.getLog(this.getClass());
+        private static final Log log = LogFactory.getLog(UDDIClerk.class);
         protected String name;
         protected UDDINode uddiNode;
         protected String publisher;

@@ -547,7 +547,9 @@ public class JUDDI_300_MultiNodeIntegrationTest {
 
                         }
 
-                        Assert.assertNotNull(tModelDetail);
+                        if (tModelDetail==null)
+                            TckCommon.PrintMarker();
+                        Assert.assertNotNull("node 2 never got mary's tmodel key generator", tModelDetail);
                         Assert.assertNotNull(tModelDetail.getTModel());
                         Assert.assertTrue(tModelDetail.getTModel().size() == 1);
                         Assert.assertTrue(tModelDetail.getTModel().get(0).getTModelKey().equals(TckTModel.MARY_PUBLISHER_TMODEL_KEY));

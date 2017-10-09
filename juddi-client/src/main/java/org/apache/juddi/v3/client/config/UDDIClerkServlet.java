@@ -32,7 +32,7 @@ public class UDDIClerkServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = -91998529871296125L;
 	private static final Log logger = LogFactory.getLog(UDDIClerkServlet.class);
-	private UDDIClient manager = null;
+	private transient UDDIClient manager = null;
 	
 	/**
 	 * Starting the UDDIClient
