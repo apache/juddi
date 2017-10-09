@@ -414,7 +414,7 @@ public abstract class UDDI_090_SubscriptionListenerIntegrationBase {
                         logger.info("updating Mary's business ********** ");
                         updatePublisherBusiness(authInfoMary, saveMaryPublisherBusiness, publicationMary, "Updated Name");
 
-                        boolean found = verifyDelivery("Updated Name");
+                        boolean found = verifyDelivery(saveMaryPublisherBusiness.getBusinessKey());
 
                         if (!found) {
                                 logger.warn("Test failed, dumping business list");

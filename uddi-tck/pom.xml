@@ -321,7 +321,7 @@
 						</goals>
 						<configuration>
 							<skip>false</skip>
-                                                        <runOrder>alphabetical</runOrder>
+                                                        <runOrder>random</runOrder>
                                                         <skipAfterFailureCount>1</skipAfterFailureCount>
 							<systemProperties>
 								<property>

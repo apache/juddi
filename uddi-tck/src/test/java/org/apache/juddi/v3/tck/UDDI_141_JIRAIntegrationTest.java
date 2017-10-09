@@ -70,9 +70,11 @@ public class UDDI_141_JIRAIntegrationTest {
         static UDDIInquiryPortType inquiryJoeSam = null;
         static UDDIPublicationPortType publicationSam = null;
         static TckTModel tckTModelSam = null;
+        static TckTModel tckTmodelUddi = null;
         static TckBusiness tckBusinessSam = null;
         protected static String authInfoJoe = null;
         protected static String authInfoSam = null;
+        protected static String authInfoUddi = null;
         private static UDDIClient manager;
         static final String str256 = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
         static final String str255 = "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
@@ -93,7 +95,9 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
-                if (!TckPublisher.isEnabled()) return;
+                if (!TckPublisher.isEnabled()) {
+                        return;
+                }
                 tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 tckTModelSam.deleteCreatedTModels(authInfoSam);
                 manager.stop();
@@ -101,7 +105,9 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
-                if (!TckPublisher.isEnabled()) return;
+                if (!TckPublisher.isEnabled()) {
+                        return;
+                }
                 logger.info("UDDI_141_JIRAIntegrationTest");
                 manager = new UDDIClient();
                 manager.start();
@@ -118,6 +124,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
                         authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                         authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                        authInfoUddi = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
                         //Assert.assertNotNull(authInfoJoe);
                         //Assert.assertNotNull(authInfoSam);
                         if (!TckPublisher.isUDDIAuthMode()) {
@@ -141,6 +148,20 @@ public class UDDI_141_JIRAIntegrationTest {
                         subscriptionSam = transport.getUDDISubscriptionService();
                         tckTModelSam = new TckTModel(publicationSam, inquiryJoeSam);
                         tckBusinessSam = new TckBusiness(publicationSam, inquiryJoeSam);
+
+                        transport = manager.getTransport("uddiv3");
+
+                        UDDIPublicationPortType uddiPublishService = transport.getUDDIPublishService();
+                        UDDIInquiryPortType uddiInquiryService = transport.getUDDIInquiryService();
+
+                        tckTmodelUddi = new TckTModel(uddiPublishService, uddiInquiryService);
+                        tckTmodelUddi.saveUDDIPublisherTmodel(authInfoUddi);
+
+                        if (!TckPublisher.isUDDIAuthMode()) {
+                                TckSecurity.setCredentials((BindingProvider) uddiPublishService, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+                                TckSecurity.setCredentials((BindingProvider) uddiInquiryService, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+
+                        }
 
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
@@ -498,10 +519,10 @@ public class UDDI_141_JIRAIntegrationTest {
                                         if (businesskeysToDelete.contains(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey())) {
                                                 found1++;
                                                 if (findTModel.getTModelInfos().getTModelInfo().get(i).getName() == null
-                                                     || findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang() == null
-                                                     || findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang().length() == 0) {
+                                                        || findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang() == null
+                                                        || findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang().length() == 0) {
                                                         failuremsg += "Tmodel key " + findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey()
-                                                             + " has a null or empty lang";
+                                                                + " has a null or empty lang";
                                                 }
                                         }
 
@@ -968,7 +989,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 bt.getAccessPoint().setValue("http://" + hostname + ":" + port + "/UDDI_CALLBACK");
                 bt.getAccessPoint().setUseType("endPoint");
                 //obmitted as part of the jira test case
-        /*TModelInstanceInfo instanceInfo = new TModelInstanceInfo();
+                /*TModelInstanceInfo instanceInfo = new TModelInstanceInfo();
                  instanceInfo.setTModelKey("uddi:uddi.org:transport:http");
                  bt.setTModelInstanceDetails(new TModelInstanceDetails());
                  bt.getTModelInstanceDetails().getTModelInstanceInfo().add(instanceInfo);
@@ -1275,7 +1296,8 @@ public class UDDI_141_JIRAIntegrationTest {
                 }
                 Assume.assumeTrue(tModelDetail == null);
 
-                tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                tckTmodelUddi.saveUDDIPublisherTmodel(authInfoUddi);
+                
                 tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);
 
                 tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
@@ -1437,7 +1459,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 c.getAddress().add(addr);
                 be.getContacts().getContact().add(c);
                 be.getName().add(new Name("test JUDDI849", null));
-                
+
                 SaveBusiness sb = new SaveBusiness();
                 sb.getBusinessEntity().add(be);
                 sb.setAuthInfo(authInfoJoe);
