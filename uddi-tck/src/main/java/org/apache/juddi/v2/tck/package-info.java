@@ -18,4 +18,3 @@
  * Classes used by the UDDI TCK only.
  */
 package org.apache.juddi.v2.tck;
-
