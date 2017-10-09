@@ -48,6 +48,7 @@ public class LoginIntegrationTest extends BaseTest {
             drivers.get(i).findElement(By.id("username")).sendKeys("juddi");
             drivers.get(i).findElement(By.id("password")).sendKeys("juddi");
             drivers.get(i).findElement(By.id("loginbutton")).click();
+            Thread.sleep(2000);
             Assert.assertTrue(drivers.get(i).findElement(By.id("logout_button")).isDisplayed());
             drivers.get(i).findElement(By.id("logout_button")).click();
             try {
