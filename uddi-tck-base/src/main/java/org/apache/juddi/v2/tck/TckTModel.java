@@ -29,7 +29,6 @@ import org.junit.Assert;
 import org.uddi.api_v2.DeleteTModel;
 import org.uddi.api_v2.FindTModel;
 import org.uddi.api_v2.GetTModelDetail;
-import org.uddi.api_v2.OverviewDoc;
 import org.uddi.api_v2.SaveTModel;
 import org.uddi.api_v2.TModel;
 import org.uddi.api_v2.TModelDetail;

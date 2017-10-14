@@ -1299,6 +1299,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 tckTmodelUddi.saveUDDIPublisherTmodel(authInfoUddi);
                 
                 tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);
+                tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
 
                 tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
                 tckBusinessSam.saveSamSyndicatorBusiness(authInfoSam);

@@ -158,6 +158,8 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 try {
                         reset();
                         VALID = true;
+                        TckTModel joe = new TckTModel(publicationJoe, inquiry);
+                        joe.saveJoePublisherTmodel(authInfoJoe);
                         SaveVSVCallbackService = saveVSVCallbackService(authInfoJoe, publicationJoe);
                         saveCheckedTModel(TckTModel.JOE_PUBLISHER_KEY_PREFIX + TMODEL, SaveVSVCallbackService.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getBindingKey());
                         logger.info("Saving a business using those values");
