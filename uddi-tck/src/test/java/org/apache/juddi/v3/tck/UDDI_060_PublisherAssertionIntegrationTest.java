@@ -128,7 +128,8 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
                         tckUDDI.saveUDDIPublisherTmodel(authUddi);
                         
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
-                        tckTModelJoe.saveTmodels(authInfoJoe);
+                        tckTModelJoe.saveUDDIPublisherTmodel(authUddi);
+                        tckTModelJoe.saveTmodels(authUddi);
 
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
