@@ -118,6 +118,7 @@ public class UDDI_070_FindEntityIntegrationTest {
              Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModel.saveUDDIPublisherTmodel(authInfoUddi);
+                        tckTModel.saveTmodels(authInfoUddi);
                         tckTModel.saveJoePublisherTmodel(authInfoJoe, true);
                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
                         tckBusinessService.saveJoePublisherService(authInfoJoe);
@@ -129,10 +130,10 @@ public class UDDI_070_FindEntityIntegrationTest {
                         tckFindEntity.getNonExitingBusiness();
                 } catch (Exception e) {
                         e.printStackTrace();
-                        Assert.fail();
+                        Assert.fail(e.getMessage());
                 } catch (Throwable t) {
                         t.printStackTrace();
-                        Assert.fail();
+                        Assert.fail(t.getMessage());
                 } finally {
                         tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
                         tckBusinessService.deleteJoePublisherService(authInfoJoe);

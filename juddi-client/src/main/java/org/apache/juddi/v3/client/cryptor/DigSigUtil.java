@@ -537,12 +537,18 @@ public class DigSigUtil {
                                                 OutErrorMessage.set("Unable to verify certificate status from OCSP because the issuer of the certificate is not in the trust store. " + OutErrorMessage.get());
                                                 //throw new CertificateException("unable to locate the issuers certificate in the trust store");
                                         } else {
-                                                RevocationStatus check = OCSP.check(signingcert, issuer);
-                                                logger.info("certificate " + signingcert.getSubjectDN().toString() + " revocation status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString());
-                                                if (check.getCertStatus() != RevocationStatus.CertStatus.GOOD) {
-                                                        OutErrorMessage.set("Certificate status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString() + "." + OutErrorMessage.get());
+                                                try{
+                                                        RevocationStatus check = OCSP.check(signingcert, issuer);
+                                                        logger.info("certificate " + signingcert.getSubjectDN().toString() + " revocation status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString());
+                                                        if (check.getCertStatus() != RevocationStatus.CertStatus.GOOD) {
+                                                                OutErrorMessage.set("Certificate status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString() + "." + OutErrorMessage.get());
 
-                                                        //throw new CertificateException("Certificate status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString());
+                                                                //throw new CertificateException("Certificate status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString());
+                                                        }
+                                                } catch (Throwable t) {
+                                                        //this looks dirty, and it is, however there are some API differences on certain JDKs
+                                                        OutErrorMessage.set("Certificate status is unknown. Failed to check due to error: " + t.getMessage());
+                                                        logger.warn("Certificate status is unknown. Failed to check due to error: " + t.getMessage());
                                                 }
                                         }
                                 }
