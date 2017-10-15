@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyStore;
@@ -32,6 +33,7 @@ import java.security.Security;
 import java.security.cert.CRLException;
 import java.security.cert.CertPath;
 import java.security.cert.CertPathValidator;
+import java.security.cert.CertPathValidatorException;
 import java.security.cert.CertPathValidatorResult;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
@@ -76,8 +78,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import sun.security.provider.certpath.CertId;
 import sun.security.provider.certpath.OCSP;
 import sun.security.provider.certpath.OCSP.RevocationStatus;
+import static sun.security.provider.certpath.OCSP.getResponderURI;
+import sun.security.x509.X509CertImpl;
+
 
 /**
  * A utility class for signing and verifying JAXB Objects, such as UDDI
@@ -485,6 +491,24 @@ public class DigSigUtil {
                 }
                 return null;
         }
+        
+        /**
+          * wrapper to overcome JDK differences between oracle vs openjdk
+          */
+          public static RevocationStatus check(X509Certificate cert,
+              X509Certificate issuerCert)
+              throws IOException, CertPathValidatorException, CertificateException {
+              CertId certId = null;
+              URI responderURI = null;
+              
+                  X509CertImpl certImpl = X509CertImpl.toImpl(cert);
+                  responderURI = getResponderURI(certImpl);
+                  if (responderURI == null) {
+                      throw new CertPathValidatorException
+                          ("No OCSP Responder URI in certificate");
+                  }
+                  return OCSP.check(cert, issuerCert, responderURI, cert, null);
+         }
 
         /**
          * Verifies the signature on an enveloped digital signature on a UDDI
@@ -535,21 +559,13 @@ public class DigSigUtil {
                                         X509Certificate issuer = FindCertByDN(issuerX500Principal);
                                         if (issuer == null) {
                                                 OutErrorMessage.set("Unable to verify certificate status from OCSP because the issuer of the certificate is not in the trust store. " + OutErrorMessage.get());
-                                                //throw new CertificateException("unable to locate the issuers certificate in the trust store");
                                         } else {
-                                                try{
-                                                        RevocationStatus check = OCSP.check(signingcert, issuer);
-                                                        logger.info("certificate " + signingcert.getSubjectDN().toString() + " revocation status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString());
-                                                        if (check.getCertStatus() != RevocationStatus.CertStatus.GOOD) {
-                                                                OutErrorMessage.set("Certificate status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString() + "." + OutErrorMessage.get());
-
-                                                                //throw new CertificateException("Certificate status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString());
-                                                        }
-                                                } catch (Throwable t) {
-                                                        //this looks dirty, and it is, however there are some API differences on certain JDKs
-                                                        OutErrorMessage.set("Certificate status is unknown. Failed to check due to error: " + t.getMessage());
-                                                        logger.warn("Certificate status is unknown. Failed to check due to error: " + t.getMessage());
+                                                RevocationStatus check = check(signingcert, issuer);
+                                                logger.info("certificate " + signingcert.getSubjectDN().toString() + " revocation status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString());
+                                                if (check.getCertStatus() != RevocationStatus.CertStatus.GOOD) {
+                                                        OutErrorMessage.set("Certificate status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString() + "." + OutErrorMessage.get());
                                                 }
+                                               
                                         }
                                 }
                                 if (map.containsKey(CHECK_REVOCATION_STATUS_CRL) && Boolean.parseBoolean(map.getProperty(CHECK_REVOCATION_STATUS_CRL))) {
@@ -568,7 +584,7 @@ public class DigSigUtil {
                                         CertPathValidatorResult result = certPathValidator.validate(certPath, params);
                                         try {
                                                 PKIXCertPathValidatorResult pkixResult = (PKIXCertPathValidatorResult) result;
-                                                logger.info("revokation status via CRL PASSED for X509 public key " + signingcert.getSubjectDN().toString());
+                                                logger.info("revokation status via CRL PASSED for X509 public key " + signingcert.getSubjectDN().toString() + " " + pkixResult.toString());
                                         } catch (Exception ex) {
                                                 OutErrorMessage.set("Certificate status is via CRL Failed: " + ex.getMessage() + "." + OutErrorMessage.get());
                                         }
