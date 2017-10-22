@@ -151,11 +151,7 @@ language governing permissions and * limitations under the License. * */ -->
 					
                     <scope>provided</scope>
                 </dependency>
-                <dependency>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate</artifactId>
-                    <scope>provided</scope>
-                </dependency>
+               
                 <dependency>
                     <groupId>org.hibernate</groupId>
                     <artifactId>hibernate-entitymanager</artifactId>

@@ -754,22 +754,17 @@ under the License.
 				<version>2.1_3</version>
 
 			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate</artifactId>
-				<version>3.2.5.ga</version>
-
-			</dependency>
+		
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-core</artifactId>
-				<version>4.2.21.Final</version>
+				<version>5.1.10.Final</version>
 
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-entitymanager</artifactId>
-				<version>4.2.21.Final</version>
+				<version>5.1.10.Final</version>
 
 			</dependency>
 

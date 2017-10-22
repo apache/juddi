@@ -273,7 +273,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                         logger.info("Change records retrieved from " + poll.getNotifyingNode() + ", " + records.size());
                                                                         for (int i = 0; i < records.size(); i++) {
                                                                                 logger.info("Change records retrieved " + records.get(i).getChangeID().getNodeID() + " USN " + records.get(i).getChangeID().getOriginatingUSN());
-                                                                                PersistChangeRecord(records.get(i));
+                                                                                persistChangeRecord(records.get(i));
                                                                         }
                                                                         recordsreturned = records.size();
                                                                 }
@@ -304,7 +304,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                  *
                  * @param rec
                  */
-                private void PersistChangeRecord(ChangeRecord rec) {
+                private void persistChangeRecord(ChangeRecord rec) {
                         if (rec == null) {
                                 return;
                         }
@@ -369,12 +369,12 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                         }
                                         if (rec.getChangeRecordDelete() != null && rec.getChangeRecordDelete().getBusinessKey() != null && !"".equalsIgnoreCase(rec.getChangeRecordDelete().getBusinessKey())) {
                                                 //delete a business 
-                                                UddiEntity ue = em.find(BusinessEntity.class, rec.getChangeRecordDelete().getBindingKey());
+                                                UddiEntity ue = em.find(BusinessEntity.class, rec.getChangeRecordDelete().getBusinessKey());
                                                 validateNodeIdMisMatches(ue, getNode());
                                                 pub.deleteBusiness(rec.getChangeRecordDelete().getBusinessKey(), em);
                                         }
                                         if (rec.getChangeRecordDelete() != null && rec.getChangeRecordDelete().getServiceKey() != null && !"".equalsIgnoreCase(rec.getChangeRecordDelete().getServiceKey())) {
-                                                UddiEntity ue = em.find(BusinessService.class, rec.getChangeRecordDelete().getBindingKey());
+                                                UddiEntity ue = em.find(BusinessService.class, rec.getChangeRecordDelete().getServiceKey());
                                                 validateNodeIdMisMatches(ue, getNode());
                                                 //delete a service 
                                                 pub.deleteService(rec.getChangeRecordDelete().getServiceKey(), em);
