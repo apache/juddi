@@ -1296,6 +1296,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 }
                 Assume.assumeTrue(tModelDetail == null);
 
+                tckTmodelUddi.saveTmodels(authInfoUddi);
                 tckTmodelUddi.saveUDDIPublisherTmodel(authInfoUddi);
                 
                 tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);
