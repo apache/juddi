@@ -1,4 +1,5 @@
 package org.apache.juddi.ddl.generator;
+
 /*
  * Copyright 2001-2008 The Apache Software Foundation.
  * 
@@ -16,46 +17,55 @@ package org.apache.juddi.ddl.generator;
  */
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.hibernate.tool.hbm2ddl.SchemaExport.Action;
+import org.hibernate.tool.schema.TargetType;
 
 /**
- * Source: http://jandrewthompson.blogspot.com/2009/10/how-to-generate-ddl-scripts-from.html
+ * Source:
+ * http://jandrewthompson.blogspot.com/2009/10/how-to-generate-ddl-scripts-from.html
+ * https://stackoverflow.com/a/33761464/1203182
+ * https://stackoverflow.com/a/41894432/1203182
+ * 
  * @author john.thompson
+ * @author Alex O'Ree
  *
  */
 public class App {
 
-        private AnnotationConfiguration cfg;
+        private List<Class> jpaClasses = new ArrayList<>();
 
         public App(String packageName) throws Exception {
-                cfg = new AnnotationConfiguration();
-                cfg.setProperty("hibernate.hbm2ddl.auto", "create");
+
                 List<Class> classesForPackage = getClassesForPackage(org.apache.juddi.model.Address.class.getPackage());
                 for (Class<Object> clazz : classesForPackage) {
-                        cfg.addAnnotatedClass(clazz);
+
+                        jpaClasses.add(clazz);
                 }
         }
-        
-         public App(String dir,String packageName) throws Exception {
-                cfg = new AnnotationConfiguration();
-                cfg.setProperty("hibernate.hbm2ddl.auto", "create");
+
+        public App(String dir, String packageName) throws Exception {
+
                 List<Class> c = new ArrayList<Class>();
-                processDirectory(new File("../" + dir), packageName,c);
-                
-                processDirectory(new File(dir), packageName,c);
+                processDirectory(new File("../" + dir), packageName, c);
+
+                processDirectory(new File(dir), packageName, c);
                 for (Class<Object> clazz : c) {
-                        cfg.addAnnotatedClass(clazz);
+
+                        jpaClasses.add(clazz);
                 }
-                
-                
+
         }
 
         /**
@@ -64,12 +74,24 @@ public class App {
          * @param dbDialect to use
          */
         private void generate(Dialect dialect) {
-                cfg.setProperty("hibernate.dialect", dialect.getDialectClass());
 
-                SchemaExport export = new SchemaExport(cfg);
+                StandardServiceRegistryBuilder ssrb = new StandardServiceRegistryBuilder();
+                ssrb.applySetting("hibernate.dialect", dialect.getDialectClass());
+                StandardServiceRegistry standardServiceRegistry = ssrb.build();
+
+                MetadataSources metadataSources = new MetadataSources(standardServiceRegistry);
+                for (Class clzz : jpaClasses) {
+                        metadataSources.addAnnotatedClass(clzz);
+                }
+
+                Metadata metadata = metadataSources.buildMetadata();
+
+                SchemaExport export = new SchemaExport();
+
                 export.setDelimiter(";");
                 export.setOutputFile(dialect.name().toLowerCase() + ".ddl");
-                export.execute(true, false, false, true);
+                //export.execute(true, false, false, true);
+                export.execute(EnumSet.of(TargetType.SCRIPT), Action.BOTH, metadata);
         }
 
         /**
@@ -78,7 +100,7 @@ public class App {
         public static void main(String[] args) throws Exception {
                 App gen = null;
                 if (args != null && args.length == 1) {
-                        gen = new App(args[0],"org.apache.juddi.model");
+                        gen = new App(args[0], "org.apache.juddi.model");
                 } else {
                         gen = new App("org.apache.juddi.model");
                 }
@@ -99,11 +121,12 @@ public class App {
                 }
         }
 
-        private static void processDirectory(File directory, String pkgname,List<Class> classes) {
+        private static void processDirectory(File directory, String pkgname, List<Class> classes) {
                 log("Reading Directory '" + directory + "'");
                 // Get the list of the files contained in the package
-                if (!directory.exists())
+                if (!directory.exists()) {
                         return;
+                }
                 String[] files = directory.list();
                 for (int i = 0; i < files.length; i++) {
                         String fileName = files[i];
@@ -206,7 +229,7 @@ public class App {
                                 directory = new File(resource.toURI().getPath());
                         } catch (NullPointerException x) {
                                 throw new ClassNotFoundException(packageName + " (" + directory
-                                     + ") does not appear to be a valid package");
+                                        + ") does not appear to be a valid package");
                         }
                         if (directory.exists()) {
                                 String[] files = directory.list();
@@ -214,7 +237,7 @@ public class App {
                                         if (files[i].endsWith(".class")) {
 // removes the .class extension
                                                 classes.add(Class.forName(packageName + '.'
-                                                     + files[i].substring(0, files[i].length() - 6)));
+                                                        + files[i].substring(0, files[i].length() - 6)));
                                         }
                                 }
                         }
