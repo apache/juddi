@@ -100,7 +100,7 @@ public class TckTModel {
                         SaveTModel st = (org.uddi.api_v3.SaveTModel) EntityCreator.buildFromDoc(tModelXml, "org.uddi.api_v3");
 
                         for (int i = 0; i < st.getTModel().size(); i++) {
-                                 saveTModel(authInfo, st.getTModel().get(i), true);
+                                 saveTModel(authInfo, st.getTModel().get(i), false);
                         }
                         //st.setAuthInfo(authInfo);
                         //publication.saveTModel(st);
@@ -277,7 +277,7 @@ public class TckTModel {
          * @param authInfoTM 
          */
         public void saveUDDIPublisherTmodel(String authInfoTM) {
-                saveTModel(authInfoTM, TMODEL_PUBLISHER_TMODEL_XML, TMODEL_PUBLISHER_TMODEL_KEY, true);
+                saveTModel(authInfoTM, TMODEL_PUBLISHER_TMODEL_XML, TMODEL_PUBLISHER_TMODEL_KEY, false);
         }
 
         public void saveTmodels(String authInfoJoe) {
