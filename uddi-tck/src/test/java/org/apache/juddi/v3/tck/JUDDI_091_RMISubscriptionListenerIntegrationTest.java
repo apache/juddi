@@ -78,7 +78,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
                         //bring up the RMISubscriptionListener
                         //saw this once before
                         // internal error: ObjID already in use
-                        URI rmiEndPoint = new URI("rmi://localhost:" + randomPort + "/tck/rmisubscriptionlistener" + new Random().nextInt() );
+                        URI rmiEndPoint = new URI("rmi://localhost:" + randomPort + "/tck/rmisubscriptionlistener");
                         registry = LocateRegistry.createRegistry(rmiEndPoint.getPort());
                         String path = rmiEndPoint.getPath();
                         hostname = InetAddress.getLocalHost().getHostName();
