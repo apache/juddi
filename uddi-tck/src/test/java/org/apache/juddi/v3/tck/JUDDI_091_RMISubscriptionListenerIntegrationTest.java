@@ -60,7 +60,8 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
         @AfterClass
         public static void stopManager() throws ConfigurationException {
                 if (!TckPublisher.isEnabled()) return;
-                manager.stop();
+                if (manager!=null)
+                        manager.stop();
                 //shutting down the TCK SubscriptionListener
                 //re
         }
@@ -75,7 +76,9 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
                         randomPort = 19800 + new Random().nextInt(99);
                         System.out.println("RMI Random port=" + randomPort);
                         //bring up the RMISubscriptionListener
-                        URI rmiEndPoint = new URI("rmi://localhost:" + randomPort + "/tck/rmisubscriptionlistener");
+                        //saw this once before
+                        // internal error: ObjID already in use
+                        URI rmiEndPoint = new URI("rmi://localhost:" + randomPort + "/tck/rmisubscriptionlistener" + new Random().nextInt() );
                         registry = LocateRegistry.createRegistry(rmiEndPoint.getPort());
                         String path = rmiEndPoint.getPath();
                         hostname = InetAddress.getLocalHost().getHostName();
@@ -91,7 +94,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
 
                 } catch (Exception e2) {
                         e2.printStackTrace();
-                        Assert.fail();
+                        Assert.fail(e2.getMessage());
                 }
 
                 manager = new UDDIClient();
