@@ -125,7 +125,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
 
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
-                        Assert.fail("Could not obtain authInfo token.");
+                        Assert.fail("Could not obtain authInfo token." + e.getMessage());
                 }
                 JUDDI_300_MultiNodeIntegrationTest.testSetupReplicationConfig();
         }
@@ -174,7 +174,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
                 } catch (Exception e) {
                         e.printStackTrace();
 
-                        Assert.fail();
+                        Assert.fail(e.getMessage());
                 } finally {
 
                         rmiSubscriptionListener.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListenerRMI.SUBSCRIPTION_KEY_RMI);
