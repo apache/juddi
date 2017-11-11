@@ -28,6 +28,7 @@ import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
+import org.apache.juddi.v3.client.cryptor.XmlUtils;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.BusinessDetail;
@@ -149,7 +150,7 @@ public class Import {
 
         private void ImportTmodels() throws Exception {
                 
-                SaveTModel stm = JAXB.unmarshal(new File(tmodelfile), SaveTModel.class);
+                SaveTModel stm = (SaveTModel) XmlUtils.unmarshal(new File(tmodelfile), SaveTModel.class);
                 System.out.println();
                 System.out.println("Attempting to save " + stm.getTModel().size() + " tModels");
                 if (stripSig) {
@@ -193,7 +194,7 @@ public class Import {
         }
 
         private void ImportBusiness() throws Exception {
-                SaveBusiness stm = JAXB.unmarshal(new File(businessfile), SaveBusiness.class);
+                SaveBusiness stm = (SaveBusiness) XmlUtils.unmarshal(new File(businessfile), SaveBusiness.class);
                 if (stripSig) {
                         int x=0;
                         for (int i = 0; i < stm.getBusinessEntity().size(); i++) {
@@ -272,7 +273,7 @@ public class Import {
 
         private void ImportPublishers() throws Exception {
 
-                SavePublisher stm = JAXB.unmarshal(new File(publishersfile), SavePublisher.class);
+                SavePublisher stm = (SavePublisher) XmlUtils.unmarshal(new File(publishersfile), SavePublisher.class);
                 if (safemode) {
                         for (int i = 0; i < stm.getPublisher().size(); i++) {
                                 if (!PublisherExists(stm.getPublisher().get(i).getAuthorizedName(), token)) {

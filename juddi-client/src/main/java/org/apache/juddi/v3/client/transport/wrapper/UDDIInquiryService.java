@@ -19,6 +19,7 @@ package org.apache.juddi.v3.client.transport.wrapper;
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.util.HashMap;
+import javax.xml.XMLConstants;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.transform.Transformer;
@@ -117,6 +118,7 @@ public class UDDIInquiryService {
 	public String inquire(UDDIInquiryPortType inquiry, String request) throws Exception {
 	    java.io.InputStream sbis = new ByteArrayInputStream(request.getBytes());
 	    javax.xml.parsers.DocumentBuilderFactory dbf = javax.xml.parsers.DocumentBuilderFactory.newInstance();
+            dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 	    dbf.setNamespaceAware(true);
 	    dbf.setValidating(false);
 	    DocumentBuilder db = dbf.newDocumentBuilder();
@@ -138,7 +140,11 @@ public class UDDIInquiryService {
 	    Node n = requestHandler.invoke(reqElem);
 
 	    StringWriter sw = new StringWriter();
-            Transformer t = TransformerFactory.newInstance().newTransformer();
+            TransformerFactory factory = TransformerFactory.newInstance();
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+            Transformer t = factory.newTransformer();
+            
 	    t.transform(new DOMSource(n), new StreamResult(sw));
 	    return sw.toString();
 	}

@@ -56,6 +56,7 @@ import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.ClientConfig;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDINode;
+import org.apache.juddi.v3.client.cryptor.XmlUtils;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.webconsole.AES;
 import org.apache.juddi.webconsole.PostBackConstants;
@@ -3186,7 +3187,7 @@ public class UddiHub implements Serializable {
         public String DiscardToken(String tokenxml) {
                 DiscardTransferToken r = new DiscardTransferToken();
                 r.setAuthInfo(GetToken());
-                r.setTransferToken(JAXB.unmarshal(new StringReader(tokenxml), TransferToken.class));
+                r.setTransferToken((TransferToken) XmlUtils.unmarshal(new StringReader(tokenxml), TransferToken.class));
 
                 try {
                         try {
@@ -3220,9 +3221,9 @@ public class UddiHub implements Serializable {
                         TransferEntities te = new TransferEntities();
                         te.setAuthInfo(GetToken());
                         StringReader sr = new StringReader(tokenXML.trim());
-                        te.setTransferToken(JAXB.unmarshal(sr, TransferToken.class));
+                        te.setTransferToken((TransferToken) XmlUtils.unmarshal(sr, TransferToken.class));
                         sr = new StringReader(keyBagXML.trim());
-                        te.setKeyBag(JAXB.unmarshal(sr, org.uddi.custody_v3.KeyBag.class));
+                        te.setKeyBag((org.uddi.custody_v3.KeyBag) XmlUtils.unmarshal(sr, org.uddi.custody_v3.KeyBag.class));
 
                         try {
                                 custody.transferEntities(te);
@@ -3869,13 +3870,14 @@ public class UddiHub implements Serializable {
          * @return duration
          */
         public long GetAutoLogoutDuration() {
-                String val = clientConfig.getConfiguration().getString(PROP_AUTO_LOGOUT_TIMER);
-                if (val == null) {
-                        return 15 * 60 * 1000;
-                }
+                
                 try {
-                        return Long.parseLong(val);
-                } catch (Exception ex) {
+                    String val = clientConfig.getConfiguration().getString(PROP_AUTO_LOGOUT_TIMER);
+                    if (val == null) {
+                            return 15 * 60 * 1000;
+                    }
+                    return Long.parseLong(val);
+                } catch (Throwable ex) {
                         log.warn("unable to parse the value for " + PROP_AUTO_LOGOUT_TIMER + " in uddi.xml, defaulting to 15 minutes", ex);
                 }
                 return 15 * 60 * 1000;
@@ -3889,7 +3891,12 @@ public class UddiHub implements Serializable {
          * @return true/false
          */
         public boolean isAdminLocalhostOnly() {
+            try{
                 return clientConfig.getConfiguration().getBoolean(PROP_ADMIN_LOCALHOST_ONLY, true);
+            }catch (Throwable ex) {
+                log.warn("unable to parse the value for " + PROP_ADMIN_LOCALHOST_ONLY + " in uddi.xml, defaulting to 15 minutes", ex);
+            }
+            return true;
         }
 
         public String SaveBindingTemplate(HttpServletRequest request) {

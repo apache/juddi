@@ -23,6 +23,7 @@ import javax.xml.bind.JAXB;
 
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.cryptor.DigSigUtil;
+import org.apache.juddi.v3.client.cryptor.XmlUtils;
 import org.uddi.api_v3.*;
 
 /**
@@ -96,7 +97,7 @@ public class UddiDigitalSignatureFile {
                                         expectedType = TModel.class;
                                         break;
                         }
-                        Object be = JAXB.unmarshal(fis, expectedType);
+                        Object be = XmlUtils.unmarshal(fis, expectedType);
                         fis.close();
                         fis = null;
 

@@ -49,10 +49,15 @@
                 }
             } else if (action.equalsIgnoreCase("senddata")) {
                 Object j=UDDIRequestsAsXML.getObject(service, method, request.getParameter("content"));
-                String msg=(x.SendAdvancedQuery(j, service, method));
-                if (msg.contains(ResourceLoader.GetResource(session, "errors.generic")))
-                        response.setStatus(406);
-                out.write(msg);
+                if (j!=null){
+                    String msg=(x.SendAdvancedQuery(j, service, method));
+                    if (msg.contains(ResourceLoader.GetResource(session, "errors.generic")))
+                            response.setStatus(406);
+                    out.write(msg);
+                } else {
+                    out.write("Unrecognized xml");
+                    response.setStatus(406);
+                }
             }
         }
 

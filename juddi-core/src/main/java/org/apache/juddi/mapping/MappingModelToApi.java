@@ -63,6 +63,7 @@ import org.apache.juddi.model.ReplicationConfigurationNode;
 import org.apache.juddi.model.Signature;
 import org.apache.juddi.model.SignatureTransformDataValue;
 import org.apache.juddi.subscription.TypeConvertor;
+import org.apache.juddi.v3.client.cryptor.XmlUtils;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.uddi.api_v3.BusinessEntity;
@@ -1205,9 +1206,11 @@ public class MappingModelToApi {
                         transformObject = xformBytes;
                 } else if (type.equals(Element.class.getCanonicalName())) {
                         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                        dbf.setNamespaceAware(true);
-                        dbf.setXIncludeAware(true);
-                        try {
+                         try {
+                                dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+                                dbf.setNamespaceAware(true);
+                                dbf.setXIncludeAware(true);
+
                                 DocumentBuilder db = dbf.newDocumentBuilder();
                                 Document doc = db.parse(new ByteArrayInputStream(xformBytes));
                                 transformObject = doc.getDocumentElement();
@@ -1348,7 +1351,7 @@ public class MappingModelToApi {
                 } catch (UnsupportedEncodingException ex) {
                         Logger.getLogger(MappingModelToApi.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                ret = JAXB.unmarshal(sr, ChangeRecord.class);
+                ret = (ChangeRecord) XmlUtils.unmarshal(sr, ChangeRecord.class);
                 //secret sauce here, if this is -1, that means that the record originated at this node and needs to be populated with the databases record id
                 if (cr.getOriginatingUSN() == null || cr.getOriginatingUSN() == -1L) {
                         ret.setChangeID(new ChangeRecordIDType(cr.getNodeID(), cr.getId()));

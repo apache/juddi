@@ -17,12 +17,16 @@ package org.apache.juddi.webconsole.hub;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXB;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import org.apache.juddi.v3.client.cryptor.XmlUtils;
 import org.uddi.api_v3.AddPublisherAssertions;
 import org.uddi.api_v3.DeleteBinding;
 import org.uddi.api_v3.DeleteBusiness;
@@ -63,21 +67,25 @@ import org.uddi.sub_v3.SaveSubscription;
  */
 public class UDDIRequestsAsXML {
 
-    private static String PrettyPrintXML(String input) {
+    private static String prettyPrintXML(String input) {
         if (input == null || input.length() == 0) {
             return "";
         }
         try {
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            TransformerFactory transFactory = TransformerFactory.newInstance();
+            transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+            Transformer transformer = transFactory.newTransformer();
+            
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            //initialize StreamResult with File object to save to file
             StreamResult result = new StreamResult(new StringWriter());
             StreamSource source = new StreamSource(new StringReader(input.trim()));
             transformer.transform(source, result);
             String xmlString = result.getWriter().toString();
             return (xmlString);
         } catch (Exception ex) {
+            Logger.getLogger(UDDIRequestsAsXML.class.getName()).log(Level.WARNING, null, ex);
         }
         return null;
     }
@@ -114,7 +122,7 @@ public class UDDIRequestsAsXML {
         if (method.equalsIgnoreCase("getTModelDetail")) {
             JAXB.marshal(new GetTModelDetail(), sw);
         }
-        return PrettyPrintXML(sw.toString());
+        return prettyPrintXML(sw.toString());
     }
 
     public static String getPublish(String method) {
@@ -161,7 +169,7 @@ public class UDDIRequestsAsXML {
         if (method.equalsIgnoreCase("setPublisherAssertions")) {
             JAXB.marshal(new SetPublisherAssertions(), sw);
         }
-        return PrettyPrintXML(sw.toString());
+        return prettyPrintXML(sw.toString());
     }
 
     public static String getCustody(String method) {
@@ -175,7 +183,7 @@ public class UDDIRequestsAsXML {
         if (method.equalsIgnoreCase("transferEntities")) {
             JAXB.marshal(new TransferEntities(), sw);
         }
-        return PrettyPrintXML(sw.toString());
+        return prettyPrintXML(sw.toString());
     }
 
     public static String getSubscription(String method) {
@@ -192,7 +200,7 @@ public class UDDIRequestsAsXML {
         if (method.equalsIgnoreCase("saveSubscription")) {
             JAXB.marshal(new SaveSubscription(), sw);
         }
-        return PrettyPrintXML(sw.toString());
+        return prettyPrintXML(sw.toString());
     }
     public static final String custody = "custody";
     public static final String inquiry = "inquiry";
@@ -219,34 +227,34 @@ public class UDDIRequestsAsXML {
     private static Object getObjectInquiry(String method, String content) {
         StringReader sr = new StringReader(content);
         if (method.equalsIgnoreCase("findBinding")) {
-            return JAXB.unmarshal(sr, FindBinding.class);
+            return JAXBunmarshal(sr, FindBinding.class);
         }
         if (method.equalsIgnoreCase("findBusiness")) {
-            return JAXB.unmarshal(sr, FindBusiness.class);
+            return JAXBunmarshal(sr, FindBusiness.class);
         }
         if (method.equalsIgnoreCase("findService")) {
-            return JAXB.unmarshal(sr, FindService.class);
+            return JAXBunmarshal(sr, FindService.class);
         }
         if (method.equalsIgnoreCase("findRelatedBusines")) {
-            return JAXB.unmarshal(sr, FindRelatedBusinesses.class);
+            return JAXBunmarshal(sr, FindRelatedBusinesses.class);
         }
         if (method.equalsIgnoreCase("findTModel")) {
-            return JAXB.unmarshal(sr, FindTModel.class);
+            return JAXBunmarshal(sr, FindTModel.class);
         }
         if (method.equalsIgnoreCase("getBindingDetail")) {
-            return JAXB.unmarshal(sr, GetBindingDetail.class);
+            return JAXBunmarshal(sr, GetBindingDetail.class);
         }
         if (method.equalsIgnoreCase("getBusinessDetail")) {
-            return JAXB.unmarshal(sr, GetBusinessDetail.class);
+            return JAXBunmarshal(sr, GetBusinessDetail.class);
         }
         if (method.equalsIgnoreCase("getServiceDetail")) {
-            return JAXB.unmarshal(sr, GetServiceDetail.class);
+            return JAXBunmarshal(sr, GetServiceDetail.class);
         }
         if (method.equalsIgnoreCase("getOperationalInfo")) {
-            return JAXB.unmarshal(sr, GetOperationalInfo.class);
+            return JAXBunmarshal(sr, GetOperationalInfo.class);
         }
         if (method.equalsIgnoreCase("getTModelDetail")) {
-            return JAXB.unmarshal(sr, GetTModelDetail.class);
+            return JAXBunmarshal(sr, GetTModelDetail.class);
         }
         return null;
     }
@@ -254,60 +262,64 @@ public class UDDIRequestsAsXML {
     private static Object getObjectPublish(String method, String content) {
         StringReader sr = new StringReader(content);
         if (method.equalsIgnoreCase("addPublisherAssertions")) {
-            return JAXB.unmarshal(sr, AddPublisherAssertions.class);
+            return JAXBunmarshal(sr, AddPublisherAssertions.class);
         }
         if (method.equalsIgnoreCase("deleteBinding")) {
-            return JAXB.unmarshal(sr, DeleteBinding.class);
+            return JAXBunmarshal(sr, DeleteBinding.class);
         }
         if (method.equalsIgnoreCase("deleteBusiness")) {
-            return JAXB.unmarshal(sr, DeleteBusiness.class);
+            return JAXBunmarshal(sr, DeleteBusiness.class);
         }
         if (method.equalsIgnoreCase("deletePublisherAssertions")) {
-            return JAXB.unmarshal(sr, DeletePublisherAssertions.class);
+            return JAXBunmarshal(sr, DeletePublisherAssertions.class);
         }
         if (method.equalsIgnoreCase("deleteService")) {
-            return JAXB.unmarshal(sr, DeleteService.class);
+            return JAXBunmarshal(sr, DeleteService.class);
         }
         if (method.equalsIgnoreCase("deleteTModel")) {
-            return JAXB.unmarshal(sr, DeleteTModel.class);
+            return JAXBunmarshal(sr, DeleteTModel.class);
         }
         if (method.equalsIgnoreCase("getAssertionStatusReport")) {
-            return JAXB.unmarshal(sr, GetAssertionStatusReport.class);
+            return JAXBunmarshal(sr, GetAssertionStatusReport.class);
         }
         if (method.equalsIgnoreCase("getPublisherAssertions")) {
-            return JAXB.unmarshal(sr, GetPublisherAssertions.class);
+            return JAXBunmarshal(sr, GetPublisherAssertions.class);
         }
         if (method.equalsIgnoreCase("getRegisteredInfo")) {
-            return JAXB.unmarshal(sr, GetRegisteredInfo.class);
+            return JAXBunmarshal(sr, GetRegisteredInfo.class);
         }
         if (method.equalsIgnoreCase("saveBinding")) {
-            return JAXB.unmarshal(sr, SaveBinding.class);
+            return JAXBunmarshal(sr, SaveBinding.class);
         }
         if (method.equalsIgnoreCase("saveBusiness")) {
-            return JAXB.unmarshal(sr, SaveBusiness.class);
+            return JAXBunmarshal(sr, SaveBusiness.class);
         }
         if (method.equalsIgnoreCase("saveTModel")) {
-            return JAXB.unmarshal(sr, SaveTModel.class);
+            return JAXBunmarshal(sr, SaveTModel.class);
         }
         if (method.equalsIgnoreCase("saveService")) {
-            return JAXB.unmarshal(sr, SaveService.class);
+            return JAXBunmarshal(sr, SaveService.class);
         }
         if (method.equalsIgnoreCase("setPublisherAssertions")) {
-            return JAXB.unmarshal(sr, SetPublisherAssertions.class);
+            return JAXBunmarshal(sr, SetPublisherAssertions.class);
         }
         return null;
+    }
+    
+    private static Object JAXBunmarshal(StringReader content, Class clazz) {
+        return XmlUtils.unmarshal(content, clazz);
     }
 
     private static Object getObjectCustody(String method, String content) {
         StringReader sr = new StringReader(content);
         if (method.equalsIgnoreCase("discardTransferToken")) {
-            return JAXB.unmarshal(sr, SetPublisherAssertions.class);
+            return JAXBunmarshal(sr, SetPublisherAssertions.class);
         }
         if (method.equalsIgnoreCase("getTransferToken")) {
-            return JAXB.unmarshal(sr, SetPublisherAssertions.class);
+            return JAXBunmarshal(sr, SetPublisherAssertions.class);
         }
         if (method.equalsIgnoreCase("transferEntities")) {
-            return JAXB.unmarshal(sr, SetPublisherAssertions.class);
+            return JAXBunmarshal(sr, SetPublisherAssertions.class);
         }
         return null;
     }
@@ -315,16 +327,16 @@ public class UDDIRequestsAsXML {
     private static Object getObjectSubscription(String method, String content) {
         StringReader sr = new StringReader(content);
         if (method.equalsIgnoreCase("deleteSubscription")) {
-            return JAXB.unmarshal(sr, DeleteSubscription.class);
+            return JAXBunmarshal(sr, DeleteSubscription.class);
         }
         if (method.equalsIgnoreCase("getSubscriptionResults")) {
-            return JAXB.unmarshal(sr, GetSubscriptionResults.class);
+            return JAXBunmarshal(sr, GetSubscriptionResults.class);
         }
         if (method.equalsIgnoreCase("getSubscriptions")) {
-            return JAXB.unmarshal(sr, GetSubscriptions.class);
+            return JAXBunmarshal(sr, GetSubscriptions.class);
         }
         if (method.equalsIgnoreCase("saveSubscription")) {
-            return JAXB.unmarshal(sr, SaveSubscription.class);
+            return JAXBunmarshal(sr, SaveSubscription.class);
         }
         return null;
     }

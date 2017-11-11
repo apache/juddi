@@ -28,6 +28,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
+import org.apache.juddi.v3.client.cryptor.XmlUtils;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -126,7 +127,7 @@ public class UDDI_160_RESTIntergrationTest {
 
                 Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
                 logger.info("Response content: " + response.getEntity().getContent());
-                BusinessEntity unmarshal = JAXB.unmarshal(response.getEntity().getContent(), BusinessEntity.class);
+                BusinessEntity unmarshal = (BusinessEntity) XmlUtils.unmarshal(response.getEntity().getContent(), BusinessEntity.class);
                 client.getConnectionManager().shutdown();
                 Assert.assertNotNull(unmarshal);
                 Assert.assertEquals(unmarshal.getBusinessKey(), findBusiness.getBusinessInfos().getBusinessInfo().get(0).getBusinessKey());
@@ -159,7 +160,7 @@ public class UDDI_160_RESTIntergrationTest {
 
                 Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
                 logger.info("Response content: " + response.getEntity().getContent());
-                TModel unmarshal = JAXB.unmarshal(response.getEntity().getContent(), TModel.class);
+                TModel unmarshal = (TModel) XmlUtils.unmarshal(response.getEntity().getContent(), TModel.class);
                 client.getConnectionManager().shutdown();
                 Assert.assertNotNull(unmarshal);
                 Assert.assertEquals(unmarshal.getTModelKey(), findTModel.getTModelInfos().getTModelInfo().get(0).getTModelKey());
@@ -193,7 +194,7 @@ public class UDDI_160_RESTIntergrationTest {
 
                 Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
                 logger.info("Response content: " + response.getEntity().getContent());
-                BusinessService unmarshal = JAXB.unmarshal(response.getEntity().getContent(), BusinessService.class);
+                BusinessService unmarshal = (BusinessService) XmlUtils.unmarshal(response.getEntity().getContent(), BusinessService.class);
                 client.getConnectionManager().shutdown();
                 Assert.assertNotNull(unmarshal);
                 Assert.assertEquals(unmarshal.getServiceKey(), findService.getServiceInfos().getServiceInfo().get(0).getServiceKey());
@@ -261,7 +262,7 @@ public class UDDI_160_RESTIntergrationTest {
 
                 Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
                 logger.info("Response content: " + response.getEntity().getContent());
-                BindingTemplate unmarshal = JAXB.unmarshal(response.getEntity().getContent(), BindingTemplate.class);
+                BindingTemplate unmarshal = (BindingTemplate) XmlUtils.unmarshal(response.getEntity().getContent(), BindingTemplate.class);
                 client.getConnectionManager().shutdown();
                 Assert.assertNotNull(unmarshal);
                 Assert.assertEquals(unmarshal.getServiceKey(), bt.getServiceKey());

@@ -29,13 +29,13 @@
 
     UddiHub x = UddiHub.getInstance(application, session);
     String data = null;
-    if (type.equalsIgnoreCase("business")) {
+    if ("business".equalsIgnoreCase(type)) {
         data = (x.GetCertificate(UddiHub.FindType.Business, id, index));
-    } else if (type.equalsIgnoreCase("service")) {
+    } else if ("service".equalsIgnoreCase(type)) {
         data = (x.GetCertificate(UddiHub.FindType.Service, id, index));
-    } else if (type.equalsIgnoreCase("bindingTemplate")) {
+    } else if ("bindingTemplate".equalsIgnoreCase(type)) {
         data = (x.GetCertificate(UddiHub.FindType.BindingTemplate, id, index));
-    } else if (type.equalsIgnoreCase("tModel")) {
+    } else if ("tModel".equalsIgnoreCase(type)) {
         data = (x.GetCertificate(UddiHub.FindType.tModel, id, index));
     }
     if (data != null && !data.startsWith("Error")) {
