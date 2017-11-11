@@ -15,15 +15,66 @@
  *
  * -->
  
-
-        Release Notes - jUDDI - Version 3.3.4
+        Release Notes - jUDDI - Version 3.3.5
                                 
 <h2>        Bug
 </h2>
 <ul>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-967'>JUDDI-967</a>] -         Suspicious incrementers in for loops
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-904'>JUDDI-904</a>] -         intermittent test failures
 </li>
-<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-968'>JUDDI-968</a>] -         Update pom dependencies for vulnerable libraries
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-943'>JUDDI-943</a>] -         WebHelper class: Client name not set in servletContext after getUDDIClient is called
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-948'>JUDDI-948</a>] -         API_070_FindEntityTest is not passing anymore
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-957'>JUDDI-957</a>] -         Integration test not passing. org.apache.juddi.v3.tck.UDDI_070_FindEntityIntegrationTest:findSignedEntities()
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-960'>JUDDI-960</a>] -         TCK tests not passing (windows 7, java 1.8)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-970'>JUDDI-970</a>] -         Code smell that ignores InvalidValueException
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-975'>JUDDI-975</a>] -         mvn site is broken
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-977'>JUDDI-977</a>] -         reduce findbugs warnings
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-978'>JUDDI-978</a>] -         Build instability with Replication tests
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-983'>JUDDI-983</a>] -         Unable to compile under centos, openjdk8, sun.security.provider.certpath.OCSP api mismatch
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-984'>JUDDI-984</a>] -         Hibernate profile fails to deploy due to extraneous class in the orm xml file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-985'>JUDDI-985</a>] -         Replication change record delete fails with hibernate
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-987'>JUDDI-987</a>] -         TBD
 </li>
 </ul>
-                                                                                                            
+                                    
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-955'>JUDDI-955</a>] -         Pom maintenance
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-974'>JUDDI-974</a>] -         Add findbugs to the site reporting tasks
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-979'>JUDDI-979</a>] -         Add maven enforcer rules 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-980'>JUDDI-980</a>] -         Update juddi&#39;s parent pom to the latest apache pom
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-981'>JUDDI-981</a>] -         Force all tests to run in a random order
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-986'>JUDDI-986</a>] -         Update hibernate dependencies
+</li>
+</ul>
+                                                                                
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-971'>JUDDI-971</a>] -         Update embedded tomcat to a more recent version
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-973'>JUDDI-973</a>] -         Code clean up juddi-client-cli
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-976'>JUDDI-976</a>] -         Add jacoco test results to mvn site
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-982'>JUDDI-982</a>] -         Removing the juddi-client-plugins module
+</li>
+</ul>
+                                                                                                   
