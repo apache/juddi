@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.juddi.example</groupId>
 		<artifactId>juddi-examples</artifactId>
-		<version>3.3.6-SNAPSHOT</version>
+		<version>3.3.5-SNAPSHOT</version>
 	</parent>
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>service-version</artifactId>
@@ -39,7 +39,7 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>juddi-client</artifactId>
-			<version>3.3.6-SNAPSHOT</version>
+			<version>3.3.5-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>

@@ -20,11 +20,11 @@
     <parent>
         <groupId>org.apache.juddi.example</groupId>
         <artifactId>juddi-examples</artifactId>
-        <version>3.3.6-SNAPSHOT</version>
+        <version>3.3.5-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-more-samples</artifactId>
-    <version>3.3.6-SNAPSHOT</version>
+    <version>3.3.5-SNAPSHOT</version>
     <name>jUDDI Even More Examples and Samples</name>
     <url>http://maven.apache.org</url>
     <properties>

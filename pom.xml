@@ -27,7 +27,7 @@ under the License.
 	<packaging>pom</packaging>
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>juddi-parent</artifactId>
-	<version>3.3.6-SNAPSHOT</version>
+	<version>3.3.5-SNAPSHOT</version>
 	<name>jUDDI_v3 Parent</name>
 	<description>jUDDI (pronounced "Judy") is an open source Java
         implementation of the Universal Description, Discovery, and
@@ -45,7 +45,7 @@ under the License.
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<cxf.version>2.7.18</cxf.version>
 		<springframework.version>3.2.18.RELEASE</springframework.version>
-		<apache.tomcat.version>7.0.82</apache.tomcat.version>
+		<apache.tomcat.version>8.5.23</apache.tomcat.version>
 		<jacoco.it.execution.data.file>${project.build.directory}/coverage-reports/jacoco-it.exec</jacoco.it.execution.data.file>
 		<jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file>
 
