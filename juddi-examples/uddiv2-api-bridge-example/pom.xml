@@ -24,7 +24,6 @@
   </parent>
   <groupId>org.apache.juddi.example</groupId>
   <artifactId>uddiv2-api-bridge-example</artifactId>
-  <version>3.3.5-SNAPSHOT</version>
   <name>jUDDI Example Access UDDIv2 using Transport Adapter</name>
   <url>http://maven.apache.org</url>
   <properties>

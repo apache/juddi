@@ -14,9 +14,7 @@
 		<artifactId>juddi-examples</artifactId>
 		<version>3.3.5-SNAPSHOT</version>
 	</parent>
-
 	<artifactId>subscription-notification-amqp</artifactId>
-	<version>3.3.5-SNAPSHOT</version>
 	<name>jUDDI Example AMQP Notifier for Subscription callbacks</name>
 	<description>Demonstrates how to write a custom notifier for subscriptions</description>
 	<dependencies>
