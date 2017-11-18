@@ -12,7 +12,7 @@
 	<parent>
 		<groupId>org.apache.juddi.example</groupId>
 		<artifactId>juddi-examples</artifactId>
-		<version>3.3.5-SNAPSHOT</version>
+		<version>3.3.5</version>
 	</parent>
 	<artifactId>subscription-notification-amqp</artifactId>
 	<name>jUDDI Example AMQP Notifier for Subscription callbacks</name>
