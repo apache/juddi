@@ -20,11 +20,11 @@
      <parent>
         <groupId>org.apache.juddi</groupId>
         <artifactId>juddi-parent</artifactId>
-        <version>3.3.5</version>
+        <version>3.3.6-SNAPSHOT</version>
     </parent> 
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-client-cli</artifactId>
-    <version>3.3.5</version>
+    <version>3.3.6-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <name>jUDDI CLI Client</name>
