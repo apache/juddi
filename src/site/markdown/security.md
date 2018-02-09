@@ -2,6 +2,22 @@ Title: Security Advisories
 
 ## Security Advisories for Apache jUDDI
 
+### CVEID  [CVE-2018-1307](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-1307)
+
+VERSION:  3.2 through 3.3.4
+
+PROBLEMTYPE: XML Entity Expansion
+
+REFERENCES: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-4267
+
+DISCRIPTION: If using the WADL2Java or WSDL2Java classes, which parse a local or remote XML document and then mediates the data structures into UDDI data structures, there are little protections present against entity expansion and DTD type of attacks. This was fixed with https://issues.apache.org/jira/browse/JUDDI-987
+
+Severity: Moderate
+
+Mitigation:
+
+Update your juddi-client dependencies to 3.3.5 or newer and/or discontinue use of the effected classes.
+
 ### CVEID : [CVE-2009-4267](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-4267)
 
 VERSION:  3.0.0
