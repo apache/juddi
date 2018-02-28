@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>CompareByTModelInstanceInfoQOS xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../apidocs/org/apache/juddi/v3/client/cli/CompareByTModelInstanceInfoQOS.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright 2013 The Apache Software Foundation.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *      <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> * Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> * distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> * See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> * limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.apache.juddi.v3.client.cli;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.api_v3.AccessPointType;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.v3.client.config.UDDIClient;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.v3.client.ext.wsdm.WSDMQosConstants;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.v3.client.compare.TModelInstanceDetailsComparator;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.AccessPoint;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.BindingTemplate;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.BindingTemplates;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.BusinessEntity;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.BusinessService;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.BusinessServices;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.Contact;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.Contacts;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.Description;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.DiscoveryURL;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.DiscoveryURLs;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.InstanceDetails;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.Name;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.PersonName;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.TModelInstanceDetails;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.TModelInstanceInfo;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> * doesn't make changes to a remote server, just creates a few businesses and compares the two by qos parameters</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment"> * @author Alex O'Ree</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../org/apache/juddi/v3/client/cli/CompareByTModelInstanceInfoQOS.html">CompareByTModelInstanceInfoQOS</a> {
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> main(String[] args) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>              BusinessEntity mary = CreateMary();
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>              BindingTemplate bt1 = mary.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0);
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>              BindingTemplate bt2 = mary.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(1);
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>              
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>              TModelInstanceDetailsComparator tidc = <strong class="jxr_keyword">new</strong> TModelInstanceDetailsComparator(WSDMQosConstants.METRIC_FAULT_COUNT_KEY, <strong class="jxr_keyword">true</strong>, false, false);
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>              <strong class="jxr_keyword">int</strong> compare = tidc.compare(bt1.getTModelInstanceDetails(), bt2.getTModelInstanceDetails());
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>              <strong class="jxr_keyword">if</strong> (compare &gt; 0)
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>                      System.out.println(mary.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getAccessPoint().getValue() +
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>                              <span class="jxr_string">" is greater than "</span> + mary.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(1).getAccessPoint().getValue());
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>              <strong class="jxr_keyword">if</strong> (compare &lt; 0)
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>                      System.out.println(mary.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getAccessPoint().getValue() +
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>                              <span class="jxr_string">" is less than "</span> + mary.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(1).getAccessPoint().getValue());
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>              <strong class="jxr_keyword">if</strong> (compare== 0)
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>                      System.out.println(mary.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getAccessPoint().getValue() +
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>                              <span class="jxr_string">" is equal to "</span> + mary.getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(1).getAccessPoint().getValue());
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>              
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>      }
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">     * creates a business, service, bt with tmodel instance details with qos</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">     * parameters</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">     * @param rootAuthToken</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">     * @throws Exception</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> BusinessEntity CreateMary() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>          BusinessEntity be = <strong class="jxr_keyword">new</strong> BusinessEntity();
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>          be.setBusinessKey(<span class="jxr_string">"uddi:uddi.marypublisher.com:marybusinessone"</span>);
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>          be.setDiscoveryURLs(<strong class="jxr_keyword">new</strong> DiscoveryURLs());
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>          be.getDiscoveryURLs().getDiscoveryURL().add(<strong class="jxr_keyword">new</strong> DiscoveryURL(<span class="jxr_string">"home"</span>, <span class="jxr_string">"http://www.marybusinessone.com"</span>));
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>          be.getDiscoveryURLs().getDiscoveryURL().add(<strong class="jxr_keyword">new</strong> DiscoveryURL(<span class="jxr_string">"serviceList"</span>, <span class="jxr_string">"http://www.marybusinessone.com/services"</span>));
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>          be.getName().add(<strong class="jxr_keyword">new</strong> Name(<span class="jxr_string">"Mary Doe Enterprises"</span>, <span class="jxr_string">"en"</span>));
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>          be.getName().add(<strong class="jxr_keyword">new</strong> Name(<span class="jxr_string">"Maria Negocio Uno"</span>, <span class="jxr_string">"es"</span>));
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>          be.getDescription().add(<strong class="jxr_keyword">new</strong> Description(<span class="jxr_string">"This is the description for Mary Business One."</span>, <span class="jxr_string">"en"</span>));
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>          be.setContacts(<strong class="jxr_keyword">new</strong> Contacts());
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>          Contact c = <strong class="jxr_keyword">new</strong> Contact();
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          c.setUseType(<span class="jxr_string">"administrator"</span>);
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>          c.getPersonName().add(<strong class="jxr_keyword">new</strong> PersonName(<span class="jxr_string">"Mary Doe"</span>, <span class="jxr_string">"en"</span>));
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>          c.getPersonName().add(<strong class="jxr_keyword">new</strong> PersonName(<span class="jxr_string">"Juan Doe"</span>, <span class="jxr_string">"es"</span>));
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>          c.getDescription().add(<strong class="jxr_keyword">new</strong> Description(<span class="jxr_string">"This is the administrator of the service offerings."</span>, <span class="jxr_string">"en"</span>));
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>          be.getContacts().getContact().add(c);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>          be.setBusinessServices(<strong class="jxr_keyword">new</strong> BusinessServices());
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>          BusinessService bs = <strong class="jxr_keyword">new</strong> BusinessService();
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>          bs.setBusinessKey(<span class="jxr_string">"uddi:uddi.marypublisher.com:marybusinessone"</span>);
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>          bs.setServiceKey(<span class="jxr_string">"uddi:uddi.marypublisher.com:marybusinessoneservice"</span>);
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>          bs.getName().add(<strong class="jxr_keyword">new</strong> Name(<span class="jxr_string">"name!"</span>, <span class="jxr_string">"en"</span>));
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>          bs.setBindingTemplates(<strong class="jxr_keyword">new</strong> BindingTemplates());
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>          BindingTemplate bt = <strong class="jxr_keyword">new</strong> BindingTemplate();
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>          bt.setAccessPoint(<strong class="jxr_keyword">new</strong> AccessPoint(<span class="jxr_string">"http://localhost/endpoint1BAD"</span>, AccessPointType.WSDL_DEPLOYMENT.toString()));
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>          bt.setTModelInstanceDetails(<strong class="jxr_keyword">new</strong> TModelInstanceDetails());
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>          TModelInstanceInfo tii = <strong class="jxr_keyword">new</strong> TModelInstanceInfo();
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>         tii.setTModelKey(WSDMQosConstants.METRIC_FAULT_COUNT_KEY);
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> 
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>         tii.setInstanceDetails(<strong class="jxr_keyword">new</strong> InstanceDetails());
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>         tii.getInstanceDetails().setInstanceParms(<span class="jxr_string">"400"</span>);
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>         bt = UDDIClient.addSOAPtModels(bt);
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>         bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tii);
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>         bs.getBindingTemplates().getBindingTemplate().add(bt);
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>         
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>         bt = <strong class="jxr_keyword">new</strong> BindingTemplate();
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>         bt.setAccessPoint(<strong class="jxr_keyword">new</strong> AccessPoint(<span class="jxr_string">"http://localhost/endpoint2BETTER"</span>, AccessPointType.WSDL_DEPLOYMENT.toString()));
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>         bt.setTModelInstanceDetails(<strong class="jxr_keyword">new</strong> TModelInstanceDetails());
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>          tii = <strong class="jxr_keyword">new</strong> TModelInstanceInfo();
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>         tii.setTModelKey(WSDMQosConstants.METRIC_FAULT_COUNT_KEY);
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> 
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>         tii.setInstanceDetails(<strong class="jxr_keyword">new</strong> InstanceDetails());
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>         tii.getInstanceDetails().setInstanceParms(<span class="jxr_string">"4"</span>);
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>         bt = UDDIClient.addSOAPtModels(bt);
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>         bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tii);
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>         bs.getBindingTemplates().getBindingTemplate().add(bt);
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>         
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>         
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>         be.getBusinessServices().getBusinessService().add(bs);
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>         
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>         <strong class="jxr_keyword">return</strong> be;
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>     }
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2004&#x2013;2018 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
+</body>
+</html>

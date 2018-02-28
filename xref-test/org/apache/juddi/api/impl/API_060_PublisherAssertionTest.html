@@ -1,0 +1,520 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>API_060_PublisherAssertionTest xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../testapidocs/org/apache/juddi/api/impl/API_060_PublisherAssertionTest.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright 2001-2009 The Apache Software Foundation.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * </em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *      <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> * </em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> * Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> * distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> * See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> * limitations under the License.</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">package</strong> org.apache.juddi.api.impl;
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment"> * @author &lt;a href="<a href="mailto:jfaath@apache.org" target="alexandria_uri">mailto:jfaath@apache.org</a>"&gt;Jeff Faath&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> * @author &lt;a href="<a href="mailto:kstam@apache.org" target="alexandria_uri">mailto:kstam@apache.org</a>"&gt;Kurt T Stam&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> * @author &lt;a href="<a href="mailto:alexoree@apache.org" target="alexandria_uri">mailto:alexoree@apache.org</a>"&gt;Alex O'Ree&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.rmi.RemoteException;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.security.cert.CertificateException;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> java.util.ArrayList;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.atomic.AtomicReference;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> javax.xml.bind.JAXB;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> javax.xml.ws.Holder;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.configuration.ConfigurationException;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.logging.Log;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.logging.LogFactory;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.Registry;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.jaxb.EntityCreator;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.v3.client.UDDIConstants;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.v3.client.cryptor.DigSigUtil;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.v3.tck.TckBusiness;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.v3.tck.TckCommon;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.v3.tck.TckFindEntity;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.v3.tck.TckPublisher;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.v3.tck.TckPublisherAssertion;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.v3.tck.TckSecurity;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.v3.tck.TckTModel;
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <strong class="jxr_keyword">import</strong> org.junit.AfterClass;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <strong class="jxr_keyword">import</strong> org.junit.Assert;
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <strong class="jxr_keyword">import</strong> org.junit.BeforeClass;
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.AddPublisherAssertions;
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.AssertionStatusItem;
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.CompletionStatus;
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.DeletePublisherAssertions;
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.KeyedReference;
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.PublisherAssertion;
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <strong class="jxr_keyword">import</strong> org.uddi.v3_service.DispositionReportFaultMessage;
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <strong class="jxr_keyword">import</strong> org.uddi.v3_service.UDDISecurityPortType;
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/juddi/api/impl/API_060_PublisherAssertionTest.html">API_060_PublisherAssertionTest</a> {
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>          <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Log logger = LogFactory.getLog(API_060_PublisherAssertionTest.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>          <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../org/apache/juddi/api/impl/API_010_PublisherTest.html">API_010_PublisherTest</a> api010 = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/api/impl/API_010_PublisherTest.html">API_010_PublisherTest</a>();
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>          <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> TckTModel tckTModel = <strong class="jxr_keyword">new</strong> TckTModel(<strong class="jxr_keyword">new</strong> UDDIPublicationImpl(), <strong class="jxr_keyword">new</strong> UDDIInquiryImpl());
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>          <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> TckBusiness tckBusiness = <strong class="jxr_keyword">new</strong> TckBusiness(<strong class="jxr_keyword">new</strong> UDDIPublicationImpl(), <strong class="jxr_keyword">new</strong> UDDIInquiryImpl());
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>          <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> TckPublisherAssertion tckAssertion = <strong class="jxr_keyword">new</strong> TckPublisherAssertion(<strong class="jxr_keyword">new</strong> UDDIPublicationImpl());
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>          <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> TckFindEntity tckFindEntity = <strong class="jxr_keyword">new</strong> TckFindEntity(<strong class="jxr_keyword">new</strong> UDDIInquiryImpl());
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> String authInfoJoe = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>          <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> String authInfoSam = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>          <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> String authInfoMary = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>          <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> UDDIPublicationImpl pub = <strong class="jxr_keyword">new</strong> UDDIPublicationImpl();
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>          @BeforeClass
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>          <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setup() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>                  Registry.start();
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>                  logger.debug(<span class="jxr_string">"Getting auth token.."</span>);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>                  <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>                          api010.saveJoePublisher();
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>                          api010.saveSamSyndicator();
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>                          UDDISecurityPortType security = <strong class="jxr_keyword">new</strong> UDDISecurityImpl();
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>                          authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>                          authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>                          authInfoMary = TckSecurity.getAuthToken(security, TckPublisher.getMaryPublisherId(), TckPublisher.getMaryPassword());
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>                          TckCommon.DumpAllTModelsOpInfo(authInfoJoe, <strong class="jxr_keyword">new</strong> UDDIInquiryImpl());
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>                          String root = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>                          tckTModel.saveUDDIPublisherTmodel(root);
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>                          tckTModel.saveTmodels(root);
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>                  } <strong class="jxr_keyword">catch</strong> (RemoteException e) {
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>                          System.out.println(<span class="jxr_string">"the test failed, dumping ownership information for all tmodels...."</span>);
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>                          
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>                          logger.error(e.getMessage(), e);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>                          Assert.fail(<span class="jxr_string">"Could not obtain authInfo token."</span> + e.getMessage());
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>                  }
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>          }
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>          @AfterClass
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>          <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> stopRegistry() <strong class="jxr_keyword">throws</strong> ConfigurationException {
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>                  Registry.stop();
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>          }
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>          @Test
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testJoepublisherToSamSyndicator() {
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>                 <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>                         tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>                         tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>                         tckAssertion.saveJoePublisherPublisherAssertion(authInfoJoe);
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>                         tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>                 } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>                         tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>                         tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>                         tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>                         tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>                 }
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>         }
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> 
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">         * This test should find no publisher assertions because we only save</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment">         * them from the joe publisher side.</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>         @Test
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testFindNoAssertions() {
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>                 <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>                         tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>                         tckTModel.saveMaryPublisherTmodel(authInfoMary);
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>                         tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>                         tckBusiness.saveMaryPublisherBusiness(authInfoMary);
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>                         tckAssertion.saveJoePublisherPublisherAssertion(authInfoJoe);
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>                         tckAssertion.saveJoePublisherPublisherAssertion2(authInfoJoe);
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> 
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>                         tckFindEntity.findRelatedBusiness_sortByName(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>                         tckFindEntity.findRelatedBusinessToKey(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>                         tckFindEntity.findRelatedBusinessFromKey(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> 
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>                         tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>                         tckAssertion.deleteJoePublisherPublisherAssertion2(authInfoJoe);
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>                 } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>                         tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>                         tckBusiness.deleteMaryPublisherBusiness(authInfoMary);
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>                         tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>                         tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>                         tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>                         tckTModel.deleteMaryPublisherTmodel(authInfoMary);
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>                 }
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>         }
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> 
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> <em class="jxr_javadoccomment">         * This test should find 2 publisher assertions.</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>         @Test
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testFindAssertions() {
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>                 <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>                         tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>                         tckTModel.saveMaryPublisherTmodel(authInfoMary);
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>                         tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>                         tckBusiness.saveMaryPublisherBusiness(authInfoMary);
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>                         tckAssertion.saveJoePublisherPublisherAssertion(authInfoJoe);
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>                         tckAssertion.saveJoePublisherPublisherAssertion2(authInfoJoe);
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>                         tckAssertion.saveSamPublisherPublisherAssertion(authInfoSam);
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>                         tckAssertion.saveMaryPublisherPublisherAssertion(authInfoMary);
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> 
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>                         tckFindEntity.findRelatedBusiness_sortByName(false);
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>                         tckFindEntity.findRelatedBusinessToKey(false);
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>                         tckFindEntity.findRelatedBusinessFromKey(false);
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> 
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>                         tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>                         tckAssertion.deleteJoePublisherPublisherAssertion2(authInfoJoe);
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> 
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>                 } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>                         tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>                         tckBusiness.deleteMaryPublisherBusiness(authInfoMary);
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>                         tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>                         tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>                         tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>                         tckTModel.deleteMaryPublisherTmodel(authInfoMary);
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>                 }
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>         }
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> 
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> <em class="jxr_javadoccomment">         * covers</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> <em class="jxr_javadoccomment">         * &lt;a href="https://issues.apache.org/jira/browse/JUDDI-908"&gt;JUDDI-908&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> <em class="jxr_javadoccomment">         *</em>
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> <em class="jxr_javadoccomment">         * @throws Exception</em>
+<a class="jxr_linenumber" name="L187" href="#L187">187</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>         @Test(expected = DispositionReportFaultMessage.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> deleteAssertionNonowner() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>                 <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>                         tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>                         tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>                         tckAssertion.saveJoePublisherPublisherAssertion(authInfoJoe);
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> 
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>                         DeletePublisherAssertions dp = <strong class="jxr_keyword">new</strong> DeletePublisherAssertions();
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>                         dp.setAuthInfo(authInfoMary);
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> 
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>                         PublisherAssertion paIn = (PublisherAssertion) EntityCreator.buildFromDoc(TckPublisherAssertion.JOE_ASSERT_XML, <span class="jxr_string">"org.uddi.api_v3"</span>);
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>                         dp.getPublisherAssertion().add(paIn);
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> 
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>                         <strong class="jxr_keyword">new</strong> UDDIPublicationImpl().deletePublisherAssertions(dp);
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>                         <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>                 } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>                         tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>                         tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>                         tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>                         tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>                         tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>                 }
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>         }
+<a class="jxr_linenumber" name="L213" href="#L213">213</a> 
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>         @Test
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSetPublisherAssertions() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>                 <em class="jxr_comment">//create 1/2 PA</em>
+<a class="jxr_linenumber" name="L217" href="#L217">217</a> 
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>                 <em class="jxr_comment">//use Set with no inputs</em>
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>                 <em class="jxr_comment">//confirm all are deleted</em>
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>                 <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L221" href="#L221">221</a> 
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>                         tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>                         tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>                         Holder&lt;List&lt;PublisherAssertion&gt;&gt; x = <strong class="jxr_keyword">new</strong> Holder&lt;List&lt;PublisherAssertion&gt;&gt;();
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>                         x.value = <strong class="jxr_keyword">new</strong> ArrayList&lt;PublisherAssertion&gt;();
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>                         logger.info(<span class="jxr_string">"Clearing all Joe's publisher assertions...."</span>);
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>                         pub.setPublisherAssertions(authInfoJoe, x);
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> 
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>                         logger.info(<span class="jxr_string">"Clearing all Sam's publisher assertions...."</span>);
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>                         pub.setPublisherAssertions(authInfoSam, x);
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> 
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>                         logger.info(<span class="jxr_string">"Confirming we're clear"</span>);
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>                         List&lt;PublisherAssertion&gt; before = pub.getPublisherAssertions(authInfoJoe);
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>                         Assert.assertNotNull(before);
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>                         Assert.assertTrue(before.isEmpty());
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>                         System.out.println(before.size());
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; before.size(); i++) {
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>                                 JAXB.marshal(before.get(i), System.out);
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>                         }
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> 
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>                         before = pub.getPublisherAssertions(authInfoSam);
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>                         Assert.assertNotNull(before);
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>                         Assert.assertTrue(before.isEmpty());
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>                         System.out.println(before.size());
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; before.size(); i++) {
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>                                 JAXB.marshal(before.get(i), System.out);
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>                         }
+<a class="jxr_linenumber" name="L250" href="#L250">250</a> 
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>                         List&lt;AssertionStatusItem&gt; assertionStatusReport = pub.getAssertionStatusReport(authInfoJoe, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>                         Assert.assertTrue(assertionStatusReport.isEmpty());
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> 
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>                         assertionStatusReport = pub.getAssertionStatusReport(authInfoSam, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>                         Assert.assertTrue(assertionStatusReport.isEmpty());
+<a class="jxr_linenumber" name="L256" href="#L256">256</a> 
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>                         logger.info(<span class="jxr_string">"Saving 1/2 publisher assertion...."</span>);
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>                         List&lt;PublisherAssertion&gt; onehalfPA = tckAssertion.saveJoePublisherPublisherAssertion(authInfoJoe);
+<a class="jxr_linenumber" name="L259" href="#L259">259</a> 
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>                         before = pub.getPublisherAssertions(authInfoJoe);
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>                         Assert.assertNotNull(before);
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>                         Assert.assertFalse(before.isEmpty());
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>                         System.out.println(before.size());
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; before.size(); i++) {
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>                                 JAXB.marshal(before.get(i), System.out);
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>                         }
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>                         <em class="jxr_comment">//PublisherAssertion paIn = (PublisherAssertion)EntityCreator.buildFromDoc(TckPublisherAssertion.JOE_ASSERT_XML, "org.uddi.api_v3");</em>
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>                         <em class="jxr_comment">//dp.getPublisherAssertion().add(paIn);</em>
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>                         x = <strong class="jxr_keyword">new</strong> Holder&lt;List&lt;PublisherAssertion&gt;&gt;();
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>                         x.value = <strong class="jxr_keyword">new</strong> ArrayList&lt;PublisherAssertion&gt;();
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>                         logger.info(<span class="jxr_string">"Clearing all publisher assertions...."</span>);
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>                         pub.setPublisherAssertions(authInfoJoe, x);
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>                         System.out.println(x.value.size());
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; x.value.size(); i++) {
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>                                 JAXB.marshal(x.value.get(i), System.out);
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>                         }
+<a class="jxr_linenumber" name="L277" href="#L277">277</a> 
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>                         logger.info(<span class="jxr_string">"Fetch all publisher assertions....there should be none"</span>);
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>                         List&lt;PublisherAssertion&gt; publisherAssertions = pub.getPublisherAssertions(authInfoJoe);
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>                         System.out.println(publisherAssertions.size());
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; publisherAssertions.size(); i++) {
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>                                 JAXB.marshal(publisherAssertions.get(i), System.out);
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>                         }
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>                         Assert.assertNotNull(publisherAssertions);
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>                         Assert.assertTrue(publisherAssertions.isEmpty());
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>                         <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>                 } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>                         <em class="jxr_comment">//tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);</em>
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>                         tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>                         tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>                         tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>                         tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>                 }
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>         }
+<a class="jxr_linenumber" name="L295" href="#L295">295</a> 
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>         @Test
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSetPublisherAssertions2() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>                 <em class="jxr_comment">//create 1/2 PA</em>
+<a class="jxr_linenumber" name="L299" href="#L299">299</a> 
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>                 <em class="jxr_comment">//use Set with the same 1/2 PA</em>
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>                 <em class="jxr_comment">//confirm still present</em>
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>                 <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>                         tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>                         tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>                         List&lt;PublisherAssertion&gt; onehalfPA = tckAssertion.saveJoePublisherPublisherAssertion(authInfoJoe);
+<a class="jxr_linenumber" name="L308" href="#L308">308</a> 
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>                         List&lt;PublisherAssertion&gt; before = pub.getPublisherAssertions(authInfoJoe);
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>                         Assert.assertNotNull(before);
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>                         Assert.assertFalse(before.isEmpty());
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> 
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>                         pub.setPublisherAssertions(authInfoJoe, <strong class="jxr_keyword">new</strong> Holder&lt;List&lt;PublisherAssertion&gt;&gt;(onehalfPA));
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>                         List&lt;PublisherAssertion&gt; publisherAssertions = pub.getPublisherAssertions(authInfoJoe);
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>                         Assert.assertNotNull(publisherAssertions);
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>                         Assert.assertFalse(publisherAssertions.isEmpty());
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>                         <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>                 } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>                         <em class="jxr_comment">//tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);</em>
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>                         tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>                         tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>                         tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>                         tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>                 }
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>         }
+<a class="jxr_linenumber" name="L326" href="#L326">326</a> 
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>         @Test
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSetPublisherAssertions3() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>                 <em class="jxr_comment">//create 1/2 PA</em>
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>                 <em class="jxr_comment">//use Set with a new PA</em>
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>                 <em class="jxr_comment">//confirm first PA is gone and the new PA exists</em>
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>                 <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L333" href="#L333">333</a> 
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>                         tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>                         tckTModel.saveMaryPublisherTmodel(authInfoMary);
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>                         tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>                         tckBusiness.saveMaryPublisherBusiness(authInfoMary);
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>                         Holder&lt;List&lt;PublisherAssertion&gt;&gt; x = <strong class="jxr_keyword">new</strong> Holder&lt;List&lt;PublisherAssertion&gt;&gt;();
+<a class="jxr_linenumber" name="L341" href="#L341">341</a>                         x.value = <strong class="jxr_keyword">new</strong> ArrayList&lt;PublisherAssertion&gt;();
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>                         logger.info(<span class="jxr_string">"Clearing all Joe's publisher assertions...."</span>);
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>                         pub.setPublisherAssertions(authInfoJoe, x);
+<a class="jxr_linenumber" name="L344" href="#L344">344</a> 
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>                         logger.info(<span class="jxr_string">"Clearing all Sam's publisher assertions...."</span>);
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>                         pub.setPublisherAssertions(authInfoSam, x);
+<a class="jxr_linenumber" name="L347" href="#L347">347</a> 
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>                         logger.info(<span class="jxr_string">"Clearing all Mary's publisher assertions...."</span>);
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>                         pub.setPublisherAssertions(authInfoMary, x);
+<a class="jxr_linenumber" name="L350" href="#L350">350</a> 
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>                         logger.info(<span class="jxr_string">"Confirming we're clear"</span>);
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>                         List&lt;PublisherAssertion&gt; before = pub.getPublisherAssertions(authInfoJoe);
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>                         Assert.assertNotNull(before);
+<a class="jxr_linenumber" name="L354" href="#L354">354</a> 
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>                         System.out.println(before.size());
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; before.size(); i++) {
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>                                 JAXB.marshal(before.get(i), System.out);
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>                         }
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>                         Assert.assertTrue(before.isEmpty());
+<a class="jxr_linenumber" name="L360" href="#L360">360</a> 
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>                         before = pub.getPublisherAssertions(authInfoSam);
+<a class="jxr_linenumber" name="L362" href="#L362">362</a>                         Assert.assertNotNull(before);
+<a class="jxr_linenumber" name="L363" href="#L363">363</a> 
+<a class="jxr_linenumber" name="L364" href="#L364">364</a>                         System.out.println(before.size());
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; before.size(); i++) {
+<a class="jxr_linenumber" name="L366" href="#L366">366</a>                                 JAXB.marshal(before.get(i), System.out);
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>                         }
+<a class="jxr_linenumber" name="L368" href="#L368">368</a>                         Assert.assertTrue(before.isEmpty());
+<a class="jxr_linenumber" name="L369" href="#L369">369</a> 
+<a class="jxr_linenumber" name="L370" href="#L370">370</a>                         before = pub.getPublisherAssertions(authInfoMary);
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>                         Assert.assertNotNull(before);
+<a class="jxr_linenumber" name="L372" href="#L372">372</a> 
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>                         System.out.println(before.size());
+<a class="jxr_linenumber" name="L374" href="#L374">374</a>                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; before.size(); i++) {
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>                                 JAXB.marshal(before.get(i), System.out);
+<a class="jxr_linenumber" name="L376" href="#L376">376</a>                         }
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>                         Assert.assertTrue(before.isEmpty());
+<a class="jxr_linenumber" name="L378" href="#L378">378</a> 
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>                         List&lt;AssertionStatusItem&gt; assertionStatusReport = pub.getAssertionStatusReport(authInfoJoe, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L380" href="#L380">380</a>                         Assert.assertTrue(assertionStatusReport.isEmpty());
+<a class="jxr_linenumber" name="L381" href="#L381">381</a> 
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>                         assertionStatusReport = pub.getAssertionStatusReport(authInfoSam, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>                         Assert.assertTrue(assertionStatusReport.isEmpty());
+<a class="jxr_linenumber" name="L384" href="#L384">384</a> 
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>                         assertionStatusReport = pub.getAssertionStatusReport(authInfoMary, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>                         Assert.assertTrue(assertionStatusReport.isEmpty());
+<a class="jxr_linenumber" name="L387" href="#L387">387</a> 
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>                         logger.info(<span class="jxr_string">"Saving 1/2 publisher assertion...."</span>);
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>                         List&lt;PublisherAssertion&gt; onehalfPA = tckAssertion.saveJoePublisherPublisherAssertion(authInfoJoe);
+<a class="jxr_linenumber" name="L390" href="#L390">390</a> 
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>                         before = pub.getPublisherAssertions(authInfoJoe);
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>                         Assert.assertNotNull(before);
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>                         Assert.assertFalse(before.isEmpty());
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>                         System.out.println(before.size());
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; before.size(); i++) {
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>                                 JAXB.marshal(before.get(i), System.out);
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>                         }
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>                         <em class="jxr_comment">//PublisherAssertion paIn = (PublisherAssertion)EntityCreator.buildFromDoc(TckPublisherAssertion.JOE_ASSERT_XML, "org.uddi.api_v3");</em>
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>                         <em class="jxr_comment">//dp.getPublisherAssertion().add(paIn);</em>
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>                         x = <strong class="jxr_keyword">new</strong> Holder&lt;List&lt;PublisherAssertion&gt;&gt;();
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>                         x.value = <strong class="jxr_keyword">new</strong> ArrayList&lt;PublisherAssertion&gt;();
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>                         PublisherAssertion pa = <strong class="jxr_keyword">new</strong> PublisherAssertion();
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> 
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>                         pa.setFromKey(TckBusiness.JOE_BUSINESS_KEY);
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>                         pa.setToKey(TckBusiness.MARY_BUSINESS_KEY);
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>                         pa.setKeyedReference(<strong class="jxr_keyword">new</strong> KeyedReference(UDDIConstants.RELATIONSHIPS, <span class="jxr_string">"parent-child"</span>, <span class="jxr_string">"child"</span>));
+<a class="jxr_linenumber" name="L407" href="#L407">407</a> 
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>                         x.value.add(pa);
+<a class="jxr_linenumber" name="L409" href="#L409">409</a>                         logger.info(<span class="jxr_string">"Using set to clear existing and add a new publisher assertion...."</span>);
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>                         pub.setPublisherAssertions(authInfoJoe, x);
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>                         System.out.println(x.value.size());
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; x.value.size(); i++) {
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>                                 JAXB.marshal(x.value.get(i), System.out);
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>                         }
+<a class="jxr_linenumber" name="L415" href="#L415">415</a> 
+<a class="jxr_linenumber" name="L416" href="#L416">416</a>                         logger.info(<span class="jxr_string">"Fetch all publisher assertions....there should be 1"</span>);
+<a class="jxr_linenumber" name="L417" href="#L417">417</a>                         List&lt;PublisherAssertion&gt; publisherAssertions = pub.getPublisherAssertions(authInfoJoe);
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>                         System.out.println(publisherAssertions.size());
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; publisherAssertions.size(); i++) {
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>                                 JAXB.marshal(publisherAssertions.get(i), System.out);
+<a class="jxr_linenumber" name="L421" href="#L421">421</a>                         }
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>                         Assert.assertEquals(publisherAssertions.get(0).getFromKey(), pa.getFromKey());
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>                         Assert.assertEquals(publisherAssertions.get(0).getToKey(), pa.getToKey());
+<a class="jxr_linenumber" name="L424" href="#L424">424</a>                         Assert.assertEquals(publisherAssertions.get(0).getKeyedReference().getKeyName(), pa.getKeyedReference().getKeyName());
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>                         Assert.assertEquals(publisherAssertions.get(0).getKeyedReference().getKeyValue(), pa.getKeyedReference().getKeyValue());
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>                         Assert.assertEquals(publisherAssertions.get(0).getKeyedReference().getTModelKey(), pa.getKeyedReference().getTModelKey());
+<a class="jxr_linenumber" name="L427" href="#L427">427</a> 
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>                         <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>                 } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>                         <em class="jxr_comment">//tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);</em>
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>                         tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>                         tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>                         tckBusiness.deleteMaryPublisherBusiness(authInfoMary);
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>                         tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>                         tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>                         tckTModel.deleteMaryPublisherTmodel(authInfoMary);
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>                 }
+<a class="jxr_linenumber" name="L438" href="#L438">438</a> 
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>         }
+<a class="jxr_linenumber" name="L440" href="#L440">440</a>         DigSigUtil ds;
+<a class="jxr_linenumber" name="L441" href="#L441">441</a> 
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>         <strong class="jxr_keyword">void</strong> SetCertStoreSettigns() {
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>                 ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE, <span class="jxr_string">"./src/test/resources/keystore.jks"</span>);
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>                 ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE, <span class="jxr_string">"JKS"</span>);
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>                 ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, <span class="jxr_string">"Test"</span>);
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>                 ds.put(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS, <span class="jxr_string">"Test"</span>);
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>                 ds.put(DigSigUtil.TRUSTSTORE_FILE, <span class="jxr_string">"./src/test/resources/truststore.jks"</span>);
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>                 ds.put(DigSigUtil.TRUSTSTORE_FILETYPE, <span class="jxr_string">"JKS"</span>);
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>                 ds.put(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, <span class="jxr_string">"Test"</span>);
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>         }
+<a class="jxr_linenumber" name="L451" href="#L451">451</a> 
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>         <strong class="jxr_keyword">void</strong> Default() <strong class="jxr_keyword">throws</strong> CertificateException {
+<a class="jxr_linenumber" name="L453" href="#L453">453</a>                 ds = <strong class="jxr_keyword">new</strong> DigSigUtil();
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>                 SetCertStoreSettigns();
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>                 ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, <span class="jxr_string">"true"</span>);
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>         }
+<a class="jxr_linenumber" name="L457" href="#L457">457</a> 
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>         @Test
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testPublisherAssertionSignatures() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>                 <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>                         Default();
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>                         tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>                         tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>                         AddPublisherAssertions ap = <strong class="jxr_keyword">new</strong> AddPublisherAssertions();
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>                         ap.setAuthInfo(authInfoJoe);
+<a class="jxr_linenumber" name="L468" href="#L468">468</a> 
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>                         PublisherAssertion paIn = (PublisherAssertion) EntityCreator.buildFromDoc(TckPublisherAssertion.JOE_ASSERT_XML, <span class="jxr_string">"org.uddi.api_v3"</span>);
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>                         paIn = ds.signUddiEntity(paIn);
+<a class="jxr_linenumber" name="L471" href="#L471">471</a> 
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>                         ap.getPublisherAssertion().add(paIn);
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>                         Assert.assertFalse(paIn.getSignature().isEmpty());
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>                         pub.addPublisherAssertions(ap);
+<a class="jxr_linenumber" name="L475" href="#L475">475</a> 
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>                         List&lt;PublisherAssertion&gt; onehalfPA = tckAssertion.saveJoePublisherPublisherAssertion(authInfoJoe);
+<a class="jxr_linenumber" name="L477" href="#L477">477</a> 
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>                        
+<a class="jxr_linenumber" name="L479" href="#L479">479</a>                         Assert.assertNotNull(onehalfPA);
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>                         Assert.assertFalse(onehalfPA.get(0).getSignature().isEmpty());
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>                         Assert.assertFalse(onehalfPA.isEmpty());
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>                         
+<a class="jxr_linenumber" name="L483" href="#L483">483</a>                         Assert.assertNotNull(onehalfPA);
+<a class="jxr_linenumber" name="L484" href="#L484">484</a>                         Assert.assertFalse(onehalfPA.get(0).getSignature().isEmpty());
+<a class="jxr_linenumber" name="L485" href="#L485">485</a>                         Assert.assertFalse(onehalfPA.isEmpty());
+<a class="jxr_linenumber" name="L486" href="#L486">486</a>                         Assert.assertEquals(paIn.getSignature().size(),onehalfPA.get(0).getSignature().size());
+<a class="jxr_linenumber" name="L487" href="#L487">487</a>                         Assert.assertEquals(paIn.getSignature().get(0).getId(),onehalfPA.get(0).getSignature().get(0).getId());
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>                         Assert.assertEquals(paIn.getSignature().get(0).getKeyInfo().getId(),onehalfPA.get(0).getSignature().get(0).getKeyInfo().getId());
+<a class="jxr_linenumber" name="L489" href="#L489">489</a>                         Assert.assertEquals(paIn.getSignature().get(0).getKeyInfo().getContent().size(),onehalfPA.get(0).getSignature().get(0).getKeyInfo().getContent().size());
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>                         
+<a class="jxr_linenumber" name="L491" href="#L491">491</a>                         Assert.assertEquals(paIn.getSignature().get(0).getSignedInfo().getCanonicalizationMethod().getAlgorithm(),onehalfPA.get(0).getSignature().get(0).getSignedInfo().getCanonicalizationMethod().getAlgorithm());
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>                         Assert.assertEquals(paIn.getSignature().get(0).getSignedInfo().getId(),onehalfPA.get(0).getSignature().get(0).getSignedInfo().getId());
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>                         Assert.assertEquals(paIn.getSignature().get(0).getSignedInfo().getReference().size(),onehalfPA.get(0).getSignature().get(0).getSignedInfo().getReference().size());
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>                         AtomicReference&lt;String&gt; outmsg=<strong class="jxr_keyword">new</strong> AtomicReference&lt;String&gt;();
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>                         <strong class="jxr_keyword">boolean</strong> success=ds.verifySignedUddiEntity(onehalfPA.get(0), outmsg);
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>                         Assert.assertTrue(outmsg.get(), success);
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>                      
+<a class="jxr_linenumber" name="L498" href="#L498">498</a>                         <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L499" href="#L499">499</a>                 } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L500" href="#L500">500</a>                         <em class="jxr_comment">//tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);</em>
+<a class="jxr_linenumber" name="L501" href="#L501">501</a>                         tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+<a class="jxr_linenumber" name="L502" href="#L502">502</a>                         tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+<a class="jxr_linenumber" name="L503" href="#L503">503</a>                         tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+<a class="jxr_linenumber" name="L504" href="#L504">504</a>                         tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>                 }
+<a class="jxr_linenumber" name="L506" href="#L506">506</a>         }
+<a class="jxr_linenumber" name="L507" href="#L507">507</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2004&#x2013;2018 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
+</body>
+</html>

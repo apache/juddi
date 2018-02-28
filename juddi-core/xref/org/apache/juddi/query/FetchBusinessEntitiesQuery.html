@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>FetchBusinessEntitiesQuery xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../apidocs/org/apache/juddi/query/FetchBusinessEntitiesQuery.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright 2001-2008 The Apache Software Foundation.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * </em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> * </em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *      <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> * </em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> * Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> * distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> * See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> * limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">package</strong> org.apache.juddi.query;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> java.util.Collections;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.util.UUID;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> javax.persistence.EntityManager;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.configuration.ConfigurationException;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.logging.Log;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.logging.LogFactory;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.config.AppConfig;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.config.Property;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.query.util.DynamicQuery;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.query.util.FindQualifiers;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.uddi.v3_service.DispositionReportFaultMessage;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.ListDescription;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment"> * The "select" method retrieves all the entities for the input key list and sorts according to the user settings.  Paging is taken into account when retrieving </em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment"> * the results.  The result is a list of the entity objects containing all top level elements (restricted to the given page). </em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> * </em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> * NOTE:  Results usually need multiple one-to-many collections to be fetched.  Although this could be done in one query with eager fetching, this strategy is not</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment"> * recommended as it will lead to a potentially large Cartesian product.  Therefore, the collections are initialized in separate queries during the mapping </em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment"> * stage.  If the returned results are small (maxRows parameters is set appropriately), a single query is likely faster, but probably not by enough to consider </em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment"> * the optimization under these conditions.</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> * </em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> * @author &lt;a href="<a href="mailto:jfaath@apache.org" target="alexandria_uri">mailto:jfaath@apache.org</a>"&gt;Jeff Faath&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/apache/juddi/query/FetchBusinessEntitiesQuery.html">FetchBusinessEntitiesQuery</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../org/apache/juddi/query/BusinessEntityQuery.html">BusinessEntityQuery</a> {
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Log log = LogFactory.getLog(FetchBusinessEntitiesQuery.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  	<strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String selectSQL;
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  	<strong class="jxr_keyword">static</strong> {
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  		StringBuilder sql = <strong class="jxr_keyword">new</strong> StringBuilder(200);
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  		sql.append(<span class="jxr_string">"select "</span> + ENTITY_ALIAS + <span class="jxr_string">" from "</span> + ENTITY_NAME + <span class="jxr_string">" "</span> + ENTITY_ALIAS + <span class="jxr_string">" "</span>);
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  		selectSQL = sql.toString();
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  	}
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  	
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> List&lt;?&gt; select(EntityManager em, <a href="../../../../org/apache/juddi/query/util/FindQualifiers.html">FindQualifiers</a> fq, List&lt;?&gt; keysIn, Integer maxRowsUser, Integer listHead, ListDescription listDesc, DynamicQuery.Parameter... restrictions) <strong class="jxr_keyword">throws</strong> DispositionReportFaultMessage {
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  		
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  		<em class="jxr_comment">// If keysIn is null or empty, then nothing to fetch.</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  		<strong class="jxr_keyword">if</strong> ((keysIn == <strong class="jxr_keyword">null</strong>) || (keysIn.size() == 0))
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  		<strong class="jxr_keyword">return</strong> Collections.emptyList();
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  		
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  		<strong class="jxr_keyword">int</strong> maxRows = DEFAULT_MAXROWS;
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  		<strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  			maxRows = AppConfig.getConfiguration().getInteger(Property.JUDDI_MAX_ROWS, DEFAULT_MAXROWS);
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  		}
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  		<strong class="jxr_keyword">catch</strong>(ConfigurationException ce) {
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  			log.error(<span class="jxr_string">"Configuration exception occurred retrieving: "</span> + Property.JUDDI_MAX_ROWS);
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  		}
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  		DynamicQuery dynamicQry = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/juddi/query/util/DynamicQuery.html">DynamicQuery</a>(selectSQL);
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  		<strong class="jxr_keyword">if</strong> (keysIn.size() &gt; maxRows) {
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  			UUID uuid = UUID.randomUUID();
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  			storeIntermediateKeySetResults(em, uuid.toString(), keysIn);
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  			appendTempTable(dynamicQry);
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  			appendSortTables(dynamicQry);
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  			appendTempJoin(dynamicQry, uuid.toString());
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  		}
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  		<strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  			appendSortTables(dynamicQry);
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  			dynamicQry.appendInListWithAnd(ENTITY_ALIAS + <span class="jxr_string">"."</span> + KEY_NAME, keysIn);
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  		}
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  		<strong class="jxr_keyword">if</strong> (restrictions != <strong class="jxr_keyword">null</strong> &amp;&amp; restrictions.length &gt; 0)
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  			dynamicQry.AND().pad().appendGroupedAnd(restrictions);
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  		appendSortCriteria(dynamicQry, fq);
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  		log.debug(dynamicQry);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  		<strong class="jxr_keyword">return</strong> getPagedResult(em, dynamicQry, maxRowsUser, listHead, listDesc);
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  	}
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  	
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> appendTempTable(<a href="../../../../org/apache/juddi/query/util/DynamicQuery.html">DynamicQuery</a> qry) {
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  		qry.comma().append(TEMP_ENTITY_NAME + <span class="jxr_string">" "</span> +  TEMP_ENTITY_ALIAS );
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  	}
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  	
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> appendTempJoin(<a href="../../../../org/apache/juddi/query/util/DynamicQuery.html">DynamicQuery</a> qry, String uuid) {
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  		qry.pad().AND().pad().append(TEMP_ENTITY_PK_KEY_NAME).append(DynamicQuery.PREDICATE_EQUALS);
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  		qry.pad().append(ENTITY_ALIAS + <span class="jxr_string">"."</span> + KEY_NAME);
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> 		qry.pad().AND().pad().append(TEMP_ENTITY_PK_TXID_NAME).append(DynamicQuery.PREDICATE_EQUALS);
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> 		qry.append(<span class="jxr_string">"'"</span> + uuid + <span class="jxr_string">"'"</span>).pad();
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> 	}
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> 	
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> appendSortTables(<a href="../../../../org/apache/juddi/query/util/DynamicQuery.html">DynamicQuery</a> qry) {
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> 		qry.pad().comma().pad().append(FindBusinessByNameQuery.ENTITY_NAME_CHILD).pad().append(buildAlias(FindBusinessByNameQuery.ENTITY_NAME_CHILD)).pad();
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> 		qry.WHERE().pad().append(ENTITY_ALIAS + <span class="jxr_string">"."</span> + KEY_NAME).pad();
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> 		qry.append(DynamicQuery.PREDICATE_EQUALS).pad();
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> 		qry.append(buildAlias(FindBusinessByNameQuery.ENTITY_NAME_CHILD) + <span class="jxr_string">"."</span> + ENTITY_FIELD + <span class="jxr_string">"."</span> + KEY_NAME).pad();
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> 	}
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> 	
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> 	<em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_comment">	 *	Default ordering is name ascending and date descending.  If a name item is set, then it will always go first.  If only a date item is set, then date will</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_comment">	 *  go first, and the name sort will occur second in ascending order.</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_comment">	 */</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> appendSortCriteria(<a href="../../../../org/apache/juddi/query/util/DynamicQuery.html">DynamicQuery</a> qry, <a href="../../../../org/apache/juddi/query/util/FindQualifiers.html">FindQualifiers</a> fq) {
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> 		
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> 		String nameTerm = buildAlias(FindBusinessByNameQuery.ENTITY_NAME_CHILD) + <span class="jxr_string">".name"</span>;
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> 		
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> 		<strong class="jxr_keyword">if</strong> (fq.isCaseInsensitiveSort()) {
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> 			<em class="jxr_comment">// See JUDDI-785</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> 			log.info(<span class="jxr_string">"jUDDI does not support caseInsensitive sort, as JPA does not support sortBy "</span>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> 					+ <span class="jxr_string">"with UPPER or LOWER, see https://issues.apache.org/jira/browse/OPENJPA-1817. "</span>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> 					+ <span class="jxr_string">"A work around is to do a caseInsentive Match."</span>);
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> 			<em class="jxr_comment">//nameTerm = "upper(" + nameTerm + ")";</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> 		}
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> 		
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> 		String dateTerm = ENTITY_ALIAS + <span class="jxr_string">".modified"</span>;
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> 
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> 		String orderClause = nameTerm + <span class="jxr_string">" "</span> + DynamicQuery.SORT_ASC + <span class="jxr_string">", "</span> + dateTerm + <span class="jxr_string">" "</span> + DynamicQuery.SORT_DESC;
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> 		<strong class="jxr_keyword">if</strong> (fq.isSortByNameAsc()) {
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> 			<strong class="jxr_keyword">if</strong> (fq.isSortByDateAsc())
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> 				orderClause = nameTerm + <span class="jxr_string">" "</span> + DynamicQuery.SORT_ASC + <span class="jxr_string">", "</span> + dateTerm + <span class="jxr_string">" "</span> + DynamicQuery.SORT_ASC;
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> 		}
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> 		<strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (fq.isSortByNameDesc()) {
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> 			<strong class="jxr_keyword">if</strong> (fq.isSortByDateAsc())
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> 				orderClause = nameTerm + <span class="jxr_string">" "</span> + DynamicQuery.SORT_DESC + <span class="jxr_string">", "</span> + dateTerm + <span class="jxr_string">" "</span> + DynamicQuery.SORT_ASC;
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> 			<strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> 				orderClause = nameTerm + <span class="jxr_string">" "</span> + DynamicQuery.SORT_DESC + <span class="jxr_string">", "</span> + dateTerm + <span class="jxr_string">" "</span> + DynamicQuery.SORT_DESC;
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> 		}
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> 		<strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (fq.isSortByDateAsc())
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> 			orderClause =  dateTerm + <span class="jxr_string">" "</span> + DynamicQuery.SORT_ASC + <span class="jxr_string">", "</span> +  nameTerm + <span class="jxr_string">" "</span> + DynamicQuery.SORT_ASC;
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> 		<strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (fq.isSortByDateDesc())
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> 			orderClause =  dateTerm + <span class="jxr_string">" "</span> + DynamicQuery.SORT_DESC + <span class="jxr_string">", "</span> +  nameTerm + <span class="jxr_string">" "</span> + DynamicQuery.SORT_ASC;
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> 			
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> 		qry.ORDERBY().pad();
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> 		qry.append(orderClause);
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> 		qry.pad();
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> 	}
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> 
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2004&#x2013;2018 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
+</body>
+</html>

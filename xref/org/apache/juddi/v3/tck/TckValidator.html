@@ -1,0 +1,570 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>TckValidator xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../apidocs/org/apache/juddi/v3/tck/TckValidator.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright 2001-2009 The Apache Software Foundation.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * </em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *      <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> * </em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> * Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> * distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> * See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> * limitations under the License.</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">package</strong> org.apache.juddi.v3.tck;
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment"> * @author &lt;a href="<a href="mailto:jfaath@apache.org" target="alexandria_uri">mailto:jfaath@apache.org</a>"&gt;Jeff Faath&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> * @author &lt;a href="<a href="mailto:kstam@apache.org" target="alexandria_uri">mailto:kstam@apache.org</a>"&gt;Kurt T Stam&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> * @author &lt;a href="<a href="mailto:tcunning@apache.org" target="alexandria_uri">mailto:tcunning@apache.org</a>"&gt;Tom Cunningham&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> junit.framework.Assert.assertEquals;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> junit.framework.Assert.assertTrue;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> java.util.Collection;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> java.util.Iterator;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> javax.xml.bind.JAXB;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> javax.xml.bind.JAXBElement;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> javax.xml.transform.dom.DOMResult;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> javax.xml.transform.dom.DOMSource;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.custommonkey.xmlunit.Diff;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.custommonkey.xmlunit.XMLUnit;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.BindingTemplate;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.BindingTemplates;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.CategoryBag;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.Contact;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.Contacts;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.Description;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.DiscoveryURL;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.DiscoveryURLs;
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.HostingRedirector;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.InstanceDetails;
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.KeyedReference;
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.Name;
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.OverviewDoc;
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.OverviewURL;
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.PersonName;
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.TModelInstanceDetails;
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <strong class="jxr_keyword">import</strong> org.uddi.api_v3.TModelInstanceInfo;
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <strong class="jxr_keyword">import</strong> org.w3._2000._09.xmldsig_.CanonicalizationMethodType;
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <strong class="jxr_keyword">import</strong> org.w3._2000._09.xmldsig_.DigestMethodType;
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <strong class="jxr_keyword">import</strong> org.w3._2000._09.xmldsig_.KeyInfoType;
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <strong class="jxr_keyword">import</strong> org.w3._2000._09.xmldsig_.ObjectType;
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <strong class="jxr_keyword">import</strong> org.w3._2000._09.xmldsig_.ReferenceType;
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <strong class="jxr_keyword">import</strong> org.w3._2000._09.xmldsig_.SignatureMethodType;
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <strong class="jxr_keyword">import</strong> org.w3._2000._09.xmldsig_.SignatureType;
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <strong class="jxr_keyword">import</strong> org.w3._2000._09.xmldsig_.SignatureValueType;
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <strong class="jxr_keyword">import</strong> org.w3._2000._09.xmldsig_.SignedInfoType;
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <strong class="jxr_keyword">import</strong> org.w3._2000._09.xmldsig_.TransformType;
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <strong class="jxr_keyword">import</strong> org.w3._2000._09.xmldsig_.TransformsType;
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.Document;
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.Element;
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.Node;
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/apache/juddi/v3/tck/TckValidator.html">TckValidator</a> {
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  	
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  	
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkNames(List&lt;Name&gt; names1, List&lt;Name&gt; names2) {
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  		<strong class="jxr_keyword">if</strong> (names1 == <strong class="jxr_keyword">null</strong> || names2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  			assertEquals(names1, names2);
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  		}
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  		assertEquals(names1.size(), names2.size());
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  		Iterator&lt;Name&gt; names1Itr = names1.iterator();
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  		Iterator&lt;Name&gt; names2Itr = names2.iterator();
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  		<strong class="jxr_keyword">while</strong> (names1Itr.hasNext()) {
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  			Name name1 = names1Itr.next();
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  			Name name2 = names2Itr.next();
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  			assertEquals(name1.getLang(), name2.getLang());
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  			assertEquals(name1.getValue(), name2.getValue());
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  		}
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  	}
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  	
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkDescriptions(List&lt;Description&gt; descriptions1, List&lt;Description&gt; descriptions2) {
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  		<strong class="jxr_keyword">if</strong> (descriptions1 == <strong class="jxr_keyword">null</strong> || descriptions2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  			assertEquals(descriptions1, descriptions2);
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  		}
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  		assertEquals(descriptions1.size(), descriptions2.size());
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  		Iterator&lt;Description&gt; descriptions1Itr = descriptions1.iterator();
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  		Iterator&lt;Description&gt; descriptions2Itr = descriptions2.iterator();
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  		<strong class="jxr_keyword">while</strong> (descriptions1Itr.hasNext()) {
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  			Description description1 = descriptions1Itr.next();
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  			Description description2 = descriptions2Itr.next();
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> 			assertEquals(description1.getLang(), description2.getLang());
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> 			assertEquals(description1.getValue(), description2.getValue());
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> 		}
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> 	}
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> 	
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkDiscoveryUrls(<a href="../../../../../org/uddi/api_v3/DiscoveryURLs.html">DiscoveryURLs</a> discs1, <a href="../../../../../org/uddi/api_v3/DiscoveryURLs.html">DiscoveryURLs</a> discs2) {
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> 		<strong class="jxr_keyword">if</strong> (discs1 == <strong class="jxr_keyword">null</strong> || discs2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> 			assertEquals(discs1, discs2);
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> 		}
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> 		List&lt;DiscoveryURL&gt; discList1 = discs1.getDiscoveryURL();
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> 		List&lt;DiscoveryURL&gt; discList2 = discs2.getDiscoveryURL();
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> 		
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> 		<strong class="jxr_keyword">if</strong> (discList1 == <strong class="jxr_keyword">null</strong> || discList2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> 			assertEquals(discList1, discList2);
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> 		}
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> 		assertEquals(discList1.size(), discList2.size());
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> 		Iterator&lt;DiscoveryURL&gt; discList1Itr = discList1.iterator();
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> 		Iterator&lt;DiscoveryURL&gt; discList2Itr = discList2.iterator();
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> 		<strong class="jxr_keyword">while</strong> (discList1Itr.hasNext()) {
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> 			DiscoveryURL disc1 = discList1Itr.next();
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> 			DiscoveryURL disc2 = discList2Itr.next();
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> 			assertEquals(disc1.getUseType(), disc2.getUseType());
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> 			assertEquals(disc1.getValue(), disc2.getValue());
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> 		}
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> 	}
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> 	
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkSignatures(List&lt;SignatureType&gt; sigs1, List&lt;SignatureType&gt; sigs2) {
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>             <strong class="jxr_keyword">if</strong> (sigs1 == <strong class="jxr_keyword">null</strong> || sigs2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> 			assertEquals(sigs1, sigs2);
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>             }
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>             assertEquals(sigs1.size(), sigs2.size());
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>             Iterator&lt;SignatureType&gt; sigsList1Itr = sigs1.iterator();
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>             Iterator&lt;SignatureType&gt; sigsList2Itr = sigs2.iterator();
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>             <strong class="jxr_keyword">while</strong> (sigsList1Itr.hasNext()) {
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>                     <a href="../../../../../org/w3/_2000/_09/xmldsig_/SignatureType.html">SignatureType</a> sig1 = sigsList1Itr.next();
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>                     <a href="../../../../../org/w3/_2000/_09/xmldsig_/SignatureType.html">SignatureType</a> sig2 = sigsList2Itr.next();
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>                     
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>                     assertEquals(sig1.getId(), sig2.getId());
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>                     checkKeyInfo(sig1.getKeyInfo(), sig2.getKeyInfo());
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>                     checkObjectType(sig1.getObject(), sig2.getObject());
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>                     checkSignatureValue(sig1.getSignatureValue(), sig2.getSignatureValue());
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>                     checkSignedInfo(sig1.getSignedInfo(), sig2.getSignedInfo());
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>             }
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>         }
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>         
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkKeyInfo(<a href="../../../../../org/w3/_2000/_09/xmldsig_/KeyInfoType.html">KeyInfoType</a> kit1, <a href="../../../../../org/w3/_2000/_09/xmldsig_/KeyInfoType.html">KeyInfoType</a> kit2) {
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>             <strong class="jxr_keyword">if</strong> (kit1 == <strong class="jxr_keyword">null</strong> || kit2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>                     assertEquals(kit1, kit2);
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>                     <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>             }
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>             assertEquals(kit1.getId(), kit2.getId());
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> 
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>             DOMResult domResult1 = <strong class="jxr_keyword">new</strong> DOMResult();
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>             DOMResult domResult2 = <strong class="jxr_keyword">new</strong> DOMResult();
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>             JAXB.marshal(kit1, domResult1);
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>             JAXB.marshal(kit2, domResult2);
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>             
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>             Document doc1 = (Document)domResult1.getNode();
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>             DOMSource domSource1 = <strong class="jxr_keyword">new</strong> DOMSource(doc1.getDocumentElement());
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>             Document doc2 = (Document)domResult2.getNode();
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>             DOMSource domSource2 = <strong class="jxr_keyword">new</strong> DOMSource(doc2.getDocumentElement());
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>             XMLUnit.setIgnoreAttributeOrder(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>             XMLUnit.setIgnoreComments(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>             XMLUnit.setIgnoreWhitespace(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>             Diff diff = <strong class="jxr_keyword">new</strong> Diff(domSource1, domSource2);
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>             assertTrue(<span class="jxr_string">"Key info elements should match"</span>, diff.similar());
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>         }
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>         
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkObjectType(List&lt;ObjectType&gt; obj1List, List&lt;ObjectType&gt; obj2List) {
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>             <strong class="jxr_keyword">if</strong> (obj1List == <strong class="jxr_keyword">null</strong> || obj2List == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>                 assertEquals(obj1List, obj2List);
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>                 <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>             }
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>             assertEquals(obj1List.size(), obj2List.size());
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>             Iterator&lt;ObjectType&gt; objList1Itr = obj1List.iterator();
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>             Iterator&lt;ObjectType&gt; objList2Itr = obj2List.iterator();
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>             <strong class="jxr_keyword">while</strong> (objList1Itr.hasNext()) {
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>                     <a href="../../../../../org/w3/_2000/_09/xmldsig_/ObjectType.html">ObjectType</a> obj1 = objList1Itr.next();
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>                     <a href="../../../../../org/w3/_2000/_09/xmldsig_/ObjectType.html">ObjectType</a> obj2 = objList2Itr.next();
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>                     assertEquals(obj1.getEncoding(), obj2.getEncoding());
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>                     assertEquals(obj1.getId(), obj2.getId());
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>                     assertEquals(obj1.getMimeType(), obj2.getMimeType());
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>             }
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>         }
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>         
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkSignatureValue(<a href="../../../../../org/w3/_2000/_09/xmldsig_/SignatureValueType.html">SignatureValueType</a> sv1, <a href="../../../../../org/w3/_2000/_09/xmldsig_/SignatureValueType.html">SignatureValueType</a> sv2) {
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>             <strong class="jxr_keyword">if</strong> (sv1 == <strong class="jxr_keyword">null</strong> || sv2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>                 assertEquals(sv1, sv2);
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>                 <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>             }
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>             assertEquals(sv1.getId(), sv2.getId());
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>             assertTrue(Arrays.equals(sv1.getValue(), sv2.getValue()));
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>         }
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>         
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkSignedInfo(<a href="../../../../../org/w3/_2000/_09/xmldsig_/SignedInfoType.html">SignedInfoType</a> si1, <a href="../../../../../org/w3/_2000/_09/xmldsig_/SignedInfoType.html">SignedInfoType</a> si2) {
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>             <strong class="jxr_keyword">if</strong> (si1 == <strong class="jxr_keyword">null</strong> || si2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>                 assertEquals(si1, si2);
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>                 <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>             }
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>             assertEquals(si1.getId(), si2.getId());
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>             checkCanonicalizationMethod(si1.getCanonicalizationMethod(), si2.getCanonicalizationMethod());
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>             checkReference(si1.getReference(), si2.getReference());
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>             checkSignatureMethod(si1.getSignatureMethod(), si2.getSignatureMethod());
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>         }
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>         
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkCanonicalizationMethod(<a href="../../../../../org/w3/_2000/_09/xmldsig_/CanonicalizationMethodType.html">CanonicalizationMethodType</a> cm1, <a href="../../../../../org/w3/_2000/_09/xmldsig_/CanonicalizationMethodType.html">CanonicalizationMethodType</a> cm2) {
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>             <strong class="jxr_keyword">if</strong> (cm1 ==  <strong class="jxr_keyword">null</strong> || cm2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>                 assertEquals(cm1, cm2);
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>                 <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>             }
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>             assertEquals(cm1.getAlgorithm(), cm2.getAlgorithm());
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>         }
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>         
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkReference(List&lt;ReferenceType&gt; r1List, List&lt;ReferenceType&gt; r2List) {
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>             <strong class="jxr_keyword">if</strong> (r1List == <strong class="jxr_keyword">null</strong> || r2List == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>                 assertEquals(r1List, r2List);
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>                 <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>             }
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>             assertEquals(r1List.size(), r2List.size());
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>             
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>             Iterator&lt;ReferenceType&gt; rList1Itr = r1List.iterator();
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>             Iterator&lt;ReferenceType&gt; rList2Itr = r2List.iterator();
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>             <strong class="jxr_keyword">while</strong> (rList1Itr.hasNext()) {
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>                     <a href="../../../../../org/w3/_2000/_09/xmldsig_/ReferenceType.html">ReferenceType</a> r1 = rList1Itr.next();
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>                     <a href="../../../../../org/w3/_2000/_09/xmldsig_/ReferenceType.html">ReferenceType</a> r2 = rList2Itr.next();
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>                     checkReference(r1, r2);
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>             }
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>         }
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>         
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkReference(<a href="../../../../../org/w3/_2000/_09/xmldsig_/ReferenceType.html">ReferenceType</a> r1, <a href="../../../../../org/w3/_2000/_09/xmldsig_/ReferenceType.html">ReferenceType</a> r2) {
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>             assertTrue(Arrays.equals(r1.getDigestValue(), r2.getDigestValue()));
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>             assertEquals(r1.getId(), r2.getId());
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>             assertEquals(r1.getType(), r2.getType());
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>             assertEquals(r1.getURI(), r2.getURI());
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>             
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>             checkDigestMethod(r1.getDigestMethod(), r2.getDigestMethod());
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>             checkTransforms(r1.getTransforms(), r2.getTransforms());
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>         }
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>         
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkDigestMethod(<a href="../../../../../org/w3/_2000/_09/xmldsig_/DigestMethodType.html">DigestMethodType</a> dm1, <a href="../../../../../org/w3/_2000/_09/xmldsig_/DigestMethodType.html">DigestMethodType</a> dm2) {
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>             <strong class="jxr_keyword">if</strong> (dm1 == <strong class="jxr_keyword">null</strong> || dm2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>                 assertEquals(dm1, dm2);
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>                 <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>             }
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>             assertEquals(dm1.getAlgorithm(), dm2.getAlgorithm());
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>         }
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>         
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkTransforms(<a href="../../../../../org/w3/_2000/_09/xmldsig_/TransformsType.html">TransformsType</a> tTypes1, <a href="../../../../../org/w3/_2000/_09/xmldsig_/TransformsType.html">TransformsType</a> tTypes2) {
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>             <strong class="jxr_keyword">if</strong> (tTypes1 == <strong class="jxr_keyword">null</strong> || tTypes2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>                 assertEquals(tTypes1, tTypes2);
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>                 <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>             }
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>             List&lt;TransformType&gt; tt1List = tTypes1.getTransform();
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>             List&lt;TransformType&gt; tt2List = tTypes2.getTransform();
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>             <strong class="jxr_keyword">if</strong> (tt1List == <strong class="jxr_keyword">null</strong> || tt2List == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>                 assertEquals(tt1List, tt2List);
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>                 <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>             }
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>             assertEquals(tt1List.size(), tt2List.size());
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>             
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>             Iterator&lt;TransformType&gt; ttList1Itr = tt1List.iterator();
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>             Iterator&lt;TransformType&gt; ttList2Itr = tt2List.iterator();
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>             <strong class="jxr_keyword">while</strong> (ttList1Itr.hasNext()) {
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>                     <a href="../../../../../org/w3/_2000/_09/xmldsig_/TransformType.html">TransformType</a> tx1 = ttList1Itr.next();
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>                     <a href="../../../../../org/w3/_2000/_09/xmldsig_/TransformType.html">TransformType</a> tx2 = ttList2Itr.next();
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>                     
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>                     assertEquals(tx1.getAlgorithm(), tx2.getAlgorithm());
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>                     checkTransformContentList(tx1.getContent(), tx2.getContent());
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>             }
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>         }
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>         
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkTransformContentList(List&lt;Object&gt; list1, List&lt;Object&gt; list2) {
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>             <strong class="jxr_keyword">if</strong> (list1 == <strong class="jxr_keyword">null</strong> || list2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>                 assertEquals(list1, list2);
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>                 <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>             }
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>             assertEquals(list1.size(), list2.size());
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>             
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>             Iterator&lt;Object&gt; list1Itr = list1.iterator();
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>             Iterator&lt;Object&gt; list2Itr = list2.iterator();
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>             <strong class="jxr_keyword">while</strong> (list1Itr.hasNext()) {
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>                 Object obj1 = list1Itr.next();
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>                 Object obj2 = list2Itr.next();
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> 
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>                 <strong class="jxr_keyword">if</strong> (obj1 instanceof String) {
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>                     assertEquals((String)obj1, obj2);
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>                 } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (obj1 instanceof Element || obj1 instanceof JAXBElement) {
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>                     <strong class="jxr_keyword">if</strong> (obj1 instanceof JAXBElement) {
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>                         DOMResult domResult = <strong class="jxr_keyword">new</strong> DOMResult();
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>                         JAXB.marshal(obj1, domResult);
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>                         obj1 = ((Document)domResult.getNode()).getDocumentElement();
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>                     }
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>                     <strong class="jxr_keyword">if</strong> (obj2 instanceof JAXBElement) {
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>                         DOMResult domResult = <strong class="jxr_keyword">new</strong> DOMResult();
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>                         JAXB.marshal(obj2, domResult);
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>                         obj2 = ((Document)domResult.getNode()).getDocumentElement();
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>                     }
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>                     XMLUnit.setIgnoreAttributeOrder(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>                     XMLUnit.setIgnoreComments(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>                     DOMSource domSrc1 = <strong class="jxr_keyword">new</strong> DOMSource((Element)obj1);
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>                     DOMSource domSrc2 = <strong class="jxr_keyword">new</strong> DOMSource((Element)obj2);
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>                     Diff diff = <strong class="jxr_keyword">new</strong> Diff(domSrc1, domSrc2);
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>                     assertTrue(<span class="jxr_string">"Element should be the same"</span>, diff.similar());
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>                 } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>                     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RuntimeException(<span class="jxr_string">"Unrecognized type: "</span> + obj1.getClass());
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>                 }
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>             }
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>         }
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>         
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkSignatureMethod(<a href="../../../../../org/w3/_2000/_09/xmldsig_/SignatureMethodType.html">SignatureMethodType</a> smt1, <a href="../../../../../org/w3/_2000/_09/xmldsig_/SignatureMethodType.html">SignatureMethodType</a> smt2) {
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>             <strong class="jxr_keyword">if</strong> (smt1 == <strong class="jxr_keyword">null</strong> || smt2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>                 assertEquals(smt1, smt2);
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>                 <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>             }
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>             assertEquals(smt1.getAlgorithm(), smt2.getAlgorithm());
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>         }
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>         
+<a class="jxr_linenumber" name="L320" href="#L320">320</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkContacts(<a href="../../../../../org/uddi/api_v3/Contacts.html">Contacts</a> contacts1, <a href="../../../../../org/uddi/api_v3/Contacts.html">Contacts</a> contacts2) {
+<a class="jxr_linenumber" name="L321" href="#L321">321</a> 		<strong class="jxr_keyword">if</strong> (contacts1 == <strong class="jxr_keyword">null</strong> || contacts2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L322" href="#L322">322</a> 			assertEquals(contacts1, contacts2);
+<a class="jxr_linenumber" name="L323" href="#L323">323</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L324" href="#L324">324</a> 		}
+<a class="jxr_linenumber" name="L325" href="#L325">325</a> 		List&lt;Contact&gt; contactList1 = contacts1.getContact();
+<a class="jxr_linenumber" name="L326" href="#L326">326</a> 		List&lt;Contact&gt; contactList2 = contacts2.getContact();
+<a class="jxr_linenumber" name="L327" href="#L327">327</a> 		<strong class="jxr_keyword">if</strong> (contactList1 == <strong class="jxr_keyword">null</strong> || contactList2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L328" href="#L328">328</a> 			assertEquals(contactList1, contactList2);
+<a class="jxr_linenumber" name="L329" href="#L329">329</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L330" href="#L330">330</a> 		}
+<a class="jxr_linenumber" name="L331" href="#L331">331</a> 		assertEquals(contactList1.size(), contactList2.size());
+<a class="jxr_linenumber" name="L332" href="#L332">332</a> 		Iterator&lt;Contact&gt; contactList1Itr = contactList1.iterator();
+<a class="jxr_linenumber" name="L333" href="#L333">333</a> 		Iterator&lt;Contact&gt; contactList2Itr = contactList2.iterator();
+<a class="jxr_linenumber" name="L334" href="#L334">334</a> 		<strong class="jxr_keyword">while</strong> (contactList1Itr.hasNext()) {
+<a class="jxr_linenumber" name="L335" href="#L335">335</a> 			Contact contact1 = contactList1Itr.next();
+<a class="jxr_linenumber" name="L336" href="#L336">336</a> 			Contact contact2 = contactList2Itr.next();
+<a class="jxr_linenumber" name="L337" href="#L337">337</a> 			assertEquals(contact1.getUseType(), contact2.getUseType());
+<a class="jxr_linenumber" name="L338" href="#L338">338</a> 			
+<a class="jxr_linenumber" name="L339" href="#L339">339</a> 			checkPersonNames(contact1.getPersonName(), contact2.getPersonName());
+<a class="jxr_linenumber" name="L340" href="#L340">340</a> 			checkDescriptions(contact1.getDescription(), contact2.getDescription());
+<a class="jxr_linenumber" name="L341" href="#L341">341</a> 		}
+<a class="jxr_linenumber" name="L342" href="#L342">342</a> 	}
+<a class="jxr_linenumber" name="L343" href="#L343">343</a> 	
+<a class="jxr_linenumber" name="L344" href="#L344">344</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkPersonNames(List&lt;PersonName&gt; names1, List&lt;PersonName&gt; names2) {
+<a class="jxr_linenumber" name="L345" href="#L345">345</a> 		<strong class="jxr_keyword">if</strong> (names1 == <strong class="jxr_keyword">null</strong> || names2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L346" href="#L346">346</a> 			assertEquals(names1, names2);
+<a class="jxr_linenumber" name="L347" href="#L347">347</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L348" href="#L348">348</a> 		}
+<a class="jxr_linenumber" name="L349" href="#L349">349</a> 		assertEquals(names1.size(), names2.size());
+<a class="jxr_linenumber" name="L350" href="#L350">350</a> 		Iterator&lt;PersonName&gt; names1Itr = names1.iterator();
+<a class="jxr_linenumber" name="L351" href="#L351">351</a> 		Iterator&lt;PersonName&gt; names2Itr = names2.iterator();
+<a class="jxr_linenumber" name="L352" href="#L352">352</a> 		<strong class="jxr_keyword">while</strong> (names1Itr.hasNext()) {
+<a class="jxr_linenumber" name="L353" href="#L353">353</a> 			PersonName name1 = names1Itr.next();
+<a class="jxr_linenumber" name="L354" href="#L354">354</a> 			PersonName name2 = names2Itr.next();
+<a class="jxr_linenumber" name="L355" href="#L355">355</a> 			assertEquals(name1.getLang(), name2.getLang());
+<a class="jxr_linenumber" name="L356" href="#L356">356</a> 			assertEquals(name1.getValue(), name2.getValue());
+<a class="jxr_linenumber" name="L357" href="#L357">357</a> 		}
+<a class="jxr_linenumber" name="L358" href="#L358">358</a> 	}
+<a class="jxr_linenumber" name="L359" href="#L359">359</a> 
+<a class="jxr_linenumber" name="L360" href="#L360">360</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkCategories(<a href="../../../../../org/uddi/api_v3/CategoryBag.html">CategoryBag</a> cbag1, <a href="../../../../../org/uddi/api_v3/CategoryBag.html">CategoryBag</a> cbag2) {
+<a class="jxr_linenumber" name="L361" href="#L361">361</a> 		<strong class="jxr_keyword">if</strong> (cbag1 == <strong class="jxr_keyword">null</strong> || cbag2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L362" href="#L362">362</a> 			assertEquals(cbag1, cbag2);
+<a class="jxr_linenumber" name="L363" href="#L363">363</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L364" href="#L364">364</a> 		}
+<a class="jxr_linenumber" name="L365" href="#L365">365</a> 		List&lt;KeyedReference&gt; elemList1 = cbag1.getKeyedReference();
+<a class="jxr_linenumber" name="L366" href="#L366">366</a> 		List&lt;KeyedReference&gt; elemList2 = cbag2.getKeyedReference();
+<a class="jxr_linenumber" name="L367" href="#L367">367</a> 		<strong class="jxr_keyword">if</strong> (elemList1 == <strong class="jxr_keyword">null</strong> || elemList2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L368" href="#L368">368</a> 			assertEquals(elemList1, elemList2);
+<a class="jxr_linenumber" name="L369" href="#L369">369</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L370" href="#L370">370</a> 		}
+<a class="jxr_linenumber" name="L371" href="#L371">371</a> 		<em class="jxr_comment">// In object could have KeyedReferenceGroups which are ignored.  For now, only solo KeyedReferences are checked.</em>
+<a class="jxr_linenumber" name="L372" href="#L372">372</a> 		<em class="jxr_comment">//assertEquals(elemList1.size(), elemList2.size());</em>
+<a class="jxr_linenumber" name="L373" href="#L373">373</a> 		Iterator&lt;KeyedReference&gt; elemList1Itr = elemList1.iterator();
+<a class="jxr_linenumber" name="L374" href="#L374">374</a> 		Iterator&lt;KeyedReference&gt; elemList2Itr = elemList2.iterator();
+<a class="jxr_linenumber" name="L375" href="#L375">375</a> 		<strong class="jxr_keyword">while</strong> (elemList1Itr.hasNext()) {
+<a class="jxr_linenumber" name="L376" href="#L376">376</a> 			KeyedReference elem1 = elemList1Itr.next();
+<a class="jxr_linenumber" name="L377" href="#L377">377</a> 			<strong class="jxr_keyword">if</strong> (elem1 instanceof org.uddi.api_v3.KeyedReference) {
+<a class="jxr_linenumber" name="L378" href="#L378">378</a> 				KeyedReference elem2 = elemList2Itr.next();
+<a class="jxr_linenumber" name="L379" href="#L379">379</a> 				assertEquals(elem1.getTModelKey(), elem2.getTModelKey());
+<a class="jxr_linenumber" name="L380" href="#L380">380</a> 				assertEquals(elem1.getKeyName(), elem2.getKeyName());
+<a class="jxr_linenumber" name="L381" href="#L381">381</a> 				assertEquals(elem1.getKeyValue(), elem2.getKeyValue());
+<a class="jxr_linenumber" name="L382" href="#L382">382</a> 			}
+<a class="jxr_linenumber" name="L383" href="#L383">383</a> 			<em class="jxr_comment">// add comparing keyedReferenceGroup</em>
+<a class="jxr_linenumber" name="L384" href="#L384">384</a> 		}
+<a class="jxr_linenumber" name="L385" href="#L385">385</a> 	}
+<a class="jxr_linenumber" name="L386" href="#L386">386</a> 	
+<a class="jxr_linenumber" name="L387" href="#L387">387</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkBindingTemplates(<a href="../../../../../org/uddi/api_v3/BindingTemplates.html">BindingTemplates</a> bts1, <a href="../../../../../org/uddi/api_v3/BindingTemplates.html">BindingTemplates</a> bts2) {
+<a class="jxr_linenumber" name="L388" href="#L388">388</a> 		<strong class="jxr_keyword">if</strong> (bts1 == <strong class="jxr_keyword">null</strong> || bts2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L389" href="#L389">389</a> 			assertEquals(bts1, bts2);
+<a class="jxr_linenumber" name="L390" href="#L390">390</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L391" href="#L391">391</a> 		}
+<a class="jxr_linenumber" name="L392" href="#L392">392</a> 		assertEquals(bts1.getBindingTemplate().size(), bts2.getBindingTemplate().size());
+<a class="jxr_linenumber" name="L393" href="#L393">393</a> 		Iterator&lt;BindingTemplate&gt; bt1Iter  = bts1.getBindingTemplate().iterator();
+<a class="jxr_linenumber" name="L394" href="#L394">394</a> 		Iterator&lt;BindingTemplate&gt; bt2Iter  = bts2.getBindingTemplate().iterator();
+<a class="jxr_linenumber" name="L395" href="#L395">395</a> 		<strong class="jxr_keyword">while</strong> (bt1Iter.hasNext()) {
+<a class="jxr_linenumber" name="L396" href="#L396">396</a> 			BindingTemplate bt1 = bt1Iter.next();
+<a class="jxr_linenumber" name="L397" href="#L397">397</a> 			BindingTemplate bt2 = bt2Iter.next();
+<a class="jxr_linenumber" name="L398" href="#L398">398</a> 			assertEquals(bt1.getAccessPoint().getValue(),bt2.getAccessPoint().getValue());
+<a class="jxr_linenumber" name="L399" href="#L399">399</a> 			assertEquals(bt1.getAccessPoint().getUseType(),bt2.getAccessPoint().getUseType());
+<a class="jxr_linenumber" name="L400" href="#L400">400</a> 			assertEquals(bt1.getBindingKey().toLowerCase(),bt2.getBindingKey());
+<a class="jxr_linenumber" name="L401" href="#L401">401</a> 			checkCategories(bt1.getCategoryBag(), bt2.getCategoryBag());
+<a class="jxr_linenumber" name="L402" href="#L402">402</a> 			checkDescriptions(bt1.getDescription(),bt2.getDescription());
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> 			checkHostingRedirector(bt1.getHostingRedirector(),bt2.getHostingRedirector());
+<a class="jxr_linenumber" name="L404" href="#L404">404</a> 			<em class="jxr_comment">//the inbound apiBindingTemplate can have a null serviceKey</em>
+<a class="jxr_linenumber" name="L405" href="#L405">405</a> 			<strong class="jxr_keyword">if</strong> (bt1.getServiceKey()!=<strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L406" href="#L406">406</a> 				assertEquals(bt1.getServiceKey(),bt2.getServiceKey());
+<a class="jxr_linenumber" name="L407" href="#L407">407</a> 			}
+<a class="jxr_linenumber" name="L408" href="#L408">408</a> 			checkTModelInstanceDetails(bt1.getTModelInstanceDetails(),bt2.getTModelInstanceDetails());
+<a class="jxr_linenumber" name="L409" href="#L409">409</a> 		}
+<a class="jxr_linenumber" name="L410" href="#L410">410</a> 	}
+<a class="jxr_linenumber" name="L411" href="#L411">411</a> 	
+<a class="jxr_linenumber" name="L412" href="#L412">412</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkTModelInstanceDetails(<a href="../../../../../org/uddi/api_v3/TModelInstanceDetails.html">TModelInstanceDetails</a> tmds1, <a href="../../../../../org/uddi/api_v3/TModelInstanceDetails.html">TModelInstanceDetails</a> tmds2) {
+<a class="jxr_linenumber" name="L413" href="#L413">413</a> 		<strong class="jxr_keyword">if</strong> (tmds1 == <strong class="jxr_keyword">null</strong> || tmds2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L414" href="#L414">414</a> 			assertEquals(tmds1, tmds2);
+<a class="jxr_linenumber" name="L415" href="#L415">415</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L416" href="#L416">416</a> 		}
+<a class="jxr_linenumber" name="L417" href="#L417">417</a> 		assertEquals(tmds1.getTModelInstanceInfo().size(),tmds2.getTModelInstanceInfo().size());
+<a class="jxr_linenumber" name="L418" href="#L418">418</a> 		Iterator&lt;TModelInstanceInfo&gt; tmIter1 = tmds1.getTModelInstanceInfo().iterator();
+<a class="jxr_linenumber" name="L419" href="#L419">419</a> 		Iterator&lt;TModelInstanceInfo&gt; tmIter2 = tmds2.getTModelInstanceInfo().iterator();
+<a class="jxr_linenumber" name="L420" href="#L420">420</a> 		<strong class="jxr_keyword">while</strong> (tmIter1.hasNext()) {
+<a class="jxr_linenumber" name="L421" href="#L421">421</a> 			TModelInstanceInfo tmI1 = tmIter1.next();
+<a class="jxr_linenumber" name="L422" href="#L422">422</a> 			TModelInstanceInfo tmI2 = tmIter2.next();
+<a class="jxr_linenumber" name="L423" href="#L423">423</a> 			checkDescriptions(tmI1.getDescription(), tmI2.getDescription());
+<a class="jxr_linenumber" name="L424" href="#L424">424</a> 			checkInstanceDetails(tmI1.getInstanceDetails(), tmI2.getInstanceDetails());
+<a class="jxr_linenumber" name="L425" href="#L425">425</a> 			assertEquals(tmI1.getTModelKey().toLowerCase(),tmI2.getTModelKey());
+<a class="jxr_linenumber" name="L426" href="#L426">426</a> 		}
+<a class="jxr_linenumber" name="L427" href="#L427">427</a> 	}
+<a class="jxr_linenumber" name="L428" href="#L428">428</a> 	
+<a class="jxr_linenumber" name="L429" href="#L429">429</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkInstanceDetails(<a href="../../../../../org/uddi/api_v3/InstanceDetails.html">InstanceDetails</a> ids1, <a href="../../../../../org/uddi/api_v3/InstanceDetails.html">InstanceDetails</a> ids2) {
+<a class="jxr_linenumber" name="L430" href="#L430">430</a> 		<strong class="jxr_keyword">if</strong> (ids1 == <strong class="jxr_keyword">null</strong> || ids2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L431" href="#L431">431</a> 			assertEquals(ids1, ids2);
+<a class="jxr_linenumber" name="L432" href="#L432">432</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L433" href="#L433">433</a> 		}
+<a class="jxr_linenumber" name="L434" href="#L434">434</a> 		List&lt;Description&gt; elem1s =  ids1.getDescription();
+<a class="jxr_linenumber" name="L435" href="#L435">435</a> 		List&lt;Description&gt; elem2s =  ids2.getDescription();
+<a class="jxr_linenumber" name="L436" href="#L436">436</a> 		Iterator&lt;Description&gt; elem1 = elem1s.iterator();
+<a class="jxr_linenumber" name="L437" href="#L437">437</a> 
+<a class="jxr_linenumber" name="L438" href="#L438">438</a> 		<strong class="jxr_keyword">boolean</strong> isMatch=false;
+<a class="jxr_linenumber" name="L439" href="#L439">439</a> 
+<a class="jxr_linenumber" name="L440" href="#L440">440</a> 		<strong class="jxr_keyword">if</strong> (elem1s.size() == 0 &amp;&amp; elem2s.size() == 0) {
+<a class="jxr_linenumber" name="L441" href="#L441">441</a> 			isMatch = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L442" href="#L442">442</a> 		}
+<a class="jxr_linenumber" name="L443" href="#L443">443</a> 		
+<a class="jxr_linenumber" name="L444" href="#L444">444</a> 		<strong class="jxr_keyword">while</strong> (elem1.hasNext()) {
+<a class="jxr_linenumber" name="L445" href="#L445">445</a> 			Description desc1 = elem1.next();
+<a class="jxr_linenumber" name="L446" href="#L446">446</a> 			
+<a class="jxr_linenumber" name="L447" href="#L447">447</a> 			<strong class="jxr_keyword">if</strong> (desc1 instanceof org.uddi.api_v3.Description) {
+<a class="jxr_linenumber" name="L448" href="#L448">448</a> 				<em class="jxr_comment">//Descriptions</em>
+<a class="jxr_linenumber" name="L449" href="#L449">449</a> 				Iterator&lt;Description&gt; elem2 = elem2s.iterator();
+<a class="jxr_linenumber" name="L450" href="#L450">450</a> 				<strong class="jxr_keyword">while</strong> (elem2.hasNext()) {
+<a class="jxr_linenumber" name="L451" href="#L451">451</a> 					Description desc2 = elem2.next();
+<a class="jxr_linenumber" name="L452" href="#L452">452</a> 					<strong class="jxr_keyword">if</strong> (desc2 instanceof org.uddi.api_v3.Description) {
+<a class="jxr_linenumber" name="L453" href="#L453">453</a> 						<strong class="jxr_keyword">if</strong> (desc1.getLang().equals(desc2.getLang()) &amp;&amp; desc1.getValue().equals(desc2.getValue())) {
+<a class="jxr_linenumber" name="L454" href="#L454">454</a> 							isMatch=<strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L455" href="#L455">455</a> 							<strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L456" href="#L456">456</a> 						}
+<a class="jxr_linenumber" name="L457" href="#L457">457</a> 					}
+<a class="jxr_linenumber" name="L458" href="#L458">458</a> 				}
+<a class="jxr_linenumber" name="L459" href="#L459">459</a> 			}
+<a class="jxr_linenumber" name="L460" href="#L460">460</a> 		}
+<a class="jxr_linenumber" name="L461" href="#L461">461</a> 		assertTrue(isMatch);
+<a class="jxr_linenumber" name="L462" href="#L462">462</a> 
+<a class="jxr_linenumber" name="L463" href="#L463">463</a> 		
+<a class="jxr_linenumber" name="L464" href="#L464">464</a> 		List&lt;OverviewDoc&gt; odoc1s =  ids1.getOverviewDoc();
+<a class="jxr_linenumber" name="L465" href="#L465">465</a> 		List&lt;OverviewDoc&gt; odoc2s =  ids2.getOverviewDoc();
+<a class="jxr_linenumber" name="L466" href="#L466">466</a> 		Iterator&lt;OverviewDoc&gt; docelem1 = odoc1s.iterator();
+<a class="jxr_linenumber" name="L467" href="#L467">467</a> 		isMatch = false;
+<a class="jxr_linenumber" name="L468" href="#L468">468</a> 		<strong class="jxr_keyword">if</strong> (odoc1s.size() == 0 &amp;&amp; odoc2s.size() == 0) {
+<a class="jxr_linenumber" name="L469" href="#L469">469</a> 			isMatch = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L470" href="#L470">470</a> 		}
+<a class="jxr_linenumber" name="L471" href="#L471">471</a> 		
+<a class="jxr_linenumber" name="L472" href="#L472">472</a> 		<strong class="jxr_keyword">while</strong> (docelem1.hasNext()) {
+<a class="jxr_linenumber" name="L473" href="#L473">473</a> 			OverviewDoc odoc1 = docelem1.next();
+<a class="jxr_linenumber" name="L474" href="#L474">474</a> 			<strong class="jxr_keyword">if</strong> (odoc1 instanceof org.uddi.api_v3.OverviewDoc) {
+<a class="jxr_linenumber" name="L475" href="#L475">475</a> 				<em class="jxr_comment">//OverviewDocs</em>
+<a class="jxr_linenumber" name="L476" href="#L476">476</a> 				checkOverviewDocs(odoc1, odoc2s);
+<a class="jxr_linenumber" name="L477" href="#L477">477</a> 				isMatch=<strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L478" href="#L478">478</a> 			}
+<a class="jxr_linenumber" name="L479" href="#L479">479</a> 		}
+<a class="jxr_linenumber" name="L480" href="#L480">480</a> 		
+<a class="jxr_linenumber" name="L481" href="#L481">481</a> 		assertEquals((String)ids1.getInstanceParms(),(String)ids2.getInstanceParms());
+<a class="jxr_linenumber" name="L482" href="#L482">482</a> 		assertTrue(isMatch);
+<a class="jxr_linenumber" name="L483" href="#L483">483</a> 	}
+<a class="jxr_linenumber" name="L484" href="#L484">484</a> 	
+<a class="jxr_linenumber" name="L485" href="#L485">485</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkOverviewDocs(<a href="../../../../../org/uddi/api_v3/OverviewDoc.html">OverviewDoc</a> doc1, List&lt;OverviewDoc&gt; elem2s) {
+<a class="jxr_linenumber" name="L486" href="#L486">486</a> 		<strong class="jxr_keyword">boolean</strong> isMatch=false;
+<a class="jxr_linenumber" name="L487" href="#L487">487</a> 		Iterator&lt;OverviewDoc&gt; elem2 = elem2s.iterator();
+<a class="jxr_linenumber" name="L488" href="#L488">488</a> 		<em class="jxr_comment">//Match against any OverviewDocs in the elem2 list</em>
+<a class="jxr_linenumber" name="L489" href="#L489">489</a> 		<strong class="jxr_keyword">while</strong> (elem2.hasNext()) {
+<a class="jxr_linenumber" name="L490" href="#L490">490</a> 			OverviewDoc doc2 = elem2.next();
+<a class="jxr_linenumber" name="L491" href="#L491">491</a> 			<strong class="jxr_keyword">if</strong> (doc2 instanceof org.uddi.api_v3.OverviewDoc) {
+<a class="jxr_linenumber" name="L492" href="#L492">492</a> 				<em class="jxr_comment">//match doc1 against this doc2</em>
+<a class="jxr_linenumber" name="L493" href="#L493">493</a> 				isMatch = compareOverviewDocs(doc1, doc2);
+<a class="jxr_linenumber" name="L494" href="#L494">494</a> 				<strong class="jxr_keyword">if</strong> (isMatch) <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L495" href="#L495">495</a> 			}
+<a class="jxr_linenumber" name="L496" href="#L496">496</a> 		}
+<a class="jxr_linenumber" name="L497" href="#L497">497</a> 		assertTrue(isMatch);
+<a class="jxr_linenumber" name="L498" href="#L498">498</a> 	}
+<a class="jxr_linenumber" name="L499" href="#L499">499</a> 	
+<a class="jxr_linenumber" name="L500" href="#L500">500</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkOverviewDocs(<a href="../../../../../org/uddi/api_v3/OverviewDoc.html">OverviewDoc</a> doc1, Collection&lt;OverviewDoc&gt; doc2s) {
+<a class="jxr_linenumber" name="L501" href="#L501">501</a> 		<strong class="jxr_keyword">boolean</strong> isMatch=false;
+<a class="jxr_linenumber" name="L502" href="#L502">502</a> 		Iterator&lt;OverviewDoc&gt; docIter = doc2s.iterator();
+<a class="jxr_linenumber" name="L503" href="#L503">503</a> 		<strong class="jxr_keyword">while</strong> (docIter.hasNext()) {
+<a class="jxr_linenumber" name="L504" href="#L504">504</a> 			OverviewDoc doc2 = docIter.next();
+<a class="jxr_linenumber" name="L505" href="#L505">505</a> 			<em class="jxr_comment">//match doc1 against this doc2</em>
+<a class="jxr_linenumber" name="L506" href="#L506">506</a> 			isMatch = compareOverviewDocs(doc1, doc2);
+<a class="jxr_linenumber" name="L507" href="#L507">507</a> 			<strong class="jxr_keyword">if</strong> (isMatch) <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L508" href="#L508">508</a> 		}
+<a class="jxr_linenumber" name="L509" href="#L509">509</a> 		assertTrue(isMatch);
+<a class="jxr_linenumber" name="L510" href="#L510">510</a> 	}
+<a class="jxr_linenumber" name="L511" href="#L511">511</a> 	
+<a class="jxr_linenumber" name="L512" href="#L512">512</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> compareOverviewDocs(<a href="../../../../../org/uddi/api_v3/OverviewDoc.html">OverviewDoc</a> doc1, <a href="../../../../../org/uddi/api_v3/OverviewDoc.html">OverviewDoc</a> doc2) 
+<a class="jxr_linenumber" name="L513" href="#L513">513</a> 	{	
+<a class="jxr_linenumber" name="L514" href="#L514">514</a> 		<strong class="jxr_keyword">boolean</strong> descMatch=false;
+<a class="jxr_linenumber" name="L515" href="#L515">515</a> 		<strong class="jxr_keyword">boolean</strong> urlMatch =false;
+<a class="jxr_linenumber" name="L516" href="#L516">516</a> 
+<a class="jxr_linenumber" name="L517" href="#L517">517</a> 		OverviewURL url1 = (OverviewURL) doc1.getOverviewURL();
+<a class="jxr_linenumber" name="L518" href="#L518">518</a> 		OverviewURL url2 = (OverviewURL) doc2.getOverviewURL();
+<a class="jxr_linenumber" name="L519" href="#L519">519</a> 		<strong class="jxr_keyword">if</strong> (url1.getUseType().equals(url2.getUseType()) &amp;&amp; url1.getValue().trim().equals(url2.getValue().trim())) {
+<a class="jxr_linenumber" name="L520" href="#L520">520</a> 			urlMatch=<strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L521" href="#L521">521</a> 		}
+<a class="jxr_linenumber" name="L522" href="#L522">522</a> 
+<a class="jxr_linenumber" name="L523" href="#L523">523</a> 
+<a class="jxr_linenumber" name="L524" href="#L524">524</a> 		List&lt;Description&gt; descList1 = doc1.getDescription();
+<a class="jxr_linenumber" name="L525" href="#L525">525</a> 		Iterator&lt;Description&gt; descIter1 = descList1.iterator();
+<a class="jxr_linenumber" name="L526" href="#L526">526</a> 		<strong class="jxr_keyword">if</strong> (descList1.size() == 0 &amp;&amp; doc2.getDescription().size() == 0) {
+<a class="jxr_linenumber" name="L527" href="#L527">527</a> 			descMatch = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L528" href="#L528">528</a> 		}
+<a class="jxr_linenumber" name="L529" href="#L529">529</a> 		<strong class="jxr_keyword">while</strong> (descIter1.hasNext()) {
+<a class="jxr_linenumber" name="L530" href="#L530">530</a> 			Description descr1 = (Description) descIter1.next();
+<a class="jxr_linenumber" name="L531" href="#L531">531</a> 			List&lt;Description&gt; descList2 = doc2.getDescription();
+<a class="jxr_linenumber" name="L532" href="#L532">532</a> 			Iterator&lt;Description&gt; descElem2 = descList2.iterator();
+<a class="jxr_linenumber" name="L533" href="#L533">533</a> 			<strong class="jxr_keyword">while</strong> (descElem2.hasNext()) {
+<a class="jxr_linenumber" name="L534" href="#L534">534</a> 				Description descr2 = descElem2.next();
+<a class="jxr_linenumber" name="L535" href="#L535">535</a> 				<strong class="jxr_keyword">if</strong> (descr1.getLang().equals(descr2.getLang()) &amp;&amp; descr1.getValue().equals(descr2.getValue())) {
+<a class="jxr_linenumber" name="L536" href="#L536">536</a> 					descMatch=<strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L537" href="#L537">537</a> 				}
+<a class="jxr_linenumber" name="L538" href="#L538">538</a> 			}
+<a class="jxr_linenumber" name="L539" href="#L539">539</a> 		}
+<a class="jxr_linenumber" name="L540" href="#L540">540</a> 
+<a class="jxr_linenumber" name="L541" href="#L541">541</a> 		<strong class="jxr_keyword">if</strong> (urlMatch &amp;&amp; descMatch) {
+<a class="jxr_linenumber" name="L542" href="#L542">542</a> 				<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L543" href="#L543">543</a> 		}
+<a class="jxr_linenumber" name="L544" href="#L544">544</a> 		<strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="L545" href="#L545">545</a> 	}
+<a class="jxr_linenumber" name="L546" href="#L546">546</a> 	
+<a class="jxr_linenumber" name="L547" href="#L547">547</a> 	
+<a class="jxr_linenumber" name="L548" href="#L548">548</a> 	
+<a class="jxr_linenumber" name="L549" href="#L549">549</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> checkHostingRedirector(<a href="../../../../../org/uddi/api_v3/HostingRedirector.html">HostingRedirector</a> hr1, <a href="../../../../../org/uddi/api_v3/HostingRedirector.html">HostingRedirector</a> hr2) {
+<a class="jxr_linenumber" name="L550" href="#L550">550</a> 		<strong class="jxr_keyword">if</strong> (hr1 == <strong class="jxr_keyword">null</strong> || hr2 == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L551" href="#L551">551</a> 			assertEquals(hr1, hr2);
+<a class="jxr_linenumber" name="L552" href="#L552">552</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L553" href="#L553">553</a> 		}
+<a class="jxr_linenumber" name="L554" href="#L554">554</a> 		assertEquals(hr1.getBindingKey(),hr2.getBindingKey());
+<a class="jxr_linenumber" name="L555" href="#L555">555</a> 	}
+<a class="jxr_linenumber" name="L556" href="#L556">556</a> 	
+<a class="jxr_linenumber" name="L557" href="#L557">557</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2004&#x2013;2018 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
+</body>
+</html>

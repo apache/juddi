@@ -1,0 +1,417 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>AccessPoint xref</title>
+<link type="text/css" rel="stylesheet" href="../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../apidocs/org/uddi/api_v3/AccessPoint.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright 2001-2008 The Apache Software Foundation.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * </em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> * </em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *      <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> * </em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> * Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> * distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> * See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> * limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">package</strong> org.uddi.api_v3;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.io.Serializable;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> javax.xml.bind.annotation.XmlAccessType;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> javax.xml.bind.annotation.XmlAccessorType;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> javax.xml.bind.annotation.XmlAttribute;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> javax.xml.bind.annotation.XmlTransient;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> javax.xml.bind.annotation.XmlType;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> javax.xml.bind.annotation.XmlValue;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.apache.juddi.api_v3.AccessPointType;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment"> * &lt;div style="border:none;border-top:solid #333399 1.0pt;padding:1.0pt 0in 0in 0in"&gt;&lt;p class="AppH1" style="margin-left:0in;text-indent:0in"&gt;&lt;a name="_Toc8974358"&gt;B&lt;span style="font:7.0pt &amp;quot;Times New Roman&amp;quot;"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;</em>
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment">&lt;/span&gt;Appendix B:&amp;nbsp; Using and Extending the useType Attribute&lt;/a&gt;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment">&lt;/div&gt;</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;UDDI provides type information through the useType</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment">attribute on the following UDDI elements: accessPoint, overviewURL,</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment">discoveryURL, contact, address, email and phone. The useType attribute is</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment">intended to provide information on how to use or invoke the resource contained</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment">within the element.&amp;nbsp; This Appendix establishes and explains common values and</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment">conventions for the useType attribute in the context of certain elements, as</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment">well as a model for establishing new common values and conventions.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment">&lt;p class="AppH2" style="margin-left:0in;text-indent:0in"&gt;&lt;a name="_Toc85908385"&gt;&lt;/a&gt;&lt;a name="_Toc53709543"&gt;&lt;/a&gt;&lt;a name="_Toc45096631"&gt;&lt;/a&gt;&lt;a name="_Toc45096173"&gt;&lt;/a&gt;&lt;a name="_Toc42047544"&gt;&lt;/a&gt;&lt;a name="_Toc8974359"&gt;B.1&lt;span style="font:7.0pt &amp;quot;Times New Roman&amp;quot;"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment">&lt;/span&gt;accessPoint&lt;/a&gt;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;Four common values for providing type information about</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment">the accessPoint are: "endPoint", "wsdlDeployment", "bindingTemplate",</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment">and "hostingRedirector.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment">&lt;p class="AppH3" style="margin-left:0in;text-indent:0in"&gt;&lt;a name="_Toc85908386"&gt;&lt;/a&gt;&lt;a name="_Toc53709544"&gt;&lt;/a&gt;&lt;a name="_Toc45096632"&gt;&lt;/a&gt;&lt;a name="_Toc45096174"&gt;&lt;/a&gt;&lt;a name="_Toc42047545"&gt;B.1.1&lt;span style="font:7.0pt &amp;quot;Times New Roman&amp;quot;"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment">&lt;/span&gt;Using the "endPoint" value&lt;/a&gt;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;Typically, the network address of a Web service described</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment">by a bindingTemplate is found in the accessPoint element.&amp;nbsp; This common behavior</em>
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment">is denoted by using the string "endpoint" as the value of the</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment">accessPoint.&amp;nbsp; Decorating an accessPoint with a useType="endPoint"</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment">signifies that a user or application can invoke a Web service at that address.&amp;nbsp;</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment">A sample of such behavior is as follows:&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment">&lt;p class="codeSample"&gt;&amp;lt;bindingTemplate</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment">bindingKey="uddi:example.org:catalog"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;description xml:lang="en"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Browse catalog Web service&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/description&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;accessPoint useType="endPoint"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <a href="http://www.example.org/CatalogWebService&lt;br&gt" target="alexandria_uri">http://www.example.org/CatalogWebService&lt;br&gt</a>;</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/accessPoint&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceDetails&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceInfo</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment">tModelKey="uddi:example.org:catalog_interface"/&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceInfo</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">tModelKey="uddi:uddi.org:transport:http"/&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/tModelInstanceDetails&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment">&amp;lt;/bindingTemplate&amp;gt;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment">&lt;p class="codeSample"&gt;&amp;nbsp;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;In the example above, a client would be able to parse the</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment">bindingTemplate and discover the end point of the Web service itself.&amp;nbsp; However,</em>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment">the information about how to invoke that Web service would be modeled using</em>
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment">tModels.&amp;nbsp; All interface information about that service would be represented by</em>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment">the tModelInstanceInfo structures contained as children of the bindingTemplate.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;The client knows the transport of the accessPoint either</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment">by checking to see if a protocol tModel has been associated with the</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment">bindingTemplate or inspecting the URI prefix.&amp;nbsp; In the example above, the http</em>
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment">transport was used, denoted by the tModelInstanceInfo.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  <em class="jxr_javadoccomment">&lt;span style="font-size:10.0pt;font-family:Arial;letter-spacing:-.25pt"&gt;&lt;br style="page-break-before:always" clear="all"&gt;</em>
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment">&lt;/span&gt;</em>
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;&amp;nbsp;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;UDDI RECOMMENDS that endpoints for phone, fax and modem</em>
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  <em class="jxr_javadoccomment">communication follow the guidelines outlined in RFC 2806 &lt;i&gt;URLs for Telephone</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment">Calls&lt;/i&gt;&lt;a href="#_ftn51" name="_ftnref51" title=""&gt;&lt;span class="MsoFootnoteReference"&gt;&lt;span class="MsoFootnoteReference"&gt;&lt;span style="font-size:10.0pt;letter-spacing:-.25pt"&gt;[51]&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/a&gt;.&amp;nbsp;</em>
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment">Following such a convention for a phone number accessPoint would result in the</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment">following bindingTemplate sample:&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> 
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment">&lt;p class="codeSample"&gt;&amp;lt;bindingTemplate</em>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> <em class="jxr_javadoccomment">bindingKey="uddi:example.org:catalog"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;description xml:lang="en"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Browse catalog Web service&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/description&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;accessPoint useType="endPoint"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; tel:+1-512-555-1212&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/accessPoint&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceDetails&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceInfo</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">tModelKey="uddi:uddi.org:transport:telephone"/&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/tModelInstanceDetails&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">&amp;lt;/bindingTemplate&amp;gt;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> 
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;&amp;nbsp;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> 
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">&lt;p class="AppH3" style="margin-left:0in;text-indent:0in"&gt;&lt;a name="_Toc85908387"&gt;&lt;/a&gt;&lt;a name="_Toc53709545"&gt;&lt;/a&gt;&lt;a name="_Toc45096633"&gt;&lt;/a&gt;&lt;a name="_Toc45096175"&gt;&lt;/a&gt;&lt;a name="_Toc42047546"&gt;B.1.2&lt;span style="font:7.0pt &amp;quot;Times New Roman&amp;quot;"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">&lt;/span&gt;Using the "wsdlDeployment" value&lt;/a&gt;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> 
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;Instead of directly providing the network address in the accessPoint,</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> <em class="jxr_javadoccomment">it is occasionally useful or necessary to provide this information through</em>
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> <em class="jxr_javadoccomment">indirect means.&amp;nbsp; One common scenario for such a behavior is when the</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment">accessPoint is embedded within a WSDL file.&amp;nbsp; In such a scenario, the UDDI</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment">accessPoint contains the address of the WSDL file, and the client then must</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">retrieve the WSDL file and extract the end point address from the WSDL file</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment">itself.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> 
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;In this case, decorating the UDDI accessPoint with a</em>
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment">useType="wsdlDeployment" is appropriate.&amp;nbsp; A sample of such behavior is</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment">as follows:&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> 
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">&lt;p class="codeSample"&gt;&amp;lt;bindingTemplate</em>
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">bindingKey="uddi:example.org:catalog"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;description xml:lang="en"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Browse catalog Web service&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/description&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;accessPoint useType="wsdlDeployment"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <a href="http://www.example.org/CatalogWebService/catalog.wsdl&lt;br&gt" target="alexandria_uri">http://www.example.org/CatalogWebService/catalog.wsdl&lt;br&gt</a>;</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/accessPoint&amp;gt;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> 
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment">&lt;p class="codeSample"&gt;&amp;nbsp;&amp;nbsp; &amp;lt;categoryBag&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;keyedReference keyName="uddi-org:types:wsdl"&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp; keyValue="wsdlDeployment" &lt;br&gt;</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;</em>
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_javadoccomment">tModelKey="uddi:uddi.org:categorization:types"/&amp;gt; &lt;br&gt;</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/categoryBag&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> <em class="jxr_javadoccomment">&amp;lt;/bindingTemplate&amp;gt;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> 
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment">&lt;p class="codeSample"&gt;&amp;nbsp;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> 
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;In the example above, a client would be able to parse the</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment">result of the bindingTemplate and determine the end point of the Web service</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">within the WSDL file discovered in the accessPoint element. Note that the</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">bindingTemplate has also been categorized with the "wsdlDeployment"</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">value from the uddi.org:categorization:types scheme so that it can be</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">discovered through a find_binding API call.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> 
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment">&lt;p class="AppH3" style="margin-left:0in;text-indent:0in"&gt;&lt;a name="_Toc85908388"&gt;&lt;/a&gt;&lt;a name="_Toc53709546"&gt;&lt;/a&gt;&lt;a name="_Toc45096634"&gt;&lt;/a&gt;&lt;a name="_Toc45096176"&gt;&lt;/a&gt;&lt;a name="_Toc42047547"&gt;B.1.3&lt;span style="font:7.0pt &amp;quot;Times New Roman&amp;quot;"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</em>
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment">&lt;/span&gt;Using the "bindingTemplate" value&lt;/a&gt;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> 
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;Another form of indirection uses UDDI itself to discover</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment">the location of the final end point.&amp;nbsp; Categorizing a bindingTemplate with</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment">either "bindingTemplate" or "hostingRedirector" specifies</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_javadoccomment">that the accessPoint contains a bindingKey intended to be used in a</em>
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> <em class="jxr_javadoccomment">get_bindingDetail API call to a UDDI registry Inquiry API Set.&amp;nbsp; How the</em>
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> <em class="jxr_javadoccomment">resultant bindingTemplate is interpreted depends on which one of the two</em>
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> <em class="jxr_javadoccomment">methods described below is used.&amp;nbsp; In the case of "bindingTemplate", a</em>
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> <em class="jxr_javadoccomment">bindingKey refers to another binding within the same UDDI registry.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> 
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;For example, suppose tempuri.com, the well known but</em>
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment">fictitious maker of crispy batter coating for fried foods, contracts with the</em>
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> <em class="jxr_javadoccomment">equally fictitious Web service hosting company ws-o-rama.com to host tempuri’s</em>
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_javadoccomment">Web service that exposes its product catalog. Tempuri.com wishes to publish a</em>
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_javadoccomment">bindingTemplate for this service in the UDDI Business Registry, but wishes to</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment">leave the details of the technical implementation and its description up to</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_javadoccomment">ws-o-rama.com who may wish to change them over time. To do this, tempuri.com</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment">and ws-o-rama.com use bindingTemplate indirection. In the UDDI Business</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_javadoccomment">Registry the bindingTemplate in tempuri’s businessEntity that describes this</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> <em class="jxr_javadoccomment">service appears as follows:&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> 
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> <em class="jxr_javadoccomment">&lt;p class="codeSample"&gt;&amp;lt;bindingTemplate</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> <em class="jxr_javadoccomment">bindingKey="uddi:tempuri.com:catalog"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;description xml:lang="en"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Browse catalog Web service&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L187" href="#L187">187</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/description&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;accessPoint useType="bindingTemplate"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; uddi:ws-o-rama.com:tempuri:bt1&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/accessPoint&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L191" href="#L191">191</a> <em class="jxr_javadoccomment">&amp;lt;/bindingTemplate&amp;gt;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> 
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> <em class="jxr_javadoccomment">&lt;p class="codeSample"&gt;&amp;nbsp;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> 
+<a class="jxr_linenumber" name="L195" href="#L195">195</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;Here, the bindingTemplate describing tempuri’s catalog</em>
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> <em class="jxr_javadoccomment">browsing Web service uses an accessPoint to refer to the bindingTemplate (also</em>
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> <em class="jxr_javadoccomment">in the UDDI Business Registry) whose bindingKey is uddi:ws-o-rama.com:tempura:bt1.</em>
+<a class="jxr_linenumber" name="L198" href="#L198">198</a> <em class="jxr_javadoccomment">When a client does a get_bindingDetail asking for the bindingTemplate with that</em>
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">key, the following bindingTemplate is returned:&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> 
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">&lt;p class="codeSample"&gt;&amp;lt;bindingTemplate</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">bindingKey="uddi:ws-o-rama.com:tempuri:bt1"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;description xml:lang="en"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Tempuri.com’s catalog browsing service hosted by ws-o-rama&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/description&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;accessPoint useType="endPoint"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <a href="http://sf1.ws-o-rama.com/tempuri/catalog/&lt;br&gt" target="alexandria_uri">http://sf1.ws-o-rama.com/tempuri/catalog/&lt;br&gt</a>;</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/accessPoint&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceDetails&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L210" href="#L210">210</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceInfo tModelKey="uddi:..."/&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L211" href="#L211">211</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/tModelInstanceDetails&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L212" href="#L212">212</a> <em class="jxr_javadoccomment">&amp;lt;/bindingTemplate&amp;gt;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L213" href="#L213">213</a> 
+<a class="jxr_linenumber" name="L214" href="#L214">214</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;&amp;nbsp;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> 
+<a class="jxr_linenumber" name="L216" href="#L216">216</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;This bindingTemplate describes the actual Web service that</em>
+<a class="jxr_linenumber" name="L217" href="#L217">217</a> <em class="jxr_javadoccomment">is to be used.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L218" href="#L218">218</a> 
+<a class="jxr_linenumber" name="L219" href="#L219">219</a> <em class="jxr_javadoccomment">&lt;p class="AppH3" style="margin-left:0in;text-indent:0in"&gt;&lt;a name="_Toc85908389"&gt;&lt;/a&gt;&lt;a name="_Toc53709547"&gt;&lt;/a&gt;&lt;a name="_Toc45096635"&gt;&lt;/a&gt;&lt;a name="_Toc45096177"&gt;&lt;/a&gt;&lt;a name="_Toc42047548"&gt;B.1.4&lt;span style="font:7.0pt &amp;quot;Times New Roman&amp;quot;"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</em>
+<a class="jxr_linenumber" name="L220" href="#L220">220</a> <em class="jxr_javadoccomment">&lt;/span&gt;Using the "hostingRedirector" value&lt;/a&gt;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L221" href="#L221">221</a> 
+<a class="jxr_linenumber" name="L222" href="#L222">222</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;It may be necessary to "hide" the network</em>
+<a class="jxr_linenumber" name="L223" href="#L223">223</a> <em class="jxr_javadoccomment">address of a Web service from unauthorized access.&amp;nbsp; In this case, a useType="hostingRedirector"</em>
+<a class="jxr_linenumber" name="L224" href="#L224">224</a> <em class="jxr_javadoccomment">can be used to indicate that the client must follow a longer path of</em>
+<a class="jxr_linenumber" name="L225" href="#L225">225</a> <em class="jxr_javadoccomment">indirection to retrieve the accessPoint.&amp;nbsp; In the bindingTemplate, the client</em>
+<a class="jxr_linenumber" name="L226" href="#L226">226</a> <em class="jxr_javadoccomment">will discover a bindingKey, which will lead to a bindingTemplate that contains</em>
+<a class="jxr_linenumber" name="L227" href="#L227">227</a> <em class="jxr_javadoccomment">the end point for a Web service which supports the UDDI get_bindingDetail Web</em>
+<a class="jxr_linenumber" name="L228" href="#L228">228</a> <em class="jxr_javadoccomment">Service.&amp;nbsp; The client will then be able to re-issue the get_bindingDetail</em>
+<a class="jxr_linenumber" name="L229" href="#L229">229</a> <em class="jxr_javadoccomment">message with the original key, presumably with authentication, to this other</em>
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> <em class="jxr_javadoccomment">Web service.&amp;nbsp; Such an indirection mechanism allows a Web service to be</em>
+<a class="jxr_linenumber" name="L231" href="#L231">231</a> <em class="jxr_javadoccomment">discoverable but not accessible from a given node.&amp;nbsp; &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> 
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;For example, tempuri.com uses ws-o-rama.com to host more</em>
+<a class="jxr_linenumber" name="L234" href="#L234">234</a> <em class="jxr_javadoccomment">than just its publicly visible catalog browsing service. In particular it has a</em>
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> <em class="jxr_javadoccomment">number of services it does not wish to expose fully in the UDDI Business</em>
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">Registry. Instead, it wishes to keep their full definition in its private UDDI</em>
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> <em class="jxr_javadoccomment">registry, which ws-o-rama.com also happens to host, and supply the end points</em>
+<a class="jxr_linenumber" name="L238" href="#L238">238</a> <em class="jxr_javadoccomment">to these Web services only to authorized inquirers. &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L239" href="#L239">239</a> 
+<a class="jxr_linenumber" name="L240" href="#L240">240</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;In particular, tempuri has a Web service that its</em>
+<a class="jxr_linenumber" name="L241" href="#L241">241</a> <em class="jxr_javadoccomment">suppliers use to bill it for goods they deliver. In the UDDI Business Registry,</em>
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> <em class="jxr_javadoccomment">tempuri publishes the following bindingTemplate, which contains a bindingKey.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> 
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> <em class="jxr_javadoccomment">&lt;p class="codeSample"&gt;&amp;lt;bindingTemplate</em>
+<a class="jxr_linenumber" name="L245" href="#L245">245</a> <em class="jxr_javadoccomment">bindingKey="uddi:tempuri.com:billing"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L246" href="#L246">246</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;description xml:lang="en"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L247" href="#L247">247</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Tempuri supplier billing Web service&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L248" href="#L248">248</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/description&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L249" href="#L249">249</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;accessPoint useType="hostingRedirector"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L250" href="#L250">250</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; uddi:ws-o-rama.com:tempuri:bt47&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/accessPoint&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> <em class="jxr_javadoccomment">&amp;lt;/bindingTemplate&amp;gt;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> 
+<a class="jxr_linenumber" name="L254" href="#L254">254</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;&amp;nbsp;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> 
+<a class="jxr_linenumber" name="L256" href="#L256">256</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;Here, the bindingTemplate describing tempuri’s supplier</em>
+<a class="jxr_linenumber" name="L257" href="#L257">257</a> <em class="jxr_javadoccomment">billing Web service uses an accessPoint to refer to the bindingTemplate (also</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> <em class="jxr_javadoccomment">in the UDDI Business Registry) whose bindingKey is uddi:ws-o-rama.com: tempuri:bt47.</em>
+<a class="jxr_linenumber" name="L259" href="#L259">259</a> <em class="jxr_javadoccomment">Note that the useType equals "hostingRedirector" which indicates that</em>
+<a class="jxr_linenumber" name="L260" href="#L260">260</a> <em class="jxr_javadoccomment">the bindingKey refers to a hostingRedirector service. When a client does a</em>
+<a class="jxr_linenumber" name="L261" href="#L261">261</a> <em class="jxr_javadoccomment">get_bindingDetail (on the UDDI Business Registry) asking for the</em>
+<a class="jxr_linenumber" name="L262" href="#L262">262</a> <em class="jxr_javadoccomment">bindingTemplate with that key, the following indirect bindingTemplate is</em>
+<a class="jxr_linenumber" name="L263" href="#L263">263</a> <em class="jxr_javadoccomment">returned: &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> 
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> <em class="jxr_javadoccomment">&lt;p class="codeSample"&gt;&amp;lt;bindingTemplate</em>
+<a class="jxr_linenumber" name="L266" href="#L266">266</a> <em class="jxr_javadoccomment">bindingKey="uddi:ws-o-rama.com:tempura:bt47"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;description xml:lang="en"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L268" href="#L268">268</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Hosting Redirector Service for Tempuri.com&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L269" href="#L269">269</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; hosted by ws-o-rama.com&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L270" href="#L270">270</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/description&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L271" href="#L271">271</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;accessPoint useType="endPoint"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <a href="http://sf1.ws-o-rama.com/tempuri/uddi/inquiry&lt;br&gt" target="alexandria_uri">http://sf1.ws-o-rama.com/tempuri/uddi/inquiry&lt;br&gt</a>;</em>
+<a class="jxr_linenumber" name="L273" href="#L273">273</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/accessPoint&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L274" href="#L274">274</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceDetails&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L275" href="#L275">275</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceInfo &lt;br&gt;</em>
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; tModelKey="uddi:uddi.org:specification:hostingredirector"/&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L277" href="#L277">277</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/tModelInstanceDetails&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L278" href="#L278">278</a> <em class="jxr_javadoccomment">&amp;lt;/bindingTemplate&amp;gt;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L279" href="#L279">279</a> 
+<a class="jxr_linenumber" name="L280" href="#L280">280</a> <em class="jxr_javadoccomment">&lt;p class="codeSample"&gt;&amp;nbsp;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L281" href="#L281">281</a> 
+<a class="jxr_linenumber" name="L282" href="#L282">282</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;This bindingTemplate describes the hosting redirector Web</em>
+<a class="jxr_linenumber" name="L283" href="#L283">283</a> <em class="jxr_javadoccomment">service hosted for tempuri.com by ws-o-rama.com. By definition, it responds to</em>
+<a class="jxr_linenumber" name="L284" href="#L284">284</a> <em class="jxr_javadoccomment">the get_bindingDetail API call using SOAP over HTTP. The description in the</em>
+<a class="jxr_linenumber" name="L285" href="#L285">285</a> <em class="jxr_javadoccomment">bindingTemplate says it responds only to authorized requests. For authorized</em>
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> <em class="jxr_javadoccomment">clients, invoking get_bindingDetail, passing the key of the original</em>
+<a class="jxr_linenumber" name="L287" href="#L287">287</a> <em class="jxr_javadoccomment">bindingTemplate (uddi:tempuri.com:billing) retrieves the following</em>
+<a class="jxr_linenumber" name="L288" href="#L288">288</a> <em class="jxr_javadoccomment">bindingTemplate:&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L289" href="#L289">289</a> 
+<a class="jxr_linenumber" name="L290" href="#L290">290</a> <em class="jxr_javadoccomment">&lt;p class="codeSample"&gt;&amp;lt;bindingTemplate</em>
+<a class="jxr_linenumber" name="L291" href="#L291">291</a> <em class="jxr_javadoccomment">bindingKey="uddi:tempuri.com:billing"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L292" href="#L292">292</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;description xml:lang="en"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L293" href="#L293">293</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Tempuri.com’s supplier billing browsing service&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L294" href="#L294">294</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; hosted by ws-o-rama.com&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L295" href="#L295">295</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/description&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L296" href="#L296">296</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;accessPoint useType="endPoint"&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L297" href="#L297">297</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; http:sf1.ws-o-rama.com/tempuri/billing/&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L298" href="#L298">298</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/accessPoint&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L299" href="#L299">299</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceDetails&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L300" href="#L300">300</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceInfo tModelKey="uddi:..."/&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L301" href="#L301">301</a> <em class="jxr_javadoccomment">&amp;nbsp;&amp;nbsp; &amp;lt;/tModelInstanceDetails&amp;gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L302" href="#L302">302</a> <em class="jxr_javadoccomment">&amp;lt;/bindingTemplate&amp;gt;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L303" href="#L303">303</a> 
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;&amp;nbsp;&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L305" href="#L305">305</a> 
+<a class="jxr_linenumber" name="L306" href="#L306">306</a> <em class="jxr_javadoccomment">&lt;p class="MsoBodyText"&gt;This bindingTemplate describes the actual Web service that</em>
+<a class="jxr_linenumber" name="L307" href="#L307">307</a> <em class="jxr_javadoccomment">is to be used.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L308" href="#L308">308</a> <em class="jxr_javadoccomment"> * &lt;p&gt;Java class for accessPoint complex type.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L309" href="#L309">309</a> <em class="jxr_javadoccomment"> * </em>
+<a class="jxr_linenumber" name="L310" href="#L310">310</a> <em class="jxr_javadoccomment"> * </em>
+<a class="jxr_linenumber" name="L311" href="#L311">311</a> <em class="jxr_javadoccomment"> * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> <em class="jxr_javadoccomment"> * </em>
+<a class="jxr_linenumber" name="L313" href="#L313">313</a> <em class="jxr_javadoccomment"> * &lt;pre&gt;</em>
+<a class="jxr_linenumber" name="L314" href="#L314">314</a> <em class="jxr_javadoccomment"> * &amp;lt;complexType name="accessPoint"&gt;</em>
+<a class="jxr_linenumber" name="L315" href="#L315">315</a> <em class="jxr_javadoccomment"> *   &amp;lt;simpleContent&gt;</em>
+<a class="jxr_linenumber" name="L316" href="#L316">316</a> <em class="jxr_javadoccomment"> *     &amp;lt;extension base="&amp;lt;urn:uddi-org:api_v3&gt;validationTypeString4096"&gt;</em>
+<a class="jxr_linenumber" name="L317" href="#L317">317</a> <em class="jxr_javadoccomment"> *       &amp;lt;attribute name="useType" type="{urn:uddi-org:api_v3}useType" default="" /&gt;</em>
+<a class="jxr_linenumber" name="L318" href="#L318">318</a> <em class="jxr_javadoccomment"> *     &amp;lt;/extension&gt;</em>
+<a class="jxr_linenumber" name="L319" href="#L319">319</a> <em class="jxr_javadoccomment"> *   &amp;lt;/simpleContent&gt;</em>
+<a class="jxr_linenumber" name="L320" href="#L320">320</a> <em class="jxr_javadoccomment"> * &amp;lt;/complexType&gt;</em>
+<a class="jxr_linenumber" name="L321" href="#L321">321</a> <em class="jxr_javadoccomment"> * &lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L322" href="#L322">322</a> <em class="jxr_javadoccomment"> * </em>
+<a class="jxr_linenumber" name="L323" href="#L323">323</a> <em class="jxr_javadoccomment"> * </em>
+<a class="jxr_linenumber" name="L324" href="#L324">324</a> <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L325" href="#L325">325</a> @XmlAccessorType(XmlAccessType.FIELD)
+<a class="jxr_linenumber" name="L326" href="#L326">326</a> @XmlType(name = <span class="jxr_string">"accessPoint"</span>, propOrder = {
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>     <span class="jxr_string">"value"</span>
+<a class="jxr_linenumber" name="L328" href="#L328">328</a> })
+<a class="jxr_linenumber" name="L329" href="#L329">329</a> <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../org/uddi/api_v3/AccessPoint.html">AccessPoint</a> <strong class="jxr_keyword">implements</strong> Serializable {
+<a class="jxr_linenumber" name="L330" href="#L330">330</a> 	
+<a class="jxr_linenumber" name="L331" href="#L331">331</a> 	@XmlTransient
+<a class="jxr_linenumber" name="L332" href="#L332">332</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = -6377843530866292358L;
+<a class="jxr_linenumber" name="L333" href="#L333">333</a> 
+<a class="jxr_linenumber" name="L334" href="#L334">334</a> 	@XmlValue
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>     <strong class="jxr_keyword">protected</strong> String value;
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>     @XmlAttribute
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>     <strong class="jxr_keyword">protected</strong> String useType;
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>     <strong class="jxr_keyword">public</strong> <a href="../../../org/uddi/api_v3/AccessPoint.html">AccessPoint</a>()
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>     {}
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L341" href="#L341">341</a> <em class="jxr_javadoccomment">     * A convenience constructor&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L342" href="#L342">342</a> <em class="jxr_javadoccomment">     *@see org.apache.juddi.api_v3.AccessPointType for help on useType</em>
+<a class="jxr_linenumber" name="L343" href="#L343">343</a> <em class="jxr_javadoccomment">     * @param value</em>
+<a class="jxr_linenumber" name="L344" href="#L344">344</a> <em class="jxr_javadoccomment">     * @param useType </em>
+<a class="jxr_linenumber" name="L345" href="#L345">345</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>     <strong class="jxr_keyword">public</strong> <a href="../../../org/uddi/api_v3/AccessPoint.html">AccessPoint</a>(String value, String useType)
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>     {
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>         <strong class="jxr_keyword">this</strong>.value = value;
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>         <strong class="jxr_keyword">this</strong>.useType = useType;
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>     }
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L352" href="#L352">352</a> <em class="jxr_javadoccomment">     * Gets the value of the value property.</em>
+<a class="jxr_linenumber" name="L353" href="#L353">353</a> <em class="jxr_javadoccomment">     * </em>
+<a class="jxr_linenumber" name="L354" href="#L354">354</a> <em class="jxr_javadoccomment">     * @return</em>
+<a class="jxr_linenumber" name="L355" href="#L355">355</a> <em class="jxr_javadoccomment">     *     possible object is</em>
+<a class="jxr_linenumber" name="L356" href="#L356">356</a> <em class="jxr_javadoccomment">     *     {@link String }</em>
+<a class="jxr_linenumber" name="L357" href="#L357">357</a> <em class="jxr_javadoccomment">     *     </em>
+<a class="jxr_linenumber" name="L358" href="#L358">358</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>     <strong class="jxr_keyword">public</strong> String getValue() {
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>         <strong class="jxr_keyword">return</strong> value;
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>     }
+<a class="jxr_linenumber" name="L362" href="#L362">362</a> 
+<a class="jxr_linenumber" name="L363" href="#L363">363</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L364" href="#L364">364</a> <em class="jxr_javadoccomment">     * Sets the value of the value property.</em>
+<a class="jxr_linenumber" name="L365" href="#L365">365</a> <em class="jxr_javadoccomment">     * </em>
+<a class="jxr_linenumber" name="L366" href="#L366">366</a> <em class="jxr_javadoccomment">     * @param value</em>
+<a class="jxr_linenumber" name="L367" href="#L367">367</a> <em class="jxr_javadoccomment">     *     allowed object is</em>
+<a class="jxr_linenumber" name="L368" href="#L368">368</a> <em class="jxr_javadoccomment">     *     {@link String }</em>
+<a class="jxr_linenumber" name="L369" href="#L369">369</a> <em class="jxr_javadoccomment">     *     @see AccessPointType for spec defined values</em>
+<a class="jxr_linenumber" name="L370" href="#L370">370</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setValue(String value) {
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>         <strong class="jxr_keyword">this</strong>.value = value;
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>     }
+<a class="jxr_linenumber" name="L374" href="#L374">374</a> 
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L376" href="#L376">376</a> <em class="jxr_javadoccomment">     * Gets the value of the useType property.</em>
+<a class="jxr_linenumber" name="L377" href="#L377">377</a> <em class="jxr_javadoccomment">     * </em>
+<a class="jxr_linenumber" name="L378" href="#L378">378</a> <em class="jxr_javadoccomment">     * @return</em>
+<a class="jxr_linenumber" name="L379" href="#L379">379</a> <em class="jxr_javadoccomment">     *     possible object is</em>
+<a class="jxr_linenumber" name="L380" href="#L380">380</a> <em class="jxr_javadoccomment">     *     {@link String }</em>
+<a class="jxr_linenumber" name="L381" href="#L381">381</a> <em class="jxr_javadoccomment">     *     </em>
+<a class="jxr_linenumber" name="L382" href="#L382">382</a> <em class="jxr_javadoccomment">     * @see AccessPointType for spec defined values</em>
+<a class="jxr_linenumber" name="L383" href="#L383">383</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>     <strong class="jxr_keyword">public</strong> String getUseType() {
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>         <strong class="jxr_keyword">if</strong> (useType == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>             <strong class="jxr_keyword">return</strong> <span class="jxr_string">""</span>;
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>             <strong class="jxr_keyword">return</strong> useType;
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>         }
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>     }
+<a class="jxr_linenumber" name="L391" href="#L391">391</a> 
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L393" href="#L393">393</a> <em class="jxr_javadoccomment">     * Sets the value of the useType property.</em>
+<a class="jxr_linenumber" name="L394" href="#L394">394</a> <em class="jxr_javadoccomment">     * </em>
+<a class="jxr_linenumber" name="L395" href="#L395">395</a> <em class="jxr_javadoccomment">     * @param value</em>
+<a class="jxr_linenumber" name="L396" href="#L396">396</a> <em class="jxr_javadoccomment">     *     allowed object is</em>
+<a class="jxr_linenumber" name="L397" href="#L397">397</a> <em class="jxr_javadoccomment">     *     {@link String }</em>
+<a class="jxr_linenumber" name="L398" href="#L398">398</a> <em class="jxr_javadoccomment">     *     </em>
+<a class="jxr_linenumber" name="L399" href="#L399">399</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setUseType(String value) {
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>         <strong class="jxr_keyword">this</strong>.useType = value;
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>     }
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> 
+<a class="jxr_linenumber" name="L404" href="#L404">404</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2004&#x2013;2018 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
+</body>
+</html>
