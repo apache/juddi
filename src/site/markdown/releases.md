@@ -4,7 +4,7 @@ Title: Downloads and Releases
 
 | Name 																| Date  		| Description  			|
 | ---				| --- | --- |										
-| [3.3.4](http://www.apache.org/dyn/closer.cgi/juddi/juddi/3.3.4/)  | Feb 11, 2017   | Stable 3.3.4 Release  |		| 
+| [3.3.5](http://www.apache.org/dyn/closer.cgi/juddi/juddi/3.3.5/)  | Nov 23, 2017   | Stable 3.3.5 Release  |		| 
 | [Older releases](http://archive.apache.org/dist/juddi/)		    | 			  	| Archived Releases  	|
 
 
