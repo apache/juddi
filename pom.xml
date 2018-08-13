@@ -45,7 +45,7 @@ under the License.
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<cxf.version>2.7.18</cxf.version>
 		<springframework.version>3.2.18.RELEASE</springframework.version>
-		<apache.tomcat.version>7.0.82</apache.tomcat.version>
+		<apache.tomcat.version>9.0.10</apache.tomcat.version>
 		<jacoco.it.execution.data.file>${project.build.directory}/coverage-reports/jacoco-it.exec</jacoco.it.execution.data.file>
 		<jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file>
 

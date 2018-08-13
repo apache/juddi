@@ -26,7 +26,7 @@
 	<packaging>jar</packaging>
 	<name>UDDI TCK Tests</name>
 	<properties>
-	     <cargo.version>1.4.16</cargo.version>
+	     <cargo.version>1.6.9</cargo.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -208,7 +208,7 @@
 						<configuration>
 							<wait>false</wait>
 							<container>
-								<containerId>tomcat7x</containerId>
+								<containerId>tomcat9x</containerId>
 								<home>${basedir}/target/juddi-tomcat-${project.parent.version}</home>
 							</container>
 							<configuration>
@@ -234,7 +234,7 @@
 						<configuration>
 							<wait>false</wait>
 							<container>
-								<containerId>tomcat7x</containerId>
+								<containerId>tomcat9x</containerId>
 								<home>${basedir}/target/node2/juddi-tomcat-${project.parent.version}</home>
 							</container>
 							<configuration>
@@ -258,7 +258,7 @@
 						<phase>post-integration-test</phase>
 						<configuration>
 							<container>
-								<containerId>tomcat7x</containerId>
+								<containerId>tomcat9x</containerId>
 							</container>
 							<configuration>
 								<properties>
@@ -277,7 +277,7 @@
 						<phase>post-integration-test</phase>
 						<configuration>
 							<container>
-								<containerId>tomcat7x</containerId>
+								<containerId>tomcat9x</containerId>
 							</container>
 							<configuration>
 								<properties>
