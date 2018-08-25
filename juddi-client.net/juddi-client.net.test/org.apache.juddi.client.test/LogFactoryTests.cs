@@ -17,11 +17,8 @@
 using NUnit.Framework;
 using org.apache.juddi.v3.client;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using org.apache.juddi.v3.client.log;
 
 namespace juddi_client.net.test
@@ -64,10 +61,11 @@ namespace juddi_client.net.test
             try
             {
                 elog = new EventLog(EventLogger.EVENT_LOG_SOURCE);
+                Assert.True(elog.Entries.Count > 1);
             }
-            catch (Exception ex) { }
-            Assume.That(elog != null);
-            Assert.True(elog.Entries.Count > 1);
+            catch (Exception ex) {
+                Assert.Ignore("test ignored, event log access was probably denied " + ex.Message);
+            }
         }
 
         [Test]
@@ -95,10 +93,12 @@ namespace juddi_client.net.test
             try
             {
                 elog = new EventLog(EventLogger.EVENT_LOG_SOURCE);
+                Assert.True(elog.Entries.Count > 1);
             }
-            catch (Exception ex) { }
-            Assume.That(elog != null);
-            Assert.True(elog.Entries.Count > 1);
+            catch (Exception ex) {
+                Assert.Ignore("test ignored, event log access was probably denied " + ex.Message);
+            }
+            
         }
 
 
