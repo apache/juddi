@@ -15,9 +15,12 @@ rem "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 rem KIND, either express or implied.  See the License for the
 rem specific language governing permissions and limitations
 rem under the License.
+
+
 rem Hi, this is for running nunit tests on ASF's build bot CI servers, specifically the Windows 7 bb server
 
-juddi-installer\bin\debug\juddi-installer.exe
+cd
+juddi-client.net\juddi-installer\bin\debug\juddi-installer.exe
 
 if "%NUNIT_HOME%"=="" (
 	set NUNIT_HOME=c:\juddi\NUnit-2.6.1
