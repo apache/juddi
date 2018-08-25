@@ -16,3 +16,7 @@ nb-configuration.xml
 uddi-tck/drivers/
 *.releaseBackup
 *.versionsBackup
+**/bin/Debug/*
+**/obj/**
+*.suo
+juddi-client.net/.vs/juddi-client.net/v15/**

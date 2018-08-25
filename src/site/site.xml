@@ -75,7 +75,7 @@
 
 
 		<menu name="Documentation">
-			
+			<item name="Supported UDDI Interfaces" href="uddi.html"/>
 			<item name="Security Advisories" href="security.html"/>
 			<item name="jUDDI Docs" href="docs.html"/>
 			<item name="Wiki" href="http://wiki.apache.org/juddi"/>
