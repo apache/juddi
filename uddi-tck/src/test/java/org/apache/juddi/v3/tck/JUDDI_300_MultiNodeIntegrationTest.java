@@ -269,8 +269,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         try {
                                 replicationNode1 = juddiApiServiceNode1.getReplicationNodes(rootNode1Token);
                         } catch (Exception ex) {
-                                System.out.println("Error getting replication config");
-                                ex.printStackTrace();
+                                logger.error("Error getting replication config",ex);
                                 Assert.fail(ex.getMessage());
 
                         }

@@ -171,8 +171,7 @@ public class UDDI_141_JIRAIntegrationTest {
         }
 
         static void HandleException(Exception ex) {
-                System.err.println("Error caught of type " + ex.getClass().getCanonicalName());
-                ex.printStackTrace();
+                logger.error("Error caught of type " + ex.getClass().getCanonicalName(),ex);
                 if (ex.getMessage() != null) {
                         Assert.assertFalse(ex.getMessage().contains(TRANS));
                         Assert.assertFalse(ex.getMessage().contains(MISSING_RESOURCE));
@@ -194,7 +193,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 //find business without lang defined, expecting 2 results
                 List<String> businesskeysToDelete = new ArrayList<String>();
                 String failuremsg = "";
-                System.out.println("JUDDI_JIRA_571_Part1_Test");
+                logger.info("JUDDI_JIRA_571_Part1_Test");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -274,7 +273,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 if (failuremsg.length() > 0) {
                         Assert.fail(failuremsg);
                 }
-                System.out.println("Pass");
+                logger.info("Pass");
 
         }
 
@@ -289,7 +288,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 List<String> businesskeysToDelete = new ArrayList<String>();
                 List<String> targetServiceKeys = new ArrayList<String>();
                 String failuremsg = "";
-                System.out.println("JUDDI_JIRA_571_Part2_Test");
+                logger.info("JUDDI_JIRA_571_Part2_Test");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -377,7 +376,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 if (failuremsg.length() > 0) {
                         Assert.fail(failuremsg);
                 }
-                System.out.println("Pass");
+                logger.info("Pass");
 
         }
 
@@ -392,7 +391,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 List<String> businesskeysToDelete = new ArrayList<String>();
 
                 String failuremsg = "";
-                System.out.println("JUDDI_571_Part3_Test");
+                logger.info("JUDDI_571_Part3_Test");
                 SaveTModel sb = new SaveTModel();
                 sb.setAuthInfo(authInfoJoe);
                 TModel be = new TModel();
@@ -472,7 +471,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 if (failuremsg.length() > 0) {
                         Assert.fail(failuremsg);
                 }
-                System.out.println("Pass");
+                logger.info("Pass");
 
         }
 
@@ -486,7 +485,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 List<String> businesskeysToDelete = new ArrayList<String>();
 
                 String failuremsg = "";
-                System.out.println("JUDDI_574");
+                logger.info("JUDDI_574");
                 SaveTModel sb = new SaveTModel();
                 sb.setAuthInfo(authInfoJoe);
                 TModel be = new TModel();
@@ -499,7 +498,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 try {
                         TModelDetail saveTModel = publicationJoe.saveTModel(sb);
                         businesskeysToDelete.add(saveTModel.getTModel().get(0).getTModelKey());
-                        System.out.println("tmodel created with key " + saveTModel.getTModel().get(0).getTModelKey());
+                        logger.info("tmodel created with key " + saveTModel.getTModel().get(0).getTModelKey());
                 } catch (Exception ex) {
                         HandleException(ex);
                         Assert.fail("unexpected failure");
@@ -540,7 +539,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 if (failuremsg.length() > 0) {
                         Assert.fail(failuremsg);
                 }
-                System.out.println("Pass");
+                logger.info("Pass");
 
         }
 
@@ -553,7 +552,7 @@ public class UDDI_141_JIRAIntegrationTest {
         public void JUDDI_590() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 //create two businesses
-                System.out.println("JUDDI_590");
+                logger.info("JUDDI_590");
 
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
@@ -707,7 +706,7 @@ public class UDDI_141_JIRAIntegrationTest {
         public void JUDDI_590_1() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 //create two businesses
-                System.out.println("JUDDI_590_1");
+                logger.info("JUDDI_590_1");
 
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
@@ -831,7 +830,7 @@ public class UDDI_141_JIRAIntegrationTest {
         @Test
         public void JIRA_597() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JIRA_597");
+                logger.info("JIRA_597");
 
                 int port = 7000;
                 String hostname = TckPublisher.getProperties().getProperty("bindaddress");
@@ -950,7 +949,7 @@ public class UDDI_141_JIRAIntegrationTest {
         @Test
         public void JIRA_596() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JIRA_596");
+                logger.info("JIRA_596");
                 int port = 9000;
 
                 String hostname = TckPublisher.getProperties().getProperty("bindaddress");
@@ -1070,7 +1069,7 @@ public class UDDI_141_JIRAIntegrationTest {
         @Test
         public void JIRA_575_BT() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JIRA_575_BT");
+                logger.info("JIRA_575_BT");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
                 gtm.setAuthInfo(authInfoJoe);
@@ -1118,7 +1117,7 @@ public class UDDI_141_JIRAIntegrationTest {
         @Test
         public void JIRA_575_KR_Biz() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JIRA_575_KR_Biz");
+                logger.info("JIRA_575_KR_Biz");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
                 gtm.setAuthInfo(authInfoJoe);
@@ -1152,7 +1151,7 @@ public class UDDI_141_JIRAIntegrationTest {
         @Test
         public void JIRA_575_IDENT_Biz() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JIRA_575_IDENT_Biz");
+                logger.info("JIRA_575_IDENT_Biz");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
                 gtm.setAuthInfo(authInfoJoe);
@@ -1186,7 +1185,7 @@ public class UDDI_141_JIRAIntegrationTest {
         @Test
         public void JIRA_575_KR_TMODEL() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JIRA_575_KR_TMODEL");
+                logger.info("JIRA_575_KR_TMODEL");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
                 gtm.setAuthInfo(authInfoJoe);
@@ -1216,7 +1215,7 @@ public class UDDI_141_JIRAIntegrationTest {
         @Test
         public void JIRA_575_KRGRP_TMODEL() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JIRA_575_KRGRP_TMODEL");
+                logger.info("JIRA_575_KRGRP_TMODEL");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
                 gtm.setAuthInfo(authInfoJoe);
@@ -1247,7 +1246,7 @@ public class UDDI_141_JIRAIntegrationTest {
         @Test
         public void JIRA_575_KRGRP_Biz() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JIRA_575_KRGRP_Biz");
+                logger.info("JIRA_575_KRGRP_Biz");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
                 gtm.setAuthInfo(authInfoJoe);
@@ -1284,7 +1283,7 @@ public class UDDI_141_JIRAIntegrationTest {
         @Test
         public void JIRA_575_KRGRP_PA() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JIRA_575_KRGRP_PA");
+                logger.info("JIRA_575_KRGRP_PA");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
                 gtm.setAuthInfo(authInfoJoe);
@@ -1328,7 +1327,7 @@ public class UDDI_141_JIRAIntegrationTest {
         @Test
         public void JIRA_575_SVC_KR() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JIRA_575_SVC_KR");
+                logger.info("JIRA_575_SVC_KR");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
                 gtm.setAuthInfo(authInfoJoe);
@@ -1367,7 +1366,7 @@ public class UDDI_141_JIRAIntegrationTest {
         @Test
         public void JIRA_575_SVC_KRGRP() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JIRA_575_SVC_KRGRP");
+                logger.info("JIRA_575_SVC_KRGRP");
                 String madeupTmodel = "uddi" + UUID.randomUUID().toString();
                 GetTModelDetail gtm = new GetTModelDetail();
                 gtm.setAuthInfo(authInfoJoe);

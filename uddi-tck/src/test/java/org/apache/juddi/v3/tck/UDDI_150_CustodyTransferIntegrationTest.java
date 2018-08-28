@@ -145,8 +145,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
         }
 
         static void HandleException(Exception ex) {
-                System.err.println("Error caught of type " + ex.getClass().getCanonicalName());
-                ex.printStackTrace();
+                logger.error("Error caught of type " + ex.getClass().getCanonicalName(),ex);
                 if (ex.getMessage() != null) {
                         Assert.assertFalse(ex.getMessage().contains(TRANS));
                         Assert.assertFalse(ex.getMessage().contains(MISSING_RESOURCE));
@@ -167,7 +166,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
         @Test
         public void ValidTransfer() throws Exception {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ValidTransfer");
+                logger.info("ValidTransfer");
                 DatatypeFactory df = DatatypeFactory.newInstance();
                 GregorianCalendar gcal = new GregorianCalendar();
                 gcal.setTimeInMillis(System.currentTimeMillis());
@@ -240,7 +239,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
 
                         }
                 }
-                System.out.println("Business Entity transfered successfull");
+                logger.info("Business Entity transfered successfull");
 
                 //note, we transfered ownership here so sam has to delete both of them
                 TckCommon.DeleteBusiness(keyJoeBiz, authInfoSam, publishSam);

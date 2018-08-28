@@ -159,8 +159,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
 
         static void HandleException(Exception ex) {
                 if (logger.isDebugEnabled()) {
-                        System.err.println("Error caught of type " + ex.getClass().getCanonicalName());
-                        ex.printStackTrace();
+                        logger.error("Error caught of type " + ex.getClass().getCanonicalName(),ex);
                 }
                 Assert.assertFalse(ex.getMessage().contains(TRANS));
                 Assert.assertFalse(ex.getMessage().contains(MISSING_RESOURCE));
@@ -178,7 +177,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void BusinessKeyTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BusinessKeyTooLongTest");
+                logger.info("BusinessKeyTooLongTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -203,7 +202,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void BusinessNameTooShortTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BusinessNameTooShortTest");
+                logger.info("BusinessNameTooShortTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -227,7 +226,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void BusinessNameMinLengthTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BusinessNameMinLengthTest");
+                logger.info("BusinessNameMinLengthTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -245,7 +244,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void BusinessNameTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BusinessNameTooLongTest");
+                logger.info("BusinessNameTooLongTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -271,7 +270,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void BusinessNameMaxLengthTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BusinessNameMaxLengthTest");
+                logger.info("BusinessNameMaxLengthTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -290,7 +289,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void BusinessNameLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BusinessNameLangTooLongTest");
+                logger.info("BusinessNameLangTooLongTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -318,7 +317,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void BusinessNameLangMaxLengthTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BusinessNameLangMaxLengthTest");
+                logger.info("BusinessNameLangMaxLengthTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -339,7 +338,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void BusinessDescriptionLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BusinessDescriptionLangTooLongTest");
+                logger.info("BusinessDescriptionLangTooLongTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -370,7 +369,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void BusinessDescriptionLangMaxLengthTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BusinessDescriptionLangMaxLengthTest");
+                logger.info("BusinessDescriptionLangMaxLengthTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -394,7 +393,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void BusinessDescriptionMaxLengthTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BusinessDescriptionMaxLengthTest");
+                logger.info("BusinessDescriptionMaxLengthTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -417,7 +416,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void BusinessDescriptionTooLongLengthTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BusinessDescriptionTooLongLengthTest");
+                logger.info("BusinessDescriptionTooLongLengthTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -446,7 +445,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void BusinessDiscoveryURLTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BusinessDiscoveryURLTooLongTest");
+                logger.info("BusinessDiscoveryURLTooLongTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -476,7 +475,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void BusinessDiscoveryURLMaxLengthTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BusinessDiscoveryURLMaxLengthTest");
+                logger.info("BusinessDiscoveryURLMaxLengthTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -500,7 +499,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void BusinessDiscoveryURLMaxLengthMaxUseTypeTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BusinessDiscoveryURLMaxLengthMaxUseTypeTest");
+                logger.info("BusinessDiscoveryURLMaxLengthMaxUseTypeTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -525,7 +524,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void BusinessDiscoveryURLMaxLengthToolongUseTypeTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BusinessDiscoveryURLMaxLengthToolongUseTypeTest");
+                logger.info("BusinessDiscoveryURLMaxLengthToolongUseTypeTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -555,7 +554,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void ContactMaxEmailMaxUseTypeTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactMaxEmailMaxUseTypeTest");
+                logger.info("ContactMaxEmailMaxUseTypeTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -781,7 +780,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ContactTooLongEmailMaxUseTypeTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactTooLongEmailMaxUseTypeTest");
+                logger.info("ContactTooLongEmailMaxUseTypeTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -807,7 +806,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ContactMaxEmailToolongUseTypeTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactMaxEmailToolongUseTypeTest");
+                logger.info("ContactMaxEmailToolongUseTypeTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -836,7 +835,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void ContactDescriptionMaxLangMaxtest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactDescriptionMaxLangMaxtest");
+                logger.info("ContactDescriptionMaxLangMaxtest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -857,7 +856,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ContactDescriptionTooLongtest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactDescriptionTooLongtest");
+                logger.info("ContactDescriptionTooLongtest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -883,7 +882,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ContactDescriptionLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactDescriptionLangTooLongTest");
+                logger.info("ContactDescriptionLangTooLongTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -909,7 +908,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void ContactPhoneMaxLentest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactPhoneMaxLentest");
+                logger.info("ContactPhoneMaxLentest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -930,7 +929,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ContactPhoneTooLongtest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactPhoneTooLongtest");
+                logger.info("ContactPhoneTooLongtest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -955,7 +954,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void ContactPhoneMaxLongtest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactPhoneMaxLongtest");
+                logger.info("ContactPhoneMaxLongtest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -974,7 +973,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void ContactPhoneMaxLongMaxUseTypetest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactPhoneMaxLongMaxUseTypetest");
+                logger.info("ContactPhoneMaxLongMaxUseTypetest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -994,7 +993,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ContactPhoneUseTypeTooLongtest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactPhoneUseTypeTooLongtest");
+                logger.info("ContactPhoneUseTypeTooLongtest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1019,7 +1018,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void ContactMaxAddressFFFFFFFtest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactMaxAddressFFFFFFFtest");
+                logger.info("ContactMaxAddressFFFFFFFtest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1040,7 +1039,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ContactMaxAddressTFFFFFFtest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactMaxAddressTFFFFFFtest");
+                logger.info("ContactMaxAddressTFFFFFFtest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1066,7 +1065,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ContactMaxAddressFTFFFFFtest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactMaxAddressFTFFFFFtest");
+                logger.info("ContactMaxAddressFTFFFFFtest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1092,7 +1091,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ContactMaxAddressFFTFFFFtest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactMaxAddressFFTFFFFtest");
+                logger.info("ContactMaxAddressFFTFFFFtest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1118,7 +1117,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ContactMaxAddressFFFTFFFtest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactMaxAddressFFFTFFFtest");
+                logger.info("ContactMaxAddressFFFTFFFtest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1143,7 +1142,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ContactMaxAddressFFFFTFFtest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactMaxAddressFFFFTFFtest");
+                logger.info("ContactMaxAddressFFFFTFFtest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1169,7 +1168,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ContactMaxAddressFFFFFTFtest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactMaxAddressFFFFFTFtest");
+                logger.info("ContactMaxAddressFFFFFTFtest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1195,7 +1194,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ContactMaxAddressFFFFFFTtest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ContactMaxAddressFFFFFFTtest");
+                logger.info("ContactMaxAddressFFFFFFTtest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1221,7 +1220,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void KeyReferenceMax() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("KeyReferenceMax");
+                logger.info("KeyReferenceMax");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1246,7 +1245,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void KeyReferenceKeyTooLong() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("KeyReferenceKeyTooLong");
+                logger.info("KeyReferenceKeyTooLong");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1277,7 +1276,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void KeyReferenceNameTooLong() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("KeyReferenceNameTooLong");
+                logger.info("KeyReferenceNameTooLong");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1308,7 +1307,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void KeyReferenceValueTooLong() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("KeyReferenceValueTooLong");
+                logger.info("KeyReferenceValueTooLong");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1339,7 +1338,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ServiceNameTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ServiceNameTooLongTest");
+                logger.info("ServiceNameTooLongTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1371,7 +1370,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void ServiceNameMaxLenTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ServiceNameMaxLenTest");
+                logger.info("ServiceNameMaxLenTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1397,7 +1396,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void ServiceNameMaxLangLenTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ServiceNameMaxLangLenTest");
+                logger.info("ServiceNameMaxLangLenTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1424,7 +1423,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ServiceNameTooLongLangTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ServiceNameTooLongLangTest");
+                logger.info("ServiceNameTooLongLangTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1457,7 +1456,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ServiceDescTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ServiceDescTooLongTest");
+                logger.info("ServiceDescTooLongTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1492,7 +1491,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ServiceDescLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ServiceDescLangTooLongTest");
+                logger.info("ServiceDescLangTooLongTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1528,7 +1527,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void ServiceDescMaxLangTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ServiceDescMaxLangTest");
+                logger.info("ServiceDescMaxLangTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1559,7 +1558,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void ServiceMaxCatBagTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ServiceDescMaxLangTest");
+                logger.info("ServiceDescMaxLangTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1595,7 +1594,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void ServiceMaxCatBagTooBigTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("ServiceMaxCatBagTooBigTest");
+                logger.info("ServiceMaxCatBagTooBigTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1637,7 +1636,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void BindingTemplateNoAccessPointTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BindingTemplateNoAccessPointTest");
+                logger.info("BindingTemplateNoAccessPointTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1674,7 +1673,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void BindingTemplateAccessPointMaxUseTypeTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BindingTemplateAccessPointMaxUseTypeTest");
+                logger.info("BindingTemplateAccessPointMaxUseTypeTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1709,7 +1708,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void BindingTemplateAccessPointUseTypeTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BindingTemplateAccessPointUseTypeTooLongTest");
+                logger.info("BindingTemplateAccessPointUseTypeTooLongTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1750,7 +1749,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void BindingTemplateAccessPointValueTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BindingTemplateAccessPointValueTooLongTest");
+                logger.info("BindingTemplateAccessPointValueTooLongTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1791,7 +1790,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void BindingTemplateAccessPointMaxValueTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BindingTemplateAccessPointMaxValueTest");
+                logger.info("BindingTemplateAccessPointMaxValueTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1826,7 +1825,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void BindingTemplateNoAccessPointNoRedirectorTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BindingTemplateNoAccessPointNoRedirectorTest");
+                logger.info("BindingTemplateNoAccessPointNoRedirectorTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1865,7 +1864,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void BindingTemplateAccessPointAndRedirectorTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BindingTemplateAccessPointAndRedirectorTest");
+                logger.info("BindingTemplateAccessPointAndRedirectorTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -1908,7 +1907,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void BindingTemplateHostRedirectorReferencalIntegritytest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BindingTemplateHostRedirectorReferencalIntegritytest");
+                logger.info("BindingTemplateHostRedirectorReferencalIntegritytest");
                 //TODO create a binding template, get the key, use the key as the specific redirector
                 String url = "http://juddi.apache.org";
                 SaveBusiness sb = new SaveBusiness();
@@ -1936,7 +1935,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
 
                 sb.getBusinessEntity().add(be);
 
-                System.out.println("Saving the business with the first service");
+                logger.info("Saving the business with the first service");
                 BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
 
                 TckCommon.PrintBusinessDetails(saveBusiness.getBusinessEntity());
@@ -1958,7 +1957,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.getBusinessEntity().add(saveBusiness.getBusinessEntity().get(0));
 
                 //This SHOULD be allowed
-                System.out.println("Saving the business with the first and second service as a host redirect");
+                logger.info("Saving the business with the first and second service as a host redirect");
                 saveBusiness = publicationJoe.saveBusiness(sb);
                 TckCommon.PrintBusinessDetails(saveBusiness.getBusinessEntity());
 
@@ -1971,7 +1970,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void BindingTemplateAccessPointAsBindingTemplateReferencalIntegritytest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BindingTemplateAccessPointAsBindingTemplateReferencalIntegritytest");
+                logger.info("BindingTemplateAccessPointAsBindingTemplateReferencalIntegritytest");
                 //create a binding template, get the key, use the key as the specific redirector
                 String url = "http://juddi.apache.org";
                 SaveBusiness sb = new SaveBusiness();
@@ -1998,7 +1997,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 be.getBusinessServices().getBusinessService().add(bs);
 
                 sb.getBusinessEntity().add(be);
-                System.out.println("Saving the business with the first service");
+                logger.info("Saving the business with the first service");
                 BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
 
                 TckCommon.PrintBusinessDetails(saveBusiness.getBusinessEntity());
@@ -2021,7 +2020,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.getBusinessEntity().add(saveBusiness.getBusinessEntity().get(0));
 
                 //This SHOULD be allowed
-                System.out.println("Saving the business with the first and second service as a host redirect");
+                logger.info("Saving the business with the first and second service as a host redirect");
                 saveBusiness = publicationJoe.saveBusiness(sb);
                 TckCommon.PrintBusinessDetails(saveBusiness.getBusinessEntity());
 
@@ -2034,7 +2033,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void BindingTemplateAccessPointAsBindingTemplateINVALIDReferencalIntegritytest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BindingTemplateAccessPointAsBindingTemplateINVALIDReferencalIntegritytest");
+                logger.info("BindingTemplateAccessPointAsBindingTemplateINVALIDReferencalIntegritytest");
                 //create a binding template, get the key, use the key as the specific redirector
                 SaveBusiness sb;
                 try {
@@ -2077,7 +2076,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void BindingTemplateHostRedirectorTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BindingTemplateHostRedirectorTooLongTest");
+                logger.info("BindingTemplateHostRedirectorTooLongTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -2117,7 +2116,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void BindingTemplateAccessPointMaxLengthTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BindingTemplateAccessPointMaxLengthTest");
+                logger.info("BindingTemplateAccessPointMaxLengthTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -2151,7 +2150,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void BindingTemplateAccessPointTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BindingTemplateAccessPointTooLongTest");
+                logger.info("BindingTemplateAccessPointTooLongTest");
                 SaveBusiness sb = new SaveBusiness();
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
@@ -2196,7 +2195,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void CreateKeyGenMaxLengthTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("CreateKeyGenMaxLengthTest");
+                logger.info("CreateKeyGenMaxLengthTest");
 
                 SaveTModel st = new SaveTModel();
                 st.setAuthInfo(authInfoJoe);
@@ -2226,7 +2225,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void CreateKeyGenTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("CreateKeyGenTooLongTest");
+                logger.info("CreateKeyGenTooLongTest");
 
                 SaveTModel st = new SaveTModel();
                 st.setAuthInfo(authInfoJoe);
@@ -2257,7 +2256,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void CreateKeyGenKeyDescriptionTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("CreateKeyGenKeyDescriptionTooLongTest");
+                logger.info("CreateKeyGenKeyDescriptionTooLongTest");
 
                 SaveTModel st = new SaveTModel();
                 st.setAuthInfo(authInfoJoe);
@@ -2289,7 +2288,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void CreateKeyGenKeyDescriptionLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("CreateKeyGenKeyDescriptionTooLongTest");
+                logger.info("CreateKeyGenKeyDescriptionTooLongTest");
 
                 SaveTModel st = new SaveTModel();
                 st.setAuthInfo(authInfoJoe);
@@ -2325,7 +2324,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void CreateKeyGenNameLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("CreateKeyGenNameLangTooLongTest");
+                logger.info("CreateKeyGenNameLangTooLongTest");
 
                 SaveTModel st = new SaveTModel();
                 st.setAuthInfo(authInfoJoe);
@@ -2363,7 +2362,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test(expected = SOAPFaultException.class)
         public void CreateTmodelnoKeyGen() throws DispositionReportFaultMessage, RemoteException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("CreateTmodelnoKeyGen");
+                logger.info("CreateTmodelnoKeyGen");
 
                 SaveTModel st = new SaveTModel();
                 st.setAuthInfo(authInfoJoe);
@@ -2388,7 +2387,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         @Test
         public void BindingTemplateTmodelInstanceInfoTest() {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("BindingTemplateTmodelInstanceInfoTest");
+                logger.info("BindingTemplateTmodelInstanceInfoTest");
                 //create a key gen
                 //create a tmodels
                 //create a business, service, binding with tmodel instance infos

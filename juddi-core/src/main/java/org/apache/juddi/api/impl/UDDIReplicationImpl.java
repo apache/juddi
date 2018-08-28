@@ -1063,7 +1063,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                         + "order by e.originatingUSN ASC");
                                         }
                                         logger.info("Query db for replication changes, lower index is " + (firstrecord) + " last index " + lastrecord + " record limit " + maxrecords);
-                                        logger.info("This node is" + getNode() + ", request is for data originated from " + changesAlreadySeen.getHighWaterMark().get(i).getNodeID() + " and it's being sent back to " + requestingNode);
+                                        logger.info("This node is " + getNode() + ", request is for data originated from " + changesAlreadySeen.getHighWaterMark().get(i).getNodeID() + " and it's being sent back to " + requestingNode);
 
                                         createQuery.setMaxResults(maxrecords);
                                         createQuery.setParameter("inbound", firstrecord);
@@ -1092,7 +1092,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 }
                                 //assume that they just want records that originated from here?
                                 logger.info("Query db for replication changes, lower index is " + (firstrecord) + " last index " + lastrecord + " record limit " + maxrecords);
-                                logger.info("This node is" + getNode() + " requesting node " + requestingNode);
+                                logger.info("This node is " + getNode() + " requesting node " + requestingNode);
 
                                 if (lastrecord != null) {
                                         createQuery = em.createQuery("select e from ChangeRecord e where "

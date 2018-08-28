@@ -814,7 +814,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
                         BusinessDetail businessDetail = inquiryJoe.getBusinessDetail(gsb);
                         PrintUDDI<BusinessEntity> printer = new PrintUDDI<BusinessEntity>();
                         if (TckCommon.isDebug()) {
-                                System.out.println(printer.print(businessDetail.getBusinessEntity().get(0)));
+                                logger.info(printer.print(businessDetail.getBusinessEntity().get(0)));
                         }
                         AtomicReference<String> msg = new AtomicReference<String>();
                         boolean b = ds.verifySignedUddiEntity(businessDetail.getBusinessEntity().get(0), msg);
@@ -855,7 +855,7 @@ public class UDDI_142_DigitalSignatureIntegrationTest {
                         BusinessDetail businessDetail = inquiryJoe.getBusinessDetail(gsb);
                         PrintUDDI<BusinessEntity> printer = new PrintUDDI<BusinessEntity>();
                         if (TckCommon.isDebug()) {
-                                System.out.println(printer.print(businessDetail.getBusinessEntity().get(0)));
+                                logger.info(printer.print(businessDetail.getBusinessEntity().get(0)));
                         }
                         AtomicReference<String> msg = new AtomicReference<String>();
                         boolean b = ds.verifySignedUddiEntity(businessDetail.getBusinessEntity().get(0), msg);

@@ -55,13 +55,13 @@ public class UDDI_090_HttpMavenIntegrationTest extends UDDI_090_SubscriptionList
                 //bring up the TCK SubscriptionListener
                 port = 9600;
                 String httpEndpoint = "http://" + hostname + ":" + port + "/tcksubscriptionlistener";
-                System.out.println("Bringing up SubscriptionListener endpoint at " + httpEndpoint);
+                logger.info("Bringing up SubscriptionListener endpoint at " + httpEndpoint);
                 endPoint = Endpoint.publish(httpEndpoint, new UDDISubscriptionListenerImpl());
                 int count = 0;
                 while (!endPoint.isPublished()) {
                         port = 9600 + new Random().nextInt(99);
                         httpEndpoint = "http://" + hostname + ":" + port + "/tcksubscriptionlistener";
-                        System.out.println("Bringing up SubscriptionListener endpoint at " + httpEndpoint);
+                        logger.info("Bringing up SubscriptionListener endpoint at " + httpEndpoint);
                         endPoint = Endpoint.publish(httpEndpoint, new UDDISubscriptionListenerImpl());
                         count++;
                         if (count > 10) {
@@ -77,7 +77,7 @@ public class UDDI_090_HttpMavenIntegrationTest extends UDDI_090_SubscriptionList
                                 Thread.sleep(1000);
                         } catch (InterruptedException ex) {
                         }
-                        System.out.println(".");
+                        logger.info(".");
                         //if (UDDISubscriptionListenerImpl.notificationCount > 0) {                        }
                 }
                 logger.info("RX " + UDDISubscriptionListenerImpl.notificationCount + " notifications");

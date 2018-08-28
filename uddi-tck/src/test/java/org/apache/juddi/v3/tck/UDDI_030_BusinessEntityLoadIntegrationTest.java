@@ -50,7 +50,7 @@ public class UDDI_030_BusinessEntityLoadIntegrationTest extends UDDI_030_Busines
                 long startSave = System.currentTimeMillis();
                 tckBusinessJoe.saveJoePublisherBusinesses(authInfoJoe, numberOfBusinesses);
                 long saveDuration = System.currentTimeMillis() - startSave;
-                System.out.println("****************** Save " + numberOfBusinesses + " Joes Duration=" + saveDuration);
+                logger.info("****************** Save " + numberOfBusinesses + " Joes Duration=" + saveDuration);
 
                 long startFind = System.currentTimeMillis();
                 FindBusiness fs = new FindBusiness();

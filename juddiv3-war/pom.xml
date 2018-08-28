@@ -151,7 +151,22 @@ language governing permissions and * limitations under the License. * */ -->
 					
                     <scope>provided</scope>
                 </dependency>
-               
+                 <dependency>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+                    <version>${cxf.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-rt-rs-client</artifactId>
+                    <version>${cxf.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-rt-rs-service-description</artifactId>
+                    <version>${cxf.version}</version>
+                </dependency>
+                
                 <dependency>
                     <groupId>org.hibernate</groupId>
                     <artifactId>hibernate-entitymanager</artifactId>
@@ -291,6 +306,22 @@ language governing permissions and * limitations under the License. * */ -->
                     <artifactId>cxf-rt-rs-extension-providers</artifactId>
                     <version>${cxf.version}</version>
                 </dependency>
+                 <dependency>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+                    <version>${cxf.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-rt-rs-client</artifactId>
+                    <version>${cxf.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-rt-rs-service-description</artifactId>
+                    <version>${cxf.version}</version>
+                </dependency>
+                
 				
                 <dependency>
                     <groupId>org.codehaus.jettison</groupId>

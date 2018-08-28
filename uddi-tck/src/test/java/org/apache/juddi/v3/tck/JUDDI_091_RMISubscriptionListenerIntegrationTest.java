@@ -74,7 +74,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
                         //bring up the RMISubscriptionListener
                         //random port
                         randomPort = 19800 + new Random().nextInt(99);
-                        System.out.println("RMI Random port=" + randomPort);
+                        logger.info("RMI Random port=" + randomPort);
                         //bring up the RMISubscriptionListener
                         //saw this once before
                         // internal error: ObjID already in use

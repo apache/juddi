@@ -20,17 +20,24 @@
 <beans xmlns="http://www.springframework.org/schema/beans" 
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
        xmlns:jaxws="http://cxf.apache.org/jaxws"
-       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="
+	    xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+		 xmlns:sec="http://cxf.apache.org/configuration/security"
+		xmlns:http="http://cxf.apache.org/transports/http/configuration"
+		xmlns:util="http://www.springframework.org/schema/util"
+  xsi:schemaLocation="
   http://www.springframework.org/schema/beans classpath:schemas/spring-beans.xsd
   http://cxf.apache.org/jaxws  classpath:schemas/jaxws.xsd
   http://cxf.apache.org/jaxrs classpath:schemas/jaxrs.xsd
   http://www.springframework.org/schema/util classpath:schemas/spring-util.xsd
+   http://cxf.apache.org/configuration/security
+      http://cxf.apache.org/schemas/configuration/security.xsd
+      http://cxf.apache.org/transports/http/configuration
+      http://cxf.apache.org/schemas/configuration/http-conf.xsd
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
   ">
  
     <import resource="classpath:META-INF/cxf/cxf.xml" />
-    <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
 
@@ -40,5 +47,35 @@
         </jaxws:properties>
     </jaxws:endpoint>
 
+  <http:conduit name="*.http-conduit">
+ 
+    <http:tlsClientParameters>
+      <sec:keyManagers 
+					keyPassword="password">
+        <sec:keyStore type="JKS" 
+						password="password"
+                      file="conf/keystore.jks"/>
+      </sec:keyManagers>
+      <sec:trustManagers>
+        <sec:keyStore type="JKS" password="password"
+                      file="truststore.jks"/>
+      </sec:trustManagers>
+      <sec:cipherSuitesFilter>
+        <!-- these filters ensure that a ciphersuite with
+             export-suitable or null encryption is used,
+             but exclude anonymous Diffie-Hellman key change as
+             this is vulnerable to man-in-the-middle attacks -->
+        <sec:include>.*_EXPORT_.*</sec:include>
+        <sec:include>.*_EXPORT1024_.*</sec:include>
+        <sec:include>.*_WITH_DES_.*</sec:include>
+        <sec:include>.*_WITH_AES_.*</sec:include>
+        <sec:include>.*_WITH_NULL_.*</sec:include>
+        <sec:exclude>.*_DH_anon_.*</sec:exclude>
+      </sec:cipherSuitesFilter>
+    </http:tlsClientParameters>
+   
+    <http:client AutoRedirect="false" Connection="Keep-Alive"/>
+ 
+  </http:conduit>
 
 </beans>

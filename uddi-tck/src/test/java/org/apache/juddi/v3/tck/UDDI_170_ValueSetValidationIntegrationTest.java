@@ -152,7 +152,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void testVSV() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("testVSV");
+                logger.info("testVSV");
                 BusinessEntity SaveBusiness = null;
                 BusinessEntity SaveVSVCallbackService = null;
                 try {
@@ -186,7 +186,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void testVSVInvalid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
                 Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("testVSVInvalid");
+                logger.info("testVSVInvalid");
                 BusinessEntity SaveBusiness = null;
                 BusinessEntity SaveVSVCallbackService = null;
                 try {
@@ -349,7 +349,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
 
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("DerviedFromValid");
+                logger.info("DerviedFromValid");
                 TModel tm = new TModel();
                 //tm.setTModelKey();
                 tm.setCategoryBag(new CategoryBag());
@@ -367,7 +367,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void derviedFromInValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                  System.out.println("DerviedFromInValid");
+                  logger.info("DerviedFromInValid");
                 try {
                         TModel tm = new TModel();
                         //tm.setTModelKey();
@@ -393,7 +393,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void entitKeyValuesValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("EntitKeyValuesValid");
+                logger.info("EntitKeyValuesValid");
                 TModel tm = new TModel();
                 //tm.setTModelKey();
                 tm.setCategoryBag(new CategoryBag());
@@ -412,7 +412,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void entitKeyValuesInValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("EntitKeyValuesInValid");
+                logger.info("EntitKeyValuesInValid");
                 try {
                         TModel tm = new TModel();
                         //tm.setTModelKey();
@@ -440,7 +440,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 //This test should be ignored, only one business per node is allowed to be the node
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                 System.out.println("UDDINodeValid");
+                 logger.info("UDDINodeValid");
                 BusinessEntity be = new BusinessEntity();
                 be.getName().add(new Name("test", "en"));
                 be.setCategoryBag(new CategoryBag());
@@ -456,7 +456,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void uddiNodeInValid1() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("UDDINodeInValid1");
+                logger.info("UDDINodeInValid1");
                 try {
                         BusinessEntity be = new BusinessEntity();
                         be.getName().add(new Name("test", "en"));
@@ -480,7 +480,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void uddiNodeInValid2() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("UDDINodeInValid2");
+                logger.info("UDDINodeInValid2");
                 try {
                         BusinessEntity be = new BusinessEntity();
                         be.getName().add(new Name("test", "en"));
@@ -509,7 +509,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void owningBusinessValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("OwningBusinessValid");
+                logger.info("OwningBusinessValid");
                 TModel tm = new TModel();
                 //tm.setTModelKey();
                 tm.setCategoryBag(new CategoryBag());
@@ -525,7 +525,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
 
         @Test
         public void owningBusinessInValid() throws Exception {
-                System.out.println("OwningBusinessInValid");
+                logger.info("OwningBusinessInValid");
                 try {
                         Assume.assumeTrue(TckPublisher.isEnabled());
                         Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
@@ -551,7 +551,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void owningBusinessInValid2() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("OwningBusinessInValid2");
+                logger.info("OwningBusinessInValid2");
                 try {
                         TModel tm = new TModel();
                         //tm.setTModelKey();
@@ -577,7 +577,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void typeTmodelValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("TypeTmodelValid");
+                logger.info("TypeTmodelValid");
                 TModel tm = new TModel();
                 //tm.setTModelKey();
                 tm.setCategoryBag(new CategoryBag());
@@ -596,7 +596,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void typeTModelInValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("TypeTModelInValid");
+                logger.info("TypeTModelInValid");
                 try {
                         TModel tm = new TModel();
                         //tm.setTModelKey();
@@ -622,7 +622,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void typeBindingInValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("TypeBindingInValid");
+                logger.info("TypeBindingInValid");
                 BusinessDetail saveBusiness = null;
                 try {
                         BusinessEntity be = new BusinessEntity();
@@ -656,7 +656,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void rypeBindingValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("TypeBindingValid");
+                logger.info("TypeBindingValid");
                 BusinessEntity be = new BusinessEntity();
                 be.getName().add(new Name("test", "en"));
                 be.setBusinessServices(new BusinessServices());
@@ -683,7 +683,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void ralidatedByInValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("ValidatedByInValid");
+                logger.info("ValidatedByInValid");
                 BusinessEntity SaveVSVCallbackService = null;
                 try {
                         SaveVSVCallbackService = saveVSVCallbackService(authInfoJoe, publicationJoe);
@@ -713,7 +713,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
 
-                System.out.println("ValidatedByValid");
+                logger.info("ValidatedByValid");
                 BusinessEntity SaveVSVCallbackService = saveVSVCallbackService(authInfoJoe, publicationJoe);
 
                 TModel tm = new TModel();
@@ -735,7 +735,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void replacedByValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("ReplacedByValid");
+                logger.info("ReplacedByValid");
                 TModel tm = new TModel();
                 tm.setName(new Name("My old tmodel", "en"));
                 tm.getDescription().add(new Description("valid values include 'one', 'two', 'three'", "en"));
@@ -761,7 +761,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void replacedByValid2() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("ReplacedByValid2");
+                logger.info("ReplacedByValid2");
                 TModel tm = new TModel();
                 tm.setName(new Name("My old tmodel", "en"));
                 tm.getDescription().add(new Description("valid values include 'one', 'two', 'three'", "en"));
@@ -787,7 +787,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void replacedByValid3() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("ReplacedByValid3");
+                logger.info("ReplacedByValid3");
                 BusinessEntity tm = new BusinessEntity();
                 tm.getName().add(new Name("My old business", "en"));
                 tm.getDescription().add(new Description("valid values include 'one', 'two', 'three'", "en"));
@@ -813,7 +813,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void replacedByValid4() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("ReplacedByValid4");
+                logger.info("ReplacedByValid4");
                 BusinessEntity tm = new BusinessEntity();
                 tm.getName().add(new Name("My old business", "en"));
                 tm.getDescription().add(new Description("valid values include 'one', 'two', 'three'", "en"));
@@ -839,7 +839,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void replacedByValid5Projected() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("ReplacedByValid5Projected");
+                logger.info("ReplacedByValid5Projected");
                 BusinessEntity tm = new BusinessEntity();
                 tm.setBusinessKey(TckTModel.JOE_PUBLISHER_KEY_PREFIX + "testbiz");
                 tm.getName().add(new Name("My old business", "en"));
@@ -863,7 +863,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void replacedByValid6DifferentOwners() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("ReplacedByValid6DifferentOwners");
+                logger.info("ReplacedByValid6DifferentOwners");
                 
                 BusinessEntity tm = new BusinessEntity();
                 tm.setBusinessKey(TckTModel.MARY_KEY_PREFIX + "testbiz");
@@ -897,7 +897,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
                 TckTModel tmodel = new TckTModel(publicationJoe, inquiry);
                 tmodel.saveJoePublisherTmodel(authInfoJoe);
                 
-                System.out.println("ReplacedByValid7DifferentOwners");
+                logger.info("ReplacedByValid7DifferentOwners");
                 BusinessEntity tm = new BusinessEntity();
                 tm.setBusinessKey(TckTModel.MARY_KEY_PREFIX + "testbiz");
                 tm.getName().add(new Name("My old business", "en"));
@@ -931,7 +931,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void replacedByInValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("ReplacedByInValid");
+                logger.info("ReplacedByInValid");
                 try {
                         TModel tm = new TModel();
                         tm.setName(new Name("My new tmodel", "en"));
@@ -961,7 +961,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void replacedByInValid2() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("ReplacedByInValid2");
+                logger.info("ReplacedByInValid2");
                 try {
                         TModel tm = new TModel();
                         tm.setName(new Name("My new tmodel", "en"));
@@ -986,7 +986,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void relationshipsValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("RelationshipsValid");
+                logger.info("RelationshipsValid");
                 TModel tm = new TModel();
                 tm.setCategoryBag(new CategoryBag());
                 tm.setName(new Name("My Custom validated key", "en"));
@@ -1004,7 +1004,7 @@ public class UDDI_170_ValueSetValidationIntegrationTest implements UDDIValueSetV
         public void relationshipsInValid() throws Exception {
                 Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isValueSetAPIEnabled());
-                System.out.println("RelationshipsInValid");
+                logger.info("RelationshipsInValid");
                 try {
                         TModel tm = new TModel();
                         //tm.setTModelKey();

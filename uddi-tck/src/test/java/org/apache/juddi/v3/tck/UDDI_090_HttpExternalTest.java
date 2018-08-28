@@ -59,13 +59,13 @@ public class UDDI_090_HttpExternalTest extends UDDI_090_SubscriptionListenerInte
                 port = 9600;
                 //bring up the TCK SubscriptionListener
                 String httpEndpoint = "http://" + hostname + ":" + port + "/tcksubscriptionlistener";
-                System.out.println("Bringing up SubscriptionListener endpoint at " + httpEndpoint);
+                logger.info("Bringing up SubscriptionListener endpoint at " + httpEndpoint);
                 endPoint = Endpoint.publish(httpEndpoint, new UDDISubscriptionListenerImpl());
                 int count = 0;
                 while (!endPoint.isPublished()) {
                         port = 9600 + new Random().nextInt(99);
                         httpEndpoint = "http://" + hostname + ":" + port + "/tcksubscriptionlistener";
-                        System.out.println("Bringing up SubscriptionListener endpoint at " + httpEndpoint);
+                        logger.info("Bringing up SubscriptionListener endpoint at " + httpEndpoint);
                         endPoint = Endpoint.publish(httpEndpoint, new UDDISubscriptionListenerImpl());
                         count++;
                         if (count > 10) {
