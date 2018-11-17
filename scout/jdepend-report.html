@@ -1,0 +1,731 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+
+
+
+
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Apache Scout - JDepend Report Metrics</title>
+    <style type="text/css" media="all">
+      @import url("./css/maven-base.css");
+      @import url("./css/maven-theme.css");
+      @import url("./css/site.css");
+    </style>
+    <link rel="stylesheet" href="./css/print.css" type="text/css" media="print" />
+          </head>
+  <body class="composite">
+    <div id="banner">
+                  <a href="juddi.apache.org/scout/" id="bannerLeft">
+    
+                                            <img src="images/juddi_logo_v3.png" alt="" />
+    
+            </a>
+                          <span id="bannerRight">
+    
+                                            <img src="images/scout.jpg" alt="" />
+    
+            </span>
+            <div class="clear">
+        <hr/>
+      </div>
+    </div>
+    <div id="breadcrumbs">
+          
+  
+
+  
+    
+  
+  
+    
+            <div class="xleft">
+          
+                <a href="http://www.apache.org/" class="externalLink">Apache</a>
+                &gt;
+      
+                <a href="../">jUDDI</a>
+                &gt;
+      
+                <a href="http://juddi.apache.org/scout/" class="externalLink">Scout</a>
+                  </div>
+            <div class="xright">      
+  
+
+  
+    
+  
+  
+    
+             Last Published: 06 Feb 2012
+            </div>
+      <div class="clear">
+        <hr/>
+      </div>
+    </div>
+    <div id="leftColumn">
+      <div id="navcolumn">
+           
+  
+
+  
+    
+  
+  
+    
+                   <h5>Apache Scout</h5>
+            <ul>
+              
+    <li class="none">
+                    <a href="index.html">Welcome</a>
+          </li>
+              
+          
+              
+      
+            
+      
+              
+        <li class="expanded">
+                    <a href="">Get Scout</a>
+                  <ul>
+                  
+    <li class="none">
+                    <a href="releases.html">Releases</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="source-repository.html">Source Code</a>
+          </li>
+              </ul>
+        </li>
+              
+    <li class="none">
+                    <a href="http://wiki.apache.org/juddi/scout" class="externalLink">Wiki</a>
+          </li>
+          </ul>
+              <h5>Related Projects</h5>
+            <ul>
+              
+    <li class="none">
+                    <a href="../">Apache jUDDI</a>
+          </li>
+          </ul>
+              <h5>Project Documentation</h5>
+            <ul>
+              
+                
+              
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+              
+        <li class="collapsed">
+                    <a href="project-info.html">Project Information</a>
+                </li>
+              
+                
+              
+      
+            
+      
+            
+      
+            
+            
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+              
+            <li class="expanded">
+                    <a href="project-reports.html">Project Reports</a>
+                  <ul>
+                  
+    <li class="none">
+                    <a href="cobertura/index.html">Cobertura Test Coverage</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="cpd.html">CPD Report</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="apidocs/index.html">JavaDocs</a>
+          </li>
+                  
+    <li class="none">
+              <strong>JDepend</strong>
+        </li>
+                  
+    <li class="none">
+                    <a href="pmd.html">PMD Report</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="xref/index.html">Source Xref</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="surefire-report.html">Surefire Report</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="testapidocs/index.html">Test JavaDocs</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="xref-test/index.html">Test Source Xref</a>
+          </li>
+              </ul>
+        </li>
+          </ul>
+                                           <a href="http://maven.apache.org/" title="Built by Maven" class="poweredBy">
+            <img alt="Built by Maven" src="./images/logos/maven-feather.png"></img>
+          </a>
+                       
+  
+
+  
+    
+  
+  
+    
+        </div>
+    </div>
+    <div id="bodyColumn">
+      <div id="contentBox">
+        <div class="section"><h2>Metric Results</h2>
+[ <a href="#summary">summary</a> ] [ <a href="#packages">packages</a> ] [ <a href="#cycles">cycles</a> ] [ <a href="#explanations">explanations</a> ] <br />
+<br />
+The following document contains the results of a JDepend metric analysis. The various metrics are defined at the bottom of this document.<br />
+<br />
+<a name="summary"></a><h2>Summary</h2>
+[ <a href="#summary">summary</a> ] [ <a href="#packages">packages</a> ] [ <a href="#cycles">cycles</a> ] [ <a href="#explanations">explanations</a> ] <br />
+<br />
+<table class="bodyTable"><tr class="a"><th>Package</th>
+<th>TC</th>
+<th>CC</th>
+<th>AC</th>
+<th>Ca</th>
+<th>Ce</th>
+<th>A</th>
+<th>I</th>
+<th>D</th>
+<th>V</th>
+</tr>
+<tr class="b"><td><a href="#org.apache.ws.scout.model.uddi.v2">org.apache.ws.scout.model.uddi.v2</a></td>
+<td>89</td>
+<td>88</td>
+<td>1</td>
+<td>2</td>
+<td>4</td>
+<td>1.0%</td>
+<td>67.0%</td>
+<td>32.0%</td>
+<td>1</td>
+</tr>
+<tr class="a"><td><a href="#org.apache.ws.scout.registry">org.apache.ws.scout.registry</a></td>
+<td>29</td>
+<td>25</td>
+<td>4</td>
+<td>1</td>
+<td>22</td>
+<td>14.0%</td>
+<td>96.0%</td>
+<td>9.0%</td>
+<td>1</td>
+</tr>
+<tr class="b"><td><a href="#org.apache.ws.scout.registry.infomodel">org.apache.ws.scout.registry.infomodel</a></td>
+<td>23</td>
+<td>23</td>
+<td>0</td>
+<td>2</td>
+<td>5</td>
+<td>0.0%</td>
+<td>71.0%</td>
+<td>29.0%</td>
+<td>1</td>
+</tr>
+<tr class="a"><td><a href="#org.apache.ws.scout.transport">org.apache.ws.scout.transport</a></td>
+<td>10</td>
+<td>9</td>
+<td>1</td>
+<td>1</td>
+<td>18</td>
+<td>10.0%</td>
+<td>95.0%</td>
+<td>5.0%</td>
+<td>1</td>
+</tr>
+<tr class="b"><td><a href="#org.apache.ws.scout.util">org.apache.ws.scout.util</a></td>
+<td>6</td>
+<td>6</td>
+<td>0</td>
+<td>2</td>
+<td>13</td>
+<td>0.0%</td>
+<td>87.0%</td>
+<td>13.0%</td>
+<td>1</td>
+</tr>
+</table>
+<a name="packages"></a><h2>Packages</h2>
+[ <a href="#summary">summary</a> ] [ <a href="#packages">packages</a> ] [ <a href="#cycles">cycles</a> ] [ <a href="#explanations">explanations</a> ] <br />
+<a name="org.apache.ws.scout.model.uddi.v2"></a><h3>org.apache.ws.scout.model.uddi.v2</h3>
+<table class="bodyTable"><tr class="a"><th>Afferent Couplings</th>
+<th>Efferent Couplings</th>
+<th>Abstractness</th>
+<th>Instability</th>
+<th>Distance</th>
+</tr>
+<tr class="b"><td>2</td>
+<td>4</td>
+<td>1.0%</td>
+<td>67.0%</td>
+<td>32.0%</td>
+</tr>
+</table>
+<table class="bodyTable"><tr class="a"><th>Abstract Classes</th>
+<th>Concrete Classes</th>
+<th>Used by Packages</th>
+<th>Uses Packages</th>
+</tr>
+<tr class="b"><td>org.apache.ws.scout.model.uddi.v2.package-info<br />
+</td>
+<td>org.apache.ws.scout.model.uddi.v2.AccessPoint<br />
+org.apache.ws.scout.model.uddi.v2.AddPublisherAssertions<br />
+org.apache.ws.scout.model.uddi.v2.Address<br />
+org.apache.ws.scout.model.uddi.v2.AddressLine<br />
+org.apache.ws.scout.model.uddi.v2.AssertionStatusItem<br />
+org.apache.ws.scout.model.uddi.v2.AssertionStatusReport<br />
+org.apache.ws.scout.model.uddi.v2.AuthToken<br />
+org.apache.ws.scout.model.uddi.v2.BindingDetail<br />
+org.apache.ws.scout.model.uddi.v2.BindingTemplate<br />
+org.apache.ws.scout.model.uddi.v2.BindingTemplates<br />
+org.apache.ws.scout.model.uddi.v2.BusinessDetail<br />
+org.apache.ws.scout.model.uddi.v2.BusinessDetailExt<br />
+org.apache.ws.scout.model.uddi.v2.BusinessEntity<br />
+org.apache.ws.scout.model.uddi.v2.BusinessEntityExt<br />
+org.apache.ws.scout.model.uddi.v2.BusinessInfo<br />
+org.apache.ws.scout.model.uddi.v2.BusinessInfos<br />
+org.apache.ws.scout.model.uddi.v2.BusinessList<br />
+org.apache.ws.scout.model.uddi.v2.BusinessService<br />
+org.apache.ws.scout.model.uddi.v2.BusinessServices<br />
+org.apache.ws.scout.model.uddi.v2.CategoryBag<br />
+org.apache.ws.scout.model.uddi.v2.Contact<br />
+org.apache.ws.scout.model.uddi.v2.Contacts<br />
+org.apache.ws.scout.model.uddi.v2.DeleteBinding<br />
+org.apache.ws.scout.model.uddi.v2.DeleteBusiness<br />
+org.apache.ws.scout.model.uddi.v2.DeletePublisherAssertions<br />
+org.apache.ws.scout.model.uddi.v2.DeleteService<br />
+org.apache.ws.scout.model.uddi.v2.DeleteTModel<br />
+org.apache.ws.scout.model.uddi.v2.Description<br />
+org.apache.ws.scout.model.uddi.v2.Direction<br />
+org.apache.ws.scout.model.uddi.v2.DiscardAuthToken<br />
+org.apache.ws.scout.model.uddi.v2.DiscoveryURL<br />
+org.apache.ws.scout.model.uddi.v2.DiscoveryURLs<br />
+org.apache.ws.scout.model.uddi.v2.DispositionReport<br />
+org.apache.ws.scout.model.uddi.v2.Email<br />
+org.apache.ws.scout.model.uddi.v2.ErrInfo<br />
+org.apache.ws.scout.model.uddi.v2.FindBinding<br />
+org.apache.ws.scout.model.uddi.v2.FindBusiness<br />
+org.apache.ws.scout.model.uddi.v2.FindQualifiers<br />
+org.apache.ws.scout.model.uddi.v2.FindRelatedBusinesses<br />
+org.apache.ws.scout.model.uddi.v2.FindService<br />
+org.apache.ws.scout.model.uddi.v2.FindTModel<br />
+org.apache.ws.scout.model.uddi.v2.GetAssertionStatusReport<br />
+org.apache.ws.scout.model.uddi.v2.GetAuthToken<br />
+org.apache.ws.scout.model.uddi.v2.GetBindingDetail<br />
+org.apache.ws.scout.model.uddi.v2.GetBusinessDetail<br />
+org.apache.ws.scout.model.uddi.v2.GetBusinessDetailExt<br />
+org.apache.ws.scout.model.uddi.v2.GetPublisherAssertions<br />
+org.apache.ws.scout.model.uddi.v2.GetRegisteredInfo<br />
+org.apache.ws.scout.model.uddi.v2.GetServiceDetail<br />
+org.apache.ws.scout.model.uddi.v2.GetTModelDetail<br />
+org.apache.ws.scout.model.uddi.v2.HostingRedirector<br />
+org.apache.ws.scout.model.uddi.v2.IdentifierBag<br />
+org.apache.ws.scout.model.uddi.v2.InstanceDetails<br />
+org.apache.ws.scout.model.uddi.v2.KeyType<br />
+org.apache.ws.scout.model.uddi.v2.KeyedReference<br />
+org.apache.ws.scout.model.uddi.v2.KeysOwned<br />
+org.apache.ws.scout.model.uddi.v2.Name<br />
+org.apache.ws.scout.model.uddi.v2.ObjectFactory<br />
+org.apache.ws.scout.model.uddi.v2.OverviewDoc<br />
+org.apache.ws.scout.model.uddi.v2.Phone<br />
+org.apache.ws.scout.model.uddi.v2.PublisherAssertion<br />
+org.apache.ws.scout.model.uddi.v2.PublisherAssertions<br />
+org.apache.ws.scout.model.uddi.v2.RegisteredInfo<br />
+org.apache.ws.scout.model.uddi.v2.RelatedBusinessInfo<br />
+org.apache.ws.scout.model.uddi.v2.RelatedBusinessInfos<br />
+org.apache.ws.scout.model.uddi.v2.RelatedBusinessesList<br />
+org.apache.ws.scout.model.uddi.v2.Result<br />
+org.apache.ws.scout.model.uddi.v2.SaveBinding<br />
+org.apache.ws.scout.model.uddi.v2.SaveBusiness<br />
+org.apache.ws.scout.model.uddi.v2.SaveService<br />
+org.apache.ws.scout.model.uddi.v2.SaveTModel<br />
+org.apache.ws.scout.model.uddi.v2.ServiceDetail<br />
+org.apache.ws.scout.model.uddi.v2.ServiceInfo<br />
+org.apache.ws.scout.model.uddi.v2.ServiceInfos<br />
+org.apache.ws.scout.model.uddi.v2.ServiceList<br />
+org.apache.ws.scout.model.uddi.v2.SetPublisherAssertions<br />
+org.apache.ws.scout.model.uddi.v2.SharedRelationships<br />
+org.apache.ws.scout.model.uddi.v2.TModel<br />
+org.apache.ws.scout.model.uddi.v2.TModelBag<br />
+org.apache.ws.scout.model.uddi.v2.TModelDetail<br />
+org.apache.ws.scout.model.uddi.v2.TModelInfo<br />
+org.apache.ws.scout.model.uddi.v2.TModelInfos<br />
+org.apache.ws.scout.model.uddi.v2.TModelInstanceDetails<br />
+org.apache.ws.scout.model.uddi.v2.TModelInstanceInfo<br />
+org.apache.ws.scout.model.uddi.v2.TModelList<br />
+org.apache.ws.scout.model.uddi.v2.Truncated<br />
+org.apache.ws.scout.model.uddi.v2.URLType<br />
+org.apache.ws.scout.model.uddi.v2.ValidateValues<br />
+</td>
+<td>org.apache.ws.scout.registry<br />
+org.apache.ws.scout.util<br />
+</td>
+<td>java.lang<br />
+java.util<br />
+javax.xml.bind<br />
+javax.xml.namespace<br />
+</td>
+</tr>
+</table>
+<a name="org.apache.ws.scout.registry"></a><h3>org.apache.ws.scout.registry</h3>
+<table class="bodyTable"><tr class="a"><th>Afferent Couplings</th>
+<th>Efferent Couplings</th>
+<th>Abstractness</th>
+<th>Instability</th>
+<th>Distance</th>
+</tr>
+<tr class="b"><td>1</td>
+<td>22</td>
+<td>14.0%</td>
+<td>96.0%</td>
+<td>9.0%</td>
+</tr>
+</table>
+<table class="bodyTable"><tr class="a"><th>Abstract Classes</th>
+<th>Concrete Classes</th>
+<th>Used by Packages</th>
+<th>Uses Packages</th>
+</tr>
+<tr class="b"><td>org.apache.ws.scout.registry.IRegistry<br />
+org.apache.ws.scout.registry.IRegistryBase<br />
+org.apache.ws.scout.registry.IRegistryV3<br />
+org.apache.ws.scout.registry.LifeCycleManagerImpl<br />
+</td>
+<td>org.apache.ws.scout.registry.AuthTokenSingleton<br />
+org.apache.ws.scout.registry.AuthTokenV3Singleton<br />
+org.apache.ws.scout.registry.BulkResponseImpl<br />
+org.apache.ws.scout.registry.BusinessLifeCycleManagerImpl<br />
+org.apache.ws.scout.registry.BusinessLifeCycleManagerV3Impl<br />
+org.apache.ws.scout.registry.BusinessQueryManagerImpl<br />
+org.apache.ws.scout.registry.BusinessQueryManagerV3Impl<br />
+org.apache.ws.scout.registry.CapabilityProfileImpl<br />
+org.apache.ws.scout.registry.ConnectionFactoryImpl<br />
+org.apache.ws.scout.registry.ConnectionImpl<br />
+org.apache.ws.scout.registry.Constants<br />
+org.apache.ws.scout.registry.JAXBContextUtil<br />
+org.apache.ws.scout.registry.JAXRResponseImpl<br />
+org.apache.ws.scout.registry.RegistryException<br />
+org.apache.ws.scout.registry.RegistryImpl<br />
+org.apache.ws.scout.registry.RegistryImpl$1<br />
+org.apache.ws.scout.registry.RegistryImpl$2<br />
+org.apache.ws.scout.registry.RegistryServiceImpl<br />
+org.apache.ws.scout.registry.RegistryV3Exception<br />
+org.apache.ws.scout.registry.RegistryV3Impl<br />
+org.apache.ws.scout.registry.RegistryV3Impl$1<br />
+org.apache.ws.scout.registry.RegistryV3Impl$2<br />
+org.apache.ws.scout.registry.SecurityActions<br />
+org.apache.ws.scout.registry.SecurityActions$1<br />
+org.apache.ws.scout.registry.SecurityActions$2<br />
+</td>
+<td>org.apache.ws.scout.transport<br />
+</td>
+<td>java.io<br />
+java.lang<br />
+java.lang.reflect<br />
+java.net<br />
+java.security<br />
+java.util<br />
+javax.activation<br />
+javax.xml.bind<br />
+javax.xml.parsers<br />
+javax.xml.registry<br />
+javax.xml.registry.infomodel<br />
+javax.xml.transform.stream<br />
+org.apache.commons.configuration<br />
+org.apache.commons.logging<br />
+org.apache.juddi.v3.client.config<br />
+org.apache.ws.scout.model.uddi.v2<br />
+org.apache.ws.scout.registry.infomodel<br />
+org.apache.ws.scout.transport<br />
+org.apache.ws.scout.util<br />
+org.uddi.api_v3<br />
+org.w3c.dom<br />
+org.xml.sax<br />
+</td>
+</tr>
+</table>
+<a name="org.apache.ws.scout.registry.infomodel"></a><h3>org.apache.ws.scout.registry.infomodel</h3>
+<table class="bodyTable"><tr class="a"><th>Afferent Couplings</th>
+<th>Efferent Couplings</th>
+<th>Abstractness</th>
+<th>Instability</th>
+<th>Distance</th>
+</tr>
+<tr class="b"><td>2</td>
+<td>5</td>
+<td>0.0%</td>
+<td>71.0%</td>
+<td>29.0%</td>
+</tr>
+</table>
+<table class="bodyTable"><tr class="a"><th>Abstract Classes</th>
+<th>Concrete Classes</th>
+<th>Used by Packages</th>
+<th>Uses Packages</th>
+</tr>
+<tr class="b"><td><i>None</i></td>
+<td>org.apache.ws.scout.registry.infomodel.AssociationImpl<br />
+org.apache.ws.scout.registry.infomodel.ClassificationImpl<br />
+org.apache.ws.scout.registry.infomodel.ClassificationSchemeImpl<br />
+org.apache.ws.scout.registry.infomodel.ConceptImpl<br />
+org.apache.ws.scout.registry.infomodel.EmailAddressImpl<br />
+org.apache.ws.scout.registry.infomodel.ExtensibleObjectImpl<br />
+org.apache.ws.scout.registry.infomodel.ExternalIdentifierImpl<br />
+org.apache.ws.scout.registry.infomodel.ExternalLinkImpl<br />
+org.apache.ws.scout.registry.infomodel.InternationalStringImpl<br />
+org.apache.ws.scout.registry.infomodel.InternationalStringImpl$MapKey<br />
+org.apache.ws.scout.registry.infomodel.KeyImpl<br />
+org.apache.ws.scout.registry.infomodel.LocalizedStringImpl<br />
+org.apache.ws.scout.registry.infomodel.OrganizationImpl<br />
+org.apache.ws.scout.registry.infomodel.PersonNameImpl<br />
+org.apache.ws.scout.registry.infomodel.PostalAddressImpl<br />
+org.apache.ws.scout.registry.infomodel.RegistryEntryImpl<br />
+org.apache.ws.scout.registry.infomodel.RegistryObjectImpl<br />
+org.apache.ws.scout.registry.infomodel.ServiceBindingImpl<br />
+org.apache.ws.scout.registry.infomodel.ServiceImpl<br />
+org.apache.ws.scout.registry.infomodel.SlotImpl<br />
+org.apache.ws.scout.registry.infomodel.SpecificationLinkImpl<br />
+org.apache.ws.scout.registry.infomodel.TelephoneNumberImpl<br />
+org.apache.ws.scout.registry.infomodel.UserImpl<br />
+</td>
+<td>org.apache.ws.scout.registry<br />
+org.apache.ws.scout.util<br />
+</td>
+<td>java.lang<br />
+java.net<br />
+java.util<br />
+javax.xml.registry<br />
+javax.xml.registry.infomodel<br />
+</td>
+</tr>
+</table>
+<a name="org.apache.ws.scout.transport"></a><h3>org.apache.ws.scout.transport</h3>
+<table class="bodyTable"><tr class="a"><th>Afferent Couplings</th>
+<th>Efferent Couplings</th>
+<th>Abstractness</th>
+<th>Instability</th>
+<th>Distance</th>
+</tr>
+<tr class="b"><td>1</td>
+<td>18</td>
+<td>10.0%</td>
+<td>95.0%</td>
+<td>5.0%</td>
+</tr>
+</table>
+<table class="bodyTable"><tr class="a"><th>Abstract Classes</th>
+<th>Concrete Classes</th>
+<th>Used by Packages</th>
+<th>Uses Packages</th>
+</tr>
+<tr class="b"><td>org.apache.ws.scout.transport.Transport<br />
+</td>
+<td>org.apache.ws.scout.transport.AxisTransport<br />
+org.apache.ws.scout.transport.JAXRTransportException<br />
+org.apache.ws.scout.transport.LocalTransport<br />
+org.apache.ws.scout.transport.RMITransport<br />
+org.apache.ws.scout.transport.SaajTransport<br />
+org.apache.ws.scout.transport.SecurityActions<br />
+org.apache.ws.scout.transport.SecurityActions$1<br />
+org.apache.ws.scout.transport.SecurityActions$2<br />
+org.apache.ws.scout.transport.TransportException<br />
+</td>
+<td>org.apache.ws.scout.registry<br />
+</td>
+<td>java.io<br />
+java.lang<br />
+java.lang.reflect<br />
+java.net<br />
+java.security<br />
+java.util<br />
+javax.naming<br />
+javax.xml.parsers<br />
+javax.xml.soap<br />
+org.apache.axis<br />
+org.apache.axis.client<br />
+org.apache.axis.message<br />
+org.apache.axis.utils<br />
+org.apache.commons.logging<br />
+org.apache.ws.scout.registry<br />
+org.apache.ws.scout.util<br />
+org.w3c.dom<br />
+org.xml.sax<br />
+</td>
+</tr>
+</table>
+<a name="org.apache.ws.scout.util"></a><h3>org.apache.ws.scout.util</h3>
+<table class="bodyTable"><tr class="a"><th>Afferent Couplings</th>
+<th>Efferent Couplings</th>
+<th>Abstractness</th>
+<th>Instability</th>
+<th>Distance</th>
+</tr>
+<tr class="b"><td>2</td>
+<td>13</td>
+<td>0.0%</td>
+<td>87.0%</td>
+<td>13.0%</td>
+</tr>
+</table>
+<table class="bodyTable"><tr class="a"><th>Abstract Classes</th>
+<th>Concrete Classes</th>
+<th>Used by Packages</th>
+<th>Uses Packages</th>
+</tr>
+<tr class="b"><td><i>None</i></td>
+<td>org.apache.ws.scout.util.EnumerationHelper<br />
+org.apache.ws.scout.util.ScoutJaxrUddiHelper<br />
+org.apache.ws.scout.util.ScoutJaxrUddiV3Helper<br />
+org.apache.ws.scout.util.ScoutUddiJaxrHelper<br />
+org.apache.ws.scout.util.ScoutUddiV3JaxrHelper<br />
+org.apache.ws.scout.util.XMLUtils<br />
+</td>
+<td>org.apache.ws.scout.registry<br />
+org.apache.ws.scout.transport<br />
+</td>
+<td>java.io<br />
+java.lang<br />
+java.util<br />
+javax.xml.registry<br />
+javax.xml.registry.infomodel<br />
+javax.xml.transform<br />
+javax.xml.transform.dom<br />
+javax.xml.transform.stream<br />
+org.apache.commons.logging<br />
+org.apache.ws.scout.model.uddi.v2<br />
+org.apache.ws.scout.registry.infomodel<br />
+org.uddi.api_v3<br />
+org.w3c.dom<br />
+</td>
+</tr>
+</table>
+<a name="cycles"></a><h2>Cycles</h2>
+[ <a href="#summary">summary</a> ] [ <a href="#packages">packages</a> ] [ <a href="#cycles">cycles</a> ] [ <a href="#explanations">explanations</a> ] <br />
+<br />
+<table class="bodyTable"><tr class="a"><th>Package</th>
+<th>Package Dependencies</th>
+</tr>
+<tr class="b"><td>org.apache.ws.scout.registry</td>
+<td>org.apache.ws.scout.transport<br />
+org.apache.ws.scout.registry<br />
+</td>
+</tr>
+<tr class="a"><td>org.apache.ws.scout.transport</td>
+<td>org.apache.ws.scout.registry<br />
+org.apache.ws.scout.transport<br />
+</td>
+</tr>
+</table>
+<a name="explanations"></a><h2>Explanation</h2>
+[ <a href="#summary">summary</a> ] [ <a href="#packages">packages</a> ] [ <a href="#cycles">cycles</a> ] [ <a href="#explanations">explanations</a> ] <br />
+<br />
+The following explanations are for quick reference and are lifted directly from the original JDepend documentation.<br />
+<br />
+<table class="bodyTable"><tr class="b"><th>Term</th>
+<th>Description</th>
+</tr>
+<tr class="a"><td>Number of Classes</td>
+<td>The number of concrete and abstract classes (and interfaces) in the package is an indicator of the extensibility of the package.</td>
+</tr>
+<tr class="b"><td>Afferent Couplings</td>
+<td>The number of other packages that depend upon classes within the package is an indicator of the package's responsibility.</td>
+</tr>
+<tr class="a"><td>Efferent Couplings</td>
+<td>The number of other packages that the classes in the package depend upon is an indicator of the package's independence.</td>
+</tr>
+<tr class="b"><td>Abstractness</td>
+<td>The ratio of the number of abstract classes (and interfaces) in the analyzed package to the total number of classes in the analyzed package. The range for this metric is 0 to 1, with A=0 indicating a completely concrete package and A=1 indicating a completely abstract package.</td>
+</tr>
+<tr class="a"><td>Instability</td>
+<td>The ratio of efferent coupling (Ce) to total coupling (Ce / (Ce + Ca)). This metric is an indicator of the package's resilience to change. The range for this metric is 0 to 1, with I=0 indicating a completely stable package and I=1 indicating a completely instable package.</td>
+</tr>
+<tr class="b"><td>Distance</td>
+<td>The perpendicular distance of a package from the idealized line A + I = 1. This metric is an indicator of the package's balance between abstractness and stability. A package squarely on the main sequence is optimally balanced with respect to its abstractness and stability. Ideal packages are either completely abstract and stable (x=0, y=1) or completely concrete and instable (x=1, y=0). The range for this metric is 0 to 1, with D=0 indicating a package that is coincident with the main sequence and D=1 indicating a package that is as far from the main sequence as possible.</td>
+</tr>
+<tr class="a"><td>Cycles</td>
+<td>Packages participating in a package dependency cycle are  in a deadly embrace with respect to reusability and their  release cycle. Package dependency cycles can be easily identified by reviewing the textual reports of dependency cycles. Once these dependency cycles have been identified with JDepend, they can be broken by employing various object-oriented techniques.</td>
+</tr>
+</table>
+</div>
+
+      </div>
+    </div>
+    <div class="clear">
+      <hr/>
+    </div>
+    <div id="footer">
+      <div class="xright">&#169;  
+          2004-2012
+    
+          The Apache Software Foundation
+          
+  
+
+  
+    
+  
+  
+    
+  </div>
+      <div class="clear">
+        <hr/>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,5 @@
+org.apache.ws.scout.model.uddi.v2
+org.apache.ws.scout.registry
+org.apache.ws.scout.registry.infomodel
+org.apache.ws.scout.transport
+org.apache.ws.scout.util

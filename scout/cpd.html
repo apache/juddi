@@ -1,0 +1,3851 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+
+
+
+
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Apache Scout - CPD Results</title>
+    <style type="text/css" media="all">
+      @import url("./css/maven-base.css");
+      @import url("./css/maven-theme.css");
+      @import url("./css/site.css");
+    </style>
+    <link rel="stylesheet" href="./css/print.css" type="text/css" media="print" />
+          </head>
+  <body class="composite">
+    <div id="banner">
+                  <a href="juddi.apache.org/scout/" id="bannerLeft">
+    
+                                            <img src="images/juddi_logo_v3.png" alt="" />
+    
+            </a>
+                          <span id="bannerRight">
+    
+                                            <img src="images/scout.jpg" alt="" />
+    
+            </span>
+            <div class="clear">
+        <hr/>
+      </div>
+    </div>
+    <div id="breadcrumbs">
+          
+  
+
+  
+    
+  
+  
+    
+            <div class="xleft">
+          
+                <a href="http://www.apache.org/" class="externalLink">Apache</a>
+                &gt;
+      
+                <a href="../">jUDDI</a>
+                &gt;
+      
+                <a href="http://juddi.apache.org/scout/" class="externalLink">Scout</a>
+                  </div>
+            <div class="xright">      
+  
+
+  
+    
+  
+  
+    
+             Last Published: 06 Feb 2012
+            </div>
+      <div class="clear">
+        <hr/>
+      </div>
+    </div>
+    <div id="leftColumn">
+      <div id="navcolumn">
+           
+  
+
+  
+    
+  
+  
+    
+                   <h5>Apache Scout</h5>
+            <ul>
+              
+    <li class="none">
+                    <a href="index.html">Welcome</a>
+          </li>
+              
+          
+              
+      
+            
+      
+              
+        <li class="expanded">
+                    <a href="">Get Scout</a>
+                  <ul>
+                  
+    <li class="none">
+                    <a href="releases.html">Releases</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="source-repository.html">Source Code</a>
+          </li>
+              </ul>
+        </li>
+              
+    <li class="none">
+                    <a href="http://wiki.apache.org/juddi/scout" class="externalLink">Wiki</a>
+          </li>
+          </ul>
+              <h5>Related Projects</h5>
+            <ul>
+              
+    <li class="none">
+                    <a href="../">Apache jUDDI</a>
+          </li>
+          </ul>
+              <h5>Project Documentation</h5>
+            <ul>
+              
+                
+              
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+              
+        <li class="collapsed">
+                    <a href="project-info.html">Project Information</a>
+                </li>
+              
+                
+              
+      
+            
+            
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+              
+            <li class="expanded">
+                    <a href="project-reports.html">Project Reports</a>
+                  <ul>
+                  
+    <li class="none">
+                    <a href="cobertura/index.html">Cobertura Test Coverage</a>
+          </li>
+                  
+    <li class="none">
+              <strong>CPD Report</strong>
+        </li>
+                  
+    <li class="none">
+                    <a href="apidocs/index.html">JavaDocs</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="jdepend-report.html">JDepend</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="pmd.html">PMD Report</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="xref/index.html">Source Xref</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="surefire-report.html">Surefire Report</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="testapidocs/index.html">Test JavaDocs</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="xref-test/index.html">Test Source Xref</a>
+          </li>
+              </ul>
+        </li>
+          </ul>
+                                           <a href="http://maven.apache.org/" title="Built by Maven" class="poweredBy">
+            <img alt="Built by Maven" src="./images/logos/maven-feather.png"></img>
+          </a>
+                       
+  
+
+  
+    
+  
+  
+    
+        </div>
+    </div>
+    <div id="bodyColumn">
+      <div id="contentBox">
+        <div class="section"><h2>CPD Results</h2>
+<p>The following document contains the results of PMD's  <a class="externalLink" href="http://pmd.sourceforge.net/cpd.html">CPD</a> 4.2.2.</p>
+</div>
+<div class="section"><h2>Duplications</h2>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessQueryManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerImpl.html#285">285</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.html#257">257</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>        } catch (RegistryV3Exception e)
+        {
+            throw new JAXRException(e);
+        }
+    }
+
+    /**
+     *  TODO - need to support the qualifiers
+     *
+     * @param findQualifiers
+     * @param namePatterns
+     * @return ClassificationScheme
+     * @throws JAXRException
+     */
+    public ClassificationScheme findClassificationSchemeByName(Collection findQualifiers,
+                                                               String namePatterns) throws JAXRException
+    {
+        ClassificationScheme scheme = null;
+
+        if (namePatterns.indexOf(&quot;uddi-org:types&quot;) != -1) {
+
+            scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+            scheme.setName(new InternationalStringImpl(namePatterns));
+            scheme.setKey(new KeyImpl(Constants.TMODEL_TYPES_TMODEL_KEY));
+        }
+        else if (namePatterns.indexOf(&quot;dnb-com:D-U-N-S&quot;) != -1) {
+
+            scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+            scheme.setName(new InternationalStringImpl(namePatterns));
+            scheme.setKey(new KeyImpl(Constants.TMODEL_D_U_N_S_TMODEL_KEY));
+        }
+        else if (namePatterns.indexOf(&quot;uddi-org:iso-ch:3166:1999&quot;) != -1)
+        {
+            scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+            scheme.setName(new InternationalStringImpl(namePatterns));
+            scheme.setKey(new KeyImpl(Constants.TMODEL_ISO_CH_TMODEL_KEY));
+        }
+        else if (namePatterns.indexOf(&quot;uddi-org:iso-ch:3166-1999&quot;) != -1)
+        {
+            scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+            scheme.setName(new InternationalStringImpl(namePatterns));
+            scheme.setKey(new KeyImpl(Constants.TMODEL_ISO_CH_TMODEL_KEY));
+        }
+        else if (namePatterns.indexOf(&quot;iso-ch:3166:1999&quot;) != -1)
+        {
+            scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+            scheme.setName(new InternationalStringImpl(namePatterns));
+            scheme.setKey(new KeyImpl(Constants.TMODEL_ISO_CH_TMODEL_KEY));
+        }
+        else if (namePatterns.indexOf(&quot;iso-ch:3166-1999&quot;) != -1)
+        {
+            scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+            scheme.setName(new InternationalStringImpl(namePatterns));
+            scheme.setKey(new KeyImpl(Constants.TMODEL_ISO_CH_TMODEL_KEY));
+        }
+        else if (namePatterns.indexOf(&quot;unspsc-org:unspsc&quot;) != -1) {
+
+            scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+            scheme.setName(new InternationalStringImpl(namePatterns));
+            scheme.setKey(new KeyImpl(Constants.TMODEL_UNSPSC_TMODEL_KEY));
+        }
+        else if (namePatterns.indexOf(&quot;ntis-gov:naics&quot;) != -1) {
+
+            scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+            scheme.setName(new InternationalStringImpl(namePatterns));
+            scheme.setKey(new KeyImpl(Constants.TMODEL_NAICS_TMODEL_KEY));
+        }
+        else
+        {   //TODO:Before going to the registry, check if it a predefined Enumeration
+
+            /*
+             * predefined Enumerations
+             */
+
+            if (&quot;AssociationType&quot;.equals(namePatterns)) {
+                scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+
+                scheme.setName(new InternationalStringImpl(namePatterns));
+
+                scheme.setKey(new KeyImpl(Constants.TMODEL_UNSPSC_TMODEL_KEY));
+
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;RelatedTo&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;HasChild&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;HasMember&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;HasParent&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;ExternallyLinks&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;Contains&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;EquivalentTo&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;Extends&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;Implements&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;InstanceOf&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;Supersedes&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;Uses&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;Replaces&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;ResponsibleFor&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;SubmitterOf&quot;);
+            }
+            else if (&quot;ObjectType&quot;.equals(namePatterns)) {
+                scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+
+                scheme.setName(new InternationalStringImpl(namePatterns));
+
+                scheme.setKey(new KeyImpl(Constants.TMODEL_UNSPSC_TMODEL_KEY));
+
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;CPP&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;CPA&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;Process&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;WSDL&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;Association&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;AuditableEvent&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;Classification&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;Concept&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;ExternalIdentifier&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;ExternalLink&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;ExtrinsicObject&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;Organization&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;Package&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;Service&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;ServiceBinding&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;User&quot;);
+            }
+            else if (&quot;PhoneType&quot;.equals(namePatterns)) {
+                scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+
+                scheme.setName(new InternationalStringImpl(namePatterns));
+
+                scheme.setKey(new KeyImpl(Constants.TMODEL_UNSPSC_TMODEL_KEY));
+
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;OfficePhone&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;HomePhone&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;MobilePhone&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;Beeper&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;FAX&quot;);
+            }
+            else if (&quot;URLType&quot;.equals(namePatterns)) {
+                scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+
+                scheme.setName(new InternationalStringImpl(namePatterns));
+
+                scheme.setKey(new KeyImpl(Constants.TMODEL_UNSPSC_TMODEL_KEY));
+
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;HTTP&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;HTTPS&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;SMTP&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;PHONE&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;FAX&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;OTHER&quot;);
+            }
+            else if (&quot;PostalAddressAttributes&quot;.equals(namePatterns)) {
+                scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+
+                scheme.setName(new InternationalStringImpl(namePatterns));
+
+                scheme.setKey(new KeyImpl(Constants.TMODEL_UNSPSC_TMODEL_KEY));
+
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;StreetNumber&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;Street&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;City&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;State&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;PostalCode&quot;);
+                addChildConcept((ClassificationSchemeImpl)scheme, &quot;Country&quot;);
+            }
+            else {</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutJaxrUddiHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiHelper.html#763">763</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.html#765">765</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>       return uri;
+   }
+    
+	/**
+     * According to JAXR Javadoc, there are two types of classification, internal and external and they use the Classification, Concept,     
+     * and ClassificationScheme objects.  It seems the only difference between internal and external (as related to UDDI) is that the
+     * name/value pair of the categorization is held in the Concept for internal classifications and the Classification for external (bypassing
+     * the Concept entirely).
+     * 
+     * The translation to UDDI is simple.  Relevant objects have a category bag which contains a bunch of KeyedReferences (name/value pairs).  
+     * These KeyedReferences optionally refer to a tModel that identifies the type of category (translates to the ClassificationScheme key).  If
+     * this is set and the tModel doesn't exist in the UDDI registry, then an invalid key error will occur when trying to save the object.
+     * 
+     * @param classifications classifications to turn into categories
+     * @throws JAXRException
+     */
+	public static CategoryBag getCategoryBagFromClassifications(Collection classifications) throws JAXRException {
+    	try {
+			if (classifications == null || classifications.size()==0)
+				return null;
+    		
+    		// Classifications
+			CategoryBag cbag = objectFactory.createCategoryBag();
+			Iterator classiter = classifications.iterator();
+			while (classiter.hasNext()) {
+				Classification classification = (Classification) classiter.next();
+				if (classification != null ) {
+					KeyedReference keyr = objectFactory.createKeyedReference();
+					cbag.getKeyedReference().add(keyr);
+	
+					InternationalStringImpl iname = null;
+					String value = null;
+					ClassificationScheme scheme = classification.getClassificationScheme();
+                    if (scheme==null || (classification.isExternal() &amp;&amp; classification.getConcept()==null)) {
+                        /*
+                        * JAXR 1.0 Specification: Section D6.4.4
+                        * Specification related tModels mapped from Concept may be automatically
+                        * categorized by the well-known uddi-org:types taxonomy in UDDI (with
+                        * tModelKey uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4) as follows:
+                        * The keyed reference is assigned a taxonomy value of specification.
+                        */
+                        keyr.setTModelKey(UDDI_ORG_TYPES);
+                        keyr.setKeyValue(&quot;specification&quot;); 
+                    } else {
+    					if (classification.isExternal()) {
+                            iname = (InternationalStringImpl) ((RegistryObject) classification).getName();
+                            value = classification.getValue();
+    					} else {
+    						Concept concept = classification.getConcept();
+    						if (concept != null) {
+    							iname = (InternationalStringImpl) ((RegistryObject) concept).getName();
+    							value = concept.getValue();
+    							scheme = concept.getClassificationScheme();
+    						}
+    					}
+    	
+    					String name = iname.getValue();
+    					if (name != null)
+    						keyr.setKeyName(name);
+    	
+    					if (value != null)
+    						keyr.setKeyValue(value);
+    					
+    					if (scheme != null) {
+    						Key key = scheme.getKey();
+    						if (key != null &amp;&amp; key.getId() != null)
+    							keyr.setTModelKey(key.getId());
+    					}
+    				}
+                }
+			}
+			return cbag;
+    	} catch (Exception ud) {
+			throw new JAXRException(&quot;Apache JAXR Impl:&quot;, ud);
+		}
+    }
+
+	public static TModelBag getTModelBagFromSpecifications(Collection specifications) throws JAXRException {
+    	try {
+			if (specifications == null || specifications.size()==0)
+				return null;
+    		
+    		// Classifications
+			TModelBag tbag = objectFactory.createTModelBag();
+			Iterator speciter = specifications.iterator();
+			while (speciter.hasNext()) {
+				RegistryObject registryobject = (RegistryObject) speciter.next();
+				if (registryobject instanceof SpecificationLink) {
+					SpecificationLink specificationlink = (SpecificationLink) registryobject;
+					if (specificationlink.getSpecificationObject() != null) {
+						RegistryObject ro = specificationlink.getSpecificationObject();
+						if (ro.getKey() != null) {
+							Key key = ro.getKey();
+							tbag.getTModelKey().add(key.toString());
+						}
+					}
+				} else {
+					log.info(&quot;ebXML case - the RegistryObject is an ExtrinsicObject, Not implemented&quot;);
+				}
+			}
+			return tbag;
+    	} catch (Exception ud) {
+			throw new JAXRException(&quot;Apache JAXR Impl:&quot;, ud);
+		}
+    }
+
+	
+	/**
+     * Adds the objects identifiers from JAXR's external identifier collection
+     * 
+     * @param identifiers external identifiers to turn into identifiers
+     * @throws JAXRException
+     */
+	public static IdentifierBag getIdentifierBagFromExternalIdentifiers(Collection identifiers) throws JAXRException {
+    	try {
+			if (identifiers == null || identifiers.size()==0)
+				return null;
+    		
+    		// Identifiers
+			IdentifierBag ibag = objectFactory.createIdentifierBag();
+			Iterator iditer = identifiers.iterator();
+			while (iditer.hasNext()) {
+				ExternalIdentifier extid = (ExternalIdentifier) iditer.next();
+				if (extid != null ) {
+					KeyedReference keyr = objectFactory.createKeyedReference();
+					ibag.getKeyedReference().add(keyr);
+	
+					InternationalStringImpl iname = (InternationalStringImpl) ((RegistryObject) extid).getName();
+					String value = extid.getValue();
+					ClassificationScheme scheme = extid.getIdentificationScheme();
+	
+					String name = iname.getValue();
+					if (name != null)
+						keyr.setKeyName(name);
+	
+					if (value != null)
+						keyr.setKeyValue(value);
+					
+					if (scheme != null) {
+						Key key = scheme.getKey();
+						if (key != null &amp;&amp; key.getId() != null)
+							keyr.setTModelKey(key.getId());
+					}
+				}
+			}
+			return ibag;
+    	} catch (Exception ud) {
+			throw new JAXRException(&quot;Apache JAXR Impl:&quot;, ud);
+		}
+    }
+    
+    private static OverviewDoc getOverviewDocFromExternalLink(ExternalLink link)
+       throws JAXRException
+       {
+           OverviewDoc od = objectFactory.createOverviewDoc();
+           String url = link.getExternalURI();
+           if(url != null) {</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.html#99">99</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.html#99">99</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>    public BusinessLifeCycleManagerV3Impl(RegistryService registry) {
+        super(registry);
+        if(objectFactory == null)
+        	objectFactory = new ObjectFactory();
+    }
+
+    /**
+     * Deletes one or more previously submitted objects from the registry
+     * using the object keys and a specified objectType attribute.
+     *
+     * @param keys
+     * @param objectType
+     * @return BulkResponse object
+     * @throws JAXRException
+     */
+    public BulkResponse deleteObjects(Collection keys, String objectType) throws JAXRException {
+        BulkResponse bulk = null;
+
+        if (objectType == LifeCycleManager.ASSOCIATION) {
+            bulk = this.deleteAssociations(keys);
+        }
+        else if (objectType == LifeCycleManager.CLASSIFICATION_SCHEME) {
+            bulk = this.deleteClassificationSchemes(keys);
+        }
+        else if (objectType == LifeCycleManager.CONCEPT) {
+            bulk = this.deleteConcepts(keys);
+        }
+        else if (objectType == LifeCycleManager.ORGANIZATION) {
+            bulk = this.deleteOrganizations(keys);
+        }
+        else if (objectType == LifeCycleManager.SERVICE) {
+            bulk = this.deleteServices(keys);
+        }
+        else if (objectType == LifeCycleManager.SERVICE_BINDING) {
+            bulk = this.deleteServiceBindings(keys);
+        }
+        else {
+            throw new JAXRException(&quot;Delete Operation for &quot; + objectType + &quot; not implemented by Scout&quot;);
+        }
+
+        return bulk;
+    }
+
+    public BulkResponse deleteAssociations(Collection associationKeys) throws JAXRException {
+        return this.deleteOperation(associationKeys, &quot;DELETE_ASSOCIATION&quot;);
+    }
+
+    public BulkResponse deleteClassificationSchemes(Collection schemeKeys) throws JAXRException {
+        return this.deleteOperation(schemeKeys, &quot;DELETE_CLASSIFICATIONSCHEME&quot;);
+    }
+
+    public BulkResponse deleteConcepts(Collection conceptKeys) throws JAXRException {
+        return this.deleteOperation(conceptKeys, &quot;DELETE_CONCEPT&quot;);
+    }
+
+    public BulkResponse deleteOrganizations(Collection orgkeys) throws JAXRException {
+        return this.deleteOperation(orgkeys, &quot;DELETE_ORG&quot;);
+    }
+
+    public BulkResponse deleteServiceBindings(Collection bindingKeys) throws JAXRException {
+        return this.deleteOperation(bindingKeys, &quot;DELETE_SERVICEBINDING&quot;);
+    }
+
+    public BulkResponse deleteServices(Collection serviceKeys) throws JAXRException {
+        return this.deleteOperation(serviceKeys, &quot;DELETE_SERVICE&quot;);
+    }
+
+    /**
+     * Saves one or more Objects to the registry. An object may be a
+     * RegistryObject  subclass instance. If an object is not in the registry,
+     * it is created in the registry.  If it already exists in the registry
+     * and has been modified, then its  state is updated (replaced) in the
+     * registry
+     * &lt;p/&gt;
+     * TODO:Check if juddi can provide a facility to store a collection of heterogenous
+     * objects
+     * &lt;p/&gt;
+     * TODO - does this belong here?  it's really an overload of
+     * LifecycleManager.saveObjects, but all the help we need
+     * like saveOrganization() is up here...
+     *
+     * @param col
+     * @return a BulkResponse containing the Collection of keys for those objects
+     *         that were saved successfully and any SaveException that was encountered
+     *         in case of partial commit
+     * @throws JAXRException
+     */
+    public BulkResponse saveObjects(Collection col) throws JAXRException {
+
+        Iterator iter = col.iterator();
+
+        LinkedHashSet&lt;Object&gt; suc = new LinkedHashSet&lt;Object&gt;();
+        Collection&lt;Exception&gt; exc = new ArrayList&lt;Exception&gt;();
+
+        while (iter.hasNext()) {
+            RegistryObject reg = (RegistryObject) iter.next();
+
+            BulkResponse br = null;
+
+            Collection&lt;RegistryObject&gt; c = new ArrayList&lt;RegistryObject&gt;();
+            c.add(reg);
+
+            if (reg instanceof javax.xml.registry.infomodel.Association) {
+                br = saveAssociations(c, true);
+            }
+            else if (reg instanceof javax.xml.registry.infomodel.ClassificationScheme) {
+                br = saveClassificationSchemes(c);
+            }
+            else if (reg instanceof javax.xml.registry.infomodel.Concept) {
+                br = saveConcepts(c);
+            }
+            else if (reg instanceof javax.xml.registry.infomodel.Organization) {
+                br = saveOrganizations(c);
+            }
+            else if (reg instanceof javax.xml.registry.infomodel.Service) {
+                br = saveServices(c);
+            }
+            else if (reg instanceof javax.xml.registry.infomodel.ServiceBinding) {
+                br = saveServiceBindings(c);
+            }
+            else {
+                throw new JAXRException(&quot;Delete Operation for &quot; + reg.getClass() 
+                        + &quot; not implemented by Scout&quot;);
+            }
+
+            if (br.getCollection() != null) {
+                suc.addAll(br.getCollection());
+            }
+
+            if (br.getExceptions() != null) {
+                exc.addAll(br.getExceptions());
+            }
+        }
+
+        BulkResponseImpl bulk = new BulkResponseImpl();
+
+        /*
+         *  TODO - what is the right status?
+         */
+        bulk.setStatus(JAXRResponse.STATUS_SUCCESS);
+
+        bulk.setCollection(suc);
+        bulk.setExceptions(exc);
+
+        return bulk;
+    }
+
+
+    public BulkResponse saveAssociations(Collection associations, boolean replace) throws JAXRException {
+        BulkResponseImpl bulk = new BulkResponseImpl();
+        PublisherAssertion[] sarr = new PublisherAssertion[associations.size()];
+
+        Collection&lt;Key&gt; coll = new ArrayList&lt;Key&gt;();
+        Collection&lt;Exception&gt; exceptions = new ArrayList&lt;Exception&gt;();
+
+        Iterator iter = associations.iterator();
+        int currLoc = 0;
+        while (iter.hasNext()) {
+            
+                Association association = (Association) iter.next();
+                association.getSourceObject();
+                PublisherAssertion pa = ScoutJaxrUddiV3Helper.getPubAssertionFromJAXRAssociation(association);</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/RegistryException.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/RegistryException.html#147">147</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/RegistryV3Exception.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/RegistryV3Exception.html#143">143</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>  RegistryV3Exception(String fCode,int errno,String msg)
+  {
+    super(buildMessage(errno,msg));
+
+    String errCode = lookupErrCode(errno);
+
+    if (fCode != null) {
+    	setFaultCode(fCode);
+    }
+    
+    setFaultString(getMessage());
+    
+    Result r = this.objectFactory.createResult();
+    ErrInfo ei = this.objectFactory.createErrInfo();
+
+    if (errCode != null) {
+    	ei.setErrCode(errCode);
+    }
+
+    ei.setValue(getMessage());
+
+   	r.setErrno(errno);
+
+    if (ei != null) {
+    	r.setErrInfo(ei);
+    }
+
+    addResult(r);
+  }
+
+  /**
+   * Sets the fault actor of this SOAP SOAPFault to the given value.
+   * @param actor The new actor value for this SOAP SOAPFault.
+   */
+  public void setFaultActor(String actor)
+  {
+    this.faultActor = actor;
+  }
+
+  /**
+   * Returns the fault actor of this SOAP SOAPFault.
+   * @return The fault actor of this SOAP SOAPFault.
+   */
+  public String getFaultActor()
+  {
+    return this.faultActor;
+  }
+
+  /**
+   * Sets the fault code of this SOAP SOAPFault to the given value.
+   * @param code The new code number for this SOAP SOAPFault.
+   */
+  public void setFaultCode(String code)
+  {
+    this.faultCode = code;
+  }
+
+  /**
+   * Returns the fault code of this SOAP SOAPFault.
+   * @return The fault code of this SOAP SOAPFault.
+   */
+  public String getFaultCode()
+  {
+    return this.faultCode;
+  }
+
+  /**
+   * Sets the fault string of this SOAP SOAPFault to the given value.
+   * @param value The new fault string for this SOAP SOAPFault.
+   */
+  public void setFaultString(String value)
+  {
+    this.faultString = value;
+  }
+
+  /**
+   * Returns the fault string of this SOAP SOAPFault.
+   * @return The fault string of this SOAP SOAPFault.
+   */
+  public String getFaultString()
+  {
+    return this.faultString;
+  }
+
+  /**
+   * Sets the UDDI DispositionReport value to the instance
+   * specified
+   * @param dispRpt The new UDDI DispositionReport instance for
+   *  this SOAP Fault.
+   */
+  public void setDispositionReport(DispositionReport dispRpt)
+  {
+    this.dispReport = dispRpt;
+  }
+
+  /**
+   * Returns the disposition report associated with this jUDDI exception. It
+   * uses the results Vector to determine if a disposition report is present
+   * and should be returned.
+   * @return The disposition report associated with this jUDDI exception.
+   */
+  public DispositionReport getDispositionReport()
+  {
+    return this.dispReport;
+  }
+
+  /**
+   * Adds a result instance to this Exception. Multiple result objects
+   * may exist within a DispositionReport
+   */
+  public void addResult(Result result)
+  {
+    if (this.dispReport==null) {
+      this.dispReport = this.objectFactory.createDispositionReport();
+    }
+
+    Result jaxbResult = this.objectFactory.createResult();
+    this.dispReport.getResult().add(jaxbResult);
+    
+    if (result.getErrInfo() != null) jaxbResult.setErrInfo(result.getErrInfo());
+    if (result.getKeyType() != null) jaxbResult.setKeyType(result.getKeyType());
+    jaxbResult.setErrno(result.getErrno());
+  }
+
+  /**
+   *
+   */
+  public String toString()
+  {
+    String msg = getMessage();
+    if (msg == null)
+      return &quot;&quot;;
+    else
+      return getMessage();
+  }
+  
+  private static final String buildMessage(int errno,String msg)
+  {
+    StringBuffer buffer = new StringBuffer();
+    
+    String errCode = lookupErrCode(errno);
+    if (errCode != null)
+    {
+      buffer.append(errCode);
+      buffer.append(&quot; &quot;);
+    }
+    
+    buffer.append(&quot;(&quot;);
+    buffer.append(errno);
+    buffer.append(&quot;) &quot;);
+    
+    //String errText = lookupErrText(errno);
+    // FIXME: What should error text be?
+    String errText = &quot;&quot;;
+    if (errText != null)
+    {
+      buffer.append(errText);
+      buffer.append(&quot; &quot;);
+    }
+    
+    if ((msg != null) &amp;&amp; (msg.trim().length() &gt; 0))
+    {
+      buffer.append(msg);
+    }
+    
+    return buffer.toString();
+  }
+
+  public static final String lookupErrCode(int errno)
+  {
+	  switch (errno)
+	  {
+	  case E_ACCOUNT_LIMIT_EXCEEDED     : return &quot;E_accountLimitExceeded&quot;;
+	  case E_ASSERTION_NOT_FOUND        : return &quot;E_assertionNotFound&quot;; 
+	  case E_AUTH_TOKEN_EXPIRED         : return &quot;E_authTokenExpired&quot;;
+	  case E_AUTH_TOKEN_REQUIRED        : return &quot;E_authTokenRequired&quot;;
+	  case E_BUSY                       : return &quot;E_busy&quot;;
+	  case E_CATEGORIZATION_NOT_ALLOWED : return &quot;E_categorizationNotAllowed&quot;;
+	  case E_FATAL_ERROR                : return &quot;E_fatalError&quot;;
+	  case E_INVALID_CATEGORY           : return &quot;E_invalidCategory&quot;;
+	  case E_INVALID_COMPLETION_STATUS  : return &quot;E_invalidCompletionStatus&quot;;
+	  case E_INVALID_KEY_PASSED         : return &quot;E_invalidKeyPassed&quot;;
+	  case E_INVALID_PROJECTION         : return &quot;E_invalidProjection&quot;;
+	  case E_INVALID_TIME               : return &quot;E_invalidTime&quot;;
+	  case E_INVALID_URL_PASSED         : return &quot;E_invalidURLPassed&quot;;
+	  case E_INVALID_VALUE              : return &quot;E_invalidValue&quot;;
+	  case E_KEY_RETIRED                : return &quot;E_keyRetired&quot;;
+	  case E_LANGUAGE_ERROR             : return &quot;E_languageError&quot;;
+	  case E_MESSAGE_TOO_LARGE          : return &quot;E_messageTooLarge&quot;;
+	  case E_NAME_TOO_LONG              : return &quot;E_nameTooLong&quot;;
+	  case E_OPERATOR_MISMATCH          : return &quot;E_operatorMismatch&quot;;
+	  case E_PUBLISHER_CANCELLED        : return &quot;E_publisherCancelled&quot;;
+	  case E_REQUEST_DENIED             : return &quot;E_requestDenied&quot;;
+	  case E_REQUEST_TIMEOUT            : return &quot;E_requestTimeout&quot;;
+	  case E_RESULT_SET_TOO_LARGE       : return &quot;E_resultSetTooLarge&quot;;
+	  case E_SECRET_UNKNOWN             : return &quot;E_secretUnknown&quot;;
+	  case E_SUCCESS                    : return &quot;E_success&quot;;
+	  case E_TOO_MANY_OPTIONS           : return &quot;E_tooManyOptions&quot;;
+	  case E_TRANSFER_ABORTED           : return &quot;E_transferAborted&quot;;
+	  case E_UNKNOWN_USER               : return &quot;E_unknownUser&quot;;
+	  case E_UNRECOGNIZED_VERSION       : return &quot;E_unrecognizedVersion&quot;;
+	  case E_UNSUPPORTED                : return &quot;E_unsupported&quot;;
+	  case E_UNVALIDATABLE              : return &quot;E_unvalidatable&quot;;
+	  case E_USER_MISMATCH              : return &quot;E_userMismatch&quot;;
+	  case E_VALUE_NOT_ALLOWED          : return &quot;E_valueNotAllowed&quot;;
+	  default                           : return null;
+	  }
+  }  
+}</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutUddiJaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiJaxrHelper.html#489">489</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.html#472">472</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>			}
+		}
+		HostingRedirector hr = businessTemplate.getHostingRedirector();
+		if(hr != null)
+		{
+			ServiceBinding sb = lifeCycleManager.createServiceBinding();
+			sb.setKey(new KeyImpl(hr.getBindingKey()));
+			serviceBinding.setTargetBinding(sb);
+		}
+
+		return serviceBinding;
+	}
+
+	public static Concept getConcept(TModelDetail tModelDetail, LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		Concept concept = new ConceptImpl(lifeCycleManager);
+		List&lt;TModel&gt; tmodelList = tModelDetail.getTModel();
+		for (TModel tmodel : tmodelList) {
+			concept.setKey(lifeCycleManager.createKey(tmodel.getTModelKey()));
+			concept.setName(lifeCycleManager.createInternationalString(getLocale(tmodel.getName().getLang()),
+					tmodel.getName().getValue()));
+
+			Description desc = getDescription(tmodel);
+			if( desc != null ) {
+				concept.setDescription(lifeCycleManager.createInternationalString(getLocale(desc.getLang()), 
+						desc.getValue()));
+			}
+
+			concept.addExternalIdentifiers(getExternalIdentifiers(tmodel.getIdentifierBag(), lifeCycleManager));
+			concept.addClassifications(getClassifications(tmodel.getCategoryBag(), lifeCycleManager));
+		}
+		return concept;
+	}
+
+	public static Concept getConcept(TModel tmodel, LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		Concept concept = new ConceptImpl(lifeCycleManager);
+		concept.setKey(lifeCycleManager.createKey(tmodel.getTModelKey()));
+		concept.setName(lifeCycleManager.createInternationalString(getLocale(tmodel.getName().getLang()),
+				tmodel.getName().getValue()));
+
+		Description desc = getDescription(tmodel);
+		if (desc != null) {
+			concept.setDescription(lifeCycleManager.createInternationalString(getLocale(desc.getLang()), 
+					desc.getValue()));
+		}
+
+		concept.addExternalIdentifiers(getExternalIdentifiers(tmodel.getIdentifierBag(), lifeCycleManager));
+		concept.addClassifications(getClassifications(tmodel.getCategoryBag(), lifeCycleManager));
+
+		return concept;
+	}
+
+	public static Concept getConcept(TModelInfo tModelInfo, LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		Concept concept = new ConceptImpl(lifeCycleManager);
+		concept.setKey(lifeCycleManager.createKey(tModelInfo.getTModelKey()));
+		concept.setName(lifeCycleManager.createInternationalString(getLocale(tModelInfo.getName().getLang()), 
+				tModelInfo.getName().getValue()));
+
+		return concept;
+	}
+
+	private static Description getDescription( TModel tmodel )
+	{
+		Description desc = null;
+		if (tmodel.getDescription().size()&gt;0) desc=tmodel.getDescription().get(0);
+		return desc;
+	}
+
+	/**
+	 * Classifications - going to assume all are external since UDDI does not use &quot;Concepts&quot;.
+	 * @param categoryBag categories
+	 * @param lifeCycleManager lifecycleManager
+	 * @return Collection Classifications
+	 * @throws JAXRException on error
+	 */
+	public static Collection getClassifications(CategoryBag categoryBag, LifeCycleManager lifeCycleManager) 
+	throws JAXRException {
+		Collection&lt;Classification&gt; classifications = null;
+		if (categoryBag != null) {
+			classifications = new ArrayList&lt;Classification&gt;();
+			List&lt;KeyedReference&gt; keyedReferenceList = categoryBag.getKeyedReference();
+			for (KeyedReference keyedReference : keyedReferenceList) {
+				Classification classification = new ClassificationImpl(lifeCycleManager);
+				classification.setValue(keyedReference.getKeyValue());
+				classification.setName(new InternationalStringImpl(keyedReference.getKeyName()));
+				String tmodelKey = keyedReference.getTModelKey();
+				if (tmodelKey != null) {
+					ClassificationScheme scheme = new ClassificationSchemeImpl(lifeCycleManager);
+					scheme.setKey(new KeyImpl(tmodelKey));
+					classification.setClassificationScheme(scheme);
+				}
+				classifications.add(classification);
+			}
+		}
+		return classifications;
+	}
+
+	public static Collection&lt;ExternalLink&gt; getExternalLinks(List&lt;OverviewDoc&gt; overviewDocs, LifeCycleManager lifeCycleManager)</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutJaxrUddiHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiHelper.html#551">551</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.html#551">551</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>						.getBusinessServiceFromJAXRService((Service) iter
+								.next());
+				barr[barrPos] = bs;
+				barrPos++;
+            }
+
+            /*
+             * map users : JAXR has concept of 'primary contact', which is a
+             * special designation for one of the users, and D6.1 seems to say
+             * that the first UDDI user is the primary contact
+             */
+
+			Contacts cts = objectFactory.createContacts();
+			Contact[] carr = new Contact[0];
+
+            User primaryContact = organization.getPrimaryContact();
+            Collection&lt;User&gt; users = organization.getUsers();
+
+            // Expand array to necessary size only (xmlbeans does not like
+            // null items in cases like this)
+
+            int carrSize = 0;
+
+            if (primaryContact != null) {
+                carrSize += 1;
+            }
+
+            // TODO: Clean this up and make it more efficient
+            Iterator&lt;User&gt; it = users.iterator();
+            while (it.hasNext()) {
+                User u = (User) it.next();
+                if (u != primaryContact) {
+                    carrSize++;
+                }
+            }
+
+            carr = new Contact[carrSize];
+
+            /*
+             * first do primary, and then filter that out in the loop
+             */
+            if (primaryContact != null) {
+                Contact ct = getContactFromJAXRUser(primaryContact);
+                carr[0] = ct;
+            }
+
+            it = users.iterator();
+            int carrPos = 1;
+            while (it.hasNext()) {
+                User u = (User) it.next();
+
+                if (u != primaryContact) {
+                    Contact ct = getContactFromJAXRUser(u);
+                    carr[carrPos] = ct;
+                    carrPos++;
+                }
+            }
+
+			bss.getBusinessService().addAll(Arrays.asList(barr));
+            if (carr.length&gt;0) {
+                cts.getContact().addAll(Arrays.asList(carr));
+                biz.setContacts(cts);
+            }
+            biz.setBusinessServices(bss);
+
+            // External Links
+            Iterator&lt;ExternalLink&gt; exiter = organization.getExternalLinks().iterator();
+            DiscoveryURLs emptyDUs = null;
+            boolean first = true;
+            while (exiter.hasNext()) {
+                ExternalLink link = (ExternalLink) exiter.next();
+                /** Note: jUDDI adds its own discoverURL as the businessEntity* */
+                if (first) {
+                    emptyDUs = objectFactory.createDiscoveryURLs();
+                    biz.setDiscoveryURLs(emptyDUs);
+                    first = false;
+                }
+                DiscoveryURL emptyDU = objectFactory.createDiscoveryURL();
+                emptyDUs.getDiscoveryURL().add(emptyDU);
+                emptyDU.setUseType(&quot;businessEntityExt&quot;);
+				
+                if (link.getExternalURI() != null) {
+                    emptyDU.setValue(link.getExternalURI());
+                }
+            }
+			
+          IdentifierBag idBag = getIdentifierBagFromExternalIdentifiers(organization.getExternalIdentifiers());
+          if (idBag!=null) {
+              biz.setIdentifierBag(idBag);
+          }
+          CategoryBag catBag = getCategoryBagFromClassifications(organization.getClassifications());
+          if (catBag!=null) {
+              biz.setCategoryBag(catBag);
+          }
+			
+		} catch (Exception ud) {
+            throw new JAXRException(&quot;Apache JAXR Impl:&quot;, ud);
+        }
+        return biz;
+    }
+
+    /**
+     *
+     * Convert JAXR User Object to UDDI  Contact
+     */
+    public static Contact getContactFromJAXRUser(User user)
+			throws JAXRException {
+		Contact ct = objectFactory.createContact();
+        if (user == null) {
+            return null;
+        }
+
+		Address[] addarr = new Address[0];
+		Phone[] phonearr = new Phone[0];
+		Email[] emailarr = new Email[0];
+		try {
+			
+			if (user.getPersonName() != null &amp;&amp; user.getPersonName().getFullName() != null) {</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutJaxrUddiHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiHelper.html#171">171</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.html#158">158</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>                accessPoint.setUseType(getUseType(accessuri));
+				accessPoint.setValue(accessuri);
+                bt.setAccessPoint(accessPoint);
+            }
+            ServiceBinding sb = serviceBinding.getTargetBinding();
+			if (sb != null) {
+				HostingRedirector red = objectFactory.createHostingRedirector();
+                Key key = sb.getKey();
+				if (key != null &amp;&amp; key.getId() != null) {
+					red.setBindingKey(key.getId());
+                } else {
+                    red.setBindingKey(&quot;&quot;);
+                }
+                bt.setHostingRedirector(red);
+            } else {
+            	if (bt.getAccessPoint() == null) {
+            		bt.setAccessPoint(objectFactory.createAccessPoint());
+            	}
+            }
+			// TODO:Need to look further at the mapping b/w BindingTemplate and
+			// Jaxr ServiceBinding
+
+			// Get Service information
+           Service svc = serviceBinding.getService();
+			if (svc != null &amp;&amp; svc.getKey() != null &amp;&amp; svc.getKey().getId() != null) {
+              bt.setServiceKey(svc.getKey().getId());
+           }
+			
+			InternationalString idesc = serviceBinding.getDescription();
+            
+            addDescriptions(bt.getDescription(), idesc);
+
+			// SpecificationLink
+           Collection&lt;SpecificationLink&gt; slcol = serviceBinding.getSpecificationLinks();
+			TModelInstanceDetails tid = objectFactory.createTModelInstanceDetails();
+			if (slcol != null &amp;&amp; !slcol.isEmpty()) {
+              Iterator&lt;SpecificationLink&gt; iter = slcol.iterator();
+				while (iter.hasNext()) {
+					SpecificationLink slink = (SpecificationLink) iter.next();
+
+					TModelInstanceInfo emptyTInfo = objectFactory.createTModelInstanceInfo();
+					tid.getTModelInstanceInfo().add(emptyTInfo);
+
+                    RegistryObject specificationObject = slink.getSpecificationObject();
+					if (specificationObject.getKey() != null &amp;&amp; specificationObject.getKey().getId() != null) {
+						emptyTInfo.setTModelKey(specificationObject.getKey().getId());
+                        if (specificationObject.getDescription()!=null) {
+                            for (Object o : specificationObject.getDescription().getLocalizedStrings()) {
+                                LocalizedString locDesc = (LocalizedString) o;
+                                Description description = objectFactory.createDescription();
+                                emptyTInfo.getDescription().add(description);
+                                description.setValue(locDesc.getValue());
+                                description.setLang(locDesc.getLocale().getLanguage());
+                            }
+                        }
+                        Collection&lt;ExternalLink&gt; externalLinks = slink.getExternalLinks();
+                        if (externalLinks!=null &amp;&amp; externalLinks.size()&gt;0) {
+                            for (ExternalLink link : externalLinks) {
+                                InstanceDetails ids = objectFactory.createInstanceDetails();
+                                emptyTInfo.setInstanceDetails(ids);
+                                if (link.getDescription()!=null) {
+                                    Description description = objectFactory.createDescription();
+                                    ids.getDescription().add(description);
+                                    description.setValue(link.getDescription().getValue());
+                                }
+                                if (link.getExternalURI()!=null) {
+                                    OverviewDoc overviewDoc = objectFactory.createOverviewDoc();
+                                    ids.getOverviewDoc().add(overviewDoc);</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutJaxrUddiHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiHelper.html#458">458</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.html#458">458</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>                tm.getOverviewDoc().add(getOverviewDocFromExternalLink((ExternalLink)externalLinks.iterator().next()));
+            }  
+
+            IdentifierBag idBag = getIdentifierBagFromExternalIdentifiers(concept.getExternalIdentifiers());
+            if (idBag!=null) {
+                tm.setIdentifierBag(idBag);
+            }
+            CategoryBag catBag = getCategoryBagFromClassifications(concept.getClassifications());
+            if (catBag!=null) {
+                tm.setCategoryBag(catBag);
+            }
+
+		} catch (Exception ud) {
+            throw new JAXRException(&quot;Apache JAXR Impl:&quot;, ud);
+        }
+        return tm;
+    }
+
+    private static void addDescriptions(List&lt;Description&gt; descripions, InternationalString idesc) throws JAXRException {
+        if (idesc != null) {
+            for (Object o : idesc.getLocalizedStrings()) {
+                LocalizedString locName = (LocalizedString) o;
+                Description desc = objectFactory.createDescription();
+                descripions.add(desc);
+                desc.setValue(locName.getValue());
+                desc.setLang(locName.getLocale().getLanguage());
+            }
+        }
+    }
+
+    private static Name getFirstName(InternationalString iname) throws JAXRException {
+        for (Object o : iname.getLocalizedStrings()) {
+            LocalizedString locName = (LocalizedString) o;
+            Name name = objectFactory.createName();
+            name.setValue(locName.getValue());
+            name.setLang(locName.getLocale().getLanguage());
+            return name;
+        }
+        return null;
+    }
+    private static void addNames(List&lt;Name&gt; names, InternationalString iname) throws JAXRException {
+        for (Object o : iname.getLocalizedStrings()) {
+            LocalizedString locName = (LocalizedString) o;
+            Name name = objectFactory.createName();
+            name.setValue(locName.getValue());
+            name.setLang(locName.getLocale().getLanguage());
+            names.add(name);
+        }
+    }
+
+    public static BusinessEntity getBusinessEntityFromJAXROrg(Organization organization)
+			throws JAXRException {
+		BusinessEntity biz = objectFactory.createBusinessEntity();
+		BusinessServices bss = objectFactory.createBusinessServices();
+		BusinessService[] barr = new BusinessService[0];
+
+		try {
+			// It may just be an update
+            Key key = organization.getKey();
+			if (key != null &amp;&amp; key.getId() != null) {
+				biz.setBusinessKey(key.getId());
+            } else {
+                biz.setBusinessKey(&quot;&quot;);
+            }
+			// Lets get the Organization attributes at the top level
+			
+			InternationalString iname = organization.getName();
+			
+			if (iname != null) {
+                addNames(biz.getName(), iname);
+			}
+			
+			InternationalString idesc = organization.getDescription();
+			
+            addDescriptions(biz.getDescription(), idesc);
+
+			if (organization.getPrimaryContact() != null &amp;&amp; 
+				organization.getPrimaryContact().getPersonName()!= null &amp;&amp;
+				organization.getPrimaryContact().getPersonName().getFullName() != null) {</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutJaxrUddiHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiHelper.html#303">303</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.html#302">302</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>				if (&quot;UUID&quot;.equalsIgnoreCase(str))
+					str += &quot;:&quot; + getToken(token.nextToken());
+               kr.setTModelKey(str);
+               kr.setKeyName(getToken(token.nextToken()));
+               kr.setKeyValue(getToken(token.nextToken()));
+               pa.setKeyedReference(kr);
+            }
+
+		} catch (Exception ud) {
+            throw new JAXRException(&quot;Apache JAXR Impl:&quot;, ud);
+        }
+        return pa;
+    }
+
+	public static BusinessService getBusinessServiceFromJAXRService(
+			Service service) throws JAXRException {
+		BusinessService bs = objectFactory.createBusinessService();
+		try {
+			InternationalString iname = service.getName();
+						
+			addNames(bs.getName(), iname);
+	         
+            InternationalString idesc = service.getDescription();
+    
+           addDescriptions(bs.getDescription(), idesc);
+
+            Organization o = service.getProvidingOrganization();
+
+            /*
+             * there may not always be a key...
+             */
+            if (o != null) {
+                Key k = o.getKey();
+
+				if (k != null &amp;&amp; k.getId() != null) {
+                    bs.setBusinessKey(k.getId());
+                } 
+                    
+			} else {
+                /*
+                 * gmj - I *think* this is the right thing to do
+                 */
+				throw new JAXRException(
+						&quot;Service has no associated organization&quot;);
+            }
+
+			if (service.getKey() != null &amp;&amp; service.getKey().getId() != null) {
+                bs.setServiceKey(service.getKey().getId());
+            } else {
+                bs.setServiceKey(&quot;&quot;);
+            }
+
+            CategoryBag catBag = getCategoryBagFromClassifications(service.getClassifications());
+            if (catBag!=null) {
+                bs.setCategoryBag(catBag);
+            }
+
+            //Add the ServiceBinding information
+            BindingTemplates bt = getBindingTemplates(service.getServiceBindings());
+            if (bt != null) {
+                bs.setBindingTemplates(bt);
+            }
+   		    
+            log.debug(&quot;BusinessService=&quot; + bs.toString());
+		} catch (Exception ud) {
+            throw new JAXRException(&quot;Apache JAXR Impl:&quot;, ud);
+        }
+        return bs;
+    }
+
+	public static TModel getTModelFromJAXRClassificationScheme(
+			ClassificationScheme classificationScheme) throws JAXRException {
+		TModel tm = objectFactory.createTModel();
+		try {
+            /*
+             * a fresh scheme might not have a key
+             */
+
+            Key k = classificationScheme.getKey();
+
+            if (k != null &amp;&amp; k.getId() != null) {
+                tm.setTModelKey(k.getId());
+            } else {
+                tm.setTModelKey(&quot;&quot;);
+            }
+
+            /*
+             * There's no reason to believe these are here either
+             */
+
+            Slot s = classificationScheme.getSlot(&quot;authorizedName&quot;);</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutJaxrUddiHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiHelper.html#247">247</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.html#246">246</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>			log.debug(&quot;BindingTemplate=&quot; + bt.toString());
+		} catch (Exception ud) {
+            throw new JAXRException(&quot;Apache JAXR Impl:&quot;, ud);
+        }
+        return bt;
+    }
+
+	public static PublisherAssertion getPubAssertionFromJAXRAssociation(
+			Association association) throws JAXRException {
+		PublisherAssertion pa = objectFactory.createPublisherAssertion();
+		try {
+			if (association.getSourceObject().getKey() != null &amp;&amp; 
+				association.getSourceObject().getKey().getId() != null) {
+            pa.setFromKey(association.getSourceObject().getKey().getId());
+			}
+			
+			if (association.getTargetObject().getKey() != null &amp;&amp;
+				association.getTargetObject().getKey().getId() != null) {
+            pa.setToKey(association.getTargetObject().getKey().getId());
+			}
+            Concept c = association.getAssociationType();
+            String v = c.getValue();
+			KeyedReference kr = objectFactory.createKeyedReference();
+            Key key = c.getKey();
+			if (key == null) {
+				// TODO:Need to check this. If the concept is a predefined
+				// enumeration, the key can be the parent classification scheme
+                key = c.getClassificationScheme().getKey();
+            }
+			if (key != null &amp;&amp; key.getId() != null) {
+				kr.setTModelKey(key.getId());
+			} 
+            kr.setKeyName(&quot;Concept&quot;);
+
+			if (v != null) {
+				kr.setKeyValue(v);
+			}
+
+            pa.setKeyedReference(kr);
+		} catch (Exception ud) {
+            throw new JAXRException(&quot;Apache JAXR Impl:&quot;, ud);
+        }
+        return pa;
+    }
+
+	public static PublisherAssertion getPubAssertionFromJAXRAssociationKey(
+			String key) throws JAXRException {
+		PublisherAssertion pa = objectFactory.createPublisherAssertion();
+		try {
+			StringTokenizer token = new StringTokenizer(key, &quot;|&quot;);
+			if (token.hasMoreTokens()) {
+               pa.setFromKey(getToken(token.nextToken()));
+               pa.setToKey(getToken(token.nextToken()));
+				KeyedReference kr = objectFactory.createKeyedReference();
+				// Sometimes the Key is UUID:something
+               String str = getToken(token.nextToken());
+				if (&quot;UUID&quot;.equalsIgnoreCase(str))</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutUddiJaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiJaxrHelper.html#411">411</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.html#393">393</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>		}
+		serve.addClassifications(getClassifications(businessService.getCategoryBag(), lifeCycleManager));
+
+		return serve;
+	}
+
+	public static Service getService(ServiceInfo serviceInfo, LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		Service service = new ServiceImpl(lifeCycleManager);
+
+		String keystr = serviceInfo.getServiceKey();
+
+		if (keystr != null)
+		{
+			service.setKey(lifeCycleManager.createKey(keystr));
+		}
+
+		List&lt;Name&gt; namesList = serviceInfo.getName();
+		InternationalString is = null;
+		for (Name n : namesList) {
+			if (is == null) {
+				is = lifeCycleManager.createInternationalString(getLocale(n.getLang()), n.getValue());
+			} else {
+				is.setValue(getLocale(n.getLang()), n.getValue());
+			}
+		}
+		service.setName(is);
+		return service;
+	}
+
+	public static ServiceBinding getServiceBinding(BindingTemplate businessTemplate, LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		ServiceBinding serviceBinding = new ServiceBindingImpl(lifeCycleManager);
+
+		String keystr = businessTemplate.getServiceKey();
+		if (keystr != null)
+		{
+			Service svc = new ServiceImpl(lifeCycleManager);
+			svc.setKey(lifeCycleManager.createKey(keystr));
+			((ServiceBindingImpl)serviceBinding).setService(svc);
+		}
+		String bindingKey = businessTemplate.getBindingKey();
+		if(bindingKey != null) serviceBinding.setKey(new KeyImpl(bindingKey));
+
+		//Access URI
+		AccessPoint access = businessTemplate.getAccessPoint();
+		if (access != null) serviceBinding.setAccessURI(access.getValue());
+
+		//Description
+		Description desc = null;
+		if (businessTemplate.getDescription().size()&gt;0) desc = businessTemplate.getDescription().get(0);
+		if (desc!=null) {
+			serviceBinding.setDescription(new InternationalStringImpl(desc.getValue()));
+		}
+		/**Section D.10 of JAXR 1.0 Specification */
+
+		TModelInstanceDetails details = businessTemplate.getTModelInstanceDetails();</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutJaxrUddiHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiHelper.html#684">684</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.html#686">686</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>				addarr[addarrPos] = ScoutJaxrUddiV3Helper.getAddress(post);
+				addarrPos++;
+            }
+			// Phone Numbers
+            Collection ph = user.getTelephoneNumbers(null);
+
+			phonearr = new Phone[ph.size()];
+
+            Iterator it = ph.iterator();
+			int phonearrPos = 0;
+			while (it.hasNext()) {
+                TelephoneNumber t = (TelephoneNumber) it.next();
+				Phone phone = objectFactory.createPhone();
+                String str = t.getNumber();
+                log.debug(&quot;Telephone=&quot; + str);
+				
+				// FIXME: If phone number is null, should the phone 
+				// not be set at all, or set to empty string?
+				if (str != null) {
+					phone.setValue(str);
+				} else {
+					phone.setValue(&quot;&quot;);
+				}
+
+				phonearr[phonearrPos] = phone;
+				phonearrPos++;
+            }
+
+			// Email Addresses
+            Collection ec = user.getEmailAddresses();
+
+			emailarr = new Email[ec.size()];
+
+            Iterator iter = ec.iterator();
+			int emailarrPos = 0;
+			while (iter.hasNext()) {
+                EmailAddress ea = (EmailAddress) iter.next();
+				Email email = objectFactory.createEmail();
+				
+				if (ea.getAddress() != null) {
+					email.setValue(ea.getAddress());
+				}
+				// email.setText( ea.getAddress() );
+				
+				if (ea.getType() != null) {
+                email.setUseType(ea.getType());
+            }
+
+				emailarr[emailarrPos] = email;
+				emailarrPos++;
+			}
+			ct.getAddress().addAll(Arrays.asList(addarr));
+			ct.getPhone().addAll(Arrays.asList(phonearr));
+			ct.getEmail().addAll(Arrays.asList(emailarr));
+		} catch (Exception ud) {
+            throw new JAXRException(&quot;Apache JAXR Impl:&quot;, ud);
+        }
+        return ct;
+    }
+
+	private static String getToken(String tokenstr) {
+		// Token can have the value NULL which need to be converted into null
+		if (tokenstr.equals(&quot;NULL&quot;))
+			tokenstr = &quot;&quot;;
+      return tokenstr;
+   }
+
+	private static String getUseType(String accessuri) {</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.html#925">925</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.html#954">954</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>        return ScoutUddiV3JaxrHelper.getOrganization(bizDetail, this);
+    }    
+    
+    Organization createOrganization(BusinessInfo bizInfo) throws JAXRException {
+        String key = bizInfo.getBusinessKey();
+        List&lt;Name&gt; names = bizInfo.getName(); 
+        
+        List&lt;Description&gt; descriptions = bizInfo.getDescription();
+        List&lt;ServiceInfo&gt; serviceInfos = bizInfo.getServiceInfos().getServiceInfo();
+        
+        OrganizationImpl org = new OrganizationImpl(this);
+        org.setKey(createKey(key));
+        if (names != null &amp;&amp; names.size() &gt; 0) {
+            org.setName(createInternationalString(names.get(0).getValue()));
+        }
+        if (descriptions != null &amp;&amp; descriptions.size() &gt; 0) {
+            org.setDescription(createInternationalString(descriptions.get(0).getValue()));
+        }
+        if (serviceInfos != null &amp;&amp; serviceInfos.size() &gt; 0) {
+            List&lt;Service&gt; services = new ArrayList&lt;Service&gt;(serviceInfos.size());
+            for (int i = 0; i &lt; serviceInfos.size(); i++) {
+                ServiceInfo serviceInfo = serviceInfos.get(i);
+                services.add(createService(serviceInfo));
+            }
+            org.addServices(services);
+        }
+
+        return org;
+    }
+
+    Service createService(ServiceInfo serviceInfo) throws JAXRException {
+        String key = serviceInfo.getServiceKey();
+        List&lt;Name&gt; names = serviceInfo.getName();
+        ServiceImpl service = new ServiceImpl(this);
+        service.setKey(createKey(key));
+        if (names != null &amp;&amp; names.size() &gt; 0) {
+            service.setName(createInternationalString(names.get(0).getValue()));
+        }
+        return service;
+    }
+
+}</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.html#773">773</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.html#799">799</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>                log.debug(&quot;Ignoring exception &quot; + e.getMessage(),e);
+             }
+       }
+
+
+
+    protected BulkResponse deleteOperation(Collection&lt;Key&gt; keys, String op)
+            throws JAXRException {
+        if(keys == null)
+        throw new JAXRException(&quot;Keys provided to &quot;+op+&quot; are null&quot;);
+       
+        //Now we need to convert the collection into a vector for juddi
+        BulkResponseImpl bulk = new BulkResponseImpl();
+        String[] keyarr = new String[keys.size()];
+        Result[] keyResultArr;
+
+        LinkedHashSet&lt;Key&gt; coll = new LinkedHashSet&lt;Key&gt;();
+        Collection&lt;Exception&gt; exceptions = new ArrayList&lt;Exception&gt;();
+
+        try {
+            Iterator iter = keys.iterator();
+            int currLoc = 0;
+            while (iter.hasNext()) {
+                Key key = (Key) iter.next();
+                keyarr[currLoc] = key.getId();
+                currLoc++;
+            }
+            // Delete operation
+            DispositionReport bd = (DispositionReport) executeOperation(keyarr, op);
+            List&lt;Result&gt; resultList = bd.getResult();
+            keyResultArr = new Result[resultList.size()];
+            resultList.toArray(keyResultArr); 
+            
+            log.debug(&quot;After deleting Business. Obtained vector size:&quot; + keyResultArr != null ? keyResultArr.length : 0);
+            for (int i = 0; keyResultArr != null &amp;&amp; i &lt; keyResultArr.length; i++) {
+                Result result = (Result) keyResultArr[i];
+                int errno = result.getErrno();
+                if (errno == 0) {
+                    coll.addAll(keys);
+                }
+                else {
+                    ErrInfo errinfo = result.getErrInfo();
+                    DeleteException de = new DeleteException(errinfo.getErrCode() + &quot;:&quot; + errinfo.getValue());
+                    bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+                    exceptions.add(de);
+                }
+            }
+        }
+        catch (RegistryV3Exception regExcept) {</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.html#270">270</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.html#269">269</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>                catch (RegistryV3Exception e) {
+                    exceptions.add(new SaveException(e));
+                    bulk.setExceptions(exceptions);
+                    bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+                    return bulk;
+                }
+                if(bd != null)
+                {
+                	List&lt;PublisherAssertion&gt; publisherAssertionList = bd.getPublisherAssertion();
+                	PublisherAssertion[] keyarr = new PublisherAssertion[publisherAssertionList.size()];
+                	publisherAssertionList.toArray(keyarr);
+                	
+                	for (int i = 0; keyarr != null &amp;&amp; i &lt; keyarr.length; i++) {
+                		PublisherAssertion result = (PublisherAssertion) keyarr[i];
+                        KeyedReference keyr = result.getKeyedReference();
+                        Concept c = new ConceptImpl(getRegistryService().getBusinessLifeCycleManager());
+                        c.setName(new InternationalStringImpl(keyr.getKeyName()));
+                        c.setKey( new KeyImpl(keyr.getTModelKey()) );
+                        c.setValue(keyr.getKeyValue());
+                        association.setAssociationType(c);
+                        coll.add(association.getKey());
+                   }
+                }
+        }
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public BulkResponse saveClassificationSchemes(Collection schemes) throws JAXRException {
+        //Now we need to convert the collection into a vector for juddi
+        BulkResponseImpl bulk = new BulkResponseImpl();
+        TModel[] entityarr = new TModel[schemes.size()];
+
+        LinkedHashSet&lt;Key&gt; coll = new LinkedHashSet&lt;Key&gt;();
+        Collection&lt;Exception&gt; exceptions = new ArrayList&lt;Exception&gt;();
+
+        Iterator iter = schemes.iterator();
+        int currLoc = 0;
+        while (iter.hasNext()) {
+            try {
+                TModel en =</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutUddiJaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiJaxrHelper.html#322">322</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.html#306">306</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>			hm.put(anAddressLineArr.getKeyName(), anAddressLineArr.getValue());
+		}
+
+		if (hm.containsKey(&quot;STREET_NUMBER&quot;)) {
+			pa.setStreetNumber(hm.get(&quot;STREET_NUMBER&quot;));
+		}
+
+		if (hm.containsKey(&quot;STREET&quot;)) {
+			pa.setStreet(hm.get(&quot;STREET&quot;));
+		}
+
+		if (hm.containsKey(&quot;CITY&quot;)) {
+			pa.setCity(hm.get(&quot;CITY&quot;));
+		}
+
+		if (hm.containsKey(&quot;COUNTRY&quot;)) {
+			pa.setCountry(hm.get(&quot;COUNTRY&quot;));
+		}
+
+		if (hm.containsKey(&quot;POSTALCODE&quot;)) {
+			pa.setPostalCode(hm.get(&quot;POSTALCODE&quot;));
+		}
+
+		if (hm.containsKey(&quot;STATE&quot;)) {
+			pa.setStateOrProvince(hm.get(&quot;STATE&quot;));
+		}
+
+		return pa;
+	}
+
+	private static InternationalString getIString(String lang, String str, LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		if (str!=null) {
+			return lifeCycleManager.createInternationalString(getLocale(lang), str);
+		} else {
+			return null;
+		}
+	}
+
+	public static InternationalString getIString(String str, LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		return lifeCycleManager.createInternationalString(str);
+	}
+
+	public static Service getService(BusinessService businessService, LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		Service serve = new ServiceImpl(lifeCycleManager);
+
+		String keystr = businessService.getServiceKey();
+
+		if (keystr != null)
+		{
+			serve.setKey(lifeCycleManager.createKey(keystr));
+		}
+
+		List&lt;Name&gt; namesList = businessService.getName();</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutUddiJaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiJaxrHelper.html#261">261</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.html#245">245</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>				user.setType(contact.getUseType());
+				user.setPersonName(new PersonNameImpl(pname));
+	
+				List&lt;Email&gt; emailList = contact.getEmail();
+				ArrayList&lt;EmailAddress&gt; tempEmails = new ArrayList&lt;EmailAddress&gt;();
+				for (Email email : emailList) {
+					tempEmails.add(new EmailAddressImpl(email.getValue(), null));
+				}
+				user.setEmailAddresses(tempEmails);
+	
+				List&lt;Address&gt; addressList = contact.getAddress();
+				ArrayList&lt;PostalAddress&gt; tempAddresses = new ArrayList&lt;PostalAddress&gt;();
+				for (Address address : addressList) {
+					ArrayList&lt;AddressLine&gt; addressLineList = new ArrayList&lt;AddressLine&gt;(address.getAddressLine());
+					AddressLine[] alines = new AddressLine[addressLineList.size()];
+					addressLineList.toArray(alines);
+	
+					PostalAddress pa = getPostalAddress(alines);
+					tempAddresses.add(pa);
+				}
+				user.setPostalAddresses(tempAddresses);
+	
+				List&lt;Phone&gt; phoneList = contact.getPhone();
+				ArrayList&lt;TelephoneNumber&gt; tempPhones = new ArrayList&lt;TelephoneNumber&gt;();
+				for (Phone phone : phoneList) {
+					TelephoneNumberImpl tni = new TelephoneNumberImpl();
+					tni.setType(phone.getUseType());
+					tni.setNumber(phone.getValue());
+					tempPhones.add(tni);
+				}
+				user.setTelephoneNumbers(tempPhones);
+				if (isFirst) {
+					isFirst=false;
+					org.setPrimaryContact(user);
+				} else {
+					org.addUser(user);
+				}
+			}</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/RegistryException.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/RegistryException.html#34">34</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/RegistryV3Exception.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/RegistryV3Exception.html#30">30</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>	public static final int E_ASSERTION_NOT_FOUND = 30000;
+	public static final int E_AUTH_TOKEN_EXPIRED = 10110;
+	public static final int E_AUTH_TOKEN_REQUIRED = 10120;
+	public static final int E_ACCOUNT_LIMIT_EXCEEDED = 10160;
+	public static final int E_BUSY = 10400;
+	public static final int E_CATEGORIZATION_NOT_ALLOWED = 20100;
+	public static final int E_FATAL_ERROR = 10500;
+	public static final int E_INVALID_KEY_PASSED = 10210;
+	public static final int E_INVALID_PROJECTION = 20230;
+	public static final int E_INVALID_CATEGORY = 20000;
+	public static final int E_INVALID_COMPLETION_STATUS = 30100;
+	public static final int E_INVALID_URL_PASSED = 10220;
+	public static final int E_INVALID_VALUE = 20200;
+	public static final int E_KEY_RETIRED = 10310;
+	public static final int E_LANGUAGE_ERROR = 10060;
+	public static final int E_MESSAGE_TOO_LARGE = 30110;
+	public static final int E_NAME_TOO_LONG = 10020;
+	public static final int E_OPERATOR_MISMATCH = 10130;
+	public static final int E_PUBLISHER_CANCELLED = 30220;
+	public static final int E_REQUEST_DENIED = 30210;
+	public static final int E_SECRET_UNKNOWN = 30230;
+	public static final int E_SUCCESS = 0;
+	public static final int E_TOO_MANY_OPTIONS = 10030;
+	public static final int E_TRANSFER_ABORTED = 30200;
+	public static final int E_UNRECOGNIZED_VERSION = 10040;
+	public static final int E_UNKNOWN_USER = 10150;
+	public static final int E_UNSUPPORTED = 10050;
+	public static final int E_USER_MISMATCH = 10140;
+	public static final int E_VALUE_NOT_ALLOWED = 20210;
+	public static final int E_UNVALIDATABLE = 20220;
+	public static final int E_REQUEST_TIMEOUT = 20240;
+	public static final int E_INVALID_TIME = 40030;
+	public static final int E_RESULT_SET_TOO_LARGE = 40300;
+
+  // SOAP SOAPFault Actor
+  private String faultActor;
+
+  // SOAP SOAPFault Code
+  private String faultCode;
+
+  // SOAP SOAPFault SOAPMessage
+  private String faultString;
+
+  // UDDI DispositionReport
+  private DispositionReport dispReport;
+  
+  private ObjectFactory objectFactory = new ObjectFactory();
+
+  /**
+   * Constructs a RegistryException instance.
+   * @param msg additional error information
+   */
+  public RegistryV3Exception(String msg)</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.html#519">519</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.html#517">517</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>        catch (RegistryV3Exception e) {
+            exceptions.add(new SaveException(e.getLocalizedMessage()));
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            return bulk;
+        }
+
+        List&lt;BusinessService&gt; bizServiceList = sd.getBusinessService();
+        sarr = new BusinessService[bizServiceList.size()];
+        bizServiceList.toArray(sarr);
+        
+        for (int i = 0; sarr != null &amp;&amp; i &lt; sarr.length; i++) {
+            BusinessService entity = (BusinessService) sarr[i];
+            coll.add(new KeyImpl(entity.getServiceKey()));
+        }
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public void confirmAssociation(Association assoc) throws JAXRException, InvalidRequestException {
+       //Store it in the UDDI registry
+       HashSet&lt;Association&gt; col = new HashSet&lt;Association&gt;();
+       col.add(assoc);
+       BulkResponse br = this.saveAssociations(col, true);
+       if(br.getExceptions()!= null)
+          throw new JAXRException(&quot;Confiming the Association Failed&quot;);
+    }
+
+    public void unConfirmAssociation(Association assoc) throws JAXRException, InvalidRequestException {
+       //TODO
+       //Delete it from the UDDI registry
+       Collection&lt;Key&gt; col = new ArrayList&lt;Key&gt;();
+       col.add(assoc.getKey());
+       BulkResponse br = this.deleteAssociations(col);
+       if(br.getExceptions()!= null)
+          throw new JAXRException(&quot;UnConfiming the Association Failed&quot;);
+    }
+
+    //Protected Methods
+    protected Object executeOperation(Object dataarray, String op)
+            throws RegistryV3Exception, JAXRException {</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/RegistryImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/RegistryImpl.html#336">336</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/RegistryV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/RegistryV3Impl.html#355">355</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>	    }
+
+		return uddiResponse;
+	}
+ 
+	/**
+	 * @return Returns the adminURL.
+	 */
+	public URI getAdminURI() {
+		return this.adminURI;
+	}
+
+	/**
+	 * @param url
+	 *            The adminURL to set.
+	 */
+	public void setAdminURI(URI url) {
+		this.adminURI = url;
+	}
+
+	/**
+	 * @return Returns the inquiryURL.
+	 */
+	public URI getInquiryURI() {
+		return this.inquiryURI;
+	}
+
+	/**
+	 * @param inquiryURI
+	 *            The inquiryURI to set.
+	 */
+	public void setInquiryURI(URI inquiryURI) {
+		this.inquiryURI = inquiryURI;
+	}
+
+	/**
+	 * @return Returns the protocolHandler.
+	 */
+	public String getProtocolHandler() {
+		return this.protocolHandler;
+	}
+
+	/**
+	 * @param protocolHandler
+	 *            The protocolHandler to set.
+	 */
+	public void setProtocolHandler(String protocolHandler) {
+		this.protocolHandler = protocolHandler;
+	}
+
+	/**
+	 * @return Returns the publishURL.
+	 */
+	public URI getPublishURI() {
+		return this.publishURI;
+	}
+	
+	/**
+	 * @return Returns the publishURL.
+	 */
+	public URI getSecurityURI() {
+		return this.securityURI;
+	}
+
+	/**
+	 * @param publishURI
+	 *            The publishURI to set.
+	 */
+	public void setPublishURI(URI publishURI) {
+		this.publishURI = publishURI;
+	}
+	
+	/**
+	 * @param publishURI
+	 *            The publishURI to set.
+	 */
+	public void setSecurityURI(URI securityURI) {
+		this.securityURI = securityURI;
+	}
+
+	/**
+	 * @return Returns the securityProvider.
+	 */
+	public String getSecurityProvider() {
+		return this.securityProvider;
+	}
+
+	/**
+	 * @param securityProvider
+	 *            The securityProvider to set.
+	 */
+	public void setSecurityProvider(String securityProvider) {
+		this.securityProvider = securityProvider;
+	}
+
+	/**
+	 * @return Returns the transport.
+	 */
+	public Transport getTransport() {
+		return transport;
+	}
+
+	/**
+	 * @param transport
+	 *            The transport to set.
+	 */
+	public void setTransport(Transport transport) {
+		this.transport = transport;
+	}
+
+	/**
+	 * @return Returns the uddiNS.
+	 */
+	public String getUddiNamespace() {
+		return this.uddiNamespace;
+	}
+
+	/**
+	 * @param uddiNS
+	 *            The uddiNS to set.
+	 */
+	public void setUddiNamespace(String uddiNS) {
+		this.uddiNamespace = uddiNS;
+	}
+
+	/**
+	 * @return Returns the uddiVersion.
+	 */
+	public String getUddiVersion() {
+		return this.uddiVersion;
+	}
+
+	/**
+	 * @param uddiVersion
+	 *            The uddiVersion to set.
+	 */
+	public void setUddiVersion(String uddiVersion) {
+		this.uddiVersion = uddiVersion;
+	}
+
+	/**
+	 * &quot;Used to remove an existing bindingTemplate from the bindingTemplates
+	 * collection that is part of a specified businessService structure.&quot;
+	 * 
+	 * @exception RegistryV3Exception;
+	 */
+	public DispositionReport deleteBinding(String authInfo,
+			String[] bindingKeyArray) throws RegistryV3Exception {</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessQueryManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerImpl.html#472">472</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.html#444">444</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>                } catch (RegistryV3Exception e)
+                { 
+                    throw new JAXRException(e.getLocalizedMessage());
+                }
+            }
+        }
+        return scheme;
+    }
+
+    /**
+     * Creates a new Concept, associates w/ parent scheme, and then
+     * adds as decendent.
+     * @param scheme
+     * @param name
+     * @throws JAXRException
+     */
+    private void addChildConcept(ClassificationSchemeImpl scheme, String name)
+        throws JAXRException {
+        Concept c = new ConceptImpl(registryService.getLifeCycleManagerImpl());
+
+        c.setName(new InternationalStringImpl(name));
+        c.setValue(name);
+        ((ConceptImpl)c).setScheme((ClassificationSchemeImpl)scheme);
+
+        scheme.addChildConcept(c);
+    }
+
+    public BulkResponse findClassificationSchemes(Collection findQualifiers, 
+    											  Collection namePatterns, 
+    											  Collection classifications, 
+    											  Collection externalLinks) throws JAXRException
+	{
+		//TODO: Handle this better
+        LinkedHashSet&lt;ClassificationScheme&gt; col = new LinkedHashSet&lt;ClassificationScheme&gt;();
+		Iterator iter = namePatterns.iterator();
+		String name = &quot;&quot;;
+		while(iter.hasNext())
+		{
+			name = (String)iter.next();
+			break;
+		}
+		
+        ClassificationScheme classificationScheme = findClassificationSchemeByName(findQualifiers,name);
+        if (classificationScheme!=null) {
+            col.add(classificationScheme);
+        }
+		return new BulkResponseImpl(col);
+	}
+
+    public Concept findConceptByPath(String path) throws JAXRException
+    {
+        //We will store the enumerations datastructure in the util package
+        /**
+         * I am not clear about how this association type enumerations
+         * are to be implemented.
+         */
+        return EnumerationHelper.getConceptByPath(path);
+    }
+
+    public BulkResponse findConcepts(Collection findQualifiers,
+                                     Collection namePatterns,
+                                     Collection classifications,
+                                     Collection externalIdentifiers,
+                                     Collection externalLinks) throws JAXRException
+    {
+        LinkedHashSet&lt;Concept&gt; col = new LinkedHashSet&lt;Concept&gt;();</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutUddiJaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiJaxrHelper.html#603">603</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.html#590">590</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>		}
+		return alist;
+	}
+
+	/**
+	 * External Identifiers
+	 * @param identifierBag identifiers
+	 * @param lifeCycleManager lifecycleManager
+	 * @return Collection ExternalIdentifier
+	 * @throws JAXRException on error
+	 */
+
+	public static Collection getExternalIdentifiers(IdentifierBag identifierBag, LifeCycleManager lifeCycleManager) 
+	throws JAXRException {
+		Collection&lt;ExternalIdentifier&gt; extidentifiers = null;
+		if (identifierBag != null) {
+			extidentifiers = new ArrayList&lt;ExternalIdentifier&gt;();
+
+			List&lt;KeyedReference&gt; keyedReferenceList = identifierBag.getKeyedReference();
+			for (KeyedReference keyedReference : keyedReferenceList) {
+				ExternalIdentifier extId = new ExternalIdentifierImpl(lifeCycleManager);
+				extId.setValue(keyedReference.getKeyValue());
+				extId.setName(new InternationalStringImpl(keyedReference.getKeyName()));
+
+				String tmodelKey = keyedReference.getTModelKey();
+				if (tmodelKey != null) {
+					ClassificationScheme scheme = new ClassificationSchemeImpl(lifeCycleManager);
+					scheme.setKey(new KeyImpl(tmodelKey));
+					extId.setIdentificationScheme(scheme);
+				}
+				extidentifiers.add(extId);
+			}
+		}
+		return extidentifiers;
+	}
+
+	private static Locale getLocale(String lang) {
+		if (lang == null || lang.trim().length() == 0) {
+			return Locale.getDefault();
+		} else if (lang.equalsIgnoreCase(Locale.getDefault().getLanguage())) {
+			return Locale.getDefault();
+		} else {
+			return new Locale(lang);
+		} 
+	}
+
+}</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/RegistryImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/RegistryImpl.html#268">268</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/RegistryV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/RegistryV3Impl.html#310">310</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>		        throw (new RegistryV3Exception(xmle));
+		    }
+	
+			if (responseName.toLowerCase().equals(&quot;fault&quot;)) {
+				NodeList nodeList = null;
+				
+				// Child Elements
+				String fCode = null;
+				nodeList = response.getElementsByTagName(&quot;faultcode&quot;);
+				if (nodeList.getLength() &gt; 0)
+					fCode = nodeList.item(0).getNodeValue();
+	
+				String fString = null;
+				nodeList = response.getElementsByTagName(&quot;faultstring&quot;);
+				if (nodeList.getLength() &gt; 0)
+					fString = nodeList.item(0).getNodeValue();
+	
+				String fActor = null;
+				nodeList = response.getElementsByTagName(&quot;faultactor&quot;);
+				if (nodeList.getLength() &gt; 0)
+					fActor = nodeList.item(0).getNodeValue();
+	
+				DispositionReport dispRpt = null;
+	
+				nodeList = response.getElementsByTagName(&quot;detail&quot;);
+				if (nodeList.getLength() &gt; 0) {
+					nodeList = ((Element) nodeList.item(0))
+							.getElementsByTagName(&quot;dispositionReport&quot;);
+					if (nodeList.getLength() &gt; 0) {
+						JAXBElement&lt;DispositionReport&gt; dispRptObj = null;
+						try {
+							dispRptObj = (JAXBElement&lt;DispositionReport&gt;) unmarshaller.unmarshal((Element) nodeList
+									.item(0));
+						} catch (JAXBException xmle) {
+							throw (new RegistryV3Exception(xmle));</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.html#375">375</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.html#374">374</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>        catch (RegistryV3Exception e) {
+            exceptions.add(new SaveException(e.getLocalizedMessage()));
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            return bulk;
+        }
+
+        List&lt;TModel&gt; tmodelList = td.getTModel();
+        entityarr = new TModel[tmodelList.size()];
+        tmodelList.toArray(entityarr);
+        
+        log.debug(&quot;After Saving TModel. Obtained vector size:&quot; + entityarr != null ? entityarr.length : 0);
+        for (int i = 0; entityarr != null &amp;&amp; i &lt; entityarr.length; i++) {
+            TModel tm = (TModel) entityarr[i];
+            coll.add(new KeyImpl(tm.getTModelKey()));
+        }
+
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public BulkResponse saveOrganizations(Collection organizations) throws JAXRException {
+        //Now we need to convert the collection into a vector for juddi
+        BulkResponseImpl bulk = new BulkResponseImpl();
+        BusinessEntity[] entityarr = new BusinessEntity[organizations.size()];
+
+        LinkedHashSet&lt;Key&gt; coll = new LinkedHashSet&lt;Key&gt;();
+        Collection&lt;Exception&gt; exceptions = new ArrayList&lt;Exception&gt;();
+
+        Iterator iter = organizations.iterator();
+        int currLoc = 0;
+        while (iter.hasNext()) {
+            try {
+                BusinessEntity en =</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.html#327">327</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.html#326">326</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>        catch (RegistryV3Exception e) {
+            exceptions.add(new SaveException(e.getLocalizedMessage()));
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            return bulk;
+        }
+
+        List&lt;TModel&gt; tmodelList = td.getTModel();
+        entityarr = new TModel[tmodelList.size()];
+        tmodelList.toArray(entityarr); 
+        log.debug(&quot;After Saving TModel. Obtained vector size:&quot; + entityarr != null ? entityarr.length : 0);
+        for (int i = 0; entityarr != null &amp;&amp; i &lt; entityarr.length; i++) {
+            TModel tm = (TModel) entityarr[i];
+            coll.add(new KeyImpl(tm.getTModelKey()));
+        }
+
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public BulkResponse saveConcepts(Collection concepts) throws JAXRException {
+        //Now we need to convert the collection into a vector for juddi
+        BulkResponseImpl bulk = new BulkResponseImpl();
+        TModel[] entityarr = new TModel[concepts.size()];
+
+        LinkedHashSet&lt;Key&gt; coll = new LinkedHashSet&lt;Key&gt;();
+        Collection&lt;Exception&gt; exceptions = new ArrayList&lt;Exception&gt;();
+
+        Iterator iter = concepts.iterator();
+        int currLoc = 0;
+        while (iter.hasNext()) {
+            try {
+                TModel en =</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.html#472">472</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.html#470">470</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>        catch (RegistryV3Exception e) {
+            exceptions.add(new SaveException(e.getLocalizedMessage()));
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            return bulk;
+        }
+
+        List&lt;BindingTemplate&gt; bindingTemplateList = bd.getBindingTemplate();
+        sbarr = new BindingTemplate[bindingTemplateList.size()];
+        bindingTemplateList.toArray(sbarr);
+        
+        for (int i = 0; sbarr != null &amp;&amp; i &lt; sbarr.length; i++) {
+            BindingTemplate bt = (BindingTemplate) sbarr[i];
+            coll.add(new KeyImpl(bt.getBindingKey()));
+        }
+        if (coll.size()&gt;0) {
+            bulk.setCollection(coll);
+        }
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public BulkResponse saveServices(Collection services) throws JAXRException {
+        BulkResponseImpl bulk = new BulkResponseImpl();
+        BusinessService[] sarr = new BusinessService[services.size()];
+
+        LinkedHashSet&lt;Key&gt; coll = new LinkedHashSet&lt;Key&gt;();
+        Collection&lt;Exception&gt; exceptions = new ArrayList&lt;Exception&gt;();
+
+
+        Iterator iter = services.iterator();
+        int currLoc = 0;
+        while (iter.hasNext()) {
+            try {
+                BusinessService bs = ScoutJaxrUddiV3Helper.getBusinessServiceFromJAXRService((Service) iter.next());</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutUddiJaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiJaxrHelper.html#129">129</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.html#103">103</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>		if ((descriptionList != null) &amp;&amp; (descriptionList.size() &gt; 0)) {
+			InternationalString is = null;
+			for (Description desc : descriptionList)  {
+				if (is == null) {
+					is = getIString(desc.getLang(), desc.getValue(), lifeCycleManager);
+				} else {
+					is.setValue(getLocale(desc.getLang()), desc.getValue());
+				}
+			}
+			org.setDescription(is);
+		}
+		org.setKey(lifeCycleManager.createKey(businessEntity.getBusinessKey()));
+
+		//Set Services also
+		BusinessServices services = businessEntity.getBusinessServices();
+		if(services != null)
+		{
+			List&lt;BusinessService&gt; bizServiceList = services.getBusinessService();
+			for (BusinessService businessService : bizServiceList) {
+				org.addService(getService(businessService, lifeCycleManager));
+			}
+		}
+
+		/*
+		 *  Users
+		 *
+		 *  we need to take the first contact and designate as the
+		 *  'primary contact'.  Currently, the OrganizationImpl
+		 *  class does that automatically as a safety in case
+		 *  user forgets to set - lets be explicit here as to not
+		 *  depend on that behavior
+		 */
+
+		Contacts contacts = businessEntity.getContacts();
+		if(contacts != null)
+		{
+			List&lt;Contact&gt; contactList = contacts.getContact();
+			if (contactList!=null) {
+				boolean isFirst=true;
+				for (Contact contact : contactList) {
+					User user = new UserImpl(null);</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutUddiJaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiJaxrHelper.html#115">115</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutUddiJaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiJaxrHelper.html#211">211</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>		List&lt;Description&gt; descriptionList = entity.getDescription();
+
+		Organization org = new OrganizationImpl(lifeCycleManager);
+		if ((namesList != null) &amp;&amp; (namesList.size() &gt; 0)) {
+			InternationalString is = null;
+			for (Name n : namesList)  {
+				if (is == null) {
+					is = getIString(n.getLang(), n.getValue(), lifeCycleManager);
+				} else {
+					is.setValue(getLocale(n.getLang()), n.getValue());
+				}
+			}
+			org.setName(is);
+		}
+		if ((descriptionList != null) &amp;&amp; (descriptionList.size() &gt; 0)) {
+			InternationalString is = null;
+			for (Description desc : descriptionList)  {
+				if (is == null) {
+					is = getIString(desc.getLang(), desc.getValue(), lifeCycleManager);
+				} else {
+					is.setValue(getLocale(desc.getLang()), desc.getValue());
+				}
+			}
+			org.setDescription(is);
+		}
+
+		org.setKey(lifeCycleManager.createKey(entity.getBusinessKey()));</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.html#427">427</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.html#425">425</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            return bulk;
+        }
+
+        List&lt;BusinessEntity&gt; bizEntityList = bd.getBusinessEntity();
+        
+        entityarr = new BusinessEntity[bizEntityList.size()];
+        bizEntityList.toArray(entityarr);
+        
+        log.debug(&quot;After Saving Business. Obtained vector size:&quot; + entityarr != null ? entityarr.length : 0);
+        for (int i = 0; entityarr != null &amp;&amp; i &lt; entityarr.length; i++) {
+            BusinessEntity entity = (BusinessEntity) entityarr[i];
+            coll.add(new KeyImpl(entity.getBusinessKey()));
+        }
+
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public BulkResponse saveServiceBindings(Collection bindings) throws JAXRException {
+        BulkResponseImpl bulk = new BulkResponseImpl();
+        BindingTemplate[] sbarr = new BindingTemplate[bindings.size()];
+
+        LinkedHashSet&lt;Key&gt; coll = new LinkedHashSet&lt;Key&gt;();
+        Collection&lt;Exception&gt; exceptions = new ArrayList&lt;Exception&gt;();
+
+        Iterator iter = bindings.iterator();
+        int currLoc = 0;
+        while (iter.hasNext()) {
+            try {
+                BindingTemplate bs = ScoutJaxrUddiV3Helper.getBindingTemplateFromJAXRSB((ServiceBinding) iter.next());</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessQueryManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerImpl.html#995">995</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.html#977">977</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>            if (juddiQualifier == null)
+            {
+                throw new UnsupportedCapabilityException(&quot;jUDDI does not support FindQualifer: &quot; + jaxrQualifier);
+            }
+            result.getFindQualifier().add(juddiQualifier);
+        }
+        return result;
+    }
+
+    static Name[] mapNamePatterns(Collection namePatterns)
+        throws JAXRException
+    {
+        if (namePatterns == null)
+            return null;
+        Name[] result = new Name[namePatterns.size()];
+        int currLoc = 0;
+        for (Iterator i = namePatterns.iterator(); i.hasNext();)
+        {
+            Object obj = i.next();
+            Name name = objectFactory.createName();
+            if (obj instanceof String) {
+                name.setValue((String)obj);
+            } else if (obj instanceof LocalizedString) {
+                LocalizedString ls = (LocalizedString)obj;
+                name.setValue(ls.getValue());
+                name.setLang(ls.getLocale().getLanguage());
+            }
+            result[currLoc] = name;
+            currLoc++;
+        }
+        return result;
+    }
+
+   /**
+     * Get the Auth Token from the registry
+     *
+     * @param connection
+     * @param ireg
+     * @return auth token
+     * @throws JAXRException
+     */
+    private AuthToken getAuthToken(ConnectionImpl connection, IRegistryV3 ireg)</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutJaxrUddiHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiHelper.html#405">405</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.html#404">404</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>			InternationalString iname = classificationScheme.getName();
+			 
+            tm.setName(getFirstName(iname));
+
+			InternationalString idesc = classificationScheme.getDescription();
+			
+		    addDescriptions(tm.getDescription(), idesc);
+
+            IdentifierBag idBag = getIdentifierBagFromExternalIdentifiers(classificationScheme.getExternalIdentifiers());
+            if (idBag!=null) {
+                tm.setIdentifierBag(idBag);
+            }
+            CategoryBag catBag = getCategoryBagFromClassifications(classificationScheme.getClassifications());
+            if (catBag!=null) {
+                tm.setCategoryBag(catBag);
+            }
+			
+			// ToDO: overviewDoc
+		} catch (Exception ud) {
+            throw new JAXRException(&quot;Apache JAXR Impl:&quot;, ud);
+        }
+        return tm;
+    }
+
+    public static TModel getTModelFromJAXRConcept(Concept concept)
+			throws JAXRException {
+    	TModel tm = objectFactory.createTModel();
+		if (concept == null)
+			return null;
+		try {
+            Key key = concept.getKey();
+			if (key != null &amp;&amp; key.getId() != null)
+				tm.setTModelKey(key.getId());
+            Slot sl1 = concept.getSlot(&quot;authorizedName&quot;);</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/RegistryImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/RegistryImpl.html#1129">1129</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/RegistryV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/RegistryV3Impl.html#1185">1185</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+
+		return transport;
+	}
+
+	/**
+	 * 
+	 * @param name
+	 * @return The class object for the name given
+	 * @throws ClassNotFoundException
+	 * @throws NoClassDefFoundError
+	 */
+	public static Class getClassForName(String name)
+			throws ClassNotFoundException, NoClassDefFoundError {
+		Class clazz = null;
+
+		try {
+			// log.info(&quot;Using the Context ClassLoader&quot;);
+			ClassLoader ccl = AccessController.doPrivileged(new PrivilegedAction&lt;ClassLoader&gt;() 
+		    {
+				public ClassLoader run() {
+					return Thread.currentThread().getContextClassLoader();
+		        }
+			});
+			
+			clazz = Class.forName(name, true, ccl);
+		} catch (Exception e) {
+			 log.debug(&quot;Failed to load the class &quot; + name + &quot; with context class loader &quot; + e);
+		}
+
+		if (null == clazz) {
+			ClassLoader scl = AccessController.doPrivileged(new PrivilegedAction&lt;ClassLoader&gt;()
+			{ 
+				public ClassLoader run() {
+					return ClassLoader.getSystemClassLoader();
+				}
+			});
+
+			try {
+				clazz = Class.forName(name, true, scl);
+			} catch (Exception e) {
+		          throw new RuntimeException(e);
+			}
+		}
+
+		return clazz;
+	}
+}</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutJaxrUddiHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiHelper.html#921">921</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.html#926">926</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>           InternationalString extDesc = link.getDescription();
+           if(extDesc != null) {
+               Description description = objectFactory.createDescription();
+               od.getDescription().add(description);
+               description.setValue(extDesc.getValue());
+           }
+           return od;
+       }
+
+    private static BindingTemplates getBindingTemplates(Collection serviceBindings)
+        throws JAXRException {
+        BindingTemplates bt = null;
+        if(serviceBindings != null &amp;&amp; serviceBindings.size() &gt; 0) {
+            bt = objectFactory.createBindingTemplates();
+            Iterator iter = serviceBindings.iterator();
+            int currLoc = 0;
+            BindingTemplate[] bindingTemplateArray = new BindingTemplate[serviceBindings.size()];
+            while(iter.hasNext()) {
+                ServiceBinding sb = (ServiceBinding)iter.next();
+                bindingTemplateArray[currLoc] = getBindingTemplateFromJAXRSB(sb);
+                currLoc++;
+            }
+            if (bindingTemplateArray != null) {
+                bt.getBindingTemplate().addAll(Arrays.asList(bindingTemplateArray));
+            }
+        }
+        return bt; 
+    }
+}</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessQueryManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerImpl.html#784">784</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.html#756">756</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>        ServiceImpl service  = (ServiceImpl) ScoutUddiV3JaxrHelper.getService(bs, lcm);
+        service.setSubmittingOrganizationKey(bs.getBusinessKey());
+
+        return service;
+    }
+
+    /**
+     * Gets the RegistryObjects owned by the caller. The objects
+     * are returned as their concrete type (e.g. Organization, User etc.)
+     *
+     *  TODO - need to figure out what the set are.  This is just to get some
+     *  basic functionality
+     *
+     * @return BulkResponse
+     * @throws JAXRException
+     */
+    public BulkResponse getRegistryObjects() throws JAXRException
+    {
+        String types[] = {
+            LifeCycleManager.ORGANIZATION,
+            LifeCycleManager.SERVICE};
+
+        LinkedHashSet&lt;Object&gt; c = new LinkedHashSet&lt;Object&gt;();
+
+        for (int i = 0; i &lt; types.length; i++) {
+            try {
+                BulkResponse bk = getRegistryObjects(types[i]);
+
+                if (bk.getCollection() != null) {
+                    c.addAll(bk.getCollection());
+                }
+            } catch(JAXRException e) {
+            	log.debug(&quot;ignore - just a problem with that type? &quot; + e.getMessage(), e);
+            }
+        }
+
+        return new BulkResponseImpl(c);
+    }
+
+    public BulkResponse getRegistryObjects(Collection objectKeys) throws JAXRException
+    {
+        throw new UnsupportedCapabilityException();
+    }
+
+    public BulkResponse getRegistryObjects(Collection objectKeys, String objectType) throws JAXRException
+    {</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/transport/LocalTransport.java</td>
+<td><a href="./xref/org/apache/ws/scout/transport/LocalTransport.html#79">79</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/transport/RMITransport.java</td>
+<td><a href="./xref/org/apache/ws/scout/transport/RMITransport.html#87">87</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>    	if (node.getFirstChild()!=null) {
+    		response = (Element) node.getFirstChild();
+    	}
+    }
+    catch (Exception ex) {
+      throw new TransportException(ex);
+    }
+    if (log.isDebugEnabled()) {
+    	log.debug(&quot;\nResponse message:\n&quot; + XMLUtils.convertNodeToXMLString(response));
+    }
+    return response;
+  }
+  
+  /**
+   * Sends an XML, responds with an XML.
+   */
+  public String send(String request,URI endpointURI)
+    throws TransportException
+  {    
+    String response = null;
+    log.debug(&quot;\nRequest message:\n&quot; + request);
+    try {
+    	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder parser = factory.newDocumentBuilder();
+        Document document = parser.parse(request);
+        Element element = document.getDocumentElement();
+        response= XMLUtils.convertNodeToXMLString(send(element, endpointURI));
+    } catch (Exception ex) { 
+    	throw new TransportException(ex);
+    }
+    log.debug(&quot;\nResponse message:\n&quot; + response);
+    return response;
+  }
+  
+  
+}</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.html#320">320</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.html#368">368</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>        log.debug(&quot;Method:save_concept: ENlength=&quot; + entityarr.length);
+        // Save business
+        TModelDetail td = null;
+        try {
+            td = (TModelDetail) executeOperation(entityarr, &quot;SAVE_TMODEL&quot;);
+        }
+        catch (RegistryV3Exception e) {
+            exceptions.add(new SaveException(e.getLocalizedMessage()));
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            return bulk;
+        }
+
+        List&lt;TModel&gt; tmodelList = td.getTModel();
+        entityarr = new TModel[tmodelList.size()];
+        tmodelList.toArray(entityarr);
+        
+        log.debug(&quot;After Saving TModel. Obtained vector size:&quot; + entityarr != null ? entityarr.length : 0);
+        for (int i = 0; entityarr != null &amp;&amp; i &lt; entityarr.length; i++) {
+            TModel tm = (TModel) entityarr[i];
+            coll.add(new KeyImpl(tm.getTModelKey()));
+        }
+
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public BulkResponse saveOrganizations(Collection organizations) throws JAXRException {</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.html#321">321</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.html#369">369</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>        log.debug(&quot;Method:save_concept: ENlength=&quot; + entityarr.length);
+        // Save business
+        TModelDetail td = null;
+        try {
+            td = (TModelDetail) executeOperation(entityarr, &quot;SAVE_TMODEL&quot;);
+        }
+        catch (RegistryException e) {
+            exceptions.add(new SaveException(e.getLocalizedMessage()));
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            return bulk;
+        }
+
+        List&lt;TModel&gt; tmodelList = td.getTModel();
+        entityarr = new TModel[tmodelList.size()];
+        tmodelList.toArray(entityarr);
+        
+        log.debug(&quot;After Saving TModel. Obtained vector size:&quot; + entityarr != null ? entityarr.length : 0);
+        for (int i = 0; entityarr != null &amp;&amp; i &lt; entityarr.length; i++) {
+            TModel tm = (TModel) entityarr[i];
+            coll.add(new KeyImpl(tm.getTModelKey()));
+        }
+
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public BulkResponse saveOrganizations(Collection organizations) throws JAXRException {</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessQueryManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerImpl.html#450">450</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.html#422">422</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>                IRegistryV3 registry = (IRegistryV3) registryService.getRegistry();
+                FindQualifiers juddiFindQualifiers = mapFindQualifiers(findQualifiers);
+                try
+                {
+                    //We are looking for one exact match, so getting upto 3 records is fine
+                    TModelList list = registry.findTModel(namePatterns, null, null, juddiFindQualifiers, 3);
+                    if (list != null) {
+                        TModelInfos infos = list.getTModelInfos();
+                        if (infos != null) {
+                            List&lt;TModelInfo&gt; tmodelInfoList = infos.getTModelInfo();
+                            if (tmodelInfoList.size() &gt; 1) {
+                                throw new InvalidRequestException(&quot;Multiple matches found:&quot; + tmodelInfoList.size());
+                            }
+                            if (tmodelInfoList.size() ==1) {
+                                TModelInfo info = tmodelInfoList.get(0);
+                                scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+                                scheme.setName(new InternationalStringImpl(info.getName().getValue()));
+                                scheme.setKey(new KeyImpl(info.getTModelKey()));
+                            }
+                        }
+                    }
+
+                } catch (RegistryV3Exception e)</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutUddiJaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiJaxrHelper.html#297">297</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.html#282">282</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>			}
+		}
+		//External Links
+		DiscoveryURLs durls = entity.getDiscoveryURLs();
+		if (durls != null)
+		{
+			List&lt;DiscoveryURL&gt; discoveryURL_List = durls.getDiscoveryURL();
+			for (DiscoveryURL discoveryURL : discoveryURL_List) {
+				ExternalLink link = new ExternalLinkImpl(lifeCycleManager);
+				link.setExternalURI(discoveryURL.getValue());
+				org.addExternalLink(link);
+			}
+		}
+
+		org.addExternalIdentifiers(getExternalIdentifiers(entity.getIdentifierBag(), lifeCycleManager));
+		org.addClassifications(getClassifications(entity.getCategoryBag(), lifeCycleManager));
+
+		return org;
+	}
+
+	private static PostalAddress getPostalAddress(AddressLine[] addressLineArr) throws JAXRException {
+		PostalAddress pa = new PostalAddressImpl();
+		HashMap&lt;String, String&gt; hm = new HashMap&lt;String, String&gt;();
+		for (AddressLine anAddressLineArr : addressLineArr) {
+			hm.put(anAddressLineArr.getKeyName(), anAddressLineArr.getValue());</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessQueryManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerImpl.html#264">264</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.html#236">236</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>                Association asso = ScoutUddiV3JaxrHelper.getAssociation(bl.getCollection(),
+                                             registryService.getBusinessLifeCycleManager());
+                //Set Confirmation
+                ((AssociationImpl)asso).setConfirmedBySourceOwner(caller);
+                ((AssociationImpl)asso).setConfirmedByTargetOwner(other);
+
+                if(confirm != Constants.COMPLETION_STATUS_COMPLETE)
+                     ((AssociationImpl)asso).setConfirmed(false);
+
+                Concept c = new ConceptImpl(getRegistryService().getBusinessLifeCycleManager());
+                KeyedReference keyr = asi.getKeyedReference();
+                c.setKey(new KeyImpl(keyr.getTModelKey()));
+                c.setName(new InternationalStringImpl(keyr.getKeyName()));
+                c.setValue(keyr.getKeyValue());
+                asso.setKey(new KeyImpl(keyr.getTModelKey())); //TODO:Validate this
+                asso.setAssociationType(c);
+                col.add(asso);
+            }
+
+
+            return new BulkResponseImpl(col);
+        } catch (RegistryV3Exception e)</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.html#821">821</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.html#847">847</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>        catch (RegistryV3Exception regExcept) {
+
+            /*
+             * jUDDI (and prollie others) throw an exception on any fault in
+             * the transaction w/ the registry, so we don't get any partial
+             * success
+             */
+            DeleteException de = new DeleteException(regExcept.getFaultCode()
+                    + &quot;:&quot; + regExcept.getFaultString(), regExcept);
+
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            exceptions.add(de);
+        }
+        catch (JAXRException tran) {
+            exceptions.add(new JAXRException(&quot;Apache JAXR Impl:&quot;, tran));
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+        }
+
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    private String getUsernameFromCredentials(Set credentials) {
+        String username = &quot;&quot;, pwd = &quot;&quot;;
+                
+        if (credentials != null) {
+        	Iterator it = credentials.iterator();
+        	while (it.hasNext()) {
+        		PasswordAuthentication pass = (PasswordAuthentication) it.next();
+        		username = pass.getUserName();
+        	}
+        }
+        return username;
+    }
+
+    /**
+     * Get the Auth Token from the registry
+     *
+     * @param connection
+     * @param ireg
+     * @return auth token
+     * @throws JAXRException
+     */
+    private AuthToken getAuthToken(ConnectionImpl connection, IRegistryV3 ireg)</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutUddiJaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiJaxrHelper.html#172">172</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.html#149">149</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>					if (isFirst) {
+						isFirst=false;
+						org.setPrimaryContact(user);
+					} else {
+						org.addUser(user);
+					}
+				}
+			}
+		}
+
+		//External Links
+		DiscoveryURLs durls = businessEntity.getDiscoveryURLs();
+		if (durls != null)
+		{
+			List&lt;DiscoveryURL&gt; discoveryURL_List = durls.getDiscoveryURL();
+			for (DiscoveryURL discoveryURL : discoveryURL_List) {
+				ExternalLink link = new ExternalLinkImpl(lifeCycleManager);
+				link.setExternalURI(discoveryURL.getValue());
+				org.addExternalLink(link);
+			}
+		}
+
+		org.addExternalIdentifiers(getExternalIdentifiers(businessEntity.getIdentifierBag(), lifeCycleManager));
+		org.addClassifications(getClassifications(businessEntity.getCategoryBag(), lifeCycleManager));
+
+		return org;
+	}
+
+
+	public static Organization getOrganization(BusinessDetail bizdetail,
+			LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		List&lt;BusinessEntity&gt; bizEntityList = bizdetail.getBusinessEntity();</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessQueryManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerImpl.html#964">964</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.html#938">938</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>            } catch (RegistryV3Exception re) {
+            	throw new JAXRException(re);
+            }
+            return new BulkResponseImpl(orgs);
+        }
+        else if (LifeCycleManager.SERVICE.equalsIgnoreCase(id)) {
+            List&lt;String&gt; a = new ArrayList&lt;String&gt;();
+            a.add(&quot;%&quot;);
+
+            BulkResponse br = this.findServices(null,null, a, null, null);
+
+            return br;
+        }
+        else
+        {
+            throw new JAXRException(&quot;Unsupported type for getRegistryObjects() :&quot; + id);
+        }
+
+    }
+
+    static FindQualifiers mapFindQualifiers(Collection jaxrQualifiers) throws UnsupportedCapabilityException
+    {
+        if (jaxrQualifiers == null)
+        {
+            return null;
+        }
+        FindQualifiers result = objectFactory.createFindQualifiers();
+        for (Iterator i = jaxrQualifiers.iterator(); i.hasNext();)
+        {
+            String jaxrQualifier = (String) i.next();
+            String juddiQualifier = jaxrQualifier;
+           
+            // SCOUT-111 
+            // If the JAXR qualifier is exactNameMatch, then 
+            // set the UDDI v3 qualifier to exactMatch 
+            if (&quot;exactNameMatch&quot;.equals(jaxrQualifier)) {</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutUddiJaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiJaxrHelper.html#471">471</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.html#453">453</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>			List&lt;TModelInstanceInfo&gt; tmodelInstanceInfoList = details.getTModelInstanceInfo();
+	
+			for (TModelInstanceInfo info: tmodelInstanceInfoList)
+			{
+				if (info!=null &amp;&amp; info.getInstanceDetails()!=null) {
+					InstanceDetails idetails = info.getInstanceDetails();
+					Collection&lt;ExternalLink&gt; elinks = getExternalLinks(idetails.getOverviewDoc(),lifeCycleManager);
+					SpecificationLink slink = new SpecificationLinkImpl(lifeCycleManager);
+					slink.addExternalLinks(elinks);
+					serviceBinding.addSpecificationLink(slink); 
+	
+					ConceptImpl c = new ConceptImpl(lifeCycleManager);
+					c.setExternalLinks(elinks);
+					c.setKey(lifeCycleManager.createKey(info.getTModelKey())); 
+					c.setName(lifeCycleManager.createInternationalString(idetails.getInstanceParms()));
+					c.setValue(idetails.getInstanceParms());
+	
+					slink.setSpecificationObject(c);
+				}
+			}</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.html#327">327</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.html#374">374</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>        catch (RegistryV3Exception e) {
+            exceptions.add(new SaveException(e.getLocalizedMessage()));
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            return bulk;
+        }
+
+        List&lt;TModel&gt; tmodelList = td.getTModel();
+        entityarr = new TModel[tmodelList.size()];
+        tmodelList.toArray(entityarr);
+        
+        log.debug(&quot;After Saving TModel. Obtained vector size:&quot; + entityarr != null ? entityarr.length : 0);
+        for (int i = 0; entityarr != null &amp;&amp; i &lt; entityarr.length; i++) {
+            TModel tm = (TModel) entityarr[i];
+            coll.add(new KeyImpl(tm.getTModelKey()));
+        }
+
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public BulkResponse saveOrganizations(Collection organizations) throws JAXRException {</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessQueryManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerImpl.html#249">249</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.html#220">220</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>        			AuthTokenV3Singleton.deleteAuthToken(username);
+        		}
+        		auth = getAuthToken(con, registry);
+            	report = registry.getAssertionStatusReport(auth.getAuthInfo(),confirm);
+        	}
+
+            
+            List&lt;AssertionStatusItem&gt; assertionStatusItemList = report.getAssertionStatusItem();
+            LinkedHashSet&lt;Association&gt; col = new LinkedHashSet&lt;Association&gt;();
+            for (AssertionStatusItem asi : assertionStatusItemList) {
+                String sourceKey = asi.getFromKey();
+                String targetKey = asi.getToKey();
+                Collection&lt;Key&gt; orgcol = new ArrayList&lt;Key&gt;();
+                orgcol.add(new KeyImpl(sourceKey));
+                orgcol.add(new KeyImpl(targetKey));
+                BulkResponse bl = getRegistryObjects(orgcol, LifeCycleManager.ORGANIZATION);
+                Association asso = ScoutUddiV3JaxrHelper.getAssociation(bl.getCollection(),</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/RegistryImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/RegistryImpl.html#170">170</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/RegistryV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/RegistryV3Impl.html#183">183</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>            JAXBContext context = JAXBContextUtil.getContext(JAXBContextUtil.UDDI_V3_VERSION);
+            unmarshaller = context.createUnmarshaller(); 
+            marshaller = context.createMarshaller();
+            
+        } catch (URISyntaxException muex) {
+            throw new InvalidRequestException(muex.getMessage(), muex);
+        } catch(JAXBException e) {
+           throw new RuntimeException(e);
+        }
+	}
+
+	/**
+	 * 
+	 * @param uddiRequest
+	 * @return String
+	 * @throws RegistryV3Exception
+	 */
+	public String execute(String uddiRequest, String urltype)
+			throws TransportException {
+		URI endPointURL = null;
+		if (urltype.equalsIgnoreCase(&quot;INQUIRY&quot;))
+			endPointURL = this.getInquiryURI();
+		else
+			endPointURL = this.getPublishURI();
+
+		// A SOAP request is made and a SOAP response
+		// is returned.
+
+		return transport.send(uddiRequest, endPointURL);
+	}
+
+	/**
+	 * 
+	 */
+	public JAXBElement&lt;?&gt; execute(JAXBElement&lt;?&gt; uddiRequest, URI endPointURI)
+			throws RegistryV3Exception {</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutUddiJaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiJaxrHelper.html#509">509</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutUddiJaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiJaxrHelper.html#529">529</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>		concept.setKey(lifeCycleManager.createKey(tmodel.getTModelKey()));
+		concept.setName(lifeCycleManager.createInternationalString(getLocale(tmodel.getName().getLang()),
+				tmodel.getName().getValue()));
+
+		Description desc = getDescription(tmodel);
+		if (desc != null) {
+			concept.setDescription(lifeCycleManager.createInternationalString(getLocale(desc.getLang()), 
+					desc.getValue()));
+		}
+
+		concept.addExternalIdentifiers(getExternalIdentifiers(tmodel.getIdentifierBag(), lifeCycleManager));
+		concept.addClassifications(getClassifications(tmodel.getCategoryBag(), lifeCycleManager));</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.html#891">891</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.html#920">920</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>        AuthTokenV3Singleton.addAuthToken(username, token);
+        return token;	
+    }
+
+    private PublisherAssertion getPublisherAssertion(AssertionStatusItem asi)
+    {
+    	PublisherAssertion pa = this.objectFactory.createPublisherAssertion();
+        
+    	if(asi != null)
+    	{
+            String sourceKey = asi.getFromKey();
+            String targetKey = asi.getToKey();
+        
+            if (sourceKey != null) {
+            pa.setFromKey(sourceKey);
+            }
+            
+            if (targetKey != null) {
+            pa.setToKey(targetKey);
+            }
+            
+            KeyedReference keyr = asi.getKeyedReference();
+            
+            if (keyr != null) {
+            pa.setKeyedReference(keyr);
+            }
+            //pa.setTModelKey(keyr.getTModelKey());
+            //pa.setKeyName(keyr.getKeyName());
+            //pa.setKeyValue(keyr.getKeyValue()); // -CBC- These are redundant?
+    		
+    	}return pa;
+    }
+    
+    Organization createOrganization(BusinessDetail bizDetail) throws JAXRException {
+        return ScoutUddiV3JaxrHelper.getOrganization(bizDetail, this);</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/model/uddi/v2/AddPublisherAssertions.java</td>
+<td><a href="./xref/org/apache/ws/scout/model/uddi/v2/AddPublisherAssertions.html#47">47</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/model/uddi/v2/DeletePublisherAssertions.java</td>
+<td><a href="./xref/org/apache/ws/scout/model/uddi/v2/DeletePublisherAssertions.html#47">47</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>public class DeletePublisherAssertions {
+
+    @XmlElement(required = true)
+    protected String authInfo;
+    @XmlElement(required = true)
+    protected List&lt;PublisherAssertion&gt; publisherAssertion;
+    @XmlAttribute(required = true)
+    protected String generic;
+
+    /**
+     * Gets the value of the authInfo property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getAuthInfo() {
+        return authInfo;
+    }
+
+    /**
+     * Sets the value of the authInfo property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setAuthInfo(String value) {
+        this.authInfo = value;
+    }
+
+    /**
+     * Gets the value of the publisherAssertion property.
+     * 
+     * &lt;p&gt;
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a &lt;CODE&gt;set&lt;/CODE&gt; method for the publisherAssertion property.
+     * 
+     * &lt;p&gt;
+     * For example, to add a new item, do as follows:
+     * &lt;pre&gt;
+     *    getPublisherAssertion().add(newItem);
+     * &lt;/pre&gt;
+     * 
+     * 
+     * &lt;p&gt;
+     * Objects of the following type(s) are allowed in the list
+     * {@link PublisherAssertion }
+     * 
+     * 
+     */
+    public List&lt;PublisherAssertion&gt; getPublisherAssertion() {
+        if (publisherAssertion == null) {
+            publisherAssertion = new ArrayList&lt;PublisherAssertion&gt;();
+        }
+        return this.publisherAssertion;
+    }
+
+    /**
+     * Gets the value of the generic property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getGeneric() {
+        return generic;
+    }
+
+    /**
+     * Sets the value of the generic property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setGeneric(String value) {
+        this.generic = value;
+    }
+
+}</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutJaxrUddiHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiHelper.html#152">152</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.html#139">139</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>		address.getAddressLine().addAll(Arrays.asList(addarr));
+
+        return address;
+    }
+
+	public static BindingTemplate getBindingTemplateFromJAXRSB(
+			ServiceBinding serviceBinding) throws JAXRException {
+		BindingTemplate bt = objectFactory.createBindingTemplate();
+		if (serviceBinding.getKey() != null &amp;&amp; serviceBinding.getKey().getId() != null) {
+			bt.setBindingKey(serviceBinding.getKey().getId());
+		} else {
+			bt.setBindingKey(&quot;&quot;);
+		}
+	
+		try {
+			// Set Access URI
+            String accessuri = serviceBinding.getAccessURI();
+			if (accessuri != null) {
+				AccessPoint accessPoint = objectFactory.createAccessPoint();
+                accessPoint.setUseType(getUseType(accessuri));</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/util/ScoutUddiJaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiJaxrHelper.html#225">225</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java</td>
+<td><a href="./xref/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.html#202">202</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>		if ((descriptionList != null) &amp;&amp; (descriptionList.size() &gt; 0)) {
+			InternationalString is = null;
+			for (Description desc : descriptionList)  {
+				if (is == null) {
+					is = getIString(desc.getLang(), desc.getValue(), lifeCycleManager);
+				} else {
+					is.setValue(getLocale(desc.getLang()), desc.getValue());
+				}
+			}
+			org.setDescription(is);
+		}
+		org.setKey(lifeCycleManager.createKey(entity.getBusinessKey()));
+
+		//Set Services also
+		BusinessServices services = entity.getBusinessServices();</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessQueryManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerImpl.html#668">668</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.html#640">640</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>                    ScoutJaxrUddiV3Helper.getCategoryBagFromClassifications(classifications), 
+                    null, 
+                    juddiFindQualifiers, registryService.getMaxRows());
+
+            /*
+             * now convert  from jUDDI ServiceInfo objects to JAXR Services
+             */
+            if (serviceList != null) {
+
+                ServiceInfos serviceInfos = serviceList.getServiceInfos();
+                LinkedHashSet&lt;Service&gt; col = new LinkedHashSet&lt;Service&gt;();
+                
+                if(serviceInfos != null &amp;&amp; serviceInfos.getServiceInfo()!=null) {
+                	for (ServiceInfo si : serviceInfos.getServiceInfo()) {
+                		Service srv = (Service) getRegistryObject(si.getServiceKey(), LifeCycleManager.SERVICE);
+                        col.add(srv);
+					}
+                	
+                }
+                blkRes.setCollection(col);
+            }
+        }
+        catch (RegistryV3Exception e) {</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+<p><table class="bodyTable"><tr class="a"><th>File</th>
+<th>Line</th>
+</tr>
+<tr class="b"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.html#675">675</a></td>
+</tr>
+<tr class="a"><td>org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java</td>
+<td><a href="./xref/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.html#708">708</a></td>
+</tr>
+<tr class="b"><td colspan='2'><div class="source"><pre>        else if (op.equalsIgnoreCase(&quot;DELETE_CLASSIFICATIONSCHEME&quot;)) {
+            try {
+                regobj = ireg.deleteTModel(token.getAuthInfo(), (String[]) dataarray);
+	    	} catch (RegistryException rve) {
+	    		String username = getUsernameFromCredentials(connection.getCredentials());
+        		if (AuthTokenSingleton.getToken(username) != null) {
+        			AuthTokenSingleton.deleteAuthToken(username);
+	    		}
+	    		token = getAuthToken(connection, ireg);
+	            clearPublisherAssertions(token.getAuthInfo(), ireg);
+	            regobj = ireg.deleteTModel(token.getAuthInfo(), (String[]) dataarray);
+	    	}
+        }
+        else {</pre>
+</div>
+</td></tr>
+<table class="bodyTable"></p>
+</div>
+
+      </div>
+    </div>
+    <div class="clear">
+      <hr/>
+    </div>
+    <div id="footer">
+      <div class="xright">&#169;  
+          2004-2012
+    
+          The Apache Software Foundation
+          
+  
+
+  
+    
+  
+  
+    
+  </div>
+      <div class="clear">
+        <hr/>
+      </div>
+    </div>
+  </body>
+</html>

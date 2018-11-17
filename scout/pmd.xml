@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd version="4.2.2" timestamp="2012-02-06T13:04:05.345">
+<file name="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java">
+<violation beginline="24" endline="24" begincolumn="1" endcolumn="27" rule="UnusedImports" ruleset="Import Statement Rules" package="org.apache.ws.scout.registry" externalInfoUrl="http://pmd.sourceforge.net/rules/imports.html#UnusedImports" priority="4">
+Avoid unused imports such as 'java.util.Hashtable'
+</violation>
+<violation beginline="771" endline="772" begincolumn="14" endcolumn="12" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.apache.ws.scout.registry" class="BusinessLifeCycleManagerImpl" method="clearPublisherAssertions" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="846" endline="846" begincolumn="31" endcolumn="33" rule="UnusedLocalVariable" ruleset="Unused Code Rules" package="org.apache.ws.scout.registry" class="BusinessLifeCycleManagerImpl" method="getUsernameFromCredentials" variable="pwd" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedLocalVariable" priority="3">
+Avoid unused local variables such as 'pwd'.
+</violation>
+</file>
+<file name="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java">
+<violation beginline="24" endline="24" begincolumn="1" endcolumn="27" rule="UnusedImports" ruleset="Import Statement Rules" package="org.apache.ws.scout.registry" externalInfoUrl="http://pmd.sourceforge.net/rules/imports.html#UnusedImports" priority="4">
+Avoid unused imports such as 'java.util.Hashtable'
+</violation>
+<violation beginline="872" endline="872" begincolumn="31" endcolumn="33" rule="UnusedLocalVariable" ruleset="Unused Code Rules" package="org.apache.ws.scout.registry" class="BusinessLifeCycleManagerV3Impl" method="getUsernameFromCredentials" variable="pwd" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedLocalVariable" priority="3">
+Avoid unused local variables such as 'pwd'.
+</violation>
+</file>
+<file name="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerImpl.java">
+<violation beginline="1064" endline="1064" begincolumn="31" endcolumn="33" rule="UnusedLocalVariable" ruleset="Unused Code Rules" package="org.apache.ws.scout.registry" class="BusinessQueryManagerImpl" method="getUsernameFromCredentials" variable="pwd" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedLocalVariable" priority="3">
+Avoid unused local variables such as 'pwd'.
+</violation>
+</file>
+<file name="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java">
+<violation beginline="1046" endline="1046" begincolumn="31" endcolumn="33" rule="UnusedLocalVariable" ruleset="Unused Code Rules" package="org.apache.ws.scout.registry" class="BusinessQueryManagerV3Impl" method="getUsernameFromCredentials" variable="pwd" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedLocalVariable" priority="3">
+Avoid unused local variables such as 'pwd'.
+</violation>
+</file>
+<file name="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/RegistryImpl.java">
+<violation beginline="820" endline="820" begincolumn="56" endcolumn="56" rule="EmptyStatementNotInLoop" ruleset="Basic Rules" package="org.apache.ws.scout.registry" class="RegistryImpl" method="getAuthToken" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyStatementNotInLoop" priority="3">
+An empty statement (semicolon) not part of a loop
+</violation>
+</file>
+<file name="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/transport/SaajTransport.java">
+<violation beginline="27" endline="27" begincolumn="1" endcolumn="47" rule="ImportFromSamePackage" ruleset="Import Statement Rules" package="org.apache.ws.scout.transport" externalInfoUrl="http://pmd.sourceforge.net/rules/imports.html#ImportFromSamePackage" priority="3">
+No need to import a type that lives in the same package
+</violation>
+<violation beginline="184" endline="185" begincolumn="17" endcolumn="45" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.apache.ws.scout.transport" class="SaajTransport" method="getFirstChildElement" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+</file>
+<file name="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java">
+<violation beginline="392" endline="392" begincolumn="18" endcolumn="18" rule="UnusedLocalVariable" ruleset="Unused Code Rules" package="org.apache.ws.scout.util" class="ScoutJaxrUddiV3Helper" method="getTModelFromJAXRClassificationScheme" variable="s" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedLocalVariable" priority="3">
+Avoid unused local variables such as 's'.
+</violation>
+<violation beginline="437" endline="437" begincolumn="18" endcolumn="20" rule="UnusedLocalVariable" ruleset="Unused Code Rules" package="org.apache.ws.scout.util" class="ScoutJaxrUddiV3Helper" method="getTModelFromJAXRConcept" variable="sl1" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedLocalVariable" priority="3">
+Avoid unused local variables such as 'sl1'.
+</violation>
+<violation beginline="536" endline="540" begincolumn="105" endcolumn="25" rule="EmptyIfStmt" ruleset="Basic Rules" package="org.apache.ws.scout.util" class="ScoutJaxrUddiV3Helper" method="getBusinessEntityFromJAXROrg" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyIfStmt" priority="3">
+Avoid empty if statements
+</violation>
+</file>
+</pmd>

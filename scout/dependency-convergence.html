@@ -1,0 +1,475 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+
+
+
+
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Apache Scout - Reactor Dependency Convergence</title>
+    <style type="text/css" media="all">
+      @import url("./css/maven-base.css");
+      @import url("./css/maven-theme.css");
+      @import url("./css/site.css");
+    </style>
+    <link rel="stylesheet" href="./css/print.css" type="text/css" media="print" />
+          </head>
+  <body class="composite">
+    <div id="banner">
+                  <a href="ws.apache.org/scout/" id="bannerLeft">
+    
+                                            <img src="images/project-logo.jpg" alt="" />
+    
+            </a>
+                          <span id="bannerRight">
+    
+                                            <img src="images/scout.jpg" alt="" />
+    
+            </span>
+            <div class="clear">
+        <hr/>
+      </div>
+    </div>
+    <div id="breadcrumbs">
+          
+  
+
+  
+    
+  
+  
+    
+            <div class="xleft">
+          
+                <a href="http://www.apache.org/" class="externalLink">Apache</a>
+                &gt;
+      
+                <a href="../">WebServices</a>
+                &gt;
+      
+                <a href="http://ws.apache.org/scout/" class="externalLink">Scout</a>
+                  </div>
+            <div class="xright">      
+  
+
+  
+    
+  
+  
+    
+             Last Published: 01 Jun 2009
+            </div>
+      <div class="clear">
+        <hr/>
+      </div>
+    </div>
+    <div id="leftColumn">
+      <div id="navcolumn">
+           
+  
+
+  
+    
+  
+  
+    
+                   <h5>Apache Scout</h5>
+            <ul>
+              
+    <li class="none">
+                    <a href="index.html">Welcome</a>
+          </li>
+              
+          
+              
+      
+            
+      
+              
+        <li class="expanded">
+                    <a href="">Get Scout</a>
+                  <ul>
+                  
+    <li class="none">
+                    <a href="releases.html">Releases</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="source-repository.html">Source Code</a>
+          </li>
+              </ul>
+        </li>
+              
+          
+              
+      
+            
+      
+              
+        <li class="expanded">
+                    <a href="">Documentation</a>
+                  <ul>
+                  
+    <li class="none">
+                    <a href="http://wiki.apache.org/ws/scout" class="externalLink">Wiki</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="apidocs/index.html">Javadocs</a>
+          </li>
+              </ul>
+        </li>
+              
+          
+              
+      
+            
+      
+            
+      
+            
+      
+            
+            
+            
+      
+            
+      
+              
+            <li class="expanded">
+                    <a href="">Project Information</a>
+                  <ul>
+                  
+    <li class="none">
+                    <a href="project-info.html">Project Information</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="mail-lists.html">Mailing Lists</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="issue-tracking.html">Issue Tracking</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="dependencies.html">Dependencies</a>
+          </li>
+                  
+    <li class="none">
+              <strong>Dependency Convergence</strong>
+        </li>
+                  
+    <li class="none">
+                    <a href="team-list.html">Project Team</a>
+          </li>
+                  
+    <li class="none">
+                    <a href="project-summary.html">Project Summary</a>
+          </li>
+              </ul>
+        </li>
+              
+          
+              
+      
+              
+        <li class="expanded">
+                    <a href="">Related Projects</a>
+                  <ul>
+                  
+    <li class="none">
+                    <a href="../juddi/">Apache jUDDI</a>
+          </li>
+              </ul>
+        </li>
+          </ul>
+                                           <a href="http://maven.apache.org/" title="Built by Maven" class="poweredBy">
+            <img alt="Built by Maven" src="./images/logos/maven-feather.png"></img>
+          </a>
+                       
+  
+
+  
+    
+  
+  
+    
+        </div>
+    </div>
+    <div id="bodyColumn">
+      <div id="contentBox">
+        <div class="section"><h2>Reactor Dependency Convergence</h2>
+<table class="bodyTable"><caption><b>Legend:</b></caption>
+<tr class="a"><td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td>All projects share one version of the dependency.</td>
+</tr>
+<tr class="b"><td><img alt="error" src="images/icon_error_sml.gif" /></td>
+<td>At least one project has a differing version of the dependency.</td>
+</tr>
+</table>
+<br />
+<table class="bodyTable"><caption><b>Statistics:</b></caption>
+<tr class="a"><th>Number of sub-projects:</th>
+<td>3</td>
+</tr>
+<tr class="b"><th>Number of dependencies (NOD):</th>
+<td>15</td>
+</tr>
+<tr class="a"><th>Number of unique artifacts (NOA):</th>
+<td>15</td>
+</tr>
+<tr class="b"><th>Number of SNAPSHOT artifacts (NOS):</th>
+<td>0</td>
+</tr>
+<tr class="a"><th>Convergence (NOD/NOA):</th>
+<td><img alt="success" src="images/icon_success_sml.gif" />&#160;<b>100%</b></td>
+</tr>
+<tr class="b"><th>Ready for Release (100% Convergence and no SNAPSHOTS):</th>
+<td><img alt="success" src="images/icon_success_sml.gif" />&#160;<b>Success</b></td>
+</tr>
+</table>
+</div>
+<div class="section"><h3>Dependencies used in sub-projects</h3>
+<div class="section"><h4>axis:axis</h4>
+<table class="bodyTable"><tr class="a"><td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td><table class="bodyTable"><tr class="b"><td width="25%">1.4</td>
+<td><ol type="a"><li><a href="http://ws.apache.org/scout/jaxr-api" class="externalLink">org.apache.ws.scout:jaxr-api</a></li>
+<li><a href="http://ws.apache.org/scout/" class="externalLink">org.apache.ws.scout:scout-parent</a></li>
+<li><a href="http://ws.apache.org/scout/scout" class="externalLink">org.apache.ws.scout:scout</a></li>
+</ol>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+<div class="section"><h4>axis:axis-jaxrpc</h4>
+<table class="bodyTable"><tr class="a"><td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td><table class="bodyTable"><tr class="b"><td width="25%">1.4</td>
+<td><ol type="a"><li><a href="http://ws.apache.org/scout/jaxr-api" class="externalLink">org.apache.ws.scout:jaxr-api</a></li>
+<li><a href="http://ws.apache.org/scout/" class="externalLink">org.apache.ws.scout:scout-parent</a></li>
+<li><a href="http://ws.apache.org/scout/scout" class="externalLink">org.apache.ws.scout:scout</a></li>
+</ol>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+<div class="section"><h4>axis:axis-saaj</h4>
+<table class="bodyTable"><tr class="a"><td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td><table class="bodyTable"><tr class="b"><td width="25%">1.4</td>
+<td><ol type="a"><li><a href="http://ws.apache.org/scout/jaxr-api" class="externalLink">org.apache.ws.scout:jaxr-api</a></li>
+<li><a href="http://ws.apache.org/scout/" class="externalLink">org.apache.ws.scout:scout-parent</a></li>
+<li><a href="http://ws.apache.org/scout/scout" class="externalLink">org.apache.ws.scout:scout</a></li>
+</ol>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+<div class="section"><h4>commons-discovery:commons-discovery</h4>
+<table class="bodyTable"><tr class="a"><td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td><table class="bodyTable"><tr class="b"><td width="25%">0.2</td>
+<td><ol type="a"><li><a href="http://ws.apache.org/scout/jaxr-api" class="externalLink">org.apache.ws.scout:jaxr-api</a></li>
+<li><a href="http://ws.apache.org/scout/" class="externalLink">org.apache.ws.scout:scout-parent</a></li>
+<li><a href="http://ws.apache.org/scout/scout" class="externalLink">org.apache.ws.scout:scout</a></li>
+</ol>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+<div class="section"><h4>commons-logging:commons-logging</h4>
+<table class="bodyTable"><tr class="a"><td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td><table class="bodyTable"><tr class="b"><td width="25%">1.0.4</td>
+<td><ol type="a"><li><a href="http://ws.apache.org/scout/jaxr-api" class="externalLink">org.apache.ws.scout:jaxr-api</a></li>
+<li><a href="http://ws.apache.org/scout/" class="externalLink">org.apache.ws.scout:scout-parent</a></li>
+<li><a href="http://ws.apache.org/scout/scout" class="externalLink">org.apache.ws.scout:scout</a></li>
+</ol>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+<div class="section"><h4>geronimo-spec:geronimo-spec-activation</h4>
+<table class="bodyTable"><tr class="a"><td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td><table class="bodyTable"><tr class="b"><td width="25%">1.0.2-rc4</td>
+<td><ol type="a"><li><a href="http://ws.apache.org/scout/jaxr-api" class="externalLink">org.apache.ws.scout:jaxr-api</a></li>
+<li><a href="http://ws.apache.org/scout/" class="externalLink">org.apache.ws.scout:scout-parent</a></li>
+<li><a href="http://ws.apache.org/scout/scout" class="externalLink">org.apache.ws.scout:scout</a></li>
+</ol>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+<div class="section"><h4>jdom:jdom</h4>
+<table class="bodyTable"><tr class="a"><td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td><table class="bodyTable"><tr class="b"><td width="25%">1.0</td>
+<td><ol type="a"><li><a href="http://ws.apache.org/scout/jaxr-api" class="externalLink">org.apache.ws.scout:jaxr-api</a></li>
+<li><a href="http://ws.apache.org/scout/" class="externalLink">org.apache.ws.scout:scout-parent</a></li>
+<li><a href="http://ws.apache.org/scout/scout" class="externalLink">org.apache.ws.scout:scout</a></li>
+</ol>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+<div class="section"><h4>junit:junit</h4>
+<table class="bodyTable"><tr class="a"><td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td><table class="bodyTable"><tr class="b"><td width="25%">4.5</td>
+<td><ol type="a"><li><a href="http://ws.apache.org/scout/jaxr-api" class="externalLink">org.apache.ws.scout:jaxr-api</a></li>
+<li><a href="http://ws.apache.org/scout/" class="externalLink">org.apache.ws.scout:scout-parent</a></li>
+<li><a href="http://ws.apache.org/scout/scout" class="externalLink">org.apache.ws.scout:scout</a></li>
+</ol>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+<div class="section"><h4>log4j:log4j</h4>
+<table class="bodyTable"><tr class="a"><td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td><table class="bodyTable"><tr class="b"><td width="25%">1.2.13</td>
+<td><ol type="a"><li><a href="http://ws.apache.org/scout/jaxr-api" class="externalLink">org.apache.ws.scout:jaxr-api</a></li>
+<li><a href="http://ws.apache.org/scout/" class="externalLink">org.apache.ws.scout:scout-parent</a></li>
+<li><a href="http://ws.apache.org/scout/scout" class="externalLink">org.apache.ws.scout:scout</a></li>
+</ol>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+<div class="section"><h4>org.apache.derby:derby</h4>
+<table class="bodyTable"><tr class="a"><td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td><table class="bodyTable"><tr class="b"><td width="25%">10.1.2.1</td>
+<td><ol type="a"><li><a href="http://ws.apache.org/scout/jaxr-api" class="externalLink">org.apache.ws.scout:jaxr-api</a></li>
+<li><a href="http://ws.apache.org/scout/" class="externalLink">org.apache.ws.scout:scout-parent</a></li>
+<li><a href="http://ws.apache.org/scout/scout" class="externalLink">org.apache.ws.scout:scout</a></li>
+</ol>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+<div class="section"><h4>org.apache.juddi:juddi</h4>
+<table class="bodyTable"><tr class="a"><td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td><table class="bodyTable"><tr class="b"><td width="25%">2.0rc7</td>
+<td><ol type="a"><li><a href="http://ws.apache.org/scout/jaxr-api" class="externalLink">org.apache.ws.scout:jaxr-api</a></li>
+<li><a href="http://ws.apache.org/scout/" class="externalLink">org.apache.ws.scout:scout-parent</a></li>
+<li><a href="http://ws.apache.org/scout/scout" class="externalLink">org.apache.ws.scout:scout</a></li>
+</ol>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+<div class="section"><h4>org.apache.ws.scout:jaxr-api</h4>
+<table class="bodyTable"><tr class="a"><td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td><table class="bodyTable"><tr class="b"><td width="25%">1.0</td>
+<td><ol type="a"><li><a href="http://ws.apache.org/scout/scout" class="externalLink">org.apache.ws.scout:scout</a></li>
+</ol>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+<div class="section"><h4>stax:stax-api</h4>
+<table class="bodyTable"><tr class="a"><td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td><table class="bodyTable"><tr class="b"><td width="25%">1.0.1</td>
+<td><ol type="a"><li><a href="http://ws.apache.org/scout/jaxr-api" class="externalLink">org.apache.ws.scout:jaxr-api</a></li>
+<li><a href="http://ws.apache.org/scout/" class="externalLink">org.apache.ws.scout:scout-parent</a></li>
+<li><a href="http://ws.apache.org/scout/scout" class="externalLink">org.apache.ws.scout:scout</a></li>
+</ol>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+<div class="section"><h4>xerces:xercesImpl</h4>
+<table class="bodyTable"><tr class="a"><td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td><table class="bodyTable"><tr class="b"><td width="25%">2.8.0</td>
+<td><ol type="a"><li><a href="http://ws.apache.org/scout/jaxr-api" class="externalLink">org.apache.ws.scout:jaxr-api</a></li>
+<li><a href="http://ws.apache.org/scout/" class="externalLink">org.apache.ws.scout:scout-parent</a></li>
+<li><a href="http://ws.apache.org/scout/scout" class="externalLink">org.apache.ws.scout:scout</a></li>
+</ol>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+<div class="section"><h4>xmlbeans:xbean</h4>
+<table class="bodyTable"><tr class="a"><td><img alt="success" src="images/icon_success_sml.gif" /></td>
+<td><table class="bodyTable"><tr class="b"><td width="25%">2.2.0</td>
+<td><ol type="a"><li><a href="http://ws.apache.org/scout/jaxr-api" class="externalLink">org.apache.ws.scout:jaxr-api</a></li>
+<li><a href="http://ws.apache.org/scout/" class="externalLink">org.apache.ws.scout:scout-parent</a></li>
+<li><a href="http://ws.apache.org/scout/scout" class="externalLink">org.apache.ws.scout:scout</a></li>
+</ol>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+</div>
+
+      </div>
+    </div>
+    <div class="clear">
+      <hr/>
+    </div>
+    <div id="footer">
+      <div class="xright">&#169;  
+          2004-2009
+    
+          Apache Software Foundation
+          
+  
+
+  
+    
+  
+  
+    
+  </div>
+      <div class="clear">
+        <hr/>
+      </div>
+    </div>
+  </body>
+</html>

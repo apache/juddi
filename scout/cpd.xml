@@ -1,0 +1,3379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd-cpd>
+<duplication lines="163" tokens="1071">
+<file line="285" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerImpl.java"/>
+<file line="257" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+        } catch (RegistryV3Exception e)
+        {
+            throw new JAXRException(e);
+        }
+    }
+
+    /**
+     *  TODO - need to support the qualifiers
+     *
+     * @param findQualifiers
+     * @param namePatterns
+     * @return ClassificationScheme
+     * @throws JAXRException
+     */
+    public ClassificationScheme findClassificationSchemeByName(Collection findQualifiers,
+                                                               String namePatterns) throws JAXRException
+    {
+        ClassificationScheme scheme = null;
+
+        if (namePatterns.indexOf("uddi-org:types") != -1) {
+
+            scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+            scheme.setName(new InternationalStringImpl(namePatterns));
+            scheme.setKey(new KeyImpl(Constants.TMODEL_TYPES_TMODEL_KEY));
+        }
+        else if (namePatterns.indexOf("dnb-com:D-U-N-S") != -1) {
+
+            scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+            scheme.setName(new InternationalStringImpl(namePatterns));
+            scheme.setKey(new KeyImpl(Constants.TMODEL_D_U_N_S_TMODEL_KEY));
+        }
+        else if (namePatterns.indexOf("uddi-org:iso-ch:3166:1999") != -1)
+        {
+            scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+            scheme.setName(new InternationalStringImpl(namePatterns));
+            scheme.setKey(new KeyImpl(Constants.TMODEL_ISO_CH_TMODEL_KEY));
+        }
+        else if (namePatterns.indexOf("uddi-org:iso-ch:3166-1999") != -1)
+        {
+            scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+            scheme.setName(new InternationalStringImpl(namePatterns));
+            scheme.setKey(new KeyImpl(Constants.TMODEL_ISO_CH_TMODEL_KEY));
+        }
+        else if (namePatterns.indexOf("iso-ch:3166:1999") != -1)
+        {
+            scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+            scheme.setName(new InternationalStringImpl(namePatterns));
+            scheme.setKey(new KeyImpl(Constants.TMODEL_ISO_CH_TMODEL_KEY));
+        }
+        else if (namePatterns.indexOf("iso-ch:3166-1999") != -1)
+        {
+            scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+            scheme.setName(new InternationalStringImpl(namePatterns));
+            scheme.setKey(new KeyImpl(Constants.TMODEL_ISO_CH_TMODEL_KEY));
+        }
+        else if (namePatterns.indexOf("unspsc-org:unspsc") != -1) {
+
+            scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+            scheme.setName(new InternationalStringImpl(namePatterns));
+            scheme.setKey(new KeyImpl(Constants.TMODEL_UNSPSC_TMODEL_KEY));
+        }
+        else if (namePatterns.indexOf("ntis-gov:naics") != -1) {
+
+            scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+            scheme.setName(new InternationalStringImpl(namePatterns));
+            scheme.setKey(new KeyImpl(Constants.TMODEL_NAICS_TMODEL_KEY));
+        }
+        else
+        {   //TODO:Before going to the registry, check if it a predefined Enumeration
+
+            /*
+             * predefined Enumerations
+             */
+
+            if ("AssociationType".equals(namePatterns)) {
+                scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+
+                scheme.setName(new InternationalStringImpl(namePatterns));
+
+                scheme.setKey(new KeyImpl(Constants.TMODEL_UNSPSC_TMODEL_KEY));
+
+                addChildConcept((ClassificationSchemeImpl)scheme, "RelatedTo");
+                addChildConcept((ClassificationSchemeImpl)scheme, "HasChild");
+                addChildConcept((ClassificationSchemeImpl)scheme, "HasMember");
+                addChildConcept((ClassificationSchemeImpl)scheme, "HasParent");
+                addChildConcept((ClassificationSchemeImpl)scheme, "ExternallyLinks");
+                addChildConcept((ClassificationSchemeImpl)scheme, "Contains");
+                addChildConcept((ClassificationSchemeImpl)scheme, "EquivalentTo");
+                addChildConcept((ClassificationSchemeImpl)scheme, "Extends");
+                addChildConcept((ClassificationSchemeImpl)scheme, "Implements");
+                addChildConcept((ClassificationSchemeImpl)scheme, "InstanceOf");
+                addChildConcept((ClassificationSchemeImpl)scheme, "Supersedes");
+                addChildConcept((ClassificationSchemeImpl)scheme, "Uses");
+                addChildConcept((ClassificationSchemeImpl)scheme, "Replaces");
+                addChildConcept((ClassificationSchemeImpl)scheme, "ResponsibleFor");
+                addChildConcept((ClassificationSchemeImpl)scheme, "SubmitterOf");
+            }
+            else if ("ObjectType".equals(namePatterns)) {
+                scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+
+                scheme.setName(new InternationalStringImpl(namePatterns));
+
+                scheme.setKey(new KeyImpl(Constants.TMODEL_UNSPSC_TMODEL_KEY));
+
+                addChildConcept((ClassificationSchemeImpl)scheme, "CPP");
+                addChildConcept((ClassificationSchemeImpl)scheme, "CPA");
+                addChildConcept((ClassificationSchemeImpl)scheme, "Process");
+                addChildConcept((ClassificationSchemeImpl)scheme, "WSDL");
+                addChildConcept((ClassificationSchemeImpl)scheme, "Association");
+                addChildConcept((ClassificationSchemeImpl)scheme, "AuditableEvent");
+                addChildConcept((ClassificationSchemeImpl)scheme, "Classification");
+                addChildConcept((ClassificationSchemeImpl)scheme, "Concept");
+                addChildConcept((ClassificationSchemeImpl)scheme, "ExternalIdentifier");
+                addChildConcept((ClassificationSchemeImpl)scheme, "ExternalLink");
+                addChildConcept((ClassificationSchemeImpl)scheme, "ExtrinsicObject");
+                addChildConcept((ClassificationSchemeImpl)scheme, "Organization");
+                addChildConcept((ClassificationSchemeImpl)scheme, "Package");
+                addChildConcept((ClassificationSchemeImpl)scheme, "Service");
+                addChildConcept((ClassificationSchemeImpl)scheme, "ServiceBinding");
+                addChildConcept((ClassificationSchemeImpl)scheme, "User");
+            }
+            else if ("PhoneType".equals(namePatterns)) {
+                scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+
+                scheme.setName(new InternationalStringImpl(namePatterns));
+
+                scheme.setKey(new KeyImpl(Constants.TMODEL_UNSPSC_TMODEL_KEY));
+
+                addChildConcept((ClassificationSchemeImpl)scheme, "OfficePhone");
+                addChildConcept((ClassificationSchemeImpl)scheme, "HomePhone");
+                addChildConcept((ClassificationSchemeImpl)scheme, "MobilePhone");
+                addChildConcept((ClassificationSchemeImpl)scheme, "Beeper");
+                addChildConcept((ClassificationSchemeImpl)scheme, "FAX");
+            }
+            else if ("URLType".equals(namePatterns)) {
+                scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+
+                scheme.setName(new InternationalStringImpl(namePatterns));
+
+                scheme.setKey(new KeyImpl(Constants.TMODEL_UNSPSC_TMODEL_KEY));
+
+                addChildConcept((ClassificationSchemeImpl)scheme, "HTTP");
+                addChildConcept((ClassificationSchemeImpl)scheme, "HTTPS");
+                addChildConcept((ClassificationSchemeImpl)scheme, "SMTP");
+                addChildConcept((ClassificationSchemeImpl)scheme, "PHONE");
+                addChildConcept((ClassificationSchemeImpl)scheme, "FAX");
+                addChildConcept((ClassificationSchemeImpl)scheme, "OTHER");
+            }
+            else if ("PostalAddressAttributes".equals(namePatterns)) {
+                scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+
+                scheme.setName(new InternationalStringImpl(namePatterns));
+
+                scheme.setKey(new KeyImpl(Constants.TMODEL_UNSPSC_TMODEL_KEY));
+
+                addChildConcept((ClassificationSchemeImpl)scheme, "StreetNumber");
+                addChildConcept((ClassificationSchemeImpl)scheme, "Street");
+                addChildConcept((ClassificationSchemeImpl)scheme, "City");
+                addChildConcept((ClassificationSchemeImpl)scheme, "State");
+                addChildConcept((ClassificationSchemeImpl)scheme, "PostalCode");
+                addChildConcept((ClassificationSchemeImpl)scheme, "Country");
+            }
+            else {
+]]>
+</codefragment>
+</duplication>
+<duplication lines="157" tokens="732">
+<file line="763" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiHelper.java"/>
+<file line="765" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java"/>
+<codefragment>
+<![CDATA[
+       return uri;
+   }
+    
+	/**
+     * According to JAXR Javadoc, there are two types of classification, internal and external and they use the Classification, Concept,     
+     * and ClassificationScheme objects.  It seems the only difference between internal and external (as related to UDDI) is that the
+     * name/value pair of the categorization is held in the Concept for internal classifications and the Classification for external (bypassing
+     * the Concept entirely).
+     * 
+     * The translation to UDDI is simple.  Relevant objects have a category bag which contains a bunch of KeyedReferences (name/value pairs).  
+     * These KeyedReferences optionally refer to a tModel that identifies the type of category (translates to the ClassificationScheme key).  If
+     * this is set and the tModel doesn't exist in the UDDI registry, then an invalid key error will occur when trying to save the object.
+     * 
+     * @param classifications classifications to turn into categories
+     * @throws JAXRException
+     */
+	public static CategoryBag getCategoryBagFromClassifications(Collection classifications) throws JAXRException {
+    	try {
+			if (classifications == null || classifications.size()==0)
+				return null;
+    		
+    		// Classifications
+			CategoryBag cbag = objectFactory.createCategoryBag();
+			Iterator classiter = classifications.iterator();
+			while (classiter.hasNext()) {
+				Classification classification = (Classification) classiter.next();
+				if (classification != null ) {
+					KeyedReference keyr = objectFactory.createKeyedReference();
+					cbag.getKeyedReference().add(keyr);
+	
+					InternationalStringImpl iname = null;
+					String value = null;
+					ClassificationScheme scheme = classification.getClassificationScheme();
+                    if (scheme==null || (classification.isExternal() && classification.getConcept()==null)) {
+                        /*
+                        * JAXR 1.0 Specification: Section D6.4.4
+                        * Specification related tModels mapped from Concept may be automatically
+                        * categorized by the well-known uddi-org:types taxonomy in UDDI (with
+                        * tModelKey uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4) as follows:
+                        * The keyed reference is assigned a taxonomy value of specification.
+                        */
+                        keyr.setTModelKey(UDDI_ORG_TYPES);
+                        keyr.setKeyValue("specification"); 
+                    } else {
+    					if (classification.isExternal()) {
+                            iname = (InternationalStringImpl) ((RegistryObject) classification).getName();
+                            value = classification.getValue();
+    					} else {
+    						Concept concept = classification.getConcept();
+    						if (concept != null) {
+    							iname = (InternationalStringImpl) ((RegistryObject) concept).getName();
+    							value = concept.getValue();
+    							scheme = concept.getClassificationScheme();
+    						}
+    					}
+    	
+    					String name = iname.getValue();
+    					if (name != null)
+    						keyr.setKeyName(name);
+    	
+    					if (value != null)
+    						keyr.setKeyValue(value);
+    					
+    					if (scheme != null) {
+    						Key key = scheme.getKey();
+    						if (key != null && key.getId() != null)
+    							keyr.setTModelKey(key.getId());
+    					}
+    				}
+                }
+			}
+			return cbag;
+    	} catch (Exception ud) {
+			throw new JAXRException("Apache JAXR Impl:", ud);
+		}
+    }
+
+	public static TModelBag getTModelBagFromSpecifications(Collection specifications) throws JAXRException {
+    	try {
+			if (specifications == null || specifications.size()==0)
+				return null;
+    		
+    		// Classifications
+			TModelBag tbag = objectFactory.createTModelBag();
+			Iterator speciter = specifications.iterator();
+			while (speciter.hasNext()) {
+				RegistryObject registryobject = (RegistryObject) speciter.next();
+				if (registryobject instanceof SpecificationLink) {
+					SpecificationLink specificationlink = (SpecificationLink) registryobject;
+					if (specificationlink.getSpecificationObject() != null) {
+						RegistryObject ro = specificationlink.getSpecificationObject();
+						if (ro.getKey() != null) {
+							Key key = ro.getKey();
+							tbag.getTModelKey().add(key.toString());
+						}
+					}
+				} else {
+					log.info("ebXML case - the RegistryObject is an ExtrinsicObject, Not implemented");
+				}
+			}
+			return tbag;
+    	} catch (Exception ud) {
+			throw new JAXRException("Apache JAXR Impl:", ud);
+		}
+    }
+
+	
+	/**
+     * Adds the objects identifiers from JAXR's external identifier collection
+     * 
+     * @param identifiers external identifiers to turn into identifiers
+     * @throws JAXRException
+     */
+	public static IdentifierBag getIdentifierBagFromExternalIdentifiers(Collection identifiers) throws JAXRException {
+    	try {
+			if (identifiers == null || identifiers.size()==0)
+				return null;
+    		
+    		// Identifiers
+			IdentifierBag ibag = objectFactory.createIdentifierBag();
+			Iterator iditer = identifiers.iterator();
+			while (iditer.hasNext()) {
+				ExternalIdentifier extid = (ExternalIdentifier) iditer.next();
+				if (extid != null ) {
+					KeyedReference keyr = objectFactory.createKeyedReference();
+					ibag.getKeyedReference().add(keyr);
+	
+					InternationalStringImpl iname = (InternationalStringImpl) ((RegistryObject) extid).getName();
+					String value = extid.getValue();
+					ClassificationScheme scheme = extid.getIdentificationScheme();
+	
+					String name = iname.getValue();
+					if (name != null)
+						keyr.setKeyName(name);
+	
+					if (value != null)
+						keyr.setKeyValue(value);
+					
+					if (scheme != null) {
+						Key key = scheme.getKey();
+						if (key != null && key.getId() != null)
+							keyr.setTModelKey(key.getId());
+					}
+				}
+			}
+			return ibag;
+    	} catch (Exception ud) {
+			throw new JAXRException("Apache JAXR Impl:", ud);
+		}
+    }
+    
+    private static OverviewDoc getOverviewDocFromExternalLink(ExternalLink link)
+       throws JAXRException
+       {
+           OverviewDoc od = objectFactory.createOverviewDoc();
+           String url = link.getExternalURI();
+           if(url != null) {
+]]>
+</codefragment>
+</duplication>
+<duplication lines="162" tokens="706">
+<file line="99" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java"/>
+<file line="99" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+    public BusinessLifeCycleManagerV3Impl(RegistryService registry) {
+        super(registry);
+        if(objectFactory == null)
+        	objectFactory = new ObjectFactory();
+    }
+
+    /**
+     * Deletes one or more previously submitted objects from the registry
+     * using the object keys and a specified objectType attribute.
+     *
+     * @param keys
+     * @param objectType
+     * @return BulkResponse object
+     * @throws JAXRException
+     */
+    public BulkResponse deleteObjects(Collection keys, String objectType) throws JAXRException {
+        BulkResponse bulk = null;
+
+        if (objectType == LifeCycleManager.ASSOCIATION) {
+            bulk = this.deleteAssociations(keys);
+        }
+        else if (objectType == LifeCycleManager.CLASSIFICATION_SCHEME) {
+            bulk = this.deleteClassificationSchemes(keys);
+        }
+        else if (objectType == LifeCycleManager.CONCEPT) {
+            bulk = this.deleteConcepts(keys);
+        }
+        else if (objectType == LifeCycleManager.ORGANIZATION) {
+            bulk = this.deleteOrganizations(keys);
+        }
+        else if (objectType == LifeCycleManager.SERVICE) {
+            bulk = this.deleteServices(keys);
+        }
+        else if (objectType == LifeCycleManager.SERVICE_BINDING) {
+            bulk = this.deleteServiceBindings(keys);
+        }
+        else {
+            throw new JAXRException("Delete Operation for " + objectType + " not implemented by Scout");
+        }
+
+        return bulk;
+    }
+
+    public BulkResponse deleteAssociations(Collection associationKeys) throws JAXRException {
+        return this.deleteOperation(associationKeys, "DELETE_ASSOCIATION");
+    }
+
+    public BulkResponse deleteClassificationSchemes(Collection schemeKeys) throws JAXRException {
+        return this.deleteOperation(schemeKeys, "DELETE_CLASSIFICATIONSCHEME");
+    }
+
+    public BulkResponse deleteConcepts(Collection conceptKeys) throws JAXRException {
+        return this.deleteOperation(conceptKeys, "DELETE_CONCEPT");
+    }
+
+    public BulkResponse deleteOrganizations(Collection orgkeys) throws JAXRException {
+        return this.deleteOperation(orgkeys, "DELETE_ORG");
+    }
+
+    public BulkResponse deleteServiceBindings(Collection bindingKeys) throws JAXRException {
+        return this.deleteOperation(bindingKeys, "DELETE_SERVICEBINDING");
+    }
+
+    public BulkResponse deleteServices(Collection serviceKeys) throws JAXRException {
+        return this.deleteOperation(serviceKeys, "DELETE_SERVICE");
+    }
+
+    /**
+     * Saves one or more Objects to the registry. An object may be a
+     * RegistryObject  subclass instance. If an object is not in the registry,
+     * it is created in the registry.  If it already exists in the registry
+     * and has been modified, then its  state is updated (replaced) in the
+     * registry
+     * <p/>
+     * TODO:Check if juddi can provide a facility to store a collection of heterogenous
+     * objects
+     * <p/>
+     * TODO - does this belong here?  it's really an overload of
+     * LifecycleManager.saveObjects, but all the help we need
+     * like saveOrganization() is up here...
+     *
+     * @param col
+     * @return a BulkResponse containing the Collection of keys for those objects
+     *         that were saved successfully and any SaveException that was encountered
+     *         in case of partial commit
+     * @throws JAXRException
+     */
+    public BulkResponse saveObjects(Collection col) throws JAXRException {
+
+        Iterator iter = col.iterator();
+
+        LinkedHashSet<Object> suc = new LinkedHashSet<Object>();
+        Collection<Exception> exc = new ArrayList<Exception>();
+
+        while (iter.hasNext()) {
+            RegistryObject reg = (RegistryObject) iter.next();
+
+            BulkResponse br = null;
+
+            Collection<RegistryObject> c = new ArrayList<RegistryObject>();
+            c.add(reg);
+
+            if (reg instanceof javax.xml.registry.infomodel.Association) {
+                br = saveAssociations(c, true);
+            }
+            else if (reg instanceof javax.xml.registry.infomodel.ClassificationScheme) {
+                br = saveClassificationSchemes(c);
+            }
+            else if (reg instanceof javax.xml.registry.infomodel.Concept) {
+                br = saveConcepts(c);
+            }
+            else if (reg instanceof javax.xml.registry.infomodel.Organization) {
+                br = saveOrganizations(c);
+            }
+            else if (reg instanceof javax.xml.registry.infomodel.Service) {
+                br = saveServices(c);
+            }
+            else if (reg instanceof javax.xml.registry.infomodel.ServiceBinding) {
+                br = saveServiceBindings(c);
+            }
+            else {
+                throw new JAXRException("Delete Operation for " + reg.getClass() 
+                        + " not implemented by Scout");
+            }
+
+            if (br.getCollection() != null) {
+                suc.addAll(br.getCollection());
+            }
+
+            if (br.getExceptions() != null) {
+                exc.addAll(br.getExceptions());
+            }
+        }
+
+        BulkResponseImpl bulk = new BulkResponseImpl();
+
+        /*
+         *  TODO - what is the right status?
+         */
+        bulk.setStatus(JAXRResponse.STATUS_SUCCESS);
+
+        bulk.setCollection(suc);
+        bulk.setExceptions(exc);
+
+        return bulk;
+    }
+
+
+    public BulkResponse saveAssociations(Collection associations, boolean replace) throws JAXRException {
+        BulkResponseImpl bulk = new BulkResponseImpl();
+        PublisherAssertion[] sarr = new PublisherAssertion[associations.size()];
+
+        Collection<Key> coll = new ArrayList<Key>();
+        Collection<Exception> exceptions = new ArrayList<Exception>();
+
+        Iterator iter = associations.iterator();
+        int currLoc = 0;
+        while (iter.hasNext()) {
+            
+                Association association = (Association) iter.next();
+                association.getSourceObject();
+                PublisherAssertion pa = ScoutJaxrUddiV3Helper.getPubAssertionFromJAXRAssociation(association);
+]]>
+</codefragment>
+</duplication>
+<duplication lines="209" tokens="653">
+<file line="147" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/RegistryException.java"/>
+<file line="143" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/RegistryV3Exception.java"/>
+<codefragment>
+<![CDATA[
+  RegistryV3Exception(String fCode,int errno,String msg)
+  {
+    super(buildMessage(errno,msg));
+
+    String errCode = lookupErrCode(errno);
+
+    if (fCode != null) {
+    	setFaultCode(fCode);
+    }
+    
+    setFaultString(getMessage());
+    
+    Result r = this.objectFactory.createResult();
+    ErrInfo ei = this.objectFactory.createErrInfo();
+
+    if (errCode != null) {
+    	ei.setErrCode(errCode);
+    }
+
+    ei.setValue(getMessage());
+
+   	r.setErrno(errno);
+
+    if (ei != null) {
+    	r.setErrInfo(ei);
+    }
+
+    addResult(r);
+  }
+
+  /**
+   * Sets the fault actor of this SOAP SOAPFault to the given value.
+   * @param actor The new actor value for this SOAP SOAPFault.
+   */
+  public void setFaultActor(String actor)
+  {
+    this.faultActor = actor;
+  }
+
+  /**
+   * Returns the fault actor of this SOAP SOAPFault.
+   * @return The fault actor of this SOAP SOAPFault.
+   */
+  public String getFaultActor()
+  {
+    return this.faultActor;
+  }
+
+  /**
+   * Sets the fault code of this SOAP SOAPFault to the given value.
+   * @param code The new code number for this SOAP SOAPFault.
+   */
+  public void setFaultCode(String code)
+  {
+    this.faultCode = code;
+  }
+
+  /**
+   * Returns the fault code of this SOAP SOAPFault.
+   * @return The fault code of this SOAP SOAPFault.
+   */
+  public String getFaultCode()
+  {
+    return this.faultCode;
+  }
+
+  /**
+   * Sets the fault string of this SOAP SOAPFault to the given value.
+   * @param value The new fault string for this SOAP SOAPFault.
+   */
+  public void setFaultString(String value)
+  {
+    this.faultString = value;
+  }
+
+  /**
+   * Returns the fault string of this SOAP SOAPFault.
+   * @return The fault string of this SOAP SOAPFault.
+   */
+  public String getFaultString()
+  {
+    return this.faultString;
+  }
+
+  /**
+   * Sets the UDDI DispositionReport value to the instance
+   * specified
+   * @param dispRpt The new UDDI DispositionReport instance for
+   *  this SOAP Fault.
+   */
+  public void setDispositionReport(DispositionReport dispRpt)
+  {
+    this.dispReport = dispRpt;
+  }
+
+  /**
+   * Returns the disposition report associated with this jUDDI exception. It
+   * uses the results Vector to determine if a disposition report is present
+   * and should be returned.
+   * @return The disposition report associated with this jUDDI exception.
+   */
+  public DispositionReport getDispositionReport()
+  {
+    return this.dispReport;
+  }
+
+  /**
+   * Adds a result instance to this Exception. Multiple result objects
+   * may exist within a DispositionReport
+   */
+  public void addResult(Result result)
+  {
+    if (this.dispReport==null) {
+      this.dispReport = this.objectFactory.createDispositionReport();
+    }
+
+    Result jaxbResult = this.objectFactory.createResult();
+    this.dispReport.getResult().add(jaxbResult);
+    
+    if (result.getErrInfo() != null) jaxbResult.setErrInfo(result.getErrInfo());
+    if (result.getKeyType() != null) jaxbResult.setKeyType(result.getKeyType());
+    jaxbResult.setErrno(result.getErrno());
+  }
+
+  /**
+   *
+   */
+  public String toString()
+  {
+    String msg = getMessage();
+    if (msg == null)
+      return "";
+    else
+      return getMessage();
+  }
+  
+  private static final String buildMessage(int errno,String msg)
+  {
+    StringBuffer buffer = new StringBuffer();
+    
+    String errCode = lookupErrCode(errno);
+    if (errCode != null)
+    {
+      buffer.append(errCode);
+      buffer.append(" ");
+    }
+    
+    buffer.append("(");
+    buffer.append(errno);
+    buffer.append(") ");
+    
+    //String errText = lookupErrText(errno);
+    // FIXME: What should error text be?
+    String errText = "";
+    if (errText != null)
+    {
+      buffer.append(errText);
+      buffer.append(" ");
+    }
+    
+    if ((msg != null) && (msg.trim().length() > 0))
+    {
+      buffer.append(msg);
+    }
+    
+    return buffer.toString();
+  }
+
+  public static final String lookupErrCode(int errno)
+  {
+	  switch (errno)
+	  {
+	  case E_ACCOUNT_LIMIT_EXCEEDED     : return "E_accountLimitExceeded";
+	  case E_ASSERTION_NOT_FOUND        : return "E_assertionNotFound"; 
+	  case E_AUTH_TOKEN_EXPIRED         : return "E_authTokenExpired";
+	  case E_AUTH_TOKEN_REQUIRED        : return "E_authTokenRequired";
+	  case E_BUSY                       : return "E_busy";
+	  case E_CATEGORIZATION_NOT_ALLOWED : return "E_categorizationNotAllowed";
+	  case E_FATAL_ERROR                : return "E_fatalError";
+	  case E_INVALID_CATEGORY           : return "E_invalidCategory";
+	  case E_INVALID_COMPLETION_STATUS  : return "E_invalidCompletionStatus";
+	  case E_INVALID_KEY_PASSED         : return "E_invalidKeyPassed";
+	  case E_INVALID_PROJECTION         : return "E_invalidProjection";
+	  case E_INVALID_TIME               : return "E_invalidTime";
+	  case E_INVALID_URL_PASSED         : return "E_invalidURLPassed";
+	  case E_INVALID_VALUE              : return "E_invalidValue";
+	  case E_KEY_RETIRED                : return "E_keyRetired";
+	  case E_LANGUAGE_ERROR             : return "E_languageError";
+	  case E_MESSAGE_TOO_LARGE          : return "E_messageTooLarge";
+	  case E_NAME_TOO_LONG              : return "E_nameTooLong";
+	  case E_OPERATOR_MISMATCH          : return "E_operatorMismatch";
+	  case E_PUBLISHER_CANCELLED        : return "E_publisherCancelled";
+	  case E_REQUEST_DENIED             : return "E_requestDenied";
+	  case E_REQUEST_TIMEOUT            : return "E_requestTimeout";
+	  case E_RESULT_SET_TOO_LARGE       : return "E_resultSetTooLarge";
+	  case E_SECRET_UNKNOWN             : return "E_secretUnknown";
+	  case E_SUCCESS                    : return "E_success";
+	  case E_TOO_MANY_OPTIONS           : return "E_tooManyOptions";
+	  case E_TRANSFER_ABORTED           : return "E_transferAborted";
+	  case E_UNKNOWN_USER               : return "E_unknownUser";
+	  case E_UNRECOGNIZED_VERSION       : return "E_unrecognizedVersion";
+	  case E_UNSUPPORTED                : return "E_unsupported";
+	  case E_UNVALIDATABLE              : return "E_unvalidatable";
+	  case E_USER_MISMATCH              : return "E_userMismatch";
+	  case E_VALUE_NOT_ALLOWED          : return "E_valueNotAllowed";
+	  default                           : return null;
+	  }
+  }  
+}
+]]>
+</codefragment>
+</duplication>
+<duplication lines="103" tokens="612">
+<file line="489" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiJaxrHelper.java"/>
+<file line="472" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java"/>
+<codefragment>
+<![CDATA[
+			}
+		}
+		HostingRedirector hr = businessTemplate.getHostingRedirector();
+		if(hr != null)
+		{
+			ServiceBinding sb = lifeCycleManager.createServiceBinding();
+			sb.setKey(new KeyImpl(hr.getBindingKey()));
+			serviceBinding.setTargetBinding(sb);
+		}
+
+		return serviceBinding;
+	}
+
+	public static Concept getConcept(TModelDetail tModelDetail, LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		Concept concept = new ConceptImpl(lifeCycleManager);
+		List<TModel> tmodelList = tModelDetail.getTModel();
+		for (TModel tmodel : tmodelList) {
+			concept.setKey(lifeCycleManager.createKey(tmodel.getTModelKey()));
+			concept.setName(lifeCycleManager.createInternationalString(getLocale(tmodel.getName().getLang()),
+					tmodel.getName().getValue()));
+
+			Description desc = getDescription(tmodel);
+			if( desc != null ) {
+				concept.setDescription(lifeCycleManager.createInternationalString(getLocale(desc.getLang()), 
+						desc.getValue()));
+			}
+
+			concept.addExternalIdentifiers(getExternalIdentifiers(tmodel.getIdentifierBag(), lifeCycleManager));
+			concept.addClassifications(getClassifications(tmodel.getCategoryBag(), lifeCycleManager));
+		}
+		return concept;
+	}
+
+	public static Concept getConcept(TModel tmodel, LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		Concept concept = new ConceptImpl(lifeCycleManager);
+		concept.setKey(lifeCycleManager.createKey(tmodel.getTModelKey()));
+		concept.setName(lifeCycleManager.createInternationalString(getLocale(tmodel.getName().getLang()),
+				tmodel.getName().getValue()));
+
+		Description desc = getDescription(tmodel);
+		if (desc != null) {
+			concept.setDescription(lifeCycleManager.createInternationalString(getLocale(desc.getLang()), 
+					desc.getValue()));
+		}
+
+		concept.addExternalIdentifiers(getExternalIdentifiers(tmodel.getIdentifierBag(), lifeCycleManager));
+		concept.addClassifications(getClassifications(tmodel.getCategoryBag(), lifeCycleManager));
+
+		return concept;
+	}
+
+	public static Concept getConcept(TModelInfo tModelInfo, LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		Concept concept = new ConceptImpl(lifeCycleManager);
+		concept.setKey(lifeCycleManager.createKey(tModelInfo.getTModelKey()));
+		concept.setName(lifeCycleManager.createInternationalString(getLocale(tModelInfo.getName().getLang()), 
+				tModelInfo.getName().getValue()));
+
+		return concept;
+	}
+
+	private static Description getDescription( TModel tmodel )
+	{
+		Description desc = null;
+		if (tmodel.getDescription().size()>0) desc=tmodel.getDescription().get(0);
+		return desc;
+	}
+
+	/**
+	 * Classifications - going to assume all are external since UDDI does not use "Concepts".
+	 * @param categoryBag categories
+	 * @param lifeCycleManager lifecycleManager
+	 * @return Collection Classifications
+	 * @throws JAXRException on error
+	 */
+	public static Collection getClassifications(CategoryBag categoryBag, LifeCycleManager lifeCycleManager) 
+	throws JAXRException {
+		Collection<Classification> classifications = null;
+		if (categoryBag != null) {
+			classifications = new ArrayList<Classification>();
+			List<KeyedReference> keyedReferenceList = categoryBag.getKeyedReference();
+			for (KeyedReference keyedReference : keyedReferenceList) {
+				Classification classification = new ClassificationImpl(lifeCycleManager);
+				classification.setValue(keyedReference.getKeyValue());
+				classification.setName(new InternationalStringImpl(keyedReference.getKeyName()));
+				String tmodelKey = keyedReference.getTModelKey();
+				if (tmodelKey != null) {
+					ClassificationScheme scheme = new ClassificationSchemeImpl(lifeCycleManager);
+					scheme.setKey(new KeyImpl(tmodelKey));
+					classification.setClassificationScheme(scheme);
+				}
+				classifications.add(classification);
+			}
+		}
+		return classifications;
+	}
+
+	public static Collection<ExternalLink> getExternalLinks(List<OverviewDoc> overviewDocs, LifeCycleManager lifeCycleManager)
+]]>
+</codefragment>
+</duplication>
+<duplication lines="118" tokens="515">
+<file line="551" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiHelper.java"/>
+<file line="551" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java"/>
+<codefragment>
+<![CDATA[
+						.getBusinessServiceFromJAXRService((Service) iter
+								.next());
+				barr[barrPos] = bs;
+				barrPos++;
+            }
+
+            /*
+             * map users : JAXR has concept of 'primary contact', which is a
+             * special designation for one of the users, and D6.1 seems to say
+             * that the first UDDI user is the primary contact
+             */
+
+			Contacts cts = objectFactory.createContacts();
+			Contact[] carr = new Contact[0];
+
+            User primaryContact = organization.getPrimaryContact();
+            Collection<User> users = organization.getUsers();
+
+            // Expand array to necessary size only (xmlbeans does not like
+            // null items in cases like this)
+
+            int carrSize = 0;
+
+            if (primaryContact != null) {
+                carrSize += 1;
+            }
+
+            // TODO: Clean this up and make it more efficient
+            Iterator<User> it = users.iterator();
+            while (it.hasNext()) {
+                User u = (User) it.next();
+                if (u != primaryContact) {
+                    carrSize++;
+                }
+            }
+
+            carr = new Contact[carrSize];
+
+            /*
+             * first do primary, and then filter that out in the loop
+             */
+            if (primaryContact != null) {
+                Contact ct = getContactFromJAXRUser(primaryContact);
+                carr[0] = ct;
+            }
+
+            it = users.iterator();
+            int carrPos = 1;
+            while (it.hasNext()) {
+                User u = (User) it.next();
+
+                if (u != primaryContact) {
+                    Contact ct = getContactFromJAXRUser(u);
+                    carr[carrPos] = ct;
+                    carrPos++;
+                }
+            }
+
+			bss.getBusinessService().addAll(Arrays.asList(barr));
+            if (carr.length>0) {
+                cts.getContact().addAll(Arrays.asList(carr));
+                biz.setContacts(cts);
+            }
+            biz.setBusinessServices(bss);
+
+            // External Links
+            Iterator<ExternalLink> exiter = organization.getExternalLinks().iterator();
+            DiscoveryURLs emptyDUs = null;
+            boolean first = true;
+            while (exiter.hasNext()) {
+                ExternalLink link = (ExternalLink) exiter.next();
+                /** Note: jUDDI adds its own discoverURL as the businessEntity* */
+                if (first) {
+                    emptyDUs = objectFactory.createDiscoveryURLs();
+                    biz.setDiscoveryURLs(emptyDUs);
+                    first = false;
+                }
+                DiscoveryURL emptyDU = objectFactory.createDiscoveryURL();
+                emptyDUs.getDiscoveryURL().add(emptyDU);
+                emptyDU.setUseType("businessEntityExt");
+				
+                if (link.getExternalURI() != null) {
+                    emptyDU.setValue(link.getExternalURI());
+                }
+            }
+			
+          IdentifierBag idBag = getIdentifierBagFromExternalIdentifiers(organization.getExternalIdentifiers());
+          if (idBag!=null) {
+              biz.setIdentifierBag(idBag);
+          }
+          CategoryBag catBag = getCategoryBagFromClassifications(organization.getClassifications());
+          if (catBag!=null) {
+              biz.setCategoryBag(catBag);
+          }
+			
+		} catch (Exception ud) {
+            throw new JAXRException("Apache JAXR Impl:", ud);
+        }
+        return biz;
+    }
+
+    /**
+     *
+     * Convert JAXR User Object to UDDI  Contact
+     */
+    public static Contact getContactFromJAXRUser(User user)
+			throws JAXRException {
+		Contact ct = objectFactory.createContact();
+        if (user == null) {
+            return null;
+        }
+
+		Address[] addarr = new Address[0];
+		Phone[] phonearr = new Phone[0];
+		Email[] emailarr = new Email[0];
+		try {
+			
+			if (user.getPersonName() != null && user.getPersonName().getFullName() != null) {
+]]>
+</codefragment>
+</duplication>
+<duplication lines="68" tokens="501">
+<file line="171" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiHelper.java"/>
+<file line="158" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java"/>
+<codefragment>
+<![CDATA[
+                accessPoint.setUseType(getUseType(accessuri));
+				accessPoint.setValue(accessuri);
+                bt.setAccessPoint(accessPoint);
+            }
+            ServiceBinding sb = serviceBinding.getTargetBinding();
+			if (sb != null) {
+				HostingRedirector red = objectFactory.createHostingRedirector();
+                Key key = sb.getKey();
+				if (key != null && key.getId() != null) {
+					red.setBindingKey(key.getId());
+                } else {
+                    red.setBindingKey("");
+                }
+                bt.setHostingRedirector(red);
+            } else {
+            	if (bt.getAccessPoint() == null) {
+            		bt.setAccessPoint(objectFactory.createAccessPoint());
+            	}
+            }
+			// TODO:Need to look further at the mapping b/w BindingTemplate and
+			// Jaxr ServiceBinding
+
+			// Get Service information
+           Service svc = serviceBinding.getService();
+			if (svc != null && svc.getKey() != null && svc.getKey().getId() != null) {
+              bt.setServiceKey(svc.getKey().getId());
+           }
+			
+			InternationalString idesc = serviceBinding.getDescription();
+            
+            addDescriptions(bt.getDescription(), idesc);
+
+			// SpecificationLink
+           Collection<SpecificationLink> slcol = serviceBinding.getSpecificationLinks();
+			TModelInstanceDetails tid = objectFactory.createTModelInstanceDetails();
+			if (slcol != null && !slcol.isEmpty()) {
+              Iterator<SpecificationLink> iter = slcol.iterator();
+				while (iter.hasNext()) {
+					SpecificationLink slink = (SpecificationLink) iter.next();
+
+					TModelInstanceInfo emptyTInfo = objectFactory.createTModelInstanceInfo();
+					tid.getTModelInstanceInfo().add(emptyTInfo);
+
+                    RegistryObject specificationObject = slink.getSpecificationObject();
+					if (specificationObject.getKey() != null && specificationObject.getKey().getId() != null) {
+						emptyTInfo.setTModelKey(specificationObject.getKey().getId());
+                        if (specificationObject.getDescription()!=null) {
+                            for (Object o : specificationObject.getDescription().getLocalizedStrings()) {
+                                LocalizedString locDesc = (LocalizedString) o;
+                                Description description = objectFactory.createDescription();
+                                emptyTInfo.getDescription().add(description);
+                                description.setValue(locDesc.getValue());
+                                description.setLang(locDesc.getLocale().getLanguage());
+                            }
+                        }
+                        Collection<ExternalLink> externalLinks = slink.getExternalLinks();
+                        if (externalLinks!=null && externalLinks.size()>0) {
+                            for (ExternalLink link : externalLinks) {
+                                InstanceDetails ids = objectFactory.createInstanceDetails();
+                                emptyTInfo.setInstanceDetails(ids);
+                                if (link.getDescription()!=null) {
+                                    Description description = objectFactory.createDescription();
+                                    ids.getDescription().add(description);
+                                    description.setValue(link.getDescription().getValue());
+                                }
+                                if (link.getExternalURI()!=null) {
+                                    OverviewDoc overviewDoc = objectFactory.createOverviewDoc();
+                                    ids.getOverviewDoc().add(overviewDoc);
+]]>
+</codefragment>
+</duplication>
+<duplication lines="79" tokens="480">
+<file line="458" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiHelper.java"/>
+<file line="458" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java"/>
+<codefragment>
+<![CDATA[
+                tm.getOverviewDoc().add(getOverviewDocFromExternalLink((ExternalLink)externalLinks.iterator().next()));
+            }  
+
+            IdentifierBag idBag = getIdentifierBagFromExternalIdentifiers(concept.getExternalIdentifiers());
+            if (idBag!=null) {
+                tm.setIdentifierBag(idBag);
+            }
+            CategoryBag catBag = getCategoryBagFromClassifications(concept.getClassifications());
+            if (catBag!=null) {
+                tm.setCategoryBag(catBag);
+            }
+
+		} catch (Exception ud) {
+            throw new JAXRException("Apache JAXR Impl:", ud);
+        }
+        return tm;
+    }
+
+    private static void addDescriptions(List<Description> descripions, InternationalString idesc) throws JAXRException {
+        if (idesc != null) {
+            for (Object o : idesc.getLocalizedStrings()) {
+                LocalizedString locName = (LocalizedString) o;
+                Description desc = objectFactory.createDescription();
+                descripions.add(desc);
+                desc.setValue(locName.getValue());
+                desc.setLang(locName.getLocale().getLanguage());
+            }
+        }
+    }
+
+    private static Name getFirstName(InternationalString iname) throws JAXRException {
+        for (Object o : iname.getLocalizedStrings()) {
+            LocalizedString locName = (LocalizedString) o;
+            Name name = objectFactory.createName();
+            name.setValue(locName.getValue());
+            name.setLang(locName.getLocale().getLanguage());
+            return name;
+        }
+        return null;
+    }
+    private static void addNames(List<Name> names, InternationalString iname) throws JAXRException {
+        for (Object o : iname.getLocalizedStrings()) {
+            LocalizedString locName = (LocalizedString) o;
+            Name name = objectFactory.createName();
+            name.setValue(locName.getValue());
+            name.setLang(locName.getLocale().getLanguage());
+            names.add(name);
+        }
+    }
+
+    public static BusinessEntity getBusinessEntityFromJAXROrg(Organization organization)
+			throws JAXRException {
+		BusinessEntity biz = objectFactory.createBusinessEntity();
+		BusinessServices bss = objectFactory.createBusinessServices();
+		BusinessService[] barr = new BusinessService[0];
+
+		try {
+			// It may just be an update
+            Key key = organization.getKey();
+			if (key != null && key.getId() != null) {
+				biz.setBusinessKey(key.getId());
+            } else {
+                biz.setBusinessKey("");
+            }
+			// Lets get the Organization attributes at the top level
+			
+			InternationalString iname = organization.getName();
+			
+			if (iname != null) {
+                addNames(biz.getName(), iname);
+			}
+			
+			InternationalString idesc = organization.getDescription();
+			
+            addDescriptions(biz.getDescription(), idesc);
+
+			if (organization.getPrimaryContact() != null && 
+				organization.getPrimaryContact().getPersonName()!= null &&
+				organization.getPrimaryContact().getPersonName().getFullName() != null) {
+]]>
+</codefragment>
+</duplication>
+<duplication lines="91" tokens="391">
+<file line="303" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiHelper.java"/>
+<file line="302" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java"/>
+<codefragment>
+<![CDATA[
+				if ("UUID".equalsIgnoreCase(str))
+					str += ":" + getToken(token.nextToken());
+               kr.setTModelKey(str);
+               kr.setKeyName(getToken(token.nextToken()));
+               kr.setKeyValue(getToken(token.nextToken()));
+               pa.setKeyedReference(kr);
+            }
+
+		} catch (Exception ud) {
+            throw new JAXRException("Apache JAXR Impl:", ud);
+        }
+        return pa;
+    }
+
+	public static BusinessService getBusinessServiceFromJAXRService(
+			Service service) throws JAXRException {
+		BusinessService bs = objectFactory.createBusinessService();
+		try {
+			InternationalString iname = service.getName();
+						
+			addNames(bs.getName(), iname);
+	         
+            InternationalString idesc = service.getDescription();
+    
+           addDescriptions(bs.getDescription(), idesc);
+
+            Organization o = service.getProvidingOrganization();
+
+            /*
+             * there may not always be a key...
+             */
+            if (o != null) {
+                Key k = o.getKey();
+
+				if (k != null && k.getId() != null) {
+                    bs.setBusinessKey(k.getId());
+                } 
+                    
+			} else {
+                /*
+                 * gmj - I *think* this is the right thing to do
+                 */
+				throw new JAXRException(
+						"Service has no associated organization");
+            }
+
+			if (service.getKey() != null && service.getKey().getId() != null) {
+                bs.setServiceKey(service.getKey().getId());
+            } else {
+                bs.setServiceKey("");
+            }
+
+            CategoryBag catBag = getCategoryBagFromClassifications(service.getClassifications());
+            if (catBag!=null) {
+                bs.setCategoryBag(catBag);
+            }
+
+            //Add the ServiceBinding information
+            BindingTemplates bt = getBindingTemplates(service.getServiceBindings());
+            if (bt != null) {
+                bs.setBindingTemplates(bt);
+            }
+   		    
+            log.debug("BusinessService=" + bs.toString());
+		} catch (Exception ud) {
+            throw new JAXRException("Apache JAXR Impl:", ud);
+        }
+        return bs;
+    }
+
+	public static TModel getTModelFromJAXRClassificationScheme(
+			ClassificationScheme classificationScheme) throws JAXRException {
+		TModel tm = objectFactory.createTModel();
+		try {
+            /*
+             * a fresh scheme might not have a key
+             */
+
+            Key k = classificationScheme.getKey();
+
+            if (k != null && k.getId() != null) {
+                tm.setTModelKey(k.getId());
+            } else {
+                tm.setTModelKey("");
+            }
+
+            /*
+             * There's no reason to believe these are here either
+             */
+
+            Slot s = classificationScheme.getSlot("authorizedName");
+]]>
+</codefragment>
+</duplication>
+<duplication lines="57" tokens="363">
+<file line="247" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiHelper.java"/>
+<file line="246" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java"/>
+<codefragment>
+<![CDATA[
+			log.debug("BindingTemplate=" + bt.toString());
+		} catch (Exception ud) {
+            throw new JAXRException("Apache JAXR Impl:", ud);
+        }
+        return bt;
+    }
+
+	public static PublisherAssertion getPubAssertionFromJAXRAssociation(
+			Association association) throws JAXRException {
+		PublisherAssertion pa = objectFactory.createPublisherAssertion();
+		try {
+			if (association.getSourceObject().getKey() != null && 
+				association.getSourceObject().getKey().getId() != null) {
+            pa.setFromKey(association.getSourceObject().getKey().getId());
+			}
+			
+			if (association.getTargetObject().getKey() != null &&
+				association.getTargetObject().getKey().getId() != null) {
+            pa.setToKey(association.getTargetObject().getKey().getId());
+			}
+            Concept c = association.getAssociationType();
+            String v = c.getValue();
+			KeyedReference kr = objectFactory.createKeyedReference();
+            Key key = c.getKey();
+			if (key == null) {
+				// TODO:Need to check this. If the concept is a predefined
+				// enumeration, the key can be the parent classification scheme
+                key = c.getClassificationScheme().getKey();
+            }
+			if (key != null && key.getId() != null) {
+				kr.setTModelKey(key.getId());
+			} 
+            kr.setKeyName("Concept");
+
+			if (v != null) {
+				kr.setKeyValue(v);
+			}
+
+            pa.setKeyedReference(kr);
+		} catch (Exception ud) {
+            throw new JAXRException("Apache JAXR Impl:", ud);
+        }
+        return pa;
+    }
+
+	public static PublisherAssertion getPubAssertionFromJAXRAssociationKey(
+			String key) throws JAXRException {
+		PublisherAssertion pa = objectFactory.createPublisherAssertion();
+		try {
+			StringTokenizer token = new StringTokenizer(key, "|");
+			if (token.hasMoreTokens()) {
+               pa.setFromKey(getToken(token.nextToken()));
+               pa.setToKey(getToken(token.nextToken()));
+				KeyedReference kr = objectFactory.createKeyedReference();
+				// Sometimes the Key is UUID:something
+               String str = getToken(token.nextToken());
+				if ("UUID".equalsIgnoreCase(str))
+]]>
+</codefragment>
+</duplication>
+<duplication lines="59" tokens="328">
+<file line="411" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiJaxrHelper.java"/>
+<file line="393" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java"/>
+<codefragment>
+<![CDATA[
+		}
+		serve.addClassifications(getClassifications(businessService.getCategoryBag(), lifeCycleManager));
+
+		return serve;
+	}
+
+	public static Service getService(ServiceInfo serviceInfo, LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		Service service = new ServiceImpl(lifeCycleManager);
+
+		String keystr = serviceInfo.getServiceKey();
+
+		if (keystr != null)
+		{
+			service.setKey(lifeCycleManager.createKey(keystr));
+		}
+
+		List<Name> namesList = serviceInfo.getName();
+		InternationalString is = null;
+		for (Name n : namesList) {
+			if (is == null) {
+				is = lifeCycleManager.createInternationalString(getLocale(n.getLang()), n.getValue());
+			} else {
+				is.setValue(getLocale(n.getLang()), n.getValue());
+			}
+		}
+		service.setName(is);
+		return service;
+	}
+
+	public static ServiceBinding getServiceBinding(BindingTemplate businessTemplate, LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		ServiceBinding serviceBinding = new ServiceBindingImpl(lifeCycleManager);
+
+		String keystr = businessTemplate.getServiceKey();
+		if (keystr != null)
+		{
+			Service svc = new ServiceImpl(lifeCycleManager);
+			svc.setKey(lifeCycleManager.createKey(keystr));
+			((ServiceBindingImpl)serviceBinding).setService(svc);
+		}
+		String bindingKey = businessTemplate.getBindingKey();
+		if(bindingKey != null) serviceBinding.setKey(new KeyImpl(bindingKey));
+
+		//Access URI
+		AccessPoint access = businessTemplate.getAccessPoint();
+		if (access != null) serviceBinding.setAccessURI(access.getValue());
+
+		//Description
+		Description desc = null;
+		if (businessTemplate.getDescription().size()>0) desc = businessTemplate.getDescription().get(0);
+		if (desc!=null) {
+			serviceBinding.setDescription(new InternationalStringImpl(desc.getValue()));
+		}
+		/**Section D.10 of JAXR 1.0 Specification */
+
+		TModelInstanceDetails details = businessTemplate.getTModelInstanceDetails();
+]]>
+</codefragment>
+</duplication>
+<duplication lines="68" tokens="318">
+<file line="684" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiHelper.java"/>
+<file line="686" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java"/>
+<codefragment>
+<![CDATA[
+				addarr[addarrPos] = ScoutJaxrUddiV3Helper.getAddress(post);
+				addarrPos++;
+            }
+			// Phone Numbers
+            Collection ph = user.getTelephoneNumbers(null);
+
+			phonearr = new Phone[ph.size()];
+
+            Iterator it = ph.iterator();
+			int phonearrPos = 0;
+			while (it.hasNext()) {
+                TelephoneNumber t = (TelephoneNumber) it.next();
+				Phone phone = objectFactory.createPhone();
+                String str = t.getNumber();
+                log.debug("Telephone=" + str);
+				
+				// FIXME: If phone number is null, should the phone 
+				// not be set at all, or set to empty string?
+				if (str != null) {
+					phone.setValue(str);
+				} else {
+					phone.setValue("");
+				}
+
+				phonearr[phonearrPos] = phone;
+				phonearrPos++;
+            }
+
+			// Email Addresses
+            Collection ec = user.getEmailAddresses();
+
+			emailarr = new Email[ec.size()];
+
+            Iterator iter = ec.iterator();
+			int emailarrPos = 0;
+			while (iter.hasNext()) {
+                EmailAddress ea = (EmailAddress) iter.next();
+				Email email = objectFactory.createEmail();
+				
+				if (ea.getAddress() != null) {
+					email.setValue(ea.getAddress());
+				}
+				// email.setText( ea.getAddress() );
+				
+				if (ea.getType() != null) {
+                email.setUseType(ea.getType());
+            }
+
+				emailarr[emailarrPos] = email;
+				emailarrPos++;
+			}
+			ct.getAddress().addAll(Arrays.asList(addarr));
+			ct.getPhone().addAll(Arrays.asList(phonearr));
+			ct.getEmail().addAll(Arrays.asList(emailarr));
+		} catch (Exception ud) {
+            throw new JAXRException("Apache JAXR Impl:", ud);
+        }
+        return ct;
+    }
+
+	private static String getToken(String tokenstr) {
+		// Token can have the value NULL which need to be converted into null
+		if (tokenstr.equals("NULL"))
+			tokenstr = "";
+      return tokenstr;
+   }
+
+	private static String getUseType(String accessuri) {
+]]>
+</codefragment>
+</duplication>
+<duplication lines="42" tokens="309">
+<file line="925" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java"/>
+<file line="954" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+        return ScoutUddiV3JaxrHelper.getOrganization(bizDetail, this);
+    }    
+    
+    Organization createOrganization(BusinessInfo bizInfo) throws JAXRException {
+        String key = bizInfo.getBusinessKey();
+        List<Name> names = bizInfo.getName(); 
+        
+        List<Description> descriptions = bizInfo.getDescription();
+        List<ServiceInfo> serviceInfos = bizInfo.getServiceInfos().getServiceInfo();
+        
+        OrganizationImpl org = new OrganizationImpl(this);
+        org.setKey(createKey(key));
+        if (names != null && names.size() > 0) {
+            org.setName(createInternationalString(names.get(0).getValue()));
+        }
+        if (descriptions != null && descriptions.size() > 0) {
+            org.setDescription(createInternationalString(descriptions.get(0).getValue()));
+        }
+        if (serviceInfos != null && serviceInfos.size() > 0) {
+            List<Service> services = new ArrayList<Service>(serviceInfos.size());
+            for (int i = 0; i < serviceInfos.size(); i++) {
+                ServiceInfo serviceInfo = serviceInfos.get(i);
+                services.add(createService(serviceInfo));
+            }
+            org.addServices(services);
+        }
+
+        return org;
+    }
+
+    Service createService(ServiceInfo serviceInfo) throws JAXRException {
+        String key = serviceInfo.getServiceKey();
+        List<Name> names = serviceInfo.getName();
+        ServiceImpl service = new ServiceImpl(this);
+        service.setKey(createKey(key));
+        if (names != null && names.size() > 0) {
+            service.setName(createInternationalString(names.get(0).getValue()));
+        }
+        return service;
+    }
+
+}
+]]>
+</codefragment>
+</duplication>
+<duplication lines="49" tokens="289">
+<file line="773" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java"/>
+<file line="799" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+                log.debug("Ignoring exception " + e.getMessage(),e);
+             }
+       }
+
+
+
+    protected BulkResponse deleteOperation(Collection<Key> keys, String op)
+            throws JAXRException {
+        if(keys == null)
+        throw new JAXRException("Keys provided to "+op+" are null");
+       
+        //Now we need to convert the collection into a vector for juddi
+        BulkResponseImpl bulk = new BulkResponseImpl();
+        String[] keyarr = new String[keys.size()];
+        Result[] keyResultArr;
+
+        LinkedHashSet<Key> coll = new LinkedHashSet<Key>();
+        Collection<Exception> exceptions = new ArrayList<Exception>();
+
+        try {
+            Iterator iter = keys.iterator();
+            int currLoc = 0;
+            while (iter.hasNext()) {
+                Key key = (Key) iter.next();
+                keyarr[currLoc] = key.getId();
+                currLoc++;
+            }
+            // Delete operation
+            DispositionReport bd = (DispositionReport) executeOperation(keyarr, op);
+            List<Result> resultList = bd.getResult();
+            keyResultArr = new Result[resultList.size()];
+            resultList.toArray(keyResultArr); 
+            
+            log.debug("After deleting Business. Obtained vector size:" + keyResultArr != null ? keyResultArr.length : 0);
+            for (int i = 0; keyResultArr != null && i < keyResultArr.length; i++) {
+                Result result = (Result) keyResultArr[i];
+                int errno = result.getErrno();
+                if (errno == 0) {
+                    coll.addAll(keys);
+                }
+                else {
+                    ErrInfo errinfo = result.getErrInfo();
+                    DeleteException de = new DeleteException(errinfo.getErrCode() + ":" + errinfo.getValue());
+                    bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+                    exceptions.add(de);
+                }
+            }
+        }
+        catch (RegistryV3Exception regExcept) {
+]]>
+</codefragment>
+</duplication>
+<duplication lines="43" tokens="274">
+<file line="270" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java"/>
+<file line="269" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+                catch (RegistryV3Exception e) {
+                    exceptions.add(new SaveException(e));
+                    bulk.setExceptions(exceptions);
+                    bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+                    return bulk;
+                }
+                if(bd != null)
+                {
+                	List<PublisherAssertion> publisherAssertionList = bd.getPublisherAssertion();
+                	PublisherAssertion[] keyarr = new PublisherAssertion[publisherAssertionList.size()];
+                	publisherAssertionList.toArray(keyarr);
+                	
+                	for (int i = 0; keyarr != null && i < keyarr.length; i++) {
+                		PublisherAssertion result = (PublisherAssertion) keyarr[i];
+                        KeyedReference keyr = result.getKeyedReference();
+                        Concept c = new ConceptImpl(getRegistryService().getBusinessLifeCycleManager());
+                        c.setName(new InternationalStringImpl(keyr.getKeyName()));
+                        c.setKey( new KeyImpl(keyr.getTModelKey()) );
+                        c.setValue(keyr.getKeyValue());
+                        association.setAssociationType(c);
+                        coll.add(association.getKey());
+                   }
+                }
+        }
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public BulkResponse saveClassificationSchemes(Collection schemes) throws JAXRException {
+        //Now we need to convert the collection into a vector for juddi
+        BulkResponseImpl bulk = new BulkResponseImpl();
+        TModel[] entityarr = new TModel[schemes.size()];
+
+        LinkedHashSet<Key> coll = new LinkedHashSet<Key>();
+        Collection<Exception> exceptions = new ArrayList<Exception>();
+
+        Iterator iter = schemes.iterator();
+        int currLoc = 0;
+        while (iter.hasNext()) {
+            try {
+                TModel en =
+]]>
+</codefragment>
+</duplication>
+<duplication lines="59" tokens="264">
+<file line="322" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiJaxrHelper.java"/>
+<file line="306" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java"/>
+<codefragment>
+<![CDATA[
+			hm.put(anAddressLineArr.getKeyName(), anAddressLineArr.getValue());
+		}
+
+		if (hm.containsKey("STREET_NUMBER")) {
+			pa.setStreetNumber(hm.get("STREET_NUMBER"));
+		}
+
+		if (hm.containsKey("STREET")) {
+			pa.setStreet(hm.get("STREET"));
+		}
+
+		if (hm.containsKey("CITY")) {
+			pa.setCity(hm.get("CITY"));
+		}
+
+		if (hm.containsKey("COUNTRY")) {
+			pa.setCountry(hm.get("COUNTRY"));
+		}
+
+		if (hm.containsKey("POSTALCODE")) {
+			pa.setPostalCode(hm.get("POSTALCODE"));
+		}
+
+		if (hm.containsKey("STATE")) {
+			pa.setStateOrProvince(hm.get("STATE"));
+		}
+
+		return pa;
+	}
+
+	private static InternationalString getIString(String lang, String str, LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		if (str!=null) {
+			return lifeCycleManager.createInternationalString(getLocale(lang), str);
+		} else {
+			return null;
+		}
+	}
+
+	public static InternationalString getIString(String str, LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		return lifeCycleManager.createInternationalString(str);
+	}
+
+	public static Service getService(BusinessService businessService, LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		Service serve = new ServiceImpl(lifeCycleManager);
+
+		String keystr = businessService.getServiceKey();
+
+		if (keystr != null)
+		{
+			serve.setKey(lifeCycleManager.createKey(keystr));
+		}
+
+		List<Name> namesList = businessService.getName();
+]]>
+</codefragment>
+</duplication>
+<duplication lines="38" tokens="262">
+<file line="261" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiJaxrHelper.java"/>
+<file line="245" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java"/>
+<codefragment>
+<![CDATA[
+				user.setType(contact.getUseType());
+				user.setPersonName(new PersonNameImpl(pname));
+	
+				List<Email> emailList = contact.getEmail();
+				ArrayList<EmailAddress> tempEmails = new ArrayList<EmailAddress>();
+				for (Email email : emailList) {
+					tempEmails.add(new EmailAddressImpl(email.getValue(), null));
+				}
+				user.setEmailAddresses(tempEmails);
+	
+				List<Address> addressList = contact.getAddress();
+				ArrayList<PostalAddress> tempAddresses = new ArrayList<PostalAddress>();
+				for (Address address : addressList) {
+					ArrayList<AddressLine> addressLineList = new ArrayList<AddressLine>(address.getAddressLine());
+					AddressLine[] alines = new AddressLine[addressLineList.size()];
+					addressLineList.toArray(alines);
+	
+					PostalAddress pa = getPostalAddress(alines);
+					tempAddresses.add(pa);
+				}
+				user.setPostalAddresses(tempAddresses);
+	
+				List<Phone> phoneList = contact.getPhone();
+				ArrayList<TelephoneNumber> tempPhones = new ArrayList<TelephoneNumber>();
+				for (Phone phone : phoneList) {
+					TelephoneNumberImpl tni = new TelephoneNumberImpl();
+					tni.setType(phone.getUseType());
+					tni.setNumber(phone.getValue());
+					tempPhones.add(tni);
+				}
+				user.setTelephoneNumbers(tempPhones);
+				if (isFirst) {
+					isFirst=false;
+					org.setPrimaryContact(user);
+				} else {
+					org.addUser(user);
+				}
+			}
+]]>
+</codefragment>
+</duplication>
+<duplication lines="53" tokens="252">
+<file line="34" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/RegistryException.java"/>
+<file line="30" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/RegistryV3Exception.java"/>
+<codefragment>
+<![CDATA[
+	public static final int E_ASSERTION_NOT_FOUND = 30000;
+	public static final int E_AUTH_TOKEN_EXPIRED = 10110;
+	public static final int E_AUTH_TOKEN_REQUIRED = 10120;
+	public static final int E_ACCOUNT_LIMIT_EXCEEDED = 10160;
+	public static final int E_BUSY = 10400;
+	public static final int E_CATEGORIZATION_NOT_ALLOWED = 20100;
+	public static final int E_FATAL_ERROR = 10500;
+	public static final int E_INVALID_KEY_PASSED = 10210;
+	public static final int E_INVALID_PROJECTION = 20230;
+	public static final int E_INVALID_CATEGORY = 20000;
+	public static final int E_INVALID_COMPLETION_STATUS = 30100;
+	public static final int E_INVALID_URL_PASSED = 10220;
+	public static final int E_INVALID_VALUE = 20200;
+	public static final int E_KEY_RETIRED = 10310;
+	public static final int E_LANGUAGE_ERROR = 10060;
+	public static final int E_MESSAGE_TOO_LARGE = 30110;
+	public static final int E_NAME_TOO_LONG = 10020;
+	public static final int E_OPERATOR_MISMATCH = 10130;
+	public static final int E_PUBLISHER_CANCELLED = 30220;
+	public static final int E_REQUEST_DENIED = 30210;
+	public static final int E_SECRET_UNKNOWN = 30230;
+	public static final int E_SUCCESS = 0;
+	public static final int E_TOO_MANY_OPTIONS = 10030;
+	public static final int E_TRANSFER_ABORTED = 30200;
+	public static final int E_UNRECOGNIZED_VERSION = 10040;
+	public static final int E_UNKNOWN_USER = 10150;
+	public static final int E_UNSUPPORTED = 10050;
+	public static final int E_USER_MISMATCH = 10140;
+	public static final int E_VALUE_NOT_ALLOWED = 20210;
+	public static final int E_UNVALIDATABLE = 20220;
+	public static final int E_REQUEST_TIMEOUT = 20240;
+	public static final int E_INVALID_TIME = 40030;
+	public static final int E_RESULT_SET_TOO_LARGE = 40300;
+
+  // SOAP SOAPFault Actor
+  private String faultActor;
+
+  // SOAP SOAPFault Code
+  private String faultCode;
+
+  // SOAP SOAPFault SOAPMessage
+  private String faultString;
+
+  // UDDI DispositionReport
+  private DispositionReport dispReport;
+  
+  private ObjectFactory objectFactory = new ObjectFactory();
+
+  /**
+   * Constructs a RegistryException instance.
+   * @param msg additional error information
+   */
+  public RegistryV3Exception(String msg)
+]]>
+</codefragment>
+</duplication>
+<duplication lines="42" tokens="246">
+<file line="519" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java"/>
+<file line="517" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+        catch (RegistryV3Exception e) {
+            exceptions.add(new SaveException(e.getLocalizedMessage()));
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            return bulk;
+        }
+
+        List<BusinessService> bizServiceList = sd.getBusinessService();
+        sarr = new BusinessService[bizServiceList.size()];
+        bizServiceList.toArray(sarr);
+        
+        for (int i = 0; sarr != null && i < sarr.length; i++) {
+            BusinessService entity = (BusinessService) sarr[i];
+            coll.add(new KeyImpl(entity.getServiceKey()));
+        }
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public void confirmAssociation(Association assoc) throws JAXRException, InvalidRequestException {
+       //Store it in the UDDI registry
+       HashSet<Association> col = new HashSet<Association>();
+       col.add(assoc);
+       BulkResponse br = this.saveAssociations(col, true);
+       if(br.getExceptions()!= null)
+          throw new JAXRException("Confiming the Association Failed");
+    }
+
+    public void unConfirmAssociation(Association assoc) throws JAXRException, InvalidRequestException {
+       //TODO
+       //Delete it from the UDDI registry
+       Collection<Key> col = new ArrayList<Key>();
+       col.add(assoc.getKey());
+       BulkResponse br = this.deleteAssociations(col);
+       if(br.getExceptions()!= null)
+          throw new JAXRException("UnConfiming the Association Failed");
+    }
+
+    //Protected Methods
+    protected Object executeOperation(Object dataarray, String op)
+            throws RegistryV3Exception, JAXRException {
+]]>
+</codefragment>
+</duplication>
+<duplication lines="148" tokens="240">
+<file line="336" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/RegistryImpl.java"/>
+<file line="355" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/RegistryV3Impl.java"/>
+<codefragment>
+<![CDATA[
+	    }
+
+		return uddiResponse;
+	}
+ 
+	/**
+	 * @return Returns the adminURL.
+	 */
+	public URI getAdminURI() {
+		return this.adminURI;
+	}
+
+	/**
+	 * @param url
+	 *            The adminURL to set.
+	 */
+	public void setAdminURI(URI url) {
+		this.adminURI = url;
+	}
+
+	/**
+	 * @return Returns the inquiryURL.
+	 */
+	public URI getInquiryURI() {
+		return this.inquiryURI;
+	}
+
+	/**
+	 * @param inquiryURI
+	 *            The inquiryURI to set.
+	 */
+	public void setInquiryURI(URI inquiryURI) {
+		this.inquiryURI = inquiryURI;
+	}
+
+	/**
+	 * @return Returns the protocolHandler.
+	 */
+	public String getProtocolHandler() {
+		return this.protocolHandler;
+	}
+
+	/**
+	 * @param protocolHandler
+	 *            The protocolHandler to set.
+	 */
+	public void setProtocolHandler(String protocolHandler) {
+		this.protocolHandler = protocolHandler;
+	}
+
+	/**
+	 * @return Returns the publishURL.
+	 */
+	public URI getPublishURI() {
+		return this.publishURI;
+	}
+	
+	/**
+	 * @return Returns the publishURL.
+	 */
+	public URI getSecurityURI() {
+		return this.securityURI;
+	}
+
+	/**
+	 * @param publishURI
+	 *            The publishURI to set.
+	 */
+	public void setPublishURI(URI publishURI) {
+		this.publishURI = publishURI;
+	}
+	
+	/**
+	 * @param publishURI
+	 *            The publishURI to set.
+	 */
+	public void setSecurityURI(URI securityURI) {
+		this.securityURI = securityURI;
+	}
+
+	/**
+	 * @return Returns the securityProvider.
+	 */
+	public String getSecurityProvider() {
+		return this.securityProvider;
+	}
+
+	/**
+	 * @param securityProvider
+	 *            The securityProvider to set.
+	 */
+	public void setSecurityProvider(String securityProvider) {
+		this.securityProvider = securityProvider;
+	}
+
+	/**
+	 * @return Returns the transport.
+	 */
+	public Transport getTransport() {
+		return transport;
+	}
+
+	/**
+	 * @param transport
+	 *            The transport to set.
+	 */
+	public void setTransport(Transport transport) {
+		this.transport = transport;
+	}
+
+	/**
+	 * @return Returns the uddiNS.
+	 */
+	public String getUddiNamespace() {
+		return this.uddiNamespace;
+	}
+
+	/**
+	 * @param uddiNS
+	 *            The uddiNS to set.
+	 */
+	public void setUddiNamespace(String uddiNS) {
+		this.uddiNamespace = uddiNS;
+	}
+
+	/**
+	 * @return Returns the uddiVersion.
+	 */
+	public String getUddiVersion() {
+		return this.uddiVersion;
+	}
+
+	/**
+	 * @param uddiVersion
+	 *            The uddiVersion to set.
+	 */
+	public void setUddiVersion(String uddiVersion) {
+		this.uddiVersion = uddiVersion;
+	}
+
+	/**
+	 * "Used to remove an existing bindingTemplate from the bindingTemplates
+	 * collection that is part of a specified businessService structure."
+	 * 
+	 * @exception RegistryV3Exception;
+	 */
+	public DispositionReport deleteBinding(String authInfo,
+			String[] bindingKeyArray) throws RegistryV3Exception {
+]]>
+</codefragment>
+</duplication>
+<duplication lines="66" tokens="229">
+<file line="472" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerImpl.java"/>
+<file line="444" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+                } catch (RegistryV3Exception e)
+                { 
+                    throw new JAXRException(e.getLocalizedMessage());
+                }
+            }
+        }
+        return scheme;
+    }
+
+    /**
+     * Creates a new Concept, associates w/ parent scheme, and then
+     * adds as decendent.
+     * @param scheme
+     * @param name
+     * @throws JAXRException
+     */
+    private void addChildConcept(ClassificationSchemeImpl scheme, String name)
+        throws JAXRException {
+        Concept c = new ConceptImpl(registryService.getLifeCycleManagerImpl());
+
+        c.setName(new InternationalStringImpl(name));
+        c.setValue(name);
+        ((ConceptImpl)c).setScheme((ClassificationSchemeImpl)scheme);
+
+        scheme.addChildConcept(c);
+    }
+
+    public BulkResponse findClassificationSchemes(Collection findQualifiers, 
+    											  Collection namePatterns, 
+    											  Collection classifications, 
+    											  Collection externalLinks) throws JAXRException
+	{
+		//TODO: Handle this better
+        LinkedHashSet<ClassificationScheme> col = new LinkedHashSet<ClassificationScheme>();
+		Iterator iter = namePatterns.iterator();
+		String name = "";
+		while(iter.hasNext())
+		{
+			name = (String)iter.next();
+			break;
+		}
+		
+        ClassificationScheme classificationScheme = findClassificationSchemeByName(findQualifiers,name);
+        if (classificationScheme!=null) {
+            col.add(classificationScheme);
+        }
+		return new BulkResponseImpl(col);
+	}
+
+    public Concept findConceptByPath(String path) throws JAXRException
+    {
+        //We will store the enumerations datastructure in the util package
+        /**
+         * I am not clear about how this association type enumerations
+         * are to be implemented.
+         */
+        return EnumerationHelper.getConceptByPath(path);
+    }
+
+    public BulkResponse findConcepts(Collection findQualifiers,
+                                     Collection namePatterns,
+                                     Collection classifications,
+                                     Collection externalIdentifiers,
+                                     Collection externalLinks) throws JAXRException
+    {
+        LinkedHashSet<Concept> col = new LinkedHashSet<Concept>();
+]]>
+</codefragment>
+</duplication>
+<duplication lines="47" tokens="215">
+<file line="603" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiJaxrHelper.java"/>
+<file line="590" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java"/>
+<codefragment>
+<![CDATA[
+		}
+		return alist;
+	}
+
+	/**
+	 * External Identifiers
+	 * @param identifierBag identifiers
+	 * @param lifeCycleManager lifecycleManager
+	 * @return Collection ExternalIdentifier
+	 * @throws JAXRException on error
+	 */
+
+	public static Collection getExternalIdentifiers(IdentifierBag identifierBag, LifeCycleManager lifeCycleManager) 
+	throws JAXRException {
+		Collection<ExternalIdentifier> extidentifiers = null;
+		if (identifierBag != null) {
+			extidentifiers = new ArrayList<ExternalIdentifier>();
+
+			List<KeyedReference> keyedReferenceList = identifierBag.getKeyedReference();
+			for (KeyedReference keyedReference : keyedReferenceList) {
+				ExternalIdentifier extId = new ExternalIdentifierImpl(lifeCycleManager);
+				extId.setValue(keyedReference.getKeyValue());
+				extId.setName(new InternationalStringImpl(keyedReference.getKeyName()));
+
+				String tmodelKey = keyedReference.getTModelKey();
+				if (tmodelKey != null) {
+					ClassificationScheme scheme = new ClassificationSchemeImpl(lifeCycleManager);
+					scheme.setKey(new KeyImpl(tmodelKey));
+					extId.setIdentificationScheme(scheme);
+				}
+				extidentifiers.add(extId);
+			}
+		}
+		return extidentifiers;
+	}
+
+	private static Locale getLocale(String lang) {
+		if (lang == null || lang.trim().length() == 0) {
+			return Locale.getDefault();
+		} else if (lang.equalsIgnoreCase(Locale.getDefault().getLanguage())) {
+			return Locale.getDefault();
+		} else {
+			return new Locale(lang);
+		} 
+	}
+
+}
+]]>
+</codefragment>
+</duplication>
+<duplication lines="35" tokens="215">
+<file line="268" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/RegistryImpl.java"/>
+<file line="310" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/RegistryV3Impl.java"/>
+<codefragment>
+<![CDATA[
+		        throw (new RegistryV3Exception(xmle));
+		    }
+	
+			if (responseName.toLowerCase().equals("fault")) {
+				NodeList nodeList = null;
+				
+				// Child Elements
+				String fCode = null;
+				nodeList = response.getElementsByTagName("faultcode");
+				if (nodeList.getLength() > 0)
+					fCode = nodeList.item(0).getNodeValue();
+	
+				String fString = null;
+				nodeList = response.getElementsByTagName("faultstring");
+				if (nodeList.getLength() > 0)
+					fString = nodeList.item(0).getNodeValue();
+	
+				String fActor = null;
+				nodeList = response.getElementsByTagName("faultactor");
+				if (nodeList.getLength() > 0)
+					fActor = nodeList.item(0).getNodeValue();
+	
+				DispositionReport dispRpt = null;
+	
+				nodeList = response.getElementsByTagName("detail");
+				if (nodeList.getLength() > 0) {
+					nodeList = ((Element) nodeList.item(0))
+							.getElementsByTagName("dispositionReport");
+					if (nodeList.getLength() > 0) {
+						JAXBElement<DispositionReport> dispRptObj = null;
+						try {
+							dispRptObj = (JAXBElement<DispositionReport>) unmarshaller.unmarshal((Element) nodeList
+									.item(0));
+						} catch (JAXBException xmle) {
+							throw (new RegistryV3Exception(xmle));
+]]>
+</codefragment>
+</duplication>
+<duplication lines="35" tokens="214">
+<file line="375" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java"/>
+<file line="374" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+        catch (RegistryV3Exception e) {
+            exceptions.add(new SaveException(e.getLocalizedMessage()));
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            return bulk;
+        }
+
+        List<TModel> tmodelList = td.getTModel();
+        entityarr = new TModel[tmodelList.size()];
+        tmodelList.toArray(entityarr);
+        
+        log.debug("After Saving TModel. Obtained vector size:" + entityarr != null ? entityarr.length : 0);
+        for (int i = 0; entityarr != null && i < entityarr.length; i++) {
+            TModel tm = (TModel) entityarr[i];
+            coll.add(new KeyImpl(tm.getTModelKey()));
+        }
+
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public BulkResponse saveOrganizations(Collection organizations) throws JAXRException {
+        //Now we need to convert the collection into a vector for juddi
+        BulkResponseImpl bulk = new BulkResponseImpl();
+        BusinessEntity[] entityarr = new BusinessEntity[organizations.size()];
+
+        LinkedHashSet<Key> coll = new LinkedHashSet<Key>();
+        Collection<Exception> exceptions = new ArrayList<Exception>();
+
+        Iterator iter = organizations.iterator();
+        int currLoc = 0;
+        while (iter.hasNext()) {
+            try {
+                BusinessEntity en =
+]]>
+</codefragment>
+</duplication>
+<duplication lines="34" tokens="214">
+<file line="327" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java"/>
+<file line="326" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+        catch (RegistryV3Exception e) {
+            exceptions.add(new SaveException(e.getLocalizedMessage()));
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            return bulk;
+        }
+
+        List<TModel> tmodelList = td.getTModel();
+        entityarr = new TModel[tmodelList.size()];
+        tmodelList.toArray(entityarr); 
+        log.debug("After Saving TModel. Obtained vector size:" + entityarr != null ? entityarr.length : 0);
+        for (int i = 0; entityarr != null && i < entityarr.length; i++) {
+            TModel tm = (TModel) entityarr[i];
+            coll.add(new KeyImpl(tm.getTModelKey()));
+        }
+
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public BulkResponse saveConcepts(Collection concepts) throws JAXRException {
+        //Now we need to convert the collection into a vector for juddi
+        BulkResponseImpl bulk = new BulkResponseImpl();
+        TModel[] entityarr = new TModel[concepts.size()];
+
+        LinkedHashSet<Key> coll = new LinkedHashSet<Key>();
+        Collection<Exception> exceptions = new ArrayList<Exception>();
+
+        Iterator iter = concepts.iterator();
+        int currLoc = 0;
+        while (iter.hasNext()) {
+            try {
+                TModel en =
+]]>
+</codefragment>
+</duplication>
+<duplication lines="35" tokens="210">
+<file line="472" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java"/>
+<file line="470" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+        catch (RegistryV3Exception e) {
+            exceptions.add(new SaveException(e.getLocalizedMessage()));
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            return bulk;
+        }
+
+        List<BindingTemplate> bindingTemplateList = bd.getBindingTemplate();
+        sbarr = new BindingTemplate[bindingTemplateList.size()];
+        bindingTemplateList.toArray(sbarr);
+        
+        for (int i = 0; sbarr != null && i < sbarr.length; i++) {
+            BindingTemplate bt = (BindingTemplate) sbarr[i];
+            coll.add(new KeyImpl(bt.getBindingKey()));
+        }
+        if (coll.size()>0) {
+            bulk.setCollection(coll);
+        }
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public BulkResponse saveServices(Collection services) throws JAXRException {
+        BulkResponseImpl bulk = new BulkResponseImpl();
+        BusinessService[] sarr = new BusinessService[services.size()];
+
+        LinkedHashSet<Key> coll = new LinkedHashSet<Key>();
+        Collection<Exception> exceptions = new ArrayList<Exception>();
+
+
+        Iterator iter = services.iterator();
+        int currLoc = 0;
+        while (iter.hasNext()) {
+            try {
+                BusinessService bs = ScoutJaxrUddiV3Helper.getBusinessServiceFromJAXRService((Service) iter.next());
+]]>
+</codefragment>
+</duplication>
+<duplication lines="41" tokens="202">
+<file line="129" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiJaxrHelper.java"/>
+<file line="103" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java"/>
+<codefragment>
+<![CDATA[
+		if ((descriptionList != null) && (descriptionList.size() > 0)) {
+			InternationalString is = null;
+			for (Description desc : descriptionList)  {
+				if (is == null) {
+					is = getIString(desc.getLang(), desc.getValue(), lifeCycleManager);
+				} else {
+					is.setValue(getLocale(desc.getLang()), desc.getValue());
+				}
+			}
+			org.setDescription(is);
+		}
+		org.setKey(lifeCycleManager.createKey(businessEntity.getBusinessKey()));
+
+		//Set Services also
+		BusinessServices services = businessEntity.getBusinessServices();
+		if(services != null)
+		{
+			List<BusinessService> bizServiceList = services.getBusinessService();
+			for (BusinessService businessService : bizServiceList) {
+				org.addService(getService(businessService, lifeCycleManager));
+			}
+		}
+
+		/*
+		 *  Users
+		 *
+		 *  we need to take the first contact and designate as the
+		 *  'primary contact'.  Currently, the OrganizationImpl
+		 *  class does that automatically as a safety in case
+		 *  user forgets to set - lets be explicit here as to not
+		 *  depend on that behavior
+		 */
+
+		Contacts contacts = businessEntity.getContacts();
+		if(contacts != null)
+		{
+			List<Contact> contactList = contacts.getContact();
+			if (contactList!=null) {
+				boolean isFirst=true;
+				for (Contact contact : contactList) {
+					User user = new UserImpl(null);
+]]>
+</codefragment>
+</duplication>
+<duplication lines="27" tokens="194">
+<file line="115" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiJaxrHelper.java"/>
+<file line="211" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiJaxrHelper.java"/>
+<codefragment>
+<![CDATA[
+		List<Description> descriptionList = entity.getDescription();
+
+		Organization org = new OrganizationImpl(lifeCycleManager);
+		if ((namesList != null) && (namesList.size() > 0)) {
+			InternationalString is = null;
+			for (Name n : namesList)  {
+				if (is == null) {
+					is = getIString(n.getLang(), n.getValue(), lifeCycleManager);
+				} else {
+					is.setValue(getLocale(n.getLang()), n.getValue());
+				}
+			}
+			org.setName(is);
+		}
+		if ((descriptionList != null) && (descriptionList.size() > 0)) {
+			InternationalString is = null;
+			for (Description desc : descriptionList)  {
+				if (is == null) {
+					is = getIString(desc.getLang(), desc.getValue(), lifeCycleManager);
+				} else {
+					is.setValue(getLocale(desc.getLang()), desc.getValue());
+				}
+			}
+			org.setDescription(is);
+		}
+
+		org.setKey(lifeCycleManager.createKey(entity.getBusinessKey()));
+]]>
+</codefragment>
+</duplication>
+<duplication lines="33" tokens="190">
+<file line="427" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java"/>
+<file line="425" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            return bulk;
+        }
+
+        List<BusinessEntity> bizEntityList = bd.getBusinessEntity();
+        
+        entityarr = new BusinessEntity[bizEntityList.size()];
+        bizEntityList.toArray(entityarr);
+        
+        log.debug("After Saving Business. Obtained vector size:" + entityarr != null ? entityarr.length : 0);
+        for (int i = 0; entityarr != null && i < entityarr.length; i++) {
+            BusinessEntity entity = (BusinessEntity) entityarr[i];
+            coll.add(new KeyImpl(entity.getBusinessKey()));
+        }
+
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public BulkResponse saveServiceBindings(Collection bindings) throws JAXRException {
+        BulkResponseImpl bulk = new BulkResponseImpl();
+        BindingTemplate[] sbarr = new BindingTemplate[bindings.size()];
+
+        LinkedHashSet<Key> coll = new LinkedHashSet<Key>();
+        Collection<Exception> exceptions = new ArrayList<Exception>();
+
+        Iterator iter = bindings.iterator();
+        int currLoc = 0;
+        while (iter.hasNext()) {
+            try {
+                BindingTemplate bs = ScoutJaxrUddiV3Helper.getBindingTemplateFromJAXRSB((ServiceBinding) iter.next());
+]]>
+</codefragment>
+</duplication>
+<duplication lines="42" tokens="177">
+<file line="995" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerImpl.java"/>
+<file line="977" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+            if (juddiQualifier == null)
+            {
+                throw new UnsupportedCapabilityException("jUDDI does not support FindQualifer: " + jaxrQualifier);
+            }
+            result.getFindQualifier().add(juddiQualifier);
+        }
+        return result;
+    }
+
+    static Name[] mapNamePatterns(Collection namePatterns)
+        throws JAXRException
+    {
+        if (namePatterns == null)
+            return null;
+        Name[] result = new Name[namePatterns.size()];
+        int currLoc = 0;
+        for (Iterator i = namePatterns.iterator(); i.hasNext();)
+        {
+            Object obj = i.next();
+            Name name = objectFactory.createName();
+            if (obj instanceof String) {
+                name.setValue((String)obj);
+            } else if (obj instanceof LocalizedString) {
+                LocalizedString ls = (LocalizedString)obj;
+                name.setValue(ls.getValue());
+                name.setLang(ls.getLocale().getLanguage());
+            }
+            result[currLoc] = name;
+            currLoc++;
+        }
+        return result;
+    }
+
+   /**
+     * Get the Auth Token from the registry
+     *
+     * @param connection
+     * @param ireg
+     * @return auth token
+     * @throws JAXRException
+     */
+    private AuthToken getAuthToken(ConnectionImpl connection, IRegistryV3 ireg)
+]]>
+</codefragment>
+</duplication>
+<duplication lines="34" tokens="174">
+<file line="405" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiHelper.java"/>
+<file line="404" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java"/>
+<codefragment>
+<![CDATA[
+			InternationalString iname = classificationScheme.getName();
+			 
+            tm.setName(getFirstName(iname));
+
+			InternationalString idesc = classificationScheme.getDescription();
+			
+		    addDescriptions(tm.getDescription(), idesc);
+
+            IdentifierBag idBag = getIdentifierBagFromExternalIdentifiers(classificationScheme.getExternalIdentifiers());
+            if (idBag!=null) {
+                tm.setIdentifierBag(idBag);
+            }
+            CategoryBag catBag = getCategoryBagFromClassifications(classificationScheme.getClassifications());
+            if (catBag!=null) {
+                tm.setCategoryBag(catBag);
+            }
+			
+			// ToDO: overviewDoc
+		} catch (Exception ud) {
+            throw new JAXRException("Apache JAXR Impl:", ud);
+        }
+        return tm;
+    }
+
+    public static TModel getTModelFromJAXRConcept(Concept concept)
+			throws JAXRException {
+    	TModel tm = objectFactory.createTModel();
+		if (concept == null)
+			return null;
+		try {
+            Key key = concept.getKey();
+			if (key != null && key.getId() != null)
+				tm.setTModelKey(key.getId());
+            Slot sl1 = concept.getSlot("authorizedName");
+]]>
+</codefragment>
+</duplication>
+<duplication lines="50" tokens="172">
+<file line="1129" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/RegistryImpl.java"/>
+<file line="1185" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/RegistryV3Impl.java"/>
+<codefragment>
+<![CDATA[
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+
+		return transport;
+	}
+
+	/**
+	 * 
+	 * @param name
+	 * @return The class object for the name given
+	 * @throws ClassNotFoundException
+	 * @throws NoClassDefFoundError
+	 */
+	public static Class getClassForName(String name)
+			throws ClassNotFoundException, NoClassDefFoundError {
+		Class clazz = null;
+
+		try {
+			// log.info("Using the Context ClassLoader");
+			ClassLoader ccl = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() 
+		    {
+				public ClassLoader run() {
+					return Thread.currentThread().getContextClassLoader();
+		        }
+			});
+			
+			clazz = Class.forName(name, true, ccl);
+		} catch (Exception e) {
+			 log.debug("Failed to load the class " + name + " with context class loader " + e);
+		}
+
+		if (null == clazz) {
+			ClassLoader scl = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>()
+			{ 
+				public ClassLoader run() {
+					return ClassLoader.getSystemClassLoader();
+				}
+			});
+
+			try {
+				clazz = Class.forName(name, true, scl);
+			} catch (Exception e) {
+		          throw new RuntimeException(e);
+			}
+		}
+
+		return clazz;
+	}
+}
+]]>
+</codefragment>
+</duplication>
+<duplication lines="29" tokens="170">
+<file line="921" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiHelper.java"/>
+<file line="926" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java"/>
+<codefragment>
+<![CDATA[
+           InternationalString extDesc = link.getDescription();
+           if(extDesc != null) {
+               Description description = objectFactory.createDescription();
+               od.getDescription().add(description);
+               description.setValue(extDesc.getValue());
+           }
+           return od;
+       }
+
+    private static BindingTemplates getBindingTemplates(Collection serviceBindings)
+        throws JAXRException {
+        BindingTemplates bt = null;
+        if(serviceBindings != null && serviceBindings.size() > 0) {
+            bt = objectFactory.createBindingTemplates();
+            Iterator iter = serviceBindings.iterator();
+            int currLoc = 0;
+            BindingTemplate[] bindingTemplateArray = new BindingTemplate[serviceBindings.size()];
+            while(iter.hasNext()) {
+                ServiceBinding sb = (ServiceBinding)iter.next();
+                bindingTemplateArray[currLoc] = getBindingTemplateFromJAXRSB(sb);
+                currLoc++;
+            }
+            if (bindingTemplateArray != null) {
+                bt.getBindingTemplate().addAll(Arrays.asList(bindingTemplateArray));
+            }
+        }
+        return bt; 
+    }
+}
+]]>
+</codefragment>
+</duplication>
+<duplication lines="46" tokens="163">
+<file line="784" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerImpl.java"/>
+<file line="756" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+        ServiceImpl service  = (ServiceImpl) ScoutUddiV3JaxrHelper.getService(bs, lcm);
+        service.setSubmittingOrganizationKey(bs.getBusinessKey());
+
+        return service;
+    }
+
+    /**
+     * Gets the RegistryObjects owned by the caller. The objects
+     * are returned as their concrete type (e.g. Organization, User etc.)
+     *
+     *  TODO - need to figure out what the set are.  This is just to get some
+     *  basic functionality
+     *
+     * @return BulkResponse
+     * @throws JAXRException
+     */
+    public BulkResponse getRegistryObjects() throws JAXRException
+    {
+        String types[] = {
+            LifeCycleManager.ORGANIZATION,
+            LifeCycleManager.SERVICE};
+
+        LinkedHashSet<Object> c = new LinkedHashSet<Object>();
+
+        for (int i = 0; i < types.length; i++) {
+            try {
+                BulkResponse bk = getRegistryObjects(types[i]);
+
+                if (bk.getCollection() != null) {
+                    c.addAll(bk.getCollection());
+                }
+            } catch(JAXRException e) {
+            	log.debug("ignore - just a problem with that type? " + e.getMessage(), e);
+            }
+        }
+
+        return new BulkResponseImpl(c);
+    }
+
+    public BulkResponse getRegistryObjects(Collection objectKeys) throws JAXRException
+    {
+        throw new UnsupportedCapabilityException();
+    }
+
+    public BulkResponse getRegistryObjects(Collection objectKeys, String objectType) throws JAXRException
+    {
+]]>
+</codefragment>
+</duplication>
+<duplication lines="36" tokens="159">
+<file line="79" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/transport/LocalTransport.java"/>
+<file line="87" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/transport/RMITransport.java"/>
+<codefragment>
+<![CDATA[
+    	if (node.getFirstChild()!=null) {
+    		response = (Element) node.getFirstChild();
+    	}
+    }
+    catch (Exception ex) {
+      throw new TransportException(ex);
+    }
+    if (log.isDebugEnabled()) {
+    	log.debug("\nResponse message:\n" + XMLUtils.convertNodeToXMLString(response));
+    }
+    return response;
+  }
+  
+  /**
+   * Sends an XML, responds with an XML.
+   */
+  public String send(String request,URI endpointURI)
+    throws TransportException
+  {    
+    String response = null;
+    log.debug("\nRequest message:\n" + request);
+    try {
+    	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder parser = factory.newDocumentBuilder();
+        Document document = parser.parse(request);
+        Element element = document.getDocumentElement();
+        response= XMLUtils.convertNodeToXMLString(send(element, endpointURI));
+    } catch (Exception ex) { 
+    	throw new TransportException(ex);
+    }
+    log.debug("\nResponse message:\n" + response);
+    return response;
+  }
+  
+  
+}
+]]>
+</codefragment>
+</duplication>
+<duplication lines="29" tokens="159">
+<file line="320" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java"/>
+<file line="368" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+        log.debug("Method:save_concept: ENlength=" + entityarr.length);
+        // Save business
+        TModelDetail td = null;
+        try {
+            td = (TModelDetail) executeOperation(entityarr, "SAVE_TMODEL");
+        }
+        catch (RegistryV3Exception e) {
+            exceptions.add(new SaveException(e.getLocalizedMessage()));
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            return bulk;
+        }
+
+        List<TModel> tmodelList = td.getTModel();
+        entityarr = new TModel[tmodelList.size()];
+        tmodelList.toArray(entityarr);
+        
+        log.debug("After Saving TModel. Obtained vector size:" + entityarr != null ? entityarr.length : 0);
+        for (int i = 0; entityarr != null && i < entityarr.length; i++) {
+            TModel tm = (TModel) entityarr[i];
+            coll.add(new KeyImpl(tm.getTModelKey()));
+        }
+
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public BulkResponse saveOrganizations(Collection organizations) throws JAXRException {
+]]>
+</codefragment>
+</duplication>
+<duplication lines="29" tokens="159">
+<file line="321" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java"/>
+<file line="369" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java"/>
+<codefragment>
+<![CDATA[
+        log.debug("Method:save_concept: ENlength=" + entityarr.length);
+        // Save business
+        TModelDetail td = null;
+        try {
+            td = (TModelDetail) executeOperation(entityarr, "SAVE_TMODEL");
+        }
+        catch (RegistryException e) {
+            exceptions.add(new SaveException(e.getLocalizedMessage()));
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            return bulk;
+        }
+
+        List<TModel> tmodelList = td.getTModel();
+        entityarr = new TModel[tmodelList.size()];
+        tmodelList.toArray(entityarr);
+        
+        log.debug("After Saving TModel. Obtained vector size:" + entityarr != null ? entityarr.length : 0);
+        for (int i = 0; entityarr != null && i < entityarr.length; i++) {
+            TModel tm = (TModel) entityarr[i];
+            coll.add(new KeyImpl(tm.getTModelKey()));
+        }
+
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public BulkResponse saveOrganizations(Collection organizations) throws JAXRException {
+]]>
+</codefragment>
+</duplication>
+<duplication lines="23" tokens="158">
+<file line="450" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerImpl.java"/>
+<file line="422" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+                IRegistryV3 registry = (IRegistryV3) registryService.getRegistry();
+                FindQualifiers juddiFindQualifiers = mapFindQualifiers(findQualifiers);
+                try
+                {
+                    //We are looking for one exact match, so getting upto 3 records is fine
+                    TModelList list = registry.findTModel(namePatterns, null, null, juddiFindQualifiers, 3);
+                    if (list != null) {
+                        TModelInfos infos = list.getTModelInfos();
+                        if (infos != null) {
+                            List<TModelInfo> tmodelInfoList = infos.getTModelInfo();
+                            if (tmodelInfoList.size() > 1) {
+                                throw new InvalidRequestException("Multiple matches found:" + tmodelInfoList.size());
+                            }
+                            if (tmodelInfoList.size() ==1) {
+                                TModelInfo info = tmodelInfoList.get(0);
+                                scheme = new ClassificationSchemeImpl(registryService.getLifeCycleManagerImpl());
+                                scheme.setName(new InternationalStringImpl(info.getName().getValue()));
+                                scheme.setKey(new KeyImpl(info.getTModelKey()));
+                            }
+                        }
+                    }
+
+                } catch (RegistryV3Exception e)
+]]>
+</codefragment>
+</duplication>
+<duplication lines="25" tokens="152">
+<file line="297" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiJaxrHelper.java"/>
+<file line="282" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java"/>
+<codefragment>
+<![CDATA[
+			}
+		}
+		//External Links
+		DiscoveryURLs durls = entity.getDiscoveryURLs();
+		if (durls != null)
+		{
+			List<DiscoveryURL> discoveryURL_List = durls.getDiscoveryURL();
+			for (DiscoveryURL discoveryURL : discoveryURL_List) {
+				ExternalLink link = new ExternalLinkImpl(lifeCycleManager);
+				link.setExternalURI(discoveryURL.getValue());
+				org.addExternalLink(link);
+			}
+		}
+
+		org.addExternalIdentifiers(getExternalIdentifiers(entity.getIdentifierBag(), lifeCycleManager));
+		org.addClassifications(getClassifications(entity.getCategoryBag(), lifeCycleManager));
+
+		return org;
+	}
+
+	private static PostalAddress getPostalAddress(AddressLine[] addressLineArr) throws JAXRException {
+		PostalAddress pa = new PostalAddressImpl();
+		HashMap<String, String> hm = new HashMap<String, String>();
+		for (AddressLine anAddressLineArr : addressLineArr) {
+			hm.put(anAddressLineArr.getKeyName(), anAddressLineArr.getValue());
+]]>
+</codefragment>
+</duplication>
+<duplication lines="22" tokens="152">
+<file line="264" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerImpl.java"/>
+<file line="236" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+                Association asso = ScoutUddiV3JaxrHelper.getAssociation(bl.getCollection(),
+                                             registryService.getBusinessLifeCycleManager());
+                //Set Confirmation
+                ((AssociationImpl)asso).setConfirmedBySourceOwner(caller);
+                ((AssociationImpl)asso).setConfirmedByTargetOwner(other);
+
+                if(confirm != Constants.COMPLETION_STATUS_COMPLETE)
+                     ((AssociationImpl)asso).setConfirmed(false);
+
+                Concept c = new ConceptImpl(getRegistryService().getBusinessLifeCycleManager());
+                KeyedReference keyr = asi.getKeyedReference();
+                c.setKey(new KeyImpl(keyr.getTModelKey()));
+                c.setName(new InternationalStringImpl(keyr.getKeyName()));
+                c.setValue(keyr.getKeyValue());
+                asso.setKey(new KeyImpl(keyr.getTModelKey())); //TODO:Validate this
+                asso.setAssociationType(c);
+                col.add(asso);
+            }
+
+
+            return new BulkResponseImpl(col);
+        } catch (RegistryV3Exception e)
+]]>
+</codefragment>
+</duplication>
+<duplication lines="46" tokens="152">
+<file line="821" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java"/>
+<file line="847" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+        catch (RegistryV3Exception regExcept) {
+
+            /*
+             * jUDDI (and prollie others) throw an exception on any fault in
+             * the transaction w/ the registry, so we don't get any partial
+             * success
+             */
+            DeleteException de = new DeleteException(regExcept.getFaultCode()
+                    + ":" + regExcept.getFaultString(), regExcept);
+
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            exceptions.add(de);
+        }
+        catch (JAXRException tran) {
+            exceptions.add(new JAXRException("Apache JAXR Impl:", tran));
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+        }
+
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    private String getUsernameFromCredentials(Set credentials) {
+        String username = "", pwd = "";
+                
+        if (credentials != null) {
+        	Iterator it = credentials.iterator();
+        	while (it.hasNext()) {
+        		PasswordAuthentication pass = (PasswordAuthentication) it.next();
+        		username = pass.getUserName();
+        	}
+        }
+        return username;
+    }
+
+    /**
+     * Get the Auth Token from the registry
+     *
+     * @param connection
+     * @param ireg
+     * @return auth token
+     * @throws JAXRException
+     */
+    private AuthToken getAuthToken(ConnectionImpl connection, IRegistryV3 ireg)
+]]>
+</codefragment>
+</duplication>
+<duplication lines="34" tokens="145">
+<file line="172" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiJaxrHelper.java"/>
+<file line="149" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java"/>
+<codefragment>
+<![CDATA[
+					if (isFirst) {
+						isFirst=false;
+						org.setPrimaryContact(user);
+					} else {
+						org.addUser(user);
+					}
+				}
+			}
+		}
+
+		//External Links
+		DiscoveryURLs durls = businessEntity.getDiscoveryURLs();
+		if (durls != null)
+		{
+			List<DiscoveryURL> discoveryURL_List = durls.getDiscoveryURL();
+			for (DiscoveryURL discoveryURL : discoveryURL_List) {
+				ExternalLink link = new ExternalLinkImpl(lifeCycleManager);
+				link.setExternalURI(discoveryURL.getValue());
+				org.addExternalLink(link);
+			}
+		}
+
+		org.addExternalIdentifiers(getExternalIdentifiers(businessEntity.getIdentifierBag(), lifeCycleManager));
+		org.addClassifications(getClassifications(businessEntity.getCategoryBag(), lifeCycleManager));
+
+		return org;
+	}
+
+
+	public static Organization getOrganization(BusinessDetail bizdetail,
+			LifeCycleManager lifeCycleManager)
+	throws JAXRException
+	{
+		List<BusinessEntity> bizEntityList = bizdetail.getBusinessEntity();
+]]>
+</codefragment>
+</duplication>
+<duplication lines="36" tokens="143">
+<file line="964" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerImpl.java"/>
+<file line="938" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+            } catch (RegistryV3Exception re) {
+            	throw new JAXRException(re);
+            }
+            return new BulkResponseImpl(orgs);
+        }
+        else if (LifeCycleManager.SERVICE.equalsIgnoreCase(id)) {
+            List<String> a = new ArrayList<String>();
+            a.add("%");
+
+            BulkResponse br = this.findServices(null,null, a, null, null);
+
+            return br;
+        }
+        else
+        {
+            throw new JAXRException("Unsupported type for getRegistryObjects() :" + id);
+        }
+
+    }
+
+    static FindQualifiers mapFindQualifiers(Collection jaxrQualifiers) throws UnsupportedCapabilityException
+    {
+        if (jaxrQualifiers == null)
+        {
+            return null;
+        }
+        FindQualifiers result = objectFactory.createFindQualifiers();
+        for (Iterator i = jaxrQualifiers.iterator(); i.hasNext();)
+        {
+            String jaxrQualifier = (String) i.next();
+            String juddiQualifier = jaxrQualifier;
+           
+            // SCOUT-111 
+            // If the JAXR qualifier is exactNameMatch, then 
+            // set the UDDI v3 qualifier to exactMatch 
+            if ("exactNameMatch".equals(jaxrQualifier)) {
+]]>
+</codefragment>
+</duplication>
+<duplication lines="20" tokens="140">
+<file line="471" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiJaxrHelper.java"/>
+<file line="453" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java"/>
+<codefragment>
+<![CDATA[
+			List<TModelInstanceInfo> tmodelInstanceInfoList = details.getTModelInstanceInfo();
+	
+			for (TModelInstanceInfo info: tmodelInstanceInfoList)
+			{
+				if (info!=null && info.getInstanceDetails()!=null) {
+					InstanceDetails idetails = info.getInstanceDetails();
+					Collection<ExternalLink> elinks = getExternalLinks(idetails.getOverviewDoc(),lifeCycleManager);
+					SpecificationLink slink = new SpecificationLinkImpl(lifeCycleManager);
+					slink.addExternalLinks(elinks);
+					serviceBinding.addSpecificationLink(slink); 
+	
+					ConceptImpl c = new ConceptImpl(lifeCycleManager);
+					c.setExternalLinks(elinks);
+					c.setKey(lifeCycleManager.createKey(info.getTModelKey())); 
+					c.setName(lifeCycleManager.createInternationalString(idetails.getInstanceParms()));
+					c.setValue(idetails.getInstanceParms());
+	
+					slink.setSpecificationObject(c);
+				}
+			}
+]]>
+</codefragment>
+</duplication>
+<duplication lines="23" tokens="133">
+<file line="327" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java"/>
+<file line="374" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+        catch (RegistryV3Exception e) {
+            exceptions.add(new SaveException(e.getLocalizedMessage()));
+            bulk.setStatus(JAXRResponse.STATUS_FAILURE);
+            return bulk;
+        }
+
+        List<TModel> tmodelList = td.getTModel();
+        entityarr = new TModel[tmodelList.size()];
+        tmodelList.toArray(entityarr);
+        
+        log.debug("After Saving TModel. Obtained vector size:" + entityarr != null ? entityarr.length : 0);
+        for (int i = 0; entityarr != null && i < entityarr.length; i++) {
+            TModel tm = (TModel) entityarr[i];
+            coll.add(new KeyImpl(tm.getTModelKey()));
+        }
+
+        bulk.setCollection(coll);
+        bulk.setExceptions(exceptions);
+
+        return bulk;
+    }
+
+    public BulkResponse saveOrganizations(Collection organizations) throws JAXRException {
+]]>
+</codefragment>
+</duplication>
+<duplication lines="17" tokens="124">
+<file line="249" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerImpl.java"/>
+<file line="220" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+        			AuthTokenV3Singleton.deleteAuthToken(username);
+        		}
+        		auth = getAuthToken(con, registry);
+            	report = registry.getAssertionStatusReport(auth.getAuthInfo(),confirm);
+        	}
+
+            
+            List<AssertionStatusItem> assertionStatusItemList = report.getAssertionStatusItem();
+            LinkedHashSet<Association> col = new LinkedHashSet<Association>();
+            for (AssertionStatusItem asi : assertionStatusItemList) {
+                String sourceKey = asi.getFromKey();
+                String targetKey = asi.getToKey();
+                Collection<Key> orgcol = new ArrayList<Key>();
+                orgcol.add(new KeyImpl(sourceKey));
+                orgcol.add(new KeyImpl(targetKey));
+                BulkResponse bl = getRegistryObjects(orgcol, LifeCycleManager.ORGANIZATION);
+                Association asso = ScoutUddiV3JaxrHelper.getAssociation(bl.getCollection(),
+]]>
+</codefragment>
+</duplication>
+<duplication lines="36" tokens="117">
+<file line="170" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/RegistryImpl.java"/>
+<file line="183" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/RegistryV3Impl.java"/>
+<codefragment>
+<![CDATA[
+            JAXBContext context = JAXBContextUtil.getContext(JAXBContextUtil.UDDI_V3_VERSION);
+            unmarshaller = context.createUnmarshaller(); 
+            marshaller = context.createMarshaller();
+            
+        } catch (URISyntaxException muex) {
+            throw new InvalidRequestException(muex.getMessage(), muex);
+        } catch(JAXBException e) {
+           throw new RuntimeException(e);
+        }
+	}
+
+	/**
+	 * 
+	 * @param uddiRequest
+	 * @return String
+	 * @throws RegistryV3Exception
+	 */
+	public String execute(String uddiRequest, String urltype)
+			throws TransportException {
+		URI endPointURL = null;
+		if (urltype.equalsIgnoreCase("INQUIRY"))
+			endPointURL = this.getInquiryURI();
+		else
+			endPointURL = this.getPublishURI();
+
+		// A SOAP request is made and a SOAP response
+		// is returned.
+
+		return transport.send(uddiRequest, endPointURL);
+	}
+
+	/**
+	 * 
+	 */
+	public JAXBElement<?> execute(JAXBElement<?> uddiRequest, URI endPointURI)
+			throws RegistryV3Exception {
+]]>
+</codefragment>
+</duplication>
+<duplication lines="12" tokens="116">
+<file line="509" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiJaxrHelper.java"/>
+<file line="529" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiJaxrHelper.java"/>
+<codefragment>
+<![CDATA[
+		concept.setKey(lifeCycleManager.createKey(tmodel.getTModelKey()));
+		concept.setName(lifeCycleManager.createInternationalString(getLocale(tmodel.getName().getLang()),
+				tmodel.getName().getValue()));
+
+		Description desc = getDescription(tmodel);
+		if (desc != null) {
+			concept.setDescription(lifeCycleManager.createInternationalString(getLocale(desc.getLang()), 
+					desc.getValue()));
+		}
+
+		concept.addExternalIdentifiers(getExternalIdentifiers(tmodel.getIdentifierBag(), lifeCycleManager));
+		concept.addClassifications(getClassifications(tmodel.getCategoryBag(), lifeCycleManager));
+]]>
+</codefragment>
+</duplication>
+<duplication lines="35" tokens="115">
+<file line="891" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java"/>
+<file line="920" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+        AuthTokenV3Singleton.addAuthToken(username, token);
+        return token;	
+    }
+
+    private PublisherAssertion getPublisherAssertion(AssertionStatusItem asi)
+    {
+    	PublisherAssertion pa = this.objectFactory.createPublisherAssertion();
+        
+    	if(asi != null)
+    	{
+            String sourceKey = asi.getFromKey();
+            String targetKey = asi.getToKey();
+        
+            if (sourceKey != null) {
+            pa.setFromKey(sourceKey);
+            }
+            
+            if (targetKey != null) {
+            pa.setToKey(targetKey);
+            }
+            
+            KeyedReference keyr = asi.getKeyedReference();
+            
+            if (keyr != null) {
+            pa.setKeyedReference(keyr);
+            }
+            //pa.setTModelKey(keyr.getTModelKey());
+            //pa.setKeyName(keyr.getKeyName());
+            //pa.setKeyValue(keyr.getKeyValue()); // -CBC- These are redundant?
+    		
+    	}return pa;
+    }
+    
+    Organization createOrganization(BusinessDetail bizDetail) throws JAXRException {
+        return ScoutUddiV3JaxrHelper.getOrganization(bizDetail, this);
+]]>
+</codefragment>
+</duplication>
+<duplication lines="87" tokens="112">
+<file line="47" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/model/uddi/v2/AddPublisherAssertions.java"/>
+<file line="47" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/model/uddi/v2/DeletePublisherAssertions.java"/>
+<codefragment>
+<![CDATA[
+public class DeletePublisherAssertions {
+
+    @XmlElement(required = true)
+    protected String authInfo;
+    @XmlElement(required = true)
+    protected List<PublisherAssertion> publisherAssertion;
+    @XmlAttribute(required = true)
+    protected String generic;
+
+    /**
+     * Gets the value of the authInfo property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getAuthInfo() {
+        return authInfo;
+    }
+
+    /**
+     * Sets the value of the authInfo property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setAuthInfo(String value) {
+        this.authInfo = value;
+    }
+
+    /**
+     * Gets the value of the publisherAssertion property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the publisherAssertion property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getPublisherAssertion().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link PublisherAssertion }
+     * 
+     * 
+     */
+    public List<PublisherAssertion> getPublisherAssertion() {
+        if (publisherAssertion == null) {
+            publisherAssertion = new ArrayList<PublisherAssertion>();
+        }
+        return this.publisherAssertion;
+    }
+
+    /**
+     * Gets the value of the generic property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getGeneric() {
+        return generic;
+    }
+
+    /**
+     * Sets the value of the generic property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setGeneric(String value) {
+        this.generic = value;
+    }
+
+}
+]]>
+</codefragment>
+</duplication>
+<duplication lines="20" tokens="111">
+<file line="152" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiHelper.java"/>
+<file line="139" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutJaxrUddiV3Helper.java"/>
+<codefragment>
+<![CDATA[
+		address.getAddressLine().addAll(Arrays.asList(addarr));
+
+        return address;
+    }
+
+	public static BindingTemplate getBindingTemplateFromJAXRSB(
+			ServiceBinding serviceBinding) throws JAXRException {
+		BindingTemplate bt = objectFactory.createBindingTemplate();
+		if (serviceBinding.getKey() != null && serviceBinding.getKey().getId() != null) {
+			bt.setBindingKey(serviceBinding.getKey().getId());
+		} else {
+			bt.setBindingKey("");
+		}
+	
+		try {
+			// Set Access URI
+            String accessuri = serviceBinding.getAccessURI();
+			if (accessuri != null) {
+				AccessPoint accessPoint = objectFactory.createAccessPoint();
+                accessPoint.setUseType(getUseType(accessuri));
+]]>
+</codefragment>
+</duplication>
+<duplication lines="15" tokens="110">
+<file line="225" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiJaxrHelper.java"/>
+<file line="202" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/util/ScoutUddiV3JaxrHelper.java"/>
+<codefragment>
+<![CDATA[
+		if ((descriptionList != null) && (descriptionList.size() > 0)) {
+			InternationalString is = null;
+			for (Description desc : descriptionList)  {
+				if (is == null) {
+					is = getIString(desc.getLang(), desc.getValue(), lifeCycleManager);
+				} else {
+					is.setValue(getLocale(desc.getLang()), desc.getValue());
+				}
+			}
+			org.setDescription(is);
+		}
+		org.setKey(lifeCycleManager.createKey(entity.getBusinessKey()));
+
+		//Set Services also
+		BusinessServices services = entity.getBusinessServices();
+]]>
+</codefragment>
+</duplication>
+<duplication lines="23" tokens="107">
+<file line="668" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerImpl.java"/>
+<file line="640" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessQueryManagerV3Impl.java"/>
+<codefragment>
+<![CDATA[
+                    ScoutJaxrUddiV3Helper.getCategoryBagFromClassifications(classifications), 
+                    null, 
+                    juddiFindQualifiers, registryService.getMaxRows());
+
+            /*
+             * now convert  from jUDDI ServiceInfo objects to JAXR Services
+             */
+            if (serviceList != null) {
+
+                ServiceInfos serviceInfos = serviceList.getServiceInfos();
+                LinkedHashSet<Service> col = new LinkedHashSet<Service>();
+                
+                if(serviceInfos != null && serviceInfos.getServiceInfo()!=null) {
+                	for (ServiceInfo si : serviceInfos.getServiceInfo()) {
+                		Service srv = (Service) getRegistryObject(si.getServiceKey(), LifeCycleManager.SERVICE);
+                        col.add(srv);
+					}
+                	
+                }
+                blkRes.setCollection(col);
+            }
+        }
+        catch (RegistryV3Exception e) {
+]]>
+</codefragment>
+</duplication>
+<duplication lines="14" tokens="101">
+<file line="675" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java"/>
+<file line="708" path="/Users/kstam/osc/apache/dev/scout-1.2.5/src/main/java/org/apache/ws/scout/registry/BusinessLifeCycleManagerImpl.java"/>
+<codefragment>
+<![CDATA[
+        else if (op.equalsIgnoreCase("DELETE_CLASSIFICATIONSCHEME")) {
+            try {
+                regobj = ireg.deleteTModel(token.getAuthInfo(), (String[]) dataarray);
+	    	} catch (RegistryException rve) {
+	    		String username = getUsernameFromCredentials(connection.getCredentials());
+        		if (AuthTokenSingleton.getToken(username) != null) {
+        			AuthTokenSingleton.deleteAuthToken(username);
+	    		}
+	    		token = getAuthToken(connection, ireg);
+	            clearPublisherAssertions(token.getAuthInfo(), ireg);
+	            regobj = ireg.deleteTModel(token.getAuthInfo(), (String[]) dataarray);
+	    	}
+        }
+        else {
+]]>
+</codefragment>
+</duplication>
+</pmd-cpd>
