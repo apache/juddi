@@ -134,7 +134,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
                     serviceCounter.update(InquiryQuery.FIND_BINDING, QueryStatus.FAILED, procTime);                      
                     throw drfm;
                 }
-
+                
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
@@ -144,27 +144,25 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 				this.getEntityPublisher(em, body.getAuthInfo());
 
                         LogFindBindingRequest(body);
+                        if (body.getServiceKey() != null && body.getServiceKey().length() > 0) {
+                            // Check that we were passed a valid serviceKey per
+                            // 5.1.12.4 of the UDDI v3 spec
+                            String serviceKey = body.getServiceKey();
+                            org.apache.juddi.model.BusinessService modelBusinessService = null;
+                            try {
+                                    modelBusinessService=em.find(org.apache.juddi.model.BusinessService.class, serviceKey);
+                            } catch (Exception e) {
+                                    log.debug(e.getMessage(), e);
+                            }
+                            if (modelBusinessService == null)
+                                throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ServiceNotFound", serviceKey));
+                        }
+
 			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
 			findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
 
 			List<?> keysFound = InquiryHelper.findBinding(body, findQualifiers, em);
 
-			if (keysFound!=null && keysFound.size() == 0) {
-			    if (body.getServiceKey() != null) {
-			        // Check that we were passed a valid serviceKey per
-        			// 5.1.12.4 of the UDDI v3 spec
-        			String serviceKey = body.getServiceKey();
-        			org.apache.juddi.model.BusinessService modelBusinessService = null;
-        			try {
-        				modelBusinessService=em.find(org.apache.juddi.model.BusinessService.class, serviceKey);
-        			} catch (Exception e) {
-                                        log.debug(e.getMessage(), e);
-                                }
-	                if (modelBusinessService == null)
-	                    throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ServiceNotFound", serviceKey));
-
-			    }
-			}
 			BindingDetail result = InquiryHelper.getBindingDetailFromKeys(body, findQualifiers, em, keysFound);
 			tx.rollback();
                         long procTime = System.currentTimeMillis() - startTime;

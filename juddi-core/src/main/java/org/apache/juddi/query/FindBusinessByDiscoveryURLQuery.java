@@ -54,8 +54,8 @@ public class FindBusinessByDiscoveryURLQuery extends BusinessEntityQuery {
 		entityAliasChild = buildAlias(ENTITY_NAME_CHILD);
 	}
 
-	public static List<?> select(EntityManager em, FindQualifiers fq, DiscoveryURLs discURLs, 
-			List<?> keysIn, DynamicQuery.Parameter... restrictions) {
+	public static List<Object> select(EntityManager em, FindQualifiers fq, DiscoveryURLs discURLs, 
+			List<Object> keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.
 		if ((keysIn != null) && (keysIn.size() == 0))
 			return keysIn;

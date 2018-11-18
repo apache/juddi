@@ -126,8 +126,8 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 		return entityAliasChild3;
 	}
 		
-	public List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, 
-			List<?> keysIn, DynamicQuery.Parameter... restrictions) {
+	public List<Object> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, 
+			List<Object> keysIn, DynamicQuery.Parameter... restrictions) {
 	        
         // If keysIn is not null and empty, then search is over.
 		if ((keysIn != null) && (keysIn.size() == 0))
@@ -195,7 +195,7 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 				}
 			}
 		}
-		return new ArrayList<String>(resultingEntityKeys);
+		return new ArrayList<Object>(resultingEntityKeys);
 	}
 	/**
 	 * Finding the entities (businesses or services) that have a matching keyedReference in their
@@ -212,7 +212,7 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 	 */
 	private void findEntityByCategoryQuery(Map<KeyedReference,Set<String>> map, EntityManager em, 
 			FindQualifiers fq, CategoryBag categoryBag, String entityField, String entityNameChild, 
-			List<?> keysIn, DynamicQuery.Parameter... restrictions) 
+			List<Object> keysIn, DynamicQuery.Parameter... restrictions) 
 	{
 		FindEntityByCategoryQuery findEntityByCategoryQuery = new FindEntityByCategoryQuery(
 				entityName, entityAlias, keyName, entityField, entityNameChild, signaturePresent);

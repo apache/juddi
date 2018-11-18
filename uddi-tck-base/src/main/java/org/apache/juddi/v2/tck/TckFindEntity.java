@@ -229,7 +229,7 @@ public class TckFindEntity
 		String serviceKey = null;
 		try {
 			FindService body = (FindService)EntityCreator.buildFromDoc(FIND_SERVICE_XML, "org.uddi.api_v2");
-               body.setGeneric("2.0");
+                        body.setGeneric("2.0");
 			if (findQualifier!=null) body.getFindQualifiers().getFindQualifier().add(findQualifier);
 			ServiceList result = inquiry.findService(body);
 			if (result == null)
@@ -284,7 +284,7 @@ public class TckFindEntity
 	public void findServiceDetail(String serviceKey) {
 		try {
 			GetServiceDetail getServiceDetail = new GetServiceDetail();
-               getServiceDetail.setGeneric("2.0");
+                        getServiceDetail.setGeneric("2.0");
 			getServiceDetail.getServiceKey().add(serviceKey);
 			
 			
@@ -321,7 +321,7 @@ public class TckFindEntity
 		try {
 			FindBinding body = (FindBinding)EntityCreator.buildFromDoc(FIND_BINDING_XML, "org.uddi.api_v2");
 			if (findQualifier!=null) body.getFindQualifiers().getFindQualifier().add(findQualifier);
-               body.setGeneric("2.0");
+                        body.setGeneric("2.0");
 			BindingDetail result = inquiry.findBinding(body);
 			if (result == null)
 				Assert.fail("Null result from find binding operation");

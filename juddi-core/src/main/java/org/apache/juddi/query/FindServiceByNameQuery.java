@@ -58,7 +58,7 @@ public class FindServiceByNameQuery {
 											   BusinessServiceQuery.SIGNATURE_PRESENT);
 	}
 
-	public static List<?> select(EntityManager em, FindQualifiers fq, List<Name> names, String parentKey, List<?> keysIn) {
+	public static List<Object> select(EntityManager em, FindQualifiers fq, List<Name> names, String parentKey, List<Object> keysIn) {
 		if (parentKey != null && parentKey.length() > 0) {
 			DynamicQuery.Parameter param = new DynamicQuery.Parameter(BusinessServiceQuery.ENTITY_ALIAS + "." + BusinessServiceQuery.KEY_NAME_PARENT, parentKey, DynamicQuery.PREDICATE_EQUALS); 
 			return findQuery.select(em, fq, names, keysIn, param);

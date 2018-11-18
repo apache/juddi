@@ -51,7 +51,7 @@ public class FindTModelByIdentifierQuery {
 													TModelQuery.SIGNATURE_PRESENT);
 	}
 	
-	public static List<?> select(EntityManager em, FindQualifiers fq, IdentifierBag identifiers, List<?> keysIn) {
+	public static List<Object> select(EntityManager em, FindQualifiers fq, IdentifierBag identifiers, List<Object> keysIn) {
 		return findQuery.select(em, fq, identifiers, keysIn, new DynamicQuery.Parameter(TModelQuery.ENTITY_ALIAS + ".deleted", Boolean.FALSE, DynamicQuery.PREDICATE_EQUALS));
 	}
 	

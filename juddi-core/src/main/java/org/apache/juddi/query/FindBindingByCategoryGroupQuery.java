@@ -58,7 +58,7 @@ public class FindBindingByCategoryGroupQuery {
 													   BindingTemplateQuery.SIGNATURE_PRESENT);
 	}
 	
-	public static List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, String parentKey, List<?> keysIn) {
+	public static List<Object> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, String parentKey, List<Object> keysIn) {
 		if (parentKey != null && parentKey.length() > 0) {
 			DynamicQuery.Parameter param = new DynamicQuery.Parameter(BindingTemplateQuery.ENTITY_ALIAS + "." + BindingTemplateQuery.KEY_NAME_PARENT, parentKey, DynamicQuery.PREDICATE_EQUALS); 
 			return findQuery.select(em, fq, categoryBag, keysIn, param);
