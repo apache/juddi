@@ -58,7 +58,7 @@ public class FindTModelByCategoryGroupQuery {
 													   TModelQuery.SIGNATURE_PRESENT);
 	}
 	
-	public static List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, List<?> keysIn) {
+	public static List<Object> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, List<Object> keysIn) {
 		return findQuery.select(em, fq, categoryBag, keysIn,  new DynamicQuery.Parameter(TModelQuery.ENTITY_ALIAS 
 				+ ".deleted", Boolean.FALSE, DynamicQuery.PREDICATE_EQUALS));
 	}

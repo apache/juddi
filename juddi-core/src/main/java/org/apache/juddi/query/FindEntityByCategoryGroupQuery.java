@@ -128,7 +128,7 @@ public class FindEntityByCategoryGroupQuery extends EntityQuery {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
+	public List<Object> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, List<Object> keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.
 		if ((keysIn != null) && (keysIn.size() == 0))
 			return keysIn;
@@ -152,9 +152,9 @@ public class FindEntityByCategoryGroupQuery extends EntityQuery {
 		Collections.sort(keyedRefGroups, new KeyedRefGroupTModelComparator());
 		int count = 0;
 		String prevTModelKey = null;
-		Set<String> orResults = new HashSet<String>(0);
-		List<?> restrictionList = keysIn;
-		List<?> curResult = null;
+		Set<Object> orResults = new HashSet<Object>(0);
+		List<Object> restrictionList = keysIn;
+		List<Object> curResult = null;
 		for (KeyedReferenceGroup keyedRefGroup : keyedRefGroups) {
 			String curTModelKey = keyedRefGroup.getTModelKey();
 			
@@ -167,7 +167,7 @@ public class FindEntityByCategoryGroupQuery extends EntityQuery {
 			if (fq.isOrLikeKeys()) {
 				if (!curTModelKey.equals(prevTModelKey)) {
 					if (count != 0) {
-						restrictionList = new ArrayList<String>(orResults);
+						restrictionList = new ArrayList<Object>(orResults);
 						orResults.clear();
 					}
 				}
@@ -183,20 +183,20 @@ public class FindEntityByCategoryGroupQuery extends EntityQuery {
 			curResult = getQueryResult(em, dynamicQry, restrictionList, entityAlias + "." + keyName);
 
 			if (fq.isOrAllKeys() || fq.isOrLikeKeys()) {
-				orResults.addAll((List<String>)curResult);
+				orResults.addAll((List<Object>)curResult);
 			}
 			
 			prevTModelKey = curTModelKey;
 			count++;
 		}
 		
-		List<String> result = null;
+		List<Object> result = null;
 		if (fq.isOrAllKeys() || fq.isOrLikeKeys()) {
-			result = new ArrayList<String>(0);
+			result = new ArrayList<Object>(0);
 			result.addAll(orResults);
 		}
 		else
-			result = (List<String>)curResult;
+			result = (List<Object>)curResult;
 		
 		return result;
 		

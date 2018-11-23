@@ -60,7 +60,7 @@ public class FindBusinessByTModelKeyQuery extends BusinessEntityQuery {
 		entityAliasChild = buildAlias(ENTITY_NAME_CHILD);
 	}
 
-	public static List<?> select(EntityManager em, FindQualifiers fq, TModelBag tModels, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
+	public static List<Object> select(EntityManager em, FindQualifiers fq, TModelBag tModels, List<Object> keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.
 		if ((keysIn != null) && (keysIn.isEmpty()))
 			return keysIn;

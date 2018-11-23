@@ -124,7 +124,7 @@ public abstract class EntityQuery {
 	 * Used for all the find operation sub-queries.  Restricts size of the IN clause based on global parameter
 	 */
 	@SuppressWarnings("unchecked")
-	public static List<?> getQueryResult(EntityManager em, DynamicQuery dynamicQry, List<?> keysIn, String inListTerm) {
+	public static List<Object> getQueryResult(EntityManager em, DynamicQuery dynamicQry, List<?> keysIn, String inListTerm) {
 		
 		List<Object> result = new ArrayList<Object>(0);
 		// If keysIn is null, then no IN list is applied to the query - we simply need to run the query.  Otherwise, the IN list is chunked based on
@@ -142,26 +142,31 @@ public abstract class EntityQuery {
 			catch(ConfigurationException ce) {
 				log.error("Configuration exception occurred retrieving: " + Property.JUDDI_MAX_IN_CLAUSE);
 			}
-			
-			int inParamsLeft = keysIn.size();
-			int startIndex = 0;
-			while(inParamsLeft > 0) {
-				int endIndex = startIndex + Math.min(inParamsLeft, maxInClause);
-				
-				List<Object> subKeysIn = new ArrayList<Object>(endIndex);
-				for (int i=startIndex; i< endIndex; i++) {
-					subKeysIn.add(keysIn.get(i));
-				}
-				dynamicQry.appendInListWithAnd(inListTerm, subKeysIn);
-				log.debug(dynamicQry);
-	
-				Query qry = dynamicQry.buildJPAQuery(em);
-				List<Object> resultChunk = qry.getResultList();
-				result.addAll(resultChunk);
-				
-				inParamsLeft = inParamsLeft - (endIndex - startIndex);
-				startIndex = endIndex;
-			}
+			if (keysIn.isEmpty()) {
+                            Query qry = dynamicQry.buildJPAQuery(em);
+                            List<Object> resultChunk = qry.getResultList();
+                            result.addAll(resultChunk);
+                        } else {
+                            int inParamsLeft = keysIn.size();
+                            int startIndex = 0;
+                            while(inParamsLeft > 0) {
+                                    int endIndex = startIndex + Math.min(inParamsLeft, maxInClause);
+
+                                    List<Object> subKeysIn = new ArrayList<Object>(endIndex);
+                                    for (int i=startIndex; i< endIndex; i++) {
+                                            subKeysIn.add(keysIn.get(i));
+                                    }
+                                    dynamicQry.appendInListWithAnd(inListTerm, subKeysIn);
+                                    log.debug(dynamicQry);
+
+                                    Query qry = dynamicQry.buildJPAQuery(em);
+                                    List<Object> resultChunk = qry.getResultList();
+                                    result.addAll(resultChunk);
+
+                                    inParamsLeft = inParamsLeft - (endIndex - startIndex);
+                                    startIndex = endIndex;
+                            }
+                        }
 		}
 		
 		return result;

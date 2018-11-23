@@ -50,7 +50,7 @@ public class FindBusinessByIdentifierQuery {
 													BusinessEntityQuery.SIGNATURE_PRESENT);
 	}
 	
-	public static List<?> select(EntityManager em, FindQualifiers fq, IdentifierBag identifiers, List<?> keysIn) {
+	public static List<Object> select(EntityManager em, FindQualifiers fq, IdentifierBag identifiers, List<Object> keysIn) {
 		return findQuery.select(em, fq, identifiers, keysIn);
 	}
 	

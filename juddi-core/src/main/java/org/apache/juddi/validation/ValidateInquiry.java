@@ -21,6 +21,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Hashtable;
 import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import org.apache.juddi.api.impl.InquiryHelper;
+import org.apache.juddi.api.util.InquiryQuery;
+import org.apache.juddi.api.util.QueryStatus;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.mapping.MappingModelToApi;
 
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetOperationalInfo;
@@ -40,6 +47,8 @@ import org.uddi.api_v3.TModelBag;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.query.BusinessServiceQuery;
+import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
@@ -47,6 +56,8 @@ import org.apache.juddi.v3.error.InvalidCombinationException;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.juddi.v3.error.UnsupportedException;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
+import org.uddi.api_v3.BindingDetail;
+import org.uddi.api_v3.ServiceDetail;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -256,8 +267,10 @@ public class ValidateInquiry extends ValidateUDDIApi {
                 if (body == null) {
                         throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
                 }
-
-                if (body.getCategoryBag() == null && body.getFindTModel() == null && body.getTModelBag() == null) {
+                if (body.getServiceKey()!=null && body.getServiceKey().length() > 0) {
+                    validateServiceExists(body.getServiceKey());
+                }
+                if ((body.getServiceKey()==null || body.getServiceKey().length()==0) && body.getCategoryBag() == null && body.getFindTModel() == null && body.getTModelBag() == null) {
                         throw new FatalErrorException(new ErrorMessage("errors.findbinding.NoInput"));
                 }
 
@@ -760,4 +773,30 @@ public class ValidateInquiry extends ValidateUDDIApi {
                 supportedFindqualifiers.put(FindQualifiers.UTS_10_TMODEL.toLowerCase(), true);
                 
         }
+
+    private void validateServiceExists(String serviceKey) throws InvalidKeyPassedException {
+        
+        EntityManager em = PersistenceManager.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+
+            org.apache.juddi.model.BusinessService modelBusinessService = null;
+            try {
+                modelBusinessService = em.find(org.apache.juddi.model.BusinessService.class, serviceKey);
+            } catch (ClassCastException e) {
+            }
+            if (modelBusinessService == null) {
+                throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ServiceNotFound", serviceKey));
+            }
+
+            tx.commit();
+
+        } finally {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            em.close();
+        }
+    }
 }

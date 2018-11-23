@@ -99,7 +99,7 @@ public class FindEntityByNamesQuery extends EntityQuery {
 		this.signaturePresent = signaturePresent;
 	}
 	
-	public List<?> select(EntityManager em, FindQualifiers fq, List<Name> names, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
+	public List<Object> select(EntityManager em, FindQualifiers fq, List<Name> names, List<Object> keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.
 		if ((keysIn != null) && (keysIn.size() == 0))
 			return keysIn;
