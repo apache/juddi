@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.apache.juddi</groupId>
         <artifactId>juddi-parent</artifactId>
-        <version>3.3.7-SNAPSHOT</version>
+        <version>3.3.6-SNAPSHOT</version>
     </parent>
     <artifactId>juddi-tomcat</artifactId>
     <name>jUDDI Tomcat Packaging</name>
