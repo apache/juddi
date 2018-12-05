@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValidateValuesFromWebService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.validation</a> &gt; <span class="el_source">ValidateValuesFromWebService.java</span></div><h1>ValidateValuesFromWebService.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2013 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.validation;
+
+import java.util.List;
+import javax.xml.ws.BindingProvider;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.impl.UDDIValueSetValidationImpl;
+import org.apache.juddi.config.Property;
+import org.apache.juddi.v3.client.UDDIConstants;
+import org.apache.juddi.v3.client.UDDIService;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
+import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.api_v3.TModel;
+import org.uddi.v3_service.UDDIValueSetValidationPortType;
+import org.uddi.vs_v3.ValidateValues;
+
+/**
+ * This class handles when this UDDI server receives some kind of SaveXXX
+ * Publish API request and the request uses a tModel KeyedReference that is both
+ * &quot;checked&quot; and has a {@link UDDIConstants#IS_VALIDATED_BY}  property. The value of the
+ * IS_VALIDATED_BY reference points to a BindingTemplate which should in turn
+ * point to a Web Service that handles validation requests for the tModel
+ * KeyedReferences.
+ *
+ * Short Story long, this class handles the external callout. It also handles
+ * classpath:/ URLs (which is currently just jUDDI's implementation of VSV.
+ * 
+ * @author Alex O'Ree
+ * @see UDDIConstants
+ * @since 3.3
+ */
+<span class="nc" id="L51">public class ValidateValuesFromWebService {</span>
+
+<span class="fc" id="L53">        private static final Log log = LogFactory.getLog(ValidateValuesFromWebService.class);</span>
+
+        private static UDDIValueSetValidationPortType getPort(String url) throws ValueNotAllowedException {
+<span class="fc" id="L56">                UDDIService svc = new UDDIService();</span>
+<span class="fc" id="L57">                UDDIValueSetValidationPortType vsv = svc.getUDDIValueSetValidationPort();</span>
+
+<span class="pc bpc" id="L59" title="2 of 4 branches missed.">                if (url == null || url.trim().length() == 0) {</span>
+<span class="nc" id="L60">                        log.error(&quot;VSV Validation Failed: Calling Url is null&quot;);</span>
+<span class="nc" id="L61">                        ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidurl&quot;));</span>
+<span class="nc" id="L62">                        throw x;</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">                } else if (url.startsWith(Property.DEFAULT_BASE_URL)</span>
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">                        || url.startsWith(Property.DEFAULT_BASE_URL_SECURE)) {</span>
+<span class="nc" id="L65">                        vsv = new UDDIValueSetValidationImpl();</span>
+
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">                } else if (url.startsWith(&quot;classpath:/&quot;)) {</span>
+                        try {
+<span class="fc" id="L69">                                String clz = url.substring(11);</span>
+<span class="fc" id="L70">                                Class&lt;UDDIValueSetValidationPortType&gt; forName = (Class&lt;UDDIValueSetValidationPortType&gt;) Class.forName(clz);</span>
+<span class="fc" id="L71">                                vsv = forName.newInstance();</span>
+<span class="nc" id="L72">                        } catch (Exception ex) {</span>
+<span class="nc" id="L73">                                log.error(&quot;VSV Validation Failed: Cannot locate class from url &quot; + url, ex);</span>
+<span class="pc" id="L74">                        }</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">                } else if (url.toLowerCase().startsWith(&quot;http&quot;)){</span>
+                        //external service, stick with 
+<span class="nc" id="L77">                        log.info(&quot;Calling External VSV Service&quot;);</span>
+<span class="nc" id="L78">                        ((BindingProvider) vsv).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, url);</span>
+                }
+                else
+                {
+<span class="nc" id="L82">                        log.warn(&quot;Unable to figure out how to use the URL &quot; + url  + &quot; as a Value Set Validation Service transport mechanism.&quot;);</span>
+<span class="nc" id="L83">                        ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidurl&quot;, url));</span>
+<span class="nc" id="L84">                        throw x;</span>
+                }
+                
+<span class="fc" id="L87">                return vsv;</span>
+        }
+
+       
+
+        public static void ValidateTModel(String url, List&lt;TModel&gt; obj) throws ValueNotAllowedException {
+<span class="fc" id="L93">                UDDIValueSetValidationPortType vsv = getPort(url);</span>
+<span class="fc" id="L94">                ValidateValues req = new ValidateValues();</span>
+<span class="fc" id="L95">                req.getTModel().addAll(obj);</span>
+
+                try {
+<span class="fc" id="L98">                        vsv.validateValues(req);</span>
+<span class="fc" id="L99">                } catch (Exception ex) {</span>
+<span class="fc" id="L100">                        log.warn(ex.getMessage());</span>
+<span class="fc" id="L101">                        log.debug(ex.getMessage(),ex);</span>
+<span class="fc" id="L102">                        ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, ex.getMessage()));</span>
+<span class="fc" id="L103">                        throw x;</span>
+<span class="fc" id="L104">                }</span>
+<span class="fc" id="L105">        }</span>
+        
+          public static void ValidateBinding(String url, List&lt;BindingTemplate&gt; obj) throws ValueNotAllowedException {
+<span class="fc" id="L108">                UDDIValueSetValidationPortType vsv = getPort(url);</span>
+<span class="fc" id="L109">                ValidateValues req = new ValidateValues();</span>
+<span class="fc" id="L110">                req.getBindingTemplate().addAll(obj);</span>
+
+                try {
+<span class="fc" id="L113">                        vsv.validateValues(req);</span>
+<span class="nc" id="L114">                } catch (Exception ex) {</span>
+<span class="nc" id="L115">                        log.warn(ex.getMessage());</span>
+<span class="nc" id="L116">                        log.debug(ex.getMessage(),ex);</span>
+<span class="nc" id="L117">                        ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, ex.getMessage()));</span>
+<span class="nc" id="L118">                        throw x;</span>
+<span class="fc" id="L119">                }</span>
+<span class="fc" id="L120">        }</span>
+
+        public static void ValidateService(String url, List&lt;BusinessService&gt; obj) throws ValueNotAllowedException {
+<span class="nc" id="L123">                UDDIValueSetValidationPortType vsv = getPort(url);</span>
+<span class="nc" id="L124">                ValidateValues req = new ValidateValues();</span>
+<span class="nc" id="L125">                req.getBusinessService().addAll(obj);</span>
+
+                try {
+<span class="nc" id="L128">                        vsv.validateValues(req);</span>
+<span class="nc" id="L129">                } catch (Exception ex) {</span>
+<span class="nc" id="L130">                        log.warn(ex.getMessage());</span>
+<span class="nc" id="L131">                        log.debug(ex.getMessage(),ex);</span>
+<span class="nc" id="L132">                        ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, ex.getMessage()));</span>
+<span class="nc" id="L133">                        throw x;</span>
+<span class="nc" id="L134">                }</span>
+<span class="nc" id="L135">        }</span>
+        
+      
+        public static void ValidateBusiness(String url, List&lt;BusinessEntity&gt; obj) throws ValueNotAllowedException {
+<span class="fc" id="L139">                UDDIValueSetValidationPortType vsv = getPort(url);</span>
+<span class="fc" id="L140">                ValidateValues req = new ValidateValues();</span>
+<span class="fc" id="L141">                req.getBusinessEntity().addAll(obj);</span>
+
+                try {
+<span class="fc" id="L144">                        vsv.validateValues(req);</span>
+<span class="fc" id="L145">                } catch (Exception ex) {</span>
+<span class="fc" id="L146">                        log.warn(ex.getMessage());</span>
+<span class="fc" id="L147">                        log.debug(ex.getMessage(),ex);</span>
+<span class="fc" id="L148">                        ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, ex.getMessage()));</span>
+<span class="fc" id="L149">                        throw x;</span>
+<span class="fc" id="L150">                }</span>
+<span class="fc" id="L151">        }</span>
+
+        public static void ValidatePubAss(String url, PublisherAssertion obj) throws ValueNotAllowedException {
+<span class="nc" id="L154">                UDDIValueSetValidationPortType vsv = getPort(url);</span>
+<span class="nc" id="L155">                ValidateValues req = new ValidateValues();</span>
+<span class="nc" id="L156">                req.getPublisherAssertion().add(obj);</span>
+                try {
+<span class="nc" id="L158">                        vsv.validateValues(req);</span>
+<span class="nc" id="L159">                } catch (Exception ex) {</span>
+<span class="nc" id="L160">                        log.warn(ex.getMessage());</span>
+<span class="nc" id="L161">                        log.debug(ex.getMessage(),ex);</span>
+<span class="nc" id="L162">                        ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, ex.getMessage()));</span>
+<span class="nc" id="L163">                        throw x;</span>
+<span class="nc" id="L164">                }</span>
+<span class="nc" id="L165">        }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

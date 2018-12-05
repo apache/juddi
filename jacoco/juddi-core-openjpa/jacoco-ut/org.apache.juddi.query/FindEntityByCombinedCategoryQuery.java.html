@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FindEntityByCombinedCategoryQuery.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.query</a> &gt; <span class="el_source">FindEntityByCombinedCategoryQuery.java</span></div><h1>FindEntityByCombinedCategoryQuery.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.query;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.persistence.EntityManager;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.query.util.DynamicQuery;
+import org.apache.juddi.query.util.FindQualifiers;
+import org.uddi.api_v3.CategoryBag;
+import org.uddi.api_v3.KeyedReference;
+
+/**
+ * Returns the list of &quot;entity&quot; keys possessing the keyedReferences passed in or the level below.
+ * For findBusiness queries, this means keyedReferences on the businessEntity and service levels,
+ * and for findService queries this means keyedReferences on the service and serviceBinding level.
+ * 
+ * Output is restricted by list of &quot;entity&quot; keys passed in.  If null, all entities are searched.
+ * Output is produced by building the appropriate JPA query based on input and find qualifiers.
+ * 
+ * From the spec : 
+ * 
+ *  * From specification:
+ * &quot;combineCategoryBags:  this may only be used in the find_business and find_service calls.  In the case of 
+ * find_business, this qualifier makes the categoryBag entries for the full businessEntity element behave as though all 
+ * categoryBag elements found at the businessEntity level and in all contained or referenced businessService elements 
+ * and bindingTemplate elements were combined.  Searching for a category will yield a positive match on a registered 
+ * business if any of the categoryBag elements contained within the full businessEntity element (including the 
+ * categoryBag elements within contained or referenced businessService elements or bindingTemplate elements) 
+ * contains the filter criteria.  In the case of find_service, this qualifier makes the categoryBag entries 
+ * for the full businessService element behave as though all categoryBag elements found at the businessService level 
+ * and in all contained or referenced elements in the bindingTemplate elements were combined.  Searching for a category 
+ * will yield a positive match on a registered service if any of the categoryBag elements contained within the 
+ * full businessService element (including the categoryBag elements within contained or referenced bindingTemplate 
+ * elements) contains the filter criteria. This find qualifier does not cause the keyedReferences in categoryBags 
+ * to be combined with the keyedReferences in keyedReferenceGroups in categoryBags when performing the comparison.  
+ * The keyedReferences are combined with each other, and the keyedReferenceGroups are combined with each other.&quot;
+ * 
+ * 
+ * NOTES:
+ * 1) Categories are grouped with a logical AND by default.
+ * 2) Concerning when the categories are AND'd together - the only way this can be done with a single query was to create a self-join for 
+ *    each category.  If there are a lot of categories, the performance could suffer.
+ *    TODO:  Test performance with multiple AND'd categories.  If too slow, look to process this query in multiple steps.
+ * 3) The &quot;orLikeKeys&quot; qualifier complicates matters.  The &quot;like&quot; keys are OR'd together and these groups of &quot;like&quot; keys are AND'd together.
+ *    As with &quot;andAllKeys&quot;, self-joins are created but only one for each group of &quot;like&quot; keys.  If none of the keyedReferences passed are alike then this
+ *    will reduce to an &quot;andAllKeys&quot; query.  If all are alike, then this will query will exhibit the behavior of OR'ing all keys.
+ * 
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:tcunning@apache.org&quot;&gt;Tom Cunningham&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:kstam@apache.org&quot;&gt;Kurt Stam&lt;/a&gt;
+ */
+public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery {
+	
+	@SuppressWarnings(&quot;unused&quot;)
+<span class="fc" id="L79">	private final static Log log = LogFactory.getLog(FindEntityByCombinedCategoryQuery.class);</span>
+	
+	protected String entityField2;
+	protected String entityNameChild2;
+	protected String entityAliasChild2;
+	
+	protected String entityField3;
+	protected String entityNameChild3;
+	protected String entityAliasChild3;
+	
+
+	public FindEntityByCombinedCategoryQuery(String entityName, String entityAlias, String keyName,
+			String entityField, String entityNameChild, String signaturePresent) {
+<span class="nc" id="L92">		super(entityName, entityAlias, keyName, entityField, entityNameChild, signaturePresent);</span>
+<span class="nc" id="L93">	}</span>
+	
+	public FindEntityByCombinedCategoryQuery(String entityName, String entityAlias, String keyName, 
+			String entityField, String entityNameChild,
+			String entityField2, String entityNameChild2, String entityField3, String entityNameChild3,
+			String signaturePresent) {
+<span class="fc" id="L99">		super(entityName, entityAlias, keyName, entityField, entityNameChild, signaturePresent);</span>
+		
+<span class="fc" id="L101">		this.entityNameChild2 = entityNameChild2;</span>
+<span class="fc" id="L102">		this.entityAliasChild2 = buildAlias(entityNameChild2);</span>
+<span class="fc" id="L103">		this.entityField2 = entityField2;</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">		if (entityNameChild3!=null) {</span>
+<span class="fc" id="L105">			this.entityField3 = entityField3;</span>
+<span class="fc" id="L106">			this.entityNameChild3 = entityNameChild3;</span>
+<span class="fc" id="L107">			this.entityAliasChild3 = buildAlias(entityNameChild3);</span>
+		}
+<span class="fc" id="L109">		this.signaturePresent = signaturePresent;</span>
+<span class="fc" id="L110">		selectSQL = &quot;&quot;;</span>
+<span class="fc" id="L111">	}</span>
+	
+	public String getEntityNameChild2() {
+<span class="nc" id="L114">		return entityNameChild2;</span>
+	}
+	
+	public String getEntityAliasChild2() {
+<span class="nc" id="L118">		return entityAliasChild2;</span>
+	}
+	
+	public String getEntityNameChild3() {
+<span class="nc" id="L122">		return entityNameChild3;</span>
+	}
+	
+	public String getEntityAliasChild3() {
+<span class="nc" id="L126">		return entityAliasChild3;</span>
+	}
+		
+	public List&lt;Object&gt; select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, 
+			List&lt;Object&gt; keysIn, DynamicQuery.Parameter... restrictions) {
+	        
+        // If keysIn is not null and empty, then search is over.
+<span class="pc bpc" id="L133" title="3 of 4 branches missed.">		if ((keysIn != null) &amp;&amp; (keysIn.size() == 0))</span>
+<span class="nc" id="L134">			return keysIn;</span>
+		
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">		if (categoryBag == null)</span>
+<span class="nc" id="L137">			return keysIn;</span>
+		
+<span class="fc" id="L139">		List&lt;KeyedReference&gt; keyRefsInCategories = categoryBag.getKeyedReference();</span>
+<span class="pc bpc" id="L140" title="2 of 4 branches missed.">		if (keyRefsInCategories == null || keyRefsInCategories.size() == 0)</span>
+<span class="nc" id="L141">			return keysIn;</span>
+		
+<span class="fc" id="L143">		Map&lt;KeyedReference,Set&lt;String&gt;&gt; map  = new HashMap&lt;KeyedReference,Set&lt;String&gt;&gt;();</span>
+		//1. First match at the top level (i.e. categoryBag on business)
+<span class="fc" id="L145">		findEntityByCategoryQuery(map, em, fq, categoryBag, entityField, entityNameChild, keysIn, restrictions);</span>
+		//2. Now match at the second level (i.e. categoryBag on services for businesses)
+<span class="fc" id="L147">		findEntityByCategoryQuery(map, em, fq, categoryBag, entityField2, entityNameChild2, keysIn, restrictions);</span>
+		//3. Now match at the third level (i.e. categoryBag on binding for businesses)
+		//   This does only apply to businesses (not for services)
+<span class="fc bfc" id="L150" title="All 2 branches covered.">		if (entityNameChild3!=null) {</span>
+<span class="fc" id="L151">			findEntityByCategoryQuery(map, em, fq, categoryBag, entityField3, entityNameChild3, keysIn, restrictions);</span>
+		}
+		
+		//Now build the results taking into account AND/OR/LIKE
+<span class="fc" id="L155">		Set&lt;String&gt; resultingEntityKeys = new HashSet&lt;String&gt;();</span>
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">		if (fq.isOrAllKeys()) {</span>
+			//in this case get ALL businessKeys
+<span class="nc bnc" id="L158" title="All 2 branches missed.">			for (KeyedReference keyRef: map.keySet()) {</span>
+<span class="nc" id="L159">				resultingEntityKeys.addAll(map.get(keyRef));</span>
+<span class="nc" id="L160">			}</span>
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">		} else if (fq.isOrLikeKeys()) {</span>
+			// any keyedReference filters that come from the same namespace (e.g. have the same tModelKey value) 
+			// are OR’d together rather than AND’d
+			// 1. OR if we have keys with similar namespaces (keyValue)
+<span class="nc" id="L165">			Map&lt;String,Set&lt;String&gt;&gt; likeMap  = new HashMap&lt;String,Set&lt;String&gt;&gt;();</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">			for (KeyedReference keyRef: map.keySet()) {</span>
+<span class="nc" id="L167">				String keyValue = keyRef.getKeyValue();</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">				if (likeMap.containsKey(keyValue)) {</span>
+<span class="nc" id="L169">					likeMap.get(keyValue).addAll(map.get(keyRef));</span>
+				} else {
+<span class="nc" id="L171">					likeMap.put(keyValue, map.get(keyRef));</span>
+				}
+<span class="nc" id="L173">			}</span>
+			// 2. Now AND the likeMap
+<span class="nc" id="L175">			boolean firstTime = true;</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">			for (String keyValue: likeMap.keySet()) {</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">				if (firstTime) {</span>
+<span class="nc" id="L178">					resultingEntityKeys = map.get(keyValue);</span>
+<span class="nc" id="L179">					firstTime = false;</span>
+				} else {
+                                        //FIXME this is wrong
+<span class="nc" id="L182">					resultingEntityKeys.retainAll(map.get(keyValue));</span>
+				}
+<span class="nc" id="L184">			}</span>
+<span class="nc" id="L185">		} else {</span>
+			// AND keys by default, in this case each entity (business or service)
+			// needs to have ALL keys
+<span class="fc" id="L188">			boolean firstTime = true;</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">			for (KeyedReference keyRef: map.keySet()) {</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">				if (firstTime) {</span>
+<span class="fc" id="L191">					resultingEntityKeys = map.get(keyRef);</span>
+<span class="fc" id="L192">					firstTime = false;</span>
+				} else {
+<span class="fc" id="L194">					resultingEntityKeys.retainAll(map.get(keyRef));</span>
+				}
+<span class="fc" id="L196">			}</span>
+		}
+<span class="fc" id="L198">		return new ArrayList&lt;Object&gt;(resultingEntityKeys);</span>
+	}
+	/**
+	 * Finding the entities (businesses or services) that have a matching keyedReference in their
+	 * categoryBag.
+	 * 
+	 * @param map - result map of keyedReference and matching businesses
+	 * @param em
+	 * @param fq
+	 * @param categoryBag
+	 * @param entityField
+	 * @param entityNameChild
+	 * @param keysIn
+	 * @param restrictions
+	 */
+	private void findEntityByCategoryQuery(Map&lt;KeyedReference,Set&lt;String&gt;&gt; map, EntityManager em, 
+			FindQualifiers fq, CategoryBag categoryBag, String entityField, String entityNameChild, 
+			List&lt;Object&gt; keysIn, DynamicQuery.Parameter... restrictions) 
+	{
+<span class="fc" id="L217">		FindEntityByCategoryQuery findEntityByCategoryQuery = new FindEntityByCategoryQuery(</span>
+				entityName, entityAlias, keyName, entityField, entityNameChild, signaturePresent);
+<span class="fc bfc" id="L219" title="All 2 branches covered.">		for (KeyedReference keyedReference : categoryBag.getKeyedReference()) {</span>
+<span class="fc" id="L220">			CategoryBag categoryBagWithOneKey = new CategoryBag();</span>
+<span class="fc" id="L221">			categoryBagWithOneKey.getKeyedReference().add(keyedReference);</span>
+<span class="fc" id="L222">			List&lt;?&gt; entityKeys =  findEntityByCategoryQuery.select(</span>
+					em, fq, categoryBagWithOneKey, keysIn, restrictions);
+			@SuppressWarnings({ &quot;unchecked&quot;, &quot;rawtypes&quot; })
+<span class="fc" id="L225">			Set&lt;String&gt; keySet = new HashSet(entityKeys);</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">			if (map.containsKey(keyedReference)) {</span>
+<span class="fc" id="L227">				map.get(keyedReference).addAll(keySet);</span>
+			} else {
+<span class="fc" id="L229">				map.put(keyedReference, keySet);</span>
+			}
+<span class="fc" id="L231">		}</span>
+<span class="fc" id="L232">	}</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

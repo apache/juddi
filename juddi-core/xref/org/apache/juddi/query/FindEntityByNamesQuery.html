@@ -107,7 +107,7 @@
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>  		<strong class="jxr_keyword">this</strong>.signaturePresent = signaturePresent;
 <a class="jxr_linenumber" name="L100" href="#L100">100</a> 	}
 <a class="jxr_linenumber" name="L101" href="#L101">101</a> 	
-<a class="jxr_linenumber" name="L102" href="#L102">102</a> 	<strong class="jxr_keyword">public</strong> List&lt;?&gt; select(EntityManager em, <a href="../../../../org/apache/juddi/query/util/FindQualifiers.html">FindQualifiers</a> fq, List&lt;Name&gt; names, List&lt;?&gt; keysIn, DynamicQuery.Parameter... restrictions) {
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> 	<strong class="jxr_keyword">public</strong> List&lt;Object&gt; select(EntityManager em, <a href="../../../../org/apache/juddi/query/util/FindQualifiers.html">FindQualifiers</a> fq, List&lt;Name&gt; names, List&lt;Object&gt; keysIn, DynamicQuery.Parameter... restrictions) {
 <a class="jxr_linenumber" name="L103" href="#L103">103</a> 		<em class="jxr_comment">// If keysIn is not null and empty, then search is over.</em>
 <a class="jxr_linenumber" name="L104" href="#L104">104</a> 		<strong class="jxr_keyword">if</strong> ((keysIn != <strong class="jxr_keyword">null</strong>) &amp;&amp; (keysIn.size() == 0))
 <a class="jxr_linenumber" name="L105" href="#L105">105</a> 			<strong class="jxr_keyword">return</strong> keysIn;

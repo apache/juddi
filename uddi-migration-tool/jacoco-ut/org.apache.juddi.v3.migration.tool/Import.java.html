@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Import.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDI Migration tool</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.migration.tool</a> &gt; <span class="el_source">Import.java</span></div><h1>Import.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2013 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.migration.tool;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.Set;
+import javax.xml.bind.JAXB;
+import org.apache.juddi.api_v3.GetPublisherDetail;
+import org.apache.juddi.api_v3.PublisherDetail;
+import org.apache.juddi.api_v3.SavePublisher;
+import org.apache.juddi.v3.client.config.UDDIClerk;
+import org.apache.juddi.v3.client.config.UDDIClient;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
+import org.apache.juddi.v3.client.cryptor.XmlUtils;
+import org.apache.juddi.v3.client.transport.Transport;
+import org.apache.juddi.v3_service.JUDDIApiPortType;
+import org.uddi.api_v3.BusinessDetail;
+import org.uddi.api_v3.GetAuthToken;
+import org.uddi.api_v3.GetBusinessDetail;
+import org.uddi.api_v3.GetTModelDetail;
+import org.uddi.api_v3.SaveBusiness;
+import org.uddi.api_v3.SaveTModel;
+import org.uddi.api_v3.TModelDetail;
+import org.uddi.v3_service.UDDIInquiryPortType;
+import org.uddi.v3_service.UDDIPublicationPortType;
+import org.uddi.v3_service.UDDISecurityPortType;
+
+/**
+ * Provides UDDI import functions
+ *
+ * @author Alex O'Ree
+ * @since 3.2
+ */
+<span class="nc" id="L51">public class Import {</span>
+
+<span class="nc" id="L53">        private static UDDISecurityPortType security = null;</span>
+<span class="nc" id="L54">        private static JUDDIApiPortType juddiApi = null;</span>
+<span class="nc" id="L55">        private static UDDIPublicationPortType publish = null;</span>
+        private static UDDIInquiryPortType inquiry;
+        private JUDDIApiPortType juddi;
+<span class="nc" id="L58">        String token = null;</span>
+<span class="nc" id="L59">        String username = null;</span>
+<span class="nc" id="L60">        String pass=null;</span>
+<span class="nc" id="L61">        String tmodelfile = null;</span>
+<span class="nc" id="L62">        String businessfile = null;</span>
+<span class="nc" id="L63">        String publishersfile = null;</span>
+<span class="nc" id="L64">        String mappingsfile = null;</span>
+<span class="nc" id="L65">        boolean safemode = false;</span>
+<span class="nc" id="L66">        boolean stripSig = false;</span>
+<span class="nc" id="L67">        boolean preserveOwnership = false;</span>
+<span class="nc" id="L68">        Set&lt;String&gt; usernames = new HashSet&lt;String&gt;();</span>
+        /**
+         * item to user
+         */
+<span class="nc" id="L72">        Properties mapping = new Properties();</span>
+        /**
+         * user to password
+         */
+<span class="nc" id="L76">        Properties userpwd = new Properties();</span>
+        String credFile;
+
+        public void Execute(String config, String name, String username, String pass,
+                String tmodelIn, String businessIn,
+                boolean isJuddi, boolean safe, String publishersFile,
+                boolean preserveOwnership,
+                String mappingsfile, String credFile, boolean stripSig) throws Exception {
+
+<span class="nc" id="L85">                this.safemode = safe;</span>
+<span class="nc" id="L86">                this.credFile = credFile;</span>
+<span class="nc" id="L87">                this.stripSig = stripSig;</span>
+<span class="nc" id="L88">                this.publishersfile = publishersFile;</span>
+<span class="nc" id="L89">                this.tmodelfile = tmodelIn;</span>
+<span class="nc" id="L90">                this.businessfile = businessIn;</span>
+<span class="nc" id="L91">                this.preserveOwnership = preserveOwnership;</span>
+<span class="nc" id="L92">                this.mappingsfile = mappingsfile;</span>
+
+                // create a manager and read the config in the archive; 
+                // you can use your config file name
+<span class="nc" id="L96">                UDDIClient clerkManager = new UDDIClient(config);</span>
+<span class="nc" id="L97">                clerkManager.start();</span>
+<span class="nc" id="L98">                UDDIClerk clerk = clerkManager.getClerk(name);</span>
+                // a ClerkManager can be a client to multiple UDDI nodes, so 
+                // supply the nodeName (defined in your uddi.xml.
+                // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
+<span class="nc" id="L102">                Transport transport = clerkManager.getTransport(name);</span>
+                // Now you create a reference to the UDDI API
+<span class="nc" id="L104">                security = transport.getUDDISecurityService();</span>
+<span class="nc" id="L105">                publish = transport.getUDDIPublishService();</span>
+<span class="nc" id="L106">                inquiry = transport.getUDDIInquiryService();</span>
+<span class="nc" id="L107">                juddi = transport.getJUDDIApiService();</span>
+<span class="nc" id="L108">                token = null;</span>
+<span class="nc bnc" id="L109" title="All 4 branches missed.">                if (username == null || pass == null) {</span>
+<span class="nc" id="L110">                        this.username = clerk.getPublisher();</span>
+<span class="nc" id="L111">                        this.pass = clerk.getPassword();</span>
+                }
+                else
+                {
+<span class="nc" id="L115">                        this.username=username;</span>
+<span class="nc" id="L116">                        this.pass=pass;</span>
+                }
+<span class="nc" id="L118">                token = Common.GetAuthToken(username, pass, security);</span>
+                
+
+                //load mapping files
+                //prompt for credentials
+<span class="nc" id="L123">                LoadProperties();</span>
+
+<span class="nc bnc" id="L125" title="All 2 branches missed.">                if (isJuddi) {</span>
+<span class="nc" id="L126">                        ImportPublishers();</span>
+                }
+
+<span class="nc bnc" id="L129" title="All 2 branches missed.">                if (preserveOwnership) {</span>
+                        //we'll need credentials for all the users
+<span class="nc" id="L131">                        EnsureCredentials();</span>
+                }
+
+
+
+<span class="nc" id="L136">                ImportTmodels();</span>
+<span class="nc" id="L137">                ImportBusiness();</span>
+
+
+
+<span class="nc" id="L141">        }</span>
+
+        public String GetOwner(String key) {
+<span class="nc" id="L144">                return mapping.getProperty(key);</span>
+        }
+
+        public String GetPwd(String username) {
+<span class="nc" id="L148">                return userpwd.getProperty(username);</span>
+        }
+
+        private void ImportTmodels() throws Exception {
+                
+<span class="nc" id="L153">                SaveTModel stm = (SaveTModel) XmlUtils.unmarshal(new File(tmodelfile), SaveTModel.class);</span>
+<span class="nc" id="L154">                System.out.println();</span>
+<span class="nc" id="L155">                System.out.println(&quot;Attempting to save &quot; + stm.getTModel().size() + &quot; tModels&quot;);</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">                if (stripSig) {</span>
+<span class="nc" id="L157">                        int x=0;</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">                        for (int i = 0; i &lt; stm.getTModel().size(); i++) {</span>
+<span class="nc" id="L159">                                x+=stm.getTModel().get(i).getSignature().size();</span>
+<span class="nc" id="L160">                                stm.getTModel().get(i).getSignature().clear();</span>
+                        }
+<span class="nc" id="L162">                        System.out.println(x + &quot; signatures stripped&quot;);</span>
+                }
+
+<span class="nc bnc" id="L165" title="All 2 branches missed.">                if (safemode) {</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">                        for (int i = 0; i &lt; stm.getTModel().size(); i++) {</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">                                if (!TModelExists(stm.getTModel().get(i).getTModelKey(), token)) {</span>
+<span class="nc" id="L168">                                        SaveTModel stm2 = new SaveTModel();</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">                                        if (preserveOwnership) {</span>
+<span class="nc" id="L170">                                                stm2.setAuthInfo(Common.GetAuthToken(</span>
+<span class="nc" id="L171">                                                        GetOwner(stm.getTModel().get(i).getTModelKey()),</span>
+<span class="nc" id="L172">                                                        GetPwd(GetOwner(stm.getTModel().get(i).getTModelKey())), security));</span>
+                                        } else {
+<span class="nc" id="L174">                                                stm2.setAuthInfo(token);</span>
+                                        }
+<span class="nc" id="L176">                                        stm2.getTModel().add(stm.getTModel().get(i));</span>
+                                        try {
+<span class="nc" id="L178">                                                publish.saveTModel(stm2);</span>
+<span class="nc" id="L179">                                                System.out.println(stm.getTModel().get(i).getTModelKey() + &quot; saved&quot;);</span>
+<span class="nc" id="L180">                                        } catch (Exception ex) {</span>
+<span class="nc" id="L181">                                                System.out.println(&quot;Error saving &quot; + stm.getTModel().get(i).getTModelKey() + &quot; &quot; + ex.getMessage());</span>
+<span class="nc" id="L182">                                        }</span>
+<span class="nc" id="L183">                                } else {</span>
+<span class="nc" id="L184">                                        System.out.println(stm.getTModel().get(i).getTModelKey() + &quot; skipped, it exists already&quot;);</span>
+                                }
+                        }
+                } else {
+<span class="nc" id="L188">                        stm.setAuthInfo(token);</span>
+
+<span class="nc" id="L190">                        publish.saveTModel(stm);</span>
+<span class="nc" id="L191">                        System.out.println(&quot;All &quot; + stm.getTModel().size() + &quot; saved!&quot;);</span>
+                }
+
+<span class="nc" id="L194">        }</span>
+
+        private void ImportBusiness() throws Exception {
+<span class="nc" id="L197">                SaveBusiness stm = (SaveBusiness) XmlUtils.unmarshal(new File(businessfile), SaveBusiness.class);</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">                if (stripSig) {</span>
+<span class="nc" id="L199">                        int x=0;</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">                        for (int i = 0; i &lt; stm.getBusinessEntity().size(); i++) {</span>
+<span class="nc" id="L201">                                x +=  stm.getBusinessEntity().get(i).getSignature().size();</span>
+<span class="nc" id="L202">                                stm.getBusinessEntity().get(i).getSignature().clear();</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">                                if (stm.getBusinessEntity().get(i).getBusinessServices() != null) {</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">                                        for (int i2 = 0; i2 &lt; stm.getBusinessEntity().get(i).getBusinessServices().getBusinessService().size(); i2++) {</span>
+<span class="nc" id="L205">                                                x +=  stm.getBusinessEntity().get(i).getBusinessServices().getBusinessService().get(i2).getSignature().size();</span>
+<span class="nc" id="L206">                                                stm.getBusinessEntity().get(i).getBusinessServices().getBusinessService().get(i2).getSignature().clear();</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">                                                if (stm.getBusinessEntity().get(i).getBusinessServices().getBusinessService().get(i2).getBindingTemplates() != null) {</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">                                                        for (int i3 = 0; i3 &lt; stm.getBusinessEntity().get(i).getBusinessServices().getBusinessService().get(i2).getBindingTemplates().getBindingTemplate().size(); i3++) {</span>
+<span class="nc" id="L209">                                                                x += stm.getBusinessEntity().get(i).getBusinessServices().getBusinessService().get(i2).getBindingTemplates().getBindingTemplate().get(i3).getSignature().size();</span>
+<span class="nc" id="L210">                                                                stm.getBusinessEntity().get(i).getBusinessServices().getBusinessService().get(i2).getBindingTemplates().getBindingTemplate().get(i3).getSignature().clear();</span>
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+<span class="nc" id="L216">                        System.out.println(x + &quot; signatures stripped&quot;);</span>
+                }
+
+<span class="nc bnc" id="L219" title="All 2 branches missed.">                if (safemode) {</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">                        for (int i = 0; i &lt; stm.getBusinessEntity().size(); i++) {</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">                                if (!BusinessExists(stm.getBusinessEntity().get(i).getBusinessKey(), token)) {</span>
+<span class="nc" id="L222">                                        SaveBusiness stm2 = new SaveBusiness();</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">                                        if (preserveOwnership) {</span>
+<span class="nc" id="L224">                                                stm2.setAuthInfo(Common.GetAuthToken(GetOwner(stm.getBusinessEntity().get(i).getBusinessKey()), GetPwd(GetOwner(stm.getBusinessEntity().get(i).getBusinessKey())), security));</span>
+                                        } else {
+<span class="nc" id="L226">                                                stm2.setAuthInfo(token);</span>
+                                        }
+<span class="nc" id="L228">                                        stm2.getBusinessEntity().add(stm.getBusinessEntity().get(i));</span>
+                                        try {
+<span class="nc" id="L230">                                                publish.saveBusiness(stm2);</span>
+<span class="nc" id="L231">                                                System.out.println(stm.getBusinessEntity().get(i).getBusinessKey() + &quot; saved&quot;);</span>
+<span class="nc" id="L232">                                        } catch (Exception ex) {</span>
+<span class="nc" id="L233">                                                System.out.println(&quot;Error saving &quot; + stm.getBusinessEntity().get(i).getBusinessKey() + &quot; &quot; + ex.getMessage());</span>
+<span class="nc" id="L234">                                        }</span>
+<span class="nc" id="L235">                                } else {</span>
+<span class="nc" id="L236">                                        System.out.println(stm.getBusinessEntity().get(i).getBusinessKey() + &quot; skipped, it exists already&quot;);</span>
+                                }
+                        }
+                } else {
+<span class="nc" id="L240">                        stm.setAuthInfo(token);</span>
+<span class="nc" id="L241">                        publish.saveBusiness(stm);</span>
+<span class="nc" id="L242">                        System.out.println(&quot;All &quot; + stm.getBusinessEntity().size() + &quot; businesses aved!&quot;);</span>
+                }
+<span class="nc" id="L244">        }</span>
+
+        private boolean TModelExists(String tModelKey, String token) {
+<span class="nc" id="L247">                GetTModelDetail r = new GetTModelDetail();</span>
+<span class="nc" id="L248">                r.setAuthInfo(token);</span>
+<span class="nc" id="L249">                r.getTModelKey().add(tModelKey);</span>
+                try {
+<span class="nc" id="L251">                        TModelDetail tModelDetail = inquiry.getTModelDetail(r);</span>
+<span class="nc bnc" id="L252" title="All 4 branches missed.">                        if (tModelDetail != null &amp;&amp; !tModelDetail.getTModel().isEmpty()) {</span>
+<span class="nc" id="L253">                                return true;</span>
+                        }
+<span class="nc" id="L255">                } catch (Exception ex) {</span>
+<span class="nc" id="L256">                }</span>
+<span class="nc" id="L257">                return false;</span>
+        }
+
+        private boolean BusinessExists(String businessKey, String token) {
+<span class="nc" id="L261">                GetBusinessDetail r = new GetBusinessDetail();</span>
+<span class="nc" id="L262">                r.setAuthInfo(token);</span>
+<span class="nc" id="L263">                r.getBusinessKey().add(businessKey);</span>
+                try {
+<span class="nc" id="L265">                        BusinessDetail tModelDetail = inquiry.getBusinessDetail(r);</span>
+<span class="nc bnc" id="L266" title="All 4 branches missed.">                        if (tModelDetail != null &amp;&amp; !tModelDetail.getBusinessEntity().isEmpty()) {</span>
+<span class="nc" id="L267">                                return true;</span>
+                        }
+<span class="nc" id="L269">                } catch (Exception ex) {</span>
+<span class="nc" id="L270">                }</span>
+<span class="nc" id="L271">                return false;</span>
+        }
+
+        private void ImportPublishers() throws Exception {
+
+<span class="nc" id="L276">                SavePublisher stm = (SavePublisher) XmlUtils.unmarshal(new File(publishersfile), SavePublisher.class);</span>
+<span class="nc bnc" id="L277" title="All 2 branches missed.">                if (safemode) {</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">                        for (int i = 0; i &lt; stm.getPublisher().size(); i++) {</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">                                if (!PublisherExists(stm.getPublisher().get(i).getAuthorizedName(), token)) {</span>
+<span class="nc" id="L280">                                        SavePublisher stm2 = new SavePublisher();</span>
+<span class="nc" id="L281">                                        stm2.setAuthInfo(Common.GetAuthToken(username, pass, security));</span>
+<span class="nc" id="L282">                                        stm2.getPublisher().add(stm.getPublisher().get(i));</span>
+                                        try {
+<span class="nc" id="L284">                                                juddi.savePublisher(stm2);</span>
+<span class="nc" id="L285">                                                System.out.println(stm.getPublisher().get(i).getAuthorizedName() + &quot; saved&quot;);</span>
+<span class="nc" id="L286">                                        } catch (Exception ex) {</span>
+<span class="nc" id="L287">                                                System.out.println(&quot;Error saving &quot; + stm.getPublisher().get(i).getAuthorizedName() + &quot; &quot; + ex.getMessage());</span>
+<span class="nc" id="L288">                                        }</span>
+<span class="nc" id="L289">                                } else {</span>
+<span class="nc" id="L290">                                        System.out.println(stm.getPublisher().get(i).getAuthorizedName() + &quot; skipped, it exists already&quot;);</span>
+                                }
+                        }
+                } else {
+<span class="nc" id="L294">                        stm.setAuthInfo(token);</span>
+<span class="nc" id="L295">                        juddi.savePublisher(stm);</span>
+<span class="nc" id="L296">                        System.out.println(&quot;All &quot; + stm.getPublisher().size() + &quot; publishers saved!&quot;);</span>
+                }
+<span class="nc" id="L298">        }</span>
+
+        private boolean PublisherExists(String authorizedName, String token) {
+<span class="nc" id="L301">                GetPublisherDetail r = new GetPublisherDetail();</span>
+<span class="nc" id="L302">                r.setAuthInfo(token);</span>
+<span class="nc" id="L303">                r.getPublisherId().add(authorizedName);</span>
+                try {
+<span class="nc" id="L305">                        PublisherDetail publisherDetail = juddi.getPublisherDetail(r);</span>
+<span class="nc bnc" id="L306" title="All 4 branches missed.">                        if (publisherDetail != null &amp;&amp; !publisherDetail.getPublisher().isEmpty()) {</span>
+<span class="nc" id="L307">                                return true;</span>
+                        }
+<span class="nc" id="L309">                } catch (Exception ex) {</span>
+<span class="nc" id="L310">                }</span>
+<span class="nc" id="L311">                return false;</span>
+        }
+
+        private void LoadProperties() {
+
+
+                try {
+<span class="nc" id="L318">                        FileInputStream fos = new FileInputStream(mappingsfile);</span>
+<span class="nc" id="L319">                        mapping.load(fos);</span>
+<span class="nc" id="L320">                        System.out.println(mapping.size() + &quot; entity to user mappings loaded&quot;);</span>
+<span class="nc" id="L321">                        fos.close();</span>
+<span class="nc" id="L322">                } catch (Exception ex) {</span>
+<span class="nc" id="L323">                        ex.printStackTrace();</span>
+<span class="nc" id="L324">                }</span>
+
+                //mapping.getProperty(&quot;usernames&quot;);
+
+                try {
+<span class="nc" id="L329">                        FileInputStream fos = new FileInputStream(credFile);</span>
+<span class="nc" id="L330">                        userpwd.load(fos);</span>
+<span class="nc" id="L331">                        System.out.println(userpwd.size() + &quot; user credentials loaded&quot;);</span>
+<span class="nc" id="L332">                        fos.close();</span>
+<span class="nc" id="L333">                } catch (Exception ex) {</span>
+<span class="nc" id="L334">                        ex.printStackTrace();</span>
+<span class="nc" id="L335">                }</span>
+<span class="nc" id="L336">        }</span>
+
+        private void EnsureCredentials() throws Exception {
+<span class="nc" id="L339">                Iterator&lt;String&gt; it = usernames.iterator();</span>
+<span class="nc bnc" id="L340" title="All 2 branches missed.">                while (it.hasNext()){</span>
+<span class="nc" id="L341">                        String u = it.next();</span>
+<span class="nc bnc" id="L342" title="All 2 branches missed.">                        if (!userpwd.containsKey(u)){</span>
+<span class="nc" id="L343">                                throw new Exception(&quot;The credential for user '&quot;+u+&quot;' is not in the credential file&quot;);</span>
+                        }
+<span class="nc" id="L345">                }</span>
+<span class="nc" id="L346">        }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

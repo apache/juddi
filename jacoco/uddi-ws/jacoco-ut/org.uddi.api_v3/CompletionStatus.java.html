@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CompletionStatus.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.api_v3</a> &gt; <span class="el_source">CompletionStatus.java</span></div><h1>CompletionStatus.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+package org.uddi.api_v3;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+import javax.xml.bind.annotation.XmlType;
+
+
+/**
+ * &lt;p&gt;Java class for completionStatus.
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;&lt;/span&gt;&lt;b&gt;&lt;i&gt;completionStatus&lt;/i&gt;&lt;/b&gt;: This optional argument lets the
+publisher restrict the result set to only those relationships that have the
+specified status value.&amp;nbsp; Assertion status is a calculated result based on the
+sum total of assertions made by the individuals that control specific business
+registrations.&amp;nbsp; When no completionStatus element is provided, all assertions
+involving the businesses that the publisher owns are retrieved, without regard
+to the completeness of the relationship.&amp;nbsp; completionStatus MUST contain one of
+the following values&lt;/p&gt;
+
+&lt;p class=&quot;MsoNormal&quot; style=&quot;margin-left:1.5in;text-indent:-.25in&quot;&gt;&lt;span style=&quot;font-family:&amp;quot;Courier New&amp;quot;&quot;&gt;o&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;&lt;/span&gt;&lt;b&gt;status:complete&lt;/b&gt;: Passing this value causes only the
+publisher assertions that are complete to be returned.&amp;nbsp; Each businessEntity
+listed in assertions that are complete has a visible relationship that directly
+reflects the data in a complete assertion (as described in the
+find_relatedBusinesses API).&lt;/p&gt;
+
+&lt;p class=&quot;MsoNormal&quot; style=&quot;margin-left:1.5in;text-indent:-.25in&quot;&gt;&lt;span style=&quot;font-family:&amp;quot;Courier New&amp;quot;&quot;&gt;o&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;&lt;/span&gt;&lt;b&gt;status:toKey_incomplete&lt;/b&gt;: Passing this value causes only
+those publisher assertions where the party who controls the businessEntity
+referenced by the toKey value in an assertion, has not made a matching
+assertion, to be listed.&lt;/p&gt;
+
+&lt;p class=&quot;MsoNormal&quot; style=&quot;margin-left:1.5in;text-indent:-.25in&quot;&gt;&lt;span style=&quot;font-family:&amp;quot;Courier New&amp;quot;&quot;&gt;o&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;&lt;/span&gt;&lt;b&gt;status:fromKey_incomplete&lt;/b&gt;: Passing this value causes only
+those publisher assertions where the party who controls the businessEntity
+referenced by the fromKey value in an assertion, has not made a matching
+assertion, to be listed.&lt;/p&gt;
+
+&lt;p class=&quot;MsoNormal&quot; style=&quot;margin-left:1.5in;text-indent:-.25in&quot;&gt;&lt;span style=&quot;font-family:&amp;quot;Courier New&amp;quot;&quot;&gt;o&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;&lt;/span&gt;&lt;b&gt;status:both_incomplete&lt;/b&gt;. This status value, however, is only
+applicable to the context of UDDI subscription and SHOULD not be present as
+part of a response to a get_assertionStatusReport request.&lt;/p&gt;  
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * &lt;p&gt;
+ * &lt;pre&gt;
+ * &amp;lt;simpleType name=&quot;completionStatus&quot;&gt;
+ *   &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}string&quot;&gt;
+ *     &amp;lt;maxLength value=&quot;32&quot;/&gt;
+ *     &amp;lt;whiteSpace value=&quot;collapse&quot;/&gt;
+ *     &amp;lt;enumeration value=&quot;status:complete&quot;/&gt;
+ *     &amp;lt;enumeration value=&quot;status:fromKey_incomplete&quot;/&gt;
+ *     &amp;lt;enumeration value=&quot;status:toKey_incomplete&quot;/&gt;
+ *     &amp;lt;enumeration value=&quot;status:both_incomplete&quot;/&gt;
+ *   &amp;lt;/restriction&gt;
+ * &amp;lt;/simpleType&gt;
+ * &lt;/pre&gt;
+ * 
+ */
+<span class="pc" id="L79">@XmlType(name = &quot;completionStatus&quot;)</span>
+@XmlEnum
+public enum CompletionStatus implements Serializable{
+
+    /**
+     * causes only the publisher assertions that are complete to be returned
+     */
+<span class="fc" id="L86">    @XmlEnumValue(&quot;status:complete&quot;)</span>
+    STATUS_COMPLETE(&quot;status:complete&quot;),
+    /**
+     * causes only those publisher assertions where the party who controls the businessEntity referenced by the fromKey value in an assertion, has not made a matching assertion, to be listed.
+     */
+<span class="fc" id="L91">    @XmlEnumValue(&quot;status:fromKey_incomplete&quot;)</span>
+    STATUS_FROM_KEY_INCOMPLETE(&quot;status:fromKey_incomplete&quot;),
+    /**
+     *  causes only those publisher assertions where the party who controls the businessEntity referenced by the toKey value in an assertion, has not made a matching assertion, to be listed.
+     */
+<span class="fc" id="L96">    @XmlEnumValue(&quot;status:toKey_incomplete&quot;)</span>
+    STATUS_TO_KEY_INCOMPLETE(&quot;status:toKey_incomplete&quot;),
+    /**
+     * only applicable to the context of UDDI subscription and SHOULD not be present as part of a response to a get_assertionStatusReport request.
+     *  When appearing in an assertionStatusItem of a subscriptionResultsList, status:both_incomplete indicates that the publisher assertion embedded in the &lt;b&gt;assertionStatusItem has been deleted from both ends. &lt;/b&gt;
+     */
+<span class="fc" id="L102">    @XmlEnumValue(&quot;status:both_incomplete&quot;)</span>
+    STATUS_BOTH_INCOMPLETE(&quot;status:both_incomplete&quot;);
+    private final String value;
+
+<span class="fc" id="L106">    CompletionStatus(String v) {</span>
+<span class="fc" id="L107">        value = v;</span>
+<span class="fc" id="L108">    }</span>
+
+    public String value() {
+<span class="nc" id="L111">        return value;</span>
+    }
+
+    public static CompletionStatus fromValue(String v) {
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        for (CompletionStatus c: CompletionStatus.values()) {</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">            if (c.value.equals(v)) {</span>
+<span class="nc" id="L117">                return c;</span>
+            }
+        }
+<span class="nc" id="L120">        throw new IllegalArgumentException(v);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

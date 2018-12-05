@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ChangeRecordPublisherAssertion.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.repl_v3</a> &gt; <span class="el_source">ChangeRecordPublisherAssertion.java</span></div><h1>ChangeRecordPublisherAssertion.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+package org.uddi.repl_v3;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.datatype.XMLGregorianCalendar;
+import org.uddi.api_v3.PublisherAssertion;
+
+
+/**
+ * &lt;p&gt;Java class for anonymous complex type.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * 
+ * &lt;pre&gt;
+ * &amp;lt;complexType&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;sequence&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}publisherAssertion&quot;/&gt;
+ *         &amp;lt;element name=&quot;fromBusinessCheck&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}boolean&quot;/&gt;
+ *         &amp;lt;element name=&quot;toBusinessCheck&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}boolean&quot;/&gt;
+ *         &amp;lt;element name=&quot;modified&quot; type=&quot;{urn:uddi-org:api_v3}timeInstant&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:repl_v3}fromSignatures&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:repl_v3}toSignatures&quot; minOccurs=&quot;0&quot;/&gt;
+ *       &amp;lt;/sequence&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;&quot;, 
+        //namespace = &quot;urn:uddi-org:repl_v3&quot;, 
+        propOrder = {
+    &quot;publisherAssertion&quot;,
+    &quot;fromBusinessCheck&quot;,
+    &quot;toBusinessCheck&quot;,
+    &quot;modified&quot;,
+    &quot;fromSignatures&quot;,
+    &quot;toSignatures&quot;
+})
+@XmlRootElement(name = &quot;changeRecordPublisherAssertion&quot;)
+<span class="nc" id="L69">public class ChangeRecordPublisherAssertion implements Serializable{</span>
+	@XmlTransient
+	private static final long serialVersionUID = -7934282484968024201L;
+	@XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;, required = true)
+    protected PublisherAssertion publisherAssertion;
+   //     @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;, required = true)
+    protected boolean fromBusinessCheck;
+   //     @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;, required = true)
+    protected boolean toBusinessCheck;
+    @XmlElement(required = true)
+    protected XMLGregorianCalendar modified;
+    protected FromSignatures fromSignatures;
+    protected ToSignatures toSignatures;
+
+    /**
+     * Gets the value of the publisherAssertion property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link PublisherAssertion }
+     *     
+     */
+    public PublisherAssertion getPublisherAssertion() {
+<span class="nc" id="L92">        return publisherAssertion;</span>
+    }
+
+    /**
+     * Sets the value of the publisherAssertion property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link PublisherAssertion }
+     *     
+     */
+    public void setPublisherAssertion(PublisherAssertion value) {
+<span class="nc" id="L104">        this.publisherAssertion = value;</span>
+<span class="nc" id="L105">    }</span>
+
+    /**
+     * Gets the value of the fromBusinessCheck property.
+     * 
+     */
+    public boolean isFromBusinessCheck() {
+<span class="nc" id="L112">        return fromBusinessCheck;</span>
+    }
+
+    /**
+     * Sets the value of the fromBusinessCheck property.
+     * 
+     */
+    public void setFromBusinessCheck(boolean value) {
+<span class="nc" id="L120">        this.fromBusinessCheck = value;</span>
+<span class="nc" id="L121">    }</span>
+
+    /**
+     * Gets the value of the toBusinessCheck property.
+     * 
+     */
+    public boolean isToBusinessCheck() {
+<span class="nc" id="L128">        return toBusinessCheck;</span>
+    }
+
+    /**
+     * Sets the value of the toBusinessCheck property.
+     * 
+     */
+    public void setToBusinessCheck(boolean value) {
+<span class="nc" id="L136">        this.toBusinessCheck = value;</span>
+<span class="nc" id="L137">    }</span>
+
+    /**
+     * Gets the value of the modified property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link XMLGregorianCalendar }
+     *     
+     */
+    public XMLGregorianCalendar getModified() {
+<span class="nc" id="L148">        return modified;</span>
+    }
+
+    /**
+     * Sets the value of the modified property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link XMLGregorianCalendar }
+     *     
+     */
+    public void setModified(XMLGregorianCalendar value) {
+<span class="nc" id="L160">        this.modified = value;</span>
+<span class="nc" id="L161">    }</span>
+
+    /**
+     * Gets the value of the fromSignatures property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link FromSignatures }
+     *     
+     */
+    public FromSignatures getFromSignatures() {
+<span class="nc" id="L172">        return fromSignatures;</span>
+    }
+
+    /**
+     * Sets the value of the fromSignatures property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link FromSignatures }
+     *     
+     */
+    public void setFromSignatures(FromSignatures value) {
+<span class="nc" id="L184">        this.fromSignatures = value;</span>
+<span class="nc" id="L185">    }</span>
+
+    /**
+     * Gets the value of the toSignatures property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ToSignatures }
+     *     
+     */
+    public ToSignatures getToSignatures() {
+<span class="nc" id="L196">        return toSignatures;</span>
+    }
+
+    /**
+     * Sets the value of the toSignatures property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ToSignatures }
+     *     
+     */
+    public void setToSignatures(ToSignatures value) {
+<span class="nc" id="L208">        this.toSignatures = value;</span>
+<span class="nc" id="L209">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

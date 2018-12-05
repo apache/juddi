@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccessPoint.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.api_v3</a> &gt; <span class="el_source">AccessPoint.java</span></div><h1>AccessPoint.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+package org.uddi.api_v3;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
+import org.apache.juddi.api_v3.AccessPointType;
+
+
+/**
+ * &lt;div style=&quot;border:none;border-top:solid #333399 1.0pt;padding:1.0pt 0in 0in 0in&quot;&gt;&lt;p class=&quot;AppH1&quot; style=&quot;margin-left:0in;text-indent:0in&quot;&gt;&lt;a name=&quot;_Toc8974358&quot;&gt;B&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;Appendix B:&amp;nbsp; Using and Extending the useType Attribute&lt;/a&gt;&lt;/p&gt;
+
+&lt;/div&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;UDDI provides type information through the useType
+attribute on the following UDDI elements: accessPoint, overviewURL,
+discoveryURL, contact, address, email and phone. The useType attribute is
+intended to provide information on how to use or invoke the resource contained
+within the element.&amp;nbsp; This Appendix establishes and explains common values and
+conventions for the useType attribute in the context of certain elements, as
+well as a model for establishing new common values and conventions.&lt;/p&gt;
+
+&lt;p class=&quot;AppH2&quot; style=&quot;margin-left:0in;text-indent:0in&quot;&gt;&lt;a name=&quot;_Toc85908385&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc53709543&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc45096631&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc45096173&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc42047544&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc8974359&quot;&gt;B.1&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;accessPoint&lt;/a&gt;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;Four common values for providing type information about
+the accessPoint are: &quot;endPoint&quot;, &quot;wsdlDeployment&quot;, &quot;bindingTemplate&quot;,
+and &quot;hostingRedirector.&lt;/p&gt;
+
+&lt;p class=&quot;AppH3&quot; style=&quot;margin-left:0in;text-indent:0in&quot;&gt;&lt;a name=&quot;_Toc85908386&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc53709544&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc45096632&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc45096174&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc42047545&quot;&gt;B.1.1&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;Using the &quot;endPoint&quot; value&lt;/a&gt;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;Typically, the network address of a Web service described
+by a bindingTemplate is found in the accessPoint element.&amp;nbsp; This common behavior
+is denoted by using the string &quot;endpoint&quot; as the value of the
+accessPoint.&amp;nbsp; Decorating an accessPoint with a useType=&quot;endPoint&quot;
+signifies that a user or application can invoke a Web service at that address.&amp;nbsp;
+A sample of such behavior is as follows:&lt;/p&gt;
+
+&lt;p class=&quot;codeSample&quot;&gt;&amp;lt;bindingTemplate
+bindingKey=&quot;uddi:example.org:catalog&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;description xml:lang=&quot;en&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Browse catalog Web service&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/description&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;accessPoint useType=&quot;endPoint&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; http://www.example.org/CatalogWebService&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/accessPoint&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceDetails&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceInfo
+tModelKey=&quot;uddi:example.org:catalog_interface&quot;/&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceInfo
+tModelKey=&quot;uddi:uddi.org:transport:http&quot;/&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/tModelInstanceDetails&amp;gt;&lt;br&gt;
+&amp;lt;/bindingTemplate&amp;gt;&lt;/p&gt;
+
+&lt;p class=&quot;codeSample&quot;&gt;&amp;nbsp;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;In the example above, a client would be able to parse the
+bindingTemplate and discover the end point of the Web service itself.&amp;nbsp; However,
+the information about how to invoke that Web service would be modeled using
+tModels.&amp;nbsp; All interface information about that service would be represented by
+the tModelInstanceInfo structures contained as children of the bindingTemplate.&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;The client knows the transport of the accessPoint either
+by checking to see if a protocol tModel has been associated with the
+bindingTemplate or inspecting the URI prefix.&amp;nbsp; In the example above, the http
+transport was used, denoted by the tModelInstanceInfo.&lt;/p&gt;
+
+&lt;span style=&quot;font-size:10.0pt;font-family:Arial;letter-spacing:-.25pt&quot;&gt;&lt;br style=&quot;page-break-before:always&quot; clear=&quot;all&quot;&gt;
+&lt;/span&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;&amp;nbsp;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;UDDI RECOMMENDS that endpoints for phone, fax and modem
+communication follow the guidelines outlined in RFC 2806 &lt;i&gt;URLs for Telephone
+Calls&lt;/i&gt;&lt;a href=&quot;#_ftn51&quot; name=&quot;_ftnref51&quot; title=&quot;&quot;&gt;&lt;span class=&quot;MsoFootnoteReference&quot;&gt;&lt;span class=&quot;MsoFootnoteReference&quot;&gt;&lt;span style=&quot;font-size:10.0pt;letter-spacing:-.25pt&quot;&gt;[51]&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/a&gt;.&amp;nbsp;
+Following such a convention for a phone number accessPoint would result in the
+following bindingTemplate sample:&lt;/p&gt;
+
+&lt;p class=&quot;codeSample&quot;&gt;&amp;lt;bindingTemplate
+bindingKey=&quot;uddi:example.org:catalog&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;description xml:lang=&quot;en&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Browse catalog Web service&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/description&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;accessPoint useType=&quot;endPoint&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; tel:+1-512-555-1212&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/accessPoint&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceDetails&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceInfo
+tModelKey=&quot;uddi:uddi.org:transport:telephone&quot;/&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/tModelInstanceDetails&amp;gt;&lt;br&gt;
+&amp;lt;/bindingTemplate&amp;gt;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;&amp;nbsp;&lt;/p&gt;
+
+&lt;p class=&quot;AppH3&quot; style=&quot;margin-left:0in;text-indent:0in&quot;&gt;&lt;a name=&quot;_Toc85908387&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc53709545&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc45096633&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc45096175&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc42047546&quot;&gt;B.1.2&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;Using the &quot;wsdlDeployment&quot; value&lt;/a&gt;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;Instead of directly providing the network address in the accessPoint,
+it is occasionally useful or necessary to provide this information through
+indirect means.&amp;nbsp; One common scenario for such a behavior is when the
+accessPoint is embedded within a WSDL file.&amp;nbsp; In such a scenario, the UDDI
+accessPoint contains the address of the WSDL file, and the client then must
+retrieve the WSDL file and extract the end point address from the WSDL file
+itself.&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;In this case, decorating the UDDI accessPoint with a
+useType=&quot;wsdlDeployment&quot; is appropriate.&amp;nbsp; A sample of such behavior is
+as follows:&lt;/p&gt;
+
+&lt;p class=&quot;codeSample&quot;&gt;&amp;lt;bindingTemplate
+bindingKey=&quot;uddi:example.org:catalog&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;description xml:lang=&quot;en&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Browse catalog Web service&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/description&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;accessPoint useType=&quot;wsdlDeployment&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; http://www.example.org/CatalogWebService/catalog.wsdl&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/accessPoint&amp;gt;&lt;/p&gt;
+
+&lt;p class=&quot;codeSample&quot;&gt;&amp;nbsp;&amp;nbsp; &amp;lt;categoryBag&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;keyedReference keyName=&quot;uddi-org:types:wsdl&quot;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp; keyValue=&quot;wsdlDeployment&quot; &lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;
+tModelKey=&quot;uddi:uddi.org:categorization:types&quot;/&amp;gt; &lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/categoryBag&amp;gt;&lt;br&gt;
+&amp;lt;/bindingTemplate&amp;gt;&lt;/p&gt;
+
+&lt;p class=&quot;codeSample&quot;&gt;&amp;nbsp;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;In the example above, a client would be able to parse the
+result of the bindingTemplate and determine the end point of the Web service
+within the WSDL file discovered in the accessPoint element. Note that the
+bindingTemplate has also been categorized with the &quot;wsdlDeployment&quot;
+value from the uddi.org:categorization:types scheme so that it can be
+discovered through a find_binding API call.&lt;/p&gt;
+
+&lt;p class=&quot;AppH3&quot; style=&quot;margin-left:0in;text-indent:0in&quot;&gt;&lt;a name=&quot;_Toc85908388&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc53709546&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc45096634&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc45096176&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc42047547&quot;&gt;B.1.3&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;Using the &quot;bindingTemplate&quot; value&lt;/a&gt;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;Another form of indirection uses UDDI itself to discover
+the location of the final end point.&amp;nbsp; Categorizing a bindingTemplate with
+either &quot;bindingTemplate&quot; or &quot;hostingRedirector&quot; specifies
+that the accessPoint contains a bindingKey intended to be used in a
+get_bindingDetail API call to a UDDI registry Inquiry API Set.&amp;nbsp; How the
+resultant bindingTemplate is interpreted depends on which one of the two
+methods described below is used.&amp;nbsp; In the case of &quot;bindingTemplate&quot;, a
+bindingKey refers to another binding within the same UDDI registry.&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;For example, suppose tempuri.com, the well known but
+fictitious maker of crispy batter coating for fried foods, contracts with the
+equally fictitious Web service hosting company ws-o-rama.com to host tempuri’s
+Web service that exposes its product catalog. Tempuri.com wishes to publish a
+bindingTemplate for this service in the UDDI Business Registry, but wishes to
+leave the details of the technical implementation and its description up to
+ws-o-rama.com who may wish to change them over time. To do this, tempuri.com
+and ws-o-rama.com use bindingTemplate indirection. In the UDDI Business
+Registry the bindingTemplate in tempuri’s businessEntity that describes this
+service appears as follows:&lt;/p&gt;
+
+&lt;p class=&quot;codeSample&quot;&gt;&amp;lt;bindingTemplate
+bindingKey=&quot;uddi:tempuri.com:catalog&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;description xml:lang=&quot;en&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Browse catalog Web service&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/description&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;accessPoint useType=&quot;bindingTemplate&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; uddi:ws-o-rama.com:tempuri:bt1&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/accessPoint&amp;gt;&lt;br&gt;
+&amp;lt;/bindingTemplate&amp;gt;&lt;/p&gt;
+
+&lt;p class=&quot;codeSample&quot;&gt;&amp;nbsp;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;Here, the bindingTemplate describing tempuri’s catalog
+browsing Web service uses an accessPoint to refer to the bindingTemplate (also
+in the UDDI Business Registry) whose bindingKey is uddi:ws-o-rama.com:tempura:bt1.
+When a client does a get_bindingDetail asking for the bindingTemplate with that
+key, the following bindingTemplate is returned:&lt;/p&gt;
+
+&lt;p class=&quot;codeSample&quot;&gt;&amp;lt;bindingTemplate
+bindingKey=&quot;uddi:ws-o-rama.com:tempuri:bt1&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;description xml:lang=&quot;en&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Tempuri.com’s catalog browsing service hosted by ws-o-rama&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/description&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;accessPoint useType=&quot;endPoint&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; http://sf1.ws-o-rama.com/tempuri/catalog/&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/accessPoint&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceDetails&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceInfo tModelKey=&quot;uddi:...&quot;/&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/tModelInstanceDetails&amp;gt;&lt;br&gt;
+&amp;lt;/bindingTemplate&amp;gt;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;&amp;nbsp;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;This bindingTemplate describes the actual Web service that
+is to be used.&lt;/p&gt;
+
+&lt;p class=&quot;AppH3&quot; style=&quot;margin-left:0in;text-indent:0in&quot;&gt;&lt;a name=&quot;_Toc85908389&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc53709547&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc45096635&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc45096177&quot;&gt;&lt;/a&gt;&lt;a name=&quot;_Toc42047548&quot;&gt;B.1.4&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;Using the &quot;hostingRedirector&quot; value&lt;/a&gt;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;It may be necessary to &quot;hide&quot; the network
+address of a Web service from unauthorized access.&amp;nbsp; In this case, a useType=&quot;hostingRedirector&quot;
+can be used to indicate that the client must follow a longer path of
+indirection to retrieve the accessPoint.&amp;nbsp; In the bindingTemplate, the client
+will discover a bindingKey, which will lead to a bindingTemplate that contains
+the end point for a Web service which supports the UDDI get_bindingDetail Web
+Service.&amp;nbsp; The client will then be able to re-issue the get_bindingDetail
+message with the original key, presumably with authentication, to this other
+Web service.&amp;nbsp; Such an indirection mechanism allows a Web service to be
+discoverable but not accessible from a given node.&amp;nbsp; &lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;For example, tempuri.com uses ws-o-rama.com to host more
+than just its publicly visible catalog browsing service. In particular it has a
+number of services it does not wish to expose fully in the UDDI Business
+Registry. Instead, it wishes to keep their full definition in its private UDDI
+registry, which ws-o-rama.com also happens to host, and supply the end points
+to these Web services only to authorized inquirers. &lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;In particular, tempuri has a Web service that its
+suppliers use to bill it for goods they deliver. In the UDDI Business Registry,
+tempuri publishes the following bindingTemplate, which contains a bindingKey.&lt;/p&gt;
+
+&lt;p class=&quot;codeSample&quot;&gt;&amp;lt;bindingTemplate
+bindingKey=&quot;uddi:tempuri.com:billing&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;description xml:lang=&quot;en&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Tempuri supplier billing Web service&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/description&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;accessPoint useType=&quot;hostingRedirector&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; uddi:ws-o-rama.com:tempuri:bt47&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/accessPoint&amp;gt;&lt;br&gt;
+&amp;lt;/bindingTemplate&amp;gt;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;&amp;nbsp;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;Here, the bindingTemplate describing tempuri’s supplier
+billing Web service uses an accessPoint to refer to the bindingTemplate (also
+in the UDDI Business Registry) whose bindingKey is uddi:ws-o-rama.com: tempuri:bt47.
+Note that the useType equals &quot;hostingRedirector&quot; which indicates that
+the bindingKey refers to a hostingRedirector service. When a client does a
+get_bindingDetail (on the UDDI Business Registry) asking for the
+bindingTemplate with that key, the following indirect bindingTemplate is
+returned: &lt;/p&gt;
+
+&lt;p class=&quot;codeSample&quot;&gt;&amp;lt;bindingTemplate
+bindingKey=&quot;uddi:ws-o-rama.com:tempura:bt47&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;description xml:lang=&quot;en&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Hosting Redirector Service for Tempuri.com&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; hosted by ws-o-rama.com&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/description&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;accessPoint useType=&quot;endPoint&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; http://sf1.ws-o-rama.com/tempuri/uddi/inquiry&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/accessPoint&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceDetails&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceInfo &lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; tModelKey=&quot;uddi:uddi.org:specification:hostingredirector&quot;/&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/tModelInstanceDetails&amp;gt;&lt;br&gt;
+&amp;lt;/bindingTemplate&amp;gt;&lt;/p&gt;
+
+&lt;p class=&quot;codeSample&quot;&gt;&amp;nbsp;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;This bindingTemplate describes the hosting redirector Web
+service hosted for tempuri.com by ws-o-rama.com. By definition, it responds to
+the get_bindingDetail API call using SOAP over HTTP. The description in the
+bindingTemplate says it responds only to authorized requests. For authorized
+clients, invoking get_bindingDetail, passing the key of the original
+bindingTemplate (uddi:tempuri.com:billing) retrieves the following
+bindingTemplate:&lt;/p&gt;
+
+&lt;p class=&quot;codeSample&quot;&gt;&amp;lt;bindingTemplate
+bindingKey=&quot;uddi:tempuri.com:billing&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;description xml:lang=&quot;en&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Tempuri.com’s supplier billing browsing service&lt;br&gt;
+&amp;nbsp;&amp;nbsp; hosted by ws-o-rama.com&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/description&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;accessPoint useType=&quot;endPoint&quot;&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; http:sf1.ws-o-rama.com/tempuri/billing/&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/accessPoint&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceDetails&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;tModelInstanceInfo tModelKey=&quot;uddi:...&quot;/&amp;gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &amp;lt;/tModelInstanceDetails&amp;gt;&lt;br&gt;
+&amp;lt;/bindingTemplate&amp;gt;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;&amp;nbsp;&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot;&gt;This bindingTemplate describes the actual Web service that
+is to be used.&lt;/p&gt;
+ * &lt;p&gt;Java class for accessPoint complex type.&lt;/p&gt;
+ * 
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.&lt;/p&gt;
+ * 
+ * &lt;pre&gt;
+ * &amp;lt;complexType name=&quot;accessPoint&quot;&gt;
+ *   &amp;lt;simpleContent&gt;
+ *     &amp;lt;extension base=&quot;&amp;lt;urn:uddi-org:api_v3&gt;validationTypeString4096&quot;&gt;
+ *       &amp;lt;attribute name=&quot;useType&quot; type=&quot;{urn:uddi-org:api_v3}useType&quot; default=&quot;&quot; /&gt;
+ *     &amp;lt;/extension&gt;
+ *   &amp;lt;/simpleContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;accessPoint&quot;, propOrder = {
+    &quot;value&quot;
+})
+public class AccessPoint implements Serializable {
+	
+	@XmlTransient
+	private static final long serialVersionUID = -6377843530866292358L;
+
+	@XmlValue
+    protected String value;
+    @XmlAttribute
+    protected String useType;
+    public AccessPoint()
+<span class="nc" id="L339">    {}</span>
+    /**
+     * A convenience constructor&lt;br&gt;
+     *@see org.apache.juddi.api_v3.AccessPointType for help on useType
+     * @param value
+     * @param useType 
+     */
+    public AccessPoint(String value, String useType)
+<span class="nc" id="L347">    {</span>
+<span class="nc" id="L348">        this.value = value;</span>
+<span class="nc" id="L349">        this.useType = useType;</span>
+<span class="nc" id="L350">    }</span>
+    /**
+     * Gets the value of the value property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getValue() {
+<span class="nc" id="L360">        return value;</span>
+    }
+
+    /**
+     * Sets the value of the value property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     @see AccessPointType for spec defined values
+     */
+    public void setValue(String value) {
+<span class="nc" id="L372">        this.value = value;</span>
+<span class="nc" id="L373">    }</span>
+
+    /**
+     * Gets the value of the useType property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     * @see AccessPointType for spec defined values
+     */
+    public String getUseType() {
+<span class="nc bnc" id="L385" title="All 2 branches missed.">        if (useType == null) {</span>
+<span class="nc" id="L386">            return &quot;&quot;;</span>
+        } else {
+<span class="nc" id="L388">            return useType;</span>
+        }
+    }
+
+    /**
+     * Sets the value of the useType property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setUseType(String value) {
+<span class="nc" id="L401">        this.useType = value;</span>
+<span class="nc" id="L402">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

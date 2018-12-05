@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>App.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDI Migration tool</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.migration.tool</a> &gt; <span class="el_source">App.java</span></div><h1>App.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2013 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.migration.tool;
+
+import java.util.Random;
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
+/**
+ * Main entry point for the UDDI migration tool
+ *
+ * @author Alex O'Ree
+ * @since 3.2
+ *
+ */
+<span class="nc" id="L33">public class App {</span>
+
+    public static void main(String[] args) throws ParseException, Exception {
+<span class="nc" id="L36">        System.out.println(&quot;This tool is used to export and import UDDI data from a UDDI v3 registry&quot;);</span>
+<span class="nc" id="L37">        System.out.println(&quot;Random TIP: &quot; + RandomTip());</span>
+<span class="nc" id="L38">        System.out.println();</span>
+
+<span class="nc" id="L40">        Options options = new Options();</span>
+<span class="nc" id="L41">        options.addOption(&quot;import&quot;, false, &quot;Imports data into a UDDIv3 registry&quot;);</span>
+<span class="nc" id="L42">        options.addOption(&quot;export&quot;, false, &quot;Exports data into a UDDIv3 registry&quot;);</span>
+<span class="nc" id="L43">        options.addOption(&quot;user&quot;, true, &quot;Username, if not defined, those is uddi.xml will be used&quot;);</span>
+<span class="nc" id="L44">        options.addOption(&quot;pass&quot;, true, &quot;Password, if not defined, those is uddi.xml will be used&quot;);</span>
+        //options.addOption(&quot;safeMode&quot;, false, &quot;Prevents overriding existing entities, saves items one at a time&quot;);
+<span class="nc" id="L46">        options.addOption(&quot;config&quot;, true, &quot;Use an alternate config file default is 'uddi.xml'&quot;);</span>
+<span class="nc" id="L47">        options.addOption(&quot;node&quot;, true, &quot;The node 'name' in the config, default is 'default'&quot;);</span>
+<span class="nc" id="L48">        options.addOption(&quot;isJuddi&quot;, false, &quot;Is this a jUDDI registry? If so we can in/export more stuff&quot;);</span>
+<span class="nc" id="L49">        options.addOption(&quot;tmodel&quot;, true, &quot;Im/Export for tmodels, file to store tmodel data, default is 'tmodel-export.xml'&quot;);</span>
+<span class="nc" id="L50">        options.addOption(&quot;business&quot;, true, &quot;Im/Export option, file to store the business data, default is 'business-export.xml'&quot;);</span>
+<span class="nc" id="L51">        options.addOption(&quot;mappings&quot;, true, &quot;Im/Export option, file that maps keys to owners, default is 'entityusermappings.properties'&quot;);</span>
+<span class="nc" id="L52">        options.addOption(&quot;publishers&quot;, true, &quot;jUDDI only - In/Export option, file to store publishers, default is 'publishers-export.xml'&quot;);</span>
+<span class="nc" id="L53">        options.addOption(&quot;myItemsOnly&quot;, false, &quot;Export option, Only export items owned by yourself&quot;);</span>
+<span class="nc" id="L54">        options.addOption(&quot;preserveOwnership&quot;, false, &quot;Im/Export option, saves owership data to the 'mappings' file&quot;);</span>
+<span class="nc" id="L55">        options.addOption(&quot;credFile&quot;, true, &quot;Import option with -preserveOwnership, this is a properties file mapping with user=pass&quot;);</span>
+<span class="nc" id="L56">        options.addOption(&quot;stripSignatures&quot;, false, &quot;Im/Export option, removes digital signatures from all signed items, default is false&quot;);</span>
+
+
+        // create the parser
+<span class="nc" id="L60">        CommandLineParser parser = new BasicParser();</span>
+<span class="nc" id="L61">        CommandLine line = null;</span>
+        try {
+            // parse the command line arguments
+<span class="nc" id="L64">            line = parser.parse(options, args);</span>
+
+<span class="nc bnc" id="L66" title="All 4 branches missed.">            if (line.hasOption(&quot;import&quot;) &amp;&amp; line.hasOption(&quot;export&quot;)) {</span>
+<span class="nc" id="L67">                ShowHelp(options);</span>
+<span class="nc" id="L68">                return;</span>
+            }
+<span class="nc bnc" id="L70" title="All 4 branches missed.">            if (!line.hasOption(&quot;import&quot;) &amp;&amp; !line.hasOption(&quot;export&quot;)) {</span>
+<span class="nc" id="L71">                ShowHelp(options);</span>
+<span class="nc" id="L72">                return;</span>
+            }
+<span class="nc" id="L74">            String config = line.getOptionValue(&quot;config&quot;, &quot;uddi.xml&quot;);</span>
+<span class="nc" id="L75">            boolean stripSig = line.hasOption(&quot;stripSignatures&quot;);</span>
+<span class="nc" id="L76">            String node = line.getOptionValue(&quot;node&quot;, &quot;default&quot;);</span>
+
+<span class="nc" id="L78">            String pass = line.getOptionValue(&quot;pass&quot;, null);</span>
+<span class="nc" id="L79">            String user = line.getOptionValue(&quot;user&quot;, null);</span>
+
+<span class="nc" id="L81">            String tmodel = line.getOptionValue(&quot;tmodel&quot;, &quot;tmodel-export.xml&quot;);</span>
+<span class="nc" id="L82">            String business = line.getOptionValue(&quot;business&quot;, &quot;business-export.xml&quot;);</span>
+<span class="nc" id="L83">            String publishers = line.getOptionValue(&quot;publishers&quot;, &quot;publishers-export.xml&quot;);</span>
+            //username to password
+<span class="nc" id="L85">            String credFile = line.getOptionValue(&quot;credFile&quot;, &quot;credentials.properties&quot;);</span>
+            //key to username
+<span class="nc" id="L87">            String mappings = line.getOptionValue(&quot;mappings&quot;, &quot;entityusermappings.properties&quot;);</span>
+<span class="nc" id="L88">            boolean preserveOwnership = line.hasOption(&quot;preserveOwnership&quot;);</span>
+<span class="nc" id="L89">            boolean juddi = line.hasOption(&quot;isJuddi&quot;);</span>
+<span class="nc" id="L90">            boolean myItemsOnly = line.hasOption(&quot;myItemsOnly&quot;);</span>
+<span class="nc" id="L91">            boolean safe = true;//line.hasOption(&quot;safeMode&quot;);</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">            if (line.hasOption(&quot;export&quot;)) //CommandLine cmd = parser.parse(options, args);</span>
+            {
+<span class="nc" id="L94">                System.out.println(&quot;Exporting...&quot;);</span>
+<span class="nc" id="L95">                new Export().Execute(config, node, user, pass, tmodel, business, juddi, safe, publishers, myItemsOnly, mappings, preserveOwnership, credFile,stripSig);</span>
+<span class="nc" id="L96">                System.out.println();</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">                if (preserveOwnership) {</span>
+<span class="nc" id="L98">                    System.out.println(&quot;Next step(s), Edit the &quot; + credFile + &quot; and make any adjustments that are necessary.&quot;);</span>
+<span class="nc" id="L99">                    System.out.println(&quot;TIP: if you're using juddi, you can temporarily switch to the 'JuddiAuthenticator' which doesn't validate passwords.&quot;);</span>
+                }
+<span class="nc" id="L101">                System.out.println(&quot;Next step(s), Edit &quot; + config + &quot; to point to the next registry. Then try -import. You can also specify a different node.&quot;);</span>
+            }
+<span class="nc bnc" id="L103" title="All 2 branches missed.">            if (line.hasOption(&quot;import&quot;)) //CommandLine cmd = parser.parse(options, args);</span>
+            {
+<span class="nc" id="L105">                System.out.println(&quot;Importing...&quot;);</span>
+<span class="nc" id="L106">                new Import().Execute(config, node, user, pass, tmodel, business, juddi, safe, publishers, preserveOwnership, mappings, credFile,stripSig);</span>
+            }
+
+
+<span class="nc" id="L110">        } catch (Exception exp) {</span>
+            // oops, something went wrong
+<span class="nc" id="L112">            ShowHelp(options);</span>
+<span class="nc" id="L113">            System.err.println(&quot;Failed!&quot;);</span>
+<span class="nc" id="L114">            exp.printStackTrace();</span>
+<span class="nc" id="L115">        }</span>
+
+
+<span class="nc" id="L118">    }</span>
+
+    private static void ShowHelp(Options options) {
+<span class="nc" id="L121">        HelpFormatter formatter = new HelpFormatter();</span>
+<span class="nc" id="L122">        formatter.printHelp(&quot;java -jar juddi-migration-tool-(VERSION)-jar-with-dependencies.jar&quot;, options);</span>
+<span class="nc" id="L123">    }</span>
+
+    private static String RandomTip() {
+<span class="nc" id="L126">        String[] tips = new String[]{</span>
+            &quot;You can use setup custom SSL trust/key stores using -Djavax.net.ssl.keyStore=file -javax.net.ssl.keyStorePassword=pwd -Djavax.net.ssl.trustStore=file &quot;
+            + &quot;-Djavax.net.ssl.trustStorePassword=pwd&quot;,
+            &quot;You can easily script the UDDI migration tool and use it as a backup mechanism.&quot;,
+            &quot;You can protect credentials by storing them in uddi client config file.&quot;,
+            &quot;This tool can only work with UDDI v3 registries.&quot;,
+            &quot;With the preserveOwnership flag, you can maintain entity ownership.&quot;,
+            &quot;Without the preserveOwnership flag, all imported data will be owned by the username that imported it.&quot;
+        };
+<span class="nc" id="L135">        Random r = new Random();</span>
+<span class="nc" id="L136">        return tips[r.nextInt(tips.length)];</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

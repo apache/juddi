@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UddiEntityPublisher.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.model</a> &gt; <span class="el_source">UddiEntityPublisher.java</span></div><h1>UddiEntityPublisher.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.model;
+
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.persistence.Column;
+import javax.persistence.EntityManager;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Query;
+import javax.persistence.Transient;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
+
+import org.apache.juddi.keygen.KeyGenerator;
+import org.apache.juddi.query.util.DynamicQuery;
+import org.apache.juddi.validation.ValidateUDDIKey;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+@MappedSuperclass
+public class UddiEntityPublisher {
+	
+<span class="fc" id="L46">        private transient static final Logger logger = Logger.getLogger(UddiEntityPublisher.class.getCanonicalName());</span>
+	protected String authorizedName;
+<span class="fc" id="L48">	private List&lt;String&gt; keyGeneratorKeys = null;</span>
+
+<span class="fc" id="L50">	public UddiEntityPublisher() {</span>
+<span class="fc" id="L51">	}</span>
+	
+<span class="fc" id="L53">	public UddiEntityPublisher(String authorizedName) {</span>
+<span class="fc" id="L54">		this.authorizedName = authorizedName;</span>
+<span class="fc" id="L55">	}</span>
+	
+	@Id
+	@Column(name = &quot;authorized_name&quot;, nullable = false, length = 255)
+	public String getAuthorizedName() {
+<span class="fc" id="L60">		return this.authorizedName;</span>
+	}
+	public void setAuthorizedName(String authorizedName) {
+<span class="fc" id="L63">		this.authorizedName = authorizedName;</span>
+<span class="fc" id="L64">	}</span>
+	
+	@Transient
+	public List&lt;String&gt; getKeyGeneratorKeys() {
+<span class="fc" id="L68">		return keyGeneratorKeys;</span>
+	}
+	public void setKeyGeneratorKeys(List&lt;String&gt; keyGeneratorKeys) {
+<span class="fc" id="L71">		this.keyGeneratorKeys = keyGeneratorKeys;</span>
+<span class="fc" id="L72">	}</span>
+
+	@SuppressWarnings(&quot;unchecked&quot;)
+	public void populateKeyGeneratorKeys(EntityManager em) {
+<span class="fc" id="L76">		DynamicQuery getKeysQuery = new DynamicQuery();</span>
+<span class="fc" id="L77">		getKeysQuery.append(&quot;select t.entityKey from Tmodel t&quot;).pad().WHERE().pad();</span>
+
+<span class="fc" id="L79">		DynamicQuery.Parameter pubParam = new DynamicQuery.Parameter(&quot;t.authorizedName&quot;, </span>
+<span class="fc" id="L80">				 getAuthorizedName(), </span>
+				 DynamicQuery.PREDICATE_EQUALS);
+
+<span class="fc" id="L83">		DynamicQuery.Parameter keyParam = new DynamicQuery.Parameter(&quot;UPPER(t.entityKey)&quot;, </span>
+<span class="fc" id="L84">				 (DynamicQuery.WILDCARD + KeyGenerator.KEYGENERATOR_SUFFIX).toUpperCase(), </span>
+				 DynamicQuery.PREDICATE_LIKE);
+		
+		
+<span class="fc" id="L88">		getKeysQuery.appendGroupedAnd(pubParam, keyParam);</span>
+<span class="fc" id="L89">		Query qry = getKeysQuery.buildJPAQuery(em);</span>
+		
+<span class="fc" id="L91">		keyGeneratorKeys = qry.getResultList();</span>
+<span class="fc" id="L92">	}</span>
+	
+        /**
+         * Determines if *this publisher owns a specific key
+         * @param entity
+         * @return true/false
+         */
+	public boolean isOwner(UddiEntity entity){
+            try {
+<span class="fc" id="L101">                AppConfig instance = AppConfig.getInstance();</span>
+
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">                if (entity != null) {</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">                    if (entity.getAuthorizedName().equals(getAuthorizedName())</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">                            &amp;&amp; entity.getNodeId().equals((AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID)))) {</span>
+<span class="fc" id="L106">                        return true;</span>
+                    }
+                }
+<span class="nc" id="L109">            } catch (Exception ex) {</span>
+<span class="nc" id="L110">                logger.log(Level.WARNING, &quot;Error caught determining node id! Defaulting to access denied&quot;, ex);</span>
+<span class="fc" id="L111">            }</span>
+<span class="fc" id="L112">            return false;</span>
+	}
+
+	
+	public boolean isValidPublisherKey(EntityManager em, String key) {
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">		if (key == null)</span>
+<span class="nc" id="L118">			return false;</span>
+		
+<span class="pc bpc" id="L120" title="1 of 2 branches missed.">		if (keyGeneratorKeys == null)</span>
+<span class="nc" id="L121">			populateKeyGeneratorKeys(em);</span>
+		
+<span class="fc bfc" id="L123" title="All 2 branches covered.">		if (! key.contains(KeyGenerator.PARTITION_SEPARATOR)) return true; //v2 style key</span>
+<span class="fc" id="L124">		String keyPartition = key.substring(0, key.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));</span>
+		
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">		for (String keyGenKey : keyGeneratorKeys) {</span>
+<span class="fc" id="L127">			String keyGenPartition = keyGenKey.substring(0, keyGenKey.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">			if (keyGenPartition.equalsIgnoreCase(keyPartition))</span>
+<span class="fc" id="L129">				return true;</span>
+<span class="fc" id="L130">		}</span>
+<span class="nc" id="L131">		return false;</span>
+	}
+	
+	/*
+	 * This method will check if the given key generator key is available for this publisher.  The idea is to make sure that the key generator
+	 * and all its sub-partitions are not already taken by another publisher.
+	 */
+	public boolean isKeyGeneratorAvailable(EntityManager em, String keygenKey) throws DispositionReportFaultMessage {
+
+		// First make sure the key is a valid UDDIv3 key per the specification's rules
+<span class="fc" id="L141">		ValidateUDDIKey.validateUDDIv3KeyGeneratorKey(keygenKey);</span>
+		
+<span class="fc" id="L143">		String partition = keygenKey.toUpperCase().substring(0, keygenKey.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));</span>
+		
+<span class="fc" id="L145">		StringTokenizer tokenizer = new StringTokenizer(partition, KeyGenerator.PARTITION_SEPARATOR);</span>
+<span class="fc" id="L146">		int tokenCount = tokenizer.countTokens();</span>
+		// Must have 2 or more tokens as the first is the uddi scheme and the second is the domain key.
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">		if (tokenCount &lt; 2)</span>
+<span class="nc" id="L149">			return false;</span>
+
+<span class="fc" id="L151">		String domainPartition = (String)tokenizer.nextElement() + KeyGenerator.PARTITION_SEPARATOR + (String)tokenizer.nextElement();</span>
+		
+		// If three or more tokens then we need to make sure the current publisher has the parent partitions.  For example, you can't register the 
+		// uddi:domain:abc:123 key generator without having the uddi:domain and uddi:domain:abc key generators.  This implicitly checks if another
+		// publisher has any of these partitions since if they do, current publisher won't have them.
+<span class="fc bfc" id="L156" title="All 2 branches covered.">		if (tokenCount &gt; 2) {</span>
+<span class="fc" id="L157">			Vector&lt;DynamicQuery.Parameter&gt; params = new Vector&lt;DynamicQuery.Parameter&gt;(0);</span>
+
+<span class="fc" id="L159">			DynamicQuery.Parameter pubParam = new DynamicQuery.Parameter(&quot;t.authorizedName&quot;, </span>
+<span class="fc" id="L160">					 getAuthorizedName(), </span>
+					 DynamicQuery.PREDICATE_EQUALS);
+			
+<span class="fc" id="L163">			int requiredCount = 0;</span>
+<span class="fc" id="L164">			params.add(new DynamicQuery.Parameter(&quot;UPPER(t.entityKey)&quot;, </span>
+<span class="fc" id="L165">					(domainPartition + KeyGenerator.PARTITION_SEPARATOR + KeyGenerator.KEYGENERATOR_SUFFIX).toUpperCase(), </span>
+					DynamicQuery.PREDICATE_EQUALS));
+<span class="fc" id="L167">			requiredCount++;</span>
+			
+<span class="fc" id="L169">			String subPartition = domainPartition;</span>
+<span class="pc bpc" id="L170" title="1 of 2 branches missed.">			while (tokenizer.hasMoreElements()) {</span>
+				// Don't need to add the last token as it is the proposed key generator.
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">				if (tokenizer.countTokens() == 1)</span>
+<span class="fc" id="L173">					break;</span>
+
+<span class="nc" id="L175">				String nextToken = (String)tokenizer.nextElement();</span>
+<span class="nc" id="L176">				subPartition = subPartition + KeyGenerator.PARTITION_SEPARATOR + nextToken;</span>
+<span class="nc" id="L177">				DynamicQuery.Parameter param = new DynamicQuery.Parameter(&quot;UPPER(t.entityKey)&quot;, </span>
+<span class="nc" id="L178">						(subPartition + KeyGenerator.PARTITION_SEPARATOR + KeyGenerator.KEYGENERATOR_SUFFIX).toUpperCase(), </span>
+						DynamicQuery.PREDICATE_EQUALS);
+<span class="nc" id="L180">				params.add(param);</span>
+<span class="nc" id="L181">				requiredCount++;</span>
+<span class="nc" id="L182">			}</span>
+			
+<span class="fc" id="L184">			DynamicQuery checkParentKeyQry = new DynamicQuery();</span>
+<span class="fc" id="L185">			checkParentKeyQry.append(&quot;select COUNT(t.entityKey) from Tmodel t&quot;).pad();</span>
+
+<span class="fc" id="L187">			checkParentKeyQry.WHERE().pad().appendGroupedAnd(pubParam);</span>
+<span class="fc" id="L188">			checkParentKeyQry.AND().pad().appendGroupedOr(params.toArray(new DynamicQuery.Parameter[0]));</span>
+			
+<span class="fc" id="L190">			Query qry = checkParentKeyQry.buildJPAQuery(em);			</span>
+<span class="fc" id="L191">			Number resultCount = (Number)qry.getSingleResult();</span>
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">			if (resultCount.longValue() != requiredCount)</span>
+<span class="nc" id="L193">				return false;</span>
+<span class="fc" id="L194">		}</span>
+		else {
+			// If only two tokens, then a domain key generator is being checked.  A domain key generator can only be registered if no other publishers
+			// own it.  For example, if trying to register the uddi:domain:abc:123 key then uddi:domain cannot be owned by another publisher.
+<span class="fc" id="L198">			DynamicQuery.Parameter notPubParam = new DynamicQuery.Parameter(&quot;t.authorizedName&quot;, </span>
+<span class="fc" id="L199">					 getAuthorizedName(), </span>
+					 DynamicQuery.PREDICATE_NOTEQUALS);
+
+<span class="fc" id="L202">			DynamicQuery.Parameter keyParam = new DynamicQuery.Parameter(&quot;UPPER(t.entityKey)&quot;, </span>
+<span class="fc" id="L203">					(domainPartition + KeyGenerator.PARTITION_SEPARATOR + KeyGenerator.KEYGENERATOR_SUFFIX).toUpperCase(), </span>
+					DynamicQuery.PREDICATE_EQUALS);
+			
+<span class="fc" id="L206">			DynamicQuery checkDomainKeyQry = new DynamicQuery();</span>
+<span class="fc" id="L207">			checkDomainKeyQry.append(&quot;select t.entityKey from Tmodel t&quot;).pad();</span>
+			
+<span class="fc" id="L209">			checkDomainKeyQry.WHERE().pad().appendGroupedAnd(notPubParam, keyParam);</span>
+
+<span class="fc" id="L211">			Query qry = checkDomainKeyQry.buildJPAQuery(em);</span>
+<span class="fc" id="L212">			List&lt;?&gt; obj = qry.getResultList();</span>
+			// If there are results then another publisher has the domain key and therefore the key generator is unavailable
+<span class="pc bpc" id="L214" title="2 of 4 branches missed.">			if (obj != null &amp;&amp; obj.size() &gt; 0)</span>
+<span class="nc" id="L215">				return false;</span>
+		}
+		
+<span class="fc" id="L218">		return true;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

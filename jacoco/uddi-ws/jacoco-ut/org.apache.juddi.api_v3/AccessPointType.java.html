@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccessPointType.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.api_v3</a> &gt; <span class="el_source">AccessPointType.java</span></div><h1>AccessPointType.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.api_v3;
+
+/**
+ * Provides a basic enumeration of the predefinied useType values for UDDI service/bindingTemplates/accessPoints/useType
+ * @author unknown
+ */
+<span class="nc" id="L23">public enum AccessPointType {</span>
+	/**
+         *  endPoint: designates that the accessPoint points to the actual service endpoint, i.e. the network address at which the Web service can be invoked,
+         */
+<span class="nc" id="L27">	END_POINT (&quot;endPoint&quot;),</span>
+        /**
+         *  bindingTemplate: designates that the accessPoint contains a bindingKey that points to a different bindingTemplate entry. The value in providing this facility is seen when a business or entity wants to expose a service description (e.g. advertise that they have a service available that suits a specific purpose) that is actually a service that is described in a separate bindingTemplate record. This might occur when many service descriptions could benefit from a single service description,
+         */
+<span class="nc" id="L31">	BINDING_TEMPLATE(&quot;bindingTemplate&quot;),</span>
+        /**
+         * hostingRedirector: designates that the accessPoint can only be determined by querying another UDDI registry.  This might occur when a service is remotely hosted.
+         */
+<span class="nc" id="L35">	HOSTING_REDIRECTOR(&quot;hostingDirector&quot;),</span>
+        /**
+         * wsdlDeployment: designates that the accessPoint points to a remotely hosted WSDL document that already contains the necessary binding information, including the actual service endpoint.
+         *  The bindingTemplate of a Web service making use of indirection via a hostingRedirector Web service contains the bindingKey of the hosting redirector service’s bindingTemplate.  The hosting redirector’s bindingTemplate contains the accessPoint of the Hosting Redirector Web service
+         */
+<span class="nc" id="L40">	WSDL_DEPLOYMENT (&quot;wsdlDeployment&quot;);</span>
+	
+	final String type;
+
+<span class="nc" id="L44">	private AccessPointType(String type) {</span>
+<span class="nc" id="L45">		this.type = type;</span>
+<span class="nc" id="L46">	}</span>
+	
+ 	public String toString() {
+<span class="nc" id="L49">		return type;	</span>
+	}
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

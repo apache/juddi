@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ChangeRecordNewData.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.repl_v3</a> &gt; <span class="el_source">ChangeRecordNewData.java</span></div><h1>ChangeRecordNewData.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+package org.uddi.repl_v3;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.OperationalInfo;
+import org.uddi.api_v3.TModel;
+
+
+/**
+ * &lt;img src=&quot;http://www.uddi.org/pubs/uddi-v3.0.2-20041019_files/image112.gif&quot;&gt;&lt;Br&gt;
+ * A changeRecordNewData MUST not be empty; it must contain a valid semantic piece of new data. Change records of this type provide new or updated business or modeling information that is to be incorporated. Partial updates to a datum are not provided for; rather, the entire new contents of the datum and its operationalInfo are to be provided, and these replace any existing definition of the datum and its operationalInfo with the recipient of the change record. The hidden state (i.e. the deleted attribute) must be persisted through replication to allow for a custody transfer of hidden tModels between nodes via the replication protocol.
+
+The operationalInfo element MUST contain the operational information associated with the indicated new data. No validation other than schema assessment and presence requirements are performed by the consuming node. Specifically, the creation date may change; the creation date need not be earlier than the modification date; the modification date need not be earlier than the modified including children date.
+
+A changeRecordNewData is considered &quot;successfully processed&quot; once a node has received it, assigned a local USN to it, validated it, durably stored it in its change record journal, and then successfully incorporated it into the node’s data store.
+ * &lt;p&gt;Java class for anonymous complex type.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * 
+ * &lt;pre&gt;
+ * &amp;lt;complexType&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;sequence&gt;
+ *         &amp;lt;choice&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}businessEntity&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}businessService&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}bindingTemplate&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}tModel&quot;/&gt;
+ *         &amp;lt;/choice&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}operationalInfo&quot;/&gt;
+ *       &amp;lt;/sequence&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;&quot;, propOrder = {
+    &quot;businessEntity&quot;,
+    &quot;businessService&quot;,
+    &quot;bindingTemplate&quot;,
+    &quot;tModel&quot;,
+    &quot;operationalInfo&quot;
+})
+@XmlRootElement(name = &quot;changeRecordNewData&quot;)
+<span class="nc" id="L76">public class ChangeRecordNewData implements Serializable{</span>
+	@XmlTransient
+	private static final long serialVersionUID = 3254341966186893497L;
+	@XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected BusinessEntity businessEntity;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected BusinessService businessService;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected BindingTemplate bindingTemplate;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected TModel tModel;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;, required = true)
+    protected OperationalInfo operationalInfo;
+
+    /**
+     * Gets the value of the businessEntity property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BusinessEntity }
+     *     
+     */
+    public BusinessEntity getBusinessEntity() {
+<span class="nc" id="L99">        return businessEntity;</span>
+    }
+
+    /**
+     * Sets the value of the businessEntity property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BusinessEntity }
+     *     
+     */
+    public void setBusinessEntity(BusinessEntity value) {
+<span class="nc" id="L111">        this.businessEntity = value;</span>
+<span class="nc" id="L112">    }</span>
+
+    /**
+     * Gets the value of the businessService property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BusinessService }
+     *     
+     */
+    public BusinessService getBusinessService() {
+<span class="nc" id="L123">        return businessService;</span>
+    }
+
+    /**
+     * Sets the value of the businessService property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BusinessService }
+     *     
+     */
+    public void setBusinessService(BusinessService value) {
+<span class="nc" id="L135">        this.businessService = value;</span>
+<span class="nc" id="L136">    }</span>
+
+    /**
+     * Gets the value of the bindingTemplate property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BindingTemplate }
+     *     
+     */
+    public BindingTemplate getBindingTemplate() {
+<span class="nc" id="L147">        return bindingTemplate;</span>
+    }
+
+    /**
+     * Sets the value of the bindingTemplate property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BindingTemplate }
+     *     
+     */
+    public void setBindingTemplate(BindingTemplate value) {
+<span class="nc" id="L159">        this.bindingTemplate = value;</span>
+<span class="nc" id="L160">    }</span>
+
+    /**
+     * Gets the value of the tModel property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link TModel }
+     *     
+     */
+    public TModel getTModel() {
+<span class="nc" id="L171">        return tModel;</span>
+    }
+
+    /**
+     * Sets the value of the tModel property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link TModel }
+     *     
+     */
+    public void setTModel(TModel value) {
+<span class="nc" id="L183">        this.tModel = value;</span>
+<span class="nc" id="L184">    }</span>
+
+    /**
+     * Gets the value of the operationalInfo property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link OperationalInfo }
+     *     
+     */
+    public OperationalInfo getOperationalInfo() {
+<span class="nc" id="L195">        return operationalInfo;</span>
+    }
+
+    /**
+     * Sets the value of the operationalInfo property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link OperationalInfo }
+     *     
+     */
+    public void setOperationalInfo(OperationalInfo value) {
+<span class="nc" id="L207">        this.operationalInfo = value;</span>
+<span class="nc" id="L208">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

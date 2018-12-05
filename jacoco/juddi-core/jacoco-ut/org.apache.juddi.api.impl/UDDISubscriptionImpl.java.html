@@ -1,0 +1,1047 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UDDISubscriptionImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.api.impl</a> &gt; <span class="el_source">UDDISubscriptionImpl.java</span></div><h1>UDDISubscriptionImpl.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.api.impl;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.UUID;
+
+import javax.jws.WebService;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.xml.bind.JAXBException;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.ws.Holder;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.util.QueryStatus;
+import org.apache.juddi.api.util.SubscriptionQuery;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.config.Property;
+import org.apache.juddi.jaxb.JAXBMarshaller;
+import org.apache.juddi.mapping.MappingApiToModel;
+import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.model.SubscriptionChunkToken;
+import org.apache.juddi.model.SubscriptionMatch;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.query.FindBusinessByPublisherQuery;
+import org.apache.juddi.query.FindSubscriptionByPublisherQuery;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.InvalidValueException;
+import org.apache.juddi.validation.ValidateSubscription;
+import org.uddi.api_v3.AssertionStatusReport;
+import org.uddi.api_v3.BindingDetail;
+import org.uddi.api_v3.BusinessDetail;
+import org.uddi.api_v3.BusinessList;
+import org.uddi.api_v3.FindBinding;
+import org.uddi.api_v3.FindBusiness;
+import org.uddi.api_v3.FindRelatedBusinesses;
+import org.uddi.api_v3.FindService;
+import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.GetAssertionStatusReport;
+import org.uddi.api_v3.GetBindingDetail;
+import org.uddi.api_v3.GetBusinessDetail;
+import org.uddi.api_v3.GetServiceDetail;
+import org.uddi.api_v3.GetTModelDetail;
+import org.uddi.api_v3.RelatedBusinessesList;
+import org.uddi.api_v3.ServiceDetail;
+import org.uddi.api_v3.ServiceList;
+import org.uddi.api_v3.TModelDetail;
+import org.uddi.api_v3.TModelList;
+import org.uddi.sub_v3.DeleteSubscription;
+import org.uddi.sub_v3.GetSubscriptionResults;
+import org.uddi.sub_v3.KeyBag;
+import org.uddi.sub_v3.Subscription;
+import org.uddi.sub_v3.SubscriptionFilter;
+import org.uddi.sub_v3.SubscriptionResultsList;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.uddi.v3_service.UDDISubscriptionPortType;
+
+/**
+ * This is jUDDI's implementation of the UDDIv3 Subscription API
+ */
+@WebService(serviceName=&quot;UDDISubscriptionService&quot;, 
+			endpointInterface=&quot;org.uddi.v3_service.UDDISubscriptionPortType&quot;,
+			targetNamespace = &quot;urn:uddi-org:api_v3_portType&quot;)
+public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISubscriptionPortType {
+
+<span class="fc" id="L90">	private static Log logger = LogFactory.getLog(UDDISubscriptionImpl.class);</span>
+
+	public static final int DEFAULT_SUBSCRIPTIONEXPIRATION_DAYS = 30;
+	public static final int DEFAULT_CHUNKEXPIRATION_MINUTES = 5;
+
+	public static final String CHUNK_TOKEN_PREFIX = &quot;chunktoken:&quot;;
+
+        private UDDIServiceCounter serviceCounter;
+
+        public UDDISubscriptionImpl() {
+<span class="fc" id="L100">            super();</span>
+<span class="fc" id="L101">            serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());</span>
+<span class="fc" id="L102">        }</span>
+	
+	public void deleteSubscription(DeleteSubscription body)
+			throws DispositionReportFaultMessage {
+<span class="fc" id="L106">	        long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L108">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L109">		EntityTransaction tx = em.getTransaction();</span>
+		try {
+<span class="fc" id="L111">			tx.begin();</span>
+	
+<span class="fc" id="L113">			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());</span>
+<span class="fc" id="L114">			new ValidateSubscription(publisher).validateDeleteSubscription(em, body);</span>
+			
+<span class="fc" id="L116">	        List&lt;String&gt; subscriptionKeyList = body.getSubscriptionKey();</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">	        for (String subscriptionKey : subscriptionKeyList) {</span>
+<span class="fc" id="L118">	                Object obj = em.find(org.apache.juddi.model.Subscription.class, subscriptionKey);</span>
+<span class="fc" id="L119">	                em.remove(obj);</span>
+<span class="fc" id="L120">	        }</span>
+	
+<span class="fc" id="L122">	        tx.commit();</span>
+<span class="fc" id="L123">                long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L124">                serviceCounter.update(SubscriptionQuery.DELETE_SUBSCRIPTION, </span>
+                        QueryStatus.SUCCESS, procTime);
+<span class="nc" id="L126">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L127">                    long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L128">                    serviceCounter.update(SubscriptionQuery.DELETE_SUBSCRIPTION, </span>
+                            QueryStatus.FAILED, procTime);                      
+<span class="nc" id="L130">                    throw drfm;                                                                                                 </span>
+		} finally {
+<span class="pc bpc" id="L132" title="3 of 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="nc" id="L133">				tx.rollback();</span>
+			}
+<span class="pc" id="L135">			em.close();</span>
+<span class="fc" id="L136">		}</span>
+<span class="fc" id="L137">	}</span>
+   
+    public SubscriptionResultsList getSubscriptionResults(GetSubscriptionResults body) throws DispositionReportFaultMessage {
+<span class="fc" id="L140">    	return getSubscriptionResults(body, null);</span>
+    }
+	/* (non-Javadoc)
+	 * @see org.uddi.v3_service.UDDISubscriptionPortType#getSubscriptionResults(org.uddi.sub_v3.GetSubscriptionResults)
+	 * 
+	 * Notes: Does it make sense to refresh the subscription matches on a call to this method?  I don't think so, the user theoretically had
+	 * a set of entities in mind when the subscription was saved and the snapshot should remain just that - a snapshot of the entities at the
+	 * time of the subscription save.  The result of this policy is that if an entity is deleted, that deleted result will appear in the keyBag
+	 * on every call to this method.  To resolve this, the user can renew the subscription at which time the &quot;match&quot; snapshot will be refreshed.
+	 * 
+	 * The WS needs to be authenticated (null publisher), however the notificationSubscriber is calling this method also. The
+	 * notificationSubscriber will pass in the publisher and this method will work in unauthenticated mode.
+	 */
+	@SuppressWarnings(&quot;unchecked&quot;)
+	public SubscriptionResultsList getSubscriptionResults(GetSubscriptionResults body, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
+<span class="fc" id="L155">                long startTime = System.currentTimeMillis();</span>
+            
+<span class="fc" id="L157">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L158">		EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L160">	        tx.begin();</span>
+	        
+<span class="fc bfc" id="L162" title="All 2 branches covered.">			if (publisher==null) {</span>
+<span class="fc" id="L163">				publisher = this.getEntityPublisher(em, body.getAuthInfo());</span>
+<span class="fc" id="L164">				new ValidateSubscription(publisher).validateGetSubscriptionResults(em, body);</span>
+			}
+			
+<span class="fc" id="L167">			org.apache.juddi.model.Subscription modelSubscription = em.find(org.apache.juddi.model.Subscription.class, body.getSubscriptionKey());</span>
+<span class="fc" id="L168">			SubscriptionFilter subscriptionFilter = null;</span>
+			try {
+<span class="fc" id="L170">				subscriptionFilter = (SubscriptionFilter)JAXBMarshaller.unmarshallFromString(modelSubscription.getSubscriptionFilter(), JAXBMarshaller.PACKAGE_SUBSCRIPTION);</span>
+			} 
+<span class="nc" id="L172">			catch (JAXBException e) {</span>
+<span class="nc" id="L173">				logger.error(&quot;JAXB Exception while unmarshalling subscription filter&quot;, e);</span>
+<span class="nc" id="L174">				throw new FatalErrorException(new ErrorMessage(&quot;errors.Unspecified&quot;));</span>
+<span class="fc" id="L175">			}</span>
+<span class="pc bpc" id="L176" title="1 of 2 branches missed.">			if (logger.isDebugEnabled()) logger.debug(&quot;filter=&quot; + modelSubscription.getSubscriptionFilter());</span>
+			
+<span class="fc" id="L178">			SubscriptionResultsList result = new SubscriptionResultsList();</span>
+<span class="fc" id="L179">                        result.setChunkToken(&quot;0&quot;);</span>
+                        //chunkToken:  Optional element used to retrieve subsequent groups of data when the first invocation of this API indicates more data is available.  This occurs when a chunkToken is returned whose value is not &quot;0&quot; in the validValuesList structure described in the next section.  To retrieve the next chunk of data, the chunkToken returned should be used as an argument to the next invocation of this API.
+<span class="fc" id="L181">			result.setCoveragePeriod(body.getCoveragePeriod());</span>
+	
+			// The subscription structure is required output for the results
+<span class="fc" id="L184">			org.uddi.sub_v3.Subscription apiSubscription = new org.uddi.sub_v3.Subscription();</span>
+<span class="fc" id="L185">			MappingModelToApi.mapSubscription(modelSubscription, apiSubscription);</span>
+<span class="fc" id="L186">			result.setSubscription(apiSubscription);</span>
+			
+<span class="fc" id="L188">			Date startPointDate = new Date(body.getCoveragePeriod().getStartPoint().toGregorianCalendar().getTimeInMillis());</span>
+<span class="fc" id="L189">			Date endPointDate = new Date(body.getCoveragePeriod().getEndPoint().toGregorianCalendar().getTimeInMillis());</span>
+	
+<span class="fc" id="L191">			Integer chunkData = null;</span>
+<span class="fc bfc" id="L192" title="All 4 branches covered.">			if (body.getChunkToken() != null &amp;&amp; body.getChunkToken().length() &gt; 0) {</span>
+<span class="fc" id="L193">				SubscriptionChunkToken chunkToken = em.find(SubscriptionChunkToken.class, body.getChunkToken());</span>
+				
+<span class="pc bpc" id="L195" title="1 of 2 branches missed.">				if (chunkToken == null)</span>
+<span class="nc" id="L196">					throw new InvalidValueException(new ErrorMessage(&quot;errors.getsubscriptionresult.InvalidChunkToken&quot;, body.getChunkToken()));</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">				if (!chunkToken.getSubscriptionKey().equals(body.getSubscriptionKey()))</span>
+<span class="nc" id="L198">					throw new InvalidValueException(new ErrorMessage(&quot;errors.getsubscriptionresult.NonMatchingChunkToken&quot;, body.getChunkToken()));</span>
+<span class="pc bpc" id="L199" title="2 of 4 branches missed.">				if (chunkToken.getStartPoint() != null &amp;&amp; chunkToken.getStartPoint().getTime() != startPointDate.getTime())</span>
+<span class="nc" id="L200">					throw new InvalidValueException(new ErrorMessage(&quot;errors.getsubscriptionresult.NonMatchingChunkToken&quot;, body.getChunkToken()));</span>
+<span class="pc bpc" id="L201" title="2 of 4 branches missed.">				if (chunkToken.getEndPoint() != null &amp;&amp; chunkToken.getEndPoint().getTime() != endPointDate.getTime())</span>
+<span class="nc" id="L202">					throw new InvalidValueException(new ErrorMessage(&quot;errors.getsubscriptionresult.NonMatchingChunkToken&quot;, body.getChunkToken()));</span>
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">				if (chunkToken.getExpiresAfter().before(new Date()))</span>
+<span class="nc" id="L204">					throw new InvalidValueException(new ErrorMessage(&quot;errors.getsubscriptionresult.ExpiredChunkToken&quot;, body.getChunkToken()));</span>
+				
+<span class="fc" id="L206">				chunkData = chunkToken.getData();</span>
+				// We've got the data from the chunk token, now it is no longer needed (once it's called, it's used up)
+<span class="fc" id="L208">				em.remove(chunkToken);</span>
+			}
+	
+			
+<span class="pc bpc" id="L212" title="1 of 2 branches missed.">			if (subscriptionFilter.getFindBinding() != null) {</span>
+				//Get the current matching keys
+<span class="nc" id="L214">				List&lt;?&gt; currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);</span>
+				// See if there's any missing keys by comparing against the previous matches.  If so, they missing keys are added to the KeyBag and
+				// then added to the result
+<span class="nc" id="L217">				List&lt;String&gt; missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());</span>
+<span class="nc bnc" id="L218" title="All 4 branches missed.">				if (missingKeys != null &amp;&amp; missingKeys.size() &gt; 0) {</span>
+<span class="nc" id="L219">					KeyBag missingKeyBag = new KeyBag();</span>
+<span class="nc" id="L220">					missingKeyBag.setDeleted(true);</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">					for (String key : missingKeys)</span>
+<span class="nc" id="L222">						missingKeyBag.getBindingKey().add(key);</span>
+					
+<span class="nc" id="L224">					result.getKeyBag().add(missingKeyBag);</span>
+				}
+				
+				// Re-setting the subscription matches to the new matching key collection
+				//modelSubscription.getSubscriptionMatches().clear();
+				//for (Object key : currentMatchingKeys) {
+				//	SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
+				//	modelSubscription.getSubscriptionMatches().add(subMatch);
+				//}
+				
+				// Now, finding the necessary entities, within the coverage period limits
+<span class="nc bnc" id="L235" title="All 2 branches missed.">				if (modelSubscription.isBrief()) {</span>
+<span class="nc" id="L236">					KeyBag resultsKeyBag = new KeyBag();</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">					for (String key : (List&lt;String&gt;)currentMatchingKeys)</span>
+<span class="nc" id="L238">						resultsKeyBag.getBindingKey().add(key);</span>
+					
+<span class="nc" id="L240">					result.getKeyBag().add(resultsKeyBag);</span>
+<span class="nc" id="L241">				}</span>
+				else {
+<span class="nc" id="L243">					FindBinding fb = subscriptionFilter.getFindBinding();</span>
+<span class="nc" id="L244">					org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();</span>
+<span class="nc" id="L245">					findQualifiers.mapApiFindQualifiers(fb.getFindQualifiers());</span>
+					
+					// To do subscription &quot;chunking&quot;, the listHead and maxRows are nulled which will set them to system default.  User settings for
+					// these values don't make sense with the &quot;chunking&quot; feature.
+<span class="nc" id="L249">					fb.setListHead(null);</span>
+<span class="nc" id="L250">					fb.setMaxRows(null);</span>
+					// Setting the start index to the chunkData
+<span class="nc" id="L252">					Holder&lt;Integer&gt; subscriptionStartIndex = new Holder&lt;Integer&gt;(chunkData);</span>
+					
+<span class="nc" id="L254">					BindingDetail bindingDetail = InquiryHelper.getBindingDetailFromKeys(fb, findQualifiers, em, currentMatchingKeys,              </span>
+<span class="nc" id="L255">						startPointDate, endPointDate, subscriptionStartIndex, modelSubscription.getMaxEntities());</span>
+							
+					// Upon exiting above function, if more results are to be had, the subscriptionStartIndex will contain the latest value (or null
+					// if no more results)
+<span class="nc" id="L259">					chunkData = subscriptionStartIndex.value;</span>
+					
+<span class="nc" id="L261">					result.setBindingDetail(bindingDetail);</span>
+				}
+			}
+<span class="pc bpc" id="L264" title="1 of 2 branches missed.">			if (subscriptionFilter.getFindBusiness() != null) {</span>
+				//Get the current matching keys
+<span class="nc" id="L266">				List&lt;?&gt; currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);</span>
+	
+<span class="nc" id="L268">				List&lt;String&gt; missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());</span>
+<span class="nc bnc" id="L269" title="All 4 branches missed.">				if (missingKeys != null &amp;&amp; missingKeys.size() &gt; 0) {</span>
+<span class="nc" id="L270">					KeyBag missingKeyBag = new KeyBag();</span>
+<span class="nc" id="L271">					missingKeyBag.setDeleted(true);</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">					for (String key : missingKeys)</span>
+<span class="nc" id="L273">						missingKeyBag.getBusinessKey().add(key);</span>
+	
+<span class="nc" id="L275">					result.getKeyBag().add(missingKeyBag);</span>
+				}
+				
+				// Re-setting the subscription matches to the new matching key collection
+				//modelSubscription.getSubscriptionMatches().clear();
+				//for (Object key : currentMatchingKeys) {
+				//	SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
+				//	modelSubscription.getSubscriptionMatches().add(subMatch);
+				//}
+				
+				// Now, finding the necessary entities, within the coverage period limits
+<span class="nc bnc" id="L286" title="All 2 branches missed.">				if (modelSubscription.isBrief()) {</span>
+<span class="nc" id="L287">					KeyBag resultsKeyBag = new KeyBag();</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">					for (String key : (List&lt;String&gt;)currentMatchingKeys)</span>
+<span class="nc" id="L289">						resultsKeyBag.getBusinessKey().add(key);</span>
+					
+<span class="nc" id="L291">					result.getKeyBag().add(resultsKeyBag);</span>
+<span class="nc" id="L292">				}</span>
+				else {
+<span class="nc" id="L294">					FindBusiness fb = subscriptionFilter.getFindBusiness();</span>
+<span class="nc" id="L295">					org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();</span>
+<span class="nc" id="L296">					findQualifiers.mapApiFindQualifiers(fb.getFindQualifiers());</span>
+					
+					// To do subscription &quot;chunking&quot;, the listHead and maxRows are nulled which will set them to system default.  User settings for
+					// these values don't make sense with the &quot;chunking&quot; feature.
+<span class="nc" id="L300">					fb.setListHead(null);</span>
+<span class="nc" id="L301">					fb.setMaxRows(null);</span>
+					// Setting the start index to the chunkData
+<span class="nc" id="L303">					Holder&lt;Integer&gt; subscriptionStartIndex = new Holder&lt;Integer&gt;(chunkData);</span>
+					
+<span class="nc" id="L305">					BusinessList businessList = InquiryHelper.getBusinessListFromKeys(fb, findQualifiers, em, currentMatchingKeys,</span>
+<span class="nc" id="L306">																					  startPointDate, endPointDate, subscriptionStartIndex, modelSubscription.getMaxEntities());</span>
+					
+					// Upon exiting above function, if more results are to be had, the subscriptionStartIndex will contain the latest value (or null
+					// if no more results)
+<span class="nc" id="L310">					chunkData = subscriptionStartIndex.value;</span>
+					
+<span class="nc" id="L312">					result.setBusinessList(businessList);</span>
+				}
+			}
+<span class="fc bfc" id="L315" title="All 2 branches covered.">			if (subscriptionFilter.getFindService() != null) {</span>
+				//Get the current matching keys
+<span class="fc" id="L317">				List&lt;?&gt; currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);</span>
+<span class="pc bpc" id="L318" title="1 of 2 branches missed.">				if (logger.isDebugEnabled()) logger.debug(&quot;current matching keys=&quot; + currentMatchingKeys);</span>
+<span class="fc" id="L319">				List&lt;String&gt; missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());</span>
+<span class="pc bpc" id="L320" title="2 of 4 branches missed.">				if (missingKeys != null &amp;&amp; missingKeys.size() &gt; 0) {</span>
+<span class="nc" id="L321">					KeyBag missingKeyBag = new KeyBag();</span>
+<span class="nc" id="L322">					missingKeyBag.setDeleted(true);</span>
+<span class="nc bnc" id="L323" title="All 2 branches missed.">					for (String key : missingKeys)</span>
+<span class="nc" id="L324">						missingKeyBag.getServiceKey().add(key);</span>
+	
+<span class="nc" id="L326">					result.getKeyBag().add(missingKeyBag);</span>
+				}
+				
+				// Re-setting the subscription matches to the new matching key collection
+				//modelSubscription.getSubscriptionMatches().clear();
+				//for (Object key : currentMatchingKeys) {
+				//	SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
+				//	modelSubscription.getSubscriptionMatches().add(subMatch);
+				//}
+				
+				// Now, finding the necessary entities, within the coverage period limits
+<span class="pc bpc" id="L337" title="1 of 2 branches missed.">				if (modelSubscription.isBrief()) {</span>
+<span class="nc" id="L338">					KeyBag resultsKeyBag = new KeyBag();</span>
+<span class="nc bnc" id="L339" title="All 2 branches missed.">					for (String key : (List&lt;String&gt;)currentMatchingKeys)</span>
+<span class="nc" id="L340">						resultsKeyBag.getServiceKey().add(key);</span>
+					
+<span class="nc" id="L342">					result.getKeyBag().add(resultsKeyBag);</span>
+<span class="nc" id="L343">				}</span>
+				else {
+<span class="fc" id="L345">					FindService fs = subscriptionFilter.getFindService();</span>
+<span class="fc" id="L346">					org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();</span>
+<span class="fc" id="L347">					findQualifiers.mapApiFindQualifiers(fs.getFindQualifiers());</span>
+					
+					// To do subscription &quot;chunking&quot;, the listHead and maxRows are nulled which will set them to system default.  User settings for
+					// these values don't make sense with the &quot;chunking&quot; feature.
+<span class="fc" id="L351">					fs.setListHead(null);</span>
+<span class="fc" id="L352">					fs.setMaxRows(null);</span>
+					// Setting the start index to the chunkData
+<span class="fc" id="L354">					Holder&lt;Integer&gt; subscriptionStartIndex = new Holder&lt;Integer&gt;(chunkData);</span>
+	
+<span class="fc" id="L356">					ServiceList serviceList = InquiryHelper.getServiceListFromKeys(fs, findQualifiers, em, currentMatchingKeys,</span>
+<span class="fc" id="L357">																				   startPointDate, endPointDate, subscriptionStartIndex, modelSubscription.getMaxEntities());</span>
+<span class="pc bpc" id="L358" title="1 of 4 branches missed.">					if (serviceList.getServiceInfos()==null || serviceList.getServiceInfos().getServiceInfo().size()==0) {</span>
+<span class="fc" id="L359">						serviceList=null;</span>
+					}
+					// Upon exiting above function, if more results are to be had, the subscriptionStartIndex will contain the latest value (or null
+					// if no more results)
+<span class="fc" id="L363">					chunkData = subscriptionStartIndex.value;</span>
+					
+<span class="fc" id="L365">					result.setServiceList(serviceList);</span>
+				}
+			}
+<span class="fc bfc" id="L368" title="All 2 branches covered.">			if (subscriptionFilter.getFindTModel() != null) {</span>
+				//Get the current matching keys
+<span class="fc" id="L370">				List&lt;?&gt; currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);</span>
+	
+<span class="fc" id="L372">				List&lt;String&gt; missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());</span>
+<span class="pc bpc" id="L373" title="2 of 4 branches missed.">				if (missingKeys != null &amp;&amp; missingKeys.size() &gt; 0) {</span>
+<span class="nc" id="L374">					KeyBag missingKeyBag = new KeyBag();</span>
+<span class="nc" id="L375">					missingKeyBag.setDeleted(true);</span>
+<span class="nc bnc" id="L376" title="All 2 branches missed.">					for (String key : missingKeys)</span>
+<span class="nc" id="L377">						missingKeyBag.getTModelKey().add(key);</span>
+	
+<span class="nc" id="L379">					result.getKeyBag().add(missingKeyBag);</span>
+				}
+				
+				// Re-setting the subscription matches to the new matching key collection
+				//modelSubscription.getSubscriptionMatches().clear();
+				//for (Object key : currentMatchingKeys) {
+				//	SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
+				//	modelSubscription.getSubscriptionMatches().add(subMatch);
+				//}
+				
+				// Now, finding the necessary entities, within the coverage period limits
+<span class="pc bpc" id="L390" title="1 of 2 branches missed.">				if (modelSubscription.isBrief()) {</span>
+<span class="nc" id="L391">					KeyBag resultsKeyBag = new KeyBag();</span>
+<span class="nc bnc" id="L392" title="All 2 branches missed.">					for (String key : (List&lt;String&gt;)currentMatchingKeys)</span>
+<span class="nc" id="L393">						resultsKeyBag.getTModelKey().add(key);</span>
+					
+<span class="nc" id="L395">					result.getKeyBag().add(resultsKeyBag);</span>
+<span class="nc" id="L396">				}</span>
+				else {
+<span class="fc" id="L398">					FindTModel ft = subscriptionFilter.getFindTModel();</span>
+<span class="fc" id="L399">					org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();</span>
+<span class="fc" id="L400">					findQualifiers.mapApiFindQualifiers(ft.getFindQualifiers());</span>
+	
+					// To do subscription &quot;chunking&quot;, the listHead and maxRows are nulled which will set them to system default.  User settings for
+					// these values don't make sense with the &quot;chunking&quot; feature.
+<span class="fc" id="L404">					ft.setListHead(null);</span>
+<span class="fc" id="L405">					ft.setMaxRows(null);</span>
+					// Setting the start index to the chunkData
+<span class="fc" id="L407">					Holder&lt;Integer&gt; subscriptionStartIndex = new Holder&lt;Integer&gt;(chunkData);</span>
+					
+					// If more results are to be had, chunkData will come out with a value and a new token will be generated below.  Otherwise, it will
+					// be null and no token will be generated.
+<span class="fc" id="L411">					TModelList tmodelList = InquiryHelper.getTModelListFromKeys(ft, findQualifiers, em, currentMatchingKeys, </span>
+<span class="fc" id="L412">																				startPointDate, endPointDate, subscriptionStartIndex, modelSubscription.getMaxEntities());</span>
+	
+					// Upon exiting above function, if more results are to be had, the subscriptionStartIndex will contain the latest value (or null
+					// if no more results)
+<span class="fc" id="L416">					chunkData = subscriptionStartIndex.value;</span>
+					
+<span class="fc" id="L418">					result.setTModelList(tmodelList);</span>
+				}
+				
+			}
+<span class="pc bpc" id="L422" title="1 of 2 branches missed.">			if (subscriptionFilter.getFindRelatedBusinesses() != null) {</span>
+<span class="nc" id="L423">				FindRelatedBusinesses findRelatedBusiness = subscriptionFilter.getFindRelatedBusinesses();</span>
+<span class="nc" id="L424">				RelatedBusinessesList  relatedBusinessList = InquiryHelper.getRelatedBusinessesList(findRelatedBusiness, em, startPointDate, endPointDate);</span>
+<span class="nc" id="L425">				result.setRelatedBusinessesList(relatedBusinessList);</span>
+			}
+<span class="pc bpc" id="L427" title="1 of 2 branches missed.">			if (subscriptionFilter.getGetBindingDetail() != null) {</span>
+<span class="nc" id="L428">				GetBindingDetail getDetail = subscriptionFilter.getGetBindingDetail();</span>
+				
+				// Running through the key list here to determine the deleted keys and store the existing entities.
+<span class="nc" id="L431">				KeyBag missingKeyBag = new KeyBag();</span>
+<span class="nc" id="L432">				missingKeyBag.setDeleted(true);</span>
+<span class="nc" id="L433">				List&lt;org.apache.juddi.model.BindingTemplate&gt; existingList = new ArrayList&lt;org.apache.juddi.model.BindingTemplate&gt;(0);</span>
+<span class="nc bnc" id="L434" title="All 2 branches missed.">				for (String key : getDetail.getBindingKey()) {</span>
+<span class="nc" id="L435">					org.apache.juddi.model.BindingTemplate modelBindingTemplate = em.find(org.apache.juddi.model.BindingTemplate.class, key);</span>
+<span class="nc bnc" id="L436" title="All 2 branches missed.">					if (modelBindingTemplate != null)</span>
+<span class="nc" id="L437">						existingList.add(modelBindingTemplate);</span>
+					else
+<span class="nc" id="L439">						missingKeyBag.getBindingKey().add(key);</span>
+<span class="nc" id="L440">				}</span>
+				// Store deleted keys in the results
+<span class="nc bnc" id="L442" title="All 4 branches missed.">				if (missingKeyBag.getBindingKey() != null &amp;&amp; missingKeyBag.getBindingKey().size() &gt; 0)</span>
+<span class="nc" id="L443">					result.getKeyBag().add(missingKeyBag);</span>
+				
+<span class="nc" id="L445">				KeyBag resultsKeyBag = new KeyBag();</span>
+<span class="nc" id="L446">				BindingDetail bindingDetail = new BindingDetail();</span>
+	
+				// Set the currentIndex to 0 or the value of the chunkData
+<span class="nc" id="L449">				int currentIndex = 0;</span>
+<span class="nc bnc" id="L450" title="All 2 branches missed.">				if (chunkData != null)</span>
+<span class="nc" id="L451">					currentIndex = chunkData;</span>
+	
+<span class="nc" id="L453">				int returnedRowCount = 0;</span>
+<span class="nc bnc" id="L454" title="All 2 branches missed.">				while(currentIndex &lt; existingList.size()) {</span>
+	
+<span class="nc" id="L456">					org.apache.juddi.model.BindingTemplate modelBindingTemplate = existingList.get(currentIndex);</span>
+						
+<span class="nc bnc" id="L458" title="All 2 branches missed.">					if (startPointDate.after(modelBindingTemplate.getModifiedIncludingChildren())) {</span>
+<span class="nc" id="L459">						currentIndex++;</span>
+<span class="nc" id="L460">						continue;</span>
+					}
+					
+<span class="nc bnc" id="L463" title="All 2 branches missed.">					if (endPointDate.before(modelBindingTemplate.getModifiedIncludingChildren())) {</span>
+<span class="nc" id="L464">						currentIndex++;</span>
+<span class="nc" id="L465">						continue;</span>
+					}
+					
+<span class="nc bnc" id="L468" title="All 2 branches missed.">					if (modelSubscription.isBrief()) {</span>
+<span class="nc" id="L469">						resultsKeyBag.getBindingKey().add(modelBindingTemplate.getEntityKey());</span>
+					}
+					else {
+<span class="nc" id="L472">						org.uddi.api_v3.BindingTemplate apiBindingTemplate = new org.uddi.api_v3.BindingTemplate();</span>
+<span class="nc" id="L473">						MappingModelToApi.mapBindingTemplate(modelBindingTemplate, apiBindingTemplate);</span>
+<span class="nc" id="L474">						bindingDetail.getBindingTemplate().add(apiBindingTemplate);</span>
+						
+<span class="nc" id="L476">						returnedRowCount++;</span>
+					}
+	
+					// If the returned rows equals the max allowed, we can end the loop.
+<span class="nc bnc" id="L480" title="All 2 branches missed.">					if (modelSubscription.getMaxEntities() != null) {</span>
+<span class="nc bnc" id="L481" title="All 2 branches missed.">						if (returnedRowCount == modelSubscription.getMaxEntities())</span>
+<span class="nc" id="L482">							break;</span>
+					}
+	
+<span class="nc" id="L485">					currentIndex++;</span>
+<span class="nc" id="L486">				}</span>
+				
+				// If the loop was broken prematurely (max row count hit) we set the chunk data to the next index to start with.
+				// A non-null value of chunk data will cause a chunk token to be generated. 
+<span class="nc bnc" id="L490" title="All 2 branches missed.">				if (currentIndex &lt; (existingList.size() - 1))</span>
+<span class="nc" id="L491">					chunkData = currentIndex + 1;</span>
+				else
+<span class="nc" id="L493">					chunkData = null;</span>
+				
+<span class="nc bnc" id="L495" title="All 2 branches missed.">				if (modelSubscription.isBrief())</span>
+<span class="nc" id="L496">					result.getKeyBag().add(resultsKeyBag);</span>
+				else
+<span class="nc" id="L498">					result.setBindingDetail(bindingDetail);</span>
+				
+				
+			}
+<span class="fc bfc" id="L502" title="All 2 branches covered.">			if (subscriptionFilter.getGetBusinessDetail() != null) {</span>
+<span class="fc" id="L503">				GetBusinessDetail getDetail = subscriptionFilter.getGetBusinessDetail();</span>
+	
+				// Running through the key list here to determine the deleted keys and store the existing entities.
+<span class="fc" id="L506">				KeyBag missingKeyBag = new KeyBag();</span>
+<span class="fc" id="L507">				missingKeyBag.setDeleted(true);</span>
+<span class="fc" id="L508">				List&lt;org.apache.juddi.model.BusinessEntity&gt; existingList = new ArrayList&lt;org.apache.juddi.model.BusinessEntity&gt;(0);</span>
+<span class="fc bfc" id="L509" title="All 2 branches covered.">				for (String key : getDetail.getBusinessKey()) {</span>
+<span class="fc" id="L510">					org.apache.juddi.model.BusinessEntity modelBusinessEntity = em.find(org.apache.juddi.model.BusinessEntity.class, key);</span>
+<span class="fc bfc" id="L511" title="All 2 branches covered.">					if (modelBusinessEntity != null)</span>
+<span class="fc" id="L512">						existingList.add(modelBusinessEntity);</span>
+					else
+<span class="fc" id="L514">						missingKeyBag.getBusinessKey().add(key);</span>
+<span class="fc" id="L515">				}</span>
+				// Store deleted keys in the results
+<span class="pc bpc" id="L517" title="2 of 4 branches missed.">				if (missingKeyBag.getBusinessKey() != null &amp;&amp; missingKeyBag.getBusinessKey().size() &gt; 0)</span>
+<span class="fc" id="L518">					result.getKeyBag().add(missingKeyBag);</span>
+				
+<span class="fc" id="L520">				KeyBag resultsKeyBag = new KeyBag();</span>
+<span class="fc" id="L521">				BusinessDetail businessDetail = new BusinessDetail();</span>
+	
+				// Set the currentIndex to 0 or the value of the chunkData
+<span class="fc" id="L524">				int currentIndex = 0;</span>
+<span class="pc bpc" id="L525" title="1 of 2 branches missed.">				if (chunkData != null)</span>
+<span class="nc" id="L526">					currentIndex = chunkData;</span>
+				
+<span class="fc" id="L528">				int returnedRowCount = 0;</span>
+<span class="fc bfc" id="L529" title="All 2 branches covered.">				while(currentIndex &lt; existingList.size()) {</span>
+	
+<span class="fc" id="L531">					org.apache.juddi.model.BusinessEntity modelBusinessEntity = existingList.get(currentIndex);</span>
+	
+<span class="pc bpc" id="L533" title="1 of 2 branches missed.">					if (startPointDate.after(modelBusinessEntity.getModifiedIncludingChildren())) {</span>
+<span class="nc" id="L534">						currentIndex++;</span>
+<span class="nc" id="L535">						continue;</span>
+					}
+					
+<span class="pc bpc" id="L538" title="1 of 2 branches missed.">					if (endPointDate.before(modelBusinessEntity.getModifiedIncludingChildren())) {</span>
+<span class="nc" id="L539">						currentIndex++;</span>
+<span class="nc" id="L540">						continue;</span>
+					}
+					
+<span class="pc bpc" id="L543" title="1 of 2 branches missed.">					if (modelSubscription.isBrief()) {</span>
+<span class="nc" id="L544">						resultsKeyBag.getBusinessKey().add(modelBusinessEntity.getEntityKey());</span>
+					}
+					else {
+<span class="fc" id="L547">						org.uddi.api_v3.BusinessEntity apiBusinessEntity = new org.uddi.api_v3.BusinessEntity();</span>
+<span class="fc" id="L548">						MappingModelToApi.mapBusinessEntity(modelBusinessEntity, apiBusinessEntity);</span>
+<span class="fc" id="L549">						businessDetail.getBusinessEntity().add(apiBusinessEntity);</span>
+						
+<span class="fc" id="L551">						returnedRowCount++;</span>
+					}
+	
+					// If the returned rows equals the max allowed, we can end the loop.
+<span class="pc bpc" id="L555" title="1 of 2 branches missed.">					if (modelSubscription.getMaxEntities() != null) {</span>
+<span class="pc bpc" id="L556" title="1 of 2 branches missed.">						if (returnedRowCount == modelSubscription.getMaxEntities())</span>
+<span class="nc" id="L557">							break;</span>
+					}
+	
+<span class="fc" id="L560">					currentIndex++;</span>
+<span class="fc" id="L561">				}</span>
+				
+				// If the loop was broken prematurely (max row count hit) we set the chunk data to the next index to start with.
+				// A non-null value of chunk data will cause a chunk token to be generated. 
+<span class="pc bpc" id="L565" title="1 of 2 branches missed.">				if (currentIndex &lt; (existingList.size() - 1))</span>
+<span class="nc" id="L566">					chunkData = currentIndex + 1;</span>
+				else
+<span class="fc" id="L568">					chunkData = null;</span>
+				
+<span class="pc bpc" id="L570" title="1 of 2 branches missed.">				if (modelSubscription.isBrief())</span>
+<span class="nc" id="L571">					result.getKeyBag().add(resultsKeyBag);</span>
+				else
+<span class="fc" id="L573">					result.setBusinessDetail(businessDetail);</span>
+				
+			}
+<span class="pc bpc" id="L576" title="1 of 2 branches missed.">			if (subscriptionFilter.getGetServiceDetail() != null) {</span>
+<span class="nc" id="L577">				GetServiceDetail getDetail = subscriptionFilter.getGetServiceDetail();</span>
+	
+				// Running through the key list here to determine the deleted keys and store the existing entities.
+<span class="nc" id="L580">				KeyBag missingKeyBag = new KeyBag();</span>
+<span class="nc" id="L581">				missingKeyBag.setDeleted(true);</span>
+<span class="nc" id="L582">				List&lt;org.apache.juddi.model.BusinessService&gt; existingList = new ArrayList&lt;org.apache.juddi.model.BusinessService&gt;(0);</span>
+<span class="nc bnc" id="L583" title="All 2 branches missed.">				for (String key : getDetail.getServiceKey()) {</span>
+<span class="nc" id="L584">					org.apache.juddi.model.BusinessService modelBusinessService = em.find(org.apache.juddi.model.BusinessService.class, key);</span>
+<span class="nc bnc" id="L585" title="All 2 branches missed.">					if (modelBusinessService != null)</span>
+<span class="nc" id="L586">						existingList.add(modelBusinessService);</span>
+					else
+<span class="nc" id="L588">						missingKeyBag.getBusinessKey().add(key);</span>
+<span class="nc" id="L589">				}</span>
+				// Store deleted keys in the results
+<span class="nc bnc" id="L591" title="All 4 branches missed.">				if (missingKeyBag.getServiceKey() != null &amp;&amp; missingKeyBag.getServiceKey().size() &gt; 0)</span>
+<span class="nc" id="L592">					result.getKeyBag().add(missingKeyBag);</span>
+	
+<span class="nc" id="L594">				KeyBag resultsKeyBag = new KeyBag();</span>
+<span class="nc" id="L595">				ServiceDetail serviceDetail = new ServiceDetail();</span>
+				
+				// Set the currentIndex to 0 or the value of the chunkData
+<span class="nc" id="L598">				int currentIndex = 0;</span>
+<span class="nc bnc" id="L599" title="All 2 branches missed.">				if (chunkData != null)</span>
+<span class="nc" id="L600">					currentIndex = chunkData;</span>
+				
+<span class="nc" id="L602">				int returnedRowCount = 0;</span>
+<span class="nc bnc" id="L603" title="All 2 branches missed.">				while(currentIndex &lt; existingList.size()) {</span>
+					
+<span class="nc" id="L605">					org.apache.juddi.model.BusinessService modelBusinessService = existingList.get(currentIndex);</span>
+						
+<span class="nc bnc" id="L607" title="All 2 branches missed.">					if (startPointDate.after(modelBusinessService.getModifiedIncludingChildren())) {</span>
+<span class="nc" id="L608">						currentIndex++;</span>
+<span class="nc" id="L609">						continue;</span>
+					}
+					
+<span class="nc bnc" id="L612" title="All 2 branches missed.">					if (endPointDate.before(modelBusinessService.getModifiedIncludingChildren())) {</span>
+<span class="nc" id="L613">						currentIndex++;</span>
+<span class="nc" id="L614">						continue;</span>
+					}
+					
+<span class="nc bnc" id="L617" title="All 2 branches missed.">					if (modelSubscription.isBrief()) {</span>
+<span class="nc" id="L618">						resultsKeyBag.getServiceKey().add(modelBusinessService.getEntityKey());</span>
+					}
+					else {
+<span class="nc" id="L621">						org.uddi.api_v3.BusinessService apiBusinessService = new org.uddi.api_v3.BusinessService();</span>
+<span class="nc" id="L622">						MappingModelToApi.mapBusinessService(modelBusinessService, apiBusinessService);</span>
+<span class="nc" id="L623">						serviceDetail.getBusinessService().add(apiBusinessService);</span>
+						
+<span class="nc" id="L625">						returnedRowCount++;</span>
+					}
+	
+					// If the returned rows equals the max allowed, we can end the loop.
+<span class="nc bnc" id="L629" title="All 2 branches missed.">					if (modelSubscription.getMaxEntities() != null) {</span>
+<span class="nc bnc" id="L630" title="All 2 branches missed.">						if (returnedRowCount == modelSubscription.getMaxEntities())</span>
+<span class="nc" id="L631">							break;</span>
+					}
+	
+<span class="nc" id="L634">					currentIndex++;</span>
+<span class="nc" id="L635">				}</span>
+				
+				// If the loop was broken prematurely (max row count hit) we set the chunk data to the next index to start with.
+				// A non-null value of chunk data will cause a chunk token to be generated. 
+<span class="nc bnc" id="L639" title="All 2 branches missed.">				if (currentIndex &lt; (existingList.size() - 1))</span>
+<span class="nc" id="L640">					chunkData = currentIndex + 1;</span>
+				else
+<span class="nc" id="L642">					chunkData = null;</span>
+				
+<span class="nc bnc" id="L644" title="All 2 branches missed.">				if (modelSubscription.isBrief())</span>
+<span class="nc" id="L645">					result.getKeyBag().add(resultsKeyBag);</span>
+				else
+<span class="nc" id="L647">					result.setServiceDetail(serviceDetail);</span>
+				
+			}
+<span class="fc bfc" id="L650" title="All 2 branches covered.">			if (subscriptionFilter.getGetTModelDetail() != null) {</span>
+<span class="fc" id="L651">				GetTModelDetail getDetail = subscriptionFilter.getGetTModelDetail();</span>
+	
+				// Running through the key list here to determine the deleted keys and store the existing entities.
+<span class="fc" id="L654">				KeyBag missingKeyBag = new KeyBag();</span>
+<span class="fc" id="L655">				missingKeyBag.setDeleted(true);</span>
+<span class="fc" id="L656">				List&lt;org.apache.juddi.model.Tmodel&gt; existingList = new ArrayList&lt;org.apache.juddi.model.Tmodel&gt;(0);</span>
+<span class="fc bfc" id="L657" title="All 2 branches covered.">				for (String key : getDetail.getTModelKey()) {</span>
+<span class="fc" id="L658">					org.apache.juddi.model.Tmodel modelTModel = em.find(org.apache.juddi.model.Tmodel.class, key);</span>
+<span class="fc bfc" id="L659" title="All 2 branches covered.">					if (modelTModel != null)</span>
+<span class="fc" id="L660">						existingList.add(modelTModel);</span>
+					else
+<span class="fc" id="L662">						missingKeyBag.getTModelKey().add(key);</span>
+<span class="fc" id="L663">				}</span>
+				// Store deleted keys in the results
+<span class="pc bpc" id="L665" title="2 of 4 branches missed.">				if (missingKeyBag.getTModelKey() != null &amp;&amp; missingKeyBag.getTModelKey().size() &gt; 0)</span>
+<span class="fc" id="L666">					result.getKeyBag().add(missingKeyBag);</span>
+				
+<span class="fc" id="L668">				KeyBag resultsKeyBag = new KeyBag();</span>
+<span class="fc" id="L669">				TModelDetail tmodelDetail = new TModelDetail();</span>
+	
+				// Set the currentIndex to 0 or the value of the chunkData
+<span class="fc" id="L672">				int currentIndex = 0;</span>
+<span class="fc bfc" id="L673" title="All 2 branches covered.">				if (chunkData != null)</span>
+<span class="fc" id="L674">					currentIndex = chunkData;</span>
+				
+<span class="fc" id="L676">				int returnedRowCount = 0;</span>
+<span class="fc bfc" id="L677" title="All 2 branches covered.">				while(currentIndex &lt; existingList.size()) {</span>
+	
+<span class="fc" id="L679">					org.apache.juddi.model.Tmodel modelTModel = existingList.get(currentIndex);</span>
+						
+<span class="pc bpc" id="L681" title="1 of 2 branches missed.">					if (startPointDate.after(modelTModel.getModifiedIncludingChildren())) {</span>
+<span class="nc" id="L682">						currentIndex++;</span>
+<span class="nc" id="L683">						continue;</span>
+					}
+					
+<span class="pc bpc" id="L686" title="1 of 2 branches missed.">					if (endPointDate.before(modelTModel.getModifiedIncludingChildren())) {</span>
+<span class="nc" id="L687">						currentIndex++;</span>
+<span class="nc" id="L688">						continue;</span>
+					}
+					
+<span class="pc bpc" id="L691" title="1 of 2 branches missed.">					if (modelSubscription.isBrief()) {</span>
+<span class="nc" id="L692">						resultsKeyBag.getTModelKey().add(modelTModel.getEntityKey());</span>
+					}
+					else {
+<span class="fc" id="L695">						org.uddi.api_v3.TModel apiTModel = new org.uddi.api_v3.TModel();</span>
+<span class="fc" id="L696">						MappingModelToApi.mapTModel(modelTModel, apiTModel);</span>
+<span class="fc" id="L697">						tmodelDetail.getTModel().add(apiTModel);</span>
+						
+<span class="fc" id="L699">						returnedRowCount++;</span>
+					}
+	
+					// If the returned rows equals the max allowed, we can end the loop.
+<span class="pc bpc" id="L703" title="1 of 2 branches missed.">					if (modelSubscription.getMaxEntities() != null) {</span>
+<span class="fc bfc" id="L704" title="All 2 branches covered.">						if (returnedRowCount == modelSubscription.getMaxEntities())</span>
+<span class="fc" id="L705">							break;</span>
+					}
+	
+<span class="fc" id="L708">					currentIndex++;</span>
+<span class="fc" id="L709">				}</span>
+				
+				// If the loop was broken prematurely (max row count hit) we set the chunk data to the next index to start with.
+				// A non-null value of chunk data will cause a chunk token to be generated. 
+<span class="fc bfc" id="L713" title="All 2 branches covered.">				if (currentIndex &lt; (existingList.size() - 1))</span>
+<span class="fc" id="L714">					chunkData = currentIndex + 1;</span>
+				else
+<span class="fc" id="L716">					chunkData = null;</span>
+				
+<span class="pc bpc" id="L718" title="1 of 2 branches missed.">				if (modelSubscription.isBrief())</span>
+<span class="nc" id="L719">					result.getKeyBag().add(resultsKeyBag);</span>
+				else
+<span class="fc" id="L721">					result.setTModelDetail(tmodelDetail);</span>
+				
+			}
+<span class="fc bfc" id="L724" title="All 2 branches covered.">			if (subscriptionFilter.getGetAssertionStatusReport() != null) {</span>
+				// The coverage period doesn't apply here (basically because publisher assertions don't keep operational info).
+				// TODO, JUDDI-873 edit they do now, rewrite this query
+<span class="fc" id="L727">				GetAssertionStatusReport getAssertionStatusReport = subscriptionFilter.getGetAssertionStatusReport();</span>
+<span class="fc" id="L728">                                List&lt;?&gt; businessKeysFound = null;</span>
+<span class="fc" id="L729">                                businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);</span>
+		
+<span class="fc" id="L731">                                AssertionStatusReport assertionStatusReport  = new AssertionStatusReport();</span>
+                                
+<span class="fc" id="L733">				List&lt;org.apache.juddi.model.PublisherAssertion&gt; pubAssertionList = org.apache.juddi.query.FindPublisherAssertionByBusinessQuery.select(em, businessKeysFound, getAssertionStatusReport.getCompletionStatus());</span>
+                                //if (pubAssertionList==null)
+                                //    return result;
+<span class="fc bfc" id="L736" title="All 2 branches covered.">                                for (org.apache.juddi.model.PublisherAssertion modelPubAssertion : pubAssertionList) {</span>
+
+<span class="pc bpc" id="L738" title="1 of 2 branches missed.">                                        if (startPointDate.after(modelPubAssertion.getModified())) {</span>
+<span class="nc" id="L739">                                                continue;</span>
+                                        }
+
+<span class="pc bpc" id="L742" title="1 of 2 branches missed.">                                        if (endPointDate.before(modelPubAssertion.getModified())) {</span>
+<span class="nc" id="L743">                                                continue;</span>
+                                        }
+<span class="fc" id="L745">                                        org.uddi.api_v3.AssertionStatusItem apiAssertionStatusItem = new org.uddi.api_v3.AssertionStatusItem();</span>
+
+<span class="fc" id="L747">                                        MappingModelToApi.mapAssertionStatusItem(modelPubAssertion, apiAssertionStatusItem, businessKeysFound);</span>
+
+<span class="fc" id="L749">                                        assertionStatusReport.getAssertionStatusItem().add(apiAssertionStatusItem);</span>
+<span class="fc" id="L750">                                }</span>
+
+				
+<span class="fc" id="L753">				result.setAssertionStatusReport(assertionStatusReport);</span>
+			}
+			
+			// If chunkData contains non-null data, a new token must be created and the token returned in the results
+<span class="fc bfc" id="L757" title="All 2 branches covered.">			if (chunkData != null) {</span>
+<span class="fc" id="L758">				String chunkToken = CHUNK_TOKEN_PREFIX + UUID.randomUUID();</span>
+<span class="fc" id="L759">				SubscriptionChunkToken newChunkToken = new SubscriptionChunkToken(chunkToken);</span>
+<span class="fc" id="L760">				newChunkToken.setSubscriptionKey(body.getSubscriptionKey());</span>
+<span class="fc" id="L761">				newChunkToken.setStartPoint(startPointDate);</span>
+<span class="fc" id="L762">				newChunkToken.setEndPoint(endPointDate);</span>
+<span class="fc" id="L763">				newChunkToken.setData(chunkData);</span>
+	
+<span class="fc" id="L765">				int chunkExpirationMinutes = DEFAULT_CHUNKEXPIRATION_MINUTES;</span>
+				try { 
+<span class="fc" id="L767">					chunkExpirationMinutes = AppConfig.getConfiguration().getInt(Property.JUDDI_SUBSCRIPTION_CHUNKEXPIRATION_MINUTES); </span>
+				}
+<span class="nc" id="L769">				catch(ConfigurationException ce) { </span>
+<span class="nc" id="L770">					throw new FatalErrorException(new ErrorMessage(&quot;errors.configuration.Retrieval&quot;));</span>
+<span class="fc" id="L771">				}</span>
+<span class="fc" id="L772">				newChunkToken.setExpiresAfter(new Date(System.currentTimeMillis() + ((long)chunkExpirationMinutes * 60L * 1000L)));</span>
+				
+<span class="fc" id="L774">				em.persist(newChunkToken);</span>
+				
+<span class="fc" id="L776">				result.setChunkToken(chunkToken);</span>
+			}
+			
+<span class="fc" id="L779">	        tx.commit();</span>
+<span class="fc" id="L780">                long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L781">                serviceCounter.update(SubscriptionQuery.GET_SUBSCRIPTIONRESULTS, </span>
+                        QueryStatus.SUCCESS, procTime);
+
+<span class="fc" id="L784">	        return result;</span>
+<span class="nc" id="L785">        } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L786">            long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L787">            serviceCounter.update(SubscriptionQuery.GET_SUBSCRIPTIONRESULTS, </span>
+                    QueryStatus.FAILED, procTime);                      
+<span class="nc" id="L789">            throw drfm;                                                                                                 </span>
+        } finally {
+<span class="pc bpc" id="L791" title="3 of 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="nc" id="L792">				tx.rollback();</span>
+			}
+<span class="pc" id="L794">			em.close();</span>
+		}
+	}
+
+	@SuppressWarnings(&quot;unchecked&quot;)
+	public List&lt;Subscription&gt; getSubscriptions(String authInfo)
+			throws DispositionReportFaultMessage {
+<span class="fc" id="L801">	        long startTime = System.currentTimeMillis();</span>
+<span class="fc" id="L802">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L803">		EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L805">                        tx.begin();</span>
+	
+<span class="fc" id="L807">			UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);</span>
+			
+<span class="fc" id="L809">			List&lt;Subscription&gt; result = new ArrayList&lt;Subscription&gt;(0);</span>
+			
+<span class="fc" id="L811">			List&lt;org.apache.juddi.model.Subscription&gt; modelSubscriptionList = (List&lt;org.apache.juddi.model.Subscription&gt;)FindSubscriptionByPublisherQuery.select(em, publisher.getAuthorizedName());</span>
+<span class="pc bpc" id="L812" title="2 of 4 branches missed.">			if (modelSubscriptionList != null &amp;&amp; modelSubscriptionList.size() &gt; 0) {</span>
+<span class="fc bfc" id="L813" title="All 2 branches covered.">				for (org.apache.juddi.model.Subscription modelSubscription : modelSubscriptionList) {</span>
+					
+<span class="fc" id="L815">					Subscription apiSubscription = new Subscription();</span>
+					
+<span class="fc" id="L817">					MappingModelToApi.mapSubscription(modelSubscription, apiSubscription);</span>
+					
+<span class="fc" id="L819">					result.add(apiSubscription);</span>
+<span class="fc" id="L820">				}</span>
+			}
+	        
+<span class="fc" id="L823">	        tx.commit();</span>
+<span class="fc" id="L824">                long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L825">                serviceCounter.update(SubscriptionQuery.GET_SUBSCRIPTIONS, </span>
+                        QueryStatus.SUCCESS, procTime);
+
+<span class="fc" id="L828">		return result;</span>
+<span class="nc" id="L829">        } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L830">                    long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L831">                    serviceCounter.update(SubscriptionQuery.GET_SUBSCRIPTIONS, </span>
+                            QueryStatus.FAILED, procTime);                      
+<span class="nc" id="L833">                    throw drfm;                                                                                                 		</span>
+        } finally {
+<span class="pc bpc" id="L835" title="3 of 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="nc" id="L836">				tx.rollback();</span>
+			}
+<span class="pc" id="L838">			em.close();</span>
+		}
+	}
+
+
+	/* 
+	 * @see org.uddi.v3_service.UDDISubscriptionPortType#saveSubscription(java.lang.String, javax.xml.ws.Holder)
+	 * 
+	 * Notes: The matching keys are saved on a new subscription (or renewed subscription) for the find_* filters only.  With the other filter 
+	 * types, taking a snapshot of the matches doesn't make sense.
+	 * 
+	 */
+	public void saveSubscription(String authInfo,
+			Holder&lt;List&lt;Subscription&gt;&gt; subscription)
+			throws DispositionReportFaultMessage {
+<span class="fc" id="L853">	        long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L855">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L856">		EntityTransaction tx = em.getTransaction();</span>
+		try {
+<span class="fc" id="L858">			tx.begin();</span>
+	
+<span class="fc" id="L860">			UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);</span>
+<span class="fc" id="L861">			publisher.populateKeyGeneratorKeys(em);</span>
+<span class="fc" id="L862">			new ValidateSubscription(publisher).validateSubscriptions(em, subscription.value, publisher);</span>
+			
+<span class="fc" id="L864">			List&lt;org.uddi.sub_v3.Subscription&gt; apiSubscriptionList = subscription.value;</span>
+<span class="fc bfc" id="L865" title="All 2 branches covered.">			for (org.uddi.sub_v3.Subscription apiSubscription : apiSubscriptionList) {</span>
+				
+<span class="fc" id="L867">				org.apache.juddi.model.Subscription modelSubscription = new org.apache.juddi.model.Subscription();</span>
+				
+<span class="fc" id="L869">				Object existing = em.find(org.apache.juddi.model.Subscription.class, apiSubscription.getSubscriptionKey());</span>
+<span class="pc bpc" id="L870" title="1 of 2 branches missed.">				if (existing != null) {</span>
+<span class="nc" id="L871">					org.apache.juddi.model.Subscription existingEntity = (org.apache.juddi.model.Subscription) existing;</span>
+<span class="nc" id="L872">					doRenewal(existingEntity, apiSubscription);</span>
+					//carrying over the created and last notified dates if this is a renewal.
+<span class="nc" id="L874">					modelSubscription.setCreateDate(existingEntity.getCreateDate());</span>
+<span class="nc" id="L875">					modelSubscription.setLastNotified(existingEntity.getLastNotified());</span>
+<span class="nc" id="L876">					em.remove(existing);</span>
+<span class="nc" id="L877">				} else {</span>
+<span class="fc" id="L878">					modelSubscription.setCreateDate(new Date());</span>
+				}
+                              
+<span class="fc" id="L881">				doSubscriptionExpirationDate(apiSubscription);</span>
+				
+<span class="fc" id="L883">				MappingApiToModel.mapSubscription(apiSubscription, modelSubscription);</span>
+				
+<span class="fc" id="L885">				modelSubscription.setAuthorizedName(publisher.getAuthorizedName());</span>
+				
+				// Add the matching keys to the match collection
+<span class="fc" id="L888">				List&lt;?&gt; keys = getSubscriptionMatches(apiSubscription.getSubscriptionFilter(), em);</span>
+<span class="pc bpc" id="L889" title="1 of 4 branches missed.">				if (keys != null &amp;&amp; keys.size() &gt; 0) {</span>
+<span class="fc bfc" id="L890" title="All 2 branches covered.">					for (Object key : keys) {</span>
+<span class="fc" id="L891">						SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);</span>
+<span class="fc" id="L892">						modelSubscription.getSubscriptionMatches().add(subMatch);</span>
+<span class="fc" id="L893">					}</span>
+				}
+				
+<span class="fc" id="L896">				em.persist(modelSubscription);</span>
+<span class="fc" id="L897">			}</span>
+	
+<span class="fc" id="L899">			tx.commit();</span>
+<span class="fc" id="L900">	                long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L901">	                serviceCounter.update(SubscriptionQuery.SAVE_SUBSCRIPTION, </span>
+	                        QueryStatus.SUCCESS, procTime);
+<span class="nc" id="L903">	        } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L904">                    long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L905">                    serviceCounter.update(SubscriptionQuery.SAVE_SUBSCRIPTION, </span>
+                            QueryStatus.FAILED, procTime);                      
+<span class="nc" id="L907">                    throw drfm;                                                                                                                 </span>
+		} finally {
+<span class="pc bpc" id="L909" title="3 of 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="nc" id="L910">				tx.rollback();</span>
+			}
+<span class="pc" id="L912">			em.close();</span>
+<span class="fc" id="L913">		}</span>
+<span class="fc" id="L914">	}</span>
+
+	/**
+	 * Will perform the necessary logic for when a subscription is renewed (evidenced by a subscription with the same key in existence).  
+	 * In general, the appropriate data is copied from the stored subscription to the renewal subscription request.
+	 * 
+	 * @param existingSubscription - existing stored subscription
+	 * @param apiSubscription - renewal subscription request
+	 * @throws DispositionReportFaultMessage 
+	 */
+	protected void doRenewal(org.apache.juddi.model.Subscription existingSubscription, org.uddi.sub_v3.Subscription apiSubscription) throws DispositionReportFaultMessage {
+<span class="nc bnc" id="L925" title="All 2 branches missed.">		if (apiSubscription.getSubscriptionFilter() == null) {</span>
+<span class="nc" id="L926">			String rawFilter = existingSubscription.getSubscriptionFilter();</span>
+			try {
+<span class="nc" id="L928">				SubscriptionFilter existingFilter = (SubscriptionFilter)JAXBMarshaller.unmarshallFromString(rawFilter, &quot;org.uddi.sub_v3&quot;);</span>
+<span class="nc" id="L929">				apiSubscription.setSubscriptionFilter(existingFilter);</span>
+			} 
+<span class="nc" id="L931">			catch (JAXBException e) {</span>
+<span class="nc" id="L932">				logger.error(&quot;JAXB Exception while marshalling subscription filter&quot;, e);</span>
+<span class="nc" id="L933">				throw new FatalErrorException(new ErrorMessage(&quot;errors.Unspecified&quot;));</span>
+<span class="nc" id="L934">			} </span>
+		}
+		
+<span class="nc" id="L937">	}</span>
+	
+	/**
+	 * Will add the expiration date to the provided subscription request.  Date is earlier of user provided date and the system default
+	 * 
+	 * @param apiSubscription
+	 * @throws DispositionReportFaultMessage
+	 */
+	protected void doSubscriptionExpirationDate(org.uddi.sub_v3.Subscription apiSubscription) throws DispositionReportFaultMessage {
+
+<span class="fc" id="L947">		int subscriptionExpirationDays = DEFAULT_SUBSCRIPTIONEXPIRATION_DAYS;</span>
+		try { 
+<span class="fc" id="L949">			subscriptionExpirationDays = AppConfig.getConfiguration().getInt(Property.JUDDI_SUBSCRIPTION_EXPIRATION_DAYS); </span>
+		}
+<span class="nc" id="L951">		catch(ConfigurationException ce) { </span>
+<span class="nc" id="L952">			throw new FatalErrorException(new ErrorMessage(&quot;errors.configuration.Retrieval&quot;));</span>
+<span class="fc" id="L953">		}</span>
+
+<span class="fc" id="L955">		GregorianCalendar expirationDate = new GregorianCalendar();</span>
+<span class="fc" id="L956">		expirationDate.add(GregorianCalendar.DAY_OF_MONTH, subscriptionExpirationDays);</span>
+		
+		// The expiration date is the earlier of the provided date and that specified by the parameter.
+<span class="fc bfc" id="L959" title="All 2 branches covered.">		if (apiSubscription.getExpiresAfter() != null) {</span>
+<span class="fc" id="L960">			GregorianCalendar userExpiration = apiSubscription.getExpiresAfter().toGregorianCalendar();</span>
+<span class="pc bpc" id="L961" title="1 of 2 branches missed.">			if (userExpiration.getTimeInMillis() &lt; expirationDate.getTimeInMillis())</span>
+<span class="fc" id="L962">				expirationDate.setTimeInMillis(userExpiration.getTimeInMillis());</span>
+		}
+
+		try { 
+<span class="fc" id="L966">			DatatypeFactory df = DatatypeFactory.newInstance();</span>
+<span class="fc" id="L967">			apiSubscription.setExpiresAfter(df.newXMLGregorianCalendar(expirationDate));</span>
+		}
+<span class="nc" id="L969">		catch(DatatypeConfigurationException ce) { </span>
+<span class="nc" id="L970">			throw new FatalErrorException(new ErrorMessage(&quot;errors.Unspecified&quot;));</span>
+<span class="fc" id="L971">		}</span>
+		
+<span class="fc" id="L973">	}</span>
+
+	/**
+	 * Will take a snapshot of the keys that match the subscription filter return them.  Currently, keys are only returned for the find_*
+	 * filters.  It seems redundant to return the keys in the get_*Detail filters.
+	 * 
+	 * @param subscriptionFilter
+	 * @param em
+	 * @return a list of subscription matches
+	 * @throws DispositionReportFaultMessage
+	 */
+	protected List&lt;?&gt; getSubscriptionMatches(SubscriptionFilter subscriptionFilter, EntityManager em) 
+			 throws DispositionReportFaultMessage {
+		
+		
+<span class="fc" id="L988">		List&lt;?&gt; keys = null;</span>
+<span class="pc bpc" id="L989" title="1 of 2 branches missed.">		if (subscriptionFilter.getFindBinding() != null) {</span>
+<span class="nc" id="L990">			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();</span>
+<span class="nc" id="L991">			findQualifiers.mapApiFindQualifiers(subscriptionFilter.getFindBinding().getFindQualifiers());</span>
+<span class="nc" id="L992">			keys = InquiryHelper.findBinding(subscriptionFilter.getFindBinding(), findQualifiers, em);</span>
+		}
+<span class="fc bfc" id="L994" title="All 2 branches covered.">		if (subscriptionFilter.getFindBusiness() != null) {</span>
+<span class="fc" id="L995">			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();</span>
+<span class="fc" id="L996">			findQualifiers.mapApiFindQualifiers(subscriptionFilter.getFindBusiness().getFindQualifiers());</span>
+<span class="fc" id="L997">			keys = InquiryHelper.findBusiness(subscriptionFilter.getFindBusiness(), findQualifiers, em);</span>
+		}
+<span class="fc bfc" id="L999" title="All 2 branches covered.">		if (subscriptionFilter.getFindService() != null) {</span>
+<span class="fc" id="L1000">			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();</span>
+<span class="fc" id="L1001">			findQualifiers.mapApiFindQualifiers(subscriptionFilter.getFindService().getFindQualifiers());</span>
+<span class="fc" id="L1002">			keys = InquiryHelper.findService(subscriptionFilter.getFindService(), findQualifiers, em);</span>
+		}
+<span class="fc bfc" id="L1004" title="All 2 branches covered.">		if (subscriptionFilter.getFindTModel() != null) {</span>
+<span class="fc" id="L1005">			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();</span>
+<span class="fc" id="L1006">			findQualifiers.mapApiFindQualifiers(subscriptionFilter.getFindTModel().getFindQualifiers());</span>
+<span class="fc" id="L1007">			keys = InquiryHelper.findTModel(subscriptionFilter.getFindTModel(), findQualifiers, em);</span>
+		}
+<span class="pc bpc" id="L1009" title="1 of 2 branches missed.">		if (subscriptionFilter.getFindRelatedBusinesses() != null) {</span>
+			// TODO: should we bother taking a snapshot of these?
+		}
+<span class="pc bpc" id="L1012" title="1 of 2 branches missed.">		if (subscriptionFilter.getGetBindingDetail() != null) {</span>
+			//keys = subscriptionFilter.getGetBindingDetail().getBindingKey();
+			// Nothing needs to be done
+		}
+<span class="fc bfc" id="L1016" title="All 2 branches covered.">		if (subscriptionFilter.getGetBusinessDetail() != null) {</span>
+			//keys = subscriptionFilter.getGetBusinessDetail().getBusinessKey();
+			// Nothing needs to be done
+		}
+<span class="pc bpc" id="L1020" title="1 of 2 branches missed.">		if (subscriptionFilter.getGetServiceDetail() != null) {</span>
+			//keys = subscriptionFilter.getGetServiceDetail().getServiceKey();
+			// Nothing needs to be done
+		}
+<span class="fc bfc" id="L1024" title="All 2 branches covered.">		if (subscriptionFilter.getGetTModelDetail() != null) {</span>
+			//keys = subscriptionFilter.getGetTModelDetail().getTModelKey();
+			// Nothing needs to be done
+		}
+<span class="fc bfc" id="L1028" title="All 2 branches covered.">		if (subscriptionFilter.getGetAssertionStatusReport() != null) {</span>
+			// Nothing needs to be done
+		}
+<span class="fc" id="L1031">		return keys;</span>
+		
+	}
+	
+	private List&lt;String&gt; getMissingKeys(List&lt;?&gt; currentMatchingKeys, List&lt;SubscriptionMatch&gt; subscriptionMatches) {
+
+<span class="fc" id="L1037">		List&lt;String&gt; result = new ArrayList&lt;String&gt;(subscriptionMatches.size());</span>
+<span class="fc bfc" id="L1038" title="All 2 branches covered.">		for (SubscriptionMatch subMatch : subscriptionMatches)</span>
+<span class="fc" id="L1039">			result.add(subMatch.getEntityKey());</span>
+		
+<span class="fc" id="L1041">		result.removeAll(currentMatchingKeys);</span>
+		
+<span class="fc" id="L1043">		return result;</span>
+	}
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

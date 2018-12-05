@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValidateValues.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.vs_v3</a> &gt; <span class="el_source">ValidateValues.java</span></div><h1>ValidateValues.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+package org.uddi.vs_v3;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.api_v3.TModel;
+
+
+/**
+ * &lt;p&gt;Java class for validate_values complex type.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * 
+ * &lt;pre&gt;
+ * &amp;lt;complexType name=&quot;validate_values&quot;&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;sequence&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}authInfo&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;choice&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}businessEntity&quot; maxOccurs=&quot;unbounded&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}businessService&quot; maxOccurs=&quot;unbounded&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}bindingTemplate&quot; maxOccurs=&quot;unbounded&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}tModel&quot; maxOccurs=&quot;unbounded&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}publisherAssertion&quot; maxOccurs=&quot;unbounded&quot;/&gt;
+ *         &amp;lt;/choice&gt;
+ *       &amp;lt;/sequence&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;validate_values&quot;, propOrder = {
+    &quot;authInfo&quot;,
+    &quot;businessEntity&quot;,
+    &quot;businessService&quot;,
+    &quot;bindingTemplate&quot;,
+    &quot;tModel&quot;,
+    &quot;publisherAssertion&quot;
+})
+<span class="nc" id="L71">public class ValidateValues implements Serializable{</span>
+	@XmlTransient
+	private static final long serialVersionUID = 940644923802364940L;
+	@XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected String authInfo;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected List&lt;BusinessEntity&gt; businessEntity;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected List&lt;BusinessService&gt; businessService;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected List&lt;BindingTemplate&gt; bindingTemplate;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected List&lt;TModel&gt; tModel;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected List&lt;PublisherAssertion&gt; publisherAssertion;
+
+    /**
+     * Gets the value of the authInfo property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getAuthInfo() {
+<span class="nc" id="L96">        return authInfo;</span>
+    }
+
+    /**
+     * Sets the value of the authInfo property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setAuthInfo(String value) {
+<span class="nc" id="L108">        this.authInfo = value;</span>
+<span class="nc" id="L109">    }</span>
+
+    /**
+     * Gets the value of the businessEntity property.
+     * 
+     * &lt;p&gt;
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a &lt;CODE&gt;set&lt;/CODE&gt; method for the businessEntity property.
+     * 
+     * &lt;p&gt;
+     * For example, to add a new item, do as follows:
+     * &lt;pre&gt;
+     *    getBusinessEntity().add(newItem);
+     * &lt;/pre&gt;
+     * 
+     * 
+     * &lt;p&gt;
+     * Objects of the following type(s) are allowed in the list
+     * {@link BusinessEntity }
+     * 
+     * 
+     */
+    public List&lt;BusinessEntity&gt; getBusinessEntity() {
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        if (businessEntity == null) {</span>
+<span class="nc" id="L135">            businessEntity = new ArrayList&lt;BusinessEntity&gt;();</span>
+        }
+<span class="nc" id="L137">        return this.businessEntity;</span>
+    }
+
+    /**
+     * Gets the value of the businessService property.
+     * 
+     * &lt;p&gt;
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a &lt;CODE&gt;set&lt;/CODE&gt; method for the businessService property.
+     * 
+     * &lt;p&gt;
+     * For example, to add a new item, do as follows:
+     * &lt;pre&gt;
+     *    getBusinessService().add(newItem);
+     * &lt;/pre&gt;
+     * 
+     * 
+     * &lt;p&gt;
+     * Objects of the following type(s) are allowed in the list
+     * {@link BusinessService }
+     * 
+     * 
+     */
+    public List&lt;BusinessService&gt; getBusinessService() {
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        if (businessService == null) {</span>
+<span class="nc" id="L164">            businessService = new ArrayList&lt;BusinessService&gt;();</span>
+        }
+<span class="nc" id="L166">        return this.businessService;</span>
+    }
+
+    /**
+     * Gets the value of the bindingTemplate property.
+     * 
+     * &lt;p&gt;
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a &lt;CODE&gt;set&lt;/CODE&gt; method for the bindingTemplate property.
+     * 
+     * &lt;p&gt;
+     * For example, to add a new item, do as follows:
+     * &lt;pre&gt;
+     *    getBindingTemplate().add(newItem);
+     * &lt;/pre&gt;
+     * 
+     * 
+     * &lt;p&gt;
+     * Objects of the following type(s) are allowed in the list
+     * {@link BindingTemplate }
+     * 
+     * 
+     */
+    public List&lt;BindingTemplate&gt; getBindingTemplate() {
+<span class="nc bnc" id="L192" title="All 2 branches missed.">        if (bindingTemplate == null) {</span>
+<span class="nc" id="L193">            bindingTemplate = new ArrayList&lt;BindingTemplate&gt;();</span>
+        }
+<span class="nc" id="L195">        return this.bindingTemplate;</span>
+    }
+
+    /**
+     * Gets the value of the tModel property.
+     * 
+     * &lt;p&gt;
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a &lt;CODE&gt;set&lt;/CODE&gt; method for the tModel property.
+     * 
+     * &lt;p&gt;
+     * For example, to add a new item, do as follows:
+     * &lt;pre&gt;
+     *    getTModel().add(newItem);
+     * &lt;/pre&gt;
+     * 
+     * 
+     * &lt;p&gt;
+     * Objects of the following type(s) are allowed in the list
+     * {@link TModel }
+     * 
+     * 
+     */
+    public List&lt;TModel&gt; getTModel() {
+<span class="nc bnc" id="L221" title="All 2 branches missed.">        if (tModel == null) {</span>
+<span class="nc" id="L222">            tModel = new ArrayList&lt;TModel&gt;();</span>
+        }
+<span class="nc" id="L224">        return this.tModel;</span>
+    }
+
+    /**
+     * Gets the value of the publisherAssertion property.
+     * 
+     * &lt;p&gt;
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a &lt;CODE&gt;set&lt;/CODE&gt; method for the publisherAssertion property.
+     * 
+     * &lt;p&gt;
+     * For example, to add a new item, do as follows:
+     * &lt;pre&gt;
+     *    getPublisherAssertion().add(newItem);
+     * &lt;/pre&gt;
+     * 
+     * 
+     * &lt;p&gt;
+     * Objects of the following type(s) are allowed in the list
+     * {@link PublisherAssertion }
+     * 
+     * 
+     */
+    public List&lt;PublisherAssertion&gt; getPublisherAssertion() {
+<span class="nc bnc" id="L250" title="All 2 branches missed.">        if (publisherAssertion == null) {</span>
+<span class="nc" id="L251">            publisherAssertion = new ArrayList&lt;PublisherAssertion&gt;();</span>
+        }
+<span class="nc" id="L253">        return this.publisherAssertion;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

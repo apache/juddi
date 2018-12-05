@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Truncated.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.api_v2</a> &gt; <span class="el_source">Truncated.java</span></div><h1>Truncated.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.uddi.api_v2;
+
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+import javax.xml.bind.annotation.XmlType;
+
+
+/**
+ * &lt;p&gt;Java class for truncated.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * &lt;p&gt;
+ * &lt;pre&gt;
+ * &amp;lt;simpleType name=&quot;truncated&quot;&gt;
+ *   &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}NMTOKEN&quot;&gt;
+ *     &amp;lt;enumeration value=&quot;true&quot;/&gt;
+ *     &amp;lt;enumeration value=&quot;false&quot;/&gt;
+ *   &amp;lt;/restriction&gt;
+ * &amp;lt;/simpleType&gt;
+ * &lt;/pre&gt;
+ * 
+ */
+<span class="nc" id="L39">@XmlType(name = &quot;truncated&quot;)</span>
+@XmlEnum
+public enum Truncated {
+
+<span class="nc" id="L43">    @XmlEnumValue(&quot;true&quot;)</span>
+    TRUE(&quot;true&quot;),
+<span class="nc" id="L45">    @XmlEnumValue(&quot;false&quot;)</span>
+    FALSE(&quot;false&quot;);
+    private final String value;
+
+<span class="nc" id="L49">    Truncated(String v) {</span>
+<span class="nc" id="L50">        value = v;</span>
+<span class="nc" id="L51">    }</span>
+
+    public String value() {
+<span class="nc" id="L54">        return value;</span>
+    }
+
+    public static Truncated fromValue(String v) {
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        for (Truncated c: Truncated.values()) {</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">            if (c.value.equals(v)) {</span>
+<span class="nc" id="L60">                return c;</span>
+            }
+        }
+<span class="nc" id="L63">        throw new IllegalArgumentException(v);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

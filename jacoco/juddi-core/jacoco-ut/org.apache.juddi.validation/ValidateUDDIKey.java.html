@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValidateUDDIKey.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.validation</a> &gt; <span class="el_source">ValidateUDDIKey.java</span></div><h1>ValidateUDDIKey.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.validation;
+
+import java.util.List;
+import java.util.StringTokenizer;
+
+import org.apache.juddi.keygen.KeyGenerator;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:tcunning@apache.org&quot;&gt;Tom Cunningham&lt;/a&gt;
+ */
+<span class="nc" id="L33">public class ValidateUDDIKey {</span>
+
+	public static void validateUDDIv3Key(String key) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">		if (key == null)</span>
+<span class="nc" id="L37">			throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.NullKey&quot;));</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">		if (key.toLowerCase().startsWith(&quot;uuid:&quot;)) {</span>
+<span class="nc" id="L39">                        return;</span>
+                }
+<span class="fc bfc" id="L41" title="All 2 branches covered.">		if (! key.contains(KeyGenerator.PARTITION_SEPARATOR)) return; //v2 style key; no other validation rules apply</span>
+		
+<span class="fc" id="L43">		String keyToTest = key.trim();</span>
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">		if (keyToTest.endsWith(KeyGenerator.PARTITION_SEPARATOR))</span>
+<span class="nc" id="L45">			throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.MalformedKey&quot;, key));</span>
+
+<span class="fc" id="L47">		StringTokenizer tokenizer = new StringTokenizer(key.toLowerCase(), KeyGenerator.PARTITION_SEPARATOR);</span>
+		
+<span class="fc bfc" id="L49" title="All 2 branches covered.">		for(int count = 0; tokenizer.hasMoreTokens(); count++) {</span>
+<span class="fc" id="L50">			String nextToken = tokenizer.nextToken();</span>
+
+<span class="fc bfc" id="L52" title="All 2 branches covered.">			if (count == 0) {</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">				if (!ValidateUDDIKey.isValidUDDIScheme(nextToken))</span>
+<span class="nc" id="L54">					throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.MalformedKey&quot;, key));</span>
+			}
+<span class="fc bfc" id="L56" title="All 2 branches covered.">			else if (count == 1) {</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">				if(!ValidateUDDIKey.isValidDomainKey(nextToken))</span>
+<span class="nc" id="L58">					throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.MalformedKey&quot;, key));</span>
+			}
+			else {
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">				if (!isValidKSS(nextToken))</span>
+<span class="nc" id="L62">					throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.MalformedKey&quot;, key));</span>
+			}
+		}
+<span class="fc" id="L65">	}</span>
+	
+	public static void validateUDDIv3KeyGeneratorKey(String key) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">		if (key == null)</span>
+<span class="nc" id="L69">			throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.NullKeys&quot;));</span>
+		
+<span class="fc bfc" id="L71" title="All 2 branches covered.">		if ( !(key.toUpperCase().endsWith(KeyGenerator.KEYGENERATOR_SUFFIX.toUpperCase())) )</span>
+<span class="fc" id="L72">			throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.KeyGenSuffix&quot;, key));</span>
+		
+<span class="fc" id="L74">		validateUDDIv3Key(key.substring(0, key.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR)));</span>
+<span class="fc" id="L75">	}</span>
+	
+	public static void validateUDDIv3KeyGeneratorTModel(org.uddi.api_v3.TModel tModel) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">		if (tModel == null)</span>
+<span class="nc" id="L79">			throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.tmodel.NullInput&quot;));</span>
+		
+<span class="fc" id="L81">		validateUDDIv3KeyGeneratorKey(tModel.getTModelKey());</span>
+
+		// A key generator key should have exactly one category and it's key value should be 'keyGenerator'
+<span class="fc" id="L84">		org.uddi.api_v3.CategoryBag categories = tModel.getCategoryBag();</span>
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">		if (categories != null) {</span>
+<span class="fc" id="L86">			List&lt;org.uddi.api_v3.KeyedReference&gt; elems = categories.getKeyedReference();</span>
+<span class="pc bpc" id="L87" title="2 of 4 branches missed.">			if (elems != null &amp;&amp; elems.size() == 1) {</span>
+<span class="fc" id="L88">				org.uddi.api_v3.KeyedReference elem = elems.get(0);</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">				if (elem != null) {</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">					if (elem instanceof org.uddi.api_v3.KeyedReference) {</span>
+<span class="fc" id="L91">						String keyedValue = elem.getKeyValue();</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">						if (keyedValue != null) {</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">							if (keyedValue.equalsIgnoreCase(KeyGenerator.KEYGENERATOR_SUFFIX))</span>
+<span class="fc" id="L94">								return;</span>
+						}
+					}
+				}
+			}
+		}
+
+<span class="nc" id="L101">		throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.tmodel.keygenerator.BadCategory&quot;));</span>
+	}
+	
+	public static boolean isValidUDDIScheme(String token) {
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">		if (token == null)</span>
+<span class="nc" id="L106">			return false;</span>
+		
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">		if (!KeyGenerator.UDDI_SCHEME.equalsIgnoreCase(token))</span>
+<span class="nc" id="L109">			return false;</span>
+
+<span class="fc" id="L111">		return true;</span>
+
+	}
+	
+	public static boolean isValidDomainKey(String token) {
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">		if(token.indexOf(&quot;..&quot;) != -1)</span>
+<span class="nc" id="L117">			return false;</span>
+
+<span class="fc" id="L119">		StringTokenizer tokenizer = new StringTokenizer(token, &quot;.&quot;);</span>
+<span class="fc" id="L120">		int tokensCount = tokenizer.countTokens();</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">		for(int i = 0; tokenizer.hasMoreTokens(); i++) {</span>
+<span class="fc" id="L122">			String domainPart = tokenizer.nextToken();</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">			if(i == tokensCount - 1) {</span>
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">				if(!isValidTopLabel(domainPart)) {</span>
+<span class="nc" id="L125">					return false;</span>
+				}
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">			} else if(!isValidDomainLabel(domainPart)) {</span>
+<span class="nc" id="L128">				return false;</span>
+			}
+		}
+<span class="fc" id="L131">		return true;</span>
+	}
+	
+
+	private static boolean isValidDomainLabel(String token) {
+<span class="fc" id="L136">		char[] chars = token.toCharArray();</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">		for(int i = 0; i &lt; chars.length; i++) {</span>
+<span class="fc" id="L138">			char c = chars[i];</span>
+<span class="pc bpc" id="L139" title="2 of 4 branches missed.">			if(c != '-' &amp;&amp; !Character.isLetterOrDigit(c)) {</span>
+<span class="nc" id="L140">				return false;</span>
+			}
+		}
+<span class="fc" id="L143">		return true;</span>
+	}
+
+	private static boolean isValidTopLabel(String token) {
+<span class="pc bpc" id="L147" title="3 of 6 branches missed.">		return Character.isLetter(token.charAt(0)) &amp;&amp; (token.length() == 1 || isValidDomainLabel(token.substring(1)));</span>
+	}
+	
+	public static boolean isValidKSS(String token) {
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">		if (token.length() == 0)</span>
+<span class="nc" id="L152">			return false;</span>
+
+		// The key generator suffix is a reserved word and cannot be found in any part of the KSS 
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">		if (token.equalsIgnoreCase(KeyGenerator.KEYGENERATOR_SUFFIX))</span>
+<span class="nc" id="L156">			return false;</span>
+
+<span class="fc" id="L158">		return true;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

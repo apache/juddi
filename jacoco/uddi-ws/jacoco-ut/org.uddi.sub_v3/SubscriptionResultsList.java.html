@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SubscriptionResultsList.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.sub_v3</a> &gt; <span class="el_source">SubscriptionResultsList.java</span></div><h1>SubscriptionResultsList.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+package org.uddi.sub_v3;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import org.uddi.api_v3.AssertionStatusReport;
+import org.uddi.api_v3.BindingDetail;
+import org.uddi.api_v3.BusinessDetail;
+import org.uddi.api_v3.BusinessList;
+import org.uddi.api_v3.RelatedBusinessesList;
+import org.uddi.api_v3.ServiceDetail;
+import org.uddi.api_v3.ServiceList;
+import org.uddi.api_v3.TModelDetail;
+import org.uddi.api_v3.TModelList;
+
+
+/**
+ * &lt;p&gt;Java class for subscriptionResultsList complex type.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * 
+ * &lt;pre&gt;
+ * &amp;lt;complexType name=&quot;subscriptionResultsList&quot;&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;sequence&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:sub_v3}chunkToken&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:sub_v3}coveragePeriod&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:sub_v3}subscription&quot;/&gt;
+ *         &amp;lt;choice minOccurs=&quot;0&quot;&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}bindingDetail&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}businessDetail&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}serviceDetail&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}tModelDetail&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}businessList&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}relatedBusinessesList&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}serviceList&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}tModelList&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}assertionStatusReport&quot;/&gt;
+ *         &amp;lt;/choice&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:sub_v3}keyBag&quot; maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot;/&gt;
+ *       &amp;lt;/sequence&gt;
+ *       &amp;lt;attribute name=&quot;someResultsUnavailable&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}boolean&quot; /&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;subscriptionResultsList&quot;, propOrder = {
+    &quot;chunkToken&quot;,
+    &quot;coveragePeriod&quot;,
+    &quot;subscription&quot;,
+    &quot;bindingDetail&quot;,
+    &quot;businessDetail&quot;,
+    &quot;serviceDetail&quot;,
+    &quot;tModelDetail&quot;,
+    &quot;businessList&quot;,
+    &quot;relatedBusinessesList&quot;,
+    &quot;serviceList&quot;,
+    &quot;tModelList&quot;,
+    &quot;assertionStatusReport&quot;,
+    &quot;keyBag&quot;
+})
+@XmlRootElement(name=&quot;subscriptionResultsList&quot;)
+<span class="nc" id="L93">public class SubscriptionResultsList implements Serializable{</span>
+	@XmlTransient
+	private static final long serialVersionUID = 8704510604661100139L;
+	protected String chunkToken;
+    @XmlElement(required = true)
+    protected CoveragePeriod coveragePeriod;
+    @XmlElement(required = true)
+    protected Subscription subscription;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected BindingDetail bindingDetail;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected BusinessDetail businessDetail;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected ServiceDetail serviceDetail;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected TModelDetail tModelDetail;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected BusinessList businessList;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected RelatedBusinessesList relatedBusinessesList;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected ServiceList serviceList;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected TModelList tModelList;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected AssertionStatusReport assertionStatusReport;
+    protected List&lt;KeyBag&gt; keyBag;
+    @XmlAttribute
+    protected Boolean someResultsUnavailable;
+
+    /**
+     * Gets the value of the chunkToken property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getChunkToken() {
+<span class="nc" id="L132">        return chunkToken;</span>
+    }
+
+    /**
+     * Sets the value of the chunkToken property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setChunkToken(String value) {
+<span class="nc" id="L144">        this.chunkToken = value;</span>
+<span class="nc" id="L145">    }</span>
+
+    /**
+     * Gets the value of the coveragePeriod property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CoveragePeriod }
+     *     
+     */
+    public CoveragePeriod getCoveragePeriod() {
+<span class="nc" id="L156">        return coveragePeriod;</span>
+    }
+
+    /**
+     * Sets the value of the coveragePeriod property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CoveragePeriod }
+     *     
+     */
+    public void setCoveragePeriod(CoveragePeriod value) {
+<span class="nc" id="L168">        this.coveragePeriod = value;</span>
+<span class="nc" id="L169">    }</span>
+
+    /**
+     * Gets the value of the subscription property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Subscription }
+     *     
+     */
+    public Subscription getSubscription() {
+<span class="nc" id="L180">        return subscription;</span>
+    }
+
+    /**
+     * Sets the value of the subscription property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Subscription }
+     *     
+     */
+    public void setSubscription(Subscription value) {
+<span class="nc" id="L192">        this.subscription = value;</span>
+<span class="nc" id="L193">    }</span>
+
+    /**
+     * Gets the value of the bindingDetail property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BindingDetail }
+     *     
+     */
+    public BindingDetail getBindingDetail() {
+<span class="nc" id="L204">        return bindingDetail;</span>
+    }
+
+    /**
+     * Sets the value of the bindingDetail property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BindingDetail }
+     *     
+     */
+    public void setBindingDetail(BindingDetail value) {
+<span class="nc" id="L216">        this.bindingDetail = value;</span>
+<span class="nc" id="L217">    }</span>
+
+    /**
+     * Gets the value of the businessDetail property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BusinessDetail }
+     *     
+     */
+    public BusinessDetail getBusinessDetail() {
+<span class="nc" id="L228">        return businessDetail;</span>
+    }
+
+    /**
+     * Sets the value of the businessDetail property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BusinessDetail }
+     *     
+     */
+    public void setBusinessDetail(BusinessDetail value) {
+<span class="nc" id="L240">        this.businessDetail = value;</span>
+<span class="nc" id="L241">    }</span>
+
+    /**
+     * Gets the value of the serviceDetail property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ServiceDetail }
+     *     
+     */
+    public ServiceDetail getServiceDetail() {
+<span class="nc" id="L252">        return serviceDetail;</span>
+    }
+
+    /**
+     * Sets the value of the serviceDetail property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ServiceDetail }
+     *     
+     */
+    public void setServiceDetail(ServiceDetail value) {
+<span class="nc" id="L264">        this.serviceDetail = value;</span>
+<span class="nc" id="L265">    }</span>
+
+    /**
+     * Gets the value of the tModelDetail property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link TModelDetail }
+     *     
+     */
+    public TModelDetail getTModelDetail() {
+<span class="nc" id="L276">        return tModelDetail;</span>
+    }
+
+    /**
+     * Sets the value of the tModelDetail property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link TModelDetail }
+     *     
+     */
+    public void setTModelDetail(TModelDetail value) {
+<span class="nc" id="L288">        this.tModelDetail = value;</span>
+<span class="nc" id="L289">    }</span>
+
+    /**
+     * Gets the value of the businessList property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BusinessList }
+     *     
+     */
+    public BusinessList getBusinessList() {
+<span class="nc" id="L300">        return businessList;</span>
+    }
+
+    /**
+     * Sets the value of the businessList property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BusinessList }
+     *     
+     */
+    public void setBusinessList(BusinessList value) {
+<span class="nc" id="L312">        this.businessList = value;</span>
+<span class="nc" id="L313">    }</span>
+
+    /**
+     * Gets the value of the relatedBusinessesList property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link RelatedBusinessesList }
+     *     
+     */
+    public RelatedBusinessesList getRelatedBusinessesList() {
+<span class="nc" id="L324">        return relatedBusinessesList;</span>
+    }
+
+    /**
+     * Sets the value of the relatedBusinessesList property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link RelatedBusinessesList }
+     *     
+     */
+    public void setRelatedBusinessesList(RelatedBusinessesList value) {
+<span class="nc" id="L336">        this.relatedBusinessesList = value;</span>
+<span class="nc" id="L337">    }</span>
+
+    /**
+     * Gets the value of the serviceList property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ServiceList }
+     *     
+     */
+    public ServiceList getServiceList() {
+<span class="nc" id="L348">        return serviceList;</span>
+    }
+
+    /**
+     * Sets the value of the serviceList property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ServiceList }
+     *     
+     */
+    public void setServiceList(ServiceList value) {
+<span class="nc" id="L360">        this.serviceList = value;</span>
+<span class="nc" id="L361">    }</span>
+
+    /**
+     * Gets the value of the tModelList property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link TModelList }
+     *     
+     */
+    public TModelList getTModelList() {
+<span class="nc" id="L372">        return tModelList;</span>
+    }
+
+    /**
+     * Sets the value of the tModelList property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link TModelList }
+     *     
+     */
+    public void setTModelList(TModelList value) {
+<span class="nc" id="L384">        this.tModelList = value;</span>
+<span class="nc" id="L385">    }</span>
+
+    /**
+     * Gets the value of the assertionStatusReport property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link AssertionStatusReport }
+     *     
+     */
+    public AssertionStatusReport getAssertionStatusReport() {
+<span class="nc" id="L396">        return assertionStatusReport;</span>
+    }
+
+    /**
+     * Sets the value of the assertionStatusReport property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link AssertionStatusReport }
+     *     
+     */
+    public void setAssertionStatusReport(AssertionStatusReport value) {
+<span class="nc" id="L408">        this.assertionStatusReport = value;</span>
+<span class="nc" id="L409">    }</span>
+
+    /**
+     * Gets the value of the keyBag property.
+     * 
+     * &lt;p&gt;
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a &lt;CODE&gt;set&lt;/CODE&gt; method for the keyBag property.
+     * 
+     * &lt;p&gt;
+     * For example, to add a new item, do as follows:
+     * &lt;pre&gt;
+     *    getKeyBag().add(newItem);
+     * &lt;/pre&gt;
+     * 
+     * 
+     * &lt;p&gt;
+     * Objects of the following type(s) are allowed in the list
+     * {@link KeyBag }
+     * 
+     * 
+     */
+    public List&lt;KeyBag&gt; getKeyBag() {
+<span class="nc bnc" id="L434" title="All 2 branches missed.">        if (keyBag == null) {</span>
+<span class="nc" id="L435">            keyBag = new ArrayList&lt;KeyBag&gt;();</span>
+        }
+<span class="nc" id="L437">        return this.keyBag;</span>
+    }
+
+    /**
+     * Gets the value of the someResultsUnavailable property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isSomeResultsUnavailable() {
+<span class="nc" id="L449">        return someResultsUnavailable;</span>
+    }
+
+    /**
+     * Sets the value of the someResultsUnavailable property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setSomeResultsUnavailable(Boolean value) {
+<span class="nc" id="L461">        this.someResultsUnavailable = value;</span>
+<span class="nc" id="L462">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WSDMQosConstants.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.ext.wsdm</a> &gt; <span class="el_source">WSDMQosConstants.java</span></div><h1>WSDMQosConstants.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2013 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.client.ext.wsdm;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Defines constants for OASIS's WSDM specification. Specifically tModels for
+ * use in UDDI
+ * https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+ *
+ * @author Alex O'Ree
+ */
+<span class="nc" id="L28">public abstract class WSDMQosConstants {</span>
+
+        /**
+         * This is the 'for more information' url for WSDM + UDDI
+         */
+        public static final String moreInfoUrl = &quot;https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc&quot;;
+        public static final String WSDM_KEYGEN = &quot;urn:wsdm.org:keygenerator&quot;;
+        public static final String WSDM_METRIC_KEYGEN = &quot;urn:wsdm.org:metric:keygenerator&quot;;
+        public static final String WSDM_IDENTITY_KEYGEN = &quot;urn:wsdm.org:identity:keygenerator&quot;;
+        public static final String WSDM_QOS_KEYGEN = &quot;urn:wsdm.org:qos:keygenerator&quot;;
+        /**
+         * The number of requests to a given service. (number of requests)
+         */
+        public static final String METRIC_REQUEST_COUNT_KEY = &quot;urn:wsdm.org:metric:requestcount&quot;;
+        /**
+         * The number of requests to a given service. (number of requests)
+         */
+        public static final String METRIC_RequestCount = &quot;RequestCount&quot;;
+        /**
+         * The number of replies from a given service. (number of replies)
+         */
+        public static final String METRIC_REPLY_COUNT_KEY = &quot;urn:wsdm.org:metric:replycount&quot;;
+         /**
+         * The number of replies from a given service. (number of replies)
+         */
+        public static final String METRIC_ReplyCount = &quot;ReplyCount&quot;;
+        /**
+         * The number of faults from a given service. (number of faults)
+         */
+        public static final String METRIC_FAULT_COUNT_KEY = &quot;urn:wsdm.org:metric:faultcount&quot;;
+        /**
+         * The number of faults from a given service. (number of faults)
+         */
+        public static final String METRIC_FaultCount = &quot;FaultCount&quot;;
+        /**
+         * This is the unique identity by which the resource (service) is known
+         * to the management system. It is useful for further queries. (resource
+         * identification in URI format)
+         */
+        public static final String IDENTITY_RESOURCE_ID_KEY = &quot;urn:wsdm.org:identity:resourceId&quot;;
+        /**
+         * This is the unique identity by which the resource (service) is known
+         * to the management system. It is useful for further queries. (resource
+         * identification in URI format)
+         */
+        public static final String IDENTITY_ResourceId = &quot;ResourceId&quot;;
+        /**
+         * Represents the last time this metric was updated. (time value)
+         */
+        public static final String METRIC_LAST_UPDATE_TIME_KEY = &quot;urn:wsdm.org:metric:lastupdatetime&quot;;
+        /**
+         * Represents the last time this metric was updated. (time value)
+         */
+        public static final String METRIC_LastUpdateTime = &quot;LastUpdateTime&quot;;
+        /**
+         * Average response time of the service. (numeric value or symbolic
+         * rating)
+         */
+        public static final String QOS_RESPONSE_TIME_AVG_KEY = &quot;urn:wsdm.org:qos:responsetime_average&quot;;
+        /**
+         * Average response time of the service. (numeric value or symbolic
+         * rating)
+         */
+        public static final String QOS_ResponseTime_Average = &quot;ResponseTime_Average&quot;;
+        /**
+         * Throughput count. (numeric value or symbolic rating)
+         */
+        public static final String QOS_THROUGHPUT_COUNT_KEY = &quot;urn:wsdm.org:qos:throughput_count&quot;;
+        public static final String QOS_Throughput_count = &quot;Throughput_count&quot;;
+        /**
+         * Throughput bytes. (numeric value or symbolic rating)
+         */
+        public static final String QOS_THROUGHPUT_BYTES_KEY = &quot;urn:wsdm.org:qos:throughput_bytes&quot;;
+        /**
+         * Throughput bytes. (numeric value or symbolic rating)
+         */
+        public static final String QOS_Throughput_bytes = &quot;Throughput_bytes&quot;;
+        /**
+         * Reliability or the measure of. (numeric value or symbolic rating)
+         */
+        public static final String QOS_RELIABILITY_KEY = &quot;urn:wsdm.org:qos:reliability&quot;;
+        /**
+         * Reliability or the measure of. (numeric value or symbolic rating)
+         */
+        public static final String QOS_Reliability = &quot;Reliability&quot;;
+        /**
+         * The beginning on the reporting time period used for the information
+         * above. (dateTime)
+         */
+        public static final String QOS_REPORTING_PERIOD_START_KEY = &quot;urn:wsdm.org:qos:reportingperiodstart&quot;;
+        /**
+         * The beginning on the reporting time period used for the information
+         * above. (dateTime)
+         */
+        public static final String QOS_ReportingPeriodStart = &quot;ReportingPeriodStart&quot;;
+        /**
+         * The end of the reporting time period used for the information above.
+         * (dateTime)
+         */
+        public static final String QOS_REPORTING_PERIOD_END_KEY = &quot;urn:wsdm.org:qos:reportingperiodend&quot;;
+        /**
+         * The end of the reporting time period used for the information above.
+         * (dateTime)
+         */
+        public static final String QOS_ReportingPeriodEnd = &quot;ReportingPeriodEnd&quot;;
+        /**
+         * How often is this information updated in UDDI (it is not assumed to
+         * be realtime). (duration)
+         */
+        public static final String QOS_UPDATE_INTERVAL_KEY = &quot;urn:wsdm.org:qos:updateinterval&quot;;
+        /**
+         * How often is this information updated in UDDI (it is not assumed to
+         * be realtime). (duration)
+         */
+        public static final String QOS_UpdateInterval = &quot;UpdateInterval&quot;;
+
+        public static List&lt;String&gt; getAllQOSKeys() {
+<span class="nc" id="L145">                List&lt;String&gt; x = new ArrayList&lt;String&gt;();</span>
+<span class="nc" id="L146">                x.add(WSDMQosConstants.METRIC_FAULT_COUNT_KEY);</span>
+<span class="nc" id="L147">                x.add(WSDMQosConstants.METRIC_LAST_UPDATE_TIME_KEY);</span>
+<span class="nc" id="L148">                x.add(WSDMQosConstants.METRIC_REPLY_COUNT_KEY);</span>
+<span class="nc" id="L149">                x.add(WSDMQosConstants.METRIC_REQUEST_COUNT_KEY);</span>
+<span class="nc" id="L150">                x.add(WSDMQosConstants.QOS_RELIABILITY_KEY);</span>
+<span class="nc" id="L151">                x.add(WSDMQosConstants.QOS_REPORTING_PERIOD_END_KEY);</span>
+<span class="nc" id="L152">                x.add(WSDMQosConstants.QOS_REPORTING_PERIOD_START_KEY);</span>
+<span class="nc" id="L153">                x.add(WSDMQosConstants.QOS_RESPONSE_TIME_AVG_KEY);</span>
+<span class="nc" id="L154">                x.add(WSDMQosConstants.QOS_THROUGHPUT_BYTES_KEY);</span>
+<span class="nc" id="L155">                x.add(WSDMQosConstants.QOS_THROUGHPUT_COUNT_KEY);</span>
+<span class="nc" id="L156">                x.add(WSDMQosConstants.QOS_UPDATE_INTERVAL_KEY);</span>
+<span class="nc" id="L157">                x.add(WSDMQosConstants.IDENTITY_RESOURCE_ID_KEY);</span>
+<span class="nc" id="L158">                return x;</span>
+        }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

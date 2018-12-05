@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SubscriptionCallbackListener.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.subscription</a> &gt; <span class="el_source">SubscriptionCallbackListener.java</span></div><h1>SubscriptionCallbackListener.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2013 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.client.subscription;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.rmi.RemoteException;
+import java.rmi.UnexpectedException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+
+import javax.jws.WebService;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.ws.Endpoint;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.v3.client.config.UDDIClerk;
+import org.apache.juddi.v3.client.config.UDDIClient;
+import org.apache.juddi.v3.client.cryptor.DigSigUtil;
+import org.apache.juddi.v3.client.transport.Transport;
+import org.apache.juddi.v3.client.transport.TransportException;
+import org.uddi.api_v3.AccessPoint;
+import org.uddi.api_v3.BindingDetail;
+import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BusinessDetail;
+import org.uddi.api_v3.DeleteBinding;
+import org.uddi.api_v3.DispositionReport;
+import org.uddi.api_v3.GetBindingDetail;
+import org.uddi.api_v3.GetBusinessDetail;
+import org.uddi.api_v3.GetServiceDetail;
+import org.uddi.api_v3.Result;
+import org.uddi.api_v3.SaveBinding;
+import org.uddi.api_v3.ServiceDetail;
+import org.uddi.api_v3.TModelInstanceDetails;
+import org.uddi.api_v3.TModelInstanceInfo;
+import org.uddi.subr_v3.NotifySubscriptionListener;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.uddi.v3_service.UDDIInquiryPortType;
+import org.uddi.v3_service.UDDIPublicationPortType;
+
+/**
+ * WebService which implements the UDDI v3 SubscriptionListener API. This
+ * service will be called by the UDDI registry when any change to a Service or
+ * BindingTemplate call in to it.
+ * &lt;h1&gt;Usage scenario&lt;/h1&gt;
+ * Use this call for when you need to be notified from a UDDI server that either
+ * a UDDI entity was created, changed, or deleted via the UDDI Subscription web
+ * service. This class will start up an embedded Jetty server (built into the
+ * JRE). You can then register your code to be notified of any inbound messages
+ * received from the UDDI server asynchronously. Here's some sample code.
+ * &lt;pre&gt;
+ * UDDIClient c = new UDDIClient(&quot;META-INF/uddiclient.xml&quot;);
+ * UDDIClerk clerk = c.getClerk(&quot;default&quot;);
+ * TModel createKeyGenator = UDDIClerk.createKeyGenator(&quot;uddi:org.apache.juddi:test:keygenerator&quot;, &quot;Test domain&quot;, &quot;en&quot;);
+ * clerk.register(createKeyGenator);
+ * BindingTemplate start = SubscriptionCallbackListener.start(c, &quot;default&quot;);
+ * //keep alive
+ * while(running)
+ * Thread.sleep(1000);
+ * SubscriptionCallbackListener.stop(c, &quot;default&quot;, start.getBindingKey());
+ * &lt;/pre&gt;
+ *
+ * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ * @since 3.2
+ */
+@WebService(serviceName = &quot;UDDISubscriptionListenerClientService&quot;,
+        endpointInterface = &quot;org.uddi.v3_service.UDDISubscriptionListenerPortType&quot;,
+        targetNamespace = &quot;urn:uddi-org:v3_service&quot;)
+public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISubscriptionListenerPortType, Runnable {
+
+        /**
+         * adds a shutdown hook to trap and warn about leaving the server
+         * running on exit
+         */
+<span class="fc" id="L93">        public SubscriptionCallbackListener() {</span>
+<span class="fc" id="L94">                Runtime runtime = Runtime.getRuntime();</span>
+<span class="fc" id="L95">                runtime.addShutdownHook(new Thread(this));</span>
+<span class="fc" id="L96">        }</span>
+
+        /**
+         * used for unit tests, may return null if the endpoint isn't started
+         * yet
+         *
+         * @return gets an instance
+         */
+        protected static SubscriptionCallbackListener getInstance() {
+<span class="fc" id="L105">                return instance;</span>
+        }
+<span class="fc" id="L107">        private static final Log log = LogFactory.getLog(SubscriptionCallbackListener.class);</span>
+<span class="fc" id="L108">        private static List&lt;ISubscriptionCallback&gt; callbacks = new ArrayList&lt;ISubscriptionCallback&gt;();</span>
+<span class="fc" id="L109">        private static SubscriptionCallbackListener instance = null;</span>
+<span class="fc" id="L110">        private static Endpoint ep = null;</span>
+
+        /**
+         * Starts a embedded Jetty web server (comes with the JDK) using the
+         * Endpoint API.
+         *
+         * @param client
+         * @param cfg_node_name
+         * @param endpoint this is the url that a UDDI server would use to
+         * connect to the client's subscription listener service Recommend
+         * specifying a port that is firewall friendly
+         * @param keydomain
+         *
+         * @param autoregister
+         * @param behavior
+         * @param serviceKey
+         * @return null, if and only if callbackBusinessService was null,
+         * otherwise the modified callbackBusinessService is returned. Clients
+         * can then use it to continue the registration process.
+         * @throws ServiceAlreadyStartedException
+         * @throws SecurityException
+         * @throws ConfigurationException
+         * @throws TransportException
+         * @throws DispositionReportFaultMessage
+         * @throws java.rmi.UnexpectedException
+         * @throws
+         * org.apache.juddi.v3.client.subscription.RegistrationAbortedException
+         * @throws java.net.MalformedURLException
+         * @throws org.apache.juddi.v3.client.subscription.UnableToSignException
+         * @see Endpoint
+         */
+        public static synchronized BindingTemplate start(UDDIClient client, String cfg_node_name, String endpoint,
+                String keydomain, boolean autoregister, String serviceKey,
+                SignatureBehavior behavior) throws ServiceAlreadyStartedException, SecurityException, ConfigurationException, TransportException, DispositionReportFaultMessage, RemoteException, UnexpectedException, RegistrationAbortedException, UnableToSignException, MalformedURLException {
+
+<span class="fc bfc" id="L145" title="All 2 branches covered.">                if (instance == null) {</span>
+<span class="fc" id="L146">                        instance = new SubscriptionCallbackListener();</span>
+                }
+
+<span class="pc bpc" id="L149" title="1 of 4 branches missed.">                if (ep != null &amp;&amp; ep.isPublished()) {</span>
+<span class="fc" id="L150">                        throw new ServiceAlreadyStartedException();</span>
+                }
+
+<span class="fc" id="L153">                URL url = null;</span>
+                try {
+<span class="fc" id="L155">                        url = new URL(endpoint);</span>
+<span class="fc" id="L156">                } catch (Exception ex) {</span>
+<span class="fc" id="L157">                        log.warn(&quot;Callback endpoint couldn't be parsed, generating a random one: &quot; + ex.getMessage());</span>
+<span class="fc" id="L158">                        url = new URL(&quot;http://&quot; + GetHostname() + &quot;:&quot; + GetRandomPort(4000) + &quot;/&quot; + UUID.randomUUID().toString());</span>
+<span class="fc" id="L159">                }</span>
+<span class="fc" id="L160">                endpoint = url.toString();</span>
+                //if (endpoint == null || endpoint.equals(&quot;&quot;)) {
+                //    endpoint = &quot;http://&quot; + GetHostname() + &quot;:&quot; + GetRandomPort(url.getPort()) + &quot;/&quot; + UUID.randomUUID().toString();
+
+<span class="fc" id="L164">                int attempts = 5;</span>
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">                if (ep == null) {</span>
+<span class="pc bpc" id="L166" title="2 of 6 branches missed.">                        while ((ep == null || !ep.isPublished()) &amp;&amp; attempts &gt; 0) {</span>
+                                try {
+<span class="fc" id="L168">                                        ep = Endpoint.publish(endpoint, instance);</span>
+<span class="fc" id="L169">                                        callback = endpoint;</span>
+<span class="nc" id="L170">                                } catch (Exception be) {</span>
+<span class="nc" id="L171">                                        log.info(&quot;trouble starting callback at &quot; + endpoint + &quot;, trying again with a random port: &quot; + be.getMessage());</span>
+<span class="nc" id="L172">                                        log.debug(be);</span>
+<span class="nc" id="L173">                                        attempts--;</span>
+                                        //if (be instanceof java.net.BindException) {
+<span class="nc" id="L175">                                        url = new URL(&quot;http://&quot; + url.getHost() + &quot;:&quot; + GetRandomPort(url.getPort()) + &quot;/&quot; + url.getPath());</span>
+<span class="nc" id="L176">                                        endpoint = url.toString();</span>
+
+<span class="pc" id="L178">                                }</span>
+                        }
+                }
+<span class="pc bpc" id="L181" title="2 of 4 branches missed.">                if (ep == null || !ep.isPublished()) {</span>
+<span class="nc" id="L182">                        log.warn(&quot;Unable to start callback endpoint, aborting&quot;);</span>
+<span class="nc" id="L183">                        throw new SecurityException(&quot;unable to start endpoint, view previous errors for reason&quot;);</span>
+                }
+
+<span class="fc" id="L186">                log.info(&quot;Endpoint started at &quot; + callback);</span>
+
+<span class="fc" id="L188">                BindingTemplate bt = new BindingTemplate();</span>
+<span class="fc" id="L189">                bt.setAccessPoint(new AccessPoint());</span>
+<span class="fc" id="L190">                bt.getAccessPoint().setValue(callback);</span>
+<span class="fc" id="L191">                bt.getAccessPoint().setUseType(&quot;endPoint&quot;);</span>
+<span class="fc" id="L192">                TModelInstanceInfo instanceInfo = new TModelInstanceInfo();</span>
+<span class="fc" id="L193">                instanceInfo.setTModelKey(&quot;uddi:uddi.org:transport:http&quot;);</span>
+<span class="fc" id="L194">                bt.setTModelInstanceDetails(new TModelInstanceDetails());</span>
+<span class="fc" id="L195">                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(instanceInfo);</span>
+<span class="fc" id="L196">                bt.setServiceKey(serviceKey);</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">                if (keydomain.endsWith(&quot;:&quot;)) {</span>
+<span class="nc" id="L198">                        bt.setBindingKey(keydomain + GetHostname() + &quot;_subscription_callback&quot;);</span>
+                } else {
+<span class="fc" id="L200">                        bt.setBindingKey(keydomain + &quot;:&quot; + GetHostname() + &quot;_subscription_callback&quot;);</span>
+                }
+
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">                if (autoregister) {</span>
+<span class="nc" id="L204">                        bt = registerBinding(client, cfg_node_name, bt, behavior);</span>
+                }
+
+<span class="fc" id="L207">                return bt;</span>
+
+        }
+
+        /**
+         * Starts a subscription callback service using the juddi client config
+         * file's settings. This will use the config setting PROPERTY_NODE, or
+         * default if not defined
+         *
+         * @param client
+         * @return a bindingtemplate populated with the relevant information for
+         * most UDDI servers for asynchronous callbacks.
+         * @throws ServiceAlreadyStartedException
+         * @throws SecurityException
+         * @throws ConfigurationException
+         * @throws TransportException
+         * @throws DispositionReportFaultMessage
+         * @throws UnexpectedException
+         * @throws RemoteException
+         * @throws
+         * org.apache.juddi.v3.client.subscription.RegistrationAbortedException
+         * @throws org.apache.juddi.v3.client.subscription.UnableToSignException
+         * @throws java.net.MalformedURLException
+         */
+        public static synchronized BindingTemplate start(UDDIClient client) throws ServiceAlreadyStartedException, SecurityException, ConfigurationException, TransportException, DispositionReportFaultMessage, UnexpectedException, RemoteException, RegistrationAbortedException, UnableToSignException, MalformedURLException {
+<span class="nc" id="L232">                return start(client, client.getClientConfig().getConfiguration().getString(PROPERTY_NODE, &quot;default&quot;));</span>
+        }
+
+        /**
+         * Starts a subscription callback service using the juddi client config
+         * file's settings. This will use the specified node
+         *
+         * @param client
+         * @param cfg_node_name the node to connect to and perform all
+         * operations on
+         * @return a bindingtemplate populated with the relevant information for
+         * most UDDI servers for asynchronous callbacks.
+         * @throws ServiceAlreadyStartedException
+         * @throws SecurityException
+         * @throws ConfigurationException
+         * @throws TransportException
+         * @throws DispositionReportFaultMessage
+         * @throws UnexpectedException
+         * @throws RemoteException
+         * @throws
+         * org.apache.juddi.v3.client.subscription.RegistrationAbortedException
+         * @throws org.apache.juddi.v3.client.subscription.UnableToSignException
+         * @throws java.net.MalformedURLException
+         */
+        public static synchronized BindingTemplate start(UDDIClient client, String cfg_node_name) throws ServiceAlreadyStartedException, SecurityException, ConfigurationException, TransportException, DispositionReportFaultMessage, UnexpectedException, RemoteException, RegistrationAbortedException, UnableToSignException, MalformedURLException {
+
+                try {
+<span class="fc" id="L259">                        boolean reg = (client.getClientConfig().getConfiguration().getBoolean(PROPERTY_AUTOREG_BT, false));</span>
+
+<span class="fc" id="L261">                        String endpoint = client.getClientConfig().getConfiguration().getString(PROPERTY_LISTENURL);</span>
+<span class="fc" id="L262">                        String kd = client.getClientConfig().getConfiguration().getString(PROPERTY_KEYDOMAIN);</span>
+<span class="fc" id="L263">                        String key = client.getClientConfig().getConfiguration().getString(PROPERTY_AUTOREG_SERVICE_KEY);</span>
+<span class="fc" id="L264">                        String sbs = client.getClientConfig().getConfiguration().getString(PROPERTY_SIGNATURE_BEHAVIOR);</span>
+<span class="fc" id="L265">                        SignatureBehavior sb = SignatureBehavior.DoNothing;</span>
+                        try {
+<span class="fc" id="L267">                                sb = SignatureBehavior.valueOf(sbs);</span>
+<span class="nc" id="L268">                        } catch (Exception ex) {</span>
+<span class="nc" id="L269">                                log.warn(&quot;Unable to parse config setting for SignatureBehavior, defaulting to DoNothing&quot;, ex);</span>
+<span class="fc" id="L270">                        }</span>
+<span class="fc" id="L271">                        return start(client, cfg_node_name, endpoint, kd, reg, key, sb);</span>
+<span class="nc" id="L272">                } catch (ConfigurationException ex) {</span>
+<span class="nc" id="L273">                        throw new ConfigurationException(&quot;failed to some critical settings from the juddi client config file. I won't be able to fire up the subscription callback endpoint &quot;, ex);</span>
+                }
+
+        }
+<span class="fc" id="L277">        private static String callback = null;</span>
+
+        /**
+         * gets the current callback url, may be null if the endpoint isn't
+         * started yet
+         *
+         * @return the current callback url or null
+         */
+        public static String getCallbackURL() {
+<span class="fc" id="L286">                return callback;</span>
+
+        }
+
+        /**
+         * Registers an implementation of ISubscriptionCallback for subscription
+         * callbacks from a UDDI server.
+         *
+         *
+         * @param callback if null, no action is taken
+         */
+        public static synchronized void registerCallback(ISubscriptionCallback callback) {
+<span class="fc bfc" id="L298" title="All 2 branches covered.">                if (callback != null) {</span>
+<span class="pc bpc" id="L299" title="1 of 2 branches missed.">                        if (!callbacks.contains(callback)) {</span>
+<span class="fc" id="L300">                                callbacks.add(callback);</span>
+                        }
+                }
+<span class="fc" id="L303">        }</span>
+
+        /**
+         * unregisters a ISubscriptionCallback for callbacks
+         *
+         * @param callback if null, no action is taken
+         */
+        public static synchronized void unRegisterCallback(ISubscriptionCallback callback) {
+<span class="fc bfc" id="L311" title="All 2 branches covered.">                if (callback != null) {</span>
+<span class="pc bpc" id="L312" title="1 of 2 branches missed.">                        if (callbacks.contains(callback)) {</span>
+<span class="nc" id="L313">                                callbacks.remove(callback);</span>
+                        }
+                }
+<span class="fc" id="L316">        }</span>
+        /**
+         * config parameter
+         */
+        public static final String PROPERTY_LISTENURL = &quot;client.subscriptionCallbacks.listenUrl&quot;;
+        /**
+         * config parameter, if not defined, default will be used
+         */
+        public static final String PROPERTY_NODE = &quot;client.subscriptionCallbacks.node&quot;;
+        /**
+         * config parameter
+         */
+        public static final String PROPERTY_KEYDOMAIN = &quot;client.subscriptionCallbacks.keyDomain&quot;;
+        /**
+         * config parameter true/false
+         */
+        public static final String PROPERTY_AUTOREG_BT = &quot;client.subscriptionCallbacks.autoRegisterBindingTemplate&quot;;
+        /**
+         * config parameter business key
+         */
+        public static final String PROPERTY_AUTOREG_SERVICE_KEY = &quot;client.subscriptionCallbacks.autoRegisterBusinessServiceKey&quot;;
+        /**
+         * config parameter
+         *
+         * @see SignatureBehavior
+         */
+        public static final String PROPERTY_SIGNATURE_BEHAVIOR = &quot;client.subscriptionCallbacks.signatureBehavior&quot;;
+
+        /**
+         * return true if and only if the binding exists and is signed
+         *
+         * @param bindingKey
+         * @param uddiInquiryService
+         * @param token
+         * @param behavior
+         * @return true/false
+         */
+        private static boolean CheckExistingBindingForSignature(String bindingKey, UDDIInquiryPortType uddiInquiryService, String token, SignatureBehavior behavior) {
+<span class="nc" id="L354">                GetBindingDetail gbd = new GetBindingDetail();</span>
+<span class="nc" id="L355">                gbd.setAuthInfo(token);</span>
+<span class="nc" id="L356">                gbd.getBindingKey().add(bindingKey);</span>
+                try {
+<span class="nc" id="L358">                        BindingDetail bindingDetail = uddiInquiryService.getBindingDetail(gbd);</span>
+<span class="nc bnc" id="L359" title="All 2 branches missed.">                        if (bindingDetail != null</span>
+<span class="nc bnc" id="L360" title="All 2 branches missed.">                                &amp;&amp; !bindingDetail.getBindingTemplate().isEmpty()</span>
+<span class="nc bnc" id="L361" title="All 2 branches missed.">                                &amp;&amp; !bindingDetail.getBindingTemplate().get(0).getSignature().isEmpty()) {</span>
+<span class="nc" id="L362">                                log.info(&quot;the binding template with key=&quot; + bindingKey + &quot; exists and is digitally signed&quot;);</span>
+                        }
+<span class="nc" id="L364">                        return true;</span>
+<span class="nc" id="L365">                } catch (Exception ex) {</span>
+<span class="nc" id="L366">                        log.debug(&quot;Error caught checking for the existence of and if a signature is present for binding key &quot; + bindingKey + &quot; this may be ignorable&quot;, ex);</span>
+                }
+<span class="nc" id="L368">                return false;</span>
+        }
+
+        private static boolean CheckServiceAndParentForSignature(String serviceKey, UDDIInquiryPortType uddiInquiryService, String token) throws UnexpectedResponseException {
+<span class="nc" id="L372">                GetServiceDetail gsd = new GetServiceDetail();</span>
+<span class="nc" id="L373">                gsd.setAuthInfo(token);</span>
+<span class="nc" id="L374">                gsd.getServiceKey().add(serviceKey);</span>
+<span class="nc" id="L375">                String bizkey = null;</span>
+                try {
+<span class="nc" id="L377">                        ServiceDetail serviceDetail = uddiInquiryService.getServiceDetail(gsd);</span>
+<span class="nc bnc" id="L378" title="All 2 branches missed.">                        if (serviceDetail != null) {</span>
+<span class="nc bnc" id="L379" title="All 2 branches missed.">                                if (!serviceDetail.getBusinessService().isEmpty()) {</span>
+<span class="nc" id="L380">                                        bizkey = serviceDetail.getBusinessService().get(0).getBusinessKey();</span>
+<span class="nc bnc" id="L381" title="All 2 branches missed.">                                        if (!serviceDetail.getBusinessService().get(0).getSignature().isEmpty()) {</span>
+<span class="nc" id="L382">                                                log.info(&quot;the service with key=&quot; + serviceKey + &quot; exists and is digitally signed&quot;);</span>
+<span class="nc" id="L383">                                                return true;</span>
+                                        }
+                                }
+                        }
+<span class="nc" id="L387">                } catch (Exception ex) {</span>
+<span class="nc" id="L388">                        log.info(&quot;Error caught checking for the existence of and if a signature is present for service key &quot; + serviceKey, ex);</span>
+<span class="nc" id="L389">                        throw new UnexpectedResponseException(&quot;Error caught checking for the existence of and if a signature is present for service key &quot; + serviceKey, ex);</span>
+<span class="nc" id="L390">                }</span>
+<span class="nc bnc" id="L391" title="All 2 branches missed.">                if (bizkey == null) {</span>
+<span class="nc" id="L392">                        throw new UnexpectedResponseException(&quot;The service with key &quot; + serviceKey + &quot; parent's business key could not be determined. This is unexpected&quot;);</span>
+                }
+<span class="nc" id="L394">                GetBusinessDetail gbd = new GetBusinessDetail();</span>
+<span class="nc" id="L395">                gbd.setAuthInfo(token);</span>
+<span class="nc" id="L396">                gbd.getBusinessKey().add(bizkey);</span>
+                try {
+<span class="nc" id="L398">                        BusinessDetail businessDetail = uddiInquiryService.getBusinessDetail(gbd);</span>
+<span class="nc bnc" id="L399" title="All 4 branches missed.">                        if (businessDetail != null &amp;&amp; !businessDetail.getBusinessEntity().isEmpty()) {</span>
+<span class="nc bnc" id="L400" title="All 2 branches missed.">                                if (!businessDetail.getBusinessEntity().get(0).getSignature().isEmpty()) {</span>
+<span class="nc" id="L401">                                        log.info(&quot;the business with key=&quot; + bizkey + &quot; exists and is digitally signed&quot;);</span>
+<span class="nc" id="L402">                                        return true;</span>
+                                }
+                        }
+<span class="nc" id="L405">                } catch (Exception ex) {</span>
+<span class="nc" id="L406">                        log.info(&quot;Error caught checking for the existence of and if a signature is present for business key &quot; + bizkey, ex);</span>
+<span class="nc" id="L407">                        throw new UnexpectedResponseException(&quot;Error caught checking for the existence of and if a signature is present for business key &quot; + bizkey, ex);</span>
+<span class="nc" id="L408">                }</span>
+<span class="nc" id="L409">                return false;</span>
+        }
+
+        private static int GetRandomPort(int oldport) {
+<span class="pc bpc" id="L413" title="1 of 2 branches missed.">                if (oldport &lt;= 0) {</span>
+<span class="nc" id="L414">                        oldport = 4000;</span>
+                }
+<span class="fc" id="L416">                return oldport + new Random().nextInt(99);</span>
+
+        }
+
+        /**
+         * shutdown hook
+         */
+        @Override
+        public void run() {
+<span class="fc" id="L425">                shutdown();</span>
+<span class="fc" id="L426">        }</span>
+
+        private synchronized void shutdown() {
+<span class="pc bpc" id="L429" title="3 of 4 branches missed.">                if (ep != null &amp;&amp; !ep.isPublished()) {</span>
+<span class="nc" id="L430">                        log.fatal(&quot;Hey, someone should tell the developer to call SubscriptionCallbackListern.stop(...) before ending the program. Stopping endpoint at &quot; + callback);</span>
+<span class="nc" id="L431">                        unregisterAllCallbacks();</span>
+<span class="nc" id="L432">                        ep.stop();</span>
+<span class="nc" id="L433">                        ep = null;</span>
+<span class="nc" id="L434">                        callback = null;</span>
+                }
+
+<span class="fc" id="L437">        }</span>
+
+        /**
+         * This defines how the automatic subscription binding template is
+         * suppose to behave
+         */
+<span class="fc" id="L443">        public enum SignatureBehavior {</span>
+
+                /**
+                 * Aborts the save request if either the entity exists and is
+                 * already signed, or if any parent uddi element is signed
+                 */
+<span class="fc" id="L449">                AbortIfSigned,</span>
+                /**
+                 * Signs this element. Warning: It may cause signatures of
+                 * parent elements to become invalid. If unable to sign, an
+                 * exception will be thrown
+                 */
+<span class="fc" id="L455">                SignAlways,</span>
+                /**
+                 * Signs this element, but only if parents are not signed. If
+                 * unable to sign, an exception will be thrown
+                 */
+<span class="fc" id="L460">                SignOnlyIfParentIsntSigned,</span>
+                /**
+                 * Do nothing, don't sign it and don't check if a parent item is
+                 * signed or not.
+                 */
+<span class="fc" id="L465">                DoNothing</span>
+        }
+
+        /**
+         * Registers a UDDI binding template that represents the subscription
+         * callback endpoint
+         *
+         * @param client
+         * @param cfg_node_name
+         * @param bt - Binding Template
+         * @param behavior
+         * @return a binding template
+         * @throws ServiceAlreadyStartedException
+         * @throws SecurityException
+         * @throws ConfigurationException
+         * @throws TransportException
+         * @throws DispositionReportFaultMessage
+         * @throws RemoteException
+         * @throws UnexpectedException
+         * @throws RegistrationAbortedException
+         * @throws UnableToSignException
+         */
+        public static BindingTemplate registerBinding(UDDIClient client, String cfg_node_name, BindingTemplate bt, SignatureBehavior behavior) throws ServiceAlreadyStartedException, SecurityException, ConfigurationException, TransportException, DispositionReportFaultMessage, RemoteException, UnexpectedException, RegistrationAbortedException, UnableToSignException {
+
+<span class="nc" id="L489">                UDDIClerk clerk = client.getClerk(cfg_node_name);</span>
+<span class="nc" id="L490">                Transport tp = client.getTransport(cfg_node_name);</span>
+<span class="nc" id="L491">                UDDIInquiryPortType uddiInquiryService = tp.getUDDIInquiryService();</span>
+<span class="nc" id="L492">                UDDIPublicationPortType uddiPublishService = tp.getUDDIPublishService();</span>
+
+<span class="nc" id="L494">                String token = clerk.getAuthToken(clerk.getUDDINode().getSecurityUrl());</span>
+
+<span class="nc bnc" id="L496" title="All 5 branches missed.">                switch (behavior) {</span>
+                        case AbortIfSigned:
+<span class="nc bnc" id="L498" title="All 2 branches missed.">                                if (CheckExistingBindingForSignature(bt.getBindingKey(), uddiInquiryService, token, behavior)) {</span>
+<span class="nc" id="L499">                                        throw new RegistrationAbortedException(&quot;Aborting, Either the item exists and is signed&quot;);</span>
+                                }
+<span class="nc bnc" id="L501" title="All 2 branches missed.">                                if (CheckServiceAndParentForSignature(bt.getServiceKey(), uddiInquiryService, token)) {</span>
+<span class="nc" id="L502">                                        throw new RegistrationAbortedException(&quot;Aborting, Either the service or busness is signed&quot;);</span>
+                                }
+                                break;
+                        case DoNothing:
+<span class="nc" id="L506">                                break;</span>
+                        case SignAlways:
+                                try {
+<span class="nc" id="L509">                                        DigSigUtil ds = new DigSigUtil(client.getClientConfig().getDigitalSignatureConfiguration());</span>
+<span class="nc" id="L510">                                        bt = ds.signUddiEntity(bt);</span>
+<span class="nc" id="L511">                                } catch (Exception ex) {</span>
+<span class="nc" id="L512">                                        log.error(&quot;Unable to sign&quot;, ex);</span>
+<span class="nc" id="L513">                                        throw new UnableToSignException(ex);</span>
+<span class="nc" id="L514">                                }</span>
+
+                                break;
+                        case SignOnlyIfParentIsntSigned:
+<span class="nc bnc" id="L518" title="All 2 branches missed.">                                if (!CheckServiceAndParentForSignature(bt.getServiceKey(), uddiInquiryService, token)) {</span>
+                                        try {
+<span class="nc" id="L520">                                                DigSigUtil ds = new DigSigUtil(client.getClientConfig().getDigitalSignatureConfiguration());</span>
+<span class="nc" id="L521">                                                bt = ds.signUddiEntity(bt);</span>
+<span class="nc" id="L522">                                        } catch (Exception ex) {</span>
+<span class="nc" id="L523">                                                log.error(&quot;Unable to sign&quot;, ex);</span>
+<span class="nc" id="L524">                                                throw new UnableToSignException(ex);</span>
+<span class="nc" id="L525">                                        }</span>
+                                }
+                                break;
+                }
+<span class="nc" id="L529">                SaveBinding sb = new SaveBinding();</span>
+<span class="nc" id="L530">                sb.setAuthInfo(token);</span>
+<span class="nc" id="L531">                sb.getBindingTemplate().add(bt);</span>
+
+<span class="nc" id="L533">                BindingDetail saveBinding = uddiPublishService.saveBinding(sb);</span>
+<span class="nc bnc" id="L534" title="All 4 branches missed.">                if (saveBinding.getBindingTemplate().isEmpty() || saveBinding.getBindingTemplate().size() &gt; 1) {</span>
+<span class="nc" id="L535">                        throw new UnexpectedResponseException(&quot;The number of binding templates returned was unexpected, count=&quot; + saveBinding.getBindingTemplate().size());</span>
+                }
+<span class="nc" id="L537">                return saveBinding.getBindingTemplate().get(0);</span>
+        }
+
+        protected static synchronized void unregisterAllCallbacks() {
+<span class="pc bpc" id="L541" title="1 of 2 branches missed.">                if (callbacks != null) {</span>
+<span class="fc" id="L542">                        log.info(&quot;Notifying all subscribing classes, count=&quot; + callbacks.size());</span>
+<span class="fc bfc" id="L543" title="All 2 branches covered.">                        for (int i = 0; i &lt; callbacks.size(); i++) {</span>
+<span class="pc bpc" id="L544" title="1 of 2 branches missed.">                                if (callbacks.get(i) != null) {</span>
+                                        try {
+<span class="fc" id="L546">                                                callbacks.get(i).notifyEndpointStopped();</span>
+<span class="fc" id="L547">                                        } catch (Exception ex) {</span>
+<span class="fc" id="L548">                                                log.warn(&quot;Your implementation on ISubscriptionCallback is faulty and threw an error, contact the developer&quot;, ex);</span>
+<span class="fc" id="L549">                                        }</span>
+                                }
+                        }
+<span class="fc" id="L552">                        callbacks.clear();</span>
+                }
+
+<span class="fc" id="L555">        }</span>
+
+        /**
+         * This effectively stops the endpoint address and notifies all
+         * ISubscriptionCallback clients that the endpoint as been stopped.
+         * After it has been stopped, all ISubscriptionCallback are removed from
+         * the callback list. If the configuration file is set to automatically
+         * register binding templates, the binding template will be unregistered
+         * from the UDDI server
+         *
+         * @param client
+         * @param cfg_node_name
+         * @param bindingKey
+         * @throws org.apache.commons.configuration.ConfigurationException
+         */
+        public static synchronized void stop(UDDIClient client, String cfg_node_name, String bindingKey) throws ConfigurationException {
+                //stop the service
+<span class="pc bpc" id="L572" title="1 of 4 branches missed.">                if (ep != null &amp;&amp; ep.isPublished()) {</span>
+<span class="fc" id="L573">                        log.warn(&quot;Stopping jUDDI Subscription callback endpoint at &quot; + callback);</span>
+<span class="fc" id="L574">                        ep.stop();</span>
+<span class="pc bpc" id="L575" title="1 of 2 branches missed.">                        if (ep.isPublished()) {</span>
+<span class="nc" id="L576">                                log.fatal(&quot;Unable to stop the endpoint. the port may be locked until this java process terminates&quot;);</span>
+                        }
+<span class="fc" id="L578">                        ep = null;</span>
+<span class="fc" id="L579">                        callback = null;</span>
+                }
+<span class="fc" id="L581">                unregisterAllCallbacks();</span>
+<span class="pc bpc" id="L582" title="3 of 4 branches missed.">                if (client.getClientConfig().getConfiguration().getBoolean(PROPERTY_AUTOREG_BT, false) &amp;&amp; bindingKey != null) {</span>
+
+                        try {
+<span class="nc" id="L585">                                UDDIClerk clerk = client.getClerk(cfg_node_name);</span>
+<span class="nc" id="L586">                                Transport tp = client.getTransport(cfg_node_name);</span>
+<span class="nc" id="L587">                                String token = clerk.getAuthToken(clerk.getUDDINode().getSecurityUrl());</span>
+<span class="nc" id="L588">                                UDDIPublicationPortType uddiPublishService = tp.getUDDIPublishService();</span>
+<span class="nc" id="L589">                                DeleteBinding db = new DeleteBinding();</span>
+<span class="nc" id="L590">                                db.setAuthInfo(token);</span>
+<span class="nc" id="L591">                                db.getBindingKey().add(bindingKey);</span>
+<span class="nc" id="L592">                                uddiPublishService.deleteBinding(db);</span>
+<span class="nc" id="L593">                                log.info(&quot;Subscription callback binding unregistered.&quot;);</span>
+<span class="nc" id="L594">                        } catch (Exception ex) {</span>
+<span class="nc" id="L595">                                log.error(&quot;Unable to unregister binding &quot; + bindingKey, ex);</span>
+<span class="nc" id="L596">                        }</span>
+                }
+
+                //TODO optionally kill the subscription?
+                //get all subscriptions from the uddi node, 
+                //loop through and deduce which ones are pointed at this endpoint
+                //then remove them
+<span class="fc" id="L603">        }</span>
+
+        private static String GetHostname() {
+                try {
+<span class="fc" id="L607">                        return java.net.InetAddress.getLocalHost().getHostName();</span>
+<span class="nc" id="L608">                } catch (UnknownHostException ex) {</span>
+<span class="nc" id="L609">                        return &quot;HOST_UNKNOWN&quot;;</span>
+                }
+        }
+
+        @Override
+        public DispositionReport notifySubscriptionListener(NotifySubscriptionListener body) throws DispositionReportFaultMessage, RemoteException {
+<span class="fc bfc" id="L615" title="All 2 branches covered.">                for (int i = 0; i &lt; callbacks.size(); i++) {</span>
+                        try {
+<span class="fc" id="L617">                                callbacks.get(i).handleCallback(body.getSubscriptionResultsList());</span>
+<span class="fc" id="L618">                        } catch (Exception ex) {</span>
+<span class="fc" id="L619">                                log.warn(&quot;Your implementation on ISubscriptionCallback is faulty and threw an error, contact the developer&quot;, ex);</span>
+<span class="fc" id="L620">                        }</span>
+                }
+<span class="fc" id="L622">                DispositionReport r = new DispositionReport();</span>
+<span class="fc" id="L623">                r.getResult().add(new Result());</span>
+<span class="fc" id="L624">                return r;</span>
+        }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Edge.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.model</a> &gt; <span class="el_source">Edge.java</span></div><h1>Edge.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2013 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.model;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = &quot;j3_edge&quot;)
+<span class="fc" id="L35">public class Edge implements Serializable{</span>
+
+        private Long id;
+        private List&lt;ControlMessage&gt;  message;
+        private String messageSender;
+        private String messageReceiver;
+        private List&lt;EdgeReceiverAlternate&gt; messageReceiverAlternate;
+        private ReplicationConfiguration parent;
+
+         @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = &quot;ReplicationConfiguration&quot;, nullable = false)
+        public ReplicationConfiguration getReplicationConfiguration() {
+<span class="fc" id="L47">                return parent;</span>
+        }
+        
+        public void setReplicationConfiguration(ReplicationConfiguration p){
+<span class="fc" id="L51">                parent = p;</span>
+<span class="fc" id="L52">        }</span>
+        
+        /**
+         * The message elements contain the local name of the Replication API message elements
+         * @return 
+         */
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = ControlMessage.class)
+        public List&lt;ControlMessage&gt; getMessages() {
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">                if (message == null) {</span>
+<span class="nc" id="L61">                        message = new ArrayList&lt;ControlMessage&gt;();</span>
+                }
+<span class="fc" id="L63">                return this.message;</span>
+        }
+        public void setMessages(List&lt;ControlMessage&gt;  values) {
+<span class="fc" id="L66">                this.message = values;</span>
+<span class="fc" id="L67">        }</span>
+
+        
+        @Column
+        public String getMessageSender() {
+<span class="fc" id="L72">                return messageSender;</span>
+        }
+
+        public void setMessageSender(String value) {
+<span class="fc" id="L76">                this.messageSender = value;</span>
+<span class="fc" id="L77">        }</span>
+
+        /**
+         * For each directed edge, the primary edge Node id
+                 *
+         * @return
+         */
+        @Column
+        public String getMessageReceiver() {
+<span class="fc" id="L86">                return messageReceiver;</span>
+        }
+
+        public void setMessageReceiver(String value) {
+<span class="fc" id="L90">                this.messageReceiver = value;</span>
+<span class="fc" id="L91">        }</span>
+
+        /**
+         * For each directed edge, an ordered sequence of zero or more
+         * alternate, backup edges MAY be listed using the
+         * messageReceiverAlternate element
+         *
+         * @return
+         */
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = EdgeReceiverAlternate.class
+                //, mappedBy = &quot;messageReceiverAlternate&quot;
+        )
+        public List&lt;EdgeReceiverAlternate&gt; getMessageReceiverAlternate() {
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">                if (messageReceiverAlternate == null) {</span>
+<span class="nc" id="L105">                        messageReceiverAlternate = new ArrayList&lt;EdgeReceiverAlternate&gt;();</span>
+                }
+<span class="fc" id="L107">                return this.messageReceiverAlternate;</span>
+        }
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        public Long getId() {
+<span class="fc" id="L113">                return id;</span>
+        }
+
+        public void setMessage(List&lt;ControlMessage&gt; message) {
+<span class="fc" id="L117">                this.message = message;</span>
+<span class="fc" id="L118">        }</span>
+
+        public void setMessageReceiverAlternate(List&lt;EdgeReceiverAlternate&gt; messageReceiverAlternate) {
+<span class="fc" id="L121">                this.messageReceiverAlternate = messageReceiverAlternate;</span>
+<span class="fc" id="L122">        }</span>
+
+     
+
+        public void setId(Long id) {
+<span class="fc" id="L127">                this.id = id;</span>
+<span class="fc" id="L128">        }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

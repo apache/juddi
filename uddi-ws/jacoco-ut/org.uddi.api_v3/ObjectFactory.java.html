@@ -1,0 +1,1779 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ObjectFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.api_v3</a> &gt; <span class="el_source">ObjectFactory.java</span></div><h1>ObjectFactory.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+package org.uddi.api_v3;
+
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.annotation.XmlElementDecl;
+import javax.xml.bind.annotation.XmlRegistry;
+import javax.xml.namespace.QName;
+
+
+/**
+ * This object contains factory methods for each 
+ * Java content interface and Java element interface 
+ * generated in the org.uddi.api_v3 package. 
+ * &lt;p&gt;An ObjectFactory allows you to programatically 
+ * construct new instances of the Java representation 
+ * for XML content. The Java representation of XML 
+ * content can consist of schema derived interfaces 
+ * and classes representing the binding of schema 
+ * type definitions, element declarations and model 
+ * groups.  Factory methods for each of these are 
+ * provided in this class.
+ * 
+ */
+@XmlRegistry
+public class ObjectFactory {
+
+<span class="fc" id="L44">    private final static QName _DiscoveryURL_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;discoveryURL&quot;);</span>
+<span class="fc" id="L45">    private final static QName _TModelInfos_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;tModelInfos&quot;);</span>
+<span class="fc" id="L46">    private final static QName _AssertionStatusItem_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;assertionStatusItem&quot;);</span>
+<span class="fc" id="L47">    private final static QName _ActualCount_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;actualCount&quot;);</span>
+<span class="fc" id="L48">    private final static QName _SaveBusiness_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;save_business&quot;);</span>
+<span class="fc" id="L49">    private final static QName _TModel_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;tModel&quot;);</span>
+<span class="fc" id="L50">    private final static QName _TModelKey_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;tModelKey&quot;);</span>
+<span class="fc" id="L51">    private final static QName _ToKey_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;toKey&quot;);</span>
+<span class="fc" id="L52">    private final static QName _ServiceList_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;serviceList&quot;);</span>
+<span class="fc" id="L53">    private final static QName _PublisherAssertion_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;publisherAssertion&quot;);</span>
+<span class="fc" id="L54">    private final static QName _AuthorizedName_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;authorizedName&quot;);</span>
+<span class="fc" id="L55">    private final static QName _InfoSelection_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;infoSelection&quot;);</span>
+<span class="fc" id="L56">    private final static QName _TModelList_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;tModelList&quot;);</span>
+<span class="fc" id="L57">    private final static QName _ErrInfo_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;errInfo&quot;);</span>
+<span class="fc" id="L58">    private final static QName _CategoryBag_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;categoryBag&quot;);</span>
+<span class="fc" id="L59">    private final static QName _GetAssertionStatusReport_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;get_assertionStatusReport&quot;);</span>
+<span class="fc" id="L60">    private final static QName _GetServiceDetail_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;get_serviceDetail&quot;);</span>
+<span class="fc" id="L61">    private final static QName _GetBindingDetail_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;get_bindingDetail&quot;);</span>
+<span class="fc" id="L62">    private final static QName _InstanceParms_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;instanceParms&quot;);</span>
+<span class="fc" id="L63">    private final static QName _KeyedReferenceGroup_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;keyedReferenceGroup&quot;);</span>
+<span class="fc" id="L64">    private final static QName _DeletePublisherAssertions_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;delete_publisherAssertions&quot;);</span>
+<span class="fc" id="L65">    private final static QName _RelatedBusinessesList_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;relatedBusinessesList&quot;);</span>
+<span class="fc" id="L66">    private final static QName _ServiceInfos_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;serviceInfos&quot;);</span>
+<span class="fc" id="L67">    private final static QName _BusinessEntity_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;businessEntity&quot;);</span>
+<span class="fc" id="L68">    private final static QName _PublisherAssertions_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;publisherAssertions&quot;);</span>
+<span class="fc" id="L69">    private final static QName _GetOperationalInfo_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;get_operationalInfo&quot;);</span>
+<span class="fc" id="L70">    private final static QName _SaveService_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;save_service&quot;);</span>
+<span class="fc" id="L71">    private final static QName _TModelInstanceInfo_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;tModelInstanceInfo&quot;);</span>
+<span class="fc" id="L72">    private final static QName _SaveTModel_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;save_tModel&quot;);</span>
+<span class="fc" id="L73">    private final static QName _BusinessInfos_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;businessInfos&quot;);</span>
+<span class="fc" id="L74">    private final static QName _DiscoveryURLs_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;discoveryURLs&quot;);</span>
+<span class="fc" id="L75">    private final static QName _OperationalInfo_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;operationalInfo&quot;);</span>
+<span class="fc" id="L76">    private final static QName _AuthInfo_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;authInfo&quot;);</span>
+<span class="fc" id="L77">    private final static QName _TModelBag_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;tModelBag&quot;);</span>
+<span class="fc" id="L78">    private final static QName _FindBusiness_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;find_business&quot;);</span>
+<span class="fc" id="L79">    private final static QName _BindingKey_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;bindingKey&quot;);</span>
+<span class="fc" id="L80">    private final static QName _Contact_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;contact&quot;);</span>
+<span class="fc" id="L81">    private final static QName _SaveBinding_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;save_binding&quot;);</span>
+<span class="fc" id="L82">    private final static QName _GetPublisherAssertions_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;get_publisherAssertions&quot;);</span>
+<span class="fc" id="L83">    private final static QName _PublisherAssertionsResponse_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;publisherAssertionsResponse&quot;);</span>
+<span class="fc" id="L84">    private final static QName _TModelDetail_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;tModelDetail&quot;);</span>
+<span class="fc" id="L85">    private final static QName _BusinessService_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;businessService&quot;);</span>
+<span class="fc" id="L86">    private final static QName _AddressLine_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;addressLine&quot;);</span>
+<span class="fc" id="L87">    private final static QName _RelatedBusinessInfos_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;relatedBusinessInfos&quot;);</span>
+<span class="fc" id="L88">    private final static QName _BusinessServices_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;businessServices&quot;);</span>
+<span class="fc" id="L89">    private final static QName _TModelInfo_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;tModelInfo&quot;);</span>
+<span class="fc" id="L90">    private final static QName _BusinessList_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;businessList&quot;);</span>
+<span class="fc" id="L91">    private final static QName _DeleteBinding_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;delete_binding&quot;);</span>
+<span class="fc" id="L92">    private final static QName _FindService_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;find_service&quot;);</span>
+<span class="fc" id="L93">    private final static QName _GetTModelDetail_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;get_tModelDetail&quot;);</span>
+<span class="fc" id="L94">    private final static QName _BusinessDetail_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;businessDetail&quot;);</span>
+<span class="fc" id="L95">    private final static QName _Email_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;email&quot;);</span>
+<span class="fc" id="L96">    private final static QName _GetBusinessDetail_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;get_businessDetail&quot;);</span>
+<span class="fc" id="L97">    private final static QName _RegisteredInfo_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;registeredInfo&quot;);</span>
+<span class="fc" id="L98">    private final static QName _InstanceDetails_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;instanceDetails&quot;);</span>
+<span class="fc" id="L99">    private final static QName _NodeID_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;nodeID&quot;);</span>
+<span class="fc" id="L100">    private final static QName _CompletionStatus_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;completionStatus&quot;);</span>
+<span class="fc" id="L101">    private final static QName _SharedRelationships_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;sharedRelationships&quot;);</span>
+<span class="fc" id="L102">    private final static QName _OperationalInfos_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;operationalInfos&quot;);</span>
+<span class="fc" id="L103">    private final static QName _FindTModel_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;find_tModel&quot;);</span>
+<span class="fc" id="L104">    private final static QName _BusinessKey_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;businessKey&quot;);</span>
+<span class="fc" id="L105">    private final static QName _Phone_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;phone&quot;);</span>
+<span class="fc" id="L106">    private final static QName _PersonName_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;personName&quot;);</span>
+<span class="fc" id="L107">    private final static QName _SetPublisherAssertions_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;set_publisherAssertions&quot;);</span>
+<span class="fc" id="L108">    private final static QName _Contacts_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;contacts&quot;);</span>
+<span class="fc" id="L109">    private final static QName _BindingTemplate_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;bindingTemplate&quot;);</span>
+<span class="fc" id="L110">    private final static QName _DiscardAuthToken_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;discard_authToken&quot;);</span>
+<span class="fc" id="L111">    private final static QName _DispositionReport_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;dispositionReport&quot;);</span>
+<span class="fc" id="L112">    private final static QName _OverviewDoc_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;overviewDoc&quot;);</span>
+<span class="fc" id="L113">    private final static QName _Description_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;description&quot;);</span>
+<span class="fc" id="L114">    private final static QName _KeysOwned_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;keysOwned&quot;);</span>
+<span class="fc" id="L115">    private final static QName _KeyedReference_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;keyedReference&quot;);</span>
+<span class="fc" id="L116">    private final static QName _RelatedBusinessInfo_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;relatedBusinessInfo&quot;);</span>
+<span class="fc" id="L117">    private final static QName _BindingDetail_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;bindingDetail&quot;);</span>
+<span class="fc" id="L118">    private final static QName _DeleteBusiness_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;delete_business&quot;);</span>
+<span class="fc" id="L119">    private final static QName _IncludeCount_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;includeCount&quot;);</span>
+<span class="fc" id="L120">    private final static QName _AddPublisherAssertions_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;add_publisherAssertions&quot;);</span>
+<span class="fc" id="L121">    private final static QName _GetAuthToken_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;get_authToken&quot;);</span>
+<span class="fc" id="L122">    private final static QName _ServiceInfo_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;serviceInfo&quot;);</span>
+<span class="fc" id="L123">    private final static QName _AuthToken_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;authToken&quot;);</span>
+<span class="fc" id="L124">    private final static QName _HostingRedirector_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;hostingRedirector&quot;);</span>
+<span class="fc" id="L125">    private final static QName _DeleteService_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;delete_service&quot;);</span>
+<span class="fc" id="L126">    private final static QName _Address_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;address&quot;);</span>
+<span class="fc" id="L127">    private final static QName _BindingTemplates_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;bindingTemplates&quot;);</span>
+<span class="fc" id="L128">    private final static QName _AssertionStatusReport_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;assertionStatusReport&quot;);</span>
+<span class="fc" id="L129">    private final static QName _FindQualifiers_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;findQualifiers&quot;);</span>
+<span class="fc" id="L130">    private final static QName _FindRelatedBusinesses_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;find_relatedBusinesses&quot;);</span>
+<span class="fc" id="L131">    private final static QName _FromKey_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;fromKey&quot;);</span>
+<span class="fc" id="L132">    private final static QName _OverviewURL_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;overviewURL&quot;);</span>
+<span class="fc" id="L133">    private final static QName _AccessPoint_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;accessPoint&quot;);</span>
+<span class="fc" id="L134">    private final static QName _ListHead_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;listHead&quot;);</span>
+<span class="fc" id="L135">    private final static QName _FindQualifier_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;findQualifier&quot;);</span>
+<span class="fc" id="L136">    private final static QName _BusinessInfo_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;businessInfo&quot;);</span>
+<span class="fc" id="L137">    private final static QName _ServiceKey_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;serviceKey&quot;);</span>
+<span class="fc" id="L138">    private final static QName _Result_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;result&quot;);</span>
+<span class="fc" id="L139">    private final static QName _ServiceDetail_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;serviceDetail&quot;);</span>
+<span class="fc" id="L140">    private final static QName _DeleteTModel_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;delete_tModel&quot;);</span>
+<span class="fc" id="L141">    private final static QName _FindBinding_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;find_binding&quot;);</span>
+<span class="fc" id="L142">    private final static QName _IdentifierBag_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;identifierBag&quot;);</span>
+<span class="fc" id="L143">    private final static QName _Name_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;name&quot;);</span>
+<span class="fc" id="L144">    private final static QName _ListDescription_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;listDescription&quot;);</span>
+<span class="fc" id="L145">    private final static QName _GetRegisteredInfo_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;get_registeredInfo&quot;);</span>
+<span class="fc" id="L146">    private final static QName _TModelInstanceDetails_QNAME = new QName(&quot;urn:uddi-org:api_v3&quot;, &quot;tModelInstanceDetails&quot;);</span>
+
+    /**
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.uddi.api_v3
+     * 
+     */
+<span class="fc" id="L152">    public ObjectFactory() {</span>
+<span class="fc" id="L153">    }</span>
+
+    /**
+     * Create an instance of {@link TModelList }
+     * 
+     */
+    public TModelList createTModelList() {
+<span class="nc" id="L160">        return new TModelList();</span>
+    }
+
+    /**
+     * Create an instance of {@link AuthToken }
+     * 
+     */
+    public AuthToken createAuthToken() {
+<span class="fc" id="L168">        return new AuthToken();</span>
+    }
+
+    /**
+     * Create an instance of {@link PersonName }
+     * 
+     */
+    public PersonName createPersonName() {
+<span class="nc" id="L176">        return new PersonName();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetPublisherAssertions }
+     * 
+     */
+    public GetPublisherAssertions createGetPublisherAssertions() {
+<span class="nc" id="L184">        return new GetPublisherAssertions();</span>
+    }
+
+    /**
+     * Create an instance of {@link Name }
+     * 
+     */
+    public Name createName() {
+<span class="nc" id="L192">        return new Name();</span>
+    }
+
+    /**
+     * Create an instance of {@link FindService }
+     * 
+     */
+    public FindService createFindService() {
+<span class="nc" id="L200">        return new FindService();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetAssertionStatusReport }
+     * 
+     */
+    public GetAssertionStatusReport createGetAssertionStatusReport() {
+<span class="nc" id="L208">        return new GetAssertionStatusReport();</span>
+    }
+
+    /**
+     * Create an instance of {@link RelatedBusinessesList }
+     * 
+     */
+    public RelatedBusinessesList createRelatedBusinessesList() {
+<span class="nc" id="L216">        return new RelatedBusinessesList();</span>
+    }
+
+    /**
+     * Create an instance of {@link HostingRedirector }
+     * 
+     */
+    public HostingRedirector createHostingRedirector() {
+<span class="nc" id="L224">        return new HostingRedirector();</span>
+    }
+
+    /**
+     * Create an instance of {@link DispositionReport }
+     * 
+     */
+    public DispositionReport createDispositionReport() {
+<span class="nc" id="L232">        return new DispositionReport();</span>
+    }
+
+    /**
+     * Create an instance of {@link SaveBinding }
+     * 
+     */
+    public SaveBinding createSaveBinding() {
+<span class="nc" id="L240">        return new SaveBinding();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetServiceDetail }
+     * 
+     */
+    public GetServiceDetail createGetServiceDetail() {
+<span class="nc" id="L248">        return new GetServiceDetail();</span>
+    }
+
+    /**
+     * Create an instance of {@link BusinessService }
+     * 
+     */
+    public BusinessService createBusinessService() {
+<span class="nc" id="L256">        return new BusinessService();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetAuthToken }
+     * 
+     */
+    public GetAuthToken createGetAuthToken() {
+<span class="nc" id="L264">        return new GetAuthToken();</span>
+    }
+
+    /**
+     * Create an instance of {@link SaveBusiness }
+     * 
+     */
+    public SaveBusiness createSaveBusiness() {
+<span class="nc" id="L272">        return new SaveBusiness();</span>
+    }
+
+    /**
+     * Create an instance of {@link KeyedReferenceGroup }
+     * 
+     */
+    public KeyedReferenceGroup createKeyedReferenceGroup() {
+<span class="nc" id="L280">        return new KeyedReferenceGroup();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetRegisteredInfo }
+     * 
+     */
+    public GetRegisteredInfo createGetRegisteredInfo() {
+<span class="nc" id="L288">        return new GetRegisteredInfo();</span>
+    }
+
+    /**
+     * Create an instance of {@link FindTModel }
+     * 
+     */
+    public FindTModel createFindTModel() {
+<span class="nc" id="L296">        return new FindTModel();</span>
+    }
+
+    /**
+     * Create an instance of {@link DiscoveryURLs }
+     * 
+     */
+    public DiscoveryURLs createDiscoveryURLs() {
+<span class="nc" id="L304">        return new DiscoveryURLs();</span>
+    }
+
+    /**
+     * Create an instance of {@link AddressLine }
+     * 
+     */
+    public AddressLine createAddressLine() {
+<span class="nc" id="L312">        return new AddressLine();</span>
+    }
+
+    /**
+     * Create an instance of {@link SaveTModel }
+     * 
+     */
+    public SaveTModel createSaveTModel() {
+<span class="nc" id="L320">        return new SaveTModel();</span>
+    }
+
+    /**
+     * Create an instance of {@link AssertionStatusReport }
+     * 
+     */
+    public AssertionStatusReport createAssertionStatusReport() {
+<span class="nc" id="L328">        return new AssertionStatusReport();</span>
+    }
+
+    /**
+     * Create an instance of {@link BindingTemplate }
+     * 
+     */
+    public BindingTemplate createBindingTemplate() {
+<span class="nc" id="L336">        return new BindingTemplate();</span>
+    }
+
+    /**
+     * Create an instance of {@link Email }
+     * 
+     */
+    public Email createEmail() {
+<span class="nc" id="L344">        return new Email();</span>
+    }
+
+    /**
+     * Create an instance of {@link TModelInstanceDetails }
+     * 
+     */
+    public TModelInstanceDetails createTModelInstanceDetails() {
+<span class="nc" id="L352">        return new TModelInstanceDetails();</span>
+    }
+
+    /**
+     * Create an instance of {@link SaveService }
+     * 
+     */
+    public SaveService createSaveService() {
+<span class="nc" id="L360">        return new SaveService();</span>
+    }
+
+    /**
+     * Create an instance of {@link OverviewDoc }
+     * 
+     */
+    public OverviewDoc createOverviewDoc() {
+<span class="nc" id="L368">        return new OverviewDoc();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetBindingDetail }
+     * 
+     */
+    public GetBindingDetail createGetBindingDetail() {
+<span class="nc" id="L376">        return new GetBindingDetail();</span>
+    }
+
+    /**
+     * Create an instance of {@link InstanceDetails }
+     * 
+     */
+    public InstanceDetails createInstanceDetails() {
+<span class="nc" id="L384">        return new InstanceDetails();</span>
+    }
+
+    /**
+     * Create an instance of {@link RegisteredInfo }
+     * 
+     */
+    public RegisteredInfo createRegisteredInfo() {
+<span class="nc" id="L392">        return new RegisteredInfo();</span>
+    }
+
+    /**
+     * Create an instance of {@link DeleteBusiness }
+     * 
+     */
+    public DeleteBusiness createDeleteBusiness() {
+<span class="nc" id="L400">        return new DeleteBusiness();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetOperationalInfo }
+     * 
+     */
+    public GetOperationalInfo createGetOperationalInfo() {
+<span class="nc" id="L408">        return new GetOperationalInfo();</span>
+    }
+
+    /**
+     * Create an instance of {@link DeleteService }
+     * 
+     */
+    public DeleteService createDeleteService() {
+<span class="nc" id="L416">        return new DeleteService();</span>
+    }
+
+    /**
+     * Create an instance of {@link DiscardAuthToken }
+     * 
+     */
+    public DiscardAuthToken createDiscardAuthToken() {
+<span class="nc" id="L424">        return new DiscardAuthToken();</span>
+    }
+
+    /**
+     * Create an instance of {@link OperationalInfo }
+     * 
+     */
+    public OperationalInfo createOperationalInfo() {
+<span class="nc" id="L432">        return new OperationalInfo();</span>
+    }
+
+    /**
+     * Create an instance of {@link BindingDetail }
+     * 
+     */
+    public BindingDetail createBindingDetail() {
+<span class="nc" id="L440">        return new BindingDetail();</span>
+    }
+
+    /**
+     * Create an instance of {@link TModelInfo }
+     * 
+     */
+    public TModelInfo createTModelInfo() {
+<span class="nc" id="L448">        return new TModelInfo();</span>
+    }
+
+    /**
+     * Create an instance of {@link TModelInfos }
+     * 
+     */
+    public TModelInfos createTModelInfos() {
+<span class="nc" id="L456">        return new TModelInfos();</span>
+    }
+
+    /**
+     * Create an instance of {@link DeleteTModel }
+     * 
+     */
+    public DeleteTModel createDeleteTModel() {
+<span class="nc" id="L464">        return new DeleteTModel();</span>
+    }
+
+    /**
+     * Create an instance of {@link AccessPoint }
+     * 
+     */
+    public AccessPoint createAccessPoint() {
+<span class="nc" id="L472">        return new AccessPoint();</span>
+    }
+
+    /**
+     * Create an instance of {@link FindBinding }
+     * 
+     */
+    public FindBinding createFindBinding() {
+<span class="nc" id="L480">        return new FindBinding();</span>
+    }
+
+    /**
+     * Create an instance of {@link KeysOwned }
+     * 
+     */
+    public KeysOwned createKeysOwned() {
+<span class="nc" id="L488">        return new KeysOwned();</span>
+    }
+
+    /**
+     * Create an instance of {@link IdentifierBag }
+     * 
+     */
+    public IdentifierBag createIdentifierBag() {
+<span class="nc" id="L496">        return new IdentifierBag();</span>
+    }
+
+    /**
+     * Create an instance of {@link AssertionStatusItem }
+     * 
+     */
+    public AssertionStatusItem createAssertionStatusItem() {
+<span class="nc" id="L504">        return new AssertionStatusItem();</span>
+    }
+
+    /**
+     * Create an instance of {@link BusinessServices }
+     * 
+     */
+    public BusinessServices createBusinessServices() {
+<span class="nc" id="L512">        return new BusinessServices();</span>
+    }
+
+    /**
+     * Create an instance of {@link RelatedBusinessInfo }
+     * 
+     */
+    public RelatedBusinessInfo createRelatedBusinessInfo() {
+<span class="nc" id="L520">        return new RelatedBusinessInfo();</span>
+    }
+
+    /**
+     * Create an instance of {@link ServiceList }
+     * 
+     */
+    public ServiceList createServiceList() {
+<span class="nc" id="L528">        return new ServiceList();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetBusinessDetail }
+     * 
+     */
+    public GetBusinessDetail createGetBusinessDetail() {
+<span class="nc" id="L536">        return new GetBusinessDetail();</span>
+    }
+
+    /**
+     * Create an instance of {@link TModelBag }
+     * 
+     */
+    public TModelBag createTModelBag() {
+<span class="nc" id="L544">        return new TModelBag();</span>
+    }
+
+    /**
+     * Create an instance of {@link SharedRelationships }
+     * 
+     */
+    public SharedRelationships createSharedRelationships() {
+<span class="nc" id="L552">        return new SharedRelationships();</span>
+    }
+
+    /**
+     * Create an instance of {@link KeyedReference }
+     * 
+     */
+    public KeyedReference createKeyedReference() {
+<span class="nc" id="L560">        return new KeyedReference();</span>
+    }
+
+    /**
+     * Create an instance of {@link FindRelatedBusinesses }
+     * 
+     */
+    public FindRelatedBusinesses createFindRelatedBusinesses() {
+<span class="nc" id="L568">        return new FindRelatedBusinesses();</span>
+    }
+
+    /**
+     * Create an instance of {@link TModel }
+     * 
+     */
+    public TModel createTModel() {
+<span class="nc" id="L576">        return new TModel();</span>
+    }
+
+    /**
+     * Create an instance of {@link BusinessDetail }
+     * 
+     */
+    public BusinessDetail createBusinessDetail() {
+<span class="nc" id="L584">        return new BusinessDetail();</span>
+    }
+
+    /**
+     * Create an instance of {@link PublisherAssertionsResponse }
+     * 
+     */
+    public PublisherAssertionsResponse createPublisherAssertionsResponse() {
+<span class="nc" id="L592">        return new PublisherAssertionsResponse();</span>
+    }
+
+    /**
+     * Create an instance of {@link PublisherAssertion }
+     * 
+     */
+    public PublisherAssertion createPublisherAssertion() {
+<span class="nc" id="L600">        return new PublisherAssertion();</span>
+    }
+
+    /**
+     * Create an instance of {@link BindingTemplates }
+     * 
+     */
+    public BindingTemplates createBindingTemplates() {
+<span class="nc" id="L608">        return new BindingTemplates();</span>
+    }
+
+    /**
+     * Create an instance of {@link TModelInstanceInfo }
+     * 
+     */
+    public TModelInstanceInfo createTModelInstanceInfo() {
+<span class="nc" id="L616">        return new TModelInstanceInfo();</span>
+    }
+
+    /**
+     * Create an instance of {@link BusinessInfo }
+     * 
+     */
+    public BusinessInfo createBusinessInfo() {
+<span class="nc" id="L624">        return new BusinessInfo();</span>
+    }
+
+    /**
+     * Create an instance of {@link Contacts }
+     * 
+     */
+    public Contacts createContacts() {
+<span class="nc" id="L632">        return new Contacts();</span>
+    }
+
+    /**
+     * Create an instance of {@link DiscoveryURL }
+     * 
+     */
+    public DiscoveryURL createDiscoveryURL() {
+<span class="nc" id="L640">        return new DiscoveryURL();</span>
+    }
+
+    /**
+     * Create an instance of {@link ErrInfo }
+     * 
+     */
+    public ErrInfo createErrInfo() {
+<span class="nc" id="L648">        return new ErrInfo();</span>
+    }
+
+    /**
+     * Create an instance of {@link Result }
+     * 
+     */
+    public Result createResult() {
+<span class="nc" id="L656">        return new Result();</span>
+    }
+
+    /**
+     * Create an instance of {@link Phone }
+     * 
+     */
+    public Phone createPhone() {
+<span class="nc" id="L664">        return new Phone();</span>
+    }
+
+    /**
+     * Create an instance of {@link ServiceDetail }
+     * 
+     */
+    public ServiceDetail createServiceDetail() {
+<span class="nc" id="L672">        return new ServiceDetail();</span>
+    }
+
+    /**
+     * Create an instance of {@link ServiceInfo }
+     * 
+     */
+    public ServiceInfo createServiceInfo() {
+<span class="nc" id="L680">        return new ServiceInfo();</span>
+    }
+
+    /**
+     * Create an instance of {@link TModelDetail }
+     * 
+     */
+    public TModelDetail createTModelDetail() {
+<span class="nc" id="L688">        return new TModelDetail();</span>
+    }
+
+    /**
+     * Create an instance of {@link BusinessEntity }
+     * 
+     */
+    public BusinessEntity createBusinessEntity() {
+<span class="nc" id="L696">        return new BusinessEntity();</span>
+    }
+
+    /**
+     * Create an instance of {@link Description }
+     * 
+     */
+    public Description createDescription() {
+<span class="nc" id="L704">        return new Description();</span>
+    }
+
+    /**
+     * Create an instance of {@link ServiceInfos }
+     * 
+     */
+    public ServiceInfos createServiceInfos() {
+<span class="nc" id="L712">        return new ServiceInfos();</span>
+    }
+
+    /**
+     * Create an instance of {@link PublisherAssertions }
+     * 
+     */
+    public PublisherAssertions createPublisherAssertions() {
+<span class="nc" id="L720">        return new PublisherAssertions();</span>
+    }
+
+    /**
+     * Create an instance of {@link BusinessInfos }
+     * 
+     */
+    public BusinessInfos createBusinessInfos() {
+<span class="nc" id="L728">        return new BusinessInfos();</span>
+    }
+
+    /**
+     * Create an instance of {@link Address }
+     * 
+     */
+    public Address createAddress() {
+<span class="nc" id="L736">        return new Address();</span>
+    }
+
+    /**
+     * Create an instance of {@link DeleteBinding }
+     * 
+     */
+    public DeleteBinding createDeleteBinding() {
+<span class="nc" id="L744">        return new DeleteBinding();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetTModelDetail }
+     * 
+     */
+    public GetTModelDetail createGetTModelDetail() {
+<span class="nc" id="L752">        return new GetTModelDetail();</span>
+    }
+
+    /**
+     * Create an instance of {@link ListDescription }
+     * 
+     */
+    public ListDescription createListDescription() {
+<span class="nc" id="L760">        return new ListDescription();</span>
+    }
+
+    /**
+     * Create an instance of {@link Contact }
+     * 
+     */
+    public Contact createContact() {
+<span class="nc" id="L768">        return new Contact();</span>
+    }
+
+    /**
+     * Create an instance of {@link FindBusiness }
+     * 
+     */
+    public FindBusiness createFindBusiness() {
+<span class="nc" id="L776">        return new FindBusiness();</span>
+    }
+
+    /**
+     * Create an instance of {@link FindQualifiers }
+     * 
+     */
+    public FindQualifiers createFindQualifiers() {
+<span class="nc" id="L784">        return new FindQualifiers();</span>
+    }
+
+    /**
+     * Create an instance of {@link BusinessList }
+     * 
+     */
+    public BusinessList createBusinessList() {
+<span class="nc" id="L792">        return new BusinessList();</span>
+    }
+
+    /**
+     * Create an instance of {@link RelatedBusinessInfos }
+     * 
+     */
+    public RelatedBusinessInfos createRelatedBusinessInfos() {
+<span class="nc" id="L800">        return new RelatedBusinessInfos();</span>
+    }
+
+    /**
+     * Create an instance of {@link OverviewURL }
+     * 
+     */
+    public OverviewURL createOverviewURL() {
+<span class="nc" id="L808">        return new OverviewURL();</span>
+    }
+
+    /**
+     * Create an instance of {@link CategoryBag }
+     * 
+     */
+    public CategoryBag createCategoryBag() {
+<span class="nc" id="L816">        return new CategoryBag();</span>
+    }
+
+    /**
+     * Create an instance of {@link OperationalInfos }
+     * 
+     */
+    public OperationalInfos createOperationalInfos() {
+<span class="nc" id="L824">        return new OperationalInfos();</span>
+    }
+
+    /**
+     * Create an instance of {@link AddPublisherAssertions }
+     * 
+     */
+    public AddPublisherAssertions createAddPublisherAssertions() {
+<span class="nc" id="L832">        return new AddPublisherAssertions();</span>
+    }
+
+    /**
+     * Create an instance of {@link SetPublisherAssertions }
+     * 
+     */
+    public SetPublisherAssertions createSetPublisherAssertions() {
+<span class="nc" id="L840">        return new SetPublisherAssertions();</span>
+    }
+
+    /**
+     * Create an instance of {@link DeletePublisherAssertions }
+     * 
+     */
+    public DeletePublisherAssertions createDeletePublisherAssertions() {
+<span class="nc" id="L848">        return new DeletePublisherAssertions();</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link DiscoveryURL }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;discoveryURL&quot;)
+    public JAXBElement&lt;DiscoveryURL&gt; createDiscoveryURL(DiscoveryURL value) {
+<span class="nc" id="L857">        return new JAXBElement&lt;DiscoveryURL&gt;(_DiscoveryURL_QNAME, DiscoveryURL.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link TModelInfos }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;tModelInfos&quot;)
+    public JAXBElement&lt;TModelInfos&gt; createTModelInfos(TModelInfos value) {
+<span class="nc" id="L866">        return new JAXBElement&lt;TModelInfos&gt;(_TModelInfos_QNAME, TModelInfos.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link AssertionStatusItem }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;assertionStatusItem&quot;)
+    public JAXBElement&lt;AssertionStatusItem&gt; createAssertionStatusItem(AssertionStatusItem value) {
+<span class="nc" id="L875">        return new JAXBElement&lt;AssertionStatusItem&gt;(_AssertionStatusItem_QNAME, AssertionStatusItem.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Integer }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;actualCount&quot;)
+    public JAXBElement&lt;Integer&gt; createActualCount(Integer value) {
+<span class="nc" id="L884">        return new JAXBElement&lt;Integer&gt;(_ActualCount_QNAME, Integer.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SaveBusiness }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;save_business&quot;)
+    public JAXBElement&lt;SaveBusiness&gt; createSaveBusiness(SaveBusiness value) {
+<span class="nc" id="L893">        return new JAXBElement&lt;SaveBusiness&gt;(_SaveBusiness_QNAME, SaveBusiness.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link TModel }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;tModel&quot;)
+    public JAXBElement&lt;TModel&gt; createTModel(TModel value) {
+<span class="nc" id="L902">        return new JAXBElement&lt;TModel&gt;(_TModel_QNAME, TModel.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link String }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;tModelKey&quot;)
+    public JAXBElement&lt;String&gt; createTModelKey(String value) {
+<span class="nc" id="L911">        return new JAXBElement&lt;String&gt;(_TModelKey_QNAME, String.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link String }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;toKey&quot;)
+    public JAXBElement&lt;String&gt; createToKey(String value) {
+<span class="nc" id="L920">        return new JAXBElement&lt;String&gt;(_ToKey_QNAME, String.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link ServiceList }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;serviceList&quot;)
+    public JAXBElement&lt;ServiceList&gt; createServiceList(ServiceList value) {
+<span class="nc" id="L929">        return new JAXBElement&lt;ServiceList&gt;(_ServiceList_QNAME, ServiceList.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link PublisherAssertion }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;publisherAssertion&quot;)
+    public JAXBElement&lt;PublisherAssertion&gt; createPublisherAssertion(PublisherAssertion value) {
+<span class="nc" id="L938">        return new JAXBElement&lt;PublisherAssertion&gt;(_PublisherAssertion_QNAME, PublisherAssertion.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link String }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;authorizedName&quot;)
+    public JAXBElement&lt;String&gt; createAuthorizedName(String value) {
+<span class="nc" id="L947">        return new JAXBElement&lt;String&gt;(_AuthorizedName_QNAME, String.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link InfoSelection }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;infoSelection&quot;)
+    public JAXBElement&lt;InfoSelection&gt; createInfoSelection(InfoSelection value) {
+<span class="nc" id="L956">        return new JAXBElement&lt;InfoSelection&gt;(_InfoSelection_QNAME, InfoSelection.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link TModelList }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;tModelList&quot;)
+    public JAXBElement&lt;TModelList&gt; createTModelList(TModelList value) {
+<span class="nc" id="L965">        return new JAXBElement&lt;TModelList&gt;(_TModelList_QNAME, TModelList.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link ErrInfo }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;errInfo&quot;)
+    public JAXBElement&lt;ErrInfo&gt; createErrInfo(ErrInfo value) {
+<span class="nc" id="L974">        return new JAXBElement&lt;ErrInfo&gt;(_ErrInfo_QNAME, ErrInfo.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link CategoryBag }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;categoryBag&quot;)
+    public JAXBElement&lt;CategoryBag&gt; createCategoryBag(CategoryBag value) {
+<span class="nc" id="L983">        return new JAXBElement&lt;CategoryBag&gt;(_CategoryBag_QNAME, CategoryBag.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetAssertionStatusReport }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;get_assertionStatusReport&quot;)
+    public JAXBElement&lt;GetAssertionStatusReport&gt; createGetAssertionStatusReport(GetAssertionStatusReport value) {
+<span class="nc" id="L992">        return new JAXBElement&lt;GetAssertionStatusReport&gt;(_GetAssertionStatusReport_QNAME, GetAssertionStatusReport.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetServiceDetail }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;get_serviceDetail&quot;)
+    public JAXBElement&lt;GetServiceDetail&gt; createGetServiceDetail(GetServiceDetail value) {
+<span class="nc" id="L1001">        return new JAXBElement&lt;GetServiceDetail&gt;(_GetServiceDetail_QNAME, GetServiceDetail.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetBindingDetail }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;get_bindingDetail&quot;)
+    public JAXBElement&lt;GetBindingDetail&gt; createGetBindingDetail(GetBindingDetail value) {
+<span class="nc" id="L1010">        return new JAXBElement&lt;GetBindingDetail&gt;(_GetBindingDetail_QNAME, GetBindingDetail.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link String }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;instanceParms&quot;)
+    public JAXBElement&lt;String&gt; createInstanceParms(String value) {
+<span class="nc" id="L1019">        return new JAXBElement&lt;String&gt;(_InstanceParms_QNAME, String.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link KeyedReferenceGroup }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;keyedReferenceGroup&quot;)
+    public JAXBElement&lt;KeyedReferenceGroup&gt; createKeyedReferenceGroup(KeyedReferenceGroup value) {
+<span class="nc" id="L1028">        return new JAXBElement&lt;KeyedReferenceGroup&gt;(_KeyedReferenceGroup_QNAME, KeyedReferenceGroup.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link DeletePublisherAssertions }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;delete_publisherAssertions&quot;)
+    public JAXBElement&lt;DeletePublisherAssertions&gt; createDeletePublisherAssertions(DeletePublisherAssertions value) {
+<span class="nc" id="L1037">        return new JAXBElement&lt;DeletePublisherAssertions&gt;(_DeletePublisherAssertions_QNAME, DeletePublisherAssertions.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link RelatedBusinessesList }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;relatedBusinessesList&quot;)
+    public JAXBElement&lt;RelatedBusinessesList&gt; createRelatedBusinessesList(RelatedBusinessesList value) {
+<span class="nc" id="L1046">        return new JAXBElement&lt;RelatedBusinessesList&gt;(_RelatedBusinessesList_QNAME, RelatedBusinessesList.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link ServiceInfos }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;serviceInfos&quot;)
+    public JAXBElement&lt;ServiceInfos&gt; createServiceInfos(ServiceInfos value) {
+<span class="nc" id="L1055">        return new JAXBElement&lt;ServiceInfos&gt;(_ServiceInfos_QNAME, ServiceInfos.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link BusinessEntity }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;businessEntity&quot;)
+    public JAXBElement&lt;BusinessEntity&gt; createBusinessEntity(BusinessEntity value) {
+<span class="nc" id="L1064">        return new JAXBElement&lt;BusinessEntity&gt;(_BusinessEntity_QNAME, BusinessEntity.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link PublisherAssertions }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;publisherAssertions&quot;)
+    public JAXBElement&lt;PublisherAssertions&gt; createPublisherAssertions(PublisherAssertions value) {
+<span class="nc" id="L1073">        return new JAXBElement&lt;PublisherAssertions&gt;(_PublisherAssertions_QNAME, PublisherAssertions.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetOperationalInfo }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;get_operationalInfo&quot;)
+    public JAXBElement&lt;GetOperationalInfo&gt; createGetOperationalInfo(GetOperationalInfo value) {
+<span class="nc" id="L1082">        return new JAXBElement&lt;GetOperationalInfo&gt;(_GetOperationalInfo_QNAME, GetOperationalInfo.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SaveService }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;save_service&quot;)
+    public JAXBElement&lt;SaveService&gt; createSaveService(SaveService value) {
+<span class="nc" id="L1091">        return new JAXBElement&lt;SaveService&gt;(_SaveService_QNAME, SaveService.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link TModelInstanceInfo }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;tModelInstanceInfo&quot;)
+    public JAXBElement&lt;TModelInstanceInfo&gt; createTModelInstanceInfo(TModelInstanceInfo value) {
+<span class="nc" id="L1100">        return new JAXBElement&lt;TModelInstanceInfo&gt;(_TModelInstanceInfo_QNAME, TModelInstanceInfo.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SaveTModel }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;save_tModel&quot;)
+    public JAXBElement&lt;SaveTModel&gt; createSaveTModel(SaveTModel value) {
+<span class="nc" id="L1109">        return new JAXBElement&lt;SaveTModel&gt;(_SaveTModel_QNAME, SaveTModel.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link BusinessInfos }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;businessInfos&quot;)
+    public JAXBElement&lt;BusinessInfos&gt; createBusinessInfos(BusinessInfos value) {
+<span class="nc" id="L1118">        return new JAXBElement&lt;BusinessInfos&gt;(_BusinessInfos_QNAME, BusinessInfos.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link DiscoveryURLs }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;discoveryURLs&quot;)
+    public JAXBElement&lt;DiscoveryURLs&gt; createDiscoveryURLs(DiscoveryURLs value) {
+<span class="nc" id="L1127">        return new JAXBElement&lt;DiscoveryURLs&gt;(_DiscoveryURLs_QNAME, DiscoveryURLs.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link OperationalInfo }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;operationalInfo&quot;)
+    public JAXBElement&lt;OperationalInfo&gt; createOperationalInfo(OperationalInfo value) {
+<span class="nc" id="L1136">        return new JAXBElement&lt;OperationalInfo&gt;(_OperationalInfo_QNAME, OperationalInfo.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link String }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;authInfo&quot;)
+    public JAXBElement&lt;String&gt; createAuthInfo(String value) {
+<span class="nc" id="L1145">        return new JAXBElement&lt;String&gt;(_AuthInfo_QNAME, String.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link TModelBag }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;tModelBag&quot;)
+    public JAXBElement&lt;TModelBag&gt; createTModelBag(TModelBag value) {
+<span class="nc" id="L1154">        return new JAXBElement&lt;TModelBag&gt;(_TModelBag_QNAME, TModelBag.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link FindBusiness }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;find_business&quot;)
+    public JAXBElement&lt;FindBusiness&gt; createFindBusiness(FindBusiness value) {
+<span class="nc" id="L1163">        return new JAXBElement&lt;FindBusiness&gt;(_FindBusiness_QNAME, FindBusiness.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link String }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;bindingKey&quot;)
+    public JAXBElement&lt;String&gt; createBindingKey(String value) {
+<span class="nc" id="L1172">        return new JAXBElement&lt;String&gt;(_BindingKey_QNAME, String.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Contact }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;contact&quot;)
+    public JAXBElement&lt;Contact&gt; createContact(Contact value) {
+<span class="nc" id="L1181">        return new JAXBElement&lt;Contact&gt;(_Contact_QNAME, Contact.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SaveBinding }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;save_binding&quot;)
+    public JAXBElement&lt;SaveBinding&gt; createSaveBinding(SaveBinding value) {
+<span class="nc" id="L1190">        return new JAXBElement&lt;SaveBinding&gt;(_SaveBinding_QNAME, SaveBinding.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetPublisherAssertions }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;get_publisherAssertions&quot;)
+    public JAXBElement&lt;GetPublisherAssertions&gt; createGetPublisherAssertions(GetPublisherAssertions value) {
+<span class="nc" id="L1199">        return new JAXBElement&lt;GetPublisherAssertions&gt;(_GetPublisherAssertions_QNAME, GetPublisherAssertions.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link PublisherAssertionsResponse }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;publisherAssertionsResponse&quot;)
+    public JAXBElement&lt;PublisherAssertionsResponse&gt; createPublisherAssertionsResponse(PublisherAssertionsResponse value) {
+<span class="nc" id="L1208">        return new JAXBElement&lt;PublisherAssertionsResponse&gt;(_PublisherAssertionsResponse_QNAME, PublisherAssertionsResponse.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link TModelDetail }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;tModelDetail&quot;)
+    public JAXBElement&lt;TModelDetail&gt; createTModelDetail(TModelDetail value) {
+<span class="nc" id="L1217">        return new JAXBElement&lt;TModelDetail&gt;(_TModelDetail_QNAME, TModelDetail.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link BusinessService }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;businessService&quot;)
+    public JAXBElement&lt;BusinessService&gt; createBusinessService(BusinessService value) {
+<span class="nc" id="L1226">        return new JAXBElement&lt;BusinessService&gt;(_BusinessService_QNAME, BusinessService.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link AddressLine }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;addressLine&quot;)
+    public JAXBElement&lt;AddressLine&gt; createAddressLine(AddressLine value) {
+<span class="nc" id="L1235">        return new JAXBElement&lt;AddressLine&gt;(_AddressLine_QNAME, AddressLine.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link RelatedBusinessInfos }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;relatedBusinessInfos&quot;)
+    public JAXBElement&lt;RelatedBusinessInfos&gt; createRelatedBusinessInfos(RelatedBusinessInfos value) {
+<span class="nc" id="L1244">        return new JAXBElement&lt;RelatedBusinessInfos&gt;(_RelatedBusinessInfos_QNAME, RelatedBusinessInfos.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link BusinessServices }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;businessServices&quot;)
+    public JAXBElement&lt;BusinessServices&gt; createBusinessServices(BusinessServices value) {
+<span class="nc" id="L1253">        return new JAXBElement&lt;BusinessServices&gt;(_BusinessServices_QNAME, BusinessServices.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link TModelInfo }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;tModelInfo&quot;)
+    public JAXBElement&lt;TModelInfo&gt; createTModelInfo(TModelInfo value) {
+<span class="nc" id="L1262">        return new JAXBElement&lt;TModelInfo&gt;(_TModelInfo_QNAME, TModelInfo.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link BusinessList }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;businessList&quot;)
+    public JAXBElement&lt;BusinessList&gt; createBusinessList(BusinessList value) {
+<span class="nc" id="L1271">        return new JAXBElement&lt;BusinessList&gt;(_BusinessList_QNAME, BusinessList.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link DeleteBinding }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;delete_binding&quot;)
+    public JAXBElement&lt;DeleteBinding&gt; createDeleteBinding(DeleteBinding value) {
+<span class="nc" id="L1280">        return new JAXBElement&lt;DeleteBinding&gt;(_DeleteBinding_QNAME, DeleteBinding.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link FindService }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;find_service&quot;)
+    public JAXBElement&lt;FindService&gt; createFindService(FindService value) {
+<span class="nc" id="L1289">        return new JAXBElement&lt;FindService&gt;(_FindService_QNAME, FindService.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetTModelDetail }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;get_tModelDetail&quot;)
+    public JAXBElement&lt;GetTModelDetail&gt; createGetTModelDetail(GetTModelDetail value) {
+<span class="nc" id="L1298">        return new JAXBElement&lt;GetTModelDetail&gt;(_GetTModelDetail_QNAME, GetTModelDetail.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link BusinessDetail }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;businessDetail&quot;)
+    public JAXBElement&lt;BusinessDetail&gt; createBusinessDetail(BusinessDetail value) {
+<span class="nc" id="L1307">        return new JAXBElement&lt;BusinessDetail&gt;(_BusinessDetail_QNAME, BusinessDetail.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Email }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;email&quot;)
+    public JAXBElement&lt;Email&gt; createEmail(Email value) {
+<span class="nc" id="L1316">        return new JAXBElement&lt;Email&gt;(_Email_QNAME, Email.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetBusinessDetail }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;get_businessDetail&quot;)
+    public JAXBElement&lt;GetBusinessDetail&gt; createGetBusinessDetail(GetBusinessDetail value) {
+<span class="nc" id="L1325">        return new JAXBElement&lt;GetBusinessDetail&gt;(_GetBusinessDetail_QNAME, GetBusinessDetail.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link RegisteredInfo }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;registeredInfo&quot;)
+    public JAXBElement&lt;RegisteredInfo&gt; createRegisteredInfo(RegisteredInfo value) {
+<span class="nc" id="L1334">        return new JAXBElement&lt;RegisteredInfo&gt;(_RegisteredInfo_QNAME, RegisteredInfo.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link InstanceDetails }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;instanceDetails&quot;)
+    public JAXBElement&lt;InstanceDetails&gt; createInstanceDetails(InstanceDetails value) {
+<span class="nc" id="L1343">        return new JAXBElement&lt;InstanceDetails&gt;(_InstanceDetails_QNAME, InstanceDetails.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link String }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;nodeID&quot;)
+    public JAXBElement&lt;String&gt; createNodeID(String value) {
+<span class="nc" id="L1352">        return new JAXBElement&lt;String&gt;(_NodeID_QNAME, String.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link CompletionStatus }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;completionStatus&quot;)
+    public JAXBElement&lt;CompletionStatus&gt; createCompletionStatus(CompletionStatus value) {
+<span class="nc" id="L1361">        return new JAXBElement&lt;CompletionStatus&gt;(_CompletionStatus_QNAME, CompletionStatus.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SharedRelationships }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;sharedRelationships&quot;)
+    public JAXBElement&lt;SharedRelationships&gt; createSharedRelationships(SharedRelationships value) {
+<span class="nc" id="L1370">        return new JAXBElement&lt;SharedRelationships&gt;(_SharedRelationships_QNAME, SharedRelationships.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link OperationalInfos }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;operationalInfos&quot;)
+    public JAXBElement&lt;OperationalInfos&gt; createOperationalInfos(OperationalInfos value) {
+<span class="nc" id="L1379">        return new JAXBElement&lt;OperationalInfos&gt;(_OperationalInfos_QNAME, OperationalInfos.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link FindTModel }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;find_tModel&quot;)
+    public JAXBElement&lt;FindTModel&gt; createFindTModel(FindTModel value) {
+<span class="nc" id="L1388">        return new JAXBElement&lt;FindTModel&gt;(_FindTModel_QNAME, FindTModel.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link String }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;businessKey&quot;)
+    public JAXBElement&lt;String&gt; createBusinessKey(String value) {
+<span class="nc" id="L1397">        return new JAXBElement&lt;String&gt;(_BusinessKey_QNAME, String.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Phone }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;phone&quot;)
+    public JAXBElement&lt;Phone&gt; createPhone(Phone value) {
+<span class="nc" id="L1406">        return new JAXBElement&lt;Phone&gt;(_Phone_QNAME, Phone.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link PersonName }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;personName&quot;)
+    public JAXBElement&lt;PersonName&gt; createPersonName(PersonName value) {
+<span class="nc" id="L1415">        return new JAXBElement&lt;PersonName&gt;(_PersonName_QNAME, PersonName.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SetPublisherAssertions }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;set_publisherAssertions&quot;)
+    public JAXBElement&lt;SetPublisherAssertions&gt; createSetPublisherAssertions(SetPublisherAssertions value) {
+<span class="nc" id="L1424">        return new JAXBElement&lt;SetPublisherAssertions&gt;(_SetPublisherAssertions_QNAME, SetPublisherAssertions.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Contacts }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;contacts&quot;)
+    public JAXBElement&lt;Contacts&gt; createContacts(Contacts value) {
+<span class="nc" id="L1433">        return new JAXBElement&lt;Contacts&gt;(_Contacts_QNAME, Contacts.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link BindingTemplate }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;bindingTemplate&quot;)
+    public JAXBElement&lt;BindingTemplate&gt; createBindingTemplate(BindingTemplate value) {
+<span class="nc" id="L1442">        return new JAXBElement&lt;BindingTemplate&gt;(_BindingTemplate_QNAME, BindingTemplate.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link DiscardAuthToken }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;discard_authToken&quot;)
+    public JAXBElement&lt;DiscardAuthToken&gt; createDiscardAuthToken(DiscardAuthToken value) {
+<span class="nc" id="L1451">        return new JAXBElement&lt;DiscardAuthToken&gt;(_DiscardAuthToken_QNAME, DiscardAuthToken.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link DispositionReport }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;dispositionReport&quot;)
+    public JAXBElement&lt;DispositionReport&gt; createDispositionReport(DispositionReport value) {
+<span class="nc" id="L1460">        return new JAXBElement&lt;DispositionReport&gt;(_DispositionReport_QNAME, DispositionReport.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link OverviewDoc }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;overviewDoc&quot;)
+    public JAXBElement&lt;OverviewDoc&gt; createOverviewDoc(OverviewDoc value) {
+<span class="nc" id="L1469">        return new JAXBElement&lt;OverviewDoc&gt;(_OverviewDoc_QNAME, OverviewDoc.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Description }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;description&quot;)
+    public JAXBElement&lt;Description&gt; createDescription(Description value) {
+<span class="nc" id="L1478">        return new JAXBElement&lt;Description&gt;(_Description_QNAME, Description.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link KeysOwned }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;keysOwned&quot;)
+    public JAXBElement&lt;KeysOwned&gt; createKeysOwned(KeysOwned value) {
+<span class="nc" id="L1487">        return new JAXBElement&lt;KeysOwned&gt;(_KeysOwned_QNAME, KeysOwned.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link KeyedReference }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;keyedReference&quot;)
+    public JAXBElement&lt;KeyedReference&gt; createKeyedReference(KeyedReference value) {
+<span class="nc" id="L1496">        return new JAXBElement&lt;KeyedReference&gt;(_KeyedReference_QNAME, KeyedReference.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link RelatedBusinessInfo }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;relatedBusinessInfo&quot;)
+    public JAXBElement&lt;RelatedBusinessInfo&gt; createRelatedBusinessInfo(RelatedBusinessInfo value) {
+<span class="nc" id="L1505">        return new JAXBElement&lt;RelatedBusinessInfo&gt;(_RelatedBusinessInfo_QNAME, RelatedBusinessInfo.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link BindingDetail }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;bindingDetail&quot;)
+    public JAXBElement&lt;BindingDetail&gt; createBindingDetail(BindingDetail value) {
+<span class="nc" id="L1514">        return new JAXBElement&lt;BindingDetail&gt;(_BindingDetail_QNAME, BindingDetail.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link DeleteBusiness }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;delete_business&quot;)
+    public JAXBElement&lt;DeleteBusiness&gt; createDeleteBusiness(DeleteBusiness value) {
+<span class="nc" id="L1523">        return new JAXBElement&lt;DeleteBusiness&gt;(_DeleteBusiness_QNAME, DeleteBusiness.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Integer }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;includeCount&quot;)
+    public JAXBElement&lt;Integer&gt; createIncludeCount(Integer value) {
+<span class="nc" id="L1532">        return new JAXBElement&lt;Integer&gt;(_IncludeCount_QNAME, Integer.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link AddPublisherAssertions }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;add_publisherAssertions&quot;)
+    public JAXBElement&lt;AddPublisherAssertions&gt; createAddPublisherAssertions(AddPublisherAssertions value) {
+<span class="nc" id="L1541">        return new JAXBElement&lt;AddPublisherAssertions&gt;(_AddPublisherAssertions_QNAME, AddPublisherAssertions.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetAuthToken }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;get_authToken&quot;)
+    public JAXBElement&lt;GetAuthToken&gt; createGetAuthToken(GetAuthToken value) {
+<span class="nc" id="L1550">        return new JAXBElement&lt;GetAuthToken&gt;(_GetAuthToken_QNAME, GetAuthToken.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link ServiceInfo }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;serviceInfo&quot;)
+    public JAXBElement&lt;ServiceInfo&gt; createServiceInfo(ServiceInfo value) {
+<span class="nc" id="L1559">        return new JAXBElement&lt;ServiceInfo&gt;(_ServiceInfo_QNAME, ServiceInfo.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link AuthToken }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;authToken&quot;)
+    public JAXBElement&lt;AuthToken&gt; createAuthToken(AuthToken value) {
+<span class="nc" id="L1568">        return new JAXBElement&lt;AuthToken&gt;(_AuthToken_QNAME, AuthToken.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link HostingRedirector }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;hostingRedirector&quot;)
+    public JAXBElement&lt;HostingRedirector&gt; createHostingRedirector(HostingRedirector value) {
+<span class="nc" id="L1577">        return new JAXBElement&lt;HostingRedirector&gt;(_HostingRedirector_QNAME, HostingRedirector.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link DeleteService }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;delete_service&quot;)
+    public JAXBElement&lt;DeleteService&gt; createDeleteService(DeleteService value) {
+<span class="nc" id="L1586">        return new JAXBElement&lt;DeleteService&gt;(_DeleteService_QNAME, DeleteService.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Address }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;address&quot;)
+    public JAXBElement&lt;Address&gt; createAddress(Address value) {
+<span class="nc" id="L1595">        return new JAXBElement&lt;Address&gt;(_Address_QNAME, Address.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link BindingTemplates }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;bindingTemplates&quot;)
+    public JAXBElement&lt;BindingTemplates&gt; createBindingTemplates(BindingTemplates value) {
+<span class="nc" id="L1604">        return new JAXBElement&lt;BindingTemplates&gt;(_BindingTemplates_QNAME, BindingTemplates.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link AssertionStatusReport }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;assertionStatusReport&quot;)
+    public JAXBElement&lt;AssertionStatusReport&gt; createAssertionStatusReport(AssertionStatusReport value) {
+<span class="nc" id="L1613">        return new JAXBElement&lt;AssertionStatusReport&gt;(_AssertionStatusReport_QNAME, AssertionStatusReport.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link FindQualifiers }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;findQualifiers&quot;)
+    public JAXBElement&lt;FindQualifiers&gt; createFindQualifiers(FindQualifiers value) {
+<span class="nc" id="L1622">        return new JAXBElement&lt;FindQualifiers&gt;(_FindQualifiers_QNAME, FindQualifiers.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link FindRelatedBusinesses }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;find_relatedBusinesses&quot;)
+    public JAXBElement&lt;FindRelatedBusinesses&gt; createFindRelatedBusinesses(FindRelatedBusinesses value) {
+<span class="nc" id="L1631">        return new JAXBElement&lt;FindRelatedBusinesses&gt;(_FindRelatedBusinesses_QNAME, FindRelatedBusinesses.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link String }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;fromKey&quot;)
+    public JAXBElement&lt;String&gt; createFromKey(String value) {
+<span class="nc" id="L1640">        return new JAXBElement&lt;String&gt;(_FromKey_QNAME, String.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link OverviewURL }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;overviewURL&quot;)
+    public JAXBElement&lt;OverviewURL&gt; createOverviewURL(OverviewURL value) {
+<span class="nc" id="L1649">        return new JAXBElement&lt;OverviewURL&gt;(_OverviewURL_QNAME, OverviewURL.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link AccessPoint }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;accessPoint&quot;)
+    public JAXBElement&lt;AccessPoint&gt; createAccessPoint(AccessPoint value) {
+<span class="nc" id="L1658">        return new JAXBElement&lt;AccessPoint&gt;(_AccessPoint_QNAME, AccessPoint.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Integer }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;listHead&quot;)
+    public JAXBElement&lt;Integer&gt; createListHead(Integer value) {
+<span class="nc" id="L1667">        return new JAXBElement&lt;Integer&gt;(_ListHead_QNAME, Integer.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link String }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;findQualifier&quot;)
+    public JAXBElement&lt;String&gt; createFindQualifier(String value) {
+<span class="nc" id="L1676">        return new JAXBElement&lt;String&gt;(_FindQualifier_QNAME, String.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link BusinessInfo }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;businessInfo&quot;)
+    public JAXBElement&lt;BusinessInfo&gt; createBusinessInfo(BusinessInfo value) {
+<span class="nc" id="L1685">        return new JAXBElement&lt;BusinessInfo&gt;(_BusinessInfo_QNAME, BusinessInfo.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link String }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;serviceKey&quot;)
+    public JAXBElement&lt;String&gt; createServiceKey(String value) {
+<span class="nc" id="L1694">        return new JAXBElement&lt;String&gt;(_ServiceKey_QNAME, String.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Result }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;result&quot;)
+    public JAXBElement&lt;Result&gt; createResult(Result value) {
+<span class="nc" id="L1703">        return new JAXBElement&lt;Result&gt;(_Result_QNAME, Result.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link ServiceDetail }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;serviceDetail&quot;)
+    public JAXBElement&lt;ServiceDetail&gt; createServiceDetail(ServiceDetail value) {
+<span class="nc" id="L1712">        return new JAXBElement&lt;ServiceDetail&gt;(_ServiceDetail_QNAME, ServiceDetail.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link DeleteTModel }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;delete_tModel&quot;)
+    public JAXBElement&lt;DeleteTModel&gt; createDeleteTModel(DeleteTModel value) {
+<span class="nc" id="L1721">        return new JAXBElement&lt;DeleteTModel&gt;(_DeleteTModel_QNAME, DeleteTModel.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link FindBinding }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;find_binding&quot;)
+    public JAXBElement&lt;FindBinding&gt; createFindBinding(FindBinding value) {
+<span class="nc" id="L1730">        return new JAXBElement&lt;FindBinding&gt;(_FindBinding_QNAME, FindBinding.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link IdentifierBag }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;identifierBag&quot;)
+    public JAXBElement&lt;IdentifierBag&gt; createIdentifierBag(IdentifierBag value) {
+<span class="nc" id="L1739">        return new JAXBElement&lt;IdentifierBag&gt;(_IdentifierBag_QNAME, IdentifierBag.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Name }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;name&quot;)
+    public JAXBElement&lt;Name&gt; createName(Name value) {
+<span class="nc" id="L1748">        return new JAXBElement&lt;Name&gt;(_Name_QNAME, Name.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link ListDescription }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;listDescription&quot;)
+    public JAXBElement&lt;ListDescription&gt; createListDescription(ListDescription value) {
+<span class="nc" id="L1757">        return new JAXBElement&lt;ListDescription&gt;(_ListDescription_QNAME, ListDescription.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetRegisteredInfo }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;get_registeredInfo&quot;)
+    public JAXBElement&lt;GetRegisteredInfo&gt; createGetRegisteredInfo(GetRegisteredInfo value) {
+<span class="nc" id="L1766">        return new JAXBElement&lt;GetRegisteredInfo&gt;(_GetRegisteredInfo_QNAME, GetRegisteredInfo.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link TModelInstanceDetails }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:api_v3&quot;, name = &quot;tModelInstanceDetails&quot;)
+    public JAXBElement&lt;TModelInstanceDetails&gt; createTModelInstanceDetails(TModelInstanceDetails value) {
+<span class="nc" id="L1775">        return new JAXBElement&lt;TModelInstanceDetails&gt;(_TModelInstanceDetails_QNAME, TModelInstanceDetails.class, null, value);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

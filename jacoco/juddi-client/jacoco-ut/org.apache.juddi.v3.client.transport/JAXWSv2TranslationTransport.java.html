@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JAXWSv2TranslationTransport.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.transport</a> &gt; <span class="el_source">JAXWSv2TranslationTransport.java</span></div><h1>JAXWSv2TranslationTransport.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.v3.client.transport;
+
+import java.util.Map;
+import java.util.Properties;
+
+import javax.xml.ws.BindingProvider;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.v3.client.config.Property;
+import org.apache.juddi.v3.client.config.UDDIClient;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
+import org.apache.juddi.v3.client.cryptor.CryptorFactory;
+import org.apache.juddi.v3.client.transport.wrapper.Inquiry3to2;
+import org.apache.juddi.v3.client.transport.wrapper.Publish3to2;
+import org.apache.juddi.v3.client.transport.wrapper.Security3to2;
+import org.uddi.v2_service.Inquire;
+import org.uddi.v2_service.Publish;
+import org.uddi.v3_service.UDDIInquiryPortType;
+import org.uddi.v3_service.UDDIPublicationPortType;
+import org.uddi.v3_service.UDDISecurityPortType;
+
+/**
+ * JAXWS Transport for UDDIv2 bindings. Use this class for accessing UDDIv2
+ * server using the UDDIv3 APIs
+ *
+ * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ * @since 3.2
+ */
+public class JAXWSv2TranslationTransport extends JAXWSTransport {
+
+<span class="fc" id="L49">        private static Log logger = LogFactory.getLog(JAXWSv2TranslationTransport.class);</span>
+
+<span class="pc" id="L51">        Inquiry3to2 inquiryv2 = null;</span>
+<span class="pc" id="L52">        Security3to2 securityv2 = null;</span>
+<span class="pc" id="L53">        Publish3to2 publishv2 = null;</span>
+
+        public JAXWSv2TranslationTransport() {
+<span class="nc" id="L56">                super();</span>
+<span class="nc" id="L57">                this.nodeName = Transport.DEFAULT_NODE_NAME;</span>
+<span class="nc" id="L58">        }</span>
+
+        public JAXWSv2TranslationTransport(String nodeName) {
+<span class="nc" id="L61">                super();</span>
+<span class="nc" id="L62">                this.nodeName = nodeName;</span>
+<span class="nc" id="L63">        }</span>
+
+        public JAXWSv2TranslationTransport(String clientName, String nodeName) {
+<span class="fc" id="L66">                super();</span>
+<span class="fc" id="L67">                this.clientName = clientName;</span>
+<span class="fc" id="L68">                this.nodeName = nodeName;</span>
+<span class="fc" id="L69">        }</span>
+
+        public String getNodeName() {
+<span class="nc" id="L72">                return nodeName;</span>
+        }
+
+        public void setNodeName(String nodeName) {
+<span class="nc" id="L76">                this.nodeName = nodeName;</span>
+<span class="nc" id="L77">        }</span>
+
+        /**
+         * Sets the credentials on the RequestContext if the services are
+         * protected by Basic Authentication. The username and password are
+         * obtained from the uddi.xml.
+         *
+         * @param requestContext
+         * @throws ConfigurationException
+         */
+        private void setCredentials(Map&lt;String, Object&gt; requestContext) throws ConfigurationException {
+<span class="fc" id="L88">                UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);</span>
+<span class="fc" id="L89">                Properties properties = client.getClientConfig().getUDDINode(nodeName).getProperties();</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">                if (properties != null) {</span>
+<span class="fc" id="L91">                        String username = null;</span>
+<span class="fc" id="L92">                        String password = null;</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">                        if (properties.containsKey(Property.BASIC_AUTH_USERNAME)) {</span>
+<span class="nc" id="L94">                                username = properties.getProperty(Property.BASIC_AUTH_USERNAME);</span>
+                        }
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">                        if (properties.containsKey(Property.BASIC_AUTH_PASSWORD)) {</span>
+<span class="nc" id="L97">                                password = properties.getProperty(Property.BASIC_AUTH_PASSWORD);</span>
+                        }
+<span class="fc" id="L99">                        String cipher = null;</span>
+<span class="fc" id="L100">                        boolean isEncrypted = false;</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">                        if (properties.containsKey(Property.BASIC_AUTH_PASSWORD_CP)) {</span>
+<span class="nc" id="L102">                                cipher = properties.getProperty(Property.BASIC_AUTH_PASSWORD_CP);</span>
+                        }
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">                        if (properties.containsKey(Property.BASIC_AUTH_PASSWORD_IS_ENC)) {</span>
+<span class="nc" id="L105">                                isEncrypted = Boolean.parseBoolean(properties.getProperty(Property.BASIC_AUTH_PASSWORD_IS_ENC));</span>
+                        }
+<span class="pc bpc" id="L107" title="3 of 4 branches missed.">                        if (username != null &amp;&amp; password != null) {</span>
+<span class="nc" id="L108">                                requestContext.put(BindingProvider.USERNAME_PROPERTY, username);</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">                                if (isEncrypted) {</span>
+                                        try {
+<span class="nc" id="L111">                                                requestContext.put(BindingProvider.PASSWORD_PROPERTY, CryptorFactory.getCryptor(cipher).decrypt(password));</span>
+<span class="nc" id="L112">                                        } catch (Exception ex) {</span>
+<span class="nc" id="L113">                                                logger.error(&quot;Unable to decrypt password!&quot;, ex);</span>
+<span class="nc" id="L114">                                        }</span>
+                                } else {
+<span class="nc" id="L116">                                        requestContext.put(BindingProvider.PASSWORD_PROPERTY, password);</span>
+                                }
+                        }
+                }
+<span class="fc" id="L120">        }</span>
+
+        @Override
+        public UDDIInquiryPortType getUDDIInquiryService(String endpointURL) throws TransportException {
+                try {
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">                        if (inquiryv2 == null) {</span>
+<span class="fc" id="L126">                                inquiryv2 = new Inquiry3to2();</span>
+
+                        }
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">                        if (endpointURL == null) {</span>
+<span class="fc" id="L130">                                UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);</span>
+<span class="fc" id="L131">                                endpointURL = client.getClientConfig().getUDDINode(nodeName).getInquiryUrl();</span>
+                        }
+<span class="fc" id="L133">                        Map&lt;String, Object&gt; requestContext = ((BindingProvider) inquiryv2).getRequestContext();</span>
+<span class="fc" id="L134">                        requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);</span>
+<span class="fc" id="L135">                        setCredentials(requestContext);</span>
+<span class="nc" id="L136">                } catch (Exception e) {</span>
+<span class="nc" id="L137">                        throw new TransportException(e.getMessage(), e);</span>
+<span class="fc" id="L138">                }</span>
+<span class="fc" id="L139">                return inquiryv2;</span>
+
+        }
+
+        @Override
+        public UDDISecurityPortType getUDDISecurityService(String endpointURL) throws TransportException {
+                try {
+<span class="nc bnc" id="L146" title="All 2 branches missed.">                        if (securityv2 == null) {</span>
+<span class="nc" id="L147">                                securityv2 = new Security3to2();</span>
+
+                        }
+
+<span class="nc bnc" id="L151" title="All 2 branches missed.">                        if (endpointURL == null) {</span>
+                                
+<span class="nc" id="L153">                                UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);</span>
+<span class="nc" id="L154">                                endpointURL = client.getClientConfig().getUDDINode(nodeName).getPublishUrl();</span>
+                        }
+<span class="nc bnc" id="L156" title="All 2 branches missed.">                         if (endpointURL.toLowerCase().startsWith(&quot;http:&quot;)){</span>
+<span class="nc" id="L157">                                        logger.warn(&quot;You should consider using a secure protocol (https) when sending your password!&quot;);</span>
+                                }
+<span class="nc" id="L159">                        Map&lt;String, Object&gt; requestContext = ((BindingProvider) securityv2).getRequestContext();</span>
+<span class="nc" id="L160">                        requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);</span>
+<span class="nc" id="L161">                        setCredentials(requestContext);</span>
+<span class="nc" id="L162">                } catch (Exception e) {</span>
+<span class="nc" id="L163">                        throw new TransportException(e.getMessage(), e);</span>
+<span class="nc" id="L164">                }</span>
+<span class="nc" id="L165">                return securityv2;</span>
+
+        }
+
+        @Override
+        public UDDIPublicationPortType getUDDIPublishService(String endpointURL) throws TransportException {
+                try {
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">                        if (publishv2 == null) {</span>
+<span class="fc" id="L173">                                publishv2 = new Publish3to2();</span>
+
+                        }
+<span class="pc bpc" id="L176" title="1 of 2 branches missed.">                        if (endpointURL == null) {</span>
+<span class="fc" id="L177">                                UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);</span>
+<span class="fc" id="L178">                                endpointURL = client.getClientConfig().getUDDINode(nodeName).getPublishUrl();</span>
+                        }
+
+<span class="fc" id="L181">                        Map&lt;String, Object&gt; requestContext = ((BindingProvider) publishv2).getRequestContext();</span>
+<span class="fc" id="L182">                        requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);</span>
+<span class="fc" id="L183">                        setCredentials(requestContext);</span>
+<span class="nc" id="L184">                } catch (Exception e) {</span>
+<span class="nc" id="L185">                        throw new TransportException(e.getMessage(), e);</span>
+<span class="fc" id="L186">                }</span>
+<span class="fc" id="L187">                return publishv2;</span>
+        }
+
+        
+        
+        
+        
+        
+        public Inquire getUDDIv2InquiryService() throws TransportException {
+<span class="nc" id="L196">             return getUDDIv2InquiryService(null);</span>
+        }
+        public Inquire getUDDIv2InquiryService(String endpointURL) throws TransportException {
+                try {
+<span class="nc bnc" id="L200" title="All 2 branches missed.">                        if (inquiryv2 == null) {</span>
+<span class="nc" id="L201">                                inquiryv2 = new Inquiry3to2();</span>
+
+                        }
+<span class="nc bnc" id="L204" title="All 2 branches missed.">                        if (endpointURL == null) {</span>
+<span class="nc" id="L205">                                UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);</span>
+<span class="nc" id="L206">                                endpointURL = client.getClientConfig().getUDDINode(nodeName).getInquiryUrl();</span>
+                        }
+<span class="nc" id="L208">                        Map&lt;String, Object&gt; requestContext = ((BindingProvider) inquiryv2).getRequestContext();</span>
+<span class="nc" id="L209">                        requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);</span>
+<span class="nc" id="L210">                        setCredentials(requestContext);</span>
+<span class="nc" id="L211">                } catch (Exception e) {</span>
+<span class="nc" id="L212">                        throw new TransportException(e.getMessage(), e);</span>
+<span class="nc" id="L213">                }</span>
+<span class="nc" id="L214">                return inquiryv2.getUDDIv2WebServiceClient();</span>
+
+        }
+
+        
+        
+        public Publish getUDDIv2PublishService(String endpointURL) throws TransportException {
+                try {
+<span class="nc bnc" id="L222" title="All 2 branches missed.">                        if (publishv2 == null) {</span>
+<span class="nc" id="L223">                                publishv2 = new Publish3to2();</span>
+
+                        }
+<span class="nc bnc" id="L226" title="All 2 branches missed.">                        if (endpointURL == null) {</span>
+<span class="nc" id="L227">                                UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);</span>
+<span class="nc" id="L228">                                endpointURL = client.getClientConfig().getUDDINode(nodeName).getPublishUrl();</span>
+                        }
+
+<span class="nc" id="L231">                        Map&lt;String, Object&gt; requestContext = ((BindingProvider) publishv2).getRequestContext();</span>
+<span class="nc" id="L232">                        requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);</span>
+<span class="nc" id="L233">                        setCredentials(requestContext);</span>
+<span class="nc" id="L234">                } catch (Exception e) {</span>
+<span class="nc" id="L235">                        throw new TransportException(e.getMessage(), e);</span>
+<span class="nc" id="L236">                }</span>
+<span class="nc" id="L237">                return publishv2.getUDDIv2PublishWebServiceClient();</span>
+        }
+        
+        public Publish getUDDIv2PublishService() throws TransportException {
+<span class="nc" id="L241">                return getUDDIv2PublishService(null);</span>
+        }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

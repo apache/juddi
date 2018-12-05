@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Uddiuddiorgcategorizationowningbusiness.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.validation.vsv</a> &gt; <span class="el_source">Uddiuddiorgcategorizationowningbusiness.java</span></div><h1>Uddiuddiorgcategorizationowningbusiness.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2014 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.validation.vsv;
+
+import java.util.Collections;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.InvalidValueException;
+import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.api_v3.TModel;
+import org.uddi.api_v3.TModelInstanceInfo;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * The owningBusiness tModel represents a category system that may be used to
+ * locate the businessEntity associated with the publisher of a tModel.
+ *
+ * It is often desirable to be able to discover the business entity that
+ * represents the publisher of a given tModel. When choosing among similar Web
+ * service definitions, for example, it is useful to be able to determine that
+ * one of them is published by a known organization. For most UDDI entities this
+ * can be deduced by inspecting the containment hierarchy of the entity to its
+ * root businessEntity. For tModels, the UDDI owningBusiness category system
+ * fills this need by allowing tModels to point to the businessEntity of their
+ * publisher.
+ *
+ * The value set of this value set is the set of businessKeys. The content of
+ * keyValue in keyedReferences that refers to this tModel must be a businessKey.
+ * The keyValue is used to specify that the businessEntity whose businessKey is
+ * the keyValue in a keyedReference &quot;owns&quot; the tagged tModel. The entity tagged
+ * must be a tModel, the referred-to businessEntity must exist, and it must have
+ * been published by the same publisher.
+ *
+ * @author Alex O'Ree
+ */
+<span class="fc" id="L55">public class Uddiuddiorgcategorizationowningbusiness implements ValueSetValidator {</span>
+
+        public String getMyKey() {
+<span class="fc" id="L58">                return &quot;uddi:uddi.org:categorization:owningbusiness&quot;;</span>
+        }
+
+        @Override
+        public void validateValuesBindingTemplate(List&lt;BindingTemplate&gt; items, String xpath) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L64">                        return;</span>
+                }
+
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">                        if (items.get(i).getCategoryBag() != null) {</span>
+<span class="nc" id="L69">                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), getMyKey(), &quot;binding&quot;);</span>
+<span class="nc" id="L70">                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), getMyKey(), &quot;binding&quot;);</span>
+                        }
+<span class="nc bnc" id="L72" title="All 2 branches missed.">                        if (items.get(i).getTModelInstanceDetails() != null) {</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">                                for (int k = 0; k &lt; items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">                                        if (items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k) != null) {</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">                                                if (getMyKey().equalsIgnoreCase(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey())) {</span>
+<span class="nc" id="L76">                                                        throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;not allowed on binding templates&quot;));</span>
+                                                }
+                                        }
+                                }
+                        }
+                }
+<span class="fc" id="L82">        }</span>
+
+        @Override
+        public void validateValuesBusinessEntity(List&lt;BusinessEntity&gt; items) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L87">                        return;</span>
+                }
+<span class="pc bfc" id="L89" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">                        if (items.get(i).getCategoryBag() != null) {</span>
+<span class="nc" id="L91">                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), getMyKey(), &quot;business&quot;);</span>
+<span class="nc" id="L92">                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), getMyKey(), &quot;business&quot;);</span>
+                        }
+<span class="nc bnc" id="L94" title="All 2 branches missed.">                        if (items.get(i).getIdentifierBag() != null) {</span>
+<span class="nc" id="L95">                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), getMyKey(), &quot;business&quot;);</span>
+                        }
+<span class="nc bnc" id="L97" title="All 2 branches missed.">                        if (items.get(i).getBusinessServices() != null) {</span>
+<span class="nc" id="L98">                                validateValuesBusinessService(items.get(i).getBusinessServices().getBusinessService(), &quot;businessEntity(&quot; + i + &quot;).&quot;);</span>
+                        }
+                }
+<span class="fc" id="L101">        }</span>
+
+        @Override
+        public void validateValuesBusinessService(List&lt;BusinessService&gt; items, String xpath) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L106">                        return;</span>
+                }
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">                        if (items.get(i).getCategoryBag() != null) {</span>
+<span class="nc" id="L110">                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), getMyKey(), &quot;service&quot;);</span>
+<span class="nc" id="L111">                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), getMyKey(), &quot;service&quot;);</span>
+                        }
+<span class="nc bnc" id="L113" title="All 2 branches missed.">                        if (items.get(i).getBindingTemplates() != null) {</span>
+<span class="nc" id="L114">                                validateValuesBindingTemplate(items.get(i).getBindingTemplates().getBindingTemplate(), xpath + xpath + &quot;businessService(&quot; + i + &quot;).identifierBag.&quot;);</span>
+                        }
+                }
+<span class="fc" id="L117">        }</span>
+
+        @Override
+        public void validateValuesPublisherAssertion(List&lt;PublisherAssertion&gt; items) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L122">                        return;</span>
+                }
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="nc" id="L125">                        AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getKeyedReference(), getMyKey(), &quot;publisherAssertion&quot;);</span>
+                }
+<span class="fc" id="L127">        }</span>
+
+        @Override
+        public void validateTmodelInstanceDetails(List&lt;TModelInstanceInfo&gt; tModelInstanceInfo, String xpath) throws DispositionReportFaultMessage {
+<span class="nc bnc" id="L131" title="All 2 branches missed.">                if (tModelInstanceInfo == null) {</span>
+<span class="nc" id="L132">                        return;</span>
+                }
+<span class="nc bnc" id="L134" title="All 2 branches missed.">                for (int k = 0; k &lt; tModelInstanceInfo.size(); k++) {</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">                        if (getMyKey().equalsIgnoreCase(tModelInstanceInfo.get(k).getTModelKey())) {</span>
+<span class="nc" id="L136">                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;not allowed on tModel instance info&quot;));</span>
+                        }
+                }
+<span class="nc" id="L139">        }</span>
+
+        @Override
+        public void validateValuesTModel(List&lt;TModel&gt; items) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L144">                        return;</span>
+                }
+<span class="fc" id="L146">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L147">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc bfc" id="L149" title="All 2 branches covered.">                        for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">                                if (items.get(i).getCategoryBag() != null) {</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">                                        for (int k = 0; k &lt; items.get(i).getCategoryBag().getKeyedReference().size(); k++) {</span>
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">                                                if (getMyKey().equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey())) {</span>
+                                                        //The content of keyValue in keyedReferences that refers to this tModel must be a businessKey. 
+                                                        //the referred-to businessEntity must exist, and it must have been published by the same publisher.
+<span class="fc" id="L155">                                                        org.apache.juddi.model.BusinessEntity find = em.find(org.apache.juddi.model.BusinessEntity.class, items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue());</span>
+
+<span class="fc bfc" id="L157" title="All 2 branches covered.">                                                        if (find == null) {</span>
+<span class="fc" id="L158">                                                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Referenced key &quot; + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + &quot; does not exist&quot;));</span>
+                                                        } else {
+<span class="pc bpc" id="L160" title="1 of 2 branches missed.">                                                                if (items.get(i).getTModelKey() != null) {</span>
+<span class="fc" id="L161">                                                                        org.apache.juddi.model.Tmodel tm = em.find(org.apache.juddi.model.Tmodel.class, items.get(i).getTModelKey());</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">                                                                        if (tm == null) {</span>
+                                                                                //this is a project tModel, let access control rules take care of ownership info        
+<span class="nc bnc" id="L164" title="All 2 branches missed.">                                                                        } else if (find.getAuthorizedName().equalsIgnoreCase(tm.getAuthorizedName())) {</span>
+<span class="nc" id="L165">                                                                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Referenced key &quot; + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + &quot; exists but is not owned by you.&quot;));</span>
+                                                                        }
+                                                                } else {
+                                                                        //this is a project tModel, let access control rules take care of ownership info
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                }
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">                                if (items.get(i).getIdentifierBag() != null) {</span>
+<span class="nc" id="L175">                                        AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getIdentifierBag().getKeyedReference(), getMyKey(), &quot;tmodel identbag&quot;);</span>
+                                }
+                        }
+<span class="fc" id="L178">                } catch (DispositionReportFaultMessage d) {</span>
+<span class="fc" id="L179">                        throw d;</span>
+                } finally {
+<span class="pc bpc" id="L181" title="2 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L182">                                tx.rollback();</span>
+                        }
+<span class="fc" id="L184">                        em.close();</span>
+<span class="fc" id="L185">                }</span>
+<span class="fc" id="L186">        }</span>
+
+        @Override
+        public List&lt;String&gt; getValidValues() {
+<span class="nc" id="L190">                return Collections.EMPTY_LIST;</span>
+        }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

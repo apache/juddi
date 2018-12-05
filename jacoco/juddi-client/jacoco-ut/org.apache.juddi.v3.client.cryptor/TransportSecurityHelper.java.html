@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransportSecurityHelper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.cryptor</a> &gt; <span class="el_source">TransportSecurityHelper.java</span></div><h1>TransportSecurityHelper.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2015 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.client.cryptor;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.security.KeyStore;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
+import javax.xml.ws.BindingProvider;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ *
+ * @author alexoree@apache.org
+ */
+<span class="nc" id="L33">public class TransportSecurityHelper {</span>
+
+<span class="nc" id="L35">        private static final Log log = LogFactory.getLog(TransportSecurityHelper.class);</span>
+
+        public static boolean applyTransportSecurity(BindingProvider webServicePort) {
+                try {
+<span class="nc" id="L39">                        File currentdir = new File(&quot;.&quot;);</span>
+<span class="nc" id="L40">                        String s = System.getProperty(&quot;javax.net.ssl.keyStore&quot;);</span>
+<span class="nc" id="L41">                        String st = System.getProperty(&quot;javax.net.ssl.trustStore&quot;);</span>
+<span class="nc" id="L42">                        log.info(&quot;Attempting to initialize keystore and truststore from &quot; + s + &quot; &quot; + st);</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">                        if (s == null) {</span>
+<span class="nc" id="L44">                                log.warn(&quot;keystore isn't defined!&quot;);</span>
+<span class="nc" id="L45">                                return false;</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">                        } else if (st == null) {</span>
+<span class="nc" id="L47">                                log.warn(&quot;truststore isn't defined! &quot; + s);</span>
+<span class="nc" id="L48">                                return false;</span>
+                        } else {
+<span class="nc" id="L50">                                File keystore = new File(s);</span>
+<span class="nc bnc" id="L51" title="All 4 branches missed.">                                if (keystore == null || !keystore.exists()) {</span>
+<span class="nc" id="L52">                                        log.warn(&quot;keystore doesn't exist! input was &quot; + s + &quot; working dir is &quot; + currentdir</span>
+<span class="nc" id="L53">                                                .getAbsolutePath());</span>
+<span class="nc" id="L54">                                        return false;</span>
+                                }
+                                //File truststore =new File(System.getProperty(&quot;javax.net.ssl.trustStore&quot;));
+<span class="nc" id="L57">                                String pwd = System.getProperty(&quot;javax.net.ssl.keyStorePassword&quot;);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">                                if (pwd == null) {</span>
+<span class="nc" id="L59">                                        log.warn(&quot;keystore password isn't defined!&quot;);</span>
+<span class="nc" id="L60">                                        return false;</span>
+                                }
+
+<span class="nc" id="L63">                                File truststore = new File(st);</span>
+<span class="nc bnc" id="L64" title="All 4 branches missed.">                                if (truststore == null || !truststore.exists()) {</span>
+<span class="nc" id="L65">                                        log.warn(&quot;truststore doesn't exist! input was &quot; + s + &quot; working dir is &quot; + currentdir</span>
+<span class="nc" id="L66">                                                .getAbsolutePath());</span>
+<span class="nc" id="L67">                                        return false;</span>
+                                }
+                                //File truststore =new File(System.getProperty(&quot;javax.net.ssl.trustStore&quot;));
+<span class="nc" id="L70">                                String pwdt = System.getProperty(&quot;javax.net.ssl.trustStorePassword&quot;);</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">                                if (pwdt == null) {</span>
+<span class="nc" id="L72">                                        log.warn(&quot;truststore password isn't defined!&quot;);</span>
+<span class="nc" id="L73">                                        return false;</span>
+                                }
+
+<span class="nc bnc" id="L76" title="All 2 branches missed.">                                if (keystore.exists()) {</span>
+<span class="nc" id="L77">                                        TrustManagerFactory tmFact = null;</span>
+<span class="nc" id="L78">                                        FileInputStream fis = null;</span>
+<span class="nc" id="L79">                                        SSLContext sc = SSLContext.getInstance(&quot;SSLv3&quot;);</span>
+                                        KeyManagerFactory kmf
+<span class="nc" id="L81">                                                = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());</span>
+                                        try {
+<span class="nc" id="L83">                                                log.info(&quot;Using keystore from &quot; + keystore.getAbsolutePath() + &quot; current dir is &quot; + currentdir.getAbsolutePath());</span>
+
+<span class="nc" id="L85">                                                log.info(&quot;Using truststore from &quot; + truststore.getAbsolutePath() + &quot; current dir is &quot; + currentdir.getAbsolutePath());</span>
+
+<span class="nc" id="L87">                                                KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());</span>
+                                                try {
+<span class="nc" id="L89">                                                        fis = new FileInputStream(keystore);</span>
+<span class="nc" id="L90">                                                        ks.load(fis, pwd.toCharArray());</span>
+<span class="nc" id="L91">                                                } catch (Exception ex) {</span>
+<span class="nc" id="L92">                                                        log.warn(&quot;unable to load key store &quot; + keystore.getAbsolutePath(), ex);</span>
+                                                } finally {
+<span class="nc bnc" id="L94" title="All 6 branches missed.">                                                        if (fis != null) {</span>
+<span class="nc" id="L95">                                                                fis.close();</span>
+                                                        }
+                                                }
+
+<span class="nc" id="L99">                                                kmf.init(ks, pwd.toCharArray());</span>
+
+<span class="nc" id="L101">                                                String alg = TrustManagerFactory.getDefaultAlgorithm();</span>
+<span class="nc" id="L102">                                                tmFact = TrustManagerFactory.getInstance(alg);</span>
+<span class="nc" id="L103">                                        } catch (Exception ex) {</span>
+<span class="nc" id="L104">                                                log.warn(&quot;unable to establish ssl settings&quot;, ex);</span>
+<span class="nc" id="L105">                                        } </span>
+                                        try {
+<span class="nc" id="L107">                                                fis = new FileInputStream(st);</span>
+<span class="nc" id="L108">                                                KeyStore kst = KeyStore.getInstance(&quot;jks&quot;);</span>
+                                                try {
+<span class="nc" id="L110">                                                        kst.load(fis, pwdt.toCharArray());</span>
+<span class="nc" id="L111">                                                } catch (Exception ex) {</span>
+<span class="nc" id="L112">                                                        log.warn(&quot;unable to load key store &quot; + st, ex);</span>
+                                                } finally {
+<span class="nc bnc" id="L114" title="All 6 branches missed.">                                                        if (fis != null) {</span>
+<span class="nc" id="L115">                                                                fis.close();</span>
+                                                        }
+                                                }
+
+<span class="nc" id="L119">                                                tmFact.init(kst);</span>
+
+<span class="nc" id="L121">                                                sc.init(kmf.getKeyManagers(), tmFact.getTrustManagers(), null);</span>
+<span class="nc" id="L122">                                                HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());</span>
+<span class="nc" id="L123">                                                ((BindingProvider) webServicePort).getRequestContext().put(&quot;com.sun.xml.internal.ws.transport.https.client.SSLSocketFactory&quot;, sc.getSocketFactory());</span>
+<span class="nc" id="L124">                                                ((BindingProvider) webServicePort).getRequestContext().put(&quot;com.sun.xml.ws.transport.https.client.SSLSocketFactory&quot;, sc.getSocketFactory());</span>
+<span class="nc" id="L125">                                                return true;</span>
+<span class="nc" id="L126">                                        } catch (Exception ex) {</span>
+<span class="nc" id="L127">                                                log.warn(&quot;unable to establish ssl settings&quot;, ex);</span>
+                                        }
+                                }
+                        }
+<span class="nc" id="L131">                        return false;</span>
+<span class="nc" id="L132">                } catch (Exception x) {</span>
+<span class="nc" id="L133">                        log.error(&quot;unexpected error&quot;, x);</span>
+                }
+<span class="nc" id="L135">                return false;</span>
+        }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

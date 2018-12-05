@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Node.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.api_v3</a> &gt; <span class="el_source">Node.java</span></div><h1>Node.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.api_v3;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlType;
+
+
+/**
+ * &lt;p&gt;Java class for node complex type.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * 
+ * &lt;pre&gt;
+ * &amp;lt;complexType name=&quot;node&quot;&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;sequence&gt;
+ *         &amp;lt;element name=&quot;name&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;clientName&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;description&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;custodyTransferUrl&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;inquiryUrl&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;publishUrl&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;securityUrl&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;subscriptionUrl&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;subscriptionListenerUrl&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;replicationUrl&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;juddiApiUrl&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;proxyTransport&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;factoryInitial&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;factoryURLPkgs&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;factoryNamingProvider&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *       &amp;lt;/sequence&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;node&quot;, propOrder = {
+    &quot;name&quot;,
+    &quot;clientName&quot;,
+    &quot;description&quot;,
+    &quot;custodyTransferUrl&quot;,
+    &quot;inquiryUrl&quot;,
+    &quot;publishUrl&quot;,
+    &quot;securityUrl&quot;,
+    &quot;subscriptionUrl&quot;,
+    &quot;subscriptionListenerUrl&quot;,
+    &quot;replicationUrl&quot;,
+    &quot;juddiApiUrl&quot;,
+    &quot;proxyTransport&quot;,
+    &quot;factoryInitial&quot;,
+    &quot;factoryURLPkgs&quot;,
+    &quot;factoryNamingProvider&quot;
+})
+<span class="nc" id="L75">public class Node {</span>
+
+    protected String name;
+    protected String clientName;
+    protected String description;
+    protected String custodyTransferUrl;
+    protected String inquiryUrl;
+    protected String publishUrl;
+    protected String securityUrl;
+    protected String subscriptionUrl;
+    protected String subscriptionListenerUrl;
+    protected String replicationUrl;
+    protected String juddiApiUrl;
+    protected String proxyTransport;
+    protected String factoryInitial;
+    protected String factoryURLPkgs;
+    protected String factoryNamingProvider;
+
+    /**
+     * Gets the value of the name property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getName() {
+<span class="nc" id="L102">        return name;</span>
+    }
+
+    /**
+     * Sets the value of the name property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setName(String value) {
+<span class="nc" id="L114">        this.name = value;</span>
+<span class="nc" id="L115">    }</span>
+
+    /**
+     * Gets the value of the clientName property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getClientName() {
+<span class="nc" id="L126">        return clientName;</span>
+    }
+
+    /**
+     * Sets the value of the clientName property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setClientName(String value) {
+<span class="nc" id="L138">        this.clientName = value;</span>
+<span class="nc" id="L139">    }</span>
+
+    /**
+     * Gets the value of the description property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getDescription() {
+<span class="nc" id="L150">        return description;</span>
+    }
+
+    /**
+     * Sets the value of the description property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setDescription(String value) {
+<span class="nc" id="L162">        this.description = value;</span>
+<span class="nc" id="L163">    }</span>
+
+    /**
+     * Gets the value of the custodyTransferUrl property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getCustodyTransferUrl() {
+<span class="nc" id="L174">        return custodyTransferUrl;</span>
+    }
+
+    /**
+     * Sets the value of the custodyTransferUrl property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setCustodyTransferUrl(String value) {
+<span class="nc" id="L186">        this.custodyTransferUrl = value;</span>
+<span class="nc" id="L187">    }</span>
+
+    /**
+     * Gets the value of the inquiryUrl property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getInquiryUrl() {
+<span class="nc" id="L198">        return inquiryUrl;</span>
+    }
+
+    /**
+     * Sets the value of the inquiryUrl property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setInquiryUrl(String value) {
+<span class="nc" id="L210">        this.inquiryUrl = value;</span>
+<span class="nc" id="L211">    }</span>
+
+    /**
+     * Gets the value of the publishUrl property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getPublishUrl() {
+<span class="nc" id="L222">        return publishUrl;</span>
+    }
+
+    /**
+     * Sets the value of the publishUrl property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setPublishUrl(String value) {
+<span class="nc" id="L234">        this.publishUrl = value;</span>
+<span class="nc" id="L235">    }</span>
+
+    /**
+     * Gets the value of the securityUrl property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getSecurityUrl() {
+<span class="nc" id="L246">        return securityUrl;</span>
+    }
+
+    /**
+     * Sets the value of the securityUrl property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSecurityUrl(String value) {
+<span class="nc" id="L258">        this.securityUrl = value;</span>
+<span class="nc" id="L259">    }</span>
+
+    /**
+     * Gets the value of the subscriptionUrl property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getSubscriptionUrl() {
+<span class="nc" id="L270">        return subscriptionUrl;</span>
+    }
+
+    /**
+     * Sets the value of the subscriptionUrl property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSubscriptionUrl(String value) {
+<span class="nc" id="L282">        this.subscriptionUrl = value;</span>
+<span class="nc" id="L283">    }</span>
+
+    /**
+     * Gets the value of the subscriptionListenerUrl property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getSubscriptionListenerUrl() {
+<span class="nc" id="L294">        return subscriptionListenerUrl;</span>
+    }
+
+    /**
+     * Sets the value of the subscriptionListenerUrl property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSubscriptionListenerUrl(String value) {
+<span class="nc" id="L306">        this.subscriptionListenerUrl = value;</span>
+<span class="nc" id="L307">    }</span>
+
+    /**
+     * Gets the value of the replicationUrl property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getReplicationUrl() {
+<span class="nc" id="L318">        return replicationUrl;</span>
+    }
+
+    /**
+     * Sets the value of the replicationUrl property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setReplicationUrl(String value) {
+<span class="nc" id="L330">        this.replicationUrl = value;</span>
+<span class="nc" id="L331">    }</span>
+
+    /**
+     * Gets the value of the juddiApiUrl property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getJuddiApiUrl() {
+<span class="nc" id="L342">        return juddiApiUrl;</span>
+    }
+
+    /**
+     * Sets the value of the juddiApiUrl property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setJuddiApiUrl(String value) {
+<span class="nc" id="L354">        this.juddiApiUrl = value;</span>
+<span class="nc" id="L355">    }</span>
+
+    /**
+     * Gets the value of the proxyTransport property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getProxyTransport() {
+<span class="nc" id="L366">        return proxyTransport;</span>
+    }
+
+    /**
+     * Sets the value of the proxyTransport property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setProxyTransport(String value) {
+<span class="nc" id="L378">        this.proxyTransport = value;</span>
+<span class="nc" id="L379">    }</span>
+
+    /**
+     * Gets the value of the factoryInitial property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getFactoryInitial() {
+<span class="nc" id="L390">        return factoryInitial;</span>
+    }
+
+    /**
+     * Sets the value of the factoryInitial property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setFactoryInitial(String value) {
+<span class="nc" id="L402">        this.factoryInitial = value;</span>
+<span class="nc" id="L403">    }</span>
+
+    /**
+     * Gets the value of the factoryURLPkgs property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getFactoryURLPkgs() {
+<span class="nc" id="L414">        return factoryURLPkgs;</span>
+    }
+
+    /**
+     * Sets the value of the factoryURLPkgs property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setFactoryURLPkgs(String value) {
+<span class="nc" id="L426">        this.factoryURLPkgs = value;</span>
+<span class="nc" id="L427">    }</span>
+
+    /**
+     * Gets the value of the factoryNamingProvider property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getFactoryNamingProvider() {
+<span class="nc" id="L438">        return factoryNamingProvider;</span>
+    }
+
+    /**
+     * Sets the value of the factoryNamingProvider property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setFactoryNamingProvider(String value) {
+<span class="nc" id="L450">        this.factoryNamingProvider = value;</span>
+<span class="nc" id="L451">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

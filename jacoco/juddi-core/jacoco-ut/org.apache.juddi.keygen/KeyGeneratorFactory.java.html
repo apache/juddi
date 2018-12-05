@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KeyGeneratorFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.keygen</a> &gt; <span class="el_source">KeyGeneratorFactory.java</span></div><h1>KeyGeneratorFactory.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.keygen;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.ClassUtil;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
+
+/**
+ * Used to create the org.apache.juddi.keygen.KeyGenerator implementation
+ * as specified by the 'juddi.keygenerator' property. Defaults to
+ * org.apache.juddi.cryptor.DefaultKeyGenerator if an implementation is not
+ * specified.
+ *
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+<span class="nc" id="L35">public abstract class KeyGeneratorFactory {</span>
+<span class="fc" id="L36">	private static Log log = LogFactory.getLog(KeyGeneratorFactory.class);</span>
+
+	// Key Generator default implementation
+	public static final String DEFAULT_IMPL = &quot;org.apache.juddi.keygen.DefaultKeyGenerator&quot;;
+
+	// the shared Key Generator instance
+<span class="fc" id="L42">	private static KeyGenerator keyGenerator = null;</span>
+
+	/*
+	 * Returns a new instance of a KeyGenerator.
+	 * 
+	 * @return KeyGenerator
+	 */
+	public static synchronized KeyGenerator getKeyGenerator() {
+<span class="fc bfc" id="L50" title="All 2 branches covered.">		if (keyGenerator == null)</span>
+<span class="fc" id="L51">			keyGenerator = createKeyGenerator();</span>
+<span class="fc" id="L52">		return keyGenerator;</span>
+	}
+	
+	public static synchronized KeyGenerator forceNewKeyGenerator() {
+<span class="fc" id="L56">		keyGenerator = null;</span>
+<span class="fc" id="L57">		keyGenerator = createKeyGenerator();</span>
+<span class="fc" id="L58">		return keyGenerator;</span>
+	}
+
+	/*
+	 * Returns a new instance of a Cryptor.
+	 * 
+	 * @return Cryptor
+	 */
+	private static synchronized KeyGenerator createKeyGenerator() {
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">		if (keyGenerator != null)</span>
+<span class="nc" id="L68">			return keyGenerator;</span>
+	
+		// grab class name of the Cryptor implementation to create
+<span class="fc" id="L71">		String className = System.getProperty(Property.JUDDI_KEYGENERATOR);</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">                if (className==null){</span>
+                    try {
+                            // grab class name of the Authenticator implementation to create
+<span class="fc" id="L75">                            className = AppConfig.getConfiguration().getString(Property.JUDDI_KEYGENERATOR, DEFAULT_IMPL);</span>
+                    }
+<span class="nc" id="L77">                    catch(ConfigurationException ce) {</span>
+<span class="nc" id="L78">                            log.error(&quot;Configuration exception occurred retrieving: &quot; + Property.JUDDI_KEYGENERATOR);</span>
+<span class="fc" id="L79">                    }</span>
+                }
+                try {
+                    // write the Cryptor implementation name to the log
+<span class="fc" id="L83">                    log.debug(&quot;Configuration Key Generator Implementation = &quot; + AppConfig.getConfiguration().getString(Property.JUDDI_KEYGENERATOR));</span>
+<span class="nc" id="L84">                } catch (ConfigurationException ex) {</span>
+<span class="fc" id="L85">                }</span>
+<span class="fc" id="L86">                log.debug(&quot;SysProp Key Generator Implementation = &quot; + System.getProperty(Property.JUDDI_KEYGENERATOR));</span>
+<span class="fc" id="L87">                log.debug(&quot;Using Key Generator Implementation = &quot; + className);</span>
+	
+<span class="fc" id="L89">		Class&lt;?&gt; keygenClass = null;</span>
+		try {
+			// Use Loader to locate &amp; load the Key Generator implementation
+<span class="fc" id="L92">			keygenClass = ClassUtil.forName(className,KeyGeneratorFactory.class);</span>
+			// try to instantiate the Key Generator implementation
+<span class="fc" id="L94">			keyGenerator = (KeyGenerator)keygenClass.newInstance();</span>
+<span class="fc" id="L95">		} catch(ClassNotFoundException cnfe) {</span>
+<span class="fc" id="L96">			throw new RuntimeException(&quot;The specified Key Generator class '&quot; + className + &quot;' was not found on classpath.&quot;,cnfe);</span>
+<span class="fc" id="L97">		} catch(InstantiationException ie) {</span>
+<span class="fc" id="L98">			throw new RuntimeException(&quot;The specified Key Generator class '&quot; + className + &quot;' cannot be instantiated.&quot;,ie);</span>
+<span class="nc" id="L99">		} catch(IllegalAccessException iae) {</span>
+<span class="nc" id="L100">			throw new RuntimeException(&quot;The specified Key Generator class '&quot; + className + &quot;' cannot be instantiated due to illegal access.&quot;,iae);</span>
+<span class="nc" id="L101">		} catch(Exception e) {</span>
+<span class="nc" id="L102">			throw new RuntimeException(&quot;Exception while attempting to instantiate the implementation of Key Generator: &quot; + className + &quot;\n&quot; + e.getMessage());</span>
+<span class="fc" id="L103">		}</span>
+	
+<span class="fc" id="L105">		return keyGenerator;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

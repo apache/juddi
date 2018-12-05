@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DispositionReport.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.api_v3</a> &gt; <span class="el_source">DispositionReport.java</span></div><h1>DispositionReport.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+package org.uddi.api_v3;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+
+import org.uddi.JAXBContextUtil;
+import org.w3c.dom.Node;
+
+
+/**
+ * &lt;p&gt;Java class for dispositionReport complex type.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * 
+ * &lt;pre&gt;
+ * &amp;lt;complexType name=&quot;dispositionReport&quot;&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;sequence&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}result&quot; maxOccurs=&quot;unbounded&quot;/&gt;
+ *       &amp;lt;/sequence&gt;
+ *       &amp;lt;attribute name=&quot;truncated&quot; type=&quot;{urn:uddi-org:api_v3}truncated&quot; /&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;dispositionReport&quot;, propOrder = {
+    &quot;result&quot;
+})
+@XmlRootElement
+public class DispositionReport implements Serializable {
+	@XmlTransient
+	private static final long serialVersionUID = 5852663849477002516L;
+	@XmlElement(required = true)
+    protected List&lt;Result&gt; result;
+    @XmlAttribute
+    protected Boolean truncated;
+    
+    public final static transient String E_ACCOUNT_LIMIT_EXCEEDED     = &quot;E_accountLimitExceeded&quot;;
+	public final static transient String E_ASSERTION_NOT_FOUND        = &quot;E_assertionNotFound&quot;; 
+	public final static transient String E_AUTH_TOKEN_EXPIRED         = &quot;E_authTokenExpired&quot;;
+	public final static transient String E_AUTH_TOKEN_REQUIRED        = &quot;E_authTokenRequired&quot;;
+	public final static transient String E_BUSY                       = &quot;E_busy&quot;;
+	public final static transient String E_CATEGORIZATION_NOT_ALLOWED = &quot;E_categorizationNotAllowed&quot;;
+	public final static transient String E_FATAL_ERROR                = &quot;E_fatalError&quot;;
+	public final static transient String E_INVALID_COMBINATION        = &quot;E_invalidCombination&quot;;
+	public final static transient String E_INVALID_CATEGORY           = &quot;E_invalidCategory&quot;;
+	public final static transient String E_INVALID_COMPLETION_STATUS  = &quot;E_invalidCompletionStatus&quot;;
+	public final static transient String E_INVALID_KEY_PASSED         = &quot;E_invalidKeyPassed&quot;;
+	public final static transient String E_KEY_UNAVAILABLE         	  = &quot;E_keyUnavailable&quot;;
+	public final static transient String E_INVALID_PROJECTION         = &quot;E_invalidProjection&quot;;
+	public final static transient String E_INVALID_TIME               = &quot;E_invalidTime&quot;;
+	public final static transient String E_INVALID_URL_PASSED         = &quot;E_invalidURLPassed&quot;;
+	public final static transient String E_INVALID_VALUE              = &quot;E_invalidValue&quot;;
+	public final static transient String E_KEY_RETIRED                = &quot;E_keyRetired&quot;;
+	public final static transient String E_LANGUAGE_ERROR             = &quot;E_languageError&quot;;
+	public final static transient String E_MESSAGE_TOO_LARGE          = &quot;E_messageTooLarge&quot;;
+	public final static transient String E_NAME_TOO_LONG              = &quot;E_nameTooLong&quot;;
+	public final static transient String E_OPERATOR_MISMATCH          = &quot;E_operatorMismatch&quot;;
+	public final static transient String E_PUBLISHER_CANCELLED        = &quot;E_publisherCancelled&quot;;
+	public final static transient String E_REQUEST_DENIED             = &quot;E_requestDenied&quot;;
+	public final static transient String E_REQUEST_TIMEOUT            = &quot;E_requestTimeout&quot;;
+	public final static transient String E_RESULT_SET_TOO_LARGE       = &quot;E_resultSetTooLarge&quot;;
+	public final static transient String E_SECRET_UNKNOWN             = &quot;E_secretUnknown&quot;;
+	public final static transient String E_SUCCESS                    = &quot;E_success&quot;;
+	public final static transient String E_TOO_MANY_OPTIONS           = &quot;E_tooManyOptions&quot;;
+	public final static transient String E_TRANSFER_ABORTED           = &quot;E_transferAborted&quot;;
+	public final static transient String E_UNKNOWN_USER               = &quot;E_unknownUser&quot;;
+	public final static transient String E_UNRECOGNIZED_VERSION       = &quot;E_unrecognizedVersion&quot;;
+	public final static transient String E_UNSUPPORTED                = &quot;E_unsupported&quot;;
+	public final static transient String E_UNVALIDATABLE              = &quot;E_unvalidatable&quot;;
+	public final static transient String E_USER_MISMATCH              = &quot;E_userMismatch&quot;;
+	public final static transient String E_VALUE_NOT_ALLOWED          = &quot;E_valueNotAllowed&quot;;
+	public final static transient String E_TOKEN_ALREADY_EXISTS       = &quot;E_tokenAlreadyExists&quot;;
+	public final static transient String E_TRANSFER_NOT_ALLOWED       = &quot;E_transferNotAllowed&quot;;
+
+    /**
+     * 
+     */
+    public DispositionReport() {
+<span class="nc" id="L115">		super();</span>
+<span class="nc" id="L116">	}</span>
+    /**
+     * 
+     * @param node
+     * @throws JAXBException 
+     */
+    public DispositionReport(Node node) throws JAXBException  {
+<span class="nc" id="L123">		super();</span>
+<span class="nc" id="L124">		JAXBContextUtil.getContext(this.getClass().getPackage().getName());</span>
+<span class="nc" id="L125">		Unmarshaller u = JAXBContextUtil.getContext(</span>
+<span class="nc" id="L126">				this.getClass().getPackage().getName()).createUnmarshaller();</span>
+<span class="nc" id="L127">		JAXBElement&lt;DispositionReport&gt; element =  u.unmarshal(node, DispositionReport.class);</span>
+<span class="nc" id="L128">		this.result = element.getValue().getResult();</span>
+<span class="nc" id="L129">		this.truncated = element.getValue().truncated;</span>
+<span class="nc" id="L130">	}</span>
+
+	/**
+     * Gets the value of the result property.
+     * 
+     * &lt;p&gt;
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a &lt;CODE&gt;set&lt;/CODE&gt; method for the result property.
+     * 
+     * &lt;p&gt;
+     * For example, to add a new item, do as follows:
+     * &lt;pre&gt;
+     *    getResult().add(newItem);
+     * &lt;/pre&gt;
+     * 
+     * 
+     * &lt;p&gt;
+     * Objects of the following type(s) are allowed in the list
+     * {@link Result }
+     * 
+     * 
+     */
+    public List&lt;Result&gt; getResult() {
+<span class="nc bnc" id="L155" title="All 2 branches missed.">        if (result == null) {</span>
+<span class="nc" id="L156">            result = new ArrayList&lt;Result&gt;();</span>
+        }
+<span class="nc" id="L158">        return this.result;</span>
+    }
+
+    /**
+     * Gets the value of the truncated property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isTruncated() {
+<span class="nc" id="L170">        return truncated;</span>
+    }
+
+    /**
+     * Sets the value of the truncated property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setTruncated(Boolean value) {
+<span class="nc" id="L182">        this.truncated = value;</span>
+<span class="nc" id="L183">    }</span>
+    
+    /**
+     * Determines if one of the Results in the this DispositionReport has a Error Code
+     * that matches the errCodeKey passed in. The errCodeKey should be one
+     * of the 
+     * 
+     * @param errCodeKey
+     * @return true if the errCodeKey matches with a code in the Results.
+     */
+    public boolean countainsErrorCode(final String errCodeKey) {
+<span class="nc" id="L194">    	boolean isKeyMatch = false;</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">		for (Result result : getResult()) {</span>
+<span class="nc" id="L196">			String errCode = result.getErrInfo().getErrCode();</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">			if (errCodeKey.equals(errCode)) {</span>
+<span class="nc" id="L198">				isKeyMatch = true;</span>
+<span class="nc" id="L199">				break;</span>
+			}
+<span class="nc" id="L201">		}</span>
+<span class="nc" id="L202">    	return isKeyMatch;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

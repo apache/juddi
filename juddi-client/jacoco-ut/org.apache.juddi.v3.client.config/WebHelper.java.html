@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WebHelper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.config</a> &gt; <span class="el_source">WebHelper.java</span></div><h1>WebHelper.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2011 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.v3.client.config;
+
+import javax.servlet.ServletContext;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * 
+ * @author kstam
+ */
+<span class="nc" id="L29">public class WebHelper {</span>
+
+<span class="fc" id="L31">        public static final Log logger = LogFactory.getLog(WebHelper.class);</span>
+        public static final String UDDI_CLIENT_NAME = &quot;uddi.client.name&quot;;
+        public static final String UDDI_CLIENT_CONFIG_FILE = &quot;uddi.client.config.file&quot;;
+        public static final String JUDDI_CLIENT_NAME = &quot;juddi.client.name&quot;;
+        public static final String JUDDI_CLIENT_TRANSPORT = &quot;juddi.client.transport&quot;;
+
+        /**
+         * Checks the servlet context for the manager defined in the web
+         * context. Optionally, in your web.xml you can specify either the
+         * manager name if you want to use an existing manager called
+         * 'uddi-portlet-manager':
+         * &lt;pre&gt;
+         * &amp;lt;context-param&amp;gt;
+         *   &amp;lt;param-name&amp;gt;uddi.client.manager.name&amp;lt;/param-name&amp;gt;
+         *   &amp;lt;param-value&amp;gt;uddi-portlet-manager&amp;lt;/param-value&amp;gt;
+         * &amp;lt;/context-param&amp;gt;
+         * &lt;/pre&gt; or, if you don't want to use the default META-INF/uddi.xml
+         * file path, but 'META-INF/my-uddi.xml' instead, then you can set:
+         * &lt;pre&gt;
+         * &amp;lt;context-param&amp;gt;
+         *   &amp;lt;param-name&amp;gt;uddi.client.config.path&amp;lt;/param-name&amp;gt;
+         *   &amp;lt;param-value&amp;gt;META-INF/my-uddi.xml&amp;lt;/param-value&amp;gt;
+         * &amp;lt;/context-param&amp;gt;
+         * &lt;/pre&gt;
+         *
+         * @param servletContext
+         * @return a UDDI Client instance
+         * @throws ConfigurationException
+         */
+        public static UDDIClient getUDDIClient(ServletContext servletContext) throws ConfigurationException {
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">                if (servletContext.getAttribute(JUDDI_CLIENT_NAME) != null) {</span>
+<span class="nc" id="L62">                        String clientName = String.valueOf(servletContext.getAttribute(JUDDI_CLIENT_NAME));</span>
+<span class="nc" id="L63">                        return UDDIClientContainer.getUDDIClient(clientName);</span>
+                } else {
+<span class="fc" id="L65">                        String clientName = servletContext.getInitParameter(UDDI_CLIENT_NAME);</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">                        if (clientName != null) {</span>
+                                try {
+<span class="nc" id="L68">                                        UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);</span>
+<span class="nc" id="L69">                                        logger.info(&quot;Client &quot; + clientName + &quot; was already started.&quot;);</span>
+<span class="nc" id="L70">                                        servletContext.setAttribute(JUDDI_CLIENT_NAME, clientName);</span>
+<span class="nc" id="L71">                                        return client;</span>
+<span class="fc" id="L72">                                } catch (ConfigurationException ce) {</span>
+<span class="fc" id="L73">                                        logger.debug(&quot;Client &quot; + clientName + &quot; is not yet started.&quot;);</span>
+                                }
+                        }
+<span class="fc" id="L76">                        String clientConfigFile = servletContext.getInitParameter(UDDI_CLIENT_CONFIG_FILE);</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">                        if (clientConfigFile == null) {</span>
+<span class="fc" id="L78">                                clientConfigFile = ClientConfig.DEFAULT_UDDI_CONFIG;</span>
+                        }
+                        
+
+<span class="fc" id="L82">                        logger.info(&quot;Reading the clientName from the clientConfig file &quot; + clientConfigFile);</span>
+<span class="fc" id="L83">                        UDDIClient client = new UDDIClient(clientConfigFile);</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">                        if (client.getName() == null) {</span>
+<span class="nc" id="L85">                                logger.warn(&quot;Deprecated, client name set to 'default', however it should be provided in the uddi.xml&quot;);</span>
+<span class="nc" id="L86">                                clientName = &quot;default&quot;;</span>
+                        }
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">                        if (client.getName() != null) {</span>
+<span class="fc" id="L89">                                logger.info(&quot;Starting Client &quot; + client.getName() + &quot;...&quot;);</span>
+<span class="fc" id="L90">                                clientName = client.getName();</span>
+                        } else {
+<span class="nc" id="L92">                                throw new ConfigurationException(&quot;A client name needs to be specified in the client config file.&quot;);</span>
+                        }
+
+<span class="fc" id="L95">                        client.start();</span>
+<span class="fc" id="L96">                        servletContext.setAttribute(JUDDI_CLIENT_NAME, clientName);</span>
+<span class="fc" id="L97">                        return client;</span>
+                }
+        }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

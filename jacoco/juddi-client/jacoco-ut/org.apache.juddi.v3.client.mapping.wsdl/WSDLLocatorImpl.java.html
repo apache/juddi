@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WSDLLocatorImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.mapping.wsdl</a> &gt; <span class="el_source">WSDLLocatorImpl.java</span></div><h1>WSDLLocatorImpl.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2011 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ *
+ */
+package org.apache.juddi.v3.client.mapping.wsdl;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.net.URI;
+import java.net.URL;
+
+import javax.wsdl.xml.WSDLLocator;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.BasicClientConnectionManager;
+import org.apache.juddi.v3.client.mapping.MockSSLSocketFactory;
+import org.xml.sax.InputSource;
+
+/**
+ * Implementation of the interface {@link WSDLLocatorImpl}.
+ *
+ * @author &lt;a href=&quot;mailto:kstam@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt; 
+ * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt; - Modified for supporting http based credentials 
+ */
+public class WSDLLocatorImpl implements WSDLLocator {
+<span class="pc" id="L51">    private Exception lastException=null;</span>
+<span class="pc" id="L52">    private final Log log = LogFactory.getLog(this.getClass());</span>
+<span class="pc" id="L53">    private InputStream inputStream = null;</span>
+    private URI baseURI;
+<span class="pc" id="L55">    private boolean ignoreSSLErrors = false;</span>
+    private String latestImportURI;
+<span class="pc" id="L57">    private String username = null, password = null;</span>
+
+    /**
+     * Constructor taking the URI to the WSDL. This class implements the
+     * {@link WSDLLocator} Interface.
+     *
+     * @param baseURI - URI of the WSDL
+     */
+<span class="fc" id="L65">    public WSDLLocatorImpl(URI baseURI) {</span>
+<span class="fc" id="L66">        this.baseURI = baseURI;</span>
+<span class="fc" id="L67">        this.ignoreSSLErrors = false;</span>
+<span class="fc" id="L68">    }</span>
+
+    /**
+     * Constructor taking the URI to the WSDL. This class implements the
+     * {@link WSDLLocator} Interface and includes support for HTTP
+     * Authentication
+     *
+     * @param baseURI
+     * @param username
+     * @param password
+     * @param ignoreSSLErrors 
+     */
+<span class="nc" id="L80">    public WSDLLocatorImpl(URI baseURI, String username, String password, boolean ignoreSSLErrors) {</span>
+<span class="nc" id="L81">        this.baseURI = baseURI;</span>
+<span class="nc" id="L82">        this.username = username;</span>
+<span class="nc" id="L83">        this.password = password;</span>
+<span class="nc" id="L84">        this.ignoreSSLErrors = ignoreSSLErrors;</span>
+<span class="nc" id="L85">    }</span>
+
+    /**
+     * see  {@link #getBaseInputSource getBaseInputSource}  WSDLLocator.getBaseInputSource
+     */
+    public InputSource getBaseInputSource() {
+<span class="fc" id="L91">        return getImportFromUrl(baseURI.toString());</span>
+    }
+
+    /**
+     * Internal method to normalize the importUrl. The importLocation can be
+     * relative to the parentLocation.
+     *
+     * @param parentLocation
+     * @param importLocation
+     * @return a url
+     */
+    protected URL constructImportUrl(String parentLocation, String importLocation) {
+<span class="fc" id="L103">        URL importUrl = null;</span>
+        try {
+<span class="fc" id="L105">            URI importLocationURI = new URI(importLocation);</span>
+<span class="pc bpc" id="L106" title="1 of 4 branches missed.">            if (importLocationURI.getScheme() != null || parentLocation == null) {</span>
+<span class="fc" id="L107">                importUrl = importLocationURI.toURL();</span>
+            } else {
+<span class="fc" id="L109">                String parentDir = parentLocation.substring(0, parentLocation.lastIndexOf(&quot;/&quot;));</span>
+<span class="fc" id="L110">                URI uri = new URI(parentDir + &quot;/&quot; + importLocation);</span>
+<span class="fc" id="L111">                importUrl = uri.normalize().toURL();</span>
+            }
+<span class="nc" id="L113">        } catch (Exception e) {</span>
+<span class="nc" id="L114">            log.error(e.getMessage(), e);</span>
+<span class="fc" id="L115">        }</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        if (importUrl != null) {</span>
+<span class="fc" id="L117">            log.debug(&quot;importUrl: &quot; + importUrl.toExternalForm());</span>
+        } else {
+<span class="nc" id="L119">            log.error(&quot;importUrl is null!&quot;);</span>
+        }
+<span class="fc" id="L121">        return importUrl;</span>
+    }
+
+    private InputSource getImportFromUrl(String url) {
+<span class="fc" id="L125">        InputSource inputSource = null;</span>
+<span class="fc" id="L126">        DefaultHttpClient httpclient = null;</span>
+        try {
+<span class="fc" id="L128">            URL url2 = new URL(url);</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">            if (!url.toLowerCase().startsWith(&quot;http&quot;)) {</span>
+<span class="fc" id="L130">                return getImportFromFile(url);</span>
+            }
+<span class="nc" id="L132">            boolean usessl = false;</span>
+<span class="nc" id="L133">            int port = 80;</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">            if (url.toLowerCase().startsWith(&quot;https://&quot;)) {</span>
+<span class="nc" id="L135">                port = 443;</span>
+<span class="nc" id="L136">                usessl = true;</span>
+            }
+
+<span class="nc bnc" id="L139" title="All 2 branches missed.">            if (url2.getPort() &gt; 0) {</span>
+<span class="nc" id="L140">                port = url2.getPort();</span>
+            }
+
+<span class="nc bnc" id="L143" title="All 4 branches missed.">            if (ignoreSSLErrors &amp;&amp; usessl) {</span>
+<span class="nc" id="L144">                SchemeRegistry schemeRegistry = new SchemeRegistry();</span>
+<span class="nc" id="L145">                schemeRegistry.register(new Scheme(&quot;https&quot;, port, new MockSSLSocketFactory()));</span>
+<span class="nc" id="L146">                ClientConnectionManager cm = new BasicClientConnectionManager(schemeRegistry);</span>
+<span class="nc" id="L147">                httpclient = new DefaultHttpClient(cm);</span>
+<span class="nc" id="L148">            } else {</span>
+<span class="nc" id="L149">                httpclient = new DefaultHttpClient();</span>
+            }
+
+<span class="nc bnc" id="L152" title="All 6 branches missed.">            if (username != null &amp;&amp; username.length() &gt; 0</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">                    &amp;&amp; password != null &amp;&amp; password.length() &gt; 0) {</span>
+
+
+<span class="nc" id="L156">                httpclient.getCredentialsProvider().setCredentials(</span>
+<span class="nc" id="L157">                        new AuthScope(url2.getHost(), port),</span>
+                        new UsernamePasswordCredentials(username, password));
+            }
+<span class="nc" id="L160">            HttpGet httpGet = new HttpGet(url);</span>
+            try {
+
+<span class="nc" id="L163">                HttpResponse response1 = httpclient.execute(httpGet);</span>
+                //System.out.println(response1.getStatusLine());
+                // HttpEntity entity1 = response1.getEntity();
+                // do something useful with the response body
+                // and ensure it is fully consumed
+<span class="nc" id="L168">                ResponseHandler&lt;String&gt; responseHandler = new BasicResponseHandler();</span>
+<span class="nc" id="L169">                String handleResponse = responseHandler.handleResponse(response1);</span>
+<span class="nc" id="L170">                StringReader sr = new StringReader(handleResponse);</span>
+<span class="nc" id="L171">                inputSource = new InputSource(sr);</span>
+
+
+            } finally {
+<span class="nc" id="L175">                httpGet.releaseConnection();</span>
+
+<span class="nc" id="L177">            }</span>
+
+            //  InputStream inputStream = importUrl.openStream();
+            //inputSource = new InputSource(inputStream);
+<span class="nc" id="L181">            latestImportURI = url;</span>
+<span class="nc" id="L182">        } catch (Exception e) {</span>
+<span class="nc" id="L183">            log.error(e.getMessage());</span>
+<span class="nc" id="L184">            log.debug(e.getMessage(), e);</span>
+<span class="nc" id="L185">            lastException = e;</span>
+        } finally {
+<span class="pc bpc" id="L187" title="7 of 8 branches missed.">            if (httpclient != null) {</span>
+<span class="nc" id="L188">                httpclient.getConnectionManager().shutdown();</span>
+            }
+        }
+<span class="nc" id="L191">        return inputSource;</span>
+    }
+
+   /**
+    * see also {@link #getImportInputSource WSDLLocator.getImportInputSource} 
+    * @param parentLocation
+    * @param importLocation
+    * @return input source
+    */
+    public InputSource getImportInputSource(String parentLocation, String importLocation) {
+<span class="fc" id="L201">        InputSource inputSource = null;</span>
+        try {
+<span class="fc" id="L203">            URL importUrl = constructImportUrl(parentLocation, importLocation);</span>
+<span class="fc" id="L204">            return getImportFromUrl(importUrl.toExternalForm());</span>
+<span class="nc" id="L205">        } catch (Exception e) {</span>
+<span class="nc" id="L206">            log.error(e.getMessage(), e);</span>
+<span class="nc" id="L207">            lastException=e;</span>
+        }
+<span class="nc" id="L209">        return inputSource;</span>
+    }
+
+    /**
+     * see also {@link WSDLLocator#getBaseURI WSDLLocatorImpl.getBaseURI} 
+     * @return string
+     */
+    public String getBaseURI() {
+<span class="fc" id="L217">        String baseURIStr = null;</span>
+        try {
+<span class="fc" id="L219">            baseURIStr = baseURI.toURL().toExternalForm();</span>
+<span class="nc" id="L220">        } catch (IOException e) {</span>
+<span class="nc" id="L221">            log.error(e.getMessage());</span>
+<span class="nc" id="L222">            log.debug(e.getMessage(), e);</span>
+<span class="nc" id="L223">            lastException=e;</span>
+<span class="fc" id="L224">        }</span>
+<span class="fc" id="L225">        return baseURIStr;</span>
+    }
+
+    /**
+     * {@link WSDLLocator#getLatestImportURI getLatestImportURI}
+     * @return string
+     */
+    public String getLatestImportURI() {
+<span class="fc" id="L233">        return latestImportURI;</span>
+    }
+
+    /**
+     * {@link WSDLLocator#close close}
+     */
+    public void close() {
+<span class="pc bpc" id="L240" title="1 of 2 branches missed.">        if (inputStream != null) {</span>
+            try {
+<span class="fc" id="L242">                inputStream.close();</span>
+<span class="nc" id="L243">            } catch (IOException e) {</span>
+<span class="nc" id="L244">                log.error(e.getMessage(), e);</span>
+<span class="nc" id="L245">                lastException=e;</span>
+<span class="fc" id="L246">            }</span>
+        }
+<span class="fc" id="L248">    }</span>
+
+    private InputSource getImportFromFile(String url) {
+<span class="fc" id="L251">        InputSource inputSource = null;</span>
+        try {
+<span class="fc" id="L253">            URL importUrl = new URL(url);</span>
+<span class="fc" id="L254">            inputStream = importUrl.openStream();</span>
+<span class="fc" id="L255">            inputSource = new InputSource(inputStream);</span>
+<span class="fc" id="L256">            latestImportURI = importUrl.toExternalForm();</span>
+<span class="nc" id="L257">        } catch (Exception e) {</span>
+<span class="nc" id="L258">            log.error(e.getMessage());</span>
+<span class="nc" id="L259">            log.debug(e.getMessage(), e);</span>
+<span class="nc" id="L260">            lastException=e;</span>
+<span class="fc" id="L261">        }</span>
+<span class="fc" id="L262">        return inputSource;</span>
+    }
+    
+    /**
+     * Returns the last exception or null if there wasn't any. This was done because the authors of WSDLLocator apparently thought it would always work
+     * @return the last exception or null
+     */
+    public Exception getLastException()
+    {
+<span class="nc" id="L271">        return lastException;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

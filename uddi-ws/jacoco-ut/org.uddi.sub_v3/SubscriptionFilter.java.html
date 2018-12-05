@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SubscriptionFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.sub_v3</a> &gt; <span class="el_source">SubscriptionFilter.java</span></div><h1>SubscriptionFilter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+package org.uddi.sub_v3;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import org.uddi.api_v3.FindBinding;
+import org.uddi.api_v3.FindBusiness;
+import org.uddi.api_v3.FindRelatedBusinesses;
+import org.uddi.api_v3.FindService;
+import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.GetAssertionStatusReport;
+import org.uddi.api_v3.GetBindingDetail;
+import org.uddi.api_v3.GetBusinessDetail;
+import org.uddi.api_v3.GetServiceDetail;
+import org.uddi.api_v3.GetTModelDetail;
+
+
+/**
+ * &lt;p&gt;Java class for subscriptionFilter complex type.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * 
+ * &lt;pre&gt;
+ * &amp;lt;complexType name=&quot;subscriptionFilter&quot;&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;choice&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}find_binding&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}find_business&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}find_relatedBusinesses&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}find_service&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}find_tModel&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}get_bindingDetail&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}get_businessDetail&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}get_serviceDetail&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}get_tModelDetail&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}get_assertionStatusReport&quot;/&gt;
+ *       &amp;lt;/choice&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;subscriptionFilter&quot;, propOrder = {
+    &quot;findBinding&quot;,
+    &quot;findBusiness&quot;,
+    &quot;findRelatedBusinesses&quot;,
+    &quot;findService&quot;,
+    &quot;findTModel&quot;,
+    &quot;getBindingDetail&quot;,
+    &quot;getBusinessDetail&quot;,
+    &quot;getServiceDetail&quot;,
+    &quot;getTModelDetail&quot;,
+    &quot;getAssertionStatusReport&quot;
+})
+<span class="nc" id="L81">public class SubscriptionFilter implements Serializable{</span>
+	@XmlTransient
+	private static final long serialVersionUID = -1832900660546271425L;
+	@XmlElement(name = &quot;find_binding&quot;, namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected FindBinding findBinding;
+    @XmlElement(name = &quot;find_business&quot;, namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected FindBusiness findBusiness;
+    @XmlElement(name = &quot;find_relatedBusinesses&quot;, namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected FindRelatedBusinesses findRelatedBusinesses;
+    @XmlElement(name = &quot;find_service&quot;, namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected FindService findService;
+    @XmlElement(name = &quot;find_tModel&quot;, namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected FindTModel findTModel;
+    @XmlElement(name = &quot;get_bindingDetail&quot;, namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected GetBindingDetail getBindingDetail;
+    @XmlElement(name = &quot;get_businessDetail&quot;, namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected GetBusinessDetail getBusinessDetail;
+    @XmlElement(name = &quot;get_serviceDetail&quot;, namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected GetServiceDetail getServiceDetail;
+    @XmlElement(name = &quot;get_tModelDetail&quot;, namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected GetTModelDetail getTModelDetail;
+    @XmlElement(name = &quot;get_assertionStatusReport&quot;, namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected GetAssertionStatusReport getAssertionStatusReport;
+
+    /**
+     * Gets the value of the findBinding property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link FindBinding }
+     *     
+     */
+    public FindBinding getFindBinding() {
+<span class="nc" id="L114">        return findBinding;</span>
+    }
+
+    /**
+     * Sets the value of the findBinding property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link FindBinding }
+     *     
+     */
+    public void setFindBinding(FindBinding value) {
+<span class="nc" id="L126">        this.findBinding = value;</span>
+<span class="nc" id="L127">    }</span>
+
+    /**
+     * Gets the value of the findBusiness property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link FindBusiness }
+     *     
+     */
+    public FindBusiness getFindBusiness() {
+<span class="nc" id="L138">        return findBusiness;</span>
+    }
+
+    /**
+     * Sets the value of the findBusiness property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link FindBusiness }
+     *     
+     */
+    public void setFindBusiness(FindBusiness value) {
+<span class="nc" id="L150">        this.findBusiness = value;</span>
+<span class="nc" id="L151">    }</span>
+
+    /**
+     * Gets the value of the findRelatedBusinesses property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link FindRelatedBusinesses }
+     *     
+     */
+    public FindRelatedBusinesses getFindRelatedBusinesses() {
+<span class="nc" id="L162">        return findRelatedBusinesses;</span>
+    }
+
+    /**
+     * Sets the value of the findRelatedBusinesses property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link FindRelatedBusinesses }
+     *     
+     */
+    public void setFindRelatedBusinesses(FindRelatedBusinesses value) {
+<span class="nc" id="L174">        this.findRelatedBusinesses = value;</span>
+<span class="nc" id="L175">    }</span>
+
+    /**
+     * Gets the value of the findService property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link FindService }
+     *     
+     */
+    public FindService getFindService() {
+<span class="nc" id="L186">        return findService;</span>
+    }
+
+    /**
+     * Sets the value of the findService property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link FindService }
+     *     
+     */
+    public void setFindService(FindService value) {
+<span class="nc" id="L198">        this.findService = value;</span>
+<span class="nc" id="L199">    }</span>
+
+    /**
+     * Gets the value of the findTModel property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link FindTModel }
+     *     
+     */
+    public FindTModel getFindTModel() {
+<span class="nc" id="L210">        return findTModel;</span>
+    }
+
+    /**
+     * Sets the value of the findTModel property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link FindTModel }
+     *     
+     */
+    public void setFindTModel(FindTModel value) {
+<span class="nc" id="L222">        this.findTModel = value;</span>
+<span class="nc" id="L223">    }</span>
+
+    /**
+     * Gets the value of the getBindingDetail property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link GetBindingDetail }
+     *     
+     */
+    public GetBindingDetail getGetBindingDetail() {
+<span class="nc" id="L234">        return getBindingDetail;</span>
+    }
+
+    /**
+     * Sets the value of the getBindingDetail property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link GetBindingDetail }
+     *     
+     */
+    public void setGetBindingDetail(GetBindingDetail value) {
+<span class="nc" id="L246">        this.getBindingDetail = value;</span>
+<span class="nc" id="L247">    }</span>
+
+    /**
+     * Gets the value of the getBusinessDetail property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link GetBusinessDetail }
+     *     
+     */
+    public GetBusinessDetail getGetBusinessDetail() {
+<span class="nc" id="L258">        return getBusinessDetail;</span>
+    }
+
+    /**
+     * Sets the value of the getBusinessDetail property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link GetBusinessDetail }
+     *     
+     */
+    public void setGetBusinessDetail(GetBusinessDetail value) {
+<span class="nc" id="L270">        this.getBusinessDetail = value;</span>
+<span class="nc" id="L271">    }</span>
+
+    /**
+     * Gets the value of the getServiceDetail property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link GetServiceDetail }
+     *     
+     */
+    public GetServiceDetail getGetServiceDetail() {
+<span class="nc" id="L282">        return getServiceDetail;</span>
+    }
+
+    /**
+     * Sets the value of the getServiceDetail property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link GetServiceDetail }
+     *     
+     */
+    public void setGetServiceDetail(GetServiceDetail value) {
+<span class="nc" id="L294">        this.getServiceDetail = value;</span>
+<span class="nc" id="L295">    }</span>
+
+    /**
+     * Gets the value of the getTModelDetail property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link GetTModelDetail }
+     *     
+     */
+    public GetTModelDetail getGetTModelDetail() {
+<span class="nc" id="L306">        return getTModelDetail;</span>
+    }
+
+    /**
+     * Sets the value of the getTModelDetail property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link GetTModelDetail }
+     *     
+     */
+    public void setGetTModelDetail(GetTModelDetail value) {
+<span class="nc" id="L318">        this.getTModelDetail = value;</span>
+<span class="nc" id="L319">    }</span>
+
+    /**
+     * Gets the value of the getAssertionStatusReport property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link GetAssertionStatusReport }
+     *     
+     */
+    public GetAssertionStatusReport getGetAssertionStatusReport() {
+<span class="nc" id="L330">        return getAssertionStatusReport;</span>
+    }
+
+    /**
+     * Sets the value of the getAssertionStatusReport property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link GetAssertionStatusReport }
+     *     
+     */
+    public void setGetAssertionStatusReport(GetAssertionStatusReport value) {
+<span class="nc" id="L342">        this.getAssertionStatusReport = value;</span>
+<span class="nc" id="L343">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

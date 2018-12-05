@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClassUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi</a> &gt; <span class="el_source">ClassUtil.java</span></div><h1>ClassUtil.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2010 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi;
+
+import java.net.URL;
+
+/**
+ * @author &lt;a href=&quot;mailto:tcunning@apache.org&quot;&gt;Tom Cunningham&lt;/a&gt;
+ */
+
+<span class="nc" id="L25">public class ClassUtil {</span>
+   
+	public static Class&lt;?&gt; forName(String name, Class&lt;?&gt; caller)
+    	throws ClassNotFoundException
+    {
+<span class="fc" id="L30">	    ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">	    if (threadClassLoader != null) {</span>
+	        try {
+<span class="fc" id="L33">	            return Class.forName(name, true, threadClassLoader) ;</span>
+<span class="fc" id="L34">	        } catch (ClassNotFoundException cnfe) {</span>
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">	        	if (cnfe.getException() != null) {</span>
+<span class="nc" id="L36">	        		throw cnfe;</span>
+	        	}
+	        }
+	    }
+    
+<span class="fc" id="L41">	    ClassLoader callerClassLoader = caller.getClassLoader();</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">	    if (callerClassLoader != null) {</span>
+	        try {
+<span class="nc" id="L44">	            return Class.forName(name, true, callerClassLoader) ;</span>
+<span class="fc" id="L45">	        } catch (final ClassNotFoundException cnfe) {</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">	            if (cnfe.getException() != null) {</span>
+<span class="nc" id="L47">	                throw cnfe ;</span>
+	            }
+	        }
+	    }
+	    
+<span class="nc" id="L52">	    return Class.forName(name, true, ClassLoader.getSystemClassLoader()) ;</span>
+    }
+	
+	public static URL getResource(String name, Class&lt;?&gt; caller)
+	{
+<span class="fc" id="L57">		ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">		if (threadClassLoader != null) {</span>
+
+<span class="fc" id="L60">			URL url = threadClassLoader.getResource(name);</span>
+
+<span class="fc bfc" id="L62" title="All 2 branches covered.">			if (url != null)</span>
+<span class="fc" id="L63">				return url;</span>
+
+		}
+
+<span class="fc" id="L67">		ClassLoader callerClassLoader = caller.getClassLoader();</span>
+
+<span class="fc" id="L69">		return callerClassLoader.getResource(name);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

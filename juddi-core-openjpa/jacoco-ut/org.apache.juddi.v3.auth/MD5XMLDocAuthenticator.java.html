@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MD5XMLDocAuthenticator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.auth</a> &gt; <span class="el_source">MD5XMLDocAuthenticator.java</span></div><h1>MD5XMLDocAuthenticator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.v3.auth;
+
+import java.io.IOException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.xml.bind.JAXBException;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.config.Property;
+import org.apache.juddi.model.Publisher;
+import org.apache.juddi.v3.error.AuthenticationException;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.RegistryException;
+import org.apache.juddi.v3.error.UnknownUserException;
+
+/**
+ * Uses MD5 hashes for passwords
+ * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ */
+public class MD5XMLDocAuthenticator extends XMLDocAuthenticator {
+	
+<span class="pc" id="L44">	private Log logger = LogFactory.getLog(this.getClass());</span>
+	/**
+	 * @throws IOException
+	 * @throws JAXBException
+	 * @throws ConfigurationException 
+	 * 
+	 */
+	public MD5XMLDocAuthenticator() throws JAXBException, IOException, ConfigurationException {
+<span class="fc" id="L52">		super();</span>
+<span class="fc" id="L53">	}</span>
+        /**
+         * A private constructor used for calculating hashes only
+         * @param x 
+         */
+        private MD5XMLDocAuthenticator(boolean x)  {
+<span class="nc" id="L59">            super(x);</span>
+<span class="nc" id="L60">	}</span>
+	@Override
+	protected String getFilename() throws ConfigurationException {
+<span class="fc" id="L63">		return AppConfig.getConfiguration().getString(Property.JUDDI_USERSFILE, Property.DEFAULT_HASHED_XML_USERSFILE);</span>
+	}
+	/**
+	 *
+	 */
+	@Override
+	public String authenticate(String userID, String credential)
+	throws AuthenticationException, FatalErrorException {
+<span class="fc" id="L71">		preProcess(userID, credential);</span>
+<span class="fc" id="L72">		String encryptedCredential = hash(credential);</span>
+<span class="fc" id="L73">		return postProcess(userID, encryptedCredential);</span>
+	}
+	/**
+	 *
+	 */
+	private String hash(String str) throws FatalErrorException {
+		try {
+<span class="fc" id="L80">                        return DigestUtils.md5Hex(str)       ;</span>
+<span class="nc" id="L81">		} catch (Exception e) {</span>
+<span class="nc" id="L82">			logger.error(&quot;Exception caught hashing password&quot;, e);</span>
+<span class="nc" id="L83">			throw new FatalErrorException(new ErrorMessage(</span>
+<span class="nc" id="L84">					&quot;errors.auth.cryptor.InvalidKey&quot;, e.getMessage()));</span>
+		} 
+	}
+	/**
+	 * @param userID
+	 * @param credential
+	 * @throws RegistryException
+	 */
+	private void preProcess(String userID, String credential)
+	throws AuthenticationException {
+		// a userID must be specified.
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">		if (userID == null) {</span>
+<span class="nc" id="L96">			throw new UnknownUserException(new ErrorMessage(</span>
+					&quot;errors.auth.InvalidUserId&quot;));
+		}
+		// credential (password) must be specified.
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">		if (credential == null) {</span>
+<span class="nc" id="L101">			throw new UnknownUserException(new ErrorMessage(</span>
+			&quot;errors.auth.InvalidCredentials&quot;));
+		}
+<span class="fc" id="L104">	}</span>
+	/**
+	 * @param userID
+	 * @param encryptedCredential
+	 * @return user id
+	 * @throws AuthenticationException
+	 */
+	private String postProcess(String userID, String encryptedCredential)
+	throws AuthenticationException {
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">		if (userTable.containsKey(userID)) {</span>
+<span class="fc" id="L114">			User user = (User) userTable.get(userID);</span>
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">			if ((user.getPassword() == null)</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">					|| (!encryptedCredential.equals(user.getPassword()))) {</span>
+<span class="fc" id="L117">				throw new UnknownUserException(new ErrorMessage(</span>
+						&quot;errors.auth.InvalidCredentials&quot;, userID));
+			}
+<span class="fc" id="L120">		} else {</span>
+<span class="nc" id="L121">			throw new UnknownUserException(new ErrorMessage(</span>
+					&quot;errors.auth.InvalidUserId&quot;, userID));
+		}
+<span class="fc" id="L124">		int MaxBindingsPerService = -1;</span>
+<span class="fc" id="L125">                int MaxServicesPerBusiness = -1;</span>
+<span class="fc" id="L126">                int MaxTmodels = -1;</span>
+<span class="fc" id="L127">                int MaxBusinesses = -1;</span>
+                try {
+<span class="fc" id="L129">                        MaxBindingsPerService = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_BINDINGS_PER_SERVICE, -1);</span>
+<span class="fc" id="L130">                        MaxServicesPerBusiness = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_SERVICES_PER_BUSINESS, -1);</span>
+<span class="fc" id="L131">                        MaxTmodels = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_TMODELS_PER_PUBLISHER, -1);</span>
+<span class="fc" id="L132">                        MaxBusinesses = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_BUSINESSES_PER_PUBLISHER, -1);</span>
+<span class="nc" id="L133">                } catch (Exception ex) {</span>
+<span class="nc" id="L134">                        MaxBindingsPerService = -1;</span>
+<span class="nc" id="L135">                        MaxServicesPerBusiness = -1;</span>
+<span class="nc" id="L136">                        MaxTmodels = -1;</span>
+<span class="nc" id="L137">                        MaxBusinesses = -1;</span>
+<span class="nc" id="L138">                        log.error(&quot;config exception! &quot; + userID, ex);</span>
+<span class="fc" id="L139">                }</span>
+<span class="fc" id="L140">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L141">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L143">                        tx.begin();</span>
+<span class="fc" id="L144">                        Publisher publisher = em.find(Publisher.class, userID);</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">                        if (publisher == null) {</span>
+<span class="nc" id="L146">                                log.warn(&quot;Publisher \&quot;&quot; + userID + &quot;\&quot; was not found in the database, adding the publisher in on the fly.&quot;);</span>
+<span class="nc" id="L147">                                publisher = new Publisher();</span>
+<span class="nc" id="L148">                                publisher.setAuthorizedName(userID);</span>
+<span class="nc" id="L149">                                publisher.setIsAdmin(&quot;false&quot;);</span>
+<span class="nc" id="L150">                                publisher.setIsEnabled(&quot;true&quot;);</span>
+<span class="nc" id="L151">                                publisher.setMaxBindingsPerService(MaxBindingsPerService);</span>
+<span class="nc" id="L152">                                publisher.setMaxBusinesses(MaxBusinesses);</span>
+<span class="nc" id="L153">                                publisher.setMaxServicesPerBusiness(MaxServicesPerBusiness);</span>
+<span class="nc" id="L154">                                publisher.setMaxTmodels(MaxTmodels);</span>
+<span class="nc" id="L155">                                publisher.setPublisherName(&quot;Unknown&quot;);</span>
+<span class="nc" id="L156">                                em.persist(publisher);</span>
+<span class="nc" id="L157">                                tx.commit();</span>
+                        }
+                } finally {
+<span class="pc bpc" id="L160" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="pc" id="L161">                                tx.rollback();</span>
+                        }
+<span class="pc" id="L163">                        em.close();</span>
+<span class="fc" id="L164">                }</span>
+<span class="fc" id="L165">		return userID;</span>
+	}
+        
+         public static void main(String[] args) throws Exception
+         {
+<span class="nc" id="L170">             System.out.print(&quot;Password: &quot;);</span>
+<span class="nc" id="L171">             char[] readPassword = System.console().readPassword();</span>
+<span class="nc" id="L172">             System.out.println(&quot;Cipher: &quot; + new MD5XMLDocAuthenticator(true).hash(new String(readPassword)));</span>
+<span class="nc" id="L173">         }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

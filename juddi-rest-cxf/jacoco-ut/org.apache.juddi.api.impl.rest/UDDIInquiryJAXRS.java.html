@@ -1,0 +1,954 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UDDIInquiryJAXRS.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI REST Services using Apache CXF</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.api.impl.rest</a> &gt; <span class="el_source">UDDIInquiryJAXRS.java</span></div><h1>UDDIInquiryJAXRS.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2013 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.api.impl.rest;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+
+import javax.ws.rs.*;
+import javax.wsdl.Definition;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.impl.UDDIInquiryImpl;
+import org.apache.juddi.api_v3.AccessPointType;
+import org.apache.juddi.api_v3.rest.UriContainer;
+import org.apache.juddi.v3.client.UDDIConstants;
+import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
+import org.apache.juddi.v3.client.mapping.wsdl.ReadWSDL;
+import org.apache.juddi.v3.client.mapping.wsdl.WSDL2UDDI;
+import org.apache.juddi.v3.error.UDDIErrorHelper;
+import org.uddi.api_v3.*;
+import org.uddi.sub_v3.KeyBag;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * UDDI Inquiry functions via a JAX-RS REST API. It's basically a wrapper for
+ * the REST fans to access UDDI from a URL pattern This class will ONLY deploy
+ * using the Apache CXF WS stack for REST (JAX-RS)
+ *
+ * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ */
+@Path(&quot;/&quot;)
+@Produces({&quot;application/xml&quot;, &quot;application/json&quot;, &quot;text/html&quot;})
+@org.apache.cxf.jaxrs.model.wadl.Description(&quot;This service provides access to UDDIv3 data via a REST interface, including the &quot;
+        + &quot;recommendation specified in the UDDIv3 spec titled, HTTP GET, as well as a number of methods above and beyond.&quot;)
+<span class="fc" id="L52">public class UDDIInquiryJAXRS {</span>
+
+<span class="fc" id="L54">        private static org.apache.juddi.api.impl.UDDIInquiryImpl inquiry = new UDDIInquiryImpl();</span>
+<span class="fc" id="L55">        private static final Log log = LogFactory.getLog(UDDIInquiryJAXRS.class);</span>
+
+        /**
+         * Returns the details of a business entity in JSON
+         *
+         * @param id
+         * @return json
+         */
+        @GET
+        @Path(&quot;/JSON/businessKey/{id}&quot;)
+        @Produces(&quot;application/json&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the details of a business entity in JSON&quot;)
+        public org.uddi.api_v3.BusinessEntity getBusinessDetailJSON(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
+<span class="nc" id="L68">                return getBusinessDetail(id);</span>
+        }
+
+        /**
+         * Returns the details of a business entity in XML
+         *
+         * @param id
+         * @return xml
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/XML/businessKey/{id}&quot;)
+        @Produces(&quot;application/xml&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the details of a business entity in XML&quot;)
+        public org.uddi.api_v3.BusinessEntity getBusinessDetailXML(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
+<span class="fc" id="L83">                return getBusinessDetail(id);</span>
+        }
+
+        private org.uddi.api_v3.BusinessEntity getBusinessDetail(String id) {
+<span class="fc" id="L87">                GetBusinessDetail gbd = new GetBusinessDetail();</span>
+<span class="fc" id="L88">                gbd.getBusinessKey().add(id);</span>
+                BusinessDetail businessDetail;
+                try {
+<span class="fc" id="L91">                        businessDetail = inquiry.getBusinessDetail(gbd);</span>
+<span class="fc" id="L92">                        return businessDetail.getBusinessEntity().get(0);</span>
+<span class="fc" id="L93">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L94">                        HandleException(ex);</span>
+                }
+<span class="nc" id="L96">                return null;</span>
+        }
+
+        /**
+         * Returns the details of a tModel entity in XML
+         *
+         * @param id
+         * @return xml
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/XML/tModelKey/{id}&quot;)
+        @Produces(&quot;application/xml&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the details of a tModel entity in XML&quot;)
+        public org.uddi.api_v3.TModel getTModelDetailXML(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
+<span class="fc" id="L111">                return getTModelDetail(id);</span>
+        }
+
+        /**
+         * Returns the details of a tModel entity in JSON
+         *
+         * @param id
+         * @return json
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/JSON/tModelKey/{id}&quot;)
+        @Produces(&quot;application/json&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the details of a tModel entity in JSON&quot;)
+        public org.uddi.api_v3.TModel getTModelDetailJSON(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
+<span class="fc" id="L126">                return getTModelDetail(id);</span>
+        }
+
+        private org.uddi.api_v3.TModel getTModelDetail(String id) {
+<span class="fc" id="L130">                GetTModelDetail gbd = new GetTModelDetail();</span>
+<span class="fc" id="L131">                gbd.getTModelKey().add(id);</span>
+
+                try {
+<span class="fc" id="L134">                        TModelDetail tModelDetail = inquiry.getTModelDetail(gbd);</span>
+<span class="fc" id="L135">                        return tModelDetail.getTModel().get(0);</span>
+<span class="fc" id="L136">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L137">                        HandleException(ex);</span>
+                }
+<span class="nc" id="L139">                return null;</span>
+        }
+
+        /**
+         * Returns the details of a service entity in JSON
+         *
+         * @param id
+         * @return json
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/JSON/serviceKey/{id}&quot;)
+        @Produces(&quot;application/json&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the details of a service entity in JSON&quot;)
+        public org.uddi.api_v3.BusinessService getServiceDetailJSON(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
+<span class="fc" id="L154">                return getServiceDetail(id);</span>
+        }
+
+        /**
+         * This method implements the UDDIv3 spec for HTTP GET Inquiry services
+         * Returns the details of a UDDI entity in JSON, use query parameters
+         * serviceKey,businessKey,tModelKey, or bindingKey
+         *
+         * @param serviceKey
+         * @param businessKey
+         * @param tModelKey
+         * @param bindingKey
+         * @return json
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/JSON/getDetail&quot;)
+        @Produces(&quot;application/json&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the details of a UDDI entity in JSON, use query parameters&quot;
+                + &quot;serviceKey,businessKey,tModelKey, bindingKey&quot;)
+        public Object getDetailJSON(@QueryParam(&quot;serviceKey&quot;) String serviceKey,
+                @QueryParam(&quot;businessKey&quot;) String businessKey,
+                @QueryParam(&quot;tModelKey&quot;) String tModelKey,
+                @QueryParam(&quot;bindingKey&quot;) String bindingKey) throws WebApplicationException {
+<span class="fc" id="L178">                int params = 0;</span>
+<span class="pc bpc" id="L179" title="1 of 2 branches missed.">                if (businessKey != null) {</span>
+<span class="nc" id="L180">                        params++;</span>
+                }
+<span class="pc bpc" id="L182" title="1 of 2 branches missed.">                if (tModelKey != null) {</span>
+<span class="nc" id="L183">                        params++;</span>
+                }
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">                if (bindingKey != null) {</span>
+<span class="nc" id="L186">                        params++;</span>
+                }
+<span class="fc bfc" id="L188" title="All 2 branches covered.">                if (serviceKey != null) {</span>
+<span class="fc" id="L189">                        params++;</span>
+                }
+<span class="fc bfc" id="L191" title="All 2 branches covered.">                if (params != 1) {</span>
+<span class="fc" id="L192">                        throw new WebApplicationException(400);</span>
+                }
+
+<span class="pc bpc" id="L195" title="1 of 2 branches missed.">                if (businessKey != null) {</span>
+<span class="nc" id="L196">                        return getBusinessDetail(businessKey);</span>
+                }
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">                if (tModelKey != null) {</span>
+<span class="nc" id="L199">                        return getTModelDetail(tModelKey);</span>
+                }
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">                if (bindingKey != null) {</span>
+<span class="nc" id="L202">                        return getBindingDetail(bindingKey);</span>
+                }
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">                if (serviceKey != null) {</span>
+<span class="nc" id="L205">                        return getServiceDetail(serviceKey);</span>
+                }
+<span class="nc" id="L207">                throw new WebApplicationException(400);</span>
+        }
+
+        /**
+         * This method implements the UDDIv3 spec for HTTP GET Inquiry services.
+         * Returns the details of a UDDI entity in XML, use query parameters
+         * serviceKey,businessKey,tModelKey, or bindingKey
+         *
+         * @param serviceKey
+         * @param businessKey
+         * @param tModelKey
+         * @param bindingKey
+         * @return xml
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/XML/getDetail&quot;)
+        @Produces(&quot;application/xml&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;This method implements the UDDIv3 spec for HTTP GET Inquiry services. Returns the details of a UDDI entity in XML, use query parameters&quot;
+                + &quot;serviceKey,businessKey,tModelKey, bindingKey&quot;)
+        public Object getDetailXML(@QueryParam(&quot;serviceKey&quot;) String serviceKey,
+                @QueryParam(&quot;businessKey&quot;) String businessKey,
+                @QueryParam(&quot;tModelKey&quot;) String tModelKey,
+                @QueryParam(&quot;bindingKey&quot;) String bindingKey) throws WebApplicationException {
+<span class="fc" id="L231">                int params = 0;</span>
+<span class="pc bpc" id="L232" title="1 of 2 branches missed.">                if (businessKey != null) {</span>
+<span class="nc" id="L233">                        params++;</span>
+                }
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">                if (tModelKey != null) {</span>
+<span class="nc" id="L236">                        params++;</span>
+                }
+<span class="pc bpc" id="L238" title="1 of 2 branches missed.">                if (bindingKey != null) {</span>
+<span class="nc" id="L239">                        params++;</span>
+                }
+<span class="fc bfc" id="L241" title="All 2 branches covered.">                if (serviceKey != null) {</span>
+<span class="fc" id="L242">                        params++;</span>
+                }
+<span class="fc bfc" id="L244" title="All 2 branches covered.">                if (params != 1) {</span>
+<span class="fc" id="L245">                        throw new WebApplicationException(400);</span>
+                }
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">                if (businessKey != null) {</span>
+<span class="nc" id="L248">                        return getBusinessDetail(businessKey);</span>
+                }
+<span class="pc bpc" id="L250" title="1 of 2 branches missed.">                if (tModelKey != null) {</span>
+<span class="nc" id="L251">                        return getTModelDetail(tModelKey);</span>
+                }
+<span class="pc bpc" id="L253" title="1 of 2 branches missed.">                if (bindingKey != null) {</span>
+<span class="nc" id="L254">                        return getBindingDetail(bindingKey);</span>
+                }
+<span class="pc bpc" id="L256" title="1 of 2 branches missed.">                if (serviceKey != null) {</span>
+<span class="nc" id="L257">                        return getServiceDetail(serviceKey);</span>
+                }
+<span class="nc" id="L259">                throw new WebApplicationException(400);</span>
+        }
+
+        /**
+         * Returns the details of a service entity in XML
+         *
+         * @param id
+         * @return xml
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/XML/serviceKey/{id}&quot;)
+        @Produces(&quot;application/xml&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the details of a service entity in XML&quot;)
+        public org.uddi.api_v3.BusinessService getServiceDetailXML(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
+<span class="fc" id="L274">                return getServiceDetail(id);</span>
+        }
+
+        private BusinessService getServiceDetail(String id) {
+<span class="fc" id="L278">                GetServiceDetail gbd = new GetServiceDetail();</span>
+<span class="fc" id="L279">                gbd.getServiceKey().add(id);</span>
+
+                try {
+<span class="fc" id="L282">                        ServiceDetail serviceDetail = inquiry.getServiceDetail(gbd);</span>
+<span class="fc" id="L283">                        return serviceDetail.getBusinessService().get(0);</span>
+<span class="fc" id="L284">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L285">                        HandleException(ex);</span>
+                }
+<span class="nc" id="L287">                return null;</span>
+        }
+
+        /**
+         * Returns the operational details of a given entity in JSON
+         *
+         * @param id
+         * @return json
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/JSON/opInfo/{id}&quot;)
+        @Produces(&quot;application/json&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the operational details of a given entity in JSON&quot;)
+        public org.uddi.api_v3.OperationalInfo getOpInfoJSON(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
+<span class="fc" id="L302">                return getOpInfoDetail(id);</span>
+        }
+
+        /**
+         * Returns the operational details of a given entity in XML
+         *
+         * @param id
+         * @return xml
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/XML/opInfo/{id}&quot;)
+        @Produces(&quot;application/xml&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the operational details of a given entity in XML&quot;)
+        public org.uddi.api_v3.OperationalInfo getOpInfoXML(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
+<span class="fc" id="L317">                return getOpInfoDetail(id);</span>
+        }
+
+        private OperationalInfo getOpInfoDetail(String id) {
+<span class="fc" id="L321">                GetOperationalInfo req = new GetOperationalInfo();</span>
+<span class="fc" id="L322">                req.getEntityKey().add(id);</span>
+                try {
+<span class="fc" id="L324">                        OperationalInfos operationalInfo = inquiry.getOperationalInfo(req);</span>
+<span class="fc" id="L325">                        return operationalInfo.getOperationalInfo().get(0);</span>
+<span class="fc" id="L326">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L327">                        HandleException(ex);</span>
+                }
+<span class="nc" id="L329">                return null;</span>
+        }
+
+        /**
+         * Returns the binding details of a given entity in JSON
+         *
+         * @param id
+         * @return json
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/JSON/bindingKey/{id}&quot;)
+        @Produces(&quot;application/json&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the binding details of a given entity in JSON&quot;)
+        public org.uddi.api_v3.BindingTemplate getBindingDetailJSON(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
+<span class="fc" id="L344">                return getBindingDetail(id);</span>
+        }
+
+        /**
+         * Returns the binding details of a given entity in XML
+         *
+         * @param id
+         * @return xml
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/XML/bindingKey/{id}&quot;)
+        @Produces(&quot;application/xml&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the binding details of a given entity in XML&quot;)
+        public org.uddi.api_v3.BindingTemplate getBindingDetailXML(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
+<span class="fc" id="L359">                return getBindingDetail(id);</span>
+        }
+
+        private BindingTemplate getBindingDetail(String id) {
+<span class="fc" id="L363">                GetBindingDetail req = new GetBindingDetail();</span>
+<span class="fc" id="L364">                req.getBindingKey().add(id);</span>
+                try {
+<span class="fc" id="L366">                        BindingDetail bindingDetail = inquiry.getBindingDetail(req);</span>
+<span class="fc" id="L367">                        return bindingDetail.getBindingTemplate().get(0);</span>
+<span class="fc" id="L368">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L369">                        HandleException(ex);</span>
+                }
+<span class="nc" id="L371">                return null;</span>
+        }
+
+        /**
+         * Returns the binding details of a given entity in JSON
+         *
+         * @param id
+         * @return json
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/JSON/endpointsByService/{id}&quot;)
+        @Produces(&quot;application/json&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the service access points of a given service in JSON&quot;)
+        public UriContainer geEndpointsByServiceJSON(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
+<span class="fc" id="L386">                return getEndpointsByService(id);</span>
+        }
+
+        /**
+         * Returns the binding details of a given entity in XML
+         *
+         * @param id
+         * @return xml
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/XML/endpointsByService/{id}&quot;)
+        @Produces(&quot;application/xml&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the service access points of a given service in XML&quot;)
+        public UriContainer getEndpointsByServiceXML(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
+<span class="fc" id="L401">                return getEndpointsByService(id);</span>
+        }
+
+        /**
+         * Returns the business keys of the first 100 registered businesses in
+         * XML
+         *
+         * @return xml
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/XML/businessList&quot;)
+        @Produces(&quot;application/xml&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the business keys of the first 100 registered businesses in XML&quot;)
+        public KeyBag getBusinessListXML() throws WebApplicationException {
+<span class="fc" id="L416">                return getBusinessListData();</span>
+        }
+
+        /**
+         * Returns the business keys of the first 100 registered businesses in
+         * JSON
+         *
+         * @return json
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/JSON/businessList&quot;)
+        @Produces(&quot;application/json&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the business keys of the first 100 registered businesses in JSON&quot;)
+        public KeyBag getBusinessListJSON() throws WebApplicationException {
+<span class="fc" id="L431">                return getBusinessListData();</span>
+        }
+
+        /**
+         * Returns the Service keys of the first 100 registered services in XML
+         *
+         * @return xml
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/XML/serviceList&quot;)
+        @Produces(&quot;application/xml&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the Service keys of the first 100 registered services in XML&quot;)
+        public KeyBag getServiceListXML() throws WebApplicationException {
+<span class="fc" id="L445">                return getServiceListData();</span>
+        }
+
+        /**
+         * Returns the Service keys of the first 100 registered services in JSON
+         *
+         * @return json
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/JSON/serviceList&quot;)
+        @Produces(&quot;application/json&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the Service keys of the first 100 registered services in JSON&quot;)
+        public KeyBag getServiceListJSON() throws WebApplicationException {
+<span class="fc" id="L459">                return getServiceListData();</span>
+        }
+
+        /**
+         * Returns the tModel keys of the first 100 registered services in XML
+         *
+         * @return xml
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/XML/tModelList&quot;)
+        @Produces(&quot;application/xml&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the tModel keys of the first 100 registered services in XML&quot;)
+        public KeyBag getTModelListXML() throws WebApplicationException {
+<span class="fc" id="L473">                return getTmodelListData();</span>
+        }
+
+        /**
+         * Returns the search results for registered businesses in XML
+         *
+         * @param name
+         * @param lang
+         * @param findQualifiers
+         * @param maxrows
+         * @param offset
+         * @return BusinessList
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/XML/businessSearch&quot;)
+        @Produces(&quot;application/xml&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the search results for registered businesses in XML&quot;)
+        public BusinessList getBusinessSearchXML(@QueryParam(&quot;name&quot;) String name,
+                @QueryParam(&quot;lang&quot;) String lang,
+                @QueryParam(&quot;findQualifiers&quot;) String findQualifiers,
+                @QueryParam(&quot;maxrows&quot;) Integer maxrows,
+                @QueryParam(&quot;offset&quot;) Integer offset) throws WebApplicationException {
+<span class="nc" id="L496">                return getBusinessSearch(name, lang, findQualifiers, maxrows, offset);</span>
+        }
+
+        /**
+         * Returns the search results for registered businesses in JSON
+         *
+         * @param name
+         * @param lang
+         * @param findQualifiers
+         * @param maxrows
+         * @param offset
+         * @return BusinessList
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/JSON/businessSearch&quot;)
+        @Produces(&quot;application/json&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the search results for registered businesses in JSON&quot;)
+        public BusinessList getBusinessSearchJSON(@QueryParam(&quot;name&quot;) String name,
+                @QueryParam(&quot;lang&quot;) String lang,
+                @QueryParam(&quot;findQualifiers&quot;) String findQualifiers,
+                @QueryParam(&quot;maxrows&quot;) Integer maxrows,
+                @QueryParam(&quot;offset&quot;) Integer offset) throws WebApplicationException {
+<span class="nc" id="L519">                return getBusinessSearch(name, lang, findQualifiers, maxrows, offset);</span>
+        }
+
+        /**
+         * Returns the search results for registered services in JSON
+         *
+         * @param name
+         * @param lang
+         * @param findQualifiers
+         * @param maxrows
+         * @param offset
+         * @return serviceList
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/JSON/serviceSearch&quot;)
+        @Produces(&quot;application/json&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the search results for registered services in JSON&quot;)
+        public ServiceList getServiceSearchJSON(@QueryParam(&quot;name&quot;) String name,
+                @QueryParam(&quot;lang&quot;) String lang,
+                @QueryParam(&quot;findQualifiers&quot;) String findQualifiers,
+                @QueryParam(&quot;maxrows&quot;) Integer maxrows,
+                @QueryParam(&quot;offset&quot;) Integer offset) throws WebApplicationException {
+<span class="nc" id="L542">                return getServiceSearch(name, lang, findQualifiers, maxrows, offset);</span>
+        }
+
+        /**
+         * Returns the search results for registered services in XML
+         *
+         * @param name
+         * @param lang
+         * @param findQualifiers
+         * @param maxrows
+         * @param offset
+         * @return serviceList
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/XML/serviceSearch&quot;)
+        @Produces(&quot;application/json&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the search results for registered services in XML&quot;)
+        public ServiceList getServiceSearchXML(@QueryParam(&quot;name&quot;) String name,
+                @QueryParam(&quot;lang&quot;) String lang,
+                @QueryParam(&quot;findQualifiers&quot;) String findQualifiers,
+                @QueryParam(&quot;maxrows&quot;) Integer maxrows,
+                @QueryParam(&quot;offset&quot;) Integer offset) throws WebApplicationException {
+<span class="nc" id="L565">                return getServiceSearch(name, lang, findQualifiers, maxrows, offset);</span>
+        }
+
+        /**
+         * Returns the tModel keys of the first 100 registered services in JSON
+         *
+         * @return json
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/JSON/tModelList&quot;)
+        @Produces(&quot;application/json&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the tModel keys of the first 100 registered services in JSON&quot;)
+        public KeyBag getTModelListJSON() throws WebApplicationException {
+<span class="fc" id="L579">                return getTmodelListData();</span>
+        }
+
+        /**
+         * Returns the search results for registered tModel in JSON
+         *
+         * @param name
+         * @param lang
+         * @param findQualifiers
+         * @param maxrows
+         * @param offset
+         * @return TModelList
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/JSON/searchTModel&quot;)
+        @Produces(&quot;application/json&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the search results for registered tModel in JSON&quot;)
+        public TModelList getTModelSearchJSON(@QueryParam(&quot;name&quot;) String name,
+                @QueryParam(&quot;lang&quot;) String lang,
+                @QueryParam(&quot;findQualifiers&quot;) String findQualifiers,
+                @QueryParam(&quot;maxrows&quot;) Integer maxrows,
+                @QueryParam(&quot;offset&quot;) Integer offset) throws WebApplicationException {
+<span class="nc" id="L602">                return getTModelSearch(name, lang, findQualifiers, maxrows, offset);</span>
+        }
+
+        /**
+         * Returns the search results for registered tModel in XML
+         *
+         * @param name
+         * @param lang
+         * @param findQualifiers
+         * @param maxrows
+         * @param offset
+         * @return TModelList
+         * @throws WebApplicationException
+         */
+        @GET
+        @Path(&quot;/XML/searchTModel&quot;)
+        @Produces(&quot;application/json&quot;)
+        @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the search results for registered tModel in XML&quot;)
+        public TModelList getTModelSearchXML(@QueryParam(&quot;name&quot;) String name,
+                @QueryParam(&quot;lang&quot;) String lang,
+                @QueryParam(&quot;findQualifiers&quot;) String findQualifiers,
+                @QueryParam(&quot;maxrows&quot;) Integer maxrows,
+                @QueryParam(&quot;offset&quot;) Integer offset) throws WebApplicationException {
+<span class="nc" id="L625">                return getTModelSearch(name, lang, findQualifiers, maxrows, offset);</span>
+        }
+
+        private UriContainer getEndpointsByService(String id) throws WebApplicationException {
+<span class="fc" id="L629">                UriContainer c = new UriContainer();</span>
+<span class="fc" id="L630">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L631">                GetServiceDetail fs = new GetServiceDetail();</span>
+
+<span class="fc" id="L633">                fs.getServiceKey().add(id);</span>
+                try {
+<span class="fc" id="L635">                        ServiceDetail serviceDetail = inquiry.getServiceDetail(fs);</span>
+<span class="pc bpc" id="L636" title="2 of 4 branches missed.">                        if (serviceDetail == null || serviceDetail.getBusinessService().isEmpty()) {</span>
+<span class="nc" id="L637">                                throw new WebApplicationException(400);</span>
+                        } else {
+<span class="fc" id="L639">                                List&lt;String&gt; endpoints = GetEndpoints(serviceDetail, null);</span>
+<span class="fc" id="L640">                                ret.addAll(endpoints);</span>
+                        }
+<span class="fc" id="L642">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L643">                        HandleException(ex);</span>
+<span class="fc" id="L644">                }</span>
+<span class="fc" id="L645">                c.setUriList(ret);</span>
+<span class="fc" id="L646">                return c;</span>
+        }
+
+        private List&lt;String&gt; GetEndpoints(ServiceDetail serviceDetail, String authInfo) throws DispositionReportFaultMessage {
+<span class="fc" id="L650">                List&lt;String&gt; items = new ArrayList&lt;String&gt;();</span>
+<span class="pc bpc" id="L651" title="1 of 2 branches missed.">                if (serviceDetail == null) {</span>
+<span class="nc" id="L652">                        return items;</span>
+                }
+<span class="fc bfc" id="L654" title="All 2 branches covered.">                for (int i = 0; i &lt; serviceDetail.getBusinessService().size(); i++) {</span>
+<span class="pc bpc" id="L655" title="1 of 2 branches missed.">                        if (serviceDetail.getBusinessService().get(i).getBindingTemplates() != null) {</span>
+<span class="fc bfc" id="L656" title="All 2 branches covered.">                                for (int k = 0; k &lt; serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {</span>
+<span class="fc" id="L657">                                        items.addAll(ParseBinding(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k), authInfo));</span>
+                                }
+                        }
+                }
+<span class="fc" id="L661">                return items;</span>
+        }
+
+        private List&lt;String&gt; GetBindingInfo(String value, String cred) throws DispositionReportFaultMessage {
+<span class="nc" id="L665">                List&lt;String&gt; items = new ArrayList&lt;String&gt;();</span>
+<span class="nc bnc" id="L666" title="All 2 branches missed.">                if (value == null) {</span>
+<span class="nc" id="L667">                        return items;</span>
+                }
+<span class="nc" id="L669">                GetBindingDetail b = new GetBindingDetail();</span>
+<span class="nc" id="L670">                b.setAuthInfo(cred);</span>
+<span class="nc" id="L671">                b.getBindingKey().add(value);</span>
+<span class="nc" id="L672">                BindingDetail bindingDetail = inquiry.getBindingDetail(b);</span>
+<span class="nc bnc" id="L673" title="All 2 branches missed.">                for (int i = 0; i &lt; bindingDetail.getBindingTemplate().size(); i++) {</span>
+<span class="nc" id="L674">                        items.addAll(ParseBinding(bindingDetail.getBindingTemplate().get(i), cred));</span>
+                }
+<span class="nc" id="L676">                return items;</span>
+        }
+
+        private List&lt;String&gt; FetchWSDL(String value) {
+<span class="fc" id="L680">                List&lt;String&gt; items = new ArrayList&lt;String&gt;();</span>
+
+<span class="pc bpc" id="L682" title="1 of 4 branches missed.">                if (value.startsWith(&quot;http://&quot;) || value.startsWith(&quot;https://&quot;)) {</span>
+                        //here, we need an HTTP Get for WSDLs
+<span class="fc" id="L684">                        org.apache.juddi.v3.client.mapping.wsdl.ReadWSDL r = new ReadWSDL();</span>
+<span class="fc" id="L685">                        r.setIgnoreSSLErrors(true);</span>
+                        try {
+<span class="nc" id="L687">                                Definition wsdlDefinition = r.readWSDL(new URL(value));</span>
+<span class="nc" id="L688">                                Properties properties = new Properties();</span>
+
+<span class="nc" id="L690">                                properties.put(&quot;keyDomain&quot;, &quot;domain&quot;);</span>
+<span class="nc" id="L691">                                properties.put(&quot;businessName&quot;, &quot;biz&quot;);</span>
+<span class="nc" id="L692">                                properties.put(&quot;serverName&quot;, &quot;localhost&quot;);</span>
+<span class="nc" id="L693">                                properties.put(&quot;serverPort&quot;, &quot;80&quot;);</span>
+
+<span class="nc" id="L695">                                WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);</span>
+<span class="nc" id="L696">                                BusinessServices businessServices = wsdl2UDDI.createBusinessServices(wsdlDefinition);</span>
+<span class="nc bnc" id="L697" title="All 2 branches missed.">                                for (int i = 0; i &lt; businessServices.getBusinessService().size(); i++) {</span>
+<span class="nc bnc" id="L698" title="All 2 branches missed.">                                        if (businessServices.getBusinessService().get(i).getBindingTemplates() != null) {</span>
+<span class="nc bnc" id="L699" title="All 2 branches missed.">                                                for (int k = 0; k &lt; businessServices.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {</span>
+<span class="nc" id="L700">                                                        items.addAll(ParseBinding(businessServices.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k), null));</span>
+                                                }
+                                        }
+                                }
+<span class="fc" id="L704">                        } catch (Exception ex) {</span>
+<span class="nc" id="L705">                        }</span>
+
+                }
+<span class="fc" id="L708">                return items;</span>
+        }
+
+        private List&lt;String&gt; ParseBinding(BindingTemplate get, String authInfo) throws DispositionReportFaultMessage {
+<span class="fc" id="L712">                List&lt;String&gt; items = new ArrayList&lt;String&gt;();</span>
+<span class="pc bpc" id="L713" title="2 of 4 branches missed.">                if (get == null || get.getAccessPoint() == null) {</span>
+<span class="nc" id="L714">                        return items;</span>
+                }
+<span class="pc bpc" id="L716" title="1 of 2 branches missed.">                if (get.getHostingRedirector() != null) {</span>
+                        //hosting Redirector is the same as &quot;reference this other binding template&quot;. It's actually deprecated so 
+                        //don't expect to see this too often
+<span class="nc" id="L719">                        items.addAll(GetBindingInfo(get.getHostingRedirector().getBindingKey(), authInfo));</span>
+                }
+<span class="pc bpc" id="L721" title="1 of 2 branches missed.">                if (get.getAccessPoint() != null) {</span>
+<span class="fc" id="L722">                        String usetype = get.getAccessPoint().getUseType();</span>
+<span class="pc bpc" id="L723" title="1 of 2 branches missed.">                        if (usetype == null) {</span>
+
+                                //this is unexpected, usetype is a required field
+<span class="nc" id="L726">                                items.add((get.getAccessPoint().getValue()));</span>
+
+<span class="pc bpc" id="L728" title="1 of 2 branches missed.">                        } else if (usetype.equalsIgnoreCase(AccessPointType.BINDING_TEMPLATE.toString())) {</span>
+                                //referencing another binding template
+<span class="nc" id="L730">                                items.addAll(GetBindingInfo(get.getAccessPoint().getValue(), authInfo));</span>
+<span class="pc bpc" id="L731" title="1 of 2 branches missed.">                        } else if (usetype.equalsIgnoreCase(AccessPointType.HOSTING_REDIRECTOR.toString())) {</span>
+                                //this one is a bit strange. the value should be a binding template
+
+<span class="nc" id="L734">                                items.addAll(GetBindingInfo(get.getAccessPoint().getValue(), authInfo));</span>
+
+<span class="pc bpc" id="L736" title="1 of 2 branches missed.">                        } else if (usetype.equalsIgnoreCase(AccessPointType.WSDL_DEPLOYMENT.toString())) {</span>
+                                //fetch wsdl and parse
+<span class="fc" id="L738">                                items.addAll(FetchWSDL(get.getAccessPoint().getValue()));</span>
+<span class="nc bnc" id="L739" title="All 2 branches missed.">                        } else if (usetype.equalsIgnoreCase(AccessPointType.END_POINT.toString())) {</span>
+
+<span class="nc" id="L741">                                items.add((get.getAccessPoint().getValue()));</span>
+
+                        } else {
+
+                                //treat it has an extension or whatever
+<span class="nc" id="L746">                                items.add((get.getAccessPoint().getValue()));</span>
+
+                        }
+
+                }
+<span class="fc" id="L751">                return items;</span>
+        }
+
+        private static void HandleException(Exception ex) throws WebApplicationException {
+<span class="pc bpc" id="L755" title="1 of 2 branches missed.">                if (ex == null) {</span>
+<span class="nc" id="L756">                        throw new WebApplicationException(500);</span>
+                }
+<span class="fc" id="L758">                log.error(ex.getMessage());</span>
+<span class="fc" id="L759">                log.debug(ex);</span>
+<span class="pc bpc" id="L760" title="1 of 2 branches missed.">                if (ex instanceof DispositionReportFaultMessage) {</span>
+<span class="fc" id="L761">                        DispositionReportFaultMessage dr = (DispositionReportFaultMessage) ex;</span>
+<span class="pc bpc" id="L762" title="1 of 2 branches missed.">                        if (dr.getFaultInfo() == null) {</span>
+<span class="nc" id="L763">                                throw new WebApplicationException(500);</span>
+                        }
+<span class="pc bpc" id="L765" title="1 of 2 branches missed.">                        if (dr.getFaultInfo().countainsErrorCode(UDDIErrorHelper.lookupErrCode(UDDIErrorHelper.E_AUTH_TOKEN_EXPIRED))) {</span>
+<span class="nc" id="L766">                                throw new WebApplicationException(ex, 401);</span>
+                        }
+<span class="pc bpc" id="L768" title="1 of 2 branches missed.">                        if (dr.getFaultInfo().countainsErrorCode(UDDIErrorHelper.lookupErrCode(UDDIErrorHelper.E_AUTH_TOKEN_REQUIRED))) {</span>
+<span class="nc" id="L769">                                throw new WebApplicationException(ex, 401);</span>
+                        }
+<span class="pc bpc" id="L771" title="1 of 2 branches missed.">                        if (dr.getFaultInfo().countainsErrorCode(UDDIErrorHelper.lookupErrCode(UDDIErrorHelper.E_FATAL_ERROR))) {</span>
+<span class="nc" id="L772">                                throw new WebApplicationException(ex, 500);</span>
+                        }
+                }
+<span class="fc" id="L775">                throw new WebApplicationException(ex, 400);</span>
+        }
+<span class="fc" id="L777">        private final int MAX_ROWS = 100;</span>
+
+        private KeyBag getBusinessListData() {
+<span class="fc" id="L780">                FindBusiness fb = new FindBusiness();</span>
+<span class="fc" id="L781">                fb.getName().add(new Name(UDDIConstants.WILDCARD, null));</span>
+<span class="fc" id="L782">                fb.setFindQualifiers(new FindQualifiers());</span>
+<span class="fc" id="L783">                fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
+<span class="fc" id="L784">                fb.setMaxRows(MAX_ROWS);</span>
+<span class="fc" id="L785">                BusinessList findBusiness = null;</span>
+                try {
+<span class="fc" id="L787">                        findBusiness = inquiry.findBusiness(fb);</span>
+<span class="nc" id="L788">                } catch (Exception ex) {</span>
+<span class="nc" id="L789">                        HandleException(ex);</span>
+<span class="fc" id="L790">                }</span>
+<span class="fc" id="L791">                KeyBag kb = new KeyBag();</span>
+<span class="pc bpc" id="L792" title="2 of 4 branches missed.">                if (findBusiness != null &amp;&amp; findBusiness.getBusinessInfos() != null) {</span>
+<span class="fc bfc" id="L793" title="All 2 branches covered.">                        for (int i = 0; i &lt; findBusiness.getBusinessInfos().getBusinessInfo().size(); i++) {</span>
+<span class="fc" id="L794">                                kb.getBusinessKey().add(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey());</span>
+                        }
+                }
+<span class="fc" id="L797">                return kb;</span>
+        }
+
+        private KeyBag getServiceListData() {
+<span class="fc" id="L801">                FindService fb = new FindService();</span>
+<span class="fc" id="L802">                fb.getName().add(new Name(UDDIConstants.WILDCARD, null));</span>
+<span class="fc" id="L803">                fb.setFindQualifiers(new FindQualifiers());</span>
+<span class="fc" id="L804">                fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
+<span class="fc" id="L805">                fb.setMaxRows(MAX_ROWS);</span>
+<span class="fc" id="L806">                ServiceList findBusiness = null;</span>
+                try {
+<span class="fc" id="L808">                        findBusiness = inquiry.findService(fb);</span>
+<span class="nc" id="L809">                } catch (Exception ex) {</span>
+<span class="nc" id="L810">                        HandleException(ex);</span>
+<span class="fc" id="L811">                }</span>
+<span class="fc" id="L812">                KeyBag kb = new KeyBag();</span>
+<span class="pc bpc" id="L813" title="2 of 4 branches missed.">                if (findBusiness != null &amp;&amp; findBusiness.getServiceInfos() != null) {</span>
+<span class="fc bfc" id="L814" title="All 2 branches covered.">                        for (int i = 0; i &lt; findBusiness.getServiceInfos().getServiceInfo().size(); i++) {</span>
+<span class="fc" id="L815">                                kb.getServiceKey().add(findBusiness.getServiceInfos().getServiceInfo().get(i).getServiceKey());</span>
+                        }
+                }
+<span class="fc" id="L818">                return kb;</span>
+        }
+
+        private KeyBag getTmodelListData() {
+<span class="fc" id="L822">                FindTModel fb = new FindTModel();</span>
+<span class="fc" id="L823">                fb.setName(new Name(UDDIConstants.WILDCARD, null));</span>
+<span class="fc" id="L824">                fb.setFindQualifiers(new FindQualifiers());</span>
+<span class="fc" id="L825">                fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
+<span class="fc" id="L826">                fb.setMaxRows(MAX_ROWS);</span>
+<span class="fc" id="L827">                TModelList findBusiness = null;</span>
+                try {
+<span class="fc" id="L829">                        findBusiness = inquiry.findTModel(fb);</span>
+<span class="nc" id="L830">                } catch (Exception ex) {</span>
+<span class="nc" id="L831">                        HandleException(ex);</span>
+<span class="fc" id="L832">                }</span>
+<span class="fc" id="L833">                KeyBag kb = new KeyBag();</span>
+<span class="pc bpc" id="L834" title="2 of 4 branches missed.">                if (findBusiness != null &amp;&amp; findBusiness.getTModelInfos() != null) {</span>
+<span class="fc bfc" id="L835" title="All 2 branches covered.">                        for (int i = 0; i &lt; findBusiness.getTModelInfos().getTModelInfo().size(); i++) {</span>
+<span class="fc" id="L836">                                kb.getTModelKey().add(findBusiness.getTModelInfos().getTModelInfo().get(i).getTModelKey());</span>
+                        }
+                }
+<span class="fc" id="L839">                return kb;</span>
+        }
+
+        private BusinessList getBusinessSearch(String name, String lang, String findQualifiers, Integer maxrows, Integer offset) {
+<span class="nc" id="L843">                FindBusiness fb = new FindBusiness();</span>
+
+<span class="nc" id="L845">                fb.getName().add(new Name(UDDIConstants.WILDCARD, null));</span>
+<span class="nc bnc" id="L846" title="All 2 branches missed.">                if (name != null) {</span>
+<span class="nc" id="L847">                        fb.getName().get(0).setValue(name);</span>
+                }
+<span class="nc bnc" id="L849" title="All 2 branches missed.">                if (lang != null) {</span>
+<span class="nc" id="L850">                        fb.getName().get(0).setValue(lang);</span>
+                }
+<span class="nc" id="L852">                fb.setFindQualifiers(new FindQualifiers());</span>
+<span class="nc bnc" id="L853" title="All 2 branches missed.">                if (findQualifiers == null) {</span>
+<span class="nc" id="L854">                        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
+                } else {
+<span class="nc" id="L856">                        String[] fqs = findQualifiers.split(&quot;,&quot;);</span>
+<span class="nc" id="L857">                        fb.getFindQualifiers().getFindQualifier().addAll(Arrays.asList(fqs));</span>
+                }
+<span class="nc" id="L859">                fb.setMaxRows(MAX_ROWS);</span>
+
+<span class="nc bnc" id="L861" title="All 2 branches missed.">                if (maxrows != null) {</span>
+<span class="nc" id="L862">                        fb.setMaxRows(maxrows);</span>
+                }
+<span class="nc" id="L864">                fb.setListHead(0);</span>
+<span class="nc bnc" id="L865" title="All 2 branches missed.">                if (offset != null) {</span>
+<span class="nc" id="L866">                        fb.setListHead(offset);</span>
+                }
+
+<span class="nc" id="L869">                BusinessList findBusiness = null;</span>
+                try {
+<span class="nc" id="L871">                        findBusiness = inquiry.findBusiness(fb);</span>
+<span class="nc" id="L872">                } catch (Exception ex) {</span>
+<span class="nc" id="L873">                        HandleException(ex);</span>
+<span class="nc" id="L874">                }</span>
+<span class="nc" id="L875">                return findBusiness;</span>
+
+        }
+
+        private ServiceList getServiceSearch(String name, String lang, String findQualifiers, Integer maxrows, Integer offset) {
+<span class="nc" id="L880">                FindService fb = new FindService();</span>
+
+<span class="nc" id="L882">                fb.getName().add(new Name(UDDIConstants.WILDCARD, null));</span>
+<span class="nc bnc" id="L883" title="All 2 branches missed.">                if (name != null) {</span>
+<span class="nc" id="L884">                        fb.getName().get(0).setValue(name);</span>
+                }
+<span class="nc bnc" id="L886" title="All 2 branches missed.">                if (lang != null) {</span>
+<span class="nc" id="L887">                        fb.getName().get(0).setValue(lang);</span>
+                }
+<span class="nc" id="L889">                fb.setFindQualifiers(new FindQualifiers());</span>
+<span class="nc bnc" id="L890" title="All 2 branches missed.">                if (findQualifiers == null) {</span>
+<span class="nc" id="L891">                        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
+                } else {
+<span class="nc" id="L893">                        String[] fqs = findQualifiers.split(&quot;,&quot;);</span>
+<span class="nc" id="L894">                        fb.getFindQualifiers().getFindQualifier().addAll(Arrays.asList(fqs));</span>
+                }
+<span class="nc" id="L896">                fb.setMaxRows(MAX_ROWS);</span>
+
+<span class="nc bnc" id="L898" title="All 2 branches missed.">                if (maxrows != null) {</span>
+<span class="nc" id="L899">                        fb.setMaxRows(maxrows);</span>
+                }
+<span class="nc" id="L901">                fb.setListHead(0);</span>
+<span class="nc bnc" id="L902" title="All 2 branches missed.">                if (offset != null) {</span>
+<span class="nc" id="L903">                        fb.setListHead(offset);</span>
+                }
+
+<span class="nc" id="L906">                ServiceList findBusiness = null;</span>
+                try {
+<span class="nc" id="L908">                        findBusiness = inquiry.findService(fb);</span>
+<span class="nc" id="L909">                } catch (Exception ex) {</span>
+<span class="nc" id="L910">                        HandleException(ex);</span>
+<span class="nc" id="L911">                }</span>
+
+<span class="nc" id="L913">                return findBusiness;</span>
+        }
+
+        private TModelList getTModelSearch(String name, String lang, String findQualifiers, Integer maxrows, Integer offset) {
+<span class="nc" id="L917">                FindTModel fb = new FindTModel();</span>
+
+<span class="nc" id="L919">                fb.setName(new Name(UDDIConstants.WILDCARD, null));</span>
+<span class="nc bnc" id="L920" title="All 2 branches missed.">                if (name != null) {</span>
+<span class="nc" id="L921">                        fb.getName().setValue(name);</span>
+                }
+<span class="nc bnc" id="L923" title="All 2 branches missed.">                if (lang != null) {</span>
+<span class="nc" id="L924">                        fb.getName().setValue(lang);</span>
+                }
+<span class="nc" id="L926">                fb.setFindQualifiers(new FindQualifiers());</span>
+<span class="nc bnc" id="L927" title="All 2 branches missed.">                if (findQualifiers == null) {</span>
+<span class="nc" id="L928">                        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
+                } else {
+<span class="nc" id="L930">                        String[] fqs = findQualifiers.split(&quot;,&quot;);</span>
+<span class="nc" id="L931">                        fb.getFindQualifiers().getFindQualifier().addAll(Arrays.asList(fqs));</span>
+                }
+<span class="nc" id="L933">                fb.setMaxRows(MAX_ROWS);</span>
+
+<span class="nc bnc" id="L935" title="All 2 branches missed.">                if (maxrows != null) {</span>
+<span class="nc" id="L936">                        fb.setMaxRows(maxrows);</span>
+                }
+<span class="nc" id="L938">                fb.setListHead(0);</span>
+<span class="nc bnc" id="L939" title="All 2 branches missed.">                if (offset != null) {</span>
+<span class="nc" id="L940">                        fb.setListHead(offset);</span>
+                }
+
+<span class="nc" id="L943">                TModelList findBusiness = null;</span>
+                try {
+<span class="nc" id="L945">                        findBusiness = inquiry.findTModel(fb);</span>
+<span class="nc" id="L946">                } catch (Exception ex) {</span>
+<span class="nc" id="L947">                        HandleException(ex);</span>
+<span class="nc" id="L948">                }</span>
+
+<span class="nc" id="L950">                return findBusiness;</span>
+
+        }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

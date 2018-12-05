@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EntityForLang.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.i18n</a> &gt; <span class="el_source">EntityForLang.java</span></div><h1>EntityForLang.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.v3.client.i18n;
+
+import java.util.List;
+
+import org.uddi.api_v3.Address;
+import org.uddi.api_v3.Description;
+import org.uddi.api_v3.Name;
+/** 
+ * Returns the entity in the proper language. If no language is specified
+ * or if no language is matched return the value of the first entity in the list.
+ */
+<span class="nc" id="L28">public class EntityForLang {</span>
+	
+	public static Name getName(List&lt;Name&gt; entityList, String lang) {
+		
+<span class="nc bnc" id="L32" title="All 2 branches missed.">		if (entityList.size()==0) {</span>
+<span class="nc" id="L33">			Name name = new Name();</span>
+<span class="nc" id="L34">			name.setValue(&quot;&quot;);</span>
+<span class="nc" id="L35">			name.setLang(lang);</span>
+<span class="nc" id="L36">			entityList.add(name);</span>
+		}
+<span class="nc bnc" id="L38" title="All 2 branches missed.">		if (lang==null) return entityList.get(0);</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">		for (Name entity : entityList) {</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">			if (lang.equalsIgnoreCase(entity.getLang())) {</span>
+<span class="nc" id="L41">				return entity;</span>
+			}
+<span class="nc" id="L43">		}</span>
+<span class="nc" id="L44">		return entityList.get(0);</span>
+	}
+	
+	public static Address getAddress(List&lt;Address&gt; entityList, String lang) {
+		
+<span class="nc bnc" id="L49" title="All 2 branches missed.">		if (entityList.size()==0) {</span>
+<span class="nc" id="L50">			Address address = new Address();</span>
+<span class="nc" id="L51">			address.setLang(lang);</span>
+<span class="nc" id="L52">			entityList.add(address);</span>
+		}
+<span class="nc bnc" id="L54" title="All 2 branches missed.">		if (lang==null) return entityList.get(0);</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">		for (Address entity : entityList) {</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">			if (lang.equalsIgnoreCase(entity.getLang())) {</span>
+<span class="nc" id="L57">				return entity;</span>
+			}
+<span class="nc" id="L59">		}</span>
+<span class="nc" id="L60">		return entityList.get(0);</span>
+	}
+	
+	public static Description getDescription(List&lt;Description&gt; entityList, String lang) {
+		
+<span class="nc bnc" id="L65" title="All 2 branches missed.">		if (entityList.size()==0) {</span>
+<span class="nc" id="L66">			Description description = new Description();</span>
+<span class="nc" id="L67">			description.setValue(&quot;&quot;);</span>
+<span class="nc" id="L68">			description.setLang(lang);</span>
+<span class="nc" id="L69">			entityList.add(description);</span>
+		}
+<span class="nc bnc" id="L71" title="All 2 branches missed.">		if (lang==null) return entityList.get(0);</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">		for (Description entity : entityList) {</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">			if (lang.equalsIgnoreCase(entity.getLang())) {</span>
+<span class="nc" id="L74">				return entity;</span>
+			}
+<span class="nc" id="L76">		}</span>
+<span class="nc" id="L77">		return entityList.get(0);</span>
+	}
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

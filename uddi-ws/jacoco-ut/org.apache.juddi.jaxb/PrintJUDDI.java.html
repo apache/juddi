@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PrintJUDDI.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.jaxb</a> &gt; <span class="el_source">PrintJUDDI.java</span></div><h1>PrintJUDDI.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.jaxb;
+
+import java.io.StringWriter;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
+
+/**
+ * This is for printing jUDDI specific data objects only
+ * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ * @param &lt;T&gt;
+ */
+<span class="nc" id="L30">public class PrintJUDDI&lt;T&gt; {</span>
+
+<span class="nc" id="L32">	static JAXBContext jaxbContext = null;</span>
+	
+	private Marshaller getUDDIMarshaller() throws JAXBException {
+<span class="nc bnc" id="L35" title="All 2 branches missed.">		if (jaxbContext==null) {</span>
+<span class="nc" id="L36">			jaxbContext=JAXBContext.newInstance(&quot;org.apache.juddi.api_v3&quot;);</span>
+		}
+<span class="nc" id="L38">		Marshaller marshaller = jaxbContext.createMarshaller();</span>
+<span class="nc" id="L39">		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);</span>
+<span class="nc" id="L40">		marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);</span>
+<span class="nc" id="L41">		marshaller.setProperty(Marshaller.JAXB_ENCODING, &quot;UTF-8&quot;);</span>
+		
+<span class="nc" id="L43">		return marshaller;</span>
+	}
+	
+	public String print(T UDDIEntity) {
+<span class="nc" id="L47">		String xml = &quot;&quot;;</span>
+		@SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L49">		Class&lt;T&gt; type = (Class&lt;T&gt;) UDDIEntity.getClass();</span>
+		try {
+<span class="nc" id="L51">			StringWriter writer = new StringWriter();</span>
+<span class="nc" id="L52">			JAXBElement&lt;T&gt; element = new JAXBElement&lt;T&gt;(new QName(&quot;&quot;,UDDIEntity.getClass().getName()),type,UDDIEntity);</span>
+<span class="nc" id="L53">			getUDDIMarshaller().marshal(element,writer);</span>
+<span class="nc" id="L54">			xml=writer.toString();</span>
+<span class="nc" id="L55">		} catch (JAXBException je) {</span>
+			
+<span class="nc" id="L57">		}</span>
+<span class="nc" id="L58">		return xml;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

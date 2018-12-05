@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DiscardTransferToken.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.custody_v3</a> &gt; <span class="el_source">DiscardTransferToken.java</span></div><h1>DiscardTransferToken.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+package org.uddi.custody_v3;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+
+
+/**
+ * &lt;p&gt;Java class for discard_transferToken complex type.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * 
+ * &lt;pre&gt;
+ * &amp;lt;complexType name=&quot;discard_transferToken&quot;&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;sequence&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}authInfo&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;choice&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:custody_v3}transferToken&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:custody_v3}keyBag&quot;/&gt;
+ *         &amp;lt;/choice&gt;
+ *       &amp;lt;/sequence&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;discard_transferToken&quot;, propOrder = {
+    &quot;authInfo&quot;,
+    &quot;transferToken&quot;,
+    &quot;keyBag&quot;
+})
+<span class="nc" id="L59">public class DiscardTransferToken implements Serializable{</span>
+	@XmlTransient
+	private static final long serialVersionUID = -6277573385151936734L;
+	@XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected String authInfo;
+    protected TransferToken transferToken;
+    protected KeyBag keyBag;
+
+    /**
+     * Gets the value of the authInfo property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getAuthInfo() {
+<span class="nc" id="L76">        return authInfo;</span>
+    }
+
+    /**
+     * Sets the value of the authInfo property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setAuthInfo(String value) {
+<span class="nc" id="L88">        this.authInfo = value;</span>
+<span class="nc" id="L89">    }</span>
+
+    /**
+     * Gets the value of the transferToken property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link TransferToken }
+     *     
+     */
+    public TransferToken getTransferToken() {
+<span class="nc" id="L100">        return transferToken;</span>
+    }
+
+    /**
+     * Sets the value of the transferToken property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link TransferToken }
+     *     
+     */
+    public void setTransferToken(TransferToken value) {
+<span class="nc" id="L112">        this.transferToken = value;</span>
+<span class="nc" id="L113">    }</span>
+
+    /**
+     * Gets the value of the keyBag property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link KeyBag }
+     *     
+     */
+    public KeyBag getKeyBag() {
+<span class="nc" id="L124">        return keyBag;</span>
+    }
+
+    /**
+     * Sets the value of the keyBag property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link KeyBag }
+     *     
+     */
+    public void setKeyBag(KeyBag value) {
+<span class="nc" id="L136">        this.keyBag = value;</span>
+<span class="nc" id="L137">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

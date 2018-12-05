@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KeyDataValue.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.model</a> &gt; <span class="el_source">KeyDataValue.java</span></div><h1>KeyDataValue.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2012 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.model;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+
+/**
+ *
+ */
+@Entity
+@Table(name=&quot;j3_key_data_value&quot;)
+public class KeyDataValue implements java.io.Serializable {
+    private static final long serialVersionUID = -6353389848796421615L;
+    
+    private Long id;
+    private KeyInfo keyInfo;
+    private String keyDataType;
+    private String keyDataName;
+    private byte[] keyDataValueBytes;
+    private String keyDataValueString;
+    private KeyDataValue keyDataValue;
+<span class="fc" id="L50">    private List&lt;KeyDataValue&gt; keyDataValueList = new ArrayList&lt;KeyDataValue&gt;();</span>
+
+<span class="fc" id="L52">    public KeyDataValue() {</span>
+<span class="fc" id="L53">    }</span>
+    
+<span class="fc" id="L55">    public KeyDataValue(KeyInfo keyInfo, String keyDataType, String keyDataName, byte[] keyDataValueBytes, String keyDataValueString, KeyDataValue keyDataValue) {</span>
+<span class="fc" id="L56">        this.keyInfo = keyInfo;</span>
+<span class="fc" id="L57">        this.keyDataType = keyDataType;</span>
+<span class="fc" id="L58">        this.keyDataName = keyDataName;</span>
+<span class="fc" id="L59">        this.keyDataValueBytes = keyDataValueBytes;</span>
+<span class="fc" id="L60">        this.keyDataValueString = keyDataValueString;</span>
+<span class="fc" id="L61">        this.keyDataValue = keyDataValue;</span>
+<span class="fc" id="L62">    }</span>
+    
+    
+    
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    public Long getId() {
+<span class="fc" id="L69">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="fc" id="L73">        this.id = id;</span>
+<span class="fc" id="L74">    }</span>
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;key_info_key&quot;, nullable = true)
+    public KeyInfo getKeyInfo() {
+<span class="fc" id="L79">        return keyInfo;</span>
+    }
+
+    public void setKeyInfo(KeyInfo keyInfo) {
+<span class="fc" id="L83">        this.keyInfo = keyInfo;</span>
+<span class="fc" id="L84">    }</span>
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;key_data_value_key&quot;, nullable = true)
+    public KeyDataValue getKeyDataValue() {
+<span class="fc" id="L89">        return keyDataValue;</span>
+    }
+
+    public void setKeyDataValue(KeyDataValue keyDataValue) {
+<span class="fc" id="L93">        this.keyDataValue = keyDataValue;</span>
+<span class="fc" id="L94">    }</span>
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;keyDataValue&quot;)
+    @OrderBy
+    public List&lt;KeyDataValue&gt; getKeyDataValueList() {
+<span class="fc" id="L99">        return keyDataValueList;</span>
+    }
+
+    public void setKeyDataValueList(List&lt;KeyDataValue&gt; keyDataValueList) {
+<span class="fc" id="L103">        this.keyDataValueList = keyDataValueList;</span>
+<span class="fc" id="L104">    }</span>
+
+    @Column(name=&quot;key_data_name&quot;)
+    public String getKeyDataName() {
+<span class="fc" id="L108">        return keyDataName;</span>
+    }
+
+    public void setKeyDataName(String keyDataName) {
+<span class="fc" id="L112">        this.keyDataName = keyDataName;</span>
+<span class="fc" id="L113">    }</span>
+    
+    @Column(name=&quot;key_data_type&quot;)
+    public String getKeyDataType() {
+<span class="fc" id="L117">        return keyDataType;</span>
+    }
+
+    public void setKeyDataType(String keyDataType) {
+<span class="fc" id="L121">        this.keyDataType = keyDataType;</span>
+<span class="fc" id="L122">    }</span>
+
+    @Lob
+    @Column(name=&quot;key_data_value&quot;, length = 65636)
+    public byte[] getKeyDataValueBytes() {
+<span class="fc" id="L127">        return keyDataValueBytes;</span>
+    }
+
+    public void setKeyDataValueBytes(byte[] keyDataValueBytes) {
+<span class="fc" id="L131">        this.keyDataValueBytes = keyDataValueBytes;</span>
+<span class="fc" id="L132">    }</span>
+
+    @Lob
+    @Column(name=&quot;key_data_value_string&quot;, length = 65636)
+    public String getKeyDataValueString() {
+<span class="fc" id="L137">        return keyDataValueString;</span>
+    }
+
+    public void setKeyDataValueString(String keyDataValueString) {
+<span class="fc" id="L141">        this.keyDataValueString = keyDataValueString;</span>
+<span class="fc" id="L142">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L146">        return &quot;KeyDataValue{&quot; + &quot;id=&quot; + getId() + &quot;, keyDataType=&quot; + getKeyDataType() +</span>
+<span class="nc" id="L147">                &quot;, keyDataName=&quot; + getKeyDataName() + &quot;, keyDataValueBytes=&quot; </span>
+<span class="nc" id="L148">                + Arrays.toString(getKeyDataValueBytes()) + &quot;, keyDataValueString=&quot; + getKeyDataValueString()</span>
+<span class="nc" id="L149">                + &quot;, keyDataValueList=&quot; +getKeyDataValueList()  + '}';</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

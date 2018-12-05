@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Uddiuddiorgcategorizationvalidatedby.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.validation.vsv</a> &gt; <span class="el_source">Uddiuddiorgcategorizationvalidatedby.java</span></div><h1>Uddiuddiorgcategorizationvalidatedby.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2014 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.validation.vsv;
+
+import java.util.Collections;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.InvalidValueException;
+import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.api_v3.TModel;
+import org.uddi.api_v3.TModelInstanceInfo;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * This tModel represents a category system that is used to point a tModel
+ * representing a checked value set to the bindingTemplate for a value set
+ * caching or value set validation Web service.
+ *
+ * One of the concepts that tModels can represent is a checked value set. A
+ * checked value set is one whose use is monitored by a validation algorithm.
+ * There are two types of validation algorithms: simple checking of referenced
+ * values against a pre-defined set of allowable values, and any other kind of
+ * validation. UDDI provides the Value Set API set (see Section 5.6 Value Set
+ * API Set) to acquire the set of allowable values or execute an external
+ * validation algorithm.
+ *
+ * A validation algorithm for a checked value set can be acquired by nodes
+ * privately, or can be obtained through normal UDDI discovery. The validatedBy
+ * category system facilitates discovery of the value set caching or value set
+ * validation Web service for a checked value set tModel by pointing to the
+ * bindingTemplate for the Web service.  *
+ * For the Web service to be useful, it must recognize any and all checked value
+ * sets that it is expected to be associated with. The recommended way for doing
+ * so is to place the tModels for the checked value sets it supports in the
+ * tModelInstanceDetails of the bindingTemplate for the Web service. Registry
+ * policy may require that providers of the Web service recognize value sets
+ * supported using this technique.
+ * 
+* Valid Values
+ *
+ * The keyValues in keyedReferences that refer to this tModel must be
+ * bindingKeys. Such a keyValue SHOULD reference a bindingTemplate that
+ * specifies a Web service that implements a value set caching or value set
+ * validation API and which SHOULD reference the value set tModel so categorized
+ * with this category system. No other contextual checks are performed.
+ *
+ * @author Alex O'Ree
+ */
+<span class="fc" id="L68">public class Uddiuddiorgcategorizationvalidatedby implements ValueSetValidator{</span>
+
+         
+        public String getKey(){
+<span class="fc" id="L72">                return &quot;uddi:uddi.org:categorization:validatedby&quot;;</span>
+        }
+        @Override
+        public void validateValuesBindingTemplate(List&lt;BindingTemplate&gt; items, String xpath) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L77">                        return;</span>
+                }
+
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">                        if (items.get(i).getCategoryBag() != null) {</span>
+<span class="nc" id="L82">                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), getKey(), &quot;binding&quot;);</span>
+<span class="nc" id="L83">                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), getKey(), &quot;binding&quot;);</span>
+                        }
+<span class="nc bnc" id="L85" title="All 2 branches missed.">                        if (items.get(i).getTModelInstanceDetails() != null) {</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">                                for (int k = 0; k &lt; items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">                                        if (items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k) != null) </span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">                                        if (getKey().equalsIgnoreCase(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey())) {</span>
+<span class="nc" id="L89">                                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;not allowed on binding templates&quot;));</span>
+                                        }
+                                }
+                        }
+                }
+<span class="fc" id="L94">        }</span>
+
+        @Override
+        public void validateValuesBusinessEntity(List&lt;BusinessEntity&gt; items) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L99">                        return;</span>
+                }
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">                        if (items.get(i).getCategoryBag() != null) {</span>
+<span class="nc" id="L103">                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), getKey(), &quot;business&quot;);</span>
+<span class="nc" id="L104">                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), getKey(), &quot;business&quot;);</span>
+                        }
+<span class="nc bnc" id="L106" title="All 2 branches missed.">                        if (items.get(i).getIdentifierBag() != null) {</span>
+<span class="nc" id="L107">                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), getKey(), &quot;business&quot;);</span>
+                        }
+<span class="nc bnc" id="L109" title="All 2 branches missed.">                        if (items.get(i).getBusinessServices() != null) {</span>
+<span class="nc" id="L110">                                validateValuesBusinessService(items.get(i).getBusinessServices().getBusinessService(), &quot;businessEntity(&quot; + i + &quot;).&quot;);</span>
+                        }
+                }
+<span class="fc" id="L113">        }</span>
+
+        @Override
+        public void validateValuesBusinessService(List&lt;BusinessService&gt; items, String xpath) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L118">                        return;</span>
+                }
+<span class="pc bpc" id="L120" title="1 of 2 branches missed.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">                        if (items.get(i).getCategoryBag() != null) {</span>
+<span class="nc" id="L122">                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), getKey(), &quot;service&quot;);</span>
+<span class="nc" id="L123">                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), getKey(), &quot;service&quot;);</span>
+                        }
+<span class="nc bnc" id="L125" title="All 2 branches missed.">                        if (items.get(i).getBindingTemplates() != null) {</span>
+<span class="nc" id="L126">                                validateValuesBindingTemplate(items.get(i).getBindingTemplates().getBindingTemplate(), xpath + xpath + &quot;businessService(&quot; + i + &quot;).identifierBag.&quot;);</span>
+                        }
+                }
+<span class="fc" id="L129">        }</span>
+
+        @Override
+        public void validateValuesPublisherAssertion(List&lt;PublisherAssertion&gt; items) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L134">                        return;</span>
+                }
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="nc" id="L137">                        AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getKeyedReference(), getKey(), &quot;publisherAssertion&quot;);</span>
+                }
+<span class="fc" id="L139">        }</span>
+
+      
+        @Override
+        public void validateTmodelInstanceDetails(List&lt;TModelInstanceInfo&gt; tModelInstanceInfo, String xpath) throws DispositionReportFaultMessage {
+<span class="nc bnc" id="L144" title="All 2 branches missed.">                if (tModelInstanceInfo == null) {</span>
+<span class="nc" id="L145">                        return;</span>
+                }
+<span class="nc bnc" id="L147" title="All 2 branches missed.">                for (int k = 0; k &lt; tModelInstanceInfo.size(); k++) {</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">                        if (getKey().equalsIgnoreCase(tModelInstanceInfo.get(k).getTModelKey())) {</span>
+<span class="nc" id="L149">                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;not allowed on tModel instance info&quot;));</span>
+                        }
+                }
+<span class="nc" id="L152">        }</span>
+
+        @Override
+        public void validateValuesTModel(List&lt;TModel&gt; items) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L157">                        return;</span>
+                }
+<span class="fc" id="L159">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L160">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc bfc" id="L162" title="All 2 branches covered.">                        for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">                                if (items.get(i).getCategoryBag() != null) {</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">                                        for (int k = 0; k &lt; items.get(i).getCategoryBag().getKeyedReference().size(); k++) {</span>
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">                                                if (getKey().equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey())) {</span>
+                                                       
+<span class="fc" id="L167">                                                        org.apache.juddi.model.BindingTemplate find = em.find(org.apache.juddi.model.BindingTemplate.class, items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue());</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">                                                        if (find == null) {</span>
+<span class="fc" id="L169">                                                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Referenced key &quot; + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + &quot; does not exist&quot;));</span>
+                                                        }
+                                                }
+                                        }
+                                }
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">                                if (items.get(i).getIdentifierBag() != null) {</span>
+<span class="nc" id="L175">                                        AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getIdentifierBag().getKeyedReference(), getKey(), &quot;tmodel identbag&quot;);</span>
+                                }
+                        }
+<span class="fc" id="L178">                } catch (DispositionReportFaultMessage d) {</span>
+<span class="fc" id="L179">                        throw d;</span>
+                } finally {
+<span class="pc bpc" id="L181" title="2 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L182">                                tx.rollback();</span>
+                        }
+<span class="fc" id="L184">                        em.close();</span>
+<span class="fc" id="L185">                }</span>
+<span class="fc" id="L186">        }</span>
+
+        @Override
+        public List&lt;String&gt; getValidValues() {
+<span class="nc" id="L190">                return Collections.EMPTY_LIST;</span>
+        }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

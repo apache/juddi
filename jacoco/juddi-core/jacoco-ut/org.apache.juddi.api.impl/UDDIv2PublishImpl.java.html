@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UDDIv2PublishImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.api.impl</a> &gt; <span class="el_source">UDDIv2PublishImpl.java</span></div><h1>UDDIv2PublishImpl.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2014 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.api.impl;
+
+import java.util.List;
+import javax.jws.WebService;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.xml.ws.Holder;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.config.Property;
+import org.apache.juddi.v3.client.mapping.MapUDDIv2Tov3;
+import org.apache.juddi.v3.client.mapping.MapUDDIv3Tov2;
+import org.uddi.api_v2.AddPublisherAssertions;
+import org.uddi.api_v2.AssertionStatusReport;
+import org.uddi.api_v2.AuthToken;
+import org.uddi.api_v2.BindingDetail;
+import org.uddi.api_v2.BusinessDetail;
+import org.uddi.api_v2.DeleteBinding;
+import org.uddi.api_v2.DeleteBusiness;
+import org.uddi.api_v2.DeletePublisherAssertions;
+import org.uddi.api_v2.DeleteService;
+import org.uddi.api_v2.DeleteTModel;
+import org.uddi.api_v2.DiscardAuthToken;
+import org.uddi.api_v2.DispositionReport;
+import org.uddi.api_v2.GetAssertionStatusReport;
+import org.uddi.api_v2.GetAuthToken;
+import org.uddi.api_v2.GetPublisherAssertions;
+import org.uddi.api_v2.GetRegisteredInfo;
+import org.uddi.api_v2.PublisherAssertions;
+import org.uddi.api_v2.RegisteredInfo;
+import org.uddi.api_v2.Result;
+import org.uddi.api_v2.SaveBinding;
+import org.uddi.api_v2.SaveBusiness;
+import org.uddi.api_v2.SaveService;
+import org.uddi.api_v2.SaveTModel;
+import org.uddi.api_v2.ServiceDetail;
+import org.uddi.api_v2.SetPublisherAssertions;
+import org.uddi.api_v2.TModelDetail;
+import org.uddi.api_v2.Truncated;
+import org.uddi.api_v3.CompletionStatus;
+import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.v2_service.Publish;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * UDDI v2 Implementation for the Publish service. This implementation is
+ * basically a wrapper and API translator that translates and forwards the
+ * request to our UDDIv3 Publish implementation&lt;br&gt;&lt;br&gt;
+ * This class is a BETA feature and is largely untested. Please report any
+ * issues
+ *
+ * @author &lt;a href=&quot;mailto:alexoree.apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ * @since 3.2
+ */
+@WebService(serviceName = &quot;Publish&quot;, targetNamespace = &quot;urn:uddi-org:publication_v2&quot;,
+     endpointInterface = &quot;org.uddi.v2_service.Publish&quot;)
+public class UDDIv2PublishImpl implements Publish {
+
+<span class="nc" id="L77">        public UDDIv2PublishImpl() {</span>
+<span class="nc" id="L78">                logger.warn(&quot;This implementation of UDDIv2 Publish service &quot; + UDDIv2PublishImpl.class.getCanonicalName() + &quot; is considered BETA. Please&quot;</span>
+                     + &quot; report any issues to https://issues.apache.org/jira/browse/JUDDI&quot;);
+<span class="nc" id="L80">        }</span>
+
+<span class="nc" id="L82">        static String nodeId = null;</span>
+
+        private static String getNodeID() {
+                try {
+<span class="nc" id="L86">                        nodeId = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);</span>
+<span class="nc" id="L87">                } catch (ConfigurationException ex) {</span>
+<span class="nc" id="L88">                        logger.warn(ex.getMessage());</span>
+<span class="nc" id="L89">                        nodeId = &quot;JUDDI_v3&quot;;</span>
+<span class="nc" id="L90">                }</span>
+<span class="nc" id="L91">                return nodeId;</span>
+        }
+<span class="nc" id="L93">        private static Log logger = LogFactory.getLog(UDDIv2PublishImpl.class);</span>
+<span class="nc" id="L94">        static UDDIPublicationImpl publishService = new UDDIPublicationImpl();</span>
+<span class="nc" id="L95">        static UDDISecurityImpl securityService = new UDDISecurityImpl();</span>
+
+        @Override
+        public DispositionReport addPublisherAssertions(AddPublisherAssertions body) throws org.uddi.v2_service.DispositionReport {
+                try {
+<span class="nc" id="L100">                        publishService.addPublisherAssertions(MapUDDIv2Tov3.MapAddPublisherAssertions(body));</span>
+<span class="nc" id="L101">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L102">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+<span class="nc" id="L103">                }</span>
+<span class="nc" id="L104">                return getSuccessMessage();</span>
+        }
+
+        @Override
+        public DispositionReport deleteBinding(DeleteBinding body) throws org.uddi.v2_service.DispositionReport {
+                try {
+<span class="nc" id="L110">                        publishService.deleteBinding(MapUDDIv2Tov3.MapDeleteBinding(body));</span>
+<span class="nc" id="L111">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L112">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+<span class="nc" id="L113">                }</span>
+<span class="nc" id="L114">                return getSuccessMessage();</span>
+        }
+
+        @Override
+        public DispositionReport deleteBusiness(DeleteBusiness body) throws org.uddi.v2_service.DispositionReport {
+                try {
+<span class="nc" id="L120">                        publishService.deleteBusiness(MapUDDIv2Tov3.MapDeleteBusiness(body));</span>
+<span class="nc" id="L121">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L122">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+<span class="nc" id="L123">                }</span>
+<span class="nc" id="L124">                return getSuccessMessage();</span>
+        }
+
+        @Override
+        public DispositionReport deletePublisherAssertions(DeletePublisherAssertions body) throws org.uddi.v2_service.DispositionReport {
+                try {
+<span class="nc" id="L130">                        publishService.deletePublisherAssertions(MapUDDIv2Tov3.MapDeletePublisherAssertion(body));</span>
+<span class="nc" id="L131">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L132">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+<span class="nc" id="L133">                }</span>
+<span class="nc" id="L134">                return getSuccessMessage();</span>
+        }
+
+        @Override
+        public DispositionReport deleteService(DeleteService body) throws org.uddi.v2_service.DispositionReport {
+                try {
+<span class="nc" id="L140">                        publishService.deleteService(MapUDDIv2Tov3.MapDeleteService(body));</span>
+<span class="nc" id="L141">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L142">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+<span class="nc" id="L143">                }</span>
+<span class="nc" id="L144">                return getSuccessMessage();</span>
+        }
+
+        @Override
+        public DispositionReport deleteTModel(DeleteTModel body) throws org.uddi.v2_service.DispositionReport {
+                try {
+<span class="nc" id="L150">                        publishService.deleteTModel(MapUDDIv2Tov3.MapDeleteTModel(body));</span>
+<span class="nc" id="L151">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L152">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+<span class="nc" id="L153">                }</span>
+<span class="nc" id="L154">                return getSuccessMessage();</span>
+        }
+
+        @Override
+        public DispositionReport discardAuthToken(DiscardAuthToken body) throws org.uddi.v2_service.DispositionReport {
+                try {
+<span class="nc" id="L160">                        securityService.discardAuthToken(new org.uddi.api_v3.DiscardAuthToken(body.getAuthInfo()));</span>
+<span class="nc" id="L161">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L162">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+<span class="nc" id="L163">                }</span>
+<span class="nc" id="L164">                return getSuccessMessage();</span>
+        }
+
+        @Override
+        public AssertionStatusReport getAssertionStatusReport(GetAssertionStatusReport body) throws org.uddi.v2_service.DispositionReport {
+                try {
+
+<span class="nc" id="L171">                        return MapUDDIv3Tov2.MapAssertionStatusReport(publishService.getAssertionStatusReport(body.getAuthInfo(), MapUDDIv2Tov3.MapCompletionStatus(body.getCompletionStatus())));</span>
+<span class="nc" id="L172">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L173">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+        @Override
+        public AuthToken getAuthToken(GetAuthToken body) throws org.uddi.v2_service.DispositionReport {
+                try {
+<span class="nc" id="L180">                        org.uddi.api_v3.GetAuthToken r = new org.uddi.api_v3.GetAuthToken();</span>
+<span class="nc" id="L181">                        r.setCred(body.getCred());</span>
+<span class="nc" id="L182">                        r.setUserID(body.getUserID());</span>
+<span class="nc" id="L183">                        org.uddi.api_v3.AuthToken authToken = securityService.getAuthToken(r);</span>
+<span class="nc" id="L184">                        AuthToken ret = new AuthToken();</span>
+<span class="nc" id="L185">                        ret.setAuthInfo(authToken.getAuthInfo());</span>
+<span class="nc" id="L186">                        ret.setGeneric(&quot;2.0&quot;);</span>
+<span class="nc" id="L187">                        ret.setOperator(getNodeID());</span>
+<span class="nc" id="L188">                        return ret;</span>
+<span class="nc" id="L189">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L190">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+        @Override
+        public PublisherAssertions getPublisherAssertions(GetPublisherAssertions body) throws org.uddi.v2_service.DispositionReport {
+                try {
+<span class="nc" id="L197">                        return MapUDDIv3Tov2.MapPublisherAssertions(publishService.getPublisherAssertions(body.getAuthInfo()), getNodeID(),getUsername(body.getAuthInfo()));</span>
+<span class="nc" id="L198">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L199">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+        @Override
+        public RegisteredInfo getRegisteredInfo(GetRegisteredInfo body) throws org.uddi.v2_service.DispositionReport {
+                try {
+<span class="nc" id="L206">                        return MapUDDIv3Tov2.MapRegisteredInfo(publishService.getRegisteredInfo(MapUDDIv2Tov3.MapGetRegisteredInfo(body)), getNodeID());</span>
+<span class="nc" id="L207">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L208">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+
+        }
+
+        @Override
+        public BindingDetail saveBinding(SaveBinding body) throws org.uddi.v2_service.DispositionReport {
+                try {
+<span class="nc" id="L216">                        return MapUDDIv3Tov2.MapBindingDetail(publishService.saveBinding(MapUDDIv2Tov3.MapSaveBinding(body)), getNodeID());</span>
+<span class="nc" id="L217">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L218">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+        @Override
+        public BusinessDetail saveBusiness(SaveBusiness body) throws org.uddi.v2_service.DispositionReport {
+                try {
+<span class="nc" id="L225">                        return MapUDDIv3Tov2.MapBusinessDetail(publishService.saveBusiness(MapUDDIv2Tov3.MapSaveBusiness(body)), getNodeID());</span>
+<span class="nc" id="L226">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L227">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+        @Override
+        public ServiceDetail saveService(SaveService body) throws org.uddi.v2_service.DispositionReport {
+                try {
+<span class="nc" id="L234">                        return MapUDDIv3Tov2.MapServiceDetail(publishService.saveService(MapUDDIv2Tov3.MapSaveService(body)), getNodeID());</span>
+<span class="nc" id="L235">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L236">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+        @Override
+        public TModelDetail saveTModel(SaveTModel body) throws org.uddi.v2_service.DispositionReport {
+                try {
+<span class="nc" id="L243">                        return MapUDDIv3Tov2.MapTModelDetail(publishService.saveTModel(MapUDDIv2Tov3.MapSaveTModel(body)), getNodeID());</span>
+<span class="nc" id="L244">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L245">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+        private String getUsername(String authinfo) {
+<span class="nc" id="L250">                String user = &quot;N/A&quot;;</span>
+
+<span class="nc" id="L252">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="nc" id="L253">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+
+<span class="nc" id="L256">                        tx.begin();</span>
+<span class="nc" id="L257">                        user = publishService.getEntityPublisher(em, authinfo).getAuthorizedName();</span>
+<span class="nc" id="L258">                        tx.commit();</span>
+<span class="nc" id="L259">                } catch (Exception ex) {</span>
+<span class="nc" id="L260">                        logger.error(ex);</span>
+                } finally {
+<span class="nc bnc" id="L262" title="All 6 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L263">                                tx.rollback();</span>
+                        }
+<span class="nc" id="L265">                        em.close();</span>
+<span class="nc" id="L266">                }</span>
+<span class="nc" id="L267">                return user;</span>
+        }
+
+        @Override
+        public PublisherAssertions setPublisherAssertions(SetPublisherAssertions body) throws org.uddi.v2_service.DispositionReport {
+                try {
+<span class="nc" id="L273">                        Holder&lt;List&lt;PublisherAssertion&gt;&gt; req = new Holder&lt;List&lt;PublisherAssertion&gt;&gt;();</span>
+<span class="nc" id="L274">                        req.value = MapUDDIv2Tov3.MapSetPublisherAssertions(body);</span>
+<span class="nc" id="L275">                        publishService.setPublisherAssertions(body.getAuthInfo(), req);</span>
+
+<span class="nc" id="L277">                        return MapUDDIv3Tov2.MapPublisherAssertions(req.value, getNodeID(), getUsername(body.getAuthInfo()));</span>
+<span class="nc" id="L278">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L279">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+        private DispositionReport getSuccessMessage() {
+<span class="nc" id="L284">                DispositionReport r = new DispositionReport();</span>
+<span class="nc" id="L285">                r.setGeneric(&quot;2.0&quot;);</span>
+<span class="nc" id="L286">                r.setTruncated(Truncated.FALSE);</span>
+<span class="nc" id="L287">                Result x = new Result();</span>
+<span class="nc" id="L288">                r.setOperator(getNodeID());</span>
+<span class="nc" id="L289">                r.getResult().add(x);</span>
+<span class="nc" id="L290">                return r;</span>
+        }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

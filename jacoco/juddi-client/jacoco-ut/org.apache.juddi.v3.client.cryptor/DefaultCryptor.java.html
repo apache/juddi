@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultCryptor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.cryptor</a> &gt; <span class="el_source">DefaultCryptor.java</span></div><h1>DefaultCryptor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.v3.client.cryptor;
+
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
+
+import org.apache.commons.codec.binary.Base64;
+
+/**
+ * @author Anou Manavalan
+ */
+public class DefaultCryptor implements Cryptor {
+
+<span class="fc" id="L41">        private PBEKeySpec pbeKeySpec = null;</span>
+<span class="fc" id="L42">        private PBEParameterSpec pbeParamSpec = null;</span>
+<span class="fc" id="L43">        private SecretKeyFactory keyFac = null;</span>
+<span class="fc" id="L44">        private SecretKey pbeKey = null;</span>
+
+        // Salt
+<span class="fc" id="L47">        private byte[] salt = {</span>
+                (byte) 0xc7, (byte) 0x73, (byte) 0x21, (byte) 0x8c,
+                (byte) 0x7e, (byte) 0xc8, (byte) 0xee, (byte) 0x99
+        };
+
+        // Iteration count
+<span class="fc" id="L53">        private int count = 20;</span>
+
+        /**
+         * Constructor for DefaultCryptor.
+         */
+        public DefaultCryptor()
+<span class="fc" id="L59">             throws NoSuchAlgorithmException, InvalidKeySpecException {</span>
+                // Create PBE parameter set
+<span class="fc" id="L61">                pbeParamSpec = new PBEParameterSpec(salt, count);</span>
+<span class="fc" id="L62">                pbeKeySpec = new PBEKeySpec(&quot;saagar&quot;.toCharArray());</span>
+<span class="fc" id="L63">                keyFac = SecretKeyFactory.getInstance(&quot;PBEWithMD5AndDES&quot;);</span>
+<span class="fc" id="L64">                pbeKey = keyFac.generateSecret(pbeKeySpec);</span>
+<span class="fc" id="L65">        }</span>
+
+        /**
+         * Encrypt the string
+         */
+        private byte[] crypt(int cipherMode, byte[] text)
+             throws NoSuchPaddingException,
+             NoSuchAlgorithmException,
+             InvalidAlgorithmParameterException,
+             InvalidKeyException,
+             IllegalBlockSizeException,
+             BadPaddingException {
+                // Create PBE Cipher
+<span class="fc" id="L78">                Cipher pbeCipher = Cipher.getInstance(&quot;PBEWithMD5AndDES&quot;);</span>
+
+                // Initialize PBE Cipher with key and parameters
+<span class="fc" id="L81">                pbeCipher.init(cipherMode, pbeKey, pbeParamSpec);</span>
+
+    //byte[] text = str.getBytes();
+                // Encrypt/Decrypt the string
+<span class="fc" id="L85">                byte[] cryptext = pbeCipher.doFinal(text);</span>
+
+<span class="fc" id="L87">                return cryptext;</span>
+        }
+
+        /**
+         * Encrypt the string
+         */
+        public String encrypt(String str)
+             throws NoSuchPaddingException,
+             NoSuchAlgorithmException,
+             InvalidAlgorithmParameterException,
+             InvalidKeyException,
+             IllegalBlockSizeException,
+             BadPaddingException,
+             UnsupportedEncodingException {
+<span class="fc" id="L101">                byte[] encs = crypt(Cipher.ENCRYPT_MODE, str.getBytes());</span>
+<span class="fc" id="L102">                encs = Base64.encodeBase64(encs);</span>
+<span class="fc" id="L103">                return new String(encs, &quot;UTF-8&quot;);</span>
+        }
+
+        public String decrypt(String str) throws NoSuchPaddingException,
+             NoSuchAlgorithmException,
+             InvalidAlgorithmParameterException,
+             InvalidKeyException,
+             IllegalBlockSizeException,
+             BadPaddingException,
+             UnsupportedEncodingException {
+<span class="fc" id="L113">                byte[] encs = crypt(Cipher.DECRYPT_MODE, Base64.decodeBase64(str.getBytes(&quot;UTF-8&quot;)));</span>
+<span class="fc" id="L114">                return new String(encs, &quot;UTF-8&quot;);</span>
+        }
+
+        @Override
+        public String newKey() {
+<span class="nc" id="L119">                throw new UnsupportedOperationException(&quot;Not supported yet.&quot;); </span>
+        }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AppConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.config</a> &gt; <span class="el_source">AppConfig.java</span></div><h1>AppConfig.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.config;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import java.util.Properties;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+
+import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.MapConfiguration;
+import org.apache.commons.configuration.SystemConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.ClassUtil;
+import org.apache.juddi.Registry;
+import org.apache.juddi.keygen.KeyGenerator;
+import org.apache.juddi.model.UddiEntityPublisher;
+
+/**
+ * Handles the application level configuration for jUDDI. By default it first
+ * looks at system properties (juddi.propertiesFile)
+ * @author &lt;a href=&quot;mailto:kstam@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+public class AppConfig 
+{
+        /**
+         * This system property's value should be a path to a configuration file
+         */
+        public static final String JUDDI_CONFIGURATION_FILE_SYSTEM_PROPERTY=&quot;juddi.propertiesFile&quot;;
+        /**
+         * The default configuration file name for juddi
+         */
+	public static final String JUDDI_PROPERTIES = &quot;juddiv3.xml&quot;;
+<span class="fc" id="L58">	private Log log = LogFactory.getLog(AppConfig.class);</span>
+	private Configuration config;
+<span class="fc" id="L60">	private static AppConfig instance=null;</span>
+<span class="fc" id="L61">        private static URL loadedFrom=null;</span>
+<span class="fc" id="L62">        private static XMLConfiguration propConfig=null;</span>
+        
+        /**
+         * Enables an administrator to identify the physical location of the configuration file from which it was loaded.&lt;br&gt;
+         * Always call via the singleton function AppConfig.getInstance().getConfigFileURL()
+         * @since 3.2
+         * @return may return null if no config file was found
+         */
+        public static  URL getConfigFileURL()
+        {
+<span class="fc" id="L72">            return loadedFrom;</span>
+        }
+	
+	/**
+	 * Constructor (note Singleton pattern).
+	 * @throws ConfigurationException
+	 */
+	private AppConfig() throws ConfigurationException 
+<span class="fc" id="L80">	{</span>
+<span class="fc" id="L81">		loadConfiguration();</span>
+<span class="fc" id="L82">	}</span>
+        public static void setJuddiProperty(String key, Object val) throws ConfigurationException{
+<span class="nc bnc" id="L84" title="All 2 branches missed.">                if (instance==null) {</span>
+<span class="nc" id="L85">			instance = new AppConfig();</span>
+		}
+<span class="nc" id="L87">                propConfig.setProperty(key, val);</span>
+<span class="nc" id="L88">                propConfig.save();</span>
+<span class="nc" id="L89">        }</span>
+        
+        public static void saveConfiguration() throws ConfigurationException{
+<span class="nc" id="L92">                getConfiguration(); //findbugs will flag this as useless, but its not</span>
+<span class="nc" id="L93">                propConfig.save();</span>
+<span class="nc" id="L94">        }</span>
+       
+        
+	/**
+	 * Does the actual work of reading the configuration from System
+	 * Properties and/or juddiv3.xml file. When the juddiv3.xml
+	 * file is updated the file will be reloaded. By default the reloadDelay is
+	 * set to 1 second to prevent excessive date stamp checking.
+	 */
+	private void loadConfiguration() throws ConfigurationException
+	{
+		//Properties from system properties
+<span class="fc" id="L106">		CompositeConfiguration compositeConfig = new CompositeConfiguration();</span>
+<span class="fc" id="L107">		compositeConfig.addConfiguration(new SystemConfiguration());</span>
+		//Properties from file
+                //changed 7-19-2013 AO for JUDDI-627
+<span class="fc" id="L110">		propConfig = null;</span>
+<span class="fc" id="L111">	        final String filename = System.getProperty(JUDDI_CONFIGURATION_FILE_SYSTEM_PROPERTY);</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">		if (filename != null) {</span>
+<span class="fc" id="L113">                  propConfig = new XMLConfiguration (filename); </span>
+                    try {
+<span class="fc" id="L115">                        loadedFrom = new File(filename).toURI().toURL();</span>
+                    //	propConfig = new PropertiesConfiguration(filename);
+<span class="nc" id="L117">                    } catch (MalformedURLException ex) {</span>
+                      try {
+<span class="nc" id="L119">                          loadedFrom = new URL(&quot;file://&quot; + filename);</span>
+<span class="nc" id="L120">                      } catch (MalformedURLException ex1) {</span>
+<span class="nc" id="L121">                          log.warn(&quot;unable to get an absolute path to &quot; + filename + &quot;. This may be ignorable if everything works properly.&quot;, ex1);</span>
+<span class="nc" id="L122">                      }</span>
+<span class="pc" id="L123">                    }</span>
+		} else {
+			//propConfig = new PropertiesConfiguration(JUDDI_PROPERTIES);
+<span class="fc" id="L126">                    propConfig = new XMLConfiguration(JUDDI_PROPERTIES);</span>
+<span class="fc" id="L127">                    loadedFrom = ClassUtil.getResource(JUDDI_PROPERTIES, this.getClass()); </span>
+		}
+                //Hey! this may break things
+<span class="fc" id="L130">                propConfig.setAutoSave(true);</span>
+
+<span class="fc" id="L132">		log.info(&quot;Reading from jUDDI config file from:  &quot; + loadedFrom);</span>
+<span class="fc" id="L133">		long refreshDelay = propConfig.getLong(Property.JUDDI_CONFIGURATION_RELOAD_DELAY, 1000l);</span>
+<span class="fc" id="L134">		log.debug(&quot;Setting refreshDelay to &quot; + refreshDelay);</span>
+<span class="fc" id="L135">		FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();</span>
+<span class="fc" id="L136">		fileChangedReloadingStrategy.setRefreshDelay(refreshDelay);</span>
+<span class="fc" id="L137">		propConfig.setReloadingStrategy(fileChangedReloadingStrategy);</span>
+<span class="fc" id="L138">		compositeConfig.addConfiguration(propConfig);</span>
+		
+		
+<span class="fc" id="L141">		Properties properties = new Properties();</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">		if (&quot;Hibernate&quot;.equals(propConfig.getString(Property.PERSISTENCE_PROVIDER))) {</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">			if (propConfig.containsKey(Property.DATASOURCE)) </span>
+<span class="nc" id="L144">				properties.put(&quot;hibernate.connection.datasource&quot;,propConfig.getString(Property.DATASOURCE));</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">			if (propConfig.containsKey(Property.HBM_DDL_AUTO))</span>
+<span class="nc" id="L146">				properties.put(&quot;hibernate.hbm2ddl.auto&quot;,propConfig.getString(Property.HBM_DDL_AUTO));</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">			if (propConfig.containsKey(Property.DEFAULT_SCHEMA))</span>
+<span class="nc" id="L148">				properties.put(&quot;hibernate.default_schema&quot;,propConfig.getString(Property.DEFAULT_SCHEMA));</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">			if (propConfig.containsKey(Property.HIBERNATE_DIALECT))</span>
+<span class="nc" id="L150">				properties.put(&quot;hibernate.dialect&quot;,propConfig.getString(Property.HIBERNATE_DIALECT));</span>
+		}
+		// initialize the entityManagerFactory.
+<span class="fc" id="L153">		PersistenceManager.initializeEntityManagerFactory(propConfig.getString(Property.JUDDI_PERSISTENCEUNIT_NAME), properties);</span>
+		// Properties from the persistence layer 
+<span class="fc" id="L155">		MapConfiguration persistentConfig = new MapConfiguration(getPersistentConfiguration(compositeConfig));</span>
+		
+<span class="fc" id="L157">		compositeConfig.addConfiguration(persistentConfig);</span>
+		//Making the new configuration globally accessible.
+<span class="fc" id="L159">		config = compositeConfig;</span>
+<span class="fc" id="L160">	}</span>
+
+	/*
+	 * This method will build any &quot;persisted&quot; properties. Persisted properties are those that are stored in the database.  These values
+	 * should be stored when the application is installed.  If they don't exist, then an error should occur.
+	 */
+	private Properties getPersistentConfiguration(Configuration config) throws ConfigurationException {
+<span class="fc" id="L167">		Properties result = new Properties();</span>
+		
+<span class="fc" id="L169">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L170">		EntityTransaction tx = em.getTransaction();</span>
+		try {
+<span class="fc" id="L172">			boolean seedAlways = config.getBoolean(&quot;juddi.seed.always&quot;,false);</span>
+<span class="pc bpc" id="L173" title="1 of 4 branches missed.">			if (seedAlways || !Install.alreadyInstalled(config)) {</span>
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">			    if (seedAlways) {</span>
+<span class="nc" id="L175">			    	log.info(&quot;Installing UDDI seed data, loading...&quot;);</span>
+			    } else {
+<span class="fc" id="L177">			    	log.info(&quot;The 'root' publisher was not found, loading...&quot;);</span>
+			    }
+				try {
+<span class="fc" id="L180">					Install.install(config);</span>
+<span class="nc" id="L181">				} catch (Exception e) {</span>
+<span class="nc" id="L182">					throw new ConfigurationException(e);</span>
+<span class="nc" id="L183">				} catch (Throwable t) {</span>
+<span class="nc" id="L184">					throw new ConfigurationException(t);</span>
+<span class="fc" id="L185">				}</span>
+			}
+
+<span class="fc" id="L188">			tx.begin();</span>
+	
+<span class="fc" id="L190">			String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);</span>
+<span class="fc" id="L191">			UddiEntityPublisher  rootPublisher = new UddiEntityPublisher(rootPublisherStr);</span>
+<span class="fc" id="L192">			rootPublisher.populateKeyGeneratorKeys(em);</span>
+<span class="fc" id="L193">			List&lt;String&gt; rootKeyGenList = rootPublisher.getKeyGeneratorKeys();</span>
+<span class="pc bpc" id="L194" title="2 of 4 branches missed.">			if (rootKeyGenList == null || rootKeyGenList.size() == 0)</span>
+<span class="nc" id="L195">				throw new ConfigurationException(&quot;The 'root' publisher key generator was not found.  Please make sure that the application is properly installed.&quot;);</span>
+			
+<span class="fc" id="L197">			String rootKeyGen = rootKeyGenList.iterator().next();</span>
+			//rootKeyGen = rootKeyGen.substring((KeyGenerator.UDDI_SCHEME + KeyGenerator.PARTITION_SEPARATOR).length());
+<span class="fc" id="L199">			rootKeyGen = rootKeyGen.substring(0, rootKeyGen.length() - (KeyGenerator.PARTITION_SEPARATOR + KeyGenerator.KEYGENERATOR_SUFFIX).length());</span>
+<span class="fc" id="L200">			log.debug(&quot;root partition:  &quot; + rootKeyGen);</span>
+	
+<span class="fc" id="L202">			result.setProperty(Property.JUDDI_ROOT_PARTITION, rootKeyGen);</span>
+			
+			// The node Id is defined as the business key of the business entity categorized as a node.  This entity is saved as part of the install.
+			// Only one business entity should be categorized as a node.
+<span class="fc" id="L206">			String nodeId = config.getString(Property.JUDDI_NODE_ID);</span>
+<span class="pc bpc" id="L207" title="1 of 2 branches missed.">                        if (nodeId==null)</span>
+<span class="nc" id="L208">                                log.fatal(&quot;Error! &quot; + Property.JUDDI_NODE_ID + &quot; is not defined in the config!&quot;);</span>
+                        else
+<span class="fc" id="L210">                                result.setProperty(Property.JUDDI_NODE_ID, nodeId);</span>
+			/*
+                        CategoryBag categoryBag = new CategoryBag();
+			KeyedReference keyedRef = new KeyedReference();
+			keyedRef.setTModelKey(Constants.NODE_CATEGORY_TMODEL);
+			keyedRef.setKeyValue(Constants.NODE_KEYVALUE);
+			categoryBag.getKeyedReference().add(keyedRef);
+			List&lt;?&gt; keyList = FindBusinessByCategoryQuery.select(em, new FindQualifiers(), categoryBag, null);
+			if (keyList != null &amp;&amp; keyList.size() &gt; 1)
+                        {
+                                StringBuilder sb = new StringBuilder();
+                                Iterator&lt;?&gt; iterator = keyList.iterator();
+                                while(iterator.hasNext()){
+                                        sb.append(iterator.next()).append(&quot;,&quot;);
+                                }
+				//
+                                //throw new ConfigurationException(&quot;Only one business entity can be categorized as the node. Config loaded from &quot; + loadedFrom + &quot; Key's listed at the node: &quot; + sb.toString());
+                                //unless of course, we are in a replicated environment
+                        }
+			if (keyList != null &amp;&amp; keyList.size() &gt; 0) {
+				nodeId = (String)keyList.get(0);
+			}
+			else
+				throw new ConfigurationException(&quot;A node business entity was not found.  Please make sure that the application is properly installed.&quot;);
+			*/
+<span class="fc" id="L235">                        String rootbiz=config.getString(Property.JUDDI_NODE_ROOT_BUSINESS);</span>
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">                        if (rootbiz==null)</span>
+<span class="nc" id="L237">                                log.fatal(&quot;Error! &quot; + Property.JUDDI_NODE_ROOT_BUSINESS + &quot; is not defined in the config&quot;);</span>
+                        else
+<span class="fc" id="L239">                                result.setProperty(Property.JUDDI_NODE_ROOT_BUSINESS, rootbiz);</span>
+                        
+                        
+			
+<span class="fc" id="L243">			tx.commit();</span>
+<span class="fc" id="L244">			return result;</span>
+		} finally {
+<span class="pc bpc" id="L246" title="3 of 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="nc" id="L247">				tx.rollback();</span>
+			}
+<span class="pc" id="L249">			em.close();</span>
+		}
+	}
+	
+	
+	/**
+	 * Obtains the reference to the Singleton instance.
+	 * 
+	 * @return the APplicationConfuration Singleton Instance.
+	 * @throws ConfigurationException
+	 */
+	public static AppConfig getInstance() throws ConfigurationException 
+	{
+<span class="fc bfc" id="L262" title="All 2 branches covered.">		if (instance==null) {</span>
+<span class="fc" id="L263">			instance = new AppConfig();</span>
+		}
+<span class="fc" id="L265">		return instance;</span>
+	}
+	/**
+	 * Hook to receive configuration reload events from an external application.
+	 * 
+	 * @throws ConfigurationException
+	 */
+	public static void reloadConfig() throws ConfigurationException
+	{
+<span class="fc" id="L274">		Registry.stop();</span>
+<span class="fc" id="L275">		getInstance().loadConfiguration();</span>
+<span class="fc" id="L276">		Registry.start();</span>
+<span class="fc" id="L277">	}</span>
+        
+        public static void triggerReload() throws ConfigurationException{
+<span class="fc" id="L280">                getInstance().loadConfiguration();</span>
+<span class="fc" id="L281">        }</span>
+	/**
+	 * The object from which property values can be obtained.
+	 * @return the commons Configuration interface
+	 * @throws ConfigurationException 
+	 */
+	public static Configuration getConfiguration() throws ConfigurationException
+	{
+<span class="fc" id="L289">		return getInstance().config;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

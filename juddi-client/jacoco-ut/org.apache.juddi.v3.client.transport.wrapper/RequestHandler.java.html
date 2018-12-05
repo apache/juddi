@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RequestHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.transport.wrapper</a> &gt; <span class="el_source">RequestHandler.java</span></div><h1>RequestHandler.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2004 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.client.transport.wrapper;
+
+import java.io.StringWriter;
+import java.lang.reflect.Method;
+import java.rmi.Remote;
+import java.util.List;
+import javax.xml.XMLConstants;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.ws.Holder;
+
+import org.apache.juddi.jaxb.JAXBMarshaller;
+import org.uddi.api_v3.AssertionStatusItem;
+import org.uddi.api_v3.AssertionStatusReport;
+import org.uddi.api_v3.CompletionStatus;
+import org.uddi.api_v3.DispositionReport;
+import org.uddi.api_v3.GetAssertionStatusReport;
+import org.uddi.api_v3.GetPublisherAssertions;
+import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.api_v3.PublisherAssertions;
+import org.uddi.api_v3.PublisherAssertionsResponse;
+import org.uddi.api_v3.SetPublisherAssertions;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+/**
+ * @author Tom Cunningham (tcunning@apache.org)
+ * @author Kurt Stam (kurt.stam@redhat.com)
+ */
+<span class="nc" id="L54">public class RequestHandler {</span>
+  // private reference to the webapp's logger.
+        //private static Log log = LogFactory.getLog(RequestHandler.class);
+
+        // XML Document Builder
+<span class="nc" id="L59">        private static DocumentBuilder docBuilder = null;</span>
+
+        private volatile String version;
+        private volatile String operation;
+
+        private volatile Remote portType;
+        private volatile String methodName;
+        private volatile Class&lt;?&gt; operationClass;
+<span class="nc" id="L67">        private static TransformerFactory transFactory = null;</span>
+
+        /**
+         * Grab the local name of the UDDI request element from the UDDI
+         * Request. If a value isn't returned (either null or an empty String is
+         * returned) then throw a FatalError exception. This is probably a
+         * configuration problem related to the XML Parser that jUDDI is using.
+         *
+         * @param uddiReq
+         * @return the operation name
+         * @throws Exception
+         */
+        public String getOperation(Element uddiReq) throws Exception {
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                if (uddiReq == null) {</span>
+<span class="nc" id="L81">                        throw new UnsupportedOperationException(&quot;UDDI Request is null&quot;);</span>
+                }
+
+<span class="nc" id="L84">                String operation = uddiReq.getLocalName();</span>
+<span class="nc bnc" id="L85" title="All 4 branches missed.">                if ((operation == null) || (operation.trim().length() == 0)) {</span>
+<span class="nc" id="L86">                        throw new UnsupportedOperationException(&quot;operation &quot; + operation + &quot; not supported&quot;);</span>
+                }
+<span class="nc" id="L88">                setOperation(operation);</span>
+<span class="nc" id="L89">                return operation;</span>
+        }
+
+        /**
+         * Grab the generic attribute value (version value). If one isn't
+         * specified or the value specified is not &quot;2.0&quot; then throw an exception
+         * (this value must be specified for all UDDI requests and currently
+         * only version 2.0 UDDI requests are supported).
+         *
+         * @param uddiReq
+         * @return version
+         * @throws Exception
+         */
+        public String getVersion(Element uddiReq, String operation) throws Exception {
+<span class="nc" id="L103">                String version = uddiReq.getAttribute(&quot;generic&quot;);</span>
+<span class="nc bnc" id="L104" title="All 4 branches missed.">                if ((version == null) || (&quot;&quot;.equals(version))) {</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                        if (&quot;urn:uddi-org:api_v3&quot;.equals(uddiReq.getNamespaceURI())) {</span>
+<span class="nc" id="L106">                                version = &quot;3.0&quot;;</span>
+                        }
+                }
+<span class="nc bnc" id="L109" title="All 2 branches missed.">                if (!&quot;3.0&quot;.equals(version)) {</span>
+<span class="nc" id="L110">                        throw new UnsupportedOperationException(&quot;version needs to be 3.0&quot;);</span>
+                }
+<span class="nc" id="L112">                setVersion(version);</span>
+<span class="nc" id="L113">                return version;</span>
+        }
+
+        public static synchronized String getText(Element element) throws TransformerException {
+<span class="nc bnc" id="L117" title="All 2 branches missed.">                if (transFactory == null) {</span>
+<span class="nc" id="L118">                        transFactory = TransformerFactory.newInstance();</span>
+<span class="nc" id="L119">                        transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, &quot;&quot;);</span>
+<span class="nc" id="L120">                        transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, &quot;&quot;);</span>
+                }
+<span class="nc" id="L122">                Transformer trans = transFactory.newTransformer();</span>
+<span class="nc" id="L123">                StringWriter sw = new StringWriter();</span>
+<span class="nc" id="L124">                trans.transform(new DOMSource(element), new StreamResult(sw));</span>
+<span class="nc" id="L125">                return sw.toString();</span>
+        }
+
+        @SuppressWarnings(&quot;unchecked&quot;)
+        public Node invoke(Element uddiReq) throws Exception {
+<span class="nc" id="L130">                Node response = null;</span>
+    // Create a new 'temp' XML element to use as a container 
+                // in which to marshal the UDDI response data into.
+<span class="nc" id="L133">                DocumentBuilder docBuilder = getDocumentBuilder();</span>
+<span class="nc" id="L134">                Document document = docBuilder.newDocument();</span>
+<span class="nc" id="L135">                Element element = document.createElement(&quot;temp&quot;);</span>
+                try {
+      // Lookup the appropriate XML handler.  Throw an 
+                        // UnsupportedException if one could not be located.
+                        //String reqString = getText(uddiReq);
+                        //Object uddiReqObj = JAXBMarshaller.unmarshallFromString(reqString, &quot;org.uddi.api_v3&quot;);
+<span class="nc" id="L141">                        Object uddiReqObj = JAXBMarshaller.unmarshallFromElement(uddiReq, &quot;org.uddi.api_v3&quot;);</span>
+<span class="nc" id="L142">                        Object result = null;</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">                        if (operationClass.equals(GetAssertionStatusReport.class)) {</span>
+<span class="nc" id="L144">                                GetAssertionStatusReport getAssertionStatusReport = (GetAssertionStatusReport) uddiReqObj;</span>
+<span class="nc" id="L145">                                Method method = portType.getClass().getMethod(methodName, String.class, CompletionStatus.class);</span>
+<span class="nc" id="L146">                                result = method.invoke(portType, getAssertionStatusReport.getAuthInfo(), getAssertionStatusReport.getCompletionStatus());</span>
+<span class="nc" id="L147">                                AssertionStatusReport assertionStatusReport = new AssertionStatusReport();</span>
+<span class="nc" id="L148">                                assertionStatusReport.getAssertionStatusItem().addAll((List&lt;AssertionStatusItem&gt;) result);</span>
+<span class="nc" id="L149">                                result = assertionStatusReport;</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">                        } else if (operationClass.equals(SetPublisherAssertions.class)) {</span>
+<span class="nc" id="L151">                                SetPublisherAssertions setPublisherAssertions = (SetPublisherAssertions) uddiReqObj;</span>
+<span class="nc" id="L152">                                Method method = portType.getClass().getMethod(methodName, String.class, Holder.class);</span>
+<span class="nc" id="L153">                                Holder&lt;List&lt;PublisherAssertion&gt;&gt; holder = new Holder&lt;List&lt;PublisherAssertion&gt;&gt;(setPublisherAssertions.getPublisherAssertion());</span>
+<span class="nc" id="L154">                                result = method.invoke(portType, setPublisherAssertions.getAuthInfo(), holder);</span>
+<span class="nc" id="L155">                                PublisherAssertions assertions = new PublisherAssertions();</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">                                if (holder.value != null) {</span>
+<span class="nc" id="L157">                                        assertions.getPublisherAssertion().addAll(holder.value);</span>
+                                }
+<span class="nc" id="L159">                                result = assertions;</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">                        } else if (operationClass.equals(GetPublisherAssertions.class)) {</span>
+<span class="nc" id="L161">                                GetPublisherAssertions getPublisherAssertions = (GetPublisherAssertions) uddiReqObj;</span>
+<span class="nc" id="L162">                                Method method = portType.getClass().getMethod(methodName, String.class);</span>
+<span class="nc" id="L163">                                result = method.invoke(portType, getPublisherAssertions.getAuthInfo());</span>
+<span class="nc" id="L164">                                List&lt;PublisherAssertion&gt; assertionList = (List&lt;PublisherAssertion&gt;) result;</span>
+<span class="nc" id="L165">                                PublisherAssertionsResponse publisherAssertionsResponse = new PublisherAssertionsResponse();</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">                                if (assertionList != null) {</span>
+<span class="nc" id="L167">                                        publisherAssertionsResponse.getPublisherAssertion().addAll(assertionList);</span>
+                                }
+<span class="nc" id="L169">                                result = publisherAssertionsResponse;</span>
+<span class="nc" id="L170">                        } else {</span>
+<span class="nc" id="L171">                                Method method = portType.getClass().getMethod(methodName, operationClass);</span>
+<span class="nc" id="L172">                                result = method.invoke(portType, (Object) uddiReqObj);</span>
+                        }
+
+      // Lookup the appropriate response handler which will
+                        // be used to marshal the UDDI object into the appropriate 
+                        // xml format.
+                        /*
+                         IHandler responseHandler = maker.lookup(uddiResObj.getClass().getName());
+                         if (responseHandler == null)
+                         throw new FatalErrorException(&quot;The response object &quot; +
+                         &quot;type is unknown: &quot; +uddiResObj.getClass().getName());
+                         */
+      // Lookup the appropriate response handler and marshal 
+                        // the juddi object into the appropriate xml format (we 
+                        // only support UDDI v2.0 at this time).  Attach the
+                        // results to the body of the SOAP response.
+<span class="nc bnc" id="L188" title="All 2 branches missed.">                        if (result != null) {</span>
+<span class="nc" id="L189">                                JAXBMarshaller.marshallToElement(result, &quot;org.uddi.api_v3&quot;, element);</span>
+       // Grab a reference to the 'temp' element's
+                                // only child here (this has the effect of
+                                // discarding the temp element) and append 
+                                // this child to the soap response body
+<span class="nc" id="L194">                                document.appendChild(element.getFirstChild());</span>
+                        }
+<span class="nc" id="L196">                        response = document;</span>
+<span class="nc" id="L197">                } catch (Exception e) {</span>
+<span class="nc" id="L198">                        DispositionReport dr = DispositionReportFaultMessage.getDispositionReport(e);</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">                        if (dr != null) {</span>
+<span class="nc" id="L200">                                JAXBMarshaller.marshallToElement(dr, &quot;org.uddi.api_v3&quot;, element);</span>
+<span class="nc" id="L201">                                document.appendChild(element.getFirstChild());</span>
+<span class="nc" id="L202">                                response = document;</span>
+                        } else {
+<span class="nc" id="L204">                                throw e;</span>
+                        }
+                        //log.error(e.getMessage(),e);
+<span class="nc" id="L207">                }</span>
+<span class="nc" id="L208">                return response;</span>
+        }
+
+        /**
+         *
+         */
+        private DocumentBuilder getDocumentBuilder() {
+<span class="nc bnc" id="L215" title="All 2 branches missed.">                if (docBuilder == null) {</span>
+<span class="nc" id="L216">                        docBuilder = createDocumentBuilder();</span>
+                }
+<span class="nc" id="L218">                return docBuilder;</span>
+        }
+
+        /**
+         *
+         */
+        private synchronized DocumentBuilder createDocumentBuilder() {
+<span class="nc bnc" id="L225" title="All 2 branches missed.">                if (docBuilder != null) {</span>
+<span class="nc" id="L226">                        return docBuilder;</span>
+                }
+
+                try {
+<span class="nc" id="L230">                        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();</span>
+<span class="nc" id="L231">                        factory.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, true);</span>
+<span class="nc" id="L232">                        factory.setNamespaceAware(true);</span>
+                        //factory.setValidating(true);
+
+<span class="nc" id="L235">                        docBuilder = factory.newDocumentBuilder();</span>
+<span class="nc" id="L236">                } catch (ParserConfigurationException pcex) {</span>
+<span class="nc" id="L237">                        pcex.printStackTrace();</span>
+<span class="nc" id="L238">                }</span>
+
+<span class="nc" id="L240">                return docBuilder;</span>
+        }
+
+        public String getOperation() {
+<span class="nc" id="L244">                return operation;</span>
+        }
+
+        public void setOperation(String operation) {
+<span class="nc" id="L248">                this.operation = operation;</span>
+<span class="nc" id="L249">        }</span>
+
+        public Remote getPortType() {
+<span class="nc" id="L252">                return portType;</span>
+        }
+
+        public void setPortType(Remote portType) {
+<span class="nc" id="L256">                this.portType = portType;</span>
+<span class="nc" id="L257">        }</span>
+
+        public String getMethodName() {
+<span class="nc" id="L260">                return methodName;</span>
+        }
+
+        public void setMethodName(String methodName) {
+<span class="nc" id="L264">                this.methodName = methodName;</span>
+<span class="nc" id="L265">        }</span>
+
+        public Class&lt;?&gt; getOperationClass() {
+<span class="nc" id="L268">                return operationClass;</span>
+        }
+
+        public void setOperationClass(Class&lt;?&gt; operationClass) {
+<span class="nc" id="L272">                this.operationClass = operationClass;</span>
+<span class="nc" id="L273">        }</span>
+
+        public String getVersion() {
+<span class="nc" id="L276">                return version;</span>
+        }
+
+        public void setVersion(String version) {
+<span class="nc" id="L280">                this.version = version;</span>
+<span class="nc" id="L281">        }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

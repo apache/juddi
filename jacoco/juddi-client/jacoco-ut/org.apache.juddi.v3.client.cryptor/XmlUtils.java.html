@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XmlUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.cryptor</a> &gt; <span class="el_source">XmlUtils.java</span></div><h1>XmlUtils.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2017 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.client.cryptor;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.URL;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.xml.sax.InputSource;
+
+/**
+ *
+ * @since 3.3.5
+ * @author Alex O'Ree
+ */
+<span class="nc" id="L37">public class XmlUtils {</span>
+
+<span class="fc" id="L39">        private static final Log log = LogFactory.getLog(XmlUtils.class);</span>
+
+        public static Object unmarshal(Reader reader, Class...clazz) {
+
+                try {
+<span class="nc" id="L44">                        SAXParserFactory spf = SAXParserFactory.newInstance();</span>
+<span class="nc" id="L45">                        spf.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, false);</span>
+<span class="nc" id="L46">                        spf.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, false);</span>
+<span class="nc" id="L47">                        spf.setFeature(&quot;http://apache.org/xml/features/nonvalidating/load-external-dtd&quot;, false);</span>
+<span class="nc" id="L48">                        spf.setNamespaceAware(true);</span>
+
+<span class="nc" id="L50">                        Source xmlSource = new SAXSource(spf.newSAXParser().getXMLReader(), new InputSource(reader));</span>
+<span class="nc" id="L51">                        JAXBContext jc = JAXBContext.newInstance(clazz);</span>
+<span class="nc" id="L52">                        Unmarshaller um = jc.createUnmarshaller();</span>
+<span class="nc" id="L53">                        return um.unmarshal(xmlSource);</span>
+<span class="nc" id="L54">                } catch (Exception ex) {</span>
+<span class="nc" id="L55">                        log.warn(&quot;Failed to unmarshall object. Increase logging to debug for additional information. 1&quot; + ex.getMessage());</span>
+<span class="nc" id="L56">                        log.debug(ex.getMessage(), ex);</span>
+                }
+<span class="nc" id="L58">                return null;</span>
+
+        }
+
+        public static Object unmarshal(InputStream reader, Class clazz) {
+                try {
+<span class="nc" id="L64">                        SAXParserFactory spf = SAXParserFactory.newInstance();</span>
+<span class="nc" id="L65">                        spf.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, false);</span>
+<span class="nc" id="L66">                        spf.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, false);</span>
+<span class="nc" id="L67">                        spf.setFeature(&quot;http://apache.org/xml/features/nonvalidating/load-external-dtd&quot;, false);</span>
+<span class="nc" id="L68">                        spf.setNamespaceAware(true);</span>
+<span class="nc" id="L69">                        Source xmlSource = new SAXSource(spf.newSAXParser().getXMLReader(), new InputSource(reader));</span>
+<span class="nc" id="L70">                        JAXBContext jc = JAXBContext.newInstance(clazz);</span>
+<span class="nc" id="L71">                        Unmarshaller um = jc.createUnmarshaller();</span>
+<span class="nc" id="L72">                        return um.unmarshal(xmlSource);</span>
+<span class="nc" id="L73">                } catch (Exception ex) {</span>
+<span class="nc" id="L74">                        log.warn(&quot;Failed to unmarshall object. Increase logging to debug for additional information. 2&quot; + ex.getMessage());</span>
+<span class="nc" id="L75">                        log.debug(ex.getMessage(), ex);</span>
+                }
+<span class="nc" id="L77">                return null;</span>
+
+        }
+
+        public static Object unmarshal(Reader reader, String packageName) {
+                try {
+<span class="nc" id="L83">                        SAXParserFactory spf = SAXParserFactory.newInstance();</span>
+<span class="nc" id="L84">                        spf.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, false);</span>
+<span class="nc" id="L85">                        spf.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, false);</span>
+<span class="nc" id="L86">                        spf.setFeature(&quot;http://apache.org/xml/features/nonvalidating/load-external-dtd&quot;, false);</span>
+<span class="nc" id="L87">                        spf.setNamespaceAware(true);</span>
+<span class="nc" id="L88">                        Source xmlSource = new SAXSource(spf.newSAXParser().getXMLReader(), new InputSource(reader));</span>
+<span class="nc" id="L89">                        JAXBContext jc = JAXBContext.newInstance(packageName);</span>
+                        
+<span class="nc" id="L91">                        Unmarshaller um = jc.createUnmarshaller();</span>
+<span class="nc" id="L92">                        return ((javax.xml.bind.JAXBElement)um.unmarshal(xmlSource)).getValue();</span>
+<span class="nc" id="L93">                } catch (Exception ex) {</span>
+<span class="nc" id="L94">                        log.warn(&quot;Failed to unmarshall object. Increase logging to debug for additional information. 3&quot; + ex.getMessage());</span>
+<span class="nc" id="L95">                        log.debug(ex.getMessage(), ex);</span>
+                }
+<span class="nc" id="L97">                return null;</span>
+
+        }
+
+        public static Object unmarshal(URL url, Class clazz) {
+<span class="fc" id="L102">                InputStream openStream = null;</span>
+<span class="fc" id="L103">                Object obj = null;</span>
+                try {
+<span class="fc" id="L105">                        SAXParserFactory spf = SAXParserFactory.newInstance();</span>
+<span class="fc" id="L106">                        spf.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, false);</span>
+<span class="fc" id="L107">                        spf.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, false);</span>
+<span class="fc" id="L108">                        spf.setFeature(&quot;http://apache.org/xml/features/nonvalidating/load-external-dtd&quot;, false);</span>
+<span class="fc" id="L109">                        spf.setNamespaceAware(true);</span>
+<span class="fc" id="L110">                        openStream = url.openStream();</span>
+<span class="fc" id="L111">                        Source xmlSource = new SAXSource(spf.newSAXParser().getXMLReader(), new InputSource(openStream));</span>
+<span class="fc" id="L112">                        JAXBContext jc = JAXBContext.newInstance(clazz);</span>
+<span class="fc" id="L113">                        Unmarshaller um = jc.createUnmarshaller();</span>
+<span class="fc" id="L114">                        obj = um.unmarshal(xmlSource);</span>
+<span class="nc" id="L115">                } catch (Exception ex) {</span>
+<span class="nc" id="L116">                        log.warn(&quot;Failed to unmarshall object. Increase logging to debug for additional information. 4&quot; + ex.getMessage());</span>
+<span class="nc" id="L117">                        log.debug(ex.getMessage(), ex);</span>
+                } finally {
+<span class="pc bpc" id="L119" title="5 of 6 branches missed.">                        if (openStream != null) {</span>
+                                try {
+<span class="pc" id="L121">                                        openStream.close();</span>
+<span class="nc" id="L122">                                } catch (IOException ex) {</span>
+<span class="nc" id="L123">                                        log.debug(ex.getMessage(), ex);</span>
+<span class="pc" id="L124">                                }</span>
+                        }
+                }
+<span class="fc" id="L127">                return obj;</span>
+        }
+
+        public static Object unmarshal(File file, Class clazz)  {
+                try {
+<span class="fc" id="L132">                        return unmarshal(file.toURI().toURL(), clazz);</span>
+<span class="nc" id="L133">                } catch (Exception ex) {</span>
+<span class="nc" id="L134">                        log.warn(&quot;Failed to unmarshall object. Increase logging to debug for additional information. 5&quot; + ex.getMessage());</span>
+<span class="nc" id="L135">                        log.debug(ex.getMessage(), ex);</span>
+                }
+<span class="nc" id="L137">                return null;</span>
+        }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

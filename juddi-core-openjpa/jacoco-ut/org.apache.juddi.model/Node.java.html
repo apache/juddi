@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Node.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.model</a> &gt; <span class="el_source">Node.java</span></div><h1>Node.java</h1><pre class="source lang-java linenums">package org.apache.juddi.model;
+/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+/**
+ * @author &lt;a href=&quot;mailto:kurt@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ */
+@Entity
+@Table(name = &quot;j3_node&quot;)
+public class Node implements java.io.Serializable {
+
+        @Transient
+        private static final long serialVersionUID = -893203927029468343L;
+        @Id
+        @Column(name = &quot;name&quot;, nullable = false, length = 255)
+        private String name;
+        @Column(name = &quot;client_name&quot;, nullable = false, length = 255)
+        private String clientName;
+        @Column(name = &quot;security_url&quot;, nullable = true, length = 255)
+        private String securityUrl;
+        @Column(name = &quot;inquiry_url&quot;, nullable = false, length = 255)
+        private String inquiryUrl;
+        @Column(name = &quot;publish_url&quot;, nullable = false, length = 255)
+        private String publishUrl;
+        @Column(name = &quot;custody_transfer_url&quot;, nullable = true, length = 255)
+        private String custodyTransferUrl;
+        @Column(name = &quot;subscription_url&quot;, nullable = true, length = 255)
+        private String subscriptionUrl;
+
+        @Column(name = &quot;subscriptionlist_url&quot;, nullable = true, length = 255)
+        private String subscriptionListenerUrl;
+        @Column(name = &quot;replication_url&quot;, nullable = true, length = 255)
+        private String replicationUrl;
+        @Column(name = &quot;proxy_transport&quot;, nullable = false, length = 255)
+        private String proxyTransport;
+
+        @Column(name = &quot;juddi_api_url&quot;, nullable = true, length = 255)
+        private String juddiApiUrl;
+        @Column(name = &quot;factory_initial&quot;, nullable = true, length = 255)
+        private String factoryInitial;
+        @Column(name = &quot;factory_url_pkgs&quot;, nullable = true, length = 255)
+        private String factoryURLPkgs;
+        @Column(name = &quot;factory_naming_provider&quot;, nullable = true, length = 255)
+        private String factoryNamingProvider;
+
+<span class="fc" id="L65">        public Node() {</span>
+<span class="fc" id="L66">        }</span>
+
+        public Node(String custodyTransferUrl, String inquiryUrl,
+                String juddiApiUrl, String name, String proxyTransport,
+                String publishUrl, String securityUrl, String subscriptionUrl, String replicationURL) {
+<span class="nc" id="L71">                super();</span>
+<span class="nc" id="L72">                this.custodyTransferUrl = custodyTransferUrl;</span>
+<span class="nc" id="L73">                this.inquiryUrl = inquiryUrl;</span>
+<span class="nc" id="L74">                this.juddiApiUrl = juddiApiUrl;</span>
+<span class="nc" id="L75">                this.name = name;</span>
+<span class="nc" id="L76">                this.proxyTransport = proxyTransport;</span>
+<span class="nc" id="L77">                this.publishUrl = publishUrl;</span>
+<span class="nc" id="L78">                this.securityUrl = securityUrl;</span>
+<span class="nc" id="L79">                this.subscriptionUrl = subscriptionUrl;</span>
+<span class="nc" id="L80">                this.replicationUrl = replicationURL;</span>
+<span class="nc" id="L81">        }</span>
+
+        public String getName() {
+<span class="fc" id="L84">                return name;</span>
+        }
+
+        public void setName(String name) {
+<span class="fc" id="L88">                this.name = name;</span>
+<span class="fc" id="L89">        }</span>
+
+        public String getClientName() {
+<span class="fc" id="L92">                return clientName;</span>
+        }
+
+        public void setClientName(String clientName) {
+<span class="fc" id="L96">                this.clientName = clientName;</span>
+<span class="fc" id="L97">        }</span>
+
+        public String getProxyTransport() {
+<span class="fc" id="L100">                return proxyTransport;</span>
+        }
+
+        public void setProxyTransport(String proxyTransport) {
+<span class="fc" id="L104">                this.proxyTransport = proxyTransport;</span>
+<span class="fc" id="L105">        }</span>
+
+        public String getSecurityUrl() {
+<span class="fc" id="L108">                return securityUrl;</span>
+        }
+
+        public void setSecurityUrl(String securityUrl) {
+<span class="fc" id="L112">                this.securityUrl = securityUrl;</span>
+<span class="fc" id="L113">        }</span>
+
+        public String getInquiryUrl() {
+<span class="fc" id="L116">                return inquiryUrl;</span>
+        }
+
+        public void setInquiryUrl(String inquiryUrl) {
+<span class="fc" id="L120">                this.inquiryUrl = inquiryUrl;</span>
+<span class="fc" id="L121">        }</span>
+
+        public String getPublishUrl() {
+<span class="fc" id="L124">                return publishUrl;</span>
+        }
+
+        public void setPublishUrl(String publishUrl) {
+<span class="fc" id="L128">                this.publishUrl = publishUrl;</span>
+<span class="fc" id="L129">        }</span>
+
+        public String getCustodyTransferUrl() {
+<span class="fc" id="L132">                return custodyTransferUrl;</span>
+        }
+
+        public void setCustodyTransferUrl(String custodyTransferUrl) {
+<span class="fc" id="L136">                this.custodyTransferUrl = custodyTransferUrl;</span>
+<span class="fc" id="L137">        }</span>
+
+        public String getSubscriptionUrl() {
+<span class="fc" id="L140">                return subscriptionUrl;</span>
+        }
+
+        public void setSubscriptionUrl(String subscriptionUrl) {
+<span class="fc" id="L144">                this.subscriptionUrl = subscriptionUrl;</span>
+<span class="fc" id="L145">        }</span>
+
+        public String getSubscriptionListenerUrl() {
+<span class="fc" id="L148">                return subscriptionListenerUrl;</span>
+        }
+
+        public void setSubscriptionListenerUrl(String subscriptionUrl) {
+<span class="fc" id="L152">                this.subscriptionListenerUrl = subscriptionUrl;</span>
+<span class="fc" id="L153">        }</span>
+
+        public String getReplicationUrl() {
+<span class="fc" id="L156">                return replicationUrl;</span>
+        }
+
+        public void setReplicationUrl(String replicationUrl) {
+<span class="fc" id="L160">                this.replicationUrl = replicationUrl;</span>
+<span class="fc" id="L161">        }</span>
+
+        public String getJuddiApiUrl() {
+<span class="fc" id="L164">                return juddiApiUrl;</span>
+        }
+
+        public void setJuddiApiUrl(String juddiApiUrl) {
+<span class="fc" id="L168">                this.juddiApiUrl = juddiApiUrl;</span>
+<span class="fc" id="L169">        }</span>
+
+        public String getFactoryInitial() {
+<span class="fc" id="L172">                return factoryInitial;</span>
+        }
+
+        public void setFactoryInitial(String factoryInitial) {
+<span class="fc" id="L176">                this.factoryInitial = factoryInitial;</span>
+<span class="fc" id="L177">        }</span>
+
+        public String getFactoryURLPkgs() {
+<span class="fc" id="L180">                return factoryURLPkgs;</span>
+        }
+
+        public void setFactoryURLPkgs(String factoryURLPkgs) {
+<span class="fc" id="L184">                this.factoryURLPkgs = factoryURLPkgs;</span>
+<span class="fc" id="L185">        }</span>
+
+        public String getFactoryNamingProvider() {
+<span class="fc" id="L188">                return factoryNamingProvider;</span>
+        }
+
+        public void setFactoryNamingProvider(String factoryNamingProvider) {
+<span class="fc" id="L192">                this.factoryNamingProvider = factoryNamingProvider;</span>
+<span class="fc" id="L193">        }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

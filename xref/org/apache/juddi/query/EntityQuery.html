@@ -132,7 +132,7 @@
 <a class="jxr_linenumber" name="L124" href="#L124">124</a> <em class="jxr_comment">	 * Used for all the find operation sub-queries.  Restricts size of the IN clause based on global parameter</em>
 <a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_comment">	 */</em>
 <a class="jxr_linenumber" name="L126" href="#L126">126</a> 	@SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="L127" href="#L127">127</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> List&lt;?&gt; getQueryResult(EntityManager em, <a href="../../../../org/apache/juddi/query/util/DynamicQuery.html">DynamicQuery</a> dynamicQry, List&lt;?&gt; keysIn, String inListTerm) {
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> List&lt;Object&gt; getQueryResult(EntityManager em, <a href="../../../../org/apache/juddi/query/util/DynamicQuery.html">DynamicQuery</a> dynamicQry, List&lt;?&gt; keysIn, String inListTerm) {
 <a class="jxr_linenumber" name="L128" href="#L128">128</a> 		
 <a class="jxr_linenumber" name="L129" href="#L129">129</a> 		List&lt;Object&gt; result = <strong class="jxr_keyword">new</strong> ArrayList&lt;Object&gt;(0);
 <a class="jxr_linenumber" name="L130" href="#L130">130</a> 		<em class="jxr_comment">// If keysIn is null, then no IN list is applied to the query - we simply need to run the query.  Otherwise, the IN list is chunked based on</em>
@@ -150,43 +150,48 @@
 <a class="jxr_linenumber" name="L142" href="#L142">142</a> 			<strong class="jxr_keyword">catch</strong>(ConfigurationException ce) {
 <a class="jxr_linenumber" name="L143" href="#L143">143</a> 				log.error(<span class="jxr_string">"Configuration exception occurred retrieving: "</span> + Property.JUDDI_MAX_IN_CLAUSE);
 <a class="jxr_linenumber" name="L144" href="#L144">144</a> 			}
-<a class="jxr_linenumber" name="L145" href="#L145">145</a> 			
-<a class="jxr_linenumber" name="L146" href="#L146">146</a> 			<strong class="jxr_keyword">int</strong> inParamsLeft = keysIn.size();
-<a class="jxr_linenumber" name="L147" href="#L147">147</a> 			<strong class="jxr_keyword">int</strong> startIndex = 0;
-<a class="jxr_linenumber" name="L148" href="#L148">148</a> 			<strong class="jxr_keyword">while</strong>(inParamsLeft &gt; 0) {
-<a class="jxr_linenumber" name="L149" href="#L149">149</a> 				<strong class="jxr_keyword">int</strong> endIndex = startIndex + Math.min(inParamsLeft, maxInClause);
-<a class="jxr_linenumber" name="L150" href="#L150">150</a> 				
-<a class="jxr_linenumber" name="L151" href="#L151">151</a> 				List&lt;Object&gt; subKeysIn = <strong class="jxr_keyword">new</strong> ArrayList&lt;Object&gt;(endIndex);
-<a class="jxr_linenumber" name="L152" href="#L152">152</a> 				<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i=startIndex; i&lt; endIndex; i++) {
-<a class="jxr_linenumber" name="L153" href="#L153">153</a> 					subKeysIn.add(keysIn.get(i));
-<a class="jxr_linenumber" name="L154" href="#L154">154</a> 				}
-<a class="jxr_linenumber" name="L155" href="#L155">155</a> 				dynamicQry.appendInListWithAnd(inListTerm, subKeysIn);
-<a class="jxr_linenumber" name="L156" href="#L156">156</a> 				log.debug(dynamicQry);
-<a class="jxr_linenumber" name="L157" href="#L157">157</a> 	
-<a class="jxr_linenumber" name="L158" href="#L158">158</a> 				Query qry = dynamicQry.buildJPAQuery(em);
-<a class="jxr_linenumber" name="L159" href="#L159">159</a> 				List&lt;Object&gt; resultChunk = qry.getResultList();
-<a class="jxr_linenumber" name="L160" href="#L160">160</a> 				result.addAll(resultChunk);
-<a class="jxr_linenumber" name="L161" href="#L161">161</a> 				
-<a class="jxr_linenumber" name="L162" href="#L162">162</a> 				inParamsLeft = inParamsLeft - (endIndex - startIndex);
-<a class="jxr_linenumber" name="L163" href="#L163">163</a> 				startIndex = endIndex;
-<a class="jxr_linenumber" name="L164" href="#L164">164</a> 			}
-<a class="jxr_linenumber" name="L165" href="#L165">165</a> 		}
-<a class="jxr_linenumber" name="L166" href="#L166">166</a> 		
-<a class="jxr_linenumber" name="L167" href="#L167">167</a> 		<strong class="jxr_keyword">return</strong> result;
-<a class="jxr_linenumber" name="L168" href="#L168">168</a> 		
-<a class="jxr_linenumber" name="L169" href="#L169">169</a> 
-<a class="jxr_linenumber" name="L170" href="#L170">170</a> 	}
-<a class="jxr_linenumber" name="L171" href="#L171">171</a> 	
-<a class="jxr_linenumber" name="L172" href="#L172">172</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> storeIntermediateKeySetResults (EntityManager em, String txId,  List&lt;?&gt; keysIn) {
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> 			<strong class="jxr_keyword">if</strong> (keysIn.isEmpty()) {
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>                             Query qry = dynamicQry.buildJPAQuery(em);
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>                             List&lt;Object&gt; resultChunk = qry.getResultList();
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>                             result.addAll(resultChunk);
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>                         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>                             <strong class="jxr_keyword">int</strong> inParamsLeft = keysIn.size();
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>                             <strong class="jxr_keyword">int</strong> startIndex = 0;
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>                             <strong class="jxr_keyword">while</strong>(inParamsLeft &gt; 0) {
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>                                     <strong class="jxr_keyword">int</strong> endIndex = startIndex + Math.min(inParamsLeft, maxInClause);
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> 
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>                                     List&lt;Object&gt; subKeysIn = <strong class="jxr_keyword">new</strong> ArrayList&lt;Object&gt;(endIndex);
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>                                     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i=startIndex; i&lt; endIndex; i++) {
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>                                             subKeysIn.add(keysIn.get(i));
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>                                     }
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>                                     dynamicQry.appendInListWithAnd(inListTerm, subKeysIn);
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>                                     log.debug(dynamicQry);
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> 
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>                                     Query qry = dynamicQry.buildJPAQuery(em);
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>                                     List&lt;Object&gt; resultChunk = qry.getResultList();
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>                                     result.addAll(resultChunk);
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> 
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>                                     inParamsLeft = inParamsLeft - (endIndex - startIndex);
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>                                     startIndex = endIndex;
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>                             }
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>                         }
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> 		}
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> 		
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> 		<strong class="jxr_keyword">return</strong> result;
 <a class="jxr_linenumber" name="L173" href="#L173">173</a> 		
-<a class="jxr_linenumber" name="L174" href="#L174">174</a> 		<strong class="jxr_keyword">for</strong> (Object key : keysIn) {
-<a class="jxr_linenumber" name="L175" href="#L175">175</a> 			TempKey tempKey = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/juddi/model/TempKey.html">TempKey</a>();
-<a class="jxr_linenumber" name="L176" href="#L176">176</a> 			tempKey.setPk(txId,key.toString());
-<a class="jxr_linenumber" name="L177" href="#L177">177</a> 			em.persist(tempKey);
-<a class="jxr_linenumber" name="L178" href="#L178">178</a> 		}
-<a class="jxr_linenumber" name="L179" href="#L179">179</a> 	}
-<a class="jxr_linenumber" name="L180" href="#L180">180</a> 	
-<a class="jxr_linenumber" name="L181" href="#L181">181</a> }
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> 
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> 	}
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> 	
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> storeIntermediateKeySetResults (EntityManager em, String txId,  List&lt;?&gt; keysIn) {
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> 		
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> 		<strong class="jxr_keyword">for</strong> (Object key : keysIn) {
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> 			TempKey tempKey = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/juddi/model/TempKey.html">TempKey</a>();
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> 			tempKey.setPk(txId,key.toString());
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> 			em.persist(tempKey);
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> 		}
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> 	}
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> 	
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2004&#x2013;2018 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>

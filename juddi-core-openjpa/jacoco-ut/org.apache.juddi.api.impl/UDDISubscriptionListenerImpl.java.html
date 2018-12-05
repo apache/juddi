@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UDDISubscriptionListenerImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.api.impl</a> &gt; <span class="el_source">UDDISubscriptionListenerImpl.java</span></div><h1>UDDISubscriptionListenerImpl.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.api.impl;
+
+import java.io.StringWriter;
+
+import javax.jws.WebService;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.subscription.NotificationList;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.validation.ValidateSubscriptionListener;
+import org.uddi.api_v3.DispositionReport;
+import org.uddi.api_v3.Result;
+import org.uddi.subr_v3.NotifySubscriptionListener;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.uddi.v3_service.UDDISubscriptionListenerPortType;
+
+/**
+ * This class implements the UDDI v3 Subscription Listener API (server side) 
+ * for jUDDI. It is primarily used for server to server subscriptions.
+ * 
+ */
+@WebService(serviceName=&quot;UDDISubscriptionListenerService&quot;, 
+			endpointInterface=&quot;org.uddi.v3_service.UDDISubscriptionListenerPortType&quot;,
+			targetNamespace = &quot;urn:uddi-org:api_v3_portType&quot;)
+<span class="fc" id="L52">public class UDDISubscriptionListenerImpl extends AuthenticatedService implements</span>
+		UDDISubscriptionListenerPortType {
+	
+<span class="fc" id="L55">	private static Log logger = LogFactory.getLog(UDDISubscriptionListenerImpl.class);</span>
+		
+	@SuppressWarnings(&quot;unchecked&quot;)
+	public DispositionReport notifySubscriptionListener(
+			NotifySubscriptionListener body)
+			throws DispositionReportFaultMessage {
+		try {
+<span class="nc" id="L62">			JAXBContext context = JAXBContext.newInstance(body.getClass());</span>
+<span class="nc" id="L63">			Marshaller marshaller = context.createMarshaller();</span>
+<span class="nc" id="L64">			StringWriter sw = new StringWriter();</span>
+<span class="nc" id="L65">			marshaller.marshal(body, sw);</span>
+
+<span class="nc" id="L67">			logger.info(&quot;Notification received by UDDISubscriptionListenerService : &quot; + sw.toString());</span>
+			
+			@SuppressWarnings(&quot;rawtypes&quot;)
+<span class="nc" id="L70">			NotificationList nl = NotificationList.getInstance();</span>
+<span class="nc" id="L71">			nl.getNotifications().add(sw.toString());</span>
+			
+<span class="nc" id="L73">			org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo = null;</span>
+			
+			//find the clerks to go with this subscription
+<span class="nc" id="L76">			EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="nc" id="L77">			EntityTransaction tx = em.getTransaction();</span>
+			try {
+<span class="nc" id="L79">				tx.begin();</span>
+		
+<span class="nc" id="L81">				this.getEntityPublisher(em, body.getAuthInfo());</span>
+<span class="nc" id="L82">				String subscriptionKey = body.getSubscriptionResultsList().getSubscription().getSubscriptionKey();</span>
+<span class="nc" id="L83">				org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo = null;</span>
+				try {
+<span class="nc" id="L85">					modelClientSubscriptionInfo = em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, subscriptionKey);</span>
+<span class="nc" id="L86">				} catch (ClassCastException e) {}</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">				if (modelClientSubscriptionInfo == null) {</span>
+<span class="nc" id="L88">					throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.SubscripKeyNotFound&quot;, subscriptionKey));</span>
+				}
+<span class="nc" id="L90">				apiClientSubscriptionInfo = new org.apache.juddi.api_v3.ClientSubscriptionInfo();</span>
+<span class="nc" id="L91">				MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo,em);</span>
+		
+<span class="nc" id="L93">				tx.commit();</span>
+			} finally {
+<span class="nc bnc" id="L95" title="All 4 branches missed.">				if (tx.isActive()) {</span>
+<span class="nc" id="L96">					tx.rollback();</span>
+				}
+<span class="nc" id="L98">				em.close();</span>
+<span class="nc" id="L99">			}</span>
+			
+<span class="nc" id="L101">			XRegisterHelper.handle(apiClientSubscriptionInfo.getFromClerk(),apiClientSubscriptionInfo.getToClerk(), body.getSubscriptionResultsList());</span>
+			
+<span class="nc" id="L103">		} catch (JAXBException jaxbe) {</span>
+<span class="nc" id="L104">			logger.error(&quot;&quot;, jaxbe);</span>
+<span class="nc" id="L105">			throw new FatalErrorException(new ErrorMessage(&quot;errors.subscriptionnotifier.client&quot;));</span>
+<span class="nc" id="L106">		}	</span>
+		
+<span class="nc" id="L108">		new ValidateSubscriptionListener().validateNotification(body);</span>
+			
+<span class="nc" id="L110">		DispositionReport dr = new DispositionReport();</span>
+<span class="nc" id="L111">		Result res = new Result();</span>
+<span class="nc" id="L112">		dr.getResult().add(res);</span>
+<span class="nc" id="L113">		return dr;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

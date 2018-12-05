@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FetchBusinessServicesQuery.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.query</a> &gt; <span class="el_source">FetchBusinessServicesQuery.java</span></div><h1>FetchBusinessServicesQuery.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.query;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import javax.persistence.EntityManager;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
+import org.apache.juddi.query.util.DynamicQuery;
+import org.apache.juddi.query.util.FindQualifiers;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.uddi.api_v3.ListDescription;
+
+/**
+ * The &quot;select&quot; method retrieves all the entities for the input key list and sorts according to the user settings.  Paging is taken into account when retrieving 
+ * the results.  The result is a list of the entity objects containing all top level elements (restricted to the given page). 
+ * 
+ * NOTE:  Results usually need multiple one-to-many collections to be fetched.  Although this could be done in one query with eager fetching, this strategy is not
+ * recommended as it will lead to a potentially large Cartesian product.  Therefore, the collections are initialized in separate queries during the mapping 
+ * stage.  If the returned results are small (maxRows parameters is set appropriately), a single query is likely faster, but probably not by enough to consider 
+ * the optimization under these conditions.
+ * 
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+<span class="nc" id="L47">public class FetchBusinessServicesQuery extends BusinessServiceQuery {</span>
+
+<span class="fc" id="L49">	private static final Log log = LogFactory.getLog(FetchBusinessServicesQuery.class);</span>
+
+	protected static final String selectSQL;
+
+	static {
+<span class="fc" id="L54">		StringBuilder sql = new StringBuilder(200);</span>
+<span class="fc" id="L55">		sql.append(&quot;select &quot; + ENTITY_ALIAS + &quot; from &quot; + ENTITY_NAME + &quot; &quot; + ENTITY_ALIAS + &quot; &quot;);</span>
+<span class="fc" id="L56">		selectSQL = sql.toString();</span>
+<span class="fc" id="L57">	}</span>
+	
+	public static List&lt;?&gt; select(EntityManager em, FindQualifiers fq, List&lt;?&gt; keysIn, Integer maxRowsUser, Integer listHead, ListDescription listDesc, DynamicQuery.Parameter... restrictions) throws DispositionReportFaultMessage {
+		
+		// If keysIn is null or empty, then nothing to fetch.
+<span class="pc bpc" id="L62" title="1 of 4 branches missed.">		if ((keysIn == null) || (keysIn.size() == 0))</span>
+<span class="fc" id="L63">			return Collections.emptyList();</span>
+		
+<span class="fc" id="L65">		int maxRows = DEFAULT_MAXROWS;</span>
+		try {
+<span class="fc" id="L67">			maxRows = AppConfig.getConfiguration().getInteger(Property.JUDDI_MAX_ROWS, DEFAULT_MAXROWS);</span>
+		}
+<span class="nc" id="L69">		catch(ConfigurationException ce) {</span>
+<span class="nc" id="L70">			log.error(&quot;Configuration exception occurred retrieving: &quot; + Property.JUDDI_MAX_ROWS);</span>
+<span class="fc" id="L71">		}</span>
+<span class="fc" id="L72">		DynamicQuery dynamicQry = new DynamicQuery(selectSQL);</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">		if (keysIn.size() &gt; maxRows) {</span>
+<span class="nc" id="L74">			UUID uuid = UUID.randomUUID();</span>
+<span class="nc" id="L75">			storeIntermediateKeySetResults(em, uuid.toString(), keysIn);</span>
+<span class="nc" id="L76">			appendTempTable(dynamicQry);</span>
+<span class="nc" id="L77">			appendSortTables(dynamicQry);</span>
+<span class="nc" id="L78">			appendTempJoin(dynamicQry, uuid.toString());</span>
+<span class="nc" id="L79">		}</span>
+		else {
+<span class="fc" id="L81">			appendSortTables(dynamicQry);</span>
+<span class="fc" id="L82">			dynamicQry.appendInListWithAnd(ENTITY_ALIAS + &quot;.&quot; + KEY_NAME, keysIn);</span>
+		}
+<span class="pc bpc" id="L84" title="2 of 4 branches missed.">		if (restrictions != null &amp;&amp; restrictions.length &gt; 0)</span>
+<span class="nc" id="L85">			dynamicQry.AND().pad().appendGroupedAnd(restrictions);</span>
+		
+<span class="fc" id="L87">		appendSortCriteria(dynamicQry, fq);</span>
+
+<span class="fc" id="L89">		log.debug(dynamicQry);</span>
+<span class="fc" id="L90">		return getPagedResult(em, dynamicQry, maxRowsUser, listHead, listDesc);</span>
+	}
+	
+	private static void appendTempTable(DynamicQuery qry) {
+<span class="nc" id="L94">		qry.comma().append(TEMP_ENTITY_NAME + &quot; &quot; +  TEMP_ENTITY_ALIAS );</span>
+<span class="nc" id="L95">	}</span>
+	
+	private static void appendTempJoin(DynamicQuery qry, String uuid) {
+<span class="nc" id="L98">		qry.pad().AND().pad().append(TEMP_ENTITY_PK_KEY_NAME).append(DynamicQuery.PREDICATE_EQUALS);</span>
+<span class="nc" id="L99">		qry.append(ENTITY_ALIAS + &quot;.&quot; + KEY_NAME);</span>
+<span class="nc" id="L100">		qry.pad().AND().pad().append(TEMP_ENTITY_PK_TXID_NAME).append(DynamicQuery.PREDICATE_EQUALS);</span>
+<span class="nc" id="L101">		qry.append(&quot;'&quot; + uuid + &quot;'&quot;).pad();</span>
+<span class="nc" id="L102">	}</span>
+	
+	private static void appendSortTables(DynamicQuery qry) {
+<span class="fc" id="L105">		qry.pad().comma().pad().append(FindServiceByNameQuery.ENTITY_NAME_CHILD).pad().append(buildAlias(FindServiceByNameQuery.ENTITY_NAME_CHILD)).pad();</span>
+<span class="fc" id="L106">		qry.WHERE().pad().append(ENTITY_ALIAS + &quot;.&quot; + KEY_NAME).pad();</span>
+<span class="fc" id="L107">		qry.append(DynamicQuery.PREDICATE_EQUALS).pad();</span>
+<span class="fc" id="L108">		qry.append(buildAlias(FindServiceByNameQuery.ENTITY_NAME_CHILD) + &quot;.&quot; + ENTITY_FIELD + &quot;.&quot; + KEY_NAME).pad();</span>
+<span class="fc" id="L109">	}</span>
+	
+	/*
+	 *	Default ordering is name ascending and date descending.  If a name item is set, then it will always go first.  If only a date item is set, then date will
+	 *  go first, and the name sort will occur second in ascending order.
+	 */
+	private static void appendSortCriteria(DynamicQuery qry, FindQualifiers fq) {
+		
+<span class="fc" id="L117">		String nameTerm = buildAlias(FindServiceByNameQuery.ENTITY_NAME_CHILD) + &quot;.name&quot;;</span>
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">		if (fq.isCaseInsensitiveSort()) {</span>
+			// See JUDDI-785
+<span class="nc" id="L120">			log.info(&quot;jUDDI does not support caseInsensitive sort, as JPA does not support sortBy &quot;</span>
+					+ &quot;with UPPER or LOWER, see https://issues.apache.org/jira/browse/OPENJPA-1817. &quot;
+					+ &quot;A work around is to do a caseInsentive Match.&quot;);
+			//nameTerm = &quot;upper(&quot; + nameTerm + &quot;)&quot;;
+		}
+<span class="fc" id="L125">		String dateTerm = ENTITY_ALIAS + &quot;.modified&quot;;</span>
+
+<span class="fc" id="L127">		String orderClause = nameTerm + &quot; &quot; + DynamicQuery.SORT_ASC + &quot;, &quot; + dateTerm + &quot; &quot; + DynamicQuery.SORT_DESC;</span>
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">		if (fq.isSortByNameAsc()) {</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">			if (fq.isSortByDateAsc())</span>
+<span class="nc" id="L130">				orderClause = nameTerm + &quot; &quot; + DynamicQuery.SORT_ASC + &quot;, &quot; + dateTerm + &quot; &quot; + DynamicQuery.SORT_ASC;</span>
+		}
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">		else if (fq.isSortByNameDesc()) {</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">			if (fq.isSortByDateAsc())</span>
+<span class="nc" id="L134">				orderClause = nameTerm + &quot; &quot; + DynamicQuery.SORT_DESC + &quot;, &quot; + dateTerm + &quot; &quot; + DynamicQuery.SORT_ASC;</span>
+			else
+<span class="nc" id="L136">				orderClause = nameTerm + &quot; &quot; + DynamicQuery.SORT_DESC + &quot;, &quot; + dateTerm + &quot; &quot; + DynamicQuery.SORT_DESC;</span>
+		}
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">		else if (fq.isSortByDateAsc())</span>
+<span class="nc" id="L139">			orderClause =  dateTerm + &quot; &quot; + DynamicQuery.SORT_ASC + &quot;, &quot; +  nameTerm + &quot; &quot; + DynamicQuery.SORT_ASC;</span>
+<span class="pc bpc" id="L140" title="1 of 2 branches missed.">		else if (fq.isSortByDateDesc())</span>
+<span class="nc" id="L141">			orderClause =  dateTerm + &quot; &quot; + DynamicQuery.SORT_DESC + &quot;, &quot; +  nameTerm + &quot; &quot; + DynamicQuery.SORT_ASC;</span>
+			
+<span class="fc" id="L143">		qry.ORDERBY().pad();</span>
+<span class="fc" id="L144">		qry.append(orderClause);</span>
+<span class="fc" id="L145">		qry.pad();</span>
+<span class="fc" id="L146">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthToken.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.model</a> &gt; <span class="el_source">AuthToken.java</span></div><h1>AuthToken.java</h1><pre class="source lang-java linenums">package org.apache.juddi.model;
+/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+/**
+ * @author &lt;a href=&quot;mailto:kurt@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ */
+@Entity
+@Table(name = &quot;j3_auth_token&quot;)
+public class AuthToken implements java.io.Serializable {
+
+	private static final long serialVersionUID = 1147567747533293480L;
+	private String authToken;
+        private String ipaddress;
+	private String authorizedName;
+	private Date created;
+	private Date lastUsed;
+	private int numberOfUses;
+	private int tokenState;
+	
+
+<span class="fc" id="L42">	public AuthToken() {</span>
+<span class="fc" id="L43">	}</span>
+
+	public AuthToken(String authToken, String authorizedName,
+			String publisherName, Date created, Date lastUsed,
+<span class="nc" id="L47">			int numberOfUses, int tokenState) {</span>
+<span class="nc" id="L48">		this.authToken = authToken;</span>
+<span class="nc" id="L49">		this.authorizedName = authorizedName;</span>
+<span class="nc" id="L50">		this.created = created;</span>
+<span class="nc" id="L51">		this.lastUsed = lastUsed;</span>
+<span class="nc" id="L52">		this.numberOfUses = numberOfUses;</span>
+<span class="nc" id="L53">		this.tokenState = tokenState;</span>
+<span class="nc" id="L54">	}</span>
+
+	@Id
+	@Column(name = &quot;auth_token&quot;, nullable = false, length = 51)
+	public String getAuthToken() {
+<span class="fc" id="L59">		return this.authToken;</span>
+	}
+	public void setAuthToken(String authToken) {
+<span class="fc" id="L62">		this.authToken = authToken;</span>
+<span class="fc" id="L63">	}</span>
+
+	@Column(name = &quot;authorized_name&quot;, nullable = false, length = 255)
+	public String getAuthorizedName() {
+<span class="fc" id="L67">		return this.authorizedName;</span>
+	}
+	public void setAuthorizedName(String authorizedName) {
+<span class="fc" id="L70">		this.authorizedName = authorizedName;</span>
+<span class="fc" id="L71">	}</span>
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = &quot;created&quot;, nullable = false, length = 29)
+	public Date getCreated() {
+<span class="fc" id="L76">		return this.created;</span>
+	}
+	public void setCreated(Date created) {
+<span class="fc" id="L79">		this.created = created;</span>
+<span class="fc" id="L80">	}</span>
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = &quot;last_used&quot;, nullable = false, length = 29)
+	public Date getLastUsed() {
+<span class="fc" id="L85">		return this.lastUsed;</span>
+	}
+	public void setLastUsed(Date lastUsed) {
+<span class="fc" id="L88">		this.lastUsed = lastUsed;</span>
+<span class="fc" id="L89">	}</span>
+
+	@Column(name = &quot;number_of_uses&quot;, nullable = false)
+	public int getNumberOfUses() {
+<span class="fc" id="L93">		return this.numberOfUses;</span>
+	}
+	public void setNumberOfUses(int numberOfUses) {
+<span class="fc" id="L96">		this.numberOfUses = numberOfUses;</span>
+<span class="fc" id="L97">	}</span>
+
+	@Column(name = &quot;token_state&quot;, nullable = false)
+	public int getTokenState() {
+<span class="fc" id="L101">		return this.tokenState;</span>
+	}
+	public void setTokenState(int tokenState) {
+<span class="fc" id="L104">		this.tokenState = tokenState;</span>
+<span class="fc" id="L105">	}</span>
+
+        /**
+         * @since 3.2
+         * @return ip address
+         */
+	@Column(name = &quot;ipaddress&quot;, nullable = true, length = 51)
+	public String getIPAddress() {
+<span class="fc" id="L113">		return this.ipaddress;</span>
+	}
+	public void setIPAddress(String ip) {
+<span class="fc" id="L116">		this.ipaddress=ip;</span>
+<span class="fc" id="L117">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

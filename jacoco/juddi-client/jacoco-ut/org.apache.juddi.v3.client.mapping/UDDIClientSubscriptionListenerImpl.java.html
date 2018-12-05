@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UDDIClientSubscriptionListenerImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.mapping</a> &gt; <span class="el_source">UDDIClientSubscriptionListenerImpl.java</span></div><h1>UDDIClientSubscriptionListenerImpl.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.v3.client.mapping;
+
+import java.io.StringWriter;
+
+import javax.jws.WebService;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.v3.client.subscription.SubscriptionCallbackListener;
+import org.uddi.api_v3.DispositionReport;
+import org.uddi.api_v3.Result;
+import org.uddi.subr_v3.NotifySubscriptionListener;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.uddi.v3_service.UDDISubscriptionListenerPortType;
+
+/**
+ * WebService which implements the UDDI v3 SubscriptionListener API. This service will be called by
+ * the UDDI registry when any change to a Service or BindingTemplate
+ * call in to it.
+ * 
+ * @author kstam
+ * @see SubscriptionCallbackListener
+ *
+ */
+@WebService(serviceName=&quot;UDDIClientSubscriptionListenerService&quot;, 
+			endpointInterface=&quot;org.uddi.v3_service.UDDISubscriptionListenerPortType&quot;,
+			targetNamespace = &quot;urn:uddi-org:v3_service&quot;)
+
+public class UDDIClientSubscriptionListenerImpl implements UDDISubscriptionListenerPortType {
+	
+<span class="nc" id="L50">	private static final Log logger = LogFactory.getLog(UDDIClientSubscriptionListenerImpl.class);</span>
+<span class="nc" id="L51">	private UDDIServiceCache serviceCache = null;</span>
+
+	public UDDIClientSubscriptionListenerImpl() {
+<span class="nc" id="L54">		super();</span>
+<span class="nc" id="L55">	}	</span>
+
+	public UDDIClientSubscriptionListenerImpl(String bindingKey, UDDIServiceCache serviceCache) {
+<span class="nc" id="L58">		super();</span>
+<span class="nc" id="L59">		this.serviceCache = serviceCache;</span>
+<span class="nc" id="L60">	}</span>
+
+	
+        /**
+         * The SubscriptionListener is called by the UDDI Server when there is a change to any of the
+	 * services Endpoints. With every call the serviceCache is cleared.
+         * @param body
+         * @return success or fail
+         * @throws DispositionReportFaultMessage 
+         */
+	public DispositionReport notifySubscriptionListener(
+			NotifySubscriptionListener body)
+			throws DispositionReportFaultMessage 
+	{
+		try {
+<span class="nc" id="L75">			JAXBContext context = JAXBContext.newInstance(body.getClass());</span>
+<span class="nc" id="L76">			Marshaller marshaller = context.createMarshaller();</span>
+<span class="nc" id="L77">			StringWriter sw = new StringWriter();</span>
+<span class="nc" id="L78">			marshaller.marshal(body, sw);</span>
+<span class="nc" id="L79">			logger.info(&quot;Notification received by UDDISubscriptionListenerService : &quot; + sw.toString());</span>
+			// reset the cache, big hammer for now, we could figure out changed from the
+			// subscriptionResults, and be more selective.
+<span class="nc bnc" id="L82" title="All 2 branches missed.">			if (serviceCache!=null) serviceCache.removeAll();</span>
+			
+<span class="nc" id="L84">		} catch (Exception e) {</span>
+<span class="nc" id="L85">			logger.error(e.getMessage(),e);</span>
+<span class="nc" id="L86">		}</span>
+			
+<span class="nc" id="L88">		DispositionReport dr = new DispositionReport();</span>
+<span class="nc" id="L89">		Result res = new Result();</span>
+<span class="nc" id="L90">		dr.getResult().add(res);</span>
+<span class="nc" id="L91">		return dr;</span>
+	}
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

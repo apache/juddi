@@ -1,0 +1,1365 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MappingModelToApi.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.mapping</a> &gt; <span class="el_source">MappingModelToApi.java</span></div><h1>MappingModelToApi.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.mapping;
+
+import java.math.BigInteger;
+import java.util.GregorianCalendar;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import org.w3._2000._09.xmldsig_.X509IssuerSerialType;
+import java.io.ByteArrayInputStream;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.EntityManager;
+import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBElement;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
+import org.apache.juddi.jaxb.JAXBMarshaller;
+import org.apache.juddi.model.CanonicalizationMethod;
+import org.apache.juddi.model.ControlMessage;
+import org.apache.juddi.model.Edge;
+import org.apache.juddi.model.EdgeReceiverAlternate;
+import org.apache.juddi.model.KeyInfo;
+import org.apache.juddi.model.OverviewDoc;
+import org.apache.juddi.model.Reference;
+import org.apache.juddi.model.SignatureTransform;
+import org.apache.juddi.model.SignatureValue;
+import org.apache.juddi.model.SignedInfo;
+import org.apache.juddi.model.UddiEntity;
+import org.apache.juddi.model.KeyDataValue;
+import org.apache.juddi.model.Node;
+import org.apache.juddi.model.ReplicationConfiguration;
+import org.apache.juddi.model.ReplicationConfigurationNode;
+import org.apache.juddi.model.Signature;
+import org.apache.juddi.model.SignatureTransformDataValue;
+import org.apache.juddi.subscription.TypeConvertor;
+import org.apache.juddi.v3.client.cryptor.XmlUtils;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.CompletionStatus;
+import org.uddi.api_v3.Contact;
+import org.uddi.api_v3.Contacts;
+import org.uddi.api_v3.OperationalInfo;
+import org.uddi.api_v3.PersonName;
+import org.uddi.repl_v3.ChangeRecord;
+import org.uddi.repl_v3.ChangeRecordIDType;
+import org.uddi.repl_v3.CommunicationGraph;
+import org.uddi.repl_v3.Operator;
+import org.uddi.repl_v3.OperatorStatusType;
+import org.uddi.sub_v3.SubscriptionFilter;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.w3._2000._09.xmldsig_.CanonicalizationMethodType;
+import org.w3._2000._09.xmldsig_.DSAKeyValueType;
+import org.w3._2000._09.xmldsig_.DigestMethodType;
+import org.w3._2000._09.xmldsig_.KeyInfoType;
+import org.w3._2000._09.xmldsig_.KeyValueType;
+import org.w3._2000._09.xmldsig_.PGPDataType;
+import org.w3._2000._09.xmldsig_.RSAKeyValueType;
+import org.w3._2000._09.xmldsig_.ReferenceType;
+import org.w3._2000._09.xmldsig_.RetrievalMethodType;
+import org.w3._2000._09.xmldsig_.SPKIDataType;
+import org.w3._2000._09.xmldsig_.SignatureMethodType;
+import org.w3._2000._09.xmldsig_.SignatureType;
+import org.w3._2000._09.xmldsig_.SignatureValueType;
+import org.w3._2000._09.xmldsig_.SignedInfoType;
+import org.w3._2000._09.xmldsig_.TransformType;
+import org.w3._2000._09.xmldsig_.TransformsType;
+import org.w3._2000._09.xmldsig_.X509DataType;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+/**
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:kstam@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ */
+<span class="nc" id="L106">public class MappingModelToApi {</span>
+
+<span class="fc" id="L108">        private static Log logger = LogFactory.getLog(MappingModelToApi.class);</span>
+
+        public static void mapPublisher(org.apache.juddi.model.Publisher modelPublisher,
+             org.apache.juddi.api_v3.Publisher apiPublisher)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L114">                apiPublisher.setAuthorizedName(modelPublisher.getAuthorizedName());</span>
+<span class="fc" id="L115">                apiPublisher.setPublisherName(modelPublisher.getPublisherName());</span>
+<span class="fc" id="L116">                apiPublisher.setEmailAddress(modelPublisher.getEmailAddress());</span>
+<span class="fc" id="L117">                apiPublisher.setIsAdmin(modelPublisher.getIsAdmin());</span>
+<span class="fc" id="L118">                apiPublisher.setIsEnabled(modelPublisher.getIsEnabled());</span>
+<span class="fc" id="L119">                apiPublisher.setMaxBindingsPerService(modelPublisher.getMaxBindingsPerService());</span>
+<span class="fc" id="L120">                apiPublisher.setMaxBusinesses(modelPublisher.getMaxBusinesses());</span>
+<span class="fc" id="L121">                apiPublisher.setMaxServicePerBusiness(modelPublisher.getMaxServicesPerBusiness());</span>
+<span class="fc" id="L122">                apiPublisher.setMaxTModels(modelPublisher.getMaxTmodels());</span>
+<span class="fc" id="L123">                mapSignature(modelPublisher.getSignatures(), apiPublisher.getSignature());</span>
+<span class="fc" id="L124">        }</span>
+
+        public static void mapBusinessEntity(org.apache.juddi.model.BusinessEntity modelBusinessEntity,
+             org.uddi.api_v3.BusinessEntity apiBusinessEntity)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L130">                apiBusinessEntity.setBusinessKey(modelBusinessEntity.getEntityKey());</span>
+
+<span class="fc" id="L132">                mapBusinessNames(modelBusinessEntity.getBusinessNames(), apiBusinessEntity.getName());</span>
+<span class="fc" id="L133">                mapBusinessDescriptions(modelBusinessEntity.getBusinessDescrs(), apiBusinessEntity.getDescription());</span>
+
+<span class="fc" id="L135">                mapDiscoveryUrls(modelBusinessEntity.getDiscoveryUrls(), apiBusinessEntity.getDiscoveryURLs(), apiBusinessEntity);</span>
+<span class="fc" id="L136">                mapContacts(modelBusinessEntity.getContacts(), apiBusinessEntity.getContacts(), apiBusinessEntity);</span>
+<span class="fc" id="L137">                mapBusinessIdentifiers(modelBusinessEntity.getBusinessIdentifiers(), apiBusinessEntity.getIdentifierBag(), apiBusinessEntity);</span>
+<span class="fc" id="L138">                apiBusinessEntity.setCategoryBag(mapCategoryBag(modelBusinessEntity.getCategoryBag(), apiBusinessEntity.getCategoryBag()));</span>
+
+<span class="fc" id="L140">                mapBusinessServices(modelBusinessEntity.getBusinessServices(), modelBusinessEntity.getServiceProjections(), apiBusinessEntity.getBusinessServices(), apiBusinessEntity);</span>
+
+<span class="fc" id="L142">                mapSignature(modelBusinessEntity.getSignatures(), apiBusinessEntity.getSignature());</span>
+<span class="fc" id="L143">        }</span>
+
+        public static void mapSignature(List&lt;org.apache.juddi.model.Signature&gt; signatureList,
+             List&lt;org.w3._2000._09.xmldsig_.SignatureType&gt; apiSignatureList)
+             throws DispositionReportFaultMessage {
+<span class="fc" id="L148">                apiSignatureList.clear();</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">                for (org.apache.juddi.model.Signature modelSig : signatureList) {</span>
+<span class="fc" id="L150">                        SignatureType apiSignature = new SignatureType();</span>
+<span class="fc" id="L151">                        apiSignature.setId(modelSig.getXmlID());</span>
+
+<span class="fc" id="L153">                        SignedInfo modelSignedInfo = modelSig.getSignedInfo();</span>
+<span class="fc" id="L154">                        SignedInfoType apiSignedInfoType = new SignedInfoType();</span>
+<span class="fc" id="L155">                        apiSignature.setSignedInfo(apiSignedInfoType);</span>
+                        // Canonicalization method
+<span class="fc" id="L157">                        CanonicalizationMethod modelCanonMethod = modelSignedInfo.getCanonicalizationMethod();</span>
+<span class="fc" id="L158">                        CanonicalizationMethodType apiCanonMethod = new CanonicalizationMethodType();</span>
+<span class="fc" id="L159">                        apiCanonMethod.setAlgorithm(modelCanonMethod.getAlgorithm());</span>
+<span class="fc" id="L160">                        apiSignedInfoType.setCanonicalizationMethod(apiCanonMethod);</span>
+
+                        // Signature Method
+<span class="fc" id="L163">                        String sigAlg = modelSignedInfo.getSignatureMethod().getAlgorithm();</span>
+<span class="fc" id="L164">                        SignatureMethodType apiSigMethod = new SignatureMethodType();</span>
+<span class="fc" id="L165">                        apiSigMethod.setAlgorithm(sigAlg);</span>
+<span class="fc" id="L166">                        apiSignedInfoType.setSignatureMethod(apiSigMethod);</span>
+
+                        // References
+<span class="fc" id="L169">                        List&lt;Reference&gt; modelReferenceList = modelSignedInfo.getReference();</span>
+<span class="fc" id="L170">                        List&lt;ReferenceType&gt; apiReferenceList = apiSignedInfoType.getReference();</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">                        for (Reference modelRef : modelReferenceList) {</span>
+<span class="fc" id="L172">                                ReferenceType apiRef = new ReferenceType();</span>
+<span class="fc" id="L173">                                String refUri = modelRef.getUri();</span>
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">                                if (refUri == null) {</span>
+<span class="nc" id="L175">                                        refUri = &quot;&quot;;</span>
+                                }
+<span class="fc" id="L177">                                apiRef.setURI(refUri);</span>
+
+<span class="fc" id="L179">                                List&lt;SignatureTransform&gt; modelSigTransformList = modelRef.getTransforms();</span>
+<span class="fc" id="L180">                                TransformsType apiTransformsType = apiRef.getTransforms();</span>
+<span class="pc bpc" id="L181" title="1 of 2 branches missed.">                                if (apiTransformsType == null) {</span>
+<span class="fc" id="L182">                                        apiTransformsType = new TransformsType();</span>
+<span class="fc" id="L183">                                        apiRef.setTransforms(apiTransformsType);</span>
+                                }
+<span class="fc" id="L185">                                List&lt;TransformType&gt; apiTransformList = apiTransformsType.getTransform();</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">                                for (SignatureTransform modelSigTransform : modelSigTransformList) {</span>
+<span class="fc" id="L187">                                        String modelTransformAlgStr = modelSigTransform.getTransform();</span>
+<span class="fc" id="L188">                                        TransformType apiTransform = new TransformType();</span>
+<span class="fc" id="L189">                                        apiTransform.setAlgorithm(modelTransformAlgStr);</span>
+
+<span class="fc" id="L191">                                        List&lt;SignatureTransformDataValue&gt; sigTransformSDVList = modelSigTransform.getSignatureTransformDataValue();</span>
+<span class="fc bfc" id="L192" title="All 2 branches covered.">                                        for (SignatureTransformDataValue sigTransformSDV : sigTransformSDVList) {</span>
+<span class="fc" id="L193">                                                String type = sigTransformSDV.getContentType();</span>
+<span class="fc" id="L194">                                                byte[] xformBytes = sigTransformSDV.getContentBytes();</span>
+<span class="fc" id="L195">                                                Object transformObject = convertDataToTransformContent(type, xformBytes);</span>
+<span class="fc" id="L196">                                                apiTransform.getContent().add(transformObject);</span>
+<span class="fc" id="L197">                                        }</span>
+
+<span class="fc" id="L199">                                        apiTransformList.add(apiTransform);</span>
+<span class="fc" id="L200">                                }</span>
+
+<span class="fc" id="L202">                                String digestMethodStr = modelRef.getDigestMethod();</span>
+<span class="fc" id="L203">                                byte[] digestValBytes = modelRef.getDigestValue();</span>
+
+<span class="fc" id="L205">                                DigestMethodType apiDigestMethod = new DigestMethodType();</span>
+<span class="fc" id="L206">                                apiDigestMethod.setAlgorithm(digestMethodStr);</span>
+<span class="fc" id="L207">                                apiRef.setDigestMethod(apiDigestMethod);</span>
+<span class="fc" id="L208">                                apiRef.setDigestValue(digestValBytes);</span>
+
+<span class="fc" id="L210">                                apiReferenceList.add(apiRef);</span>
+<span class="fc" id="L211">                        }</span>
+
+                        // Signature Value
+<span class="fc" id="L214">                        SignatureValueType apiSignatureValue = new SignatureValueType();</span>
+<span class="fc" id="L215">                        SignatureValue modelSigValue = modelSig.getSignatureValue();</span>
+<span class="fc" id="L216">                        apiSignatureValue.setId(modelSigValue.getXmlID());</span>
+<span class="fc" id="L217">                        apiSignatureValue.setValue(modelSigValue.getValue());</span>
+
+<span class="fc" id="L219">                        apiSignature.setSignatureValue(apiSignatureValue);</span>
+
+<span class="fc" id="L221">                        KeyInfoType apiKeyInfo = new KeyInfoType();</span>
+<span class="fc" id="L222">                        KeyInfo modelKeyInfo = modelSig.getKeyInfo();</span>
+<span class="fc" id="L223">                        apiKeyInfo.setId(modelKeyInfo.getXmlID());</span>
+
+<span class="fc" id="L225">                        List&lt;KeyDataValue&gt; modelKeyDataValueList = modelKeyInfo.getKeyDataValue();</span>
+<span class="fc" id="L226">                        List&lt;Object&gt; apiX509KeyInfoList = apiKeyInfo.getContent();</span>
+<span class="fc" id="L227">                        mapModelKeyDataValue(modelKeyDataValueList, apiX509KeyInfoList);</span>
+<span class="fc" id="L228">                        apiSignature.setKeyInfo(apiKeyInfo);</span>
+<span class="fc" id="L229">                        apiSignatureList.add(apiSignature);</span>
+<span class="fc" id="L230">                }</span>
+<span class="fc" id="L231">        }</span>
+
+        private static void mapModelKeyDataValue(List&lt;KeyDataValue&gt; modelKeyDataValueList, List&lt;Object&gt; parentKeyDataList) {
+<span class="fc bfc" id="L234" title="All 2 branches covered.">                for (KeyDataValue modelKeyDataValue : modelKeyDataValueList) {</span>
+<span class="fc" id="L235">                        String tagName = modelKeyDataValue.getKeyDataName();</span>
+<span class="fc" id="L236">                        String dataType = modelKeyDataValue.getKeyDataType();</span>
+<span class="fc" id="L237">                        byte[] contentBytes = modelKeyDataValue.getKeyDataValueBytes();</span>
+<span class="fc" id="L238">                        String contentStr = modelKeyDataValue.getKeyDataValueString();</span>
+<span class="fc bfc" id="L239" title="All 2 branches covered.">                        Object contents = contentBytes != null ? contentBytes : contentStr;</span>
+
+<span class="fc bfc" id="L241" title="All 2 branches covered.">                        if (contents == null) {</span>
+<span class="fc" id="L242">                                List&lt;Object&gt; childKeyDataList = new ArrayList&lt;Object&gt;();</span>
+<span class="fc bfc" id="L243" title="All 2 branches covered.">                                if (dataType.equals(X509DataType.class.getSimpleName())) {</span>
+<span class="fc" id="L244">                                        X509DataType x509DataType = new X509DataType();</span>
+<span class="fc" id="L245">                                        mapModelKeyDataValue(modelKeyDataValue.getKeyDataValueList(), childKeyDataList);</span>
+<span class="fc" id="L246">                                        x509DataType.getX509IssuerSerialOrX509SKIOrX509SubjectName().addAll(childKeyDataList);</span>
+<span class="fc" id="L247">                                        JAXBElement dataJAXB = new JAXBElement(new QName(&quot;http://www.w3.org/2000/09/xmldsig#&quot;, tagName), X509DataType.class, x509DataType);</span>
+<span class="fc" id="L248">                                        parentKeyDataList.add(dataJAXB);</span>
+<span class="fc bfc" id="L249" title="All 2 branches covered.">                                } else if (dataType.equals(RetrievalMethodType.class.getSimpleName())) {</span>
+<span class="fc" id="L250">                                        RetrievalMethodType retrievalMethodType = new RetrievalMethodType();</span>
+<span class="fc" id="L251">                                        TransformsType transformsType = new TransformsType();</span>
+<span class="fc bfc" id="L252" title="All 2 branches covered.">                                        for (KeyDataValue retrievalMethodKDV : modelKeyDataValue.getKeyDataValueList()) {</span>
+<span class="fc bfc" id="L253" title="All 2 branches covered.">                                                if (retrievalMethodKDV.getKeyDataName().equals(&quot;Transform&quot;)) {</span>
+<span class="fc" id="L254">                                                        TransformType tType = new TransformType();</span>
+<span class="fc" id="L255">                                                        tType.setAlgorithm(retrievalMethodKDV.getKeyDataValueString());</span>
+
+<span class="fc bfc" id="L257" title="All 2 branches covered.">                                                        for (KeyDataValue transformContentKDV : retrievalMethodKDV.getKeyDataValueList()) {</span>
+<span class="fc" id="L258">                                                                String type = transformContentKDV.getKeyDataType();</span>
+<span class="fc" id="L259">                                                                byte[] xformBytes = transformContentKDV.getKeyDataValueBytes();</span>
+<span class="fc" id="L260">                                                                Object transformObject = convertDataToTransformContent(type, xformBytes);</span>
+<span class="fc" id="L261">                                                                tType.getContent().add(transformObject);</span>
+<span class="fc" id="L262">                                                        }</span>
+
+<span class="fc" id="L264">                                                        transformsType.getTransform().add(tType);</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">                                                } else if (retrievalMethodKDV.getKeyDataName().equals(&quot;Type&quot;)) {</span>
+<span class="fc" id="L266">                                                        retrievalMethodType.setType(retrievalMethodKDV.getKeyDataValueString());</span>
+<span class="pc bpc" id="L267" title="1 of 2 branches missed.">                                                } else if (retrievalMethodKDV.getKeyDataName().equals(&quot;URI&quot;)) {</span>
+<span class="fc" id="L268">                                                        retrievalMethodType.setURI(retrievalMethodKDV.getKeyDataValueString());</span>
+                                                } else {
+<span class="nc" id="L270">                                                        throw new RuntimeException(&quot;Unrecognized key data type: &quot; + retrievalMethodKDV.getKeyDataType());</span>
+                                                }
+<span class="fc" id="L272">                                        }</span>
+<span class="pc bpc" id="L273" title="2 of 4 branches missed.">                                        if (transformsType.getTransform() != null &amp;&amp; !transformsType.getTransform().isEmpty()) {</span>
+<span class="fc" id="L274">                                                retrievalMethodType.setTransforms(transformsType);</span>
+                                        }
+<span class="fc" id="L276">                                        JAXBElement dataJAXB = new JAXBElement(new QName(&quot;http://www.w3.org/2000/09/xmldsig#&quot;, tagName), RetrievalMethodType.class, retrievalMethodType);</span>
+<span class="fc" id="L277">                                        parentKeyDataList.add(dataJAXB);</span>
+<span class="fc bfc" id="L278" title="All 2 branches covered.">                                } else if (dataType.equals(PGPDataType.class.getSimpleName())) {</span>
+<span class="fc" id="L279">                                        PGPDataType pgpDataType = new PGPDataType();</span>
+
+<span class="fc bfc" id="L281" title="All 2 branches covered.">                                        for (KeyDataValue pgpDataKDV : modelKeyDataValue.getKeyDataValueList()) {</span>
+<span class="fc" id="L282">                                                String pgpDataTagName = pgpDataKDV.getKeyDataName();</span>
+<span class="pc bpc" id="L283" title="1 of 2 branches missed.">                                                Object pgpDataContents = pgpDataKDV.getKeyDataValueBytes() != null ? pgpDataKDV.getKeyDataValueBytes() : pgpDataKDV.getKeyDataValueString();</span>
+<span class="fc" id="L284">                                                Class pgpDataClazz = pgpDataContents.getClass();</span>
+<span class="fc" id="L285">                                                JAXBElement jaxb = new JAXBElement(new QName(&quot;http://www.w3.org/2000/09/xmldsig#&quot;, pgpDataTagName), pgpDataClazz, pgpDataContents);</span>
+<span class="fc" id="L286">                                                pgpDataType.getContent().add(jaxb);</span>
+<span class="fc" id="L287">                                        }</span>
+
+<span class="fc" id="L289">                                        JAXBElement dataJAXB = new JAXBElement(new QName(&quot;http://www.w3.org/2000/09/xmldsig#&quot;, tagName), PGPDataType.class, pgpDataType);</span>
+<span class="fc" id="L290">                                        parentKeyDataList.add(dataJAXB);</span>
+<span class="fc bfc" id="L291" title="All 2 branches covered.">                                } else if (dataType.equals(SPKIDataType.class.getSimpleName())) {</span>
+<span class="fc" id="L292">                                        SPKIDataType spkiDataType = new SPKIDataType();</span>
+
+<span class="fc bfc" id="L294" title="All 2 branches covered.">                                        for (KeyDataValue spkiDataKDV : modelKeyDataValue.getKeyDataValueList()) {</span>
+<span class="fc" id="L295">                                                String spkiDataTagName = spkiDataKDV.getKeyDataName();</span>
+<span class="pc bpc" id="L296" title="1 of 2 branches missed.">                                                Object spkiDataContents = spkiDataKDV.getKeyDataValueBytes() != null ? spkiDataKDV.getKeyDataValueBytes() : spkiDataKDV.getKeyDataValueString();</span>
+<span class="fc" id="L297">                                                Class spkiDataClazz = spkiDataContents.getClass();</span>
+<span class="fc" id="L298">                                                JAXBElement jaxb = new JAXBElement(new QName(&quot;http://www.w3.org/2000/09/xmldsig#&quot;, spkiDataTagName), spkiDataClazz, spkiDataContents);</span>
+<span class="fc" id="L299">                                                spkiDataType.getSPKISexpAndAny().add(jaxb);</span>
+<span class="fc" id="L300">                                        }</span>
+
+<span class="fc" id="L302">                                        JAXBElement dataJAXB = new JAXBElement(new QName(&quot;http://www.w3.org/2000/09/xmldsig#&quot;, tagName), SPKIDataType.class, spkiDataType);</span>
+<span class="fc" id="L303">                                        parentKeyDataList.add(dataJAXB);</span>
+<span class="pc bpc" id="L304" title="1 of 2 branches missed.">                                } else if (dataType.equals(KeyValueType.class.getSimpleName())) {</span>
+<span class="fc" id="L305">                                        KeyValueType keyValueType = new KeyValueType();</span>
+<span class="fc bfc" id="L306" title="All 2 branches covered.">                                        for (KeyDataValue keyValueDataKDV : modelKeyDataValue.getKeyDataValueList()) {</span>
+<span class="fc bfc" id="L307" title="All 2 branches covered.">                                                for (KeyDataValue keyValueDataChildKDV : keyValueDataKDV.getKeyDataValueList()) {</span>
+<span class="fc" id="L308">                                                        String keyDataDataType = keyValueDataChildKDV.getKeyDataType();</span>
+<span class="fc bfc" id="L309" title="All 2 branches covered.">                                                        if (keyDataDataType.equals(&quot;DSAKeyValueType&quot;)) {</span>
+<span class="fc" id="L310">                                                                DSAKeyValueType dsaKeyValueType = new DSAKeyValueType();</span>
+<span class="fc bfc" id="L311" title="All 2 branches covered.">                                                                for (KeyDataValue dsaKDV : keyValueDataChildKDV.getKeyDataValueList()) {</span>
+<span class="fc bfc" id="L312" title="All 2 branches covered.">                                                                        if (&quot;G&quot;.equals(dsaKDV.getKeyDataName())) {</span>
+<span class="fc" id="L313">                                                                                dsaKeyValueType.setG(dsaKDV.getKeyDataValueBytes());</span>
+<span class="fc bfc" id="L314" title="All 2 branches covered.">                                                                        } else if (&quot;P&quot;.equals(dsaKDV.getKeyDataName())) {</span>
+<span class="fc" id="L315">                                                                                dsaKeyValueType.setP(dsaKDV.getKeyDataValueBytes());</span>
+<span class="fc bfc" id="L316" title="All 2 branches covered.">                                                                        } else if (&quot;Q&quot;.equals(dsaKDV.getKeyDataName())) {</span>
+<span class="fc" id="L317">                                                                                dsaKeyValueType.setQ(dsaKDV.getKeyDataValueBytes());</span>
+<span class="fc bfc" id="L318" title="All 2 branches covered.">                                                                        } else if (&quot;Y&quot;.equals(dsaKDV.getKeyDataName())) {</span>
+<span class="fc" id="L319">                                                                                dsaKeyValueType.setY(dsaKDV.getKeyDataValueBytes());</span>
+<span class="fc bfc" id="L320" title="All 2 branches covered.">                                                                        } else if (&quot;J&quot;.equals(dsaKDV.getKeyDataName())) {</span>
+<span class="fc" id="L321">                                                                                dsaKeyValueType.setJ(dsaKDV.getKeyDataValueBytes());</span>
+<span class="fc bfc" id="L322" title="All 2 branches covered.">                                                                        } else if (&quot;Seed&quot;.equals(dsaKDV.getKeyDataName())) {</span>
+<span class="fc" id="L323">                                                                                dsaKeyValueType.setSeed(dsaKDV.getKeyDataValueBytes());</span>
+<span class="pc bpc" id="L324" title="1 of 2 branches missed.">                                                                        } else if (&quot;PgenCounter&quot;.equals(dsaKDV.getKeyDataName())) {</span>
+<span class="fc" id="L325">                                                                                dsaKeyValueType.setPgenCounter(dsaKDV.getKeyDataValueBytes());</span>
+                                                                        } else {
+<span class="nc" id="L327">                                                                                throw new RuntimeException(&quot;Unrecognized dsa type: &quot; + dsaKDV.getKeyDataName());</span>
+                                                                        }
+<span class="fc" id="L329">                                                                }</span>
+<span class="fc" id="L330">                                                                JAXBElement jaxb = new JAXBElement(new QName(&quot;http://www.w3.org/2000/09/xmldsig#&quot;, keyValueDataChildKDV.getKeyDataName()), DSAKeyValueType.class, dsaKeyValueType);</span>
+<span class="fc" id="L331">                                                                keyValueType.getContent().add(jaxb);</span>
+<span class="pc bpc" id="L332" title="1 of 2 branches missed.">                                                        } else if (keyDataDataType.equals(&quot;RSAKeyValueType&quot;)) {</span>
+<span class="fc" id="L333">                                                                RSAKeyValueType rsaKeyValueType = new RSAKeyValueType();</span>
+<span class="fc bfc" id="L334" title="All 2 branches covered.">                                                                for (KeyDataValue rsaKDV : keyValueDataChildKDV.getKeyDataValueList()) {</span>
+<span class="fc bfc" id="L335" title="All 2 branches covered.">                                                                        if (&quot;Exponent&quot;.equals(rsaKDV.getKeyDataName())) {</span>
+<span class="fc" id="L336">                                                                                rsaKeyValueType.setExponent(rsaKDV.getKeyDataValueBytes());</span>
+<span class="pc bpc" id="L337" title="1 of 2 branches missed.">                                                                        } else if (&quot;Modulus&quot;.equals(rsaKDV.getKeyDataName())) {</span>
+<span class="fc" id="L338">                                                                                rsaKeyValueType.setModulus(rsaKDV.getKeyDataValueBytes());</span>
+                                                                        } else {
+<span class="nc" id="L340">                                                                                throw new RuntimeException(&quot;Unrecognized dsa type: &quot; + rsaKDV.getKeyDataName());</span>
+                                                                        }
+<span class="fc" id="L342">                                                                }</span>
+<span class="fc" id="L343">                                                                JAXBElement jaxb = new JAXBElement(new QName(&quot;http://www.w3.org/2000/09/xmldsig#&quot;, keyValueDataChildKDV.getKeyDataName()), RSAKeyValueType.class, rsaKeyValueType);</span>
+<span class="fc" id="L344">                                                                keyValueType.getContent().add(jaxb);</span>
+<span class="fc" id="L345">                                                        } else {</span>
+<span class="nc" id="L346">                                                                throw new RuntimeException(&quot;Unrecognized element: &quot; + keyDataDataType);</span>
+                                                        }
+<span class="fc" id="L348">                                                }</span>
+<span class="fc" id="L349">                                        }</span>
+<span class="fc" id="L350">                                        JAXBElement dataJAXB = new JAXBElement(new QName(&quot;http://www.w3.org/2000/09/xmldsig#&quot;, tagName), KeyValueType.class, keyValueType);</span>
+<span class="fc" id="L351">                                        parentKeyDataList.add(dataJAXB);</span>
+<span class="fc" id="L352">                                } else {</span>
+<span class="nc" id="L353">                                        throw new RuntimeException(&quot;Unrecognized type: &quot; + dataType);</span>
+                                }
+<span class="fc" id="L355">                        } else {</span>
+<span class="fc bfc" id="L356" title="All 4 branches covered.">                                if (dataType != null &amp;&amp; dataType.equals(X509IssuerSerialType.class.getSimpleName())) {</span>
+<span class="fc" id="L357">                                        X509IssuerSerialType x509IssuerSerialType = new X509IssuerSerialType();</span>
+<span class="fc" id="L358">                                        x509IssuerSerialType.setX509IssuerName(contentStr);</span>
+<span class="fc" id="L359">                                        x509IssuerSerialType.setX509SerialNumber(new BigInteger(contentBytes));</span>
+<span class="fc" id="L360">                                        JAXBElement dataJAXB = new JAXBElement(new QName(&quot;http://www.w3.org/2000/09/xmldsig#&quot;, tagName), X509IssuerSerialType.class, x509IssuerSerialType);</span>
+<span class="fc" id="L361">                                        parentKeyDataList.add(dataJAXB);</span>
+<span class="fc" id="L362">                                } else {</span>
+<span class="fc" id="L363">                                        JAXBElement dataJAXB = new JAXBElement(new QName(&quot;http://www.w3.org/2000/09/xmldsig#&quot;, tagName), contents.getClass(), contents);</span>
+<span class="fc" id="L364">                                        parentKeyDataList.add(dataJAXB);</span>
+                                }
+                        }
+<span class="fc" id="L367">                }</span>
+<span class="fc" id="L368">        }</span>
+
+        public static void mapBusinessNames(List&lt;org.apache.juddi.model.BusinessName&gt; modelNameList,
+             List&lt;org.uddi.api_v3.Name&gt; apiNameList)
+             throws DispositionReportFaultMessage {
+<span class="fc" id="L373">                apiNameList.clear();</span>
+
+<span class="fc bfc" id="L375" title="All 2 branches covered.">                for (org.apache.juddi.model.BusinessName modelName : modelNameList) {</span>
+<span class="fc" id="L376">                        org.uddi.api_v3.Name apiName = new org.uddi.api_v3.Name();</span>
+<span class="fc" id="L377">                        apiName.setLang(modelName.getLangCode());</span>
+<span class="fc" id="L378">                        apiName.setValue(modelName.getName());</span>
+<span class="fc" id="L379">                        apiNameList.add(apiName);</span>
+<span class="fc" id="L380">                }</span>
+<span class="fc" id="L381">        }</span>
+
+        public static void mapBusinessDescriptions(List&lt;org.apache.juddi.model.BusinessDescr&gt; modelDescList,
+             List&lt;org.uddi.api_v3.Description&gt; apiDescList)
+             throws DispositionReportFaultMessage {
+<span class="fc" id="L386">                apiDescList.clear();</span>
+
+<span class="fc bfc" id="L388" title="All 2 branches covered.">                for (org.apache.juddi.model.BusinessDescr modelDesc : modelDescList) {</span>
+<span class="fc" id="L389">                        org.uddi.api_v3.Description apiDesc = new org.uddi.api_v3.Description();</span>
+<span class="fc" id="L390">                        apiDesc.setLang(modelDesc.getLangCode());</span>
+<span class="fc" id="L391">                        apiDesc.setValue(modelDesc.getDescr());</span>
+<span class="fc" id="L392">                        apiDescList.add(apiDesc);</span>
+<span class="fc" id="L393">                }</span>
+<span class="fc" id="L394">        }</span>
+
+        public static void mapDiscoveryUrls(List&lt;org.apache.juddi.model.DiscoveryUrl&gt; modelDiscUrlList,
+             org.uddi.api_v3.DiscoveryURLs apiDiscUrls,
+             org.uddi.api_v3.BusinessEntity apiBusinessEntity)
+             throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L400" title="1 of 4 branches missed.">                if (modelDiscUrlList == null || modelDiscUrlList.size() == 0) {</span>
+<span class="fc" id="L401">                        return;</span>
+                }
+
+<span class="pc bpc" id="L404" title="1 of 2 branches missed.">                if (apiDiscUrls == null) {</span>
+<span class="fc" id="L405">                        apiDiscUrls = new org.uddi.api_v3.DiscoveryURLs();</span>
+                }
+
+<span class="fc" id="L408">                List&lt;org.uddi.api_v3.DiscoveryURL&gt; apiDiscUrlList = apiDiscUrls.getDiscoveryURL();</span>
+<span class="fc" id="L409">                apiDiscUrlList.clear();</span>
+
+<span class="fc bfc" id="L411" title="All 2 branches covered.">                for (org.apache.juddi.model.DiscoveryUrl modelDiscUrl : modelDiscUrlList) {</span>
+<span class="fc" id="L412">                        org.uddi.api_v3.DiscoveryURL apiDiscUrl = new org.uddi.api_v3.DiscoveryURL();</span>
+<span class="fc" id="L413">                        apiDiscUrl.setUseType(modelDiscUrl.getUseType());</span>
+<span class="fc" id="L414">                        String discoveryURL = modelDiscUrl.getUrl();</span>
+                        try {
+<span class="fc" id="L416">                                String baseUrl = AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL);</span>
+<span class="pc bpc" id="L417" title="1 of 2 branches missed.">                                if (baseUrl == null) {</span>
+<span class="nc" id="L418">                                        logger.warn(&quot;Token '&quot; + Property.JUDDI_BASE_URL + &quot;' not found in the juddiv3.xml, defaulting to '&quot;</span>
+                                             + Property.DEFAULT_BASE_URL + &quot;'&quot;);
+<span class="nc" id="L420">                                        baseUrl = Property.DEFAULT_BASE_URL;</span>
+                                }
+<span class="fc" id="L422">                                discoveryURL = discoveryURL.replaceAll(&quot;\\$\\{&quot; + Property.JUDDI_BASE_URL + &quot;\\}&quot;, baseUrl);</span>
+
+<span class="fc" id="L424">                                baseUrl = AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL_SECURE);</span>
+<span class="pc bpc" id="L425" title="1 of 2 branches missed.">                                if (baseUrl == null) {</span>
+<span class="nc" id="L426">                                        logger.warn(&quot;Token '&quot; + Property.JUDDI_BASE_URL_SECURE + &quot;' not found in the juddiv3.xml, defaulting to '&quot;</span>
+                                             + Property.JUDDI_BASE_URL_SECURE + &quot;'&quot;);
+<span class="nc" id="L428">                                        baseUrl = Property.DEFAULT_BASE_URL_SECURE;</span>
+                                }
+<span class="fc" id="L430">                                discoveryURL = discoveryURL.replaceAll(&quot;\\$\\{&quot; + Property.JUDDI_BASE_URL_SECURE + &quot;\\}&quot;, baseUrl);</span>
+
+<span class="nc" id="L432">                        } catch (ConfigurationException e) {</span>
+<span class="nc" id="L433">                                logger.error(e.getMessage(), e);</span>
+<span class="fc" id="L434">                        }</span>
+<span class="fc" id="L435">                        apiDiscUrl.setValue(discoveryURL);</span>
+<span class="fc" id="L436">                        apiDiscUrlList.add(apiDiscUrl);</span>
+<span class="fc" id="L437">                }</span>
+<span class="fc" id="L438">                apiBusinessEntity.setDiscoveryURLs(apiDiscUrls);</span>
+<span class="fc" id="L439">        }</span>
+        
+        public static void mapContact(org.apache.juddi.model.Contact modelContact,
+                org.uddi.api_v3.Contact apiContact) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L443" title="1 of 2 branches missed.">                if (apiContact == null) {</span>
+<span class="nc" id="L444">                        apiContact = new org.uddi.api_v3.Contact();</span>
+                }
+<span class="fc" id="L446">                apiContact.setUseType(modelContact.getUseType());</span>
+
+<span class="fc" id="L448">                mapPersonNames(modelContact.getPersonNames(), apiContact.getPersonName());</span>
+<span class="fc" id="L449">                mapContactDescriptions(modelContact.getContactDescrs(), apiContact.getDescription());</span>
+<span class="fc" id="L450">                mapContactEmails(modelContact.getEmails(), apiContact.getEmail());</span>
+<span class="fc" id="L451">                mapContactPhones(modelContact.getPhones(), apiContact.getPhone());</span>
+<span class="fc" id="L452">                mapContactAddresses(modelContact.getAddresses(), apiContact.getAddress());</span>
+
+<span class="fc" id="L454">        }</span>
+
+        public static void mapContacts(List&lt;org.apache.juddi.model.Contact&gt; modelContactList,
+             org.uddi.api_v3.Contacts apiContacts,
+             org.uddi.api_v3.BusinessEntity apiBusinessEntity)
+             throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L460" title="1 of 4 branches missed.">                if (modelContactList == null || modelContactList.size() == 0) {</span>
+<span class="fc" id="L461">                        return;</span>
+                }
+
+<span class="fc bfc" id="L464" title="All 2 branches covered.">                if (apiContacts == null) {</span>
+<span class="fc" id="L465">                        apiContacts = new org.uddi.api_v3.Contacts();</span>
+                }
+
+<span class="fc" id="L468">                List&lt;org.uddi.api_v3.Contact&gt; apiContactList = apiContacts.getContact();</span>
+<span class="fc" id="L469">                apiContactList.clear();</span>
+
+<span class="fc bfc" id="L471" title="All 2 branches covered.">                for (org.apache.juddi.model.Contact modelContact : modelContactList) {</span>
+<span class="fc" id="L472">                        org.uddi.api_v3.Contact apiContact = new org.uddi.api_v3.Contact();</span>
+                        
+<span class="fc" id="L474">                        mapContact(modelContact,apiContact);</span>
+                      
+<span class="fc" id="L476">                        apiContactList.add(apiContact);</span>
+<span class="fc" id="L477">                }</span>
+<span class="fc" id="L478">                apiBusinessEntity.setContacts(apiContacts);</span>
+<span class="fc" id="L479">        }</span>
+
+        public static void mapContactDescriptions(List&lt;org.apache.juddi.model.ContactDescr&gt; modelDescList,
+             List&lt;org.uddi.api_v3.Description&gt; apiDescList)
+             throws DispositionReportFaultMessage {
+<span class="fc" id="L484">                apiDescList.clear();</span>
+
+<span class="fc bfc" id="L486" title="All 2 branches covered.">                for (org.apache.juddi.model.ContactDescr modelDesc : modelDescList) {</span>
+<span class="fc" id="L487">                        org.uddi.api_v3.Description apiDesc = new org.uddi.api_v3.Description();</span>
+<span class="fc" id="L488">                        apiDesc.setLang(modelDesc.getLangCode());</span>
+<span class="fc" id="L489">                        apiDesc.setValue(modelDesc.getDescr());</span>
+<span class="fc" id="L490">                        apiDescList.add(apiDesc);</span>
+<span class="fc" id="L491">                }</span>
+<span class="fc" id="L492">        }</span>
+
+        public static void mapPersonNames(List&lt;org.apache.juddi.model.PersonName&gt; modelPersonNameList,
+             List&lt;org.uddi.api_v3.PersonName&gt; apiPersonNameList)
+             throws DispositionReportFaultMessage {
+<span class="fc" id="L497">                apiPersonNameList.clear();</span>
+
+<span class="fc bfc" id="L499" title="All 2 branches covered.">                for (org.apache.juddi.model.PersonName personName : modelPersonNameList) {</span>
+<span class="fc" id="L500">                        org.uddi.api_v3.PersonName apiPersonName = new org.uddi.api_v3.PersonName();</span>
+<span class="fc" id="L501">                        apiPersonName.setLang(personName.getLangCode());</span>
+<span class="fc" id="L502">                        apiPersonName.setValue(personName.getName());</span>
+<span class="fc" id="L503">                        apiPersonNameList.add(apiPersonName);</span>
+<span class="fc" id="L504">                }</span>
+<span class="fc" id="L505">        }</span>
+
+        public static void mapContactEmails(List&lt;org.apache.juddi.model.Email&gt; modelEmailList,
+             List&lt;org.uddi.api_v3.Email&gt; apiEmailList)
+             throws DispositionReportFaultMessage {
+<span class="fc" id="L510">                apiEmailList.clear();</span>
+
+<span class="fc bfc" id="L512" title="All 2 branches covered.">                for (org.apache.juddi.model.Email modelEmail : modelEmailList) {</span>
+<span class="fc" id="L513">                        org.uddi.api_v3.Email apiEmail = new org.uddi.api_v3.Email();</span>
+<span class="fc" id="L514">                        apiEmail.setUseType(modelEmail.getUseType());</span>
+<span class="fc" id="L515">                        apiEmail.setValue(modelEmail.getEmailAddress());</span>
+<span class="fc" id="L516">                        apiEmailList.add(apiEmail);</span>
+<span class="fc" id="L517">                }</span>
+<span class="fc" id="L518">        }</span>
+
+        public static void mapContactPhones(List&lt;org.apache.juddi.model.Phone&gt; modelPhoneList,
+             List&lt;org.uddi.api_v3.Phone&gt; apiPhoneList)
+             throws DispositionReportFaultMessage {
+<span class="fc" id="L523">                apiPhoneList.clear();</span>
+
+<span class="fc bfc" id="L525" title="All 2 branches covered.">                for (org.apache.juddi.model.Phone modelPhone : modelPhoneList) {</span>
+<span class="fc" id="L526">                        org.uddi.api_v3.Phone apiPhone = new org.uddi.api_v3.Phone();</span>
+<span class="fc" id="L527">                        apiPhone.setUseType(modelPhone.getUseType());</span>
+<span class="fc" id="L528">                        apiPhone.setValue(modelPhone.getPhoneNumber());</span>
+<span class="fc" id="L529">                        apiPhoneList.add(apiPhone);</span>
+<span class="fc" id="L530">                }</span>
+<span class="fc" id="L531">        }</span>
+
+        public static void mapContactAddresses(List&lt;org.apache.juddi.model.Address&gt; modelAddressList,
+             List&lt;org.uddi.api_v3.Address&gt; apiAddressList)
+             throws DispositionReportFaultMessage {
+<span class="fc" id="L536">                apiAddressList.clear();</span>
+
+<span class="fc bfc" id="L538" title="All 2 branches covered.">                for (org.apache.juddi.model.Address modelAddress : modelAddressList) {</span>
+<span class="fc" id="L539">                        org.uddi.api_v3.Address apiAddress = new org.uddi.api_v3.Address();</span>
+<span class="fc" id="L540">                        apiAddress.setUseType(modelAddress.getUseType());</span>
+<span class="fc" id="L541">                        apiAddress.setLang(&quot;&quot;);</span>
+<span class="fc" id="L542">                        apiAddress.setSortCode(modelAddress.getSortCode());</span>
+<span class="fc" id="L543">                        apiAddress.setTModelKey(modelAddress.getTmodelKey());</span>
+
+<span class="fc" id="L545">                        mapAddressLines(modelAddress.getAddressLines(), apiAddress.getAddressLine());</span>
+
+<span class="fc" id="L547">                        apiAddressList.add(apiAddress);</span>
+<span class="fc" id="L548">                }</span>
+<span class="fc" id="L549">        }</span>
+
+        public static void mapAddressLines(List&lt;org.apache.juddi.model.AddressLine&gt; modelAddressLineList,
+             List&lt;org.uddi.api_v3.AddressLine&gt; apiAddressLineList)
+             throws DispositionReportFaultMessage {
+<span class="fc" id="L554">                apiAddressLineList.clear();</span>
+
+<span class="fc bfc" id="L556" title="All 2 branches covered.">                for (org.apache.juddi.model.AddressLine modelAddressLine : modelAddressLineList) {</span>
+<span class="fc" id="L557">                        org.uddi.api_v3.AddressLine apiAddressLine = new org.uddi.api_v3.AddressLine();</span>
+<span class="fc" id="L558">                        apiAddressLine.setKeyName(modelAddressLine.getKeyName());</span>
+<span class="fc" id="L559">                        apiAddressLine.setKeyValue(modelAddressLine.getKeyValue());</span>
+<span class="fc" id="L560">                        apiAddressLine.setValue(modelAddressLine.getLine());</span>
+<span class="fc" id="L561">                        apiAddressLineList.add(apiAddressLine);</span>
+<span class="fc" id="L562">                }</span>
+<span class="fc" id="L563">        }</span>
+
+        public static void mapBusinessIdentifiers(List&lt;org.apache.juddi.model.BusinessIdentifier&gt; modelIdentifierList,
+             org.uddi.api_v3.IdentifierBag apiIdentifierBag,
+             org.uddi.api_v3.BusinessEntity apiBusinessEntity)
+             throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L569" title="1 of 4 branches missed.">                if (modelIdentifierList == null || modelIdentifierList.size() == 0) {</span>
+<span class="fc" id="L570">                        return;</span>
+                }
+
+<span class="pc bpc" id="L573" title="1 of 2 branches missed.">                if (apiIdentifierBag == null) {</span>
+<span class="fc" id="L574">                        apiIdentifierBag = new org.uddi.api_v3.IdentifierBag();</span>
+                }
+
+<span class="fc" id="L577">                List&lt;org.uddi.api_v3.KeyedReference&gt; apiKeyedRefList = apiIdentifierBag.getKeyedReference();</span>
+<span class="fc" id="L578">                apiKeyedRefList.clear();</span>
+
+<span class="fc bfc" id="L580" title="All 2 branches covered.">                for (org.apache.juddi.model.BusinessIdentifier modelIdentifier : modelIdentifierList) {</span>
+<span class="fc" id="L581">                        org.uddi.api_v3.KeyedReference apiKeyedRef = new org.uddi.api_v3.KeyedReference();</span>
+<span class="fc" id="L582">                        apiKeyedRef.setTModelKey(modelIdentifier.getTmodelKeyRef());</span>
+<span class="fc" id="L583">                        apiKeyedRef.setKeyName(modelIdentifier.getKeyName());</span>
+<span class="fc" id="L584">                        apiKeyedRef.setKeyValue(modelIdentifier.getKeyValue());</span>
+<span class="fc" id="L585">                        apiKeyedRefList.add(apiKeyedRef);</span>
+<span class="fc" id="L586">                }</span>
+<span class="fc" id="L587">                apiBusinessEntity.setIdentifierBag(apiIdentifierBag);</span>
+<span class="fc" id="L588">        }</span>
+
+        public static void mapBusinessServices(List&lt;org.apache.juddi.model.BusinessService&gt; modelBusinessServiceList,
+             List&lt;org.apache.juddi.model.ServiceProjection&gt; modelServiceProjectionList,
+             org.uddi.api_v3.BusinessServices apiBusinessServices,
+             org.uddi.api_v3.BusinessEntity apiBusinessEntity)
+             throws DispositionReportFaultMessage {
+
+<span class="pc bpc" id="L596" title="1 of 2 branches missed.">                if (apiBusinessServices == null) {</span>
+<span class="fc" id="L597">                        apiBusinessServices = new org.uddi.api_v3.BusinessServices();</span>
+                }
+
+<span class="fc" id="L600">                List&lt;org.uddi.api_v3.BusinessService&gt; apiBusinessServiceList = apiBusinessServices.getBusinessService();</span>
+<span class="fc" id="L601">                apiBusinessServiceList.clear();</span>
+
+<span class="pc bpc" id="L603" title="1 of 4 branches missed.">                if (modelBusinessServiceList != null &amp;&amp; modelBusinessServiceList.size() &gt; 0) {</span>
+<span class="fc bfc" id="L604" title="All 2 branches covered.">                        for (org.apache.juddi.model.BusinessService modelBusinessService : modelBusinessServiceList) {</span>
+<span class="fc" id="L605">                                org.uddi.api_v3.BusinessService apiBusinessService = new org.uddi.api_v3.BusinessService();</span>
+<span class="fc" id="L606">                                mapBusinessService(modelBusinessService, apiBusinessService);</span>
+<span class="fc" id="L607">                                apiBusinessServiceList.add(apiBusinessService);</span>
+<span class="fc" id="L608">                        }</span>
+                }
+
+<span class="pc bpc" id="L611" title="1 of 4 branches missed.">                if (modelServiceProjectionList != null &amp;&amp; modelServiceProjectionList.size() &gt; 0) {</span>
+<span class="fc bfc" id="L612" title="All 2 branches covered.">                        for (org.apache.juddi.model.ServiceProjection modelServiceProjection : modelServiceProjectionList) {</span>
+<span class="fc" id="L613">                                org.uddi.api_v3.BusinessService apiBusinessService = new org.uddi.api_v3.BusinessService();</span>
+<span class="fc" id="L614">                                mapBusinessService(modelServiceProjection.getBusinessService(), apiBusinessService);</span>
+<span class="fc" id="L615">                                apiBusinessServiceList.add(apiBusinessService);</span>
+<span class="fc" id="L616">                        }</span>
+                }
+
+<span class="fc bfc" id="L619" title="All 2 branches covered.">                if (apiBusinessServiceList.size() &gt; 0) {</span>
+<span class="fc" id="L620">                        apiBusinessEntity.setBusinessServices(apiBusinessServices);</span>
+                }
+<span class="fc" id="L622">        }</span>
+
+        public static void mapBusinessService(org.apache.juddi.model.BusinessService modelBusinessService,
+             org.uddi.api_v3.BusinessService apiBusinessService)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L628">                apiBusinessService.setBusinessKey(modelBusinessService.getBusinessEntity().getEntityKey());</span>
+<span class="fc" id="L629">                apiBusinessService.setServiceKey(modelBusinessService.getEntityKey());</span>
+
+<span class="fc" id="L631">                mapServiceNames(modelBusinessService.getServiceNames(), apiBusinessService.getName());</span>
+<span class="fc" id="L632">                mapServiceDescriptions(modelBusinessService.getServiceDescrs(), apiBusinessService.getDescription());</span>
+<span class="fc" id="L633">                mapBindingTemplates(modelBusinessService.getBindingTemplates(), apiBusinessService.getBindingTemplates(), apiBusinessService);</span>
+<span class="fc" id="L634">                apiBusinessService.setCategoryBag(mapCategoryBag(modelBusinessService.getCategoryBag(), apiBusinessService.getCategoryBag()));</span>
+
+<span class="fc" id="L636">                mapSignature(modelBusinessService.getSignatures(), apiBusinessService.getSignature());</span>
+<span class="fc" id="L637">        }</span>
+
+        public static void mapServiceNames(List&lt;org.apache.juddi.model.ServiceName&gt; modelNameList,
+             List&lt;org.uddi.api_v3.Name&gt; apiNameList)
+             throws DispositionReportFaultMessage {
+<span class="fc" id="L642">                apiNameList.clear();</span>
+
+<span class="fc bfc" id="L644" title="All 2 branches covered.">                for (org.apache.juddi.model.ServiceName modelName : modelNameList) {</span>
+<span class="fc" id="L645">                        org.uddi.api_v3.Name apiName = new org.uddi.api_v3.Name();</span>
+<span class="fc" id="L646">                        apiName.setLang(modelName.getLangCode());</span>
+<span class="fc" id="L647">                        apiName.setValue(modelName.getName());</span>
+<span class="fc" id="L648">                        apiNameList.add(apiName);</span>
+<span class="fc" id="L649">                }</span>
+<span class="fc" id="L650">        }</span>
+
+        public static void mapServiceDescriptions(List&lt;org.apache.juddi.model.ServiceDescr&gt; modelDescList,
+             List&lt;org.uddi.api_v3.Description&gt; apiDescList)
+             throws DispositionReportFaultMessage {
+<span class="fc" id="L655">                apiDescList.clear();</span>
+
+<span class="fc bfc" id="L657" title="All 2 branches covered.">                for (org.apache.juddi.model.ServiceDescr modelDesc : modelDescList) {</span>
+<span class="fc" id="L658">                        org.uddi.api_v3.Description apiDesc = new org.uddi.api_v3.Description();</span>
+<span class="fc" id="L659">                        apiDesc.setLang(modelDesc.getLangCode());</span>
+<span class="fc" id="L660">                        apiDesc.setValue(modelDesc.getDescr());</span>
+<span class="fc" id="L661">                        apiDescList.add(apiDesc);</span>
+<span class="fc" id="L662">                }</span>
+<span class="fc" id="L663">        }</span>
+
+        public static void mapBindingTemplates(List&lt;org.apache.juddi.model.BindingTemplate&gt; modelBindingTemplateList,
+             org.uddi.api_v3.BindingTemplates apiBindingTemplates,
+             org.uddi.api_v3.BusinessService apiBusinessService)
+             throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L669" title="1 of 4 branches missed.">                if (modelBindingTemplateList == null || modelBindingTemplateList.size() == 0) {</span>
+<span class="fc" id="L670">                        return;</span>
+                }
+
+<span class="pc bpc" id="L673" title="1 of 2 branches missed.">                if (apiBindingTemplates == null) {</span>
+<span class="fc" id="L674">                        apiBindingTemplates = new org.uddi.api_v3.BindingTemplates();</span>
+                }
+
+<span class="fc" id="L677">                List&lt;org.uddi.api_v3.BindingTemplate&gt; apiBindingTemplateList = apiBindingTemplates.getBindingTemplate();</span>
+<span class="fc" id="L678">                apiBindingTemplateList.clear();</span>
+
+<span class="fc bfc" id="L680" title="All 2 branches covered.">                for (org.apache.juddi.model.BindingTemplate modelBindingTemplate : modelBindingTemplateList) {</span>
+<span class="fc" id="L681">                        org.uddi.api_v3.BindingTemplate apiBindingTemplate = new org.uddi.api_v3.BindingTemplate();</span>
+<span class="fc" id="L682">                        mapBindingTemplate(modelBindingTemplate, apiBindingTemplate);</span>
+<span class="fc" id="L683">                        apiBindingTemplateList.add(apiBindingTemplate);</span>
+<span class="fc" id="L684">                }</span>
+<span class="fc" id="L685">                apiBusinessService.setBindingTemplates(apiBindingTemplates);</span>
+<span class="fc" id="L686">        }</span>
+
+        public static void mapBindingTemplate(org.apache.juddi.model.BindingTemplate modelBindingTemplate,
+             org.uddi.api_v3.BindingTemplate apiBindingTemplate)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L692">                apiBindingTemplate.setServiceKey(modelBindingTemplate.getBusinessService().getEntityKey());</span>
+<span class="fc" id="L693">                apiBindingTemplate.setBindingKey(modelBindingTemplate.getEntityKey());</span>
+<span class="fc" id="L694">                org.uddi.api_v3.AccessPoint apiAccessPoint = new org.uddi.api_v3.AccessPoint();</span>
+<span class="fc" id="L695">                apiAccessPoint.setUseType(modelBindingTemplate.getAccessPointType());</span>
+<span class="fc" id="L696">                String accessPointValue = modelBindingTemplate.getAccessPointUrl();</span>
+<span class="pc bpc" id="L697" title="1 of 2 branches missed.">                if (accessPointValue != null) {</span>
+                        try {
+<span class="fc" id="L699">                                String baseUrl = AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL);</span>
+<span class="pc bpc" id="L700" title="1 of 2 branches missed.">                                if (baseUrl == null) {</span>
+<span class="nc" id="L701">                                        logger.warn(&quot;Token '&quot; + Property.JUDDI_BASE_URL + &quot;' not found in the juddiv3.xml, defaulting to '&quot;</span>
+                                             + Property.DEFAULT_BASE_URL + &quot;'&quot;);
+<span class="nc" id="L703">                                        baseUrl = Property.DEFAULT_BASE_URL;</span>
+                                }
+<span class="fc" id="L705">                                accessPointValue = accessPointValue.replaceAll(&quot;\\$\\{&quot; + Property.JUDDI_BASE_URL + &quot;\\}&quot;, baseUrl);</span>
+
+<span class="fc" id="L707">                                baseUrl = AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL_SECURE);</span>
+<span class="pc bpc" id="L708" title="1 of 2 branches missed.">                                if (baseUrl == null) {</span>
+<span class="nc" id="L709">                                        logger.warn(&quot;Token '&quot; + Property.JUDDI_BASE_URL_SECURE + &quot;' not found in the juddiv3.xml, defaulting to '&quot;</span>
+                                             + Property.JUDDI_BASE_URL_SECURE + &quot;'&quot;);
+<span class="nc" id="L711">                                        baseUrl = Property.DEFAULT_BASE_URL_SECURE;</span>
+                                }
+<span class="fc" id="L713">                                accessPointValue = accessPointValue.replaceAll(&quot;\\$\\{&quot; + Property.JUDDI_BASE_URL_SECURE + &quot;\\}&quot;, baseUrl);</span>
+<span class="nc" id="L714">                        } catch (ConfigurationException e) {</span>
+<span class="nc" id="L715">                                logger.error(e.getMessage(), e);</span>
+<span class="fc" id="L716">                        }</span>
+                }
+<span class="fc" id="L718">                apiAccessPoint.setValue(accessPointValue);</span>
+<span class="fc" id="L719">                apiBindingTemplate.setAccessPoint(apiAccessPoint);</span>
+<span class="pc bpc" id="L720" title="1 of 2 branches missed.">                if (modelBindingTemplate.getHostingRedirector() != null) {</span>
+<span class="nc" id="L721">                        org.uddi.api_v3.HostingRedirector apiHost = new org.uddi.api_v3.HostingRedirector();</span>
+<span class="nc" id="L722">                        apiHost.setBindingKey(modelBindingTemplate.getHostingRedirector());</span>
+<span class="nc" id="L723">                        apiBindingTemplate.setHostingRedirector(apiHost);</span>
+                }
+<span class="fc" id="L725">                mapTModelInstanceDetails(modelBindingTemplate.getTmodelInstanceInfos(), apiBindingTemplate.getTModelInstanceDetails(), apiBindingTemplate);</span>
+<span class="fc" id="L726">                mapBindingDescriptions(modelBindingTemplate.getBindingDescrs(), apiBindingTemplate.getDescription());</span>
+
+<span class="fc" id="L728">                apiBindingTemplate.setCategoryBag(mapCategoryBag(modelBindingTemplate.getCategoryBag(), apiBindingTemplate.getCategoryBag()));</span>
+<span class="fc" id="L729">                mapSignature(modelBindingTemplate.getSignatures(), apiBindingTemplate.getSignature());</span>
+<span class="fc" id="L730">        }</span>
+
+        public static void mapBindingDescriptions(List&lt;org.apache.juddi.model.BindingDescr&gt; modelDescList,
+             List&lt;org.uddi.api_v3.Description&gt; apiDescList)
+             throws DispositionReportFaultMessage {
+<span class="fc" id="L735">                apiDescList.clear();</span>
+
+<span class="fc bfc" id="L737" title="All 2 branches covered.">                for (org.apache.juddi.model.BindingDescr modelDesc : modelDescList) {</span>
+<span class="fc" id="L738">                        org.uddi.api_v3.Description apiDesc = new org.uddi.api_v3.Description();</span>
+<span class="fc" id="L739">                        apiDesc.setLang(modelDesc.getLangCode());</span>
+<span class="fc" id="L740">                        apiDesc.setValue(modelDesc.getDescr());</span>
+<span class="fc" id="L741">                        apiDescList.add(apiDesc);</span>
+<span class="fc" id="L742">                }</span>
+<span class="fc" id="L743">        }</span>
+
+        public static org.uddi.api_v3.CategoryBag mapCategoryBag(org.apache.juddi.model.CategoryBag modelCategoryBag,
+             org.uddi.api_v3.CategoryBag apiCategoryBag)
+             throws DispositionReportFaultMessage {
+
+<span class="fc bfc" id="L749" title="All 2 branches covered.">                if (modelCategoryBag != null) {</span>
+<span class="pc bpc" id="L750" title="1 of 2 branches missed.">                        if (apiCategoryBag == null) {</span>
+<span class="fc" id="L751">                                apiCategoryBag = new org.uddi.api_v3.CategoryBag();</span>
+                        }
+
+<span class="fc bfc" id="L754" title="All 2 branches covered.">                        for (org.apache.juddi.model.KeyedReference modelKeyedReference : modelCategoryBag.getKeyedReferences()) {</span>
+<span class="fc" id="L755">                                org.uddi.api_v3.KeyedReference apiKeyedReference = new org.uddi.api_v3.KeyedReference();</span>
+<span class="fc" id="L756">                                apiKeyedReference.setTModelKey(modelKeyedReference.getTmodelKeyRef());</span>
+<span class="fc" id="L757">                                apiKeyedReference.setKeyName(modelKeyedReference.getKeyName());</span>
+<span class="fc" id="L758">                                apiKeyedReference.setKeyValue(modelKeyedReference.getKeyValue());</span>
+<span class="fc" id="L759">                                apiCategoryBag.getKeyedReference().add(apiKeyedReference);</span>
+<span class="fc" id="L760">                        }</span>
+<span class="fc bfc" id="L761" title="All 2 branches covered.">                        for (org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup : modelCategoryBag.getKeyedReferenceGroups()) {</span>
+<span class="fc" id="L762">                                org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup = new org.uddi.api_v3.KeyedReferenceGroup();</span>
+
+<span class="fc" id="L764">                                mapKeyedReferenceGroup(modelKeyedReferenceGroup, apiKeyedReferenceGroup);</span>
+
+<span class="fc" id="L766">                                apiCategoryBag.getKeyedReferenceGroup().add(apiKeyedReferenceGroup);</span>
+<span class="fc" id="L767">                        }</span>
+                }
+<span class="fc" id="L769">                return apiCategoryBag;</span>
+        }
+
+        public static void mapKeyedReferenceGroup(org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup,
+             org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L776">                apiKeyedReferenceGroup.setTModelKey(modelKeyedReferenceGroup.getTmodelKey());</span>
+
+<span class="fc bfc" id="L778" title="All 2 branches covered.">                for (org.apache.juddi.model.KeyedReference modelKeyedReference : modelKeyedReferenceGroup.getKeyedReferences()) {</span>
+<span class="fc" id="L779">                        org.uddi.api_v3.KeyedReference apiKeyedReference = new org.uddi.api_v3.KeyedReference();</span>
+<span class="fc" id="L780">                        apiKeyedReference.setTModelKey(modelKeyedReference.getTmodelKeyRef());</span>
+<span class="fc" id="L781">                        apiKeyedReference.setKeyName(modelKeyedReference.getKeyName());</span>
+<span class="fc" id="L782">                        apiKeyedReference.setKeyValue(modelKeyedReference.getKeyValue());</span>
+<span class="fc" id="L783">                        apiKeyedReferenceGroup.getKeyedReference().add(apiKeyedReference);</span>
+<span class="fc" id="L784">                }</span>
+
+<span class="fc" id="L786">        }</span>
+
+        public static void mapTModelInstanceDetails(List&lt;org.apache.juddi.model.TmodelInstanceInfo&gt; modelTModelInstInfoList,
+             org.uddi.api_v3.TModelInstanceDetails apiTModelInstDetails,
+             org.uddi.api_v3.BindingTemplate apiBindingTemplate)
+             throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L792" title="1 of 4 branches missed.">                if (modelTModelInstInfoList == null || modelTModelInstInfoList.size() == 0) {</span>
+<span class="fc" id="L793">                        return;</span>
+                }
+
+<span class="pc bpc" id="L796" title="1 of 2 branches missed.">                if (apiTModelInstDetails == null) {</span>
+<span class="fc" id="L797">                        apiTModelInstDetails = new org.uddi.api_v3.TModelInstanceDetails();</span>
+                }
+
+<span class="fc" id="L800">                List&lt;org.uddi.api_v3.TModelInstanceInfo&gt; apiTModelInstInfoList = apiTModelInstDetails.getTModelInstanceInfo();</span>
+<span class="fc" id="L801">                apiTModelInstInfoList.clear();</span>
+
+<span class="fc bfc" id="L803" title="All 2 branches covered.">                for (org.apache.juddi.model.TmodelInstanceInfo modelTModelInstInfo : modelTModelInstInfoList) {</span>
+<span class="fc" id="L804">                        org.uddi.api_v3.TModelInstanceInfo apiTModelInstInfo = new org.uddi.api_v3.TModelInstanceInfo();</span>
+<span class="fc" id="L805">                        apiTModelInstInfo.setTModelKey(modelTModelInstInfo.getTmodelKey());</span>
+<span class="fc" id="L806">                        mapTModelInstanceInfoDescriptions(modelTModelInstInfo.getTmodelInstanceInfoDescrs(), apiTModelInstInfo.getDescription());</span>
+<span class="fc" id="L807">                        mapInstanceDetails(modelTModelInstInfo, apiTModelInstInfo.getInstanceDetails(), apiTModelInstInfo);</span>
+
+<span class="fc" id="L809">                        apiTModelInstInfoList.add(apiTModelInstInfo);</span>
+<span class="fc" id="L810">                }</span>
+<span class="fc" id="L811">                apiBindingTemplate.setTModelInstanceDetails(apiTModelInstDetails);</span>
+<span class="fc" id="L812">        }</span>
+
+        public static void mapTModelInstanceInfoDescriptions(List&lt;org.apache.juddi.model.TmodelInstanceInfoDescr&gt; modelDescList,
+             List&lt;org.uddi.api_v3.Description&gt; apiDescList)
+             throws DispositionReportFaultMessage {
+<span class="fc" id="L817">                apiDescList.clear();</span>
+
+<span class="fc bfc" id="L819" title="All 2 branches covered.">                for (org.apache.juddi.model.TmodelInstanceInfoDescr modelDesc : modelDescList) {</span>
+<span class="fc" id="L820">                        org.uddi.api_v3.Description apiDesc = new org.uddi.api_v3.Description();</span>
+<span class="fc" id="L821">                        apiDesc.setLang(modelDesc.getLangCode());</span>
+<span class="fc" id="L822">                        apiDesc.setValue(modelDesc.getDescr());</span>
+<span class="fc" id="L823">                        apiDescList.add(apiDesc);</span>
+<span class="fc" id="L824">                }</span>
+<span class="fc" id="L825">        }</span>
+
+        public static void mapInstanceDetails(org.apache.juddi.model.TmodelInstanceInfo modelTModelInstInfo,
+             org.uddi.api_v3.InstanceDetails apiInstanceDetails,
+             org.uddi.api_v3.TModelInstanceInfo apiTModelInstInfo)
+             throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L831" title="1 of 2 branches missed.">                if (modelTModelInstInfo == null</span>
+<span class="pc bpc" id="L832" title="1 of 4 branches missed.">                     || (modelTModelInstInfo.getInstanceParms() == null &amp;&amp; modelTModelInstInfo.getOverviewDocs().size() == 0)) {</span>
+<span class="fc" id="L833">                        return;</span>
+                }
+
+<span class="pc bpc" id="L836" title="1 of 2 branches missed.">                if (apiInstanceDetails == null) {</span>
+<span class="fc" id="L837">                        apiInstanceDetails = new org.uddi.api_v3.InstanceDetails();</span>
+                }
+
+                //InstanceParms
+<span class="fc" id="L841">                apiInstanceDetails.setInstanceParms(modelTModelInstInfo.getInstanceParms());</span>
+                //Descriptions
+<span class="fc" id="L843">                List&lt;org.apache.juddi.model.InstanceDetailsDescr&gt; modelInstDetailsDescrList = modelTModelInstInfo.getInstanceDetailsDescrs();</span>
+<span class="pc bpc" id="L844" title="1 of 2 branches missed.">                for (org.apache.juddi.model.InstanceDetailsDescr modelInstDetailDescr : modelInstDetailsDescrList) {</span>
+<span class="nc" id="L845">                        org.uddi.api_v3.Description apiDesc = new org.uddi.api_v3.Description();</span>
+<span class="nc" id="L846">                        apiDesc.setLang(modelInstDetailDescr.getLangCode());</span>
+<span class="nc" id="L847">                        apiDesc.setValue(modelInstDetailDescr.getDescr());</span>
+<span class="nc" id="L848">                        apiInstanceDetails.getDescription().add(apiDesc);</span>
+<span class="nc" id="L849">                }</span>
+                //OverviewDoc
+<span class="fc" id="L851">                mapOverviewDocs(modelTModelInstInfo.getOverviewDocs(), apiInstanceDetails, null);</span>
+
+<span class="fc" id="L853">                apiTModelInstInfo.setInstanceDetails(apiInstanceDetails);</span>
+<span class="fc" id="L854">        }</span>
+
+        public static void mapOverviewDocs(List&lt;org.apache.juddi.model.OverviewDoc&gt; modelOverviewDocs,
+             org.uddi.api_v3.InstanceDetails apiInstanceDetails,
+             org.uddi.api_v3.TModel apiTModel) {
+<span class="fc bfc" id="L859" title="All 2 branches covered.">                for (OverviewDoc modelOverviewDoc : modelOverviewDocs) {</span>
+<span class="fc" id="L860">                        org.uddi.api_v3.OverviewDoc apiOverviewDoc = new org.uddi.api_v3.OverviewDoc();</span>
+
+                        //Descriptions
+<span class="fc" id="L863">                        List&lt;org.apache.juddi.model.OverviewDocDescr&gt; overviewDocDescrList = modelOverviewDoc.getOverviewDocDescrs();</span>
+<span class="fc bfc" id="L864" title="All 2 branches covered.">                        for (org.apache.juddi.model.OverviewDocDescr overviewDocDescr : overviewDocDescrList) {</span>
+<span class="fc" id="L865">                                org.uddi.api_v3.Description apiDesc = new org.uddi.api_v3.Description();</span>
+<span class="fc" id="L866">                                apiDesc.setLang(overviewDocDescr.getLangCode());</span>
+<span class="fc" id="L867">                                apiDesc.setValue(overviewDocDescr.getDescr());</span>
+<span class="fc" id="L868">                                apiOverviewDoc.getDescription().add(apiDesc);</span>
+<span class="fc" id="L869">                        }</span>
+                        //OverviewURL
+<span class="fc" id="L871">                        org.uddi.api_v3.OverviewURL apiOverviewURL = new org.uddi.api_v3.OverviewURL();</span>
+<span class="fc" id="L872">                        apiOverviewURL.setUseType(modelOverviewDoc.getOverviewUrlUseType());</span>
+<span class="fc" id="L873">                        apiOverviewURL.setValue(modelOverviewDoc.getOverviewUrl());</span>
+<span class="fc" id="L874">                        apiOverviewDoc.setOverviewURL(apiOverviewURL);</span>
+                        //Set the entity on the apiOverviewDoc
+<span class="fc bfc" id="L876" title="All 2 branches covered.">                        if (apiInstanceDetails != null) {</span>
+<span class="fc" id="L877">                                apiInstanceDetails.getOverviewDoc().add(apiOverviewDoc);</span>
+                        } else {
+<span class="fc" id="L879">                                apiTModel.getOverviewDoc().add(apiOverviewDoc);</span>
+                        }
+<span class="fc" id="L881">                }</span>
+<span class="fc" id="L882">        }</span>
+
+        public static void mapTModel(org.apache.juddi.model.Tmodel modelTModel,
+             org.uddi.api_v3.TModel apiTModel)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L888">                apiTModel.setTModelKey(modelTModel.getEntityKey());</span>
+<span class="fc" id="L889">                org.uddi.api_v3.Name apiName = new org.uddi.api_v3.Name();</span>
+<span class="fc" id="L890">                apiName.setValue(modelTModel.getName());</span>
+<span class="fc" id="L891">                apiName.setLang(modelTModel.getLangCode());</span>
+<span class="fc" id="L892">                apiTModel.setName(apiName);</span>
+<span class="fc" id="L893">                apiTModel.setDeleted(modelTModel.getDeleted());</span>
+
+<span class="fc" id="L895">                mapTModelDescriptions(modelTModel.getTmodelDescrs(), apiTModel.getDescription());</span>
+
+<span class="fc" id="L897">                mapTModelIdentifiers(modelTModel.getTmodelIdentifiers(), apiTModel.getIdentifierBag(), apiTModel);</span>
+<span class="fc" id="L898">                apiTModel.setCategoryBag(mapCategoryBag(modelTModel.getCategoryBag(), apiTModel.getCategoryBag()));</span>
+
+<span class="fc" id="L900">                mapOverviewDocs(modelTModel.getOverviewDocs(), null, apiTModel);</span>
+<span class="fc" id="L901">                mapSignature(modelTModel.getSignatures(), apiTModel.getSignature());</span>
+<span class="fc" id="L902">        }</span>
+
+        public static void mapTModelDescriptions(List&lt;org.apache.juddi.model.TmodelDescr&gt; modelDescList,
+             List&lt;org.uddi.api_v3.Description&gt; apiDescList)
+             throws DispositionReportFaultMessage {
+<span class="fc" id="L907">                apiDescList.clear();</span>
+
+<span class="fc bfc" id="L909" title="All 2 branches covered.">                for (org.apache.juddi.model.TmodelDescr modelDesc : modelDescList) {</span>
+<span class="fc" id="L910">                        org.uddi.api_v3.Description apiDesc = new org.uddi.api_v3.Description();</span>
+<span class="fc" id="L911">                        apiDesc.setLang(modelDesc.getLangCode());</span>
+<span class="fc" id="L912">                        apiDesc.setValue(modelDesc.getDescr());</span>
+<span class="fc" id="L913">                        apiDescList.add(apiDesc);</span>
+<span class="fc" id="L914">                }</span>
+<span class="fc" id="L915">        }</span>
+
+        public static void mapTModelIdentifiers(List&lt;org.apache.juddi.model.TmodelIdentifier&gt; modelIdentifierList,
+             org.uddi.api_v3.IdentifierBag apiIdentifierBag,
+             org.uddi.api_v3.TModel apiTModel)
+             throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L921" title="2 of 4 branches missed.">                if (modelIdentifierList == null || modelIdentifierList.size() == 0) {</span>
+<span class="fc" id="L922">                        return;</span>
+                }
+
+<span class="nc bnc" id="L925" title="All 2 branches missed.">                if (apiIdentifierBag == null) {</span>
+<span class="nc" id="L926">                        apiIdentifierBag = new org.uddi.api_v3.IdentifierBag();</span>
+                }
+
+<span class="nc" id="L929">                List&lt;org.uddi.api_v3.KeyedReference&gt; apiKeyedRefList = apiIdentifierBag.getKeyedReference();</span>
+<span class="nc" id="L930">                apiKeyedRefList.clear();</span>
+
+<span class="nc bnc" id="L932" title="All 2 branches missed.">                for (org.apache.juddi.model.TmodelIdentifier modelIdentifier : modelIdentifierList) {</span>
+<span class="nc" id="L933">                        org.uddi.api_v3.KeyedReference apiKeyedRef = new org.uddi.api_v3.KeyedReference();</span>
+<span class="nc" id="L934">                        apiKeyedRef.setTModelKey(modelIdentifier.getTmodelKeyRef());</span>
+<span class="nc" id="L935">                        apiKeyedRef.setKeyName(modelIdentifier.getKeyName());</span>
+<span class="nc" id="L936">                        apiKeyedRef.setKeyValue(modelIdentifier.getKeyValue());</span>
+<span class="nc" id="L937">                        apiKeyedRefList.add(apiKeyedRef);</span>
+<span class="nc" id="L938">                }</span>
+<span class="nc" id="L939">                apiTModel.setIdentifierBag(apiIdentifierBag);</span>
+<span class="nc" id="L940">        }</span>
+
+        public static void mapBusinessInfo(org.apache.juddi.model.BusinessEntity modelBusinessEntity,
+             org.uddi.api_v3.BusinessInfo apiBusinessInfo)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L946">                apiBusinessInfo.setBusinessKey(modelBusinessEntity.getEntityKey());</span>
+
+<span class="fc" id="L948">                mapBusinessNames(modelBusinessEntity.getBusinessNames(), apiBusinessInfo.getName());</span>
+<span class="fc" id="L949">                mapBusinessDescriptions(modelBusinessEntity.getBusinessDescrs(), apiBusinessInfo.getDescription());</span>
+
+<span class="fc" id="L951">                mapServiceInfos(modelBusinessEntity.getBusinessServices(), apiBusinessInfo.getServiceInfos(), apiBusinessInfo);</span>
+
+<span class="fc" id="L953">        }</span>
+
+        public static void mapServiceInfos(List&lt;org.apache.juddi.model.BusinessService&gt; modelBusinessServiceList,
+             org.uddi.api_v3.ServiceInfos apiServiceInfos,
+             org.uddi.api_v3.BusinessInfo apiBusinessInfo)
+             throws DispositionReportFaultMessage {
+<span class="fc bfc" id="L959" title="All 2 branches covered.">                if (modelBusinessServiceList.size() == 0) {</span>
+<span class="fc" id="L960">                        return;</span>
+                }
+<span class="pc bpc" id="L962" title="1 of 2 branches missed.">                if (apiServiceInfos == null) {</span>
+<span class="fc" id="L963">                        apiServiceInfos = new org.uddi.api_v3.ServiceInfos();</span>
+                }
+
+<span class="fc" id="L966">                List&lt;org.uddi.api_v3.ServiceInfo&gt; apiServiceInfoList = apiServiceInfos.getServiceInfo();</span>
+<span class="fc" id="L967">                apiServiceInfoList.clear();</span>
+
+<span class="fc bfc" id="L969" title="All 2 branches covered.">                for (org.apache.juddi.model.BusinessService modelBusinessService : modelBusinessServiceList) {</span>
+<span class="fc" id="L970">                        org.uddi.api_v3.ServiceInfo apiServiceInfo = new org.uddi.api_v3.ServiceInfo();</span>
+
+<span class="fc" id="L972">                        mapServiceInfo(modelBusinessService, apiServiceInfo);</span>
+
+<span class="fc" id="L974">                        apiServiceInfos.getServiceInfo().add(apiServiceInfo);</span>
+<span class="fc" id="L975">                }</span>
+<span class="fc" id="L976">                apiBusinessInfo.setServiceInfos(apiServiceInfos);</span>
+<span class="fc" id="L977">        }</span>
+
+        public static void mapServiceInfo(org.apache.juddi.model.BusinessService modelBusinessService,
+             org.uddi.api_v3.ServiceInfo apiServiceInfo)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L983">                apiServiceInfo.setBusinessKey(modelBusinessService.getBusinessEntity().getEntityKey());</span>
+<span class="fc" id="L984">                apiServiceInfo.setServiceKey(modelBusinessService.getEntityKey());</span>
+
+<span class="fc" id="L986">                mapServiceNames(modelBusinessService.getServiceNames(), apiServiceInfo.getName());</span>
+<span class="fc" id="L987">        }</span>
+
+        public static void mapTModelInfo(org.apache.juddi.model.Tmodel modelTModel,
+             org.uddi.api_v3.TModelInfo apiTModelInfo)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L993">                apiTModelInfo.setTModelKey(modelTModel.getEntityKey());</span>
+<span class="fc" id="L994">                org.uddi.api_v3.Name apiName = new org.uddi.api_v3.Name();</span>
+<span class="fc" id="L995">                apiName.setValue(modelTModel.getName());</span>
+<span class="fc" id="L996">                apiName.setLang(modelTModel.getLangCode());</span>
+<span class="fc" id="L997">                apiTModelInfo.setName(apiName);</span>
+
+<span class="fc" id="L999">                mapTModelDescriptions(modelTModel.getTmodelDescrs(), apiTModelInfo.getDescription());</span>
+
+<span class="fc" id="L1001">        }</span>
+
+        public static void mapAuthToken(org.apache.juddi.model.AuthToken modelAuthToken,
+             org.uddi.api_v3.AuthToken apiAuthToken)
+             throws DispositionReportFaultMessage {
+<span class="fc" id="L1006">                apiAuthToken.setAuthInfo(modelAuthToken.getAuthToken());</span>
+
+<span class="fc" id="L1008">        }</span>
+
+        public static void mapPublisherAssertion(org.apache.juddi.model.PublisherAssertion modelPublisherAssertion,
+             org.uddi.api_v3.PublisherAssertion apiPublisherAssertion)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L1014">                apiPublisherAssertion.setFromKey(modelPublisherAssertion.getId().getFromKey());</span>
+<span class="fc" id="L1015">                apiPublisherAssertion.setToKey(modelPublisherAssertion.getId().getToKey());</span>
+
+<span class="fc" id="L1017">                org.uddi.api_v3.KeyedReference keyedRef = new org.uddi.api_v3.KeyedReference();</span>
+<span class="fc" id="L1018">                keyedRef.setTModelKey(modelPublisherAssertion.getTmodelKey());</span>
+<span class="fc" id="L1019">                keyedRef.setKeyName(modelPublisherAssertion.getKeyName());</span>
+<span class="fc" id="L1020">                keyedRef.setKeyValue(modelPublisherAssertion.getKeyValue());</span>
+
+<span class="pc bpc" id="L1022" title="1 of 2 branches missed.">                if (modelPublisherAssertion.getSignatures()!=null &amp;&amp;</span>
+<span class="fc bfc" id="L1023" title="All 2 branches covered.">                        !modelPublisherAssertion.getSignatures().isEmpty())</span>
+                {
+<span class="fc" id="L1025">                        mapSignature(modelPublisherAssertion.getSignatures(), apiPublisherAssertion.getSignature());</span>
+                }
+<span class="fc" id="L1027">                apiPublisherAssertion.setKeyedReference(keyedRef);</span>
+               
+<span class="fc" id="L1029">        }</span>
+
+        public static void mapAssertionStatusItem(org.apache.juddi.model.PublisherAssertion modelPublisherAssertion,
+             org.uddi.api_v3.AssertionStatusItem apiAssertionStatusItem,
+             List&lt;?&gt; businessKeys)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L1036">                apiAssertionStatusItem.setFromKey(modelPublisherAssertion.getId().getFromKey());</span>
+<span class="fc" id="L1037">                apiAssertionStatusItem.setToKey(modelPublisherAssertion.getId().getToKey());</span>
+
+<span class="fc" id="L1039">                org.uddi.api_v3.KeyedReference keyedRef = new org.uddi.api_v3.KeyedReference();</span>
+<span class="fc" id="L1040">                keyedRef.setTModelKey(modelPublisherAssertion.getTmodelKey());</span>
+<span class="fc" id="L1041">                keyedRef.setKeyName(modelPublisherAssertion.getKeyName());</span>
+<span class="fc" id="L1042">                keyedRef.setKeyValue(modelPublisherAssertion.getKeyValue());</span>
+
+<span class="fc" id="L1044">                apiAssertionStatusItem.setKeyedReference(keyedRef);</span>
+
+<span class="pc bpc" id="L1046" title="1 of 2 branches missed.">                if (&quot;true&quot;.equalsIgnoreCase(modelPublisherAssertion.getFromCheck())</span>
+<span class="nc bnc" id="L1047" title="All 2 branches missed.">                     &amp;&amp; &quot;true&quot;.equalsIgnoreCase(modelPublisherAssertion.getToCheck())) {</span>
+<span class="nc" id="L1048">                        apiAssertionStatusItem.setCompletionStatus(CompletionStatus.STATUS_COMPLETE);</span>
+<span class="pc bpc" id="L1049" title="1 of 2 branches missed.">                } else if (!&quot;true&quot;.equalsIgnoreCase(modelPublisherAssertion.getFromCheck())</span>
+<span class="pc bpc" id="L1050" title="1 of 2 branches missed.">                     &amp;&amp; &quot;true&quot;.equalsIgnoreCase(modelPublisherAssertion.getToCheck())) {</span>
+<span class="fc" id="L1051">                        apiAssertionStatusItem.setCompletionStatus(CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);</span>
+<span class="nc bnc" id="L1052" title="All 2 branches missed.">                } else if (&quot;true&quot;.equalsIgnoreCase(modelPublisherAssertion.getFromCheck())</span>
+<span class="nc bnc" id="L1053" title="All 2 branches missed.">                     &amp;&amp; !&quot;true&quot;.equalsIgnoreCase(modelPublisherAssertion.getToCheck())) {</span>
+<span class="nc" id="L1054">                        apiAssertionStatusItem.setCompletionStatus(CompletionStatus.STATUS_TO_KEY_INCOMPLETE);</span>
+<span class="nc bnc" id="L1055" title="All 2 branches missed.">                } else if (!&quot;true&quot;.equalsIgnoreCase(modelPublisherAssertion.getFromCheck())</span>
+<span class="nc bnc" id="L1056" title="All 2 branches missed.">                     &amp;&amp; !&quot;true&quot;.equalsIgnoreCase(modelPublisherAssertion.getToCheck())) {</span>
+<span class="nc" id="L1057">                        apiAssertionStatusItem.setCompletionStatus(CompletionStatus.STATUS_BOTH_INCOMPLETE);</span>
+                }
+
+<span class="fc" id="L1060">                org.uddi.api_v3.KeysOwned keysOwned = new org.uddi.api_v3.KeysOwned();</span>
+
+                //converting resultList to simple List
+<span class="fc" id="L1063">                List&lt;String&gt; businessKeyList = new ArrayList&lt;String&gt;();</span>
+<span class="fc bfc" id="L1064" title="All 2 branches covered.">                for (Object businessKey : businessKeys) {</span>
+<span class="fc" id="L1065">                        businessKeyList.add(String.valueOf(businessKey));</span>
+<span class="fc" id="L1066">                }</span>
+<span class="fc" id="L1067">                Collections.sort(businessKeyList);</span>
+<span class="pc bpc" id="L1068" title="1 of 2 branches missed.">                if (Collections.binarySearch(businessKeyList, modelPublisherAssertion.getBusinessEntityByFromKey().getEntityKey()) &gt;= 0) {</span>
+<span class="fc" id="L1069">                        keysOwned.setFromKey(modelPublisherAssertion.getBusinessEntityByFromKey().getEntityKey());</span>
+                }
+
+<span class="pc bpc" id="L1072" title="1 of 2 branches missed.">                if (Collections.binarySearch(businessKeyList, modelPublisherAssertion.getBusinessEntityByToKey().getEntityKey()) &gt;= 0) {</span>
+<span class="nc" id="L1073">                        keysOwned.setToKey(modelPublisherAssertion.getBusinessEntityByToKey().getEntityKey());</span>
+                }
+<span class="pc bpc" id="L1075" title="3 of 4 branches missed.">                if (keysOwned.getFromKey() == null &amp;&amp; keysOwned.getToKey() == null) {</span>
+<span class="nc" id="L1076">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.invalidKey.KeysOwned&quot;));</span>
+                }
+<span class="fc" id="L1078">                apiAssertionStatusItem.setKeysOwned(keysOwned);</span>
+<span class="fc" id="L1079">        }</span>
+
+        public static void mapRelatedBusinessInfo(org.apache.juddi.model.PublisherAssertion modelPublisherAssertion,
+             org.apache.juddi.model.BusinessEntity modelRelatedBusiness,
+             org.uddi.api_v3.Direction direction,
+             org.uddi.api_v3.RelatedBusinessInfo apiRelatedBusinessInfo)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L1087">                apiRelatedBusinessInfo.setBusinessKey(modelRelatedBusiness.getEntityKey());</span>
+
+<span class="fc" id="L1089">                mapBusinessNames(modelRelatedBusiness.getBusinessNames(), apiRelatedBusinessInfo.getName());</span>
+<span class="fc" id="L1090">                mapBusinessDescriptions(modelRelatedBusiness.getBusinessDescrs(), apiRelatedBusinessInfo.getDescription());</span>
+
+<span class="fc" id="L1092">                org.uddi.api_v3.SharedRelationships sharedRelationships = new org.uddi.api_v3.SharedRelationships();</span>
+<span class="fc" id="L1093">                sharedRelationships.setDirection(direction);</span>
+
+<span class="fc" id="L1095">                org.uddi.api_v3.KeyedReference keyedRef = new org.uddi.api_v3.KeyedReference();</span>
+<span class="fc" id="L1096">                keyedRef.setTModelKey(modelPublisherAssertion.getTmodelKey());</span>
+<span class="fc" id="L1097">                keyedRef.setKeyName(modelPublisherAssertion.getKeyName());</span>
+<span class="fc" id="L1098">                keyedRef.setKeyValue(modelPublisherAssertion.getKeyValue());</span>
+<span class="fc" id="L1099">                sharedRelationships.getKeyedReference().add(keyedRef);</span>
+
+<span class="fc" id="L1101">                apiRelatedBusinessInfo.getSharedRelationships().add(sharedRelationships);</span>
+<span class="fc" id="L1102">        }</span>
+
+        public static void mapOperationalInfo(UddiEntity modelUddiEntity,
+             OperationalInfo apiOperationalInfo)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L1108">                apiOperationalInfo.setCreated(TypeConvertor.convertDateToXMLGregorianCalendar(modelUddiEntity.getCreated()));</span>
+<span class="fc" id="L1109">                apiOperationalInfo.setModified(TypeConvertor.convertDateToXMLGregorianCalendar(modelUddiEntity.getModified()));</span>
+<span class="fc" id="L1110">                apiOperationalInfo.setModifiedIncludingChildren(TypeConvertor.convertDateToXMLGregorianCalendar(modelUddiEntity.getModifiedIncludingChildren()));</span>
+<span class="fc" id="L1111">                apiOperationalInfo.setNodeID(modelUddiEntity.getNodeId());</span>
+<span class="fc" id="L1112">                apiOperationalInfo.setAuthorizedName(modelUddiEntity.getAuthorizedName());</span>
+<span class="fc" id="L1113">                apiOperationalInfo.setEntityKey(modelUddiEntity.getEntityKey());</span>
+<span class="fc" id="L1114">        }</span>
+
+        public static void mapSubscription(org.apache.juddi.model.Subscription modelSubscription,
+             org.uddi.sub_v3.Subscription apiSubscription)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L1120">                apiSubscription.setSubscriptionKey(modelSubscription.getSubscriptionKey());</span>
+<span class="fc" id="L1121">                apiSubscription.setBrief(modelSubscription.isBrief());</span>
+<span class="fc" id="L1122">                apiSubscription.setExpiresAfter(TypeConvertor.convertDateToXMLGregorianCalendar(modelSubscription.getExpiresAfter()));</span>
+<span class="fc" id="L1123">                apiSubscription.setBindingKey(modelSubscription.getBindingKey());</span>
+<span class="fc" id="L1124">                apiSubscription.setMaxEntities(modelSubscription.getMaxEntities());</span>
+<span class="fc" id="L1125">                apiSubscription.setNotificationInterval(TypeConvertor.convertStringToDuration(modelSubscription.getNotificationInterval()));</span>
+
+                try {
+<span class="fc" id="L1128">                        SubscriptionFilter existingFilter = (SubscriptionFilter) JAXBMarshaller.unmarshallFromString(modelSubscription.getSubscriptionFilter(), JAXBMarshaller.PACKAGE_SUBSCRIPTION);</span>
+<span class="fc" id="L1129">                        apiSubscription.setSubscriptionFilter(existingFilter);</span>
+<span class="nc" id="L1130">                } catch (JAXBException e) {</span>
+<span class="nc" id="L1131">                        logger.error(&quot;JAXB Exception while marshalling subscription filter&quot;, e);</span>
+<span class="nc" id="L1132">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.Unspecified&quot;));</span>
+<span class="fc" id="L1133">                }</span>
+<span class="fc" id="L1134">        }</span>
+
+        public static void mapClientSubscriptionInfo(org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo,
+             org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo, EntityManager em)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L1140">                apiClientSubscriptionInfo.setSubscriptionKey(modelClientSubscriptionInfo.getSubscriptionKey());</span>
+<span class="fc" id="L1141">                GregorianCalendar gcal = new GregorianCalendar();</span>
+<span class="fc" id="L1142">                gcal.setTimeInMillis(modelClientSubscriptionInfo.getLastNotified().getTime());</span>
+                try {
+<span class="fc" id="L1144">                        apiClientSubscriptionInfo.setLastModified(DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal));</span>
+<span class="nc" id="L1145">                } catch (DatatypeConfigurationException ex) {</span>
+<span class="nc" id="L1146">                        logger.warn(&quot;unable to create DatatypeFactory&quot;, ex);</span>
+<span class="fc" id="L1147">                }</span>
+
+<span class="pc bpc" id="L1149" title="1 of 2 branches missed.">                if (modelClientSubscriptionInfo.getFromClerk() != null) {</span>
+<span class="fc" id="L1150">                        org.apache.juddi.api_v3.Clerk apiFromClerk = new org.apache.juddi.api_v3.Clerk();</span>
+<span class="fc" id="L1151">                        mapClerk(modelClientSubscriptionInfo.getFromClerk(), apiFromClerk,em);</span>
+<span class="fc" id="L1152">                        apiClientSubscriptionInfo.setFromClerk(apiFromClerk);</span>
+                }
+<span class="pc bpc" id="L1154" title="1 of 2 branches missed.">                if (modelClientSubscriptionInfo.getToClerk() != null) {</span>
+<span class="nc" id="L1155">                        org.apache.juddi.api_v3.Clerk apiToClerk = new org.apache.juddi.api_v3.Clerk();</span>
+<span class="nc" id="L1156">                        mapClerk(modelClientSubscriptionInfo.getToClerk(), apiToClerk,em);</span>
+<span class="nc" id="L1157">                        apiClientSubscriptionInfo.setToClerk(apiToClerk);</span>
+                }
+<span class="fc" id="L1159">        }</span>
+
+        public static void mapClerk(org.apache.juddi.model.Clerk modelClerk,
+             org.apache.juddi.api_v3.Clerk apiClerk,EntityManager em)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L1165">                apiClerk.setName(modelClerk.getClerkName());</span>
+<span class="fc" id="L1166">                apiClerk.setPassword(modelClerk.getCred());</span>
+<span class="fc" id="L1167">                apiClerk.setPublisher(modelClerk.getPublisherId());</span>
+<span class="pc bpc" id="L1168" title="1 of 2 branches missed.">                if (modelClerk.getNode() != null) {</span>
+<span class="fc" id="L1169">                        org.apache.juddi.api_v3.Node apiNode = new org.apache.juddi.api_v3.Node();</span>
+<span class="fc" id="L1170">                        mapNode(</span>
+<span class="fc" id="L1171">                                em.find(org.apache.juddi.model.Node.class, modelClerk.getNode()) </span>
+                               , apiNode);
+<span class="fc" id="L1173">                        apiClerk.setNode(apiNode);</span>
+                }
+<span class="fc" id="L1175">        }</span>
+
+        public static void mapNode(org.apache.juddi.model.Node modelNode,
+             org.apache.juddi.api_v3.Node apiNode)
+             throws DispositionReportFaultMessage {
+
+<span class="fc" id="L1181">                apiNode.setCustodyTransferUrl(modelNode.getCustodyTransferUrl());</span>
+<span class="fc" id="L1182">                apiNode.setFactoryInitial(modelNode.getFactoryInitial());</span>
+<span class="fc" id="L1183">                apiNode.setFactoryNamingProvider(modelNode.getFactoryNamingProvider());</span>
+<span class="fc" id="L1184">                apiNode.setFactoryURLPkgs(modelNode.getFactoryURLPkgs());</span>
+<span class="fc" id="L1185">                apiNode.setInquiryUrl(modelNode.getInquiryUrl());</span>
+<span class="fc" id="L1186">                apiNode.setJuddiApiUrl(modelNode.getJuddiApiUrl());</span>
+<span class="fc" id="L1187">                apiNode.setName(modelNode.getName());</span>
+<span class="fc" id="L1188">                apiNode.setClientName(modelNode.getClientName());</span>
+<span class="fc" id="L1189">                apiNode.setProxyTransport(modelNode.getProxyTransport());</span>
+<span class="fc" id="L1190">                apiNode.setPublishUrl(modelNode.getPublishUrl());</span>
+<span class="fc" id="L1191">                apiNode.setSecurityUrl(modelNode.getSecurityUrl());</span>
+<span class="fc" id="L1192">                apiNode.setSubscriptionUrl(modelNode.getSubscriptionUrl());</span>
+<span class="fc" id="L1193">                apiNode.setSubscriptionListenerUrl(modelNode.getSubscriptionListenerUrl());</span>
+<span class="fc" id="L1194">                apiNode.setReplicationUrl(modelNode.getReplicationUrl());</span>
+<span class="fc" id="L1195">        }</span>
+
+        private static Object convertDataToTransformContent(String type, byte[] xformBytes) throws RuntimeException {
+                Object transformObject;
+<span class="fc bfc" id="L1199" title="All 2 branches covered.">                if (type.equals(String.class.getSimpleName())) {</span>
+                        try {
+<span class="fc" id="L1201">                                transformObject = new String(xformBytes, &quot;UTF-8&quot;);</span>
+<span class="nc" id="L1202">                        } catch (Exception e) {</span>
+<span class="nc" id="L1203">                                throw new RuntimeException(&quot;Error decoding string due to: &quot; + e.getMessage(), e);</span>
+<span class="fc" id="L1204">                        }</span>
+<span class="pc bpc" id="L1205" title="1 of 2 branches missed.">                } else if (type.equals(byte[].class.getSimpleName())) {</span>
+<span class="nc" id="L1206">                        transformObject = xformBytes;</span>
+<span class="pc bpc" id="L1207" title="1 of 2 branches missed.">                } else if (type.equals(Element.class.getCanonicalName())) {</span>
+<span class="fc" id="L1208">                        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();</span>
+                         try {
+<span class="fc" id="L1210">                                dbf.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, true);</span>
+<span class="fc" id="L1211">                                dbf.setNamespaceAware(true);</span>
+<span class="fc" id="L1212">                                dbf.setXIncludeAware(true);</span>
+
+<span class="fc" id="L1214">                                DocumentBuilder db = dbf.newDocumentBuilder();</span>
+<span class="fc" id="L1215">                                Document doc = db.parse(new ByteArrayInputStream(xformBytes));</span>
+<span class="fc" id="L1216">                                transformObject = doc.getDocumentElement();</span>
+<span class="nc" id="L1217">                        } catch (Exception e) {</span>
+<span class="nc" id="L1218">                                throw new RuntimeException(&quot;Failed to parse element due to: &quot; + e.getMessage(), e);</span>
+<span class="fc" id="L1219">                        }</span>
+<span class="fc" id="L1220">                } else {</span>
+<span class="nc" id="L1221">                        throw new RuntimeException(&quot;Unrecognized type: &quot; + type);</span>
+                }
+<span class="fc" id="L1223">                return transformObject;</span>
+        }
+
+        public static void mapReplicationConfiguration(ReplicationConfiguration find, org.uddi.repl_v3.ReplicationConfiguration item) throws DispositionReportFaultMessage {
+<span class="fc" id="L1227">                item.setMaximumTimeToGetChanges(find.getMaximumTimeToGetChanges());</span>
+<span class="fc" id="L1228">                item.setMaximumTimeToSyncRegistry(find.getMaximumTimeToSyncRegistry());</span>
+<span class="fc" id="L1229">                item.setSerialNumber(find.getSerialNumber());</span>
+                
+<span class="fc" id="L1231">                List&lt;SignatureType&gt; sigs = new ArrayList&lt;SignatureType&gt;();</span>
+<span class="fc" id="L1232">                mapSignature(find.getSignatures(), sigs);</span>
+<span class="fc" id="L1233">                item.getSignature().addAll(sigs);</span>
+<span class="fc" id="L1234">                mapOperator(find.getOperator(), item.getOperator());</span>
+
+<span class="fc" id="L1236">                List&lt;org.apache.juddi.model.Contact&gt; modelContactList = new ArrayList&lt;org.apache.juddi.model.Contact&gt;();</span>
+<span class="fc" id="L1237">                org.uddi.api_v3.Contacts cs = new Contacts();</span>
+
+<span class="fc" id="L1239">                mapContacts(modelContactList, cs, new BusinessEntity());</span>
+<span class="fc" id="L1240">                item.setRegistryContact(new org.uddi.repl_v3.ReplicationConfiguration.RegistryContact());</span>
+<span class="pc bpc" id="L1241" title="1 of 2 branches missed.">                if (!cs.getContact().isEmpty()) {</span>
+                        
+<span class="nc" id="L1243">                        item.getRegistryContact().setContact(cs.getContact().get(0));</span>
+                }
+                else
+                {
+<span class="fc" id="L1247">                        item.getRegistryContact().setContact(new Contact());</span>
+<span class="fc" id="L1248">                        item.getRegistryContact().getContact().getPersonName().add(new PersonName(&quot;unknown&quot;, null));</span>
+                }
+<span class="fc" id="L1250">                item.setTimeOfConfigurationUpdate(find.getTimeOfConfigurationUpdate());</span>
+<span class="fc" id="L1251">                CommunicationGraph xcom = new CommunicationGraph();</span>
+
+<span class="fc" id="L1253">                mapCommunicationGraph(find, xcom);</span>
+<span class="fc" id="L1254">                item.setCommunicationGraph(xcom);</span>
+                //(List&lt;org.apache.juddi.model.Contact&gt; modelContactList, 
+                //org.uddi.api_v3.Contacts apiContacts,
+                //org.uddi.api_v3.BusinessEntity apiBusinessEntity) 
+<span class="fc" id="L1258">        }</span>
+
+        private static void mapOperator(List&lt;org.apache.juddi.model.Operator&gt; model, List&lt;Operator&gt; api) throws DispositionReportFaultMessage {
+<span class="fc bfc" id="L1261" title="All 2 branches covered.">                for (int i = 0; i &lt; model.size(); i++) {</span>
+<span class="fc" id="L1262">                        Operator op = new Operator();</span>
+<span class="fc" id="L1263">                        op.setOperatorNodeID(model.get(i).getOperatorNodeID());</span>
+<span class="fc" id="L1264">                        op.setSoapReplicationURL(model.get(i).getSoapReplicationURL());</span>
+<span class="pc bpc" id="L1265" title="3 of 4 branches missed.">                        switch (model.get(i).getOperatorStatus()) {</span>
+                                case NEW:
+<span class="nc" id="L1267">                                        op.setOperatorStatus(OperatorStatusType.NEW);</span>
+<span class="nc" id="L1268">                                        break;</span>
+                                case NORMAL:
+<span class="fc" id="L1270">                                        op.setOperatorStatus(OperatorStatusType.NORMAL);</span>
+<span class="fc" id="L1271">                                        break;</span>
+                                case RESIGNED:
+<span class="nc" id="L1273">                                        op.setOperatorStatus(OperatorStatusType.RESIGNED);</span>
+                                        break;
+                        }
+<span class="fc" id="L1276">                        Contacts c = new Contacts();</span>
+<span class="fc" id="L1277">                        mapContacts(model.get(i).getContact(), c, new BusinessEntity());</span>
+<span class="fc" id="L1278">                        op.getContact().addAll(c.getContact());</span>
+
+<span class="pc bpc" id="L1280" title="1 of 2 branches missed.">                        if (model.get(i).getKeyInfo() != null) {</span>
+<span class="pc bpc" id="L1281" title="1 of 2 branches missed.">                                for (int x = 0; x &lt; model.get(i).getKeyInfo().size(); x++) {</span>
+<span class="nc" id="L1282">                                        KeyInfoType apiKeyInfo = new KeyInfoType();</span>
+<span class="nc" id="L1283">                                        KeyInfo modelKeyInfo = model.get(i).getKeyInfo().get(x);</span>
+<span class="nc" id="L1284">                                        apiKeyInfo.setId(modelKeyInfo.getXmlID());</span>
+<span class="nc" id="L1285">                                        List&lt;KeyDataValue&gt; modelKeyDataValueList = modelKeyInfo.getKeyDataValue();</span>
+<span class="nc" id="L1286">                                        List&lt;Object&gt; apiX509KeyInfoList = apiKeyInfo.getContent();</span>
+<span class="nc" id="L1287">                                        mapModelKeyDataValue(modelKeyDataValueList, apiX509KeyInfoList);</span>
+<span class="nc" id="L1288">                                        op.getKeyInfo().add(apiKeyInfo);</span>
+                                }
+                        }
+<span class="fc" id="L1291">                        api.add(op);</span>
+                }
+
+<span class="fc" id="L1294">        }</span>
+
+        private static void mapCommunicationGraph(org.apache.juddi.model.ReplicationConfiguration model,
+             CommunicationGraph api) {
+
+<span class="fc" id="L1299">                mapEdge(model.getEdge(), api.getEdge());</span>
+<span class="fc" id="L1300">                mapControlMessages(model.getControlMessage(), api.getControlledMessage());</span>
+<span class="fc" id="L1301">                mapEdgeNodes(model.getNode(), api.getNode());</span>
+
+<span class="fc" id="L1303">        }</span>
+
+        private static void mapEdge(List&lt;Edge&gt; model, List&lt;CommunicationGraph.Edge&gt; api) {
+<span class="fc" id="L1306">                Iterator&lt;Edge&gt; it = model.iterator();</span>
+<span class="fc bfc" id="L1307" title="All 2 branches covered.">                while (it.hasNext()) {</span>
+<span class="fc" id="L1308">                        Edge modelEdge = it.next();</span>
+
+<span class="fc" id="L1310">                        CommunicationGraph.Edge apiEdge = new CommunicationGraph.Edge();</span>
+<span class="fc" id="L1311">                        apiEdge.setMessageReceiver(modelEdge.getMessageReceiver());</span>
+<span class="fc" id="L1312">                        apiEdge.setMessageSender(modelEdge.getMessageSender());</span>
+
+<span class="fc" id="L1314">                        Iterator&lt;ControlMessage&gt; it2 = modelEdge.getMessages().iterator();</span>
+<span class="fc bfc" id="L1315" title="All 2 branches covered.">                        while (it2.hasNext()) {</span>
+<span class="fc" id="L1316">                                apiEdge.getMessage().add(it2.next().getMessage());</span>
+                        }
+<span class="fc" id="L1318">                        Iterator&lt;EdgeReceiverAlternate&gt; it3 = modelEdge.getMessageReceiverAlternate().iterator();</span>
+<span class="fc bfc" id="L1319" title="All 2 branches covered.">                        while (it3.hasNext()) {</span>
+<span class="fc" id="L1320">                                apiEdge.getMessageReceiverAlternate().add(it3.next().getReceiverAlternate());</span>
+                        }
+
+<span class="fc" id="L1323">                        api.add(apiEdge);</span>
+
+<span class="fc" id="L1325">                }</span>
+<span class="fc" id="L1326">        }</span>
+
+        private static void mapControlMessages(List&lt;ControlMessage&gt; model, List&lt;String&gt; api) {
+<span class="fc" id="L1329">                Iterator&lt;ControlMessage&gt; it = model.iterator();</span>
+<span class="fc bfc" id="L1330" title="All 2 branches covered.">                while (it.hasNext()) {</span>
+<span class="fc" id="L1331">                        api.add(it.next().getMessage());</span>
+                }
+<span class="fc" id="L1333">        }</span>
+
+        private static void mapEdgeNodes(List&lt;ReplicationConfigurationNode&gt; model, List&lt;String&gt; api) {
+<span class="fc" id="L1336">                Iterator&lt;ReplicationConfigurationNode&gt; it = model.iterator();</span>
+<span class="fc bfc" id="L1337" title="All 2 branches covered.">                while (it.hasNext()) {</span>
+<span class="fc" id="L1338">                        api.add(it.next().getNodeName());</span>
+                }
+<span class="fc" id="L1340">        }</span>
+
+        public static ChangeRecord mapChangeRecord(org.apache.juddi.model.ChangeRecord cr) {
+<span class="pc bpc" id="L1343" title="1 of 2 branches missed.">                if (cr == null) {</span>
+<span class="nc" id="L1344">                        return null;</span>
+                }
+<span class="fc" id="L1346">                ChangeRecord ret = null;</span>
+
+<span class="fc" id="L1348">                StringReader sr = null;</span>
+                try {
+<span class="fc" id="L1350">                        sr = new StringReader(new String(cr.getContents(), &quot;UTF8&quot;));</span>
+<span class="nc" id="L1351">                } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L1352">                        Logger.getLogger(MappingModelToApi.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="fc" id="L1353">                }</span>
+<span class="fc" id="L1354">                ret = (ChangeRecord) XmlUtils.unmarshal(sr, ChangeRecord.class);</span>
+                //secret sauce here, if this is -1, that means that the record originated at this node and needs to be populated with the databases record id
+<span class="pc bpc" id="L1356" title="2 of 4 branches missed.">                if (cr.getOriginatingUSN() == null || cr.getOriginatingUSN() == -1L) {</span>
+<span class="nc" id="L1357">                        ret.setChangeID(new ChangeRecordIDType(cr.getNodeID(), cr.getId()));</span>
+                } else {
+<span class="fc" id="L1359">                        ret.setChangeID(new ChangeRecordIDType(cr.getNodeID(), cr.getOriginatingUSN()));</span>
+                }
+<span class="fc" id="L1361">                return ret;</span>
+
+        }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

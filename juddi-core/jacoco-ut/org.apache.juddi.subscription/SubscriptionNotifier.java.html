@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SubscriptionNotifier.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.subscription</a> &gt; <span class="el_source">SubscriptionNotifier.java</span></div><h1>SubscriptionNotifier.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.subscription;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.impl.ServiceCounterLifecycleResource;
+import org.apache.juddi.api.impl.UDDIPublicationImpl;
+import org.apache.juddi.api.impl.UDDISecurityImpl;
+import org.apache.juddi.api.impl.UDDIServiceCounter;
+import org.apache.juddi.api.impl.UDDISubscriptionImpl;
+import org.apache.juddi.api_v3.AccessPointType;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.config.Property;
+import org.apache.juddi.model.Subscription;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.subscription.notify.Notifier;
+import org.apache.juddi.subscription.notify.NotifierFactory;
+import org.uddi.sub_v3.CoveragePeriod;
+import org.uddi.sub_v3.GetSubscriptionResults;
+import org.uddi.sub_v3.SubscriptionResultsList;
+import org.uddi.subr_v3.NotifySubscriptionListener;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ *
+ * @author &lt;a href=&quot;mailto:kstam@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ *
+ */
+public class SubscriptionNotifier extends TimerTask {
+
+<span class="fc" id="L64">        private static final Log log = LogFactory.getLog(SubscriptionNotifier.class);</span>
+<span class="fc" id="L65">        private Timer timer = null;</span>
+<span class="fc" id="L66">        private final long startBuffer = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_START_BUFFER, 20000l); // 20s startup delay default </span>
+<span class="fc" id="L67">        private final long interval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default</span>
+<span class="fc" id="L68">        private final long acceptableLagTime = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME, 1000l); //1000 milliseconds</span>
+<span class="fc" id="L69">        private final int maxTries = AppConfig.getConfiguration().getInt(Property.JUDDI_NOTIFICATION_MAX_TRIES, 3);</span>
+<span class="fc" id="L70">        private final long badListResetInterval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_LIST_RESET_INTERVAL, 1000l * 3600); //one hour</span>
+        /**
+         * @since 3.2
+         */
+<span class="fc" id="L74">        private final boolean sendToken = AppConfig.getConfiguration().getBoolean(Property.JUDDI_NOTIFICATION_SENDAUTHTOKEN, false);</span>
+<span class="fc" id="L75">        private final UDDISubscriptionImpl subscriptionImpl = new UDDISubscriptionImpl();</span>
+<span class="fc" id="L76">        private final Boolean alwaysNotify = false;</span>
+<span class="fc" id="L77">        private Date desiredDate = null;</span>
+        private int lastUpdateCounter;
+<span class="fc" id="L79">        private final UDDIServiceCounter serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDIPublicationImpl.class);</span>
+<span class="fc" id="L80">        private final String[] attributes = {</span>
+                &quot;save_business&quot;, &quot;save_service&quot;, &quot;save_binding&quot;, &quot;save_tmodel&quot;,
+                &quot;delete_business&quot;, &quot;delete_service&quot;, &quot;delete_binding&quot;, &quot;delete_tmodel&quot;,
+                &quot;add_publisherassertions&quot;, &quot;set_publisherassertions&quot;, &quot;delete_publisherassertions&quot;
+        };
+<span class="fc" id="L85">        private static Map&lt;String, Integer&gt; badNotifications = new ConcurrentHashMap&lt;String, Integer&gt;();</span>
+<span class="fc" id="L86">        private static Date lastBadNotificationReset = new Date();</span>
+
+        /**
+         * default constructor
+         *
+         * @throws ConfigurationException
+         */
+        public SubscriptionNotifier() throws ConfigurationException {
+<span class="fc" id="L94">                super();</span>
+<span class="fc" id="L95">                timer = new Timer(true);</span>
+<span class="fc" id="L96">                timer.scheduleAtFixedRate(this, startBuffer, interval);</span>
+<span class="fc" id="L97">        }</span>
+
+        @Override
+        public boolean cancel() {
+<span class="fc" id="L101">                timer.cancel();</span>
+<span class="fc" id="L102">                return super.cancel();</span>
+        }
+
+        /**
+         * If the CRUD methods on the publication API where not called, this
+         * registry node does not contain changes. If the registry database is
+         * shared with other registry nodes and one of those registries pushed
+         * in a change, then that registry node will take care of sending out
+         * notifications.
+         *
+         * @return true/false
+         */
+        protected boolean registryMayContainUpdates() {
+<span class="fc" id="L115">                boolean isUpdated = false;</span>
+<span class="fc" id="L116">                int updateCounter = 0;</span>
+		//if the desiredDate is set it means that we've declined sending out a notification before
+                //because the a client did not want a notification yet. However if this desired
+                //notification time has come we should try sending out the notification now.
+<span class="pc bpc" id="L120" title="3 of 4 branches missed.">                if (desiredDate != null &amp;&amp; new Date().getTime() &gt; desiredDate.getTime()) {</span>
+<span class="nc" id="L121">                        return true;</span>
+                }
+                try {
+<span class="fc bfc" id="L124" title="All 2 branches covered.">                        for (String attribute : attributes) {</span>
+<span class="fc" id="L125">                                String counter = serviceCounter.getAttribute(attribute + &quot; successful queries&quot;).toString();</span>
+<span class="fc" id="L126">                                updateCounter += Integer.valueOf(counter);</span>
+                        }
+			// if the counts are not the same something has changed, 
+                        // this accounts for the case where the counters where reset.
+<span class="fc bfc" id="L130" title="All 2 branches covered.">                        if (updateCounter != lastUpdateCounter) {</span>
+<span class="fc" id="L131">                                lastUpdateCounter = updateCounter;</span>
+<span class="fc" id="L132">                                isUpdated = true;</span>
+                        }
+<span class="nc" id="L134">                } catch (Exception e) {</span>
+<span class="nc" id="L135">                        log.error(e.getMessage(), e);</span>
+<span class="fc" id="L136">                }</span>
+<span class="fc" id="L137">                return isUpdated;</span>
+        }
+
+        @Override
+        public synchronized void run() {
+<span class="pc bpc" id="L142" title="2 of 4 branches missed.">                if (badListResetInterval &gt; 0 &amp;&amp; new Date().getTime() &gt; lastBadNotificationReset.getTime() + badListResetInterval) {</span>
+<span class="nc" id="L143">                        badNotifications = new ConcurrentHashMap&lt;String, Integer&gt;();</span>
+<span class="nc" id="L144">                        lastBadNotificationReset = new Date();</span>
+<span class="nc" id="L145">                        log.debug(&quot;badNotificationList was reset&quot;);</span>
+                }
+<span class="pc bpc" id="L147" title="3 of 6 branches missed.">                if ((firedOnTime(scheduledExecutionTime()) || alwaysNotify) &amp;&amp; registryMayContainUpdates()) {</span>
+<span class="fc" id="L148">                        long startTime = System.currentTimeMillis();</span>
+<span class="fc" id="L149">                        desiredDate = null;</span>
+<span class="fc" id="L150">                        log.info(&quot;Start Notification background task; checking if subscription notifications need to be send out..&quot;);</span>
+
+<span class="fc" id="L152">                        Collection&lt;Subscription&gt; subscriptions = getAllAsyncSubscriptions();</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">                        for (Subscription subscription : subscriptions) {</span>
+
+<span class="pc bpc" id="L155" title="2 of 4 branches missed.">                                if (subscription.getExpiresAfter() == null || subscription.getExpiresAfter().getTime() &gt; startTime</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">                                        || !isTemporarilyDisabled(subscription.getSubscriptionKey())) {</span>
+                                        try {
+						//build a query with a coverage period from the lastNotified time to 
+                                                //now (the scheduled Execution time)
+<span class="fc" id="L160">                                                Date notificationDate = new Date(scheduledExecutionTime());</span>
+<span class="fc" id="L161">                                                GetSubscriptionResults getSubscriptionResults</span>
+<span class="fc" id="L162">                                                        = buildGetSubscriptionResults(subscription, notificationDate);</span>
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">                                                if (getSubscriptionResults != null) {</span>
+<span class="fc" id="L164">                                                        getSubscriptionResults.setSubscriptionKey(subscription.getSubscriptionKey());</span>
+<span class="fc" id="L165">                                                        UddiEntityPublisher publisher = new UddiEntityPublisher();</span>
+<span class="fc" id="L166">                                                        publisher.setAuthorizedName(subscription.getAuthorizedName());</span>
+<span class="fc" id="L167">                                                        SubscriptionResultsList resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);</span>
+<span class="fc" id="L168">                                                        String token = resultList.getChunkToken();</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">                                                        if (resultListContainsChanges(resultList)) {</span>
+<span class="fc" id="L170">                                                                log.info(&quot;We have a change and need to notify &quot; + subscription.getSubscriptionKey());</span>
+<span class="fc" id="L171">                                                                resultList.setChunkToken(null);</span>
+                                                                //Note that the chunkToken is not returned with this structure for this API.  
+<span class="fc" id="L173">                                                                notify(getSubscriptionResults, resultList, notificationDate);</span>
+                                                        } else {
+<span class="fc" id="L175">                                                                log.info(&quot;No changes where recorded, no need to notify.&quot;);</span>
+                                                        }
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">                                                        while (!token.equalsIgnoreCase(&quot;0&quot;)) {</span>
+<span class="nc" id="L178">                                                                resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">                                                                if (resultListContainsChanges(resultList)) {</span>
+<span class="nc" id="L180">                                                                        log.info(&quot;We have a change and need to notify &quot; + subscription.getSubscriptionKey());</span>
+<span class="nc" id="L181">                                                                        resultList.setChunkToken(null);</span>
+                                                                        //Note that the chunkToken is not returned with this structure for this API.  
+<span class="nc" id="L183">                                                                        notify(getSubscriptionResults, resultList, notificationDate);</span>
+                                                                } else {
+<span class="nc" id="L185">                                                                        log.info(&quot;No changes where recorded, no need to notify.&quot;);</span>
+                                                                }
+                                                        }
+
+                                                }
+<span class="nc" id="L190">                                        } catch (Exception e) {</span>
+<span class="nc" id="L191">                                                log.error(&quot;Could not obtain subscriptionResult for subscriptionKey &quot;</span>
+<span class="nc" id="L192">                                                        + subscription.getSubscriptionKey() + &quot;. &quot; + e.getMessage(), e);</span>
+<span class="pc" id="L193">                                        }</span>
+                                } else {
+                                        // the subscription expired, we should delete it
+<span class="nc" id="L196">                                        log.info(&quot;Subcription with key &quot; + subscription.getSubscriptionKey()</span>
+<span class="nc" id="L197">                                                + &quot; expired &quot; + subscription.getExpiresAfter());</span>
+<span class="nc" id="L198">                                        deleteSubscription(subscription);</span>
+                                }
+<span class="fc" id="L200">                        }</span>
+<span class="fc" id="L201">                        long endTime = System.currentTimeMillis();</span>
+
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">                        if ((endTime - startTime) &gt; interval) {</span>
+<span class="nc" id="L204">                                log.info(&quot;Notification background task duration exceeds the JUDDI_NOTIFICATION_INTERVAL&quot;</span>
+                                        + &quot; of &quot; + interval + &quot;. Notification background task took &quot;
+                                        + (endTime - startTime) + &quot; milliseconds.&quot;);
+                        } else {
+<span class="fc" id="L208">                                log.info(&quot;Notification background task took &quot; + (endTime - startTime) + &quot; milliseconds.&quot;);</span>
+                        }
+<span class="fc" id="L210">                } else {</span>
+<span class="fc" id="L211">                        log.debug(&quot;Skipping current notification cycle because lagtime is too great.&quot;);</span>
+                }
+<span class="fc" id="L213">        }</span>
+
+        /**
+         * Checks to see that the event are fired on time. If they are late this
+         * may indicate that the server is under load. The acceptableLagTime is
+         * configurable using the &quot;juddi.notification.acceptable.lagtime&quot;
+         * property and is defaulted to 500ms. A negative value means that you
+         * do not care about the lag time and you simply always want to go do
+         * the notification work.
+         *
+         * @param scheduleExecutionTime
+         * @return true if the server is within the acceptable latency lag.
+         */
+        private boolean firedOnTime(long scheduleExecutionTime) {
+<span class="fc" id="L227">                long lagTime = System.currentTimeMillis() - scheduleExecutionTime;</span>
+<span class="pc bpc" id="L228" title="3 of 4 branches missed.">                if (lagTime &lt;= acceptableLagTime || acceptableLagTime &lt; 0) {</span>
+<span class="fc" id="L229">                        return true;</span>
+                } else {
+<span class="nc" id="L231">                        log.debug(&quot;NotificationTimer is lagging &quot; + lagTime + &quot; milli seconds behind. A lag time &quot;</span>
+                                + &quot;which exceeds an acceptable lagtime of &quot; + acceptableLagTime + &quot;ms indicates &quot;
+                                + &quot;that the registry server is under load or was in sleep mode. We are therefore skipping this notification &quot;
+                                + &quot;cycle.&quot;);
+<span class="nc" id="L235">                        return false;</span>
+                }
+        }
+
+        protected GetSubscriptionResults buildGetSubscriptionResults(Subscription subscription, Date endPoint)
+                throws DispositionReportFaultMessage, DatatypeConfigurationException {
+
+<span class="fc" id="L242">                GetSubscriptionResults getSubscriptionResults = null;</span>
+<span class="fc" id="L243">                Duration duration = TypeConvertor.convertStringToDuration(subscription.getNotificationInterval());</span>
+<span class="fc" id="L244">                Date startPoint = subscription.getLastNotified();</span>
+<span class="fc" id="L245">                Date nextDesiredNotificationDate = null;</span>
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">                if (startPoint == null) {</span>
+<span class="fc" id="L247">                        startPoint = subscription.getCreateDate();</span>
+                }
+<span class="fc" id="L249">                nextDesiredNotificationDate = new Date(startPoint.getTime());</span>
+<span class="fc" id="L250">                duration.addTo(nextDesiredNotificationDate);</span>
+		//nextDesiredNotificationDate = lastTime + the Interval Duration, which should be:
+                //AFTER the lastNotified time and BEFORE the endTime (current time). If it is
+                //after the endTime, then the user does not want a notification yet, so we accumulate.
+<span class="pc bpc" id="L254" title="5 of 6 branches missed.">                if (subscription.getLastNotified() == null || nextDesiredNotificationDate.after(startPoint) &amp;&amp; nextDesiredNotificationDate.before(endPoint)) {</span>
+<span class="fc" id="L255">                        getSubscriptionResults = new GetSubscriptionResults();</span>
+<span class="fc" id="L256">                        CoveragePeriod period = new CoveragePeriod();</span>
+<span class="fc" id="L257">                        GregorianCalendar calendar = new GregorianCalendar();</span>
+<span class="fc" id="L258">                        calendar.setTimeInMillis(startPoint.getTime());</span>
+<span class="fc" id="L259">                        period.setStartPoint(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));</span>
+<span class="fc" id="L260">                        calendar.setTimeInMillis(endPoint.getTime());</span>
+<span class="fc" id="L261">                        period.setEndPoint(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));</span>
+<span class="pc bpc" id="L262" title="1 of 2 branches missed.">                        if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L263">                                log.debug(&quot;Period &quot; + period.getStartPoint() + &quot; &quot; + period.getEndPoint());</span>
+                        }
+<span class="fc" id="L265">                        getSubscriptionResults.setCoveragePeriod(period);</span>
+<span class="fc" id="L266">                } else {</span>
+<span class="nc" id="L267">                        log.info(&quot;Client does not yet want a notification. The next desidered notification Date &quot; + nextDesiredNotificationDate + &quot;. The current interval [&quot;</span>
+                                + startPoint + &quot; , &quot; + endPoint + &quot;] therefore skipping this notification cycle.&quot;);
+<span class="nc bnc" id="L269" title="All 4 branches missed.">                        if (desiredDate == null || nextDesiredNotificationDate.getTime() &lt; desiredDate.getTime()) {</span>
+<span class="nc" id="L270">                                desiredDate = nextDesiredNotificationDate;</span>
+                        }
+                }
+<span class="fc" id="L273">                return getSubscriptionResults;</span>
+
+        }
+
+        protected boolean resultListContainsChanges(SubscriptionResultsList resultList) {
+<span class="pc bpc" id="L278" title="1 of 2 branches missed.">                if (resultList == null) {</span>
+<span class="nc" id="L279">                        return false;</span>
+                }
+<span class="pc bpc" id="L281" title="2 of 4 branches missed.">                if (resultList.getBindingDetail() != null || resultList.getBusinessDetail() != null</span>
+<span class="pc bpc" id="L282" title="2 of 4 branches missed.">                        || resultList.getBusinessList() != null || resultList.getServiceDetail() != null</span>
+<span class="pc bpc" id="L283" title="1 of 4 branches missed.">                        || resultList.getServiceList() != null || resultList.getTModelDetail() != null</span>
+<span class="pc bpc" id="L284" title="2 of 4 branches missed.">                        || resultList.getTModelList() != null || resultList.getRelatedBusinessesList() != null</span>
+<span class="fc bfc" id="L285" title="All 2 branches covered.">                        || resultList.getAssertionStatusReport() !=null) {</span>
+<span class="fc" id="L286">                        return true;</span>
+                }
+                //When the response is 'brief', or when there are deleted only keyBags are used.
+<span class="pc bpc" id="L289" title="2 of 4 branches missed.">                if (resultList.getKeyBag() != null &amp;&amp; resultList.getKeyBag().size() &gt; 0) {</span>
+<span class="nc" id="L290">                        return true;</span>
+                }
+                //there are no changes to what was subscribed to
+<span class="fc" id="L293">                return false;</span>
+        }
+
+        /**
+         * Obtains all subscriptions in the system.
+         *
+         * @return Collection of All Subscriptions in the system.
+         */
+        @SuppressWarnings(&quot;unchecked&quot;)
+        protected Collection&lt;Subscription&gt; getAllAsyncSubscriptions() {
+<span class="fc" id="L303">                Collection&lt;Subscription&gt; subscriptions = null;</span>
+<span class="fc" id="L304">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L305">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L307">                        tx.begin();</span>
+<span class="fc" id="L308">                        Query query = em.createQuery(&quot;SELECT s FROM Subscription s WHERE s.bindingKey IS NOT NULL&quot;);</span>
+<span class="fc" id="L309">                        subscriptions = (Collection&lt;Subscription&gt;) query.getResultList();</span>
+<span class="fc" id="L310">                        tx.commit();</span>
+                } finally {
+<span class="pc bpc" id="L312" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L313">                                tx.rollback();</span>
+                        }
+<span class="pc" id="L315">                        em.close();</span>
+<span class="fc" id="L316">                }</span>
+<span class="fc" id="L317">                return subscriptions;</span>
+        }
+
+        /**
+         * Deletes the subscription. i.e. when it is expired.
+         *
+         * @param subscription
+         */
+        protected void deleteSubscription(Subscription subscription) {
+<span class="nc" id="L326">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="nc" id="L327">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="nc" id="L329">                        tx.begin();</span>
+<span class="nc" id="L330">                        em.remove(subscription);</span>
+<span class="nc" id="L331">                        tx.commit();</span>
+                } finally {
+<span class="nc bnc" id="L333" title="All 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L334">                                tx.rollback();</span>
+                        }
+<span class="nc" id="L336">                        em.close();</span>
+<span class="nc" id="L337">                }</span>
+<span class="nc" id="L338">        }</span>
+
+        /**
+         * Sends out the notifications.
+         *
+         * @param getSubscriptionResults
+         * @param resultList
+         * @param notificationDate
+         */
+        protected void notify(GetSubscriptionResults getSubscriptionResults, SubscriptionResultsList resultList, Date notificationDate) {
+<span class="fc" id="L348">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L349">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L351">                        String subscriptionKey = resultList.getSubscription().getSubscriptionKey();</span>
+<span class="fc" id="L352">                        org.apache.juddi.model.Subscription modelSubscription</span>
+<span class="fc" id="L353">                                = em.find(org.apache.juddi.model.Subscription.class, subscriptionKey);</span>
+<span class="fc" id="L354">                        Date lastNotifiedDate = modelSubscription.getLastNotified();</span>
+                        //now log to the db that we are sending the notification.
+<span class="fc" id="L356">                        tx.begin();</span>
+<span class="fc" id="L357">                        modelSubscription.setLastNotified(notificationDate);</span>
+<span class="fc" id="L358">                        em.persist(modelSubscription);</span>
+<span class="fc" id="L359">                        tx.commit();</span>
+
+<span class="fc" id="L361">                        org.apache.juddi.model.BindingTemplate bindingTemplate = em.find(org.apache.juddi.model.BindingTemplate.class, modelSubscription.getBindingKey());</span>
+<span class="fc" id="L362">                        NotifySubscriptionListener body = new NotifySubscriptionListener();</span>
+//			if (resultList.getServiceList()!=null &amp;&amp; resultList.getServiceList().getServiceInfos()!=null &amp;&amp;
+//					resultList.getServiceList().getServiceInfos().getServiceInfo().size() == 0) {
+//				resultList.getServiceList().setServiceInfos(null);
+//			}
+<span class="fc" id="L367">                        body.setSubscriptionResultsList(resultList);</span>
+
+                         //TODO if the endpoint requires an auth token, look up the security endpoint of the remote registry
+                        //via ClientSubscriptionInfo
+<span class="pc bpc" id="L371" title="1 of 2 branches missed.">                        if (sendToken) {</span>
+<span class="nc" id="L372">                                String authorizedName = modelSubscription.getAuthorizedName();</span>
+<span class="nc" id="L373">                                UDDISecurityImpl security = new UDDISecurityImpl();</span>
+
+<span class="nc bnc" id="L375" title="All 2 branches missed.">                                if (authorizedName != null) { // add a security token if needed</span>
+                                        try {
+                                                //obtain a token for this publisher
+<span class="nc" id="L378">                                                org.uddi.api_v3.AuthToken token = security.getAuthToken(authorizedName);</span>
+<span class="nc" id="L379">                                                body.setAuthInfo(token.getAuthInfo());</span>
+<span class="nc" id="L380">                                        } catch (DispositionReportFaultMessage e) {</span>
+<span class="nc" id="L381">                                                body.setAuthInfo(&quot;Failed to generate token, please contact UDDI admin&quot;);</span>
+<span class="nc" id="L382">                                                log.error(e.getMessage(), e);</span>
+<span class="nc" id="L383">                                        }</span>
+                                }
+                        }
+
+<span class="pc bpc" id="L387" title="1 of 2 branches missed.">                        if (bindingTemplate != null) {</span>
+<span class="pc bpc" id="L388" title="1 of 2 branches missed.">                                if (AccessPointType.END_POINT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType())</span>
+<span class="nc bnc" id="L389" title="All 2 branches missed.">                                        || AccessPointType.WSDL_DEPLOYMENT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType())) {</span>
+                                        try {
+<span class="fc" id="L391">                                                Notifier notifier = new NotifierFactory().getNotifier(bindingTemplate);</span>
+<span class="pc bpc" id="L392" title="1 of 2 branches missed.">                                                if (notifier != null) {</span>
+<span class="fc" id="L393">                                                        log.info(&quot;Sending out notification to &quot; + bindingTemplate.getAccessPointUrl());</span>
+<span class="fc" id="L394">                                                        notifier.notifySubscriptionListener(body);</span>
+                                                        //there maybe more chunks we have to send
+<span class="fc" id="L396">                                                        String chunkToken = body.getSubscriptionResultsList().getChunkToken();</span>
+<span class="pc bpc" id="L397" title="1 of 2 branches missed.">                                                        while (chunkToken != null) {</span>
+<span class="nc" id="L398">                                                                UddiEntityPublisher publisher = new UddiEntityPublisher();</span>
+<span class="nc" id="L399">                                                                publisher.setAuthorizedName(modelSubscription.getAuthorizedName());</span>
+<span class="nc" id="L400">                                                                log.debug(&quot;Sending out next chunk: &quot; + chunkToken + &quot; to &quot; + bindingTemplate.getAccessPointUrl());</span>
+<span class="nc" id="L401">                                                                getSubscriptionResults.setChunkToken(chunkToken);</span>
+<span class="nc" id="L402">                                                                resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);</span>
+<span class="nc" id="L403">                                                                body.setSubscriptionResultsList(resultList);</span>
+<span class="nc bnc" id="L404" title="All 2 branches missed.">                                                                if (resultListContainsChanges(resultList)) //if (!IsEmpty(resultList))</span>
+                                                                {
+<span class="nc" id="L406">                                                                        notifier.notifySubscriptionListener(body);</span>
+                                                                }
+<span class="nc" id="L408">                                                                chunkToken = body.getSubscriptionResultsList().getChunkToken();</span>
+<span class="nc" id="L409">                                                        }</span>
+                                                        //successful notification so remove from the badNotificationList
+<span class="pc bpc" id="L411" title="1 of 2 branches missed.">                                                        if (badNotifications.containsKey(resultList.getSubscription().getSubscriptionKey())) {</span>
+<span class="nc" id="L412">                                                                badNotifications.remove(resultList.getSubscription().getSubscriptionKey());</span>
+                                                        }
+                                                }
+<span class="fc" id="L415">                                        } catch (Exception e) {</span>
+<span class="pc bpc" id="L416" title="1 of 2 branches missed.">                                                if (e.getCause() instanceof IOException) {</span>
+<span class="nc" id="L417">                                                        addBadNotificationToList(subscriptionKey, bindingTemplate.getAccessPointUrl());</span>
+                                                        //we could not notify so compensate the transaction above
+<span class="nc" id="L419">                                                        modelSubscription.setLastNotified(lastNotifiedDate);</span>
+<span class="nc" id="L420">                                                        tx.begin();</span>
+<span class="nc" id="L421">                                                        em.persist(modelSubscription);</span>
+<span class="nc" id="L422">                                                        tx.commit();</span>
+						//} else {
+                                                        //log.warn(&quot;Unexpected WebServiceException &quot; + e.getMessage() + e.getCause());
+                                                }
+<span class="fc" id="L426">                                                log.error(&quot;Unexpected notification exception:&quot; + e.getClass().getCanonicalName() + &quot; &quot; + e.getMessage() + &quot; &quot; + e.getCause());</span>
+<span class="fc" id="L427">                                                log.debug(&quot;Unexpected notification exception:&quot; + e.getClass().getCanonicalName() + &quot; &quot; + e.getMessage() + &quot; &quot; + e.getCause(), e);</span>
+<span class="fc" id="L428">                                        }</span>
+                                } else {
+<span class="nc" id="L430">                                        log.info(&quot;Binding &quot; + bindingTemplate.getEntityKey() + &quot; has an unsupported binding type of &quot;</span>
+<span class="nc" id="L431">                                                + bindingTemplate.getAccessPointType() + &quot;. Only &quot;</span>
+<span class="nc" id="L432">                                                + AccessPointType.END_POINT.toString() + &quot; and &quot;</span>
+<span class="nc" id="L433">                                                + AccessPointType.WSDL_DEPLOYMENT.toString() + &quot; are supported.&quot;);</span>
+<span class="nc" id="L434">                                        addBadNotificationToList(subscriptionKey, bindingTemplate.getAccessPointType() + &quot; not supported&quot;);</span>
+                                }
+                        } else {
+<span class="nc" id="L437">                                log.info(&quot;There is no valid binding template defined for this subscription: &quot; + modelSubscription.getBindingKey());</span>
+<span class="nc" id="L438">                                addBadNotificationToList(subscriptionKey, modelSubscription.getBindingKey() + &quot; not found&quot;);</span>
+                        }
+
+                } finally {
+<span class="pc bpc" id="L442" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L443">                                tx.rollback();</span>
+                        }
+<span class="pc" id="L445">                        em.close();</span>
+<span class="fc" id="L446">                }</span>
+<span class="fc" id="L447">        }</span>
+
+        protected UDDISubscriptionImpl getSubscriptionImpl() {
+<span class="fc" id="L450">                return subscriptionImpl;</span>
+        }
+
+        private boolean isTemporarilyDisabled(String subscriptionKey) {
+<span class="nc bnc" id="L454" title="All 6 branches missed.">                if (maxTries &gt; 0 &amp;&amp; badNotifications.containsKey(subscriptionKey) &amp;&amp; badNotifications.get(subscriptionKey) &gt; maxTries) {</span>
+<span class="nc" id="L455">                        log.debug(&quot;Subscription &quot; + subscriptionKey + &quot; is temperarily disabled. The notification endpoint&quot;</span>
+                                + &quot; could not be reached more then &quot; + maxTries + &quot; times&quot;);
+<span class="nc" id="L457">                        return true;</span>
+                }
+<span class="nc" id="L459">                return false;</span>
+        }
+
+        private int addBadNotificationToList(String subscriptionKey, String endPoint) {
+<span class="nc" id="L463">                Integer numberOfBadNotifications = 0;</span>
+<span class="nc bnc" id="L464" title="All 2 branches missed.">                if (badNotifications.containsKey(subscriptionKey)) {</span>
+<span class="nc" id="L465">                        numberOfBadNotifications = badNotifications.get(subscriptionKey);</span>
+                }
+<span class="nc" id="L467">                badNotifications.put(subscriptionKey, ++numberOfBadNotifications);</span>
+<span class="nc" id="L468">                log.debug(&quot;bad notification number &quot; + numberOfBadNotifications + &quot; for subscription &quot;</span>
+                        + subscriptionKey + &quot; &quot; + endPoint);
+<span class="nc" id="L470">                return numberOfBadNotifications;</span>
+        }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -1,0 +1,834 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ObjectFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.api_v3</a> &gt; <span class="el_source">ObjectFactory.java</span></div><h1>ObjectFactory.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.api_v3;
+
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.annotation.XmlElementDecl;
+import javax.xml.bind.annotation.XmlRegistry;
+import javax.xml.namespace.QName;
+import org.uddi.api_v3.DeleteTModel;
+
+
+/**
+ * This object contains factory methods for each 
+ * Java content interface and Java element interface 
+ * generated in the org.apache.juddi.api_v3 package. 
+ * &lt;p&gt;An ObjectFactory allows you to programatically 
+ * construct new instances of the Java representation 
+ * for XML content. The Java representation of XML 
+ * content can consist of schema derived interfaces 
+ * and classes representing the binding of schema 
+ * type definitions, element declarations and model 
+ * groups.  Factory methods for each of these are 
+ * provided in this class.
+ * 
+ */
+@XmlRegistry
+public class ObjectFactory {
+
+<span class="nc" id="L43">    private final static QName _AdminDeleteSubscriptionResponse_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;adminDelete_SubscriptionResponse&quot;);</span>
+<span class="nc" id="L44">    private final static QName _GetReplicationNodesResponse_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;get_ReplicationNodesResponse&quot;);</span>
+<span class="nc" id="L45">    private final static QName _GetAllPublisherDetail_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;get_allPublisherDetail&quot;);</span>
+<span class="nc" id="L46">    private final static QName _SetReplicationNodes_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;set_ReplicationNodes&quot;);</span>
+<span class="nc" id="L47">    private final static QName _DeleteClerk_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;delete_Clerk&quot;);</span>
+<span class="nc" id="L48">    private final static QName _SyncSubscription_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;sync_subscription&quot;);</span>
+<span class="nc" id="L49">    private final static QName _AdminSaveTModelResponse_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;adminSave_tModelResponse&quot;);</span>
+<span class="nc" id="L50">    private final static QName _AdminSaveTModel_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;adminSave_tModel&quot;);</span>
+<span class="nc" id="L51">    private final static QName _GetAllNodes_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;get_AllNodes&quot;);</span>
+<span class="nc" id="L52">    private final static QName _GetAllClientSubscriptionInfo_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;get_allClientSubscriptionInfo&quot;);</span>
+<span class="nc" id="L53">    private final static QName _AdminSaveBusinessResponse_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;adminSave_BusinessResponse&quot;);</span>
+<span class="nc" id="L54">    private final static QName _GetAllClientSubscriptionInfoResponse_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;get_allClientSubscriptionInfoResponse&quot;);</span>
+<span class="nc" id="L55">    private final static QName _SyncSubscriptionDetail_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;sync_subscriptionDetail&quot;);</span>
+<span class="nc" id="L56">    private final static QName _GetFailedReplicationChangeRecordsMessageResponse_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;getFailedReplicationChangeRecordsMessageResponse&quot;);</span>
+<span class="nc" id="L57">    private final static QName _GetFailedReplicationChangeRecordsMessage_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;getFailedReplicationChangeRecordsMessage&quot;);</span>
+<span class="nc" id="L58">    private final static QName _InvokeSyncSubscription_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;invoke_SyncSubscription&quot;);</span>
+<span class="nc" id="L59">    private final static QName _AdminSaveSubscriptionResponse_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;adminSave_SubscriptionResponse&quot;);</span>
+<span class="nc" id="L60">    private final static QName _DeleteNode_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;delete_Node&quot;);</span>
+<span class="nc" id="L61">    private final static QName _GetAllClerks_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;get_AllClerks&quot;);</span>
+<span class="nc" id="L62">    private final static QName _GetPublisherDetail_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;get_publisherDetail&quot;);</span>
+<span class="nc" id="L63">    private final static QName _SavePublisher_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;save_publisher&quot;);</span>
+<span class="nc" id="L64">    private final static QName _DeletePublisher_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;delete_publisher&quot;);</span>
+<span class="nc" id="L65">    private final static QName _AdminDeleteSubscription_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;adminDelete_Subscription&quot;);</span>
+<span class="nc" id="L66">    private final static QName _SaveClerkRequest_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;save_ClerkRequest&quot;);</span>
+<span class="nc" id="L67">    private final static QName _DeleteClientSubscriptionInfo_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;delete_ClientSubscriptionInfo&quot;);</span>
+<span class="nc" id="L68">    private final static QName _SaveNodeRequest_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;save_NodeRequest&quot;);</span>
+<span class="nc" id="L69">    private final static QName _GetAllNodesResponse_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;get_AllNodesResponse&quot;);</span>
+<span class="nc" id="L70">    private final static QName _GetAllClerksResponse_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;get_AllClerksResponse&quot;);</span>
+<span class="nc" id="L71">    private final static QName _AdminSaveBusiness_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;adminSave_Business&quot;);</span>
+<span class="nc" id="L72">    private final static QName _GetReplicationNodes_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;get_ReplicationNodes&quot;);</span>
+<span class="nc" id="L73">    private final static QName _PublisherDetailResponse_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;publisherDetailResponse&quot;);</span>
+<span class="nc" id="L74">    private final static QName _AdminSaveSubscription_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;adminSave_Subscription&quot;);</span>
+<span class="nc" id="L75">    private final static QName _SetReplicationNodesResponse_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;set_ReplicationNodesResponse&quot;);</span>
+<span class="nc" id="L76">    private final static QName _PublisherDetail_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;publisherDetail&quot;);</span>
+<span class="nc" id="L77">    private final static QName _SaveClientSubscriptionInfoRequest_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;save_ClientSubscriptionInfoRequest&quot;);</span>
+<span class="nc" id="L78">    private final static QName _Publisher_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;publisher&quot;);</span>
+<span class="nc" id="L79">    private final static QName _GetEntityHistoryMessage_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;getEntityHistoryMessage&quot;);</span>
+<span class="nc" id="L80">    private final static QName _GetEntityHistoryMessageResponse_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;getEntityHistoryMessageResponse&quot;);</span>
+<span class="nc" id="L81">    private final static QName _AdminDeleteTmodel_QNAME = new QName(&quot;urn:juddi-apache-org:api_v3&quot;, &quot;adminDelete_tmodel&quot;);</span>
+
+    /**
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.apache.juddi.api_v3
+     * 
+     */
+<span class="nc" id="L87">    public ObjectFactory() {</span>
+<span class="nc" id="L88">    }</span>
+
+    /**
+     * Create an instance of {@link DeleteClientSubscriptionInfo }
+     * 
+     */
+    public DeleteClientSubscriptionInfo createDeleteClientSubscriptionInfo() {
+<span class="nc" id="L95">        return new DeleteClientSubscriptionInfo();</span>
+    }
+
+    /**
+     * Create an instance of {@link AdminDeleteSubscriptionRequest }
+     * 
+     */
+    public AdminDeleteSubscriptionRequest createAdminDeleteSubscriptionRequest() {
+<span class="nc" id="L103">        return new AdminDeleteSubscriptionRequest();</span>
+    }
+
+    /**
+     * Create an instance of {@link SaveClerk }
+     * 
+     */
+    public SaveClerk createSaveClerk() {
+<span class="nc" id="L111">        return new SaveClerk();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetPublisherDetail }
+     * 
+     */
+    public GetPublisherDetail createGetPublisherDetail() {
+<span class="nc" id="L119">        return new GetPublisherDetail();</span>
+    }
+
+    /**
+     * Create an instance of {@link SetReplicationNodesResponse }
+     * 
+     */
+    public SetReplicationNodesResponse createSetReplicationNodesResponse() {
+<span class="nc" id="L127">        return new SetReplicationNodesResponse();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetAllPublisherDetail }
+     * 
+     */
+    public GetAllPublisherDetail createGetAllPublisherDetail() {
+<span class="nc" id="L135">        return new GetAllPublisherDetail();</span>
+    }
+
+    /**
+     * Create an instance of {@link SetReplicationNodes }
+     * 
+     */
+    public SetReplicationNodes createSetReplicationNodes() {
+<span class="nc" id="L143">        return new SetReplicationNodes();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetAllClientSubscriptionInfoResponse }
+     * 
+     */
+    public GetAllClientSubscriptionInfoResponse createGetAllClientSubscriptionInfoResponse() {
+<span class="nc" id="L151">        return new GetAllClientSubscriptionInfoResponse();</span>
+    }
+
+    /**
+     * Create an instance of {@link Publisher }
+     * 
+     */
+    public Publisher createPublisher() {
+<span class="nc" id="L159">        return new Publisher();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetFailedReplicationChangeRecordsMessageResponse }
+     * 
+     */
+    public GetFailedReplicationChangeRecordsMessageResponse createGetFailedReplicationChangeRecordsMessageResponse() {
+<span class="nc" id="L167">        return new GetFailedReplicationChangeRecordsMessageResponse();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetEntityHistoryMessageResponse }
+     * 
+     */
+    public GetEntityHistoryMessageResponse createGetEntityHistoryMessageResponse() {
+<span class="nc" id="L175">        return new GetEntityHistoryMessageResponse();</span>
+    }
+
+    /**
+     * Create an instance of {@link SaveClientSubscriptionInfo }
+     * 
+     */
+    public SaveClientSubscriptionInfo createSaveClientSubscriptionInfo() {
+<span class="nc" id="L183">        return new SaveClientSubscriptionInfo();</span>
+    }
+
+    /**
+     * Create an instance of {@link SyncSubscription }
+     * 
+     */
+    public SyncSubscription createSyncSubscription() {
+<span class="nc" id="L191">        return new SyncSubscription();</span>
+    }
+
+    /**
+     * Create an instance of {@link PublisherDetail }
+     * 
+     */
+    public PublisherDetail createPublisherDetail() {
+<span class="nc" id="L199">        return new PublisherDetail();</span>
+    }
+
+    /**
+     * Create an instance of {@link SyncSubscriptionRequest }
+     * 
+     */
+    public SyncSubscriptionRequest createSyncSubscriptionRequest() {
+<span class="nc" id="L207">        return new SyncSubscriptionRequest();</span>
+    }
+
+    /**
+     * Create an instance of {@link SavePublisher }
+     * 
+     */
+    public SavePublisher createSavePublisher() {
+<span class="nc" id="L215">        return new SavePublisher();</span>
+    }
+
+    /**
+     * Create an instance of {@link DeleteClerk }
+     * 
+     */
+    public DeleteClerk createDeleteClerk() {
+<span class="nc" id="L223">        return new DeleteClerk();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetAllNodesResponse }
+     * 
+     */
+    public GetAllNodesResponse createGetAllNodesResponse() {
+<span class="nc" id="L231">        return new GetAllNodesResponse();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetFailedReplicationChangeRecordsMessageRequest }
+     * 
+     */
+    public GetFailedReplicationChangeRecordsMessageRequest createGetFailedReplicationChangeRecordsMessageRequest() {
+<span class="nc" id="L239">        return new GetFailedReplicationChangeRecordsMessageRequest();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetEntityHistoryMessageRequest }
+     * 
+     */
+    public GetEntityHistoryMessageRequest createGetEntityHistoryMessageRequest() {
+<span class="nc" id="L247">        return new GetEntityHistoryMessageRequest();</span>
+    }
+
+    /**
+     * Create an instance of {@link SaveNode }
+     * 
+     */
+    public SaveNode createSaveNode() {
+<span class="nc" id="L255">        return new SaveNode();</span>
+    }
+
+    /**
+     * Create an instance of {@link SyncSubscriptionDetail }
+     * 
+     */
+    public SyncSubscriptionDetail createSyncSubscriptionDetail() {
+<span class="nc" id="L263">        return new SyncSubscriptionDetail();</span>
+    }
+
+    /**
+     * Create an instance of {@link AdminSaveSubscriptionResponse }
+     * 
+     */
+    public AdminSaveSubscriptionResponse createAdminSaveSubscriptionResponse() {
+<span class="nc" id="L271">        return new AdminSaveSubscriptionResponse();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetAllClientSubscriptionInfo }
+     * 
+     */
+    public GetAllClientSubscriptionInfo createGetAllClientSubscriptionInfo() {
+<span class="nc" id="L279">        return new GetAllClientSubscriptionInfo();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetAllNodes }
+     * 
+     */
+    public GetAllNodes createGetAllNodes() {
+<span class="nc" id="L287">        return new GetAllNodes();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetAllClerksResponse }
+     * 
+     */
+    public GetAllClerksResponse createGetAllClerksResponse() {
+<span class="nc" id="L295">        return new GetAllClerksResponse();</span>
+    }
+
+    /**
+     * Create an instance of {@link AdminSaveTModel }
+     * 
+     */
+    public AdminSaveTModel createAdminSaveTModel() {
+<span class="nc" id="L303">        return new AdminSaveTModel();</span>
+    }
+
+    /**
+     * Create an instance of {@link AdminDeleteSubscriptionResponse }
+     * 
+     */
+    public AdminDeleteSubscriptionResponse createAdminDeleteSubscriptionResponse() {
+<span class="nc" id="L311">        return new AdminDeleteSubscriptionResponse();</span>
+    }
+
+    /**
+     * Create an instance of {@link AdminSaveTModelResponse }
+     * 
+     */
+    public AdminSaveTModelResponse createAdminSaveTModelResponse() {
+<span class="nc" id="L319">        return new AdminSaveTModelResponse();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetReplicationNodesResponse }
+     * 
+     */
+    public GetReplicationNodesResponse createGetReplicationNodesResponse() {
+<span class="nc" id="L327">        return new GetReplicationNodesResponse();</span>
+    }
+
+    /**
+     * Create an instance of {@link AdminSaveBusinessResponse }
+     * 
+     */
+    public AdminSaveBusinessResponse createAdminSaveBusinessResponse() {
+<span class="nc" id="L335">        return new AdminSaveBusinessResponse();</span>
+    }
+
+    /**
+     * Create an instance of {@link AdminSaveSubscriptionRequest }
+     * 
+     */
+    public AdminSaveSubscriptionRequest createAdminSaveSubscriptionRequest() {
+<span class="nc" id="L343">        return new AdminSaveSubscriptionRequest();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetReplicationNodes }
+     * 
+     */
+    public GetReplicationNodes createGetReplicationNodes() {
+<span class="nc" id="L351">        return new GetReplicationNodes();</span>
+    }
+
+    /**
+     * Create an instance of {@link DeletePublisher }
+     * 
+     */
+    public DeletePublisher createDeletePublisher() {
+<span class="nc" id="L359">        return new DeletePublisher();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetAllClerks }
+     * 
+     */
+    public GetAllClerks createGetAllClerks() {
+<span class="nc" id="L367">        return new GetAllClerks();</span>
+    }
+
+    /**
+     * Create an instance of {@link AdminSaveBusiness }
+     * 
+     */
+    public AdminSaveBusiness createAdminSaveBusiness() {
+<span class="nc" id="L375">        return new AdminSaveBusiness();</span>
+    }
+
+    /**
+     * Create an instance of {@link DeleteNode }
+     * 
+     */
+    public DeleteNode createDeleteNode() {
+<span class="nc" id="L383">        return new DeleteNode();</span>
+    }
+
+    /**
+     * Create an instance of {@link SyncSubscriptionDetailResponse }
+     * 
+     */
+    public SyncSubscriptionDetailResponse createSyncSubscriptionDetailResponse() {
+<span class="nc" id="L391">        return new SyncSubscriptionDetailResponse();</span>
+    }
+
+    /**
+     * Create an instance of {@link SubscriptionWrapper }
+     * 
+     */
+    public SubscriptionWrapper createSubscriptionWrapper() {
+<span class="nc" id="L399">        return new SubscriptionWrapper();</span>
+    }
+
+    /**
+     * Create an instance of {@link ClerkList }
+     * 
+     */
+    public ClerkList createClerkList() {
+<span class="nc" id="L407">        return new ClerkList();</span>
+    }
+
+    /**
+     * Create an instance of {@link NodeList }
+     * 
+     */
+    public NodeList createNodeList() {
+<span class="nc" id="L415">        return new NodeList();</span>
+    }
+
+    /**
+     * Create an instance of {@link ClientSubscriptionInfoDetail }
+     * 
+     */
+    public ClientSubscriptionInfoDetail createClientSubscriptionInfoDetail() {
+<span class="nc" id="L423">        return new ClientSubscriptionInfoDetail();</span>
+    }
+
+    /**
+     * Create an instance of {@link ClerkDetail }
+     * 
+     */
+    public ClerkDetail createClerkDetail() {
+<span class="nc" id="L431">        return new ClerkDetail();</span>
+    }
+
+    /**
+     * Create an instance of {@link AdminSaveBusinessWrapper }
+     * 
+     */
+    public AdminSaveBusinessWrapper createAdminSaveBusinessWrapper() {
+<span class="nc" id="L439">        return new AdminSaveBusinessWrapper();</span>
+    }
+
+    /**
+     * Create an instance of {@link ClientSubscriptionInfo }
+     * 
+     */
+    public ClientSubscriptionInfo createClientSubscriptionInfo() {
+<span class="nc" id="L447">        return new ClientSubscriptionInfo();</span>
+    }
+
+    /**
+     * Create an instance of {@link Node }
+     * 
+     */
+    public Node createNode() {
+<span class="nc" id="L455">        return new Node();</span>
+    }
+
+    /**
+     * Create an instance of {@link Clerk }
+     * 
+     */
+    public Clerk createClerk() {
+<span class="nc" id="L463">        return new Clerk();</span>
+    }
+
+    /**
+     * Create an instance of {@link AdminSaveTModelWrapper }
+     * 
+     */
+    public AdminSaveTModelWrapper createAdminSaveTModelWrapper() {
+<span class="nc" id="L471">        return new AdminSaveTModelWrapper();</span>
+    }
+
+    /**
+     * Create an instance of {@link NodeDetail }
+     * 
+     */
+    public NodeDetail createNodeDetail() {
+<span class="nc" id="L479">        return new NodeDetail();</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link AdminDeleteSubscriptionResponse }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;adminDelete_SubscriptionResponse&quot;)
+    public JAXBElement&lt;AdminDeleteSubscriptionResponse&gt; createAdminDeleteSubscriptionResponse(AdminDeleteSubscriptionResponse value) {
+<span class="nc" id="L488">        return new JAXBElement&lt;AdminDeleteSubscriptionResponse&gt;(_AdminDeleteSubscriptionResponse_QNAME, AdminDeleteSubscriptionResponse.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetReplicationNodesResponse }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;get_ReplicationNodesResponse&quot;)
+    public JAXBElement&lt;GetReplicationNodesResponse&gt; createGetReplicationNodesResponse(GetReplicationNodesResponse value) {
+<span class="nc" id="L497">        return new JAXBElement&lt;GetReplicationNodesResponse&gt;(_GetReplicationNodesResponse_QNAME, GetReplicationNodesResponse.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetAllPublisherDetail }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;get_allPublisherDetail&quot;)
+    public JAXBElement&lt;GetAllPublisherDetail&gt; createGetAllPublisherDetail(GetAllPublisherDetail value) {
+<span class="nc" id="L506">        return new JAXBElement&lt;GetAllPublisherDetail&gt;(_GetAllPublisherDetail_QNAME, GetAllPublisherDetail.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SetReplicationNodes }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;set_ReplicationNodes&quot;)
+    public JAXBElement&lt;SetReplicationNodes&gt; createSetReplicationNodes(SetReplicationNodes value) {
+<span class="nc" id="L515">        return new JAXBElement&lt;SetReplicationNodes&gt;(_SetReplicationNodes_QNAME, SetReplicationNodes.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link DeleteClerk }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;delete_Clerk&quot;)
+    public JAXBElement&lt;DeleteClerk&gt; createDeleteClerk(DeleteClerk value) {
+<span class="nc" id="L524">        return new JAXBElement&lt;DeleteClerk&gt;(_DeleteClerk_QNAME, DeleteClerk.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SyncSubscription }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;sync_subscription&quot;)
+    public JAXBElement&lt;SyncSubscription&gt; createSyncSubscription(SyncSubscription value) {
+<span class="nc" id="L533">        return new JAXBElement&lt;SyncSubscription&gt;(_SyncSubscription_QNAME, SyncSubscription.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link AdminSaveTModelResponse }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;adminSave_tModelResponse&quot;)
+    public JAXBElement&lt;AdminSaveTModelResponse&gt; createAdminSaveTModelResponse(AdminSaveTModelResponse value) {
+<span class="nc" id="L542">        return new JAXBElement&lt;AdminSaveTModelResponse&gt;(_AdminSaveTModelResponse_QNAME, AdminSaveTModelResponse.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link AdminSaveTModel }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;adminSave_tModel&quot;)
+    public JAXBElement&lt;AdminSaveTModel&gt; createAdminSaveTModel(AdminSaveTModel value) {
+<span class="nc" id="L551">        return new JAXBElement&lt;AdminSaveTModel&gt;(_AdminSaveTModel_QNAME, AdminSaveTModel.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetAllNodes }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;get_AllNodes&quot;)
+    public JAXBElement&lt;GetAllNodes&gt; createGetAllNodes(GetAllNodes value) {
+<span class="nc" id="L560">        return new JAXBElement&lt;GetAllNodes&gt;(_GetAllNodes_QNAME, GetAllNodes.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetAllClientSubscriptionInfo }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;get_allClientSubscriptionInfo&quot;)
+    public JAXBElement&lt;GetAllClientSubscriptionInfo&gt; createGetAllClientSubscriptionInfo(GetAllClientSubscriptionInfo value) {
+<span class="nc" id="L569">        return new JAXBElement&lt;GetAllClientSubscriptionInfo&gt;(_GetAllClientSubscriptionInfo_QNAME, GetAllClientSubscriptionInfo.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link AdminSaveBusinessResponse }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;adminSave_BusinessResponse&quot;)
+    public JAXBElement&lt;AdminSaveBusinessResponse&gt; createAdminSaveBusinessResponse(AdminSaveBusinessResponse value) {
+<span class="nc" id="L578">        return new JAXBElement&lt;AdminSaveBusinessResponse&gt;(_AdminSaveBusinessResponse_QNAME, AdminSaveBusinessResponse.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetAllClientSubscriptionInfoResponse }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;get_allClientSubscriptionInfoResponse&quot;)
+    public JAXBElement&lt;GetAllClientSubscriptionInfoResponse&gt; createGetAllClientSubscriptionInfoResponse(GetAllClientSubscriptionInfoResponse value) {
+<span class="nc" id="L587">        return new JAXBElement&lt;GetAllClientSubscriptionInfoResponse&gt;(_GetAllClientSubscriptionInfoResponse_QNAME, GetAllClientSubscriptionInfoResponse.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SyncSubscriptionDetail }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;sync_subscriptionDetail&quot;)
+    public JAXBElement&lt;SyncSubscriptionDetail&gt; createSyncSubscriptionDetail(SyncSubscriptionDetail value) {
+<span class="nc" id="L596">        return new JAXBElement&lt;SyncSubscriptionDetail&gt;(_SyncSubscriptionDetail_QNAME, SyncSubscriptionDetail.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetFailedReplicationChangeRecordsMessageResponse }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;getFailedReplicationChangeRecordsMessageResponse&quot;)
+    public JAXBElement&lt;GetFailedReplicationChangeRecordsMessageResponse&gt; createGetFailedReplicationChangeRecordsMessageResponse(GetFailedReplicationChangeRecordsMessageResponse value) {
+<span class="nc" id="L605">        return new JAXBElement&lt;GetFailedReplicationChangeRecordsMessageResponse&gt;(_GetFailedReplicationChangeRecordsMessageResponse_QNAME, GetFailedReplicationChangeRecordsMessageResponse.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetFailedReplicationChangeRecordsMessageRequest }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;getFailedReplicationChangeRecordsMessage&quot;)
+    public JAXBElement&lt;GetFailedReplicationChangeRecordsMessageRequest&gt; createGetFailedReplicationChangeRecordsMessage(GetFailedReplicationChangeRecordsMessageRequest value) {
+<span class="nc" id="L614">        return new JAXBElement&lt;GetFailedReplicationChangeRecordsMessageRequest&gt;(_GetFailedReplicationChangeRecordsMessage_QNAME, GetFailedReplicationChangeRecordsMessageRequest.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SyncSubscriptionRequest }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;invoke_SyncSubscription&quot;)
+    public JAXBElement&lt;SyncSubscriptionRequest&gt; createInvokeSyncSubscription(SyncSubscriptionRequest value) {
+<span class="nc" id="L623">        return new JAXBElement&lt;SyncSubscriptionRequest&gt;(_InvokeSyncSubscription_QNAME, SyncSubscriptionRequest.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link AdminSaveSubscriptionResponse }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;adminSave_SubscriptionResponse&quot;)
+    public JAXBElement&lt;AdminSaveSubscriptionResponse&gt; createAdminSaveSubscriptionResponse(AdminSaveSubscriptionResponse value) {
+<span class="nc" id="L632">        return new JAXBElement&lt;AdminSaveSubscriptionResponse&gt;(_AdminSaveSubscriptionResponse_QNAME, AdminSaveSubscriptionResponse.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link DeleteNode }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;delete_Node&quot;)
+    public JAXBElement&lt;DeleteNode&gt; createDeleteNode(DeleteNode value) {
+<span class="nc" id="L641">        return new JAXBElement&lt;DeleteNode&gt;(_DeleteNode_QNAME, DeleteNode.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetAllClerks }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;get_AllClerks&quot;)
+    public JAXBElement&lt;GetAllClerks&gt; createGetAllClerks(GetAllClerks value) {
+<span class="nc" id="L650">        return new JAXBElement&lt;GetAllClerks&gt;(_GetAllClerks_QNAME, GetAllClerks.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetPublisherDetail }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;get_publisherDetail&quot;)
+    public JAXBElement&lt;GetPublisherDetail&gt; createGetPublisherDetail(GetPublisherDetail value) {
+<span class="nc" id="L659">        return new JAXBElement&lt;GetPublisherDetail&gt;(_GetPublisherDetail_QNAME, GetPublisherDetail.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SavePublisher }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;save_publisher&quot;)
+    public JAXBElement&lt;SavePublisher&gt; createSavePublisher(SavePublisher value) {
+<span class="nc" id="L668">        return new JAXBElement&lt;SavePublisher&gt;(_SavePublisher_QNAME, SavePublisher.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link DeletePublisher }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;delete_publisher&quot;)
+    public JAXBElement&lt;DeletePublisher&gt; createDeletePublisher(DeletePublisher value) {
+<span class="nc" id="L677">        return new JAXBElement&lt;DeletePublisher&gt;(_DeletePublisher_QNAME, DeletePublisher.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link AdminDeleteSubscriptionRequest }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;adminDelete_Subscription&quot;)
+    public JAXBElement&lt;AdminDeleteSubscriptionRequest&gt; createAdminDeleteSubscription(AdminDeleteSubscriptionRequest value) {
+<span class="nc" id="L686">        return new JAXBElement&lt;AdminDeleteSubscriptionRequest&gt;(_AdminDeleteSubscription_QNAME, AdminDeleteSubscriptionRequest.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SaveClerk }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;save_ClerkRequest&quot;)
+    public JAXBElement&lt;SaveClerk&gt; createSaveClerkRequest(SaveClerk value) {
+<span class="nc" id="L695">        return new JAXBElement&lt;SaveClerk&gt;(_SaveClerkRequest_QNAME, SaveClerk.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link DeleteClientSubscriptionInfo }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;delete_ClientSubscriptionInfo&quot;)
+    public JAXBElement&lt;DeleteClientSubscriptionInfo&gt; createDeleteClientSubscriptionInfo(DeleteClientSubscriptionInfo value) {
+<span class="nc" id="L704">        return new JAXBElement&lt;DeleteClientSubscriptionInfo&gt;(_DeleteClientSubscriptionInfo_QNAME, DeleteClientSubscriptionInfo.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SaveNode }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;save_NodeRequest&quot;)
+    public JAXBElement&lt;SaveNode&gt; createSaveNodeRequest(SaveNode value) {
+<span class="nc" id="L713">        return new JAXBElement&lt;SaveNode&gt;(_SaveNodeRequest_QNAME, SaveNode.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetAllNodesResponse }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;get_AllNodesResponse&quot;)
+    public JAXBElement&lt;GetAllNodesResponse&gt; createGetAllNodesResponse(GetAllNodesResponse value) {
+<span class="nc" id="L722">        return new JAXBElement&lt;GetAllNodesResponse&gt;(_GetAllNodesResponse_QNAME, GetAllNodesResponse.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetAllClerksResponse }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;get_AllClerksResponse&quot;)
+    public JAXBElement&lt;GetAllClerksResponse&gt; createGetAllClerksResponse(GetAllClerksResponse value) {
+<span class="nc" id="L731">        return new JAXBElement&lt;GetAllClerksResponse&gt;(_GetAllClerksResponse_QNAME, GetAllClerksResponse.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link AdminSaveBusiness }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;adminSave_Business&quot;)
+    public JAXBElement&lt;AdminSaveBusiness&gt; createAdminSaveBusiness(AdminSaveBusiness value) {
+<span class="nc" id="L740">        return new JAXBElement&lt;AdminSaveBusiness&gt;(_AdminSaveBusiness_QNAME, AdminSaveBusiness.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetReplicationNodes }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;get_ReplicationNodes&quot;)
+    public JAXBElement&lt;GetReplicationNodes&gt; createGetReplicationNodes(GetReplicationNodes value) {
+<span class="nc" id="L749">        return new JAXBElement&lt;GetReplicationNodes&gt;(_GetReplicationNodes_QNAME, GetReplicationNodes.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link PublisherDetail }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;publisherDetailResponse&quot;)
+    public JAXBElement&lt;PublisherDetail&gt; createPublisherDetailResponse(PublisherDetail value) {
+<span class="nc" id="L758">        return new JAXBElement&lt;PublisherDetail&gt;(_PublisherDetailResponse_QNAME, PublisherDetail.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link AdminSaveSubscriptionRequest }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;adminSave_Subscription&quot;)
+    public JAXBElement&lt;AdminSaveSubscriptionRequest&gt; createAdminSaveSubscription(AdminSaveSubscriptionRequest value) {
+<span class="nc" id="L767">        return new JAXBElement&lt;AdminSaveSubscriptionRequest&gt;(_AdminSaveSubscription_QNAME, AdminSaveSubscriptionRequest.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SetReplicationNodesResponse }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;set_ReplicationNodesResponse&quot;)
+    public JAXBElement&lt;SetReplicationNodesResponse&gt; createSetReplicationNodesResponse(SetReplicationNodesResponse value) {
+<span class="nc" id="L776">        return new JAXBElement&lt;SetReplicationNodesResponse&gt;(_SetReplicationNodesResponse_QNAME, SetReplicationNodesResponse.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link PublisherDetail }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;publisherDetail&quot;)
+    public JAXBElement&lt;PublisherDetail&gt; createPublisherDetail(PublisherDetail value) {
+<span class="nc" id="L785">        return new JAXBElement&lt;PublisherDetail&gt;(_PublisherDetail_QNAME, PublisherDetail.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SaveClientSubscriptionInfo }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;save_ClientSubscriptionInfoRequest&quot;)
+    public JAXBElement&lt;SaveClientSubscriptionInfo&gt; createSaveClientSubscriptionInfoRequest(SaveClientSubscriptionInfo value) {
+<span class="nc" id="L794">        return new JAXBElement&lt;SaveClientSubscriptionInfo&gt;(_SaveClientSubscriptionInfoRequest_QNAME, SaveClientSubscriptionInfo.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Publisher }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;publisher&quot;)
+    public JAXBElement&lt;Publisher&gt; createPublisher(Publisher value) {
+<span class="nc" id="L803">        return new JAXBElement&lt;Publisher&gt;(_Publisher_QNAME, Publisher.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetEntityHistoryMessageRequest }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;getEntityHistoryMessage&quot;)
+    public JAXBElement&lt;GetEntityHistoryMessageRequest&gt; createGetEntityHistoryMessage(GetEntityHistoryMessageRequest value) {
+<span class="nc" id="L812">        return new JAXBElement&lt;GetEntityHistoryMessageRequest&gt;(_GetEntityHistoryMessage_QNAME, GetEntityHistoryMessageRequest.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetEntityHistoryMessageResponse }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;getEntityHistoryMessageResponse&quot;)
+    public JAXBElement&lt;GetEntityHistoryMessageResponse&gt; createGetEntityHistoryMessageResponse(GetEntityHistoryMessageResponse value) {
+<span class="nc" id="L821">        return new JAXBElement&lt;GetEntityHistoryMessageResponse&gt;(_GetEntityHistoryMessageResponse_QNAME, GetEntityHistoryMessageResponse.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link DeleteTModel }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:juddi-apache-org:api_v3&quot;, name = &quot;adminDelete_tmodel&quot;)
+    public JAXBElement&lt;DeleteTModel&gt; createAdminDeleteTmodel(DeleteTModel value) {
+<span class="nc" id="L830">        return new JAXBElement&lt;DeleteTModel&gt;(_AdminDeleteTmodel_QNAME, DeleteTModel.class, null, value);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

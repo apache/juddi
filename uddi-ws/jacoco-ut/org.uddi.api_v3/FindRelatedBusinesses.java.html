@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FindRelatedBusinesses.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.api_v3</a> &gt; <span class="el_source">FindRelatedBusinesses.java</span></div><h1>FindRelatedBusinesses.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+package org.uddi.api_v3;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+
+
+/**
+ * &lt;p&gt;Java class for find_relatedBusinesses complex type.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * 
+ * &lt;pre&gt;
+ * &amp;lt;complexType name=&quot;find_relatedBusinesses&quot;&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;sequence&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}authInfo&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}findQualifiers&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;choice&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}businessKey&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}fromKey&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}toKey&quot;/&gt;
+ *         &amp;lt;/choice&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}keyedReference&quot; minOccurs=&quot;0&quot;/&gt;
+ *       &amp;lt;/sequence&gt;
+ *       &amp;lt;attribute name=&quot;maxRows&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}int&quot; /&gt;
+ *       &amp;lt;attribute name=&quot;listHead&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}int&quot; /&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;find_relatedBusinesses&quot;, propOrder = {
+    &quot;authInfo&quot;,
+    &quot;findQualifiers&quot;,
+    &quot;businessKey&quot;,
+    &quot;fromKey&quot;,
+    &quot;toKey&quot;,
+    &quot;keyedReference&quot;
+})
+<span class="nc" id="L67">public class FindRelatedBusinesses implements Serializable{</span>
+	@XmlTransient
+	private static final long serialVersionUID = 7121248322606286741L;
+	protected String authInfo;
+    protected FindQualifiers findQualifiers;
+    protected String businessKey;
+    protected String fromKey;
+    protected String toKey;
+    protected KeyedReference keyedReference;
+    @XmlAttribute
+    protected Integer maxRows;
+    @XmlAttribute
+    protected Integer listHead;
+
+    /**
+     * Gets the value of the authInfo property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getAuthInfo() {
+<span class="nc" id="L90">        return authInfo;</span>
+    }
+
+    /**
+     * Sets the value of the authInfo property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setAuthInfo(String value) {
+<span class="nc" id="L102">        this.authInfo = value;</span>
+<span class="nc" id="L103">    }</span>
+
+    /**
+     * Gets the value of the findQualifiers property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link FindQualifiers }
+     *     
+     */
+    public FindQualifiers getFindQualifiers() {
+<span class="nc" id="L114">        return findQualifiers;</span>
+    }
+
+    /**
+     * Sets the value of the findQualifiers property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link FindQualifiers }
+     *     
+     */
+    public void setFindQualifiers(FindQualifiers value) {
+<span class="nc" id="L126">        this.findQualifiers = value;</span>
+<span class="nc" id="L127">    }</span>
+
+    /**
+     * Gets the value of the businessKey property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getBusinessKey() {
+<span class="nc" id="L138">        return businessKey;</span>
+    }
+
+    /**
+     * Sets the value of the businessKey property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setBusinessKey(String value) {
+<span class="nc" id="L150">        this.businessKey = value;</span>
+<span class="nc" id="L151">    }</span>
+
+    /**
+     * Gets the value of the fromKey property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getFromKey() {
+<span class="nc" id="L162">        return fromKey;</span>
+    }
+
+    /**
+     * Sets the value of the fromKey property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setFromKey(String value) {
+<span class="nc" id="L174">        this.fromKey = value;</span>
+<span class="nc" id="L175">    }</span>
+
+    /**
+     * Gets the value of the toKey property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getToKey() {
+<span class="nc" id="L186">        return toKey;</span>
+    }
+
+    /**
+     * Sets the value of the toKey property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setToKey(String value) {
+<span class="nc" id="L198">        this.toKey = value;</span>
+<span class="nc" id="L199">    }</span>
+
+    /**
+     * Gets the value of the keyedReference property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link KeyedReference }
+     *     
+     */
+    public KeyedReference getKeyedReference() {
+<span class="nc" id="L210">        return keyedReference;</span>
+    }
+
+    /**
+     * Sets the value of the keyedReference property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link KeyedReference }
+     *     
+     */
+    public void setKeyedReference(KeyedReference value) {
+<span class="nc" id="L222">        this.keyedReference = value;</span>
+<span class="nc" id="L223">    }</span>
+
+    /**
+     * Gets the value of the maxRows property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getMaxRows() {
+<span class="nc" id="L234">        return maxRows;</span>
+    }
+
+    /**
+     * Sets the value of the maxRows property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setMaxRows(Integer value) {
+<span class="nc" id="L246">        this.maxRows = value;</span>
+<span class="nc" id="L247">    }</span>
+
+    /**
+     * Gets the value of the listHead property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getListHead() {
+<span class="nc" id="L258">        return listHead;</span>
+    }
+
+    /**
+     * Sets the value of the listHead property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setListHead(Integer value) {
+<span class="nc" id="L270">        this.listHead = value;</span>
+<span class="nc" id="L271">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

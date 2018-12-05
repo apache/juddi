@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Subscription.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.sub_v3</a> &gt; <span class="el_source">Subscription.java</span></div><h1>Subscription.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+package org.uddi.sub_v3;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.datatype.Duration;
+import javax.xml.datatype.XMLGregorianCalendar;
+
+
+/**
+ * &lt;h1&gt;UDDI Subscription&lt;/h1&gt;
+ * The save_subscription API registers a request to monitor specific registry content and to have the node periodically notify the subscriber when changes are available.  Notifications are not returned synchronously with results for this API.  Only data that matches the requested subscription criteria and which changes after the point in time that the subscription request is accepted is returned to the subscriber via a notification.
+
+This API returns a duration for which this particular subscription is valid.  Depending upon the policy of the Node, subscriptions need to be renewed before the expiration date in order to insure that they remain active.  Subscriptions can also be redefined or renewed using this API.  The subscriptionKey pertaining to the subscription to be renewed must be supplied in the save_subscription invocation in order to accomplish this. This allows both renewal and changes to the subscription.  Invoking save_subscription automatically resets the expiration period for the subscription in question to a value based upon the node’s policy.
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;&lt;/span&gt;&lt;b&gt;&lt;i&gt;authInfo&lt;/i&gt;&lt;/b&gt;:&amp;nbsp; This optional argument is an element
+that contains an authentication token.&amp;nbsp; Registries that wish to restrict who
+can save a subscription typically require authInfo for this call, though this
+is a matter of node policy.&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;&lt;/span&gt;&lt;b&gt;&lt;i&gt;bindingKey:&lt;/i&gt;&lt;/b&gt;&amp;nbsp; This optional argument of type anyURI
+specifies the &lt;i&gt;bindingTemplate&lt;/i&gt; which the node is to use to deliver
+notifications to subscription listeners.&amp;nbsp; It is only required when asynchronous
+notifications are used.&amp;nbsp; This &lt;i&gt;bindingTemplate&lt;/i&gt; MUST define either a Web
+service that implements notify_subscriptionListener (see below), or an email
+address to receive the notifications. If a notify_subscriptionListener Web
+service is identified, the node invokes it to deliver notifications.&amp;nbsp; If an
+email address is identified, the node delivers notifications via email to the
+address supplied. When notifications are delivered via email, the body of the
+email contains the body of the SOAP message, which would have been sent to the
+notify_subscriptionListener service if that option had been chosen.&lt;span class=&quot;MsoCommentReference&quot;&gt;&lt;span style=&quot;display:none&quot;&gt;.&lt;/span&gt;&lt;/span&gt; The
+publisher making the subscription request MUST own the bindingTemplate.&amp;nbsp; If
+this argument is not supplied, no notifications are sent, although subscribers
+may still use the get_subscriptionResults API to obtain subscription results.&amp;nbsp;
+See Section &lt;a href=&quot;#_Ref536844845 &quot;&gt;5.5.11&lt;/a&gt; &lt;i&gt;get_subscriptionResults &lt;/i&gt;for
+details.&amp;nbsp; If email delivery to the specified address fails, nodes MAY attempt re-delivery, but are not obligated to do so.&amp;nbsp; Depending upon node policy, excessive
+delivery failures MAY result in cancellation of the corresponding subscription.&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;&lt;/span&gt;&lt;b&gt;&lt;i&gt;brief&lt;/i&gt;&lt;/b&gt;:&amp;nbsp; This optional argument controls the level
+of detail returned to a subscription listener.&amp;nbsp; The default is &quot;false&quot;
+when omitted. When set to &quot;true,&quot; it indicates that the subscription
+results are to be returned to the subscriber in the form of a keyBag, listing
+all of the entities that matched the subscriptionFilter.&amp;nbsp; Refer to Section &lt;a href=&quot;#_Ref3401043 &quot;&gt;5.5.6&lt;/a&gt; &lt;i&gt;Use of keyBag in Subscription,&lt;/i&gt; for
+additional information.&amp;nbsp; This option has no effect on the assertionStatusReport
+structure, which is returned as part of a notification when the
+subscriptionFilter specifies the get_assertionStatusReport filter criteria.&amp;nbsp;
+See the explanation of subscriptionFilter below.&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;&lt;/span&gt;&lt;b&gt;&lt;i&gt;expiresAfter&lt;/i&gt;&lt;/b&gt;:&amp;nbsp; This optional argument allows
+subscribers to specify the period of time for which they would like the
+subscription to exist.&amp;nbsp; It is of the XML Schema type xsd:dateTime.&amp;nbsp; Specifying
+a value for this argument is no guarantee that the node will accept it without
+change.&amp;nbsp; Information on the format of expiresAfter can be found in Section &lt;a href=&quot;#_Ref535515666 &quot;&gt;5.5.1.1&lt;/a&gt; &lt;i&gt;Specifying Durations&lt;/i&gt;.&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;&lt;/span&gt;&lt;b&gt;&lt;i&gt;maxEntities&lt;/i&gt;&lt;/b&gt;:&amp;nbsp; This optional integer specifies the
+maximum number of entities in a notification returned to a subscription
+listener. If not specified, the number of entities sent is not limited, unless
+by node policy.&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;&lt;/span&gt;&lt;b&gt;&lt;i&gt;subscriptionFilter&lt;/i&gt;&lt;/b&gt;:&amp;nbsp; This argument specifies the
+filtering criteria which limits the scope of a subscription to a subset of
+registry records. It is required except when renewing an existing subscription.
+The get_xx and find_xx APIs are all valid choices for use as a
+subscriptionFilter.&amp;nbsp; Only one of these can be chosen for each subscription.&amp;nbsp;
+Notifications, based on the subscriptionFilter, are sent to the subscriber if
+and only if there are changes at the node, which match this criterion during a
+notification period.&amp;nbsp; A subscriptionFilter MUST contain exactly one of the
+allowed inquiry elements. The authInfo argument of the specified get_xx or
+find_xx API call is not required here and is ignored if specified.&amp;nbsp; All of the
+other arguments supported with each of these inquiry APIs are valid for use
+here.&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in&quot;&gt;Specifying find_relatedBusinesses
+is useful for tracking when reciprocal relationships are formed or dissolved.&amp;nbsp;
+Specifying get_assertionStatusReport can be used in tracking when reciprocal
+relationships (which pertain to a business owned by the subscriber) are formed,
+dissolved, or requested by the owners of some other business.&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in&quot;&gt;For a get_assertionStatusReport
+based subscription, there is a specific status value, &lt;b&gt;status:both_incomplete&lt;/b&gt;,
+defined in the XML schema. When appearing in an assertionStatusItem of a
+subscriptionResultsList, status:both_incomplete indicates that the publisher
+assertion embedded in the assertionStatusItem has been deleted from both ends. &lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in&quot;&gt;Note that the above handling of
+deleted publisher assertions is different from the case when a business entity,
+business service, binding template, or tModel is removed. In the latter case,
+the key to the entity in question is simply put inside a keyBag. A publisher
+assertion, on the other hand, has no key and therefore the keyBag idea is not
+applicable.&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;&lt;/span&gt;&lt;b&gt;&lt;i&gt;subscriptionKey&lt;/i&gt;&lt;/b&gt;:&amp;nbsp; This optional argument of type &lt;i&gt;anyURI&lt;/i&gt;
+identifies the subscription.&amp;nbsp; To renew or change an existing subscription, a
+valid subscriptionKey MUST be provided. When establishing a new subscription,
+the subscriptionKey MAY also be either omitted or specified as an empty string in
+which case the node MUST assign a unique key. If subscriptionKey is specified
+for a new subscription, the key MUST conform to the registry’s policy on
+publisher-assigned keys.&lt;/p&gt;
+
+&lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;/span&gt;&lt;/span&gt;&lt;b&gt;&lt;i&gt;notificationInterval&lt;/i&gt;&lt;/b&gt;:&amp;nbsp; This optional argument is
+only required when asynchronous notifications are used.&amp;nbsp; It is of type
+xsd:duration and specifies how often change notifications are to be provided to
+a subscriber.&amp;nbsp; If the notificationInterval specified is not acceptable due to
+node policy, then the node adjusts the value to match the next longer time
+period that is supported.&amp;nbsp; The adjusted value is provided with the returns from
+this API.&amp;nbsp; Also see Section &lt;a href=&quot;#_Ref535515666 &quot;&gt;5.5.1.1&lt;/a&gt; &lt;i&gt;Specifying
+Durations&lt;/i&gt;.&lt;/p&gt;
+ * &lt;p&gt;Java class for subscription complex type.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * 
+ * &lt;pre&gt;
+ * &amp;lt;complexType name=&quot;subscription&quot;&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;sequence&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:sub_v3}subscriptionKey&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:sub_v3}subscriptionFilter&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}bindingKey&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:sub_v3}notificationInterval&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:sub_v3}maxEntities&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:sub_v3}expiresAfter&quot; minOccurs=&quot;0&quot;/&gt;
+ *       &amp;lt;/sequence&gt;
+ *       &amp;lt;attribute name=&quot;brief&quot; type=&quot;{urn:uddi-org:sub_v3}brief&quot; /&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ * 
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;subscription&quot;, propOrder = {
+    &quot;subscriptionKey&quot;,
+    &quot;subscriptionFilter&quot;,
+    &quot;bindingKey&quot;,
+    &quot;notificationInterval&quot;,
+    &quot;maxEntities&quot;,
+    &quot;expiresAfter&quot;
+})
+@XmlRootElement
+<span class="nc" id="L174">public class Subscription implements Serializable{</span>
+	@XmlTransient
+	private static final long serialVersionUID = -1016771256986173140L;
+	protected String subscriptionKey;
+    protected SubscriptionFilter subscriptionFilter;
+    @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;)
+    protected String bindingKey;
+    protected Duration notificationInterval;
+    protected Integer maxEntities;
+    protected XMLGregorianCalendar expiresAfter;
+    @XmlAttribute
+    protected Boolean brief;
+
+    /**
+     * Gets the value of the subscriptionKey property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getSubscriptionKey() {
+<span class="nc" id="L196">        return subscriptionKey;</span>
+    }
+
+    /**
+     * Sets the value of the subscriptionKey property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSubscriptionKey(String value) {
+<span class="nc" id="L208">        this.subscriptionKey = value;</span>
+<span class="nc" id="L209">    }</span>
+
+    /**
+     * Gets the value of the subscriptionFilter property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link SubscriptionFilter }
+     *     
+     */
+    public SubscriptionFilter getSubscriptionFilter() {
+<span class="nc" id="L220">        return subscriptionFilter;</span>
+    }
+
+    /**
+     * Sets the value of the subscriptionFilter property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link SubscriptionFilter }
+     *     
+     */
+    public void setSubscriptionFilter(SubscriptionFilter value) {
+<span class="nc" id="L232">        this.subscriptionFilter = value;</span>
+<span class="nc" id="L233">    }</span>
+
+    /**
+     * Gets the value of the bindingKey property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getBindingKey() {
+<span class="nc" id="L244">        return bindingKey;</span>
+    }
+
+    /**
+     * Sets the value of the bindingKey property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setBindingKey(String value) {
+<span class="nc" id="L256">        this.bindingKey = value;</span>
+<span class="nc" id="L257">    }</span>
+
+    /**
+     * Gets the value of the notificationInterval property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Duration }
+     *     
+     */
+    public Duration getNotificationInterval() {
+<span class="nc" id="L268">        return notificationInterval;</span>
+    }
+
+    /**
+     * Sets the value of the notificationInterval property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Duration }
+     *     
+     */
+    public void setNotificationInterval(Duration value) {
+<span class="nc" id="L280">        this.notificationInterval = value;</span>
+<span class="nc" id="L281">    }</span>
+
+    /**
+     * Gets the value of the maxEntities property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getMaxEntities() {
+<span class="nc" id="L292">        return maxEntities;</span>
+    }
+
+    /**
+     * Sets the value of the maxEntities property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setMaxEntities(Integer value) {
+<span class="nc" id="L304">        this.maxEntities = value;</span>
+<span class="nc" id="L305">    }</span>
+
+    /**
+     * Gets the value of the expiresAfter property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link XMLGregorianCalendar }
+     *     
+     */
+    public XMLGregorianCalendar getExpiresAfter() {
+<span class="nc" id="L316">        return expiresAfter;</span>
+    }
+
+    /**
+     * Sets the value of the expiresAfter property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link XMLGregorianCalendar }
+     *     
+     */
+    public void setExpiresAfter(XMLGregorianCalendar value) {
+<span class="nc" id="L328">        this.expiresAfter = value;</span>
+<span class="nc" id="L329">    }</span>
+
+    /**
+     * Gets the value of the brief property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isBrief() {
+<span class="nc" id="L340">        return brief;</span>
+    }
+
+    /**
+     * Sets the value of the brief property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setBrief(Boolean value) {
+<span class="nc" id="L352">        this.brief = value;</span>
+<span class="nc" id="L353">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

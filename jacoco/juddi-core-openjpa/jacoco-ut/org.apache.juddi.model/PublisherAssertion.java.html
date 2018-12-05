@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PublisherAssertion.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.model</a> &gt; <span class="el_source">PublisherAssertion.java</span></div><h1>PublisherAssertion.java</h1><pre class="source lang-java linenums">package org.apache.juddi.model;
+
+/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+/**
+ * @author &lt;a href=&quot;mailto:kurt@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ */
+@Entity
+@Table(name = &quot;j3_publisher_assertion&quot;)
+public class PublisherAssertion implements java.io.Serializable {
+
+        private static final long serialVersionUID = -5285434317957104272L;
+        private PublisherAssertionId id;
+        private BusinessEntity businessEntityByToKey;
+        private BusinessEntity businessEntityByFromKey;
+        private String tmodelKey;
+        private String keyName;
+        private String keyValue;
+        private String fromCheck;
+        private String toCheck;
+        private Date modified;
+<span class="pc" id="L53">        private List&lt;Signature&gt; signatures = new ArrayList&lt;Signature&gt;(0);</span>
+
+<span class="fc" id="L55">        public PublisherAssertion() {</span>
+<span class="fc" id="L56">        }</span>
+
+        public PublisherAssertion(PublisherAssertionId id,
+                BusinessEntity businessEntityByToKey,
+                BusinessEntity businessEntityByFromKey, String tmodelKey,
+<span class="nc" id="L61">                String keyName, String keyValue, String fromCheck, String toCheck) {</span>
+<span class="nc" id="L62">                this.id = id;</span>
+<span class="nc" id="L63">                this.businessEntityByToKey = businessEntityByToKey;</span>
+<span class="nc" id="L64">                this.businessEntityByFromKey = businessEntityByFromKey;</span>
+<span class="nc" id="L65">                this.tmodelKey = tmodelKey;</span>
+<span class="nc" id="L66">                this.keyName = keyName;</span>
+<span class="nc" id="L67">                this.keyValue = keyValue;</span>
+<span class="nc" id="L68">                this.fromCheck = fromCheck;</span>
+<span class="nc" id="L69">                this.toCheck = toCheck;</span>
+<span class="nc" id="L70">        }</span>
+
+        public void setModified(Date created) {
+<span class="fc" id="L73">                this.modified = created;</span>
+<span class="fc" id="L74">        }</span>
+
+        @Temporal(TemporalType.TIMESTAMP)
+        @Column(name = &quot;modified&quot;, nullable = false, length = 29)
+        public Date getModified() {
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">                if (modified != null) {</span>
+<span class="fc" id="L80">                        return new Date(modified.getTime());</span>
+                } else {
+<span class="nc" id="L82">                        return null;</span>
+                }
+        }
+
+        @EmbeddedId
+        @AttributeOverrides({
+                @AttributeOverride(name = &quot;fromKey&quot;, column = @Column(name = &quot;from_key&quot;, nullable = false, length = 255)),
+        	@AttributeOverride(name = &quot;toKey&quot;, column = @Column(name = &quot;to_key&quot;, nullable = false, length = 255))})
+        public PublisherAssertionId getId() {
+<span class="fc" id="L91">                return this.id;</span>
+        }
+
+        public void setId(PublisherAssertionId id) {
+<span class="fc" id="L95">                this.id = id;</span>
+<span class="fc" id="L96">        }</span>
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = &quot;to_key&quot;, nullable = false, insertable = false, updatable = false)
+
+        public BusinessEntity getBusinessEntityByToKey() {
+<span class="fc" id="L102">                return this.businessEntityByToKey;</span>
+        }
+
+        public void setBusinessEntityByToKey(BusinessEntity businessEntityByToKey) {
+<span class="fc" id="L106">                this.businessEntityByToKey = businessEntityByToKey;</span>
+<span class="fc" id="L107">        }</span>
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = &quot;from_key&quot;, nullable = false, insertable = false, updatable = false)
+
+        public BusinessEntity getBusinessEntityByFromKey() {
+<span class="fc" id="L113">                return this.businessEntityByFromKey;</span>
+        }
+
+        public void setBusinessEntityByFromKey(
+                BusinessEntity businessEntityByFromKey) {
+<span class="fc" id="L118">                this.businessEntityByFromKey = businessEntityByFromKey;</span>
+<span class="fc" id="L119">        }</span>
+
+        @Column(name = &quot;tmodel_key&quot;, nullable = false, length = 255)
+        public String getTmodelKey() {
+<span class="fc" id="L123">                return this.tmodelKey;</span>
+        }
+
+        public void setTmodelKey(String tmodelKey) {
+<span class="fc" id="L127">                this.tmodelKey = tmodelKey;</span>
+<span class="fc" id="L128">        }</span>
+
+        @Column(name = &quot;key_name&quot;, nullable = false)
+
+        public String getKeyName() {
+<span class="fc" id="L133">                return this.keyName;</span>
+        }
+
+        public void setKeyName(String keyName) {
+<span class="fc" id="L137">                this.keyName = keyName;</span>
+<span class="fc" id="L138">        }</span>
+
+        @Column(name = &quot;key_value&quot;, nullable = false)
+
+        public String getKeyValue() {
+<span class="fc" id="L143">                return this.keyValue;</span>
+        }
+
+        public void setKeyValue(String keyValue) {
+<span class="fc" id="L147">                this.keyValue = keyValue;</span>
+<span class="fc" id="L148">        }</span>
+
+        @Column(name = &quot;from_check&quot;, nullable = false, length = 5)
+        public String getFromCheck() {
+<span class="fc" id="L152">                return this.fromCheck;</span>
+        }
+
+        public void setFromCheck(String fromCheck) {
+<span class="fc" id="L156">                this.fromCheck = fromCheck;</span>
+<span class="fc" id="L157">        }</span>
+
+        @Column(name = &quot;to_check&quot;, nullable = false, length = 5)
+        public String getToCheck() {
+<span class="fc" id="L161">                return this.toCheck;</span>
+        }
+
+        public void setToCheck(String toCheck) {
+<span class="fc" id="L165">                this.toCheck = toCheck;</span>
+<span class="fc" id="L166">        }</span>
+
+        @Override
+        public boolean equals(Object compareto) {
+<span class="pc bpc" id="L170" title="1 of 2 branches missed.">                if (compareto instanceof PublisherAssertion) {</span>
+<span class="fc" id="L171">                        PublisherAssertion rhs = (PublisherAssertion) compareto;</span>
+<span class="fc" id="L172">                        return (this.id.equals(rhs.id));</span>
+                }
+<span class="nc" id="L174">                return false;</span>
+        }
+
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+        public List&lt;Signature&gt; getSignatures() {
+<span class="fc bfc" id="L179" title="All 2 branches covered.">                if (signatures == null) {</span>
+<span class="fc" id="L180">                        signatures = new ArrayList&lt;Signature&gt;();</span>
+                }
+<span class="fc" id="L182">                return signatures;</span>
+        }
+
+        public void setSignatures(List&lt;Signature&gt; signatures) {
+<span class="fc" id="L186">                this.signatures = signatures;</span>
+<span class="fc" id="L187">        }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

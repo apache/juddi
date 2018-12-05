@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BindingTemplate.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.api_v2</a> &gt; <span class="el_source">BindingTemplate.java</span></div><h1>BindingTemplate.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.uddi.api_v2;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+
+
+/**
+ * &lt;p&gt;Java class for bindingTemplate complex type.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * 
+ * &lt;pre&gt;
+ * &amp;lt;complexType name=&quot;bindingTemplate&quot;&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;sequence&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v2}description&quot; maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;choice&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v2}accessPoint&quot;/&gt;
+ *           &amp;lt;element ref=&quot;{urn:uddi-org:api_v2}hostingRedirector&quot;/&gt;
+ *         &amp;lt;/choice&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v2}tModelInstanceDetails&quot;/&gt;
+ *       &amp;lt;/sequence&gt;
+ *       &amp;lt;attribute name=&quot;serviceKey&quot; type=&quot;{urn:uddi-org:api_v2}serviceKey&quot; /&gt;
+ *       &amp;lt;attribute name=&quot;bindingKey&quot; use=&quot;required&quot; type=&quot;{urn:uddi-org:api_v2}bindingKey&quot; /&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;bindingTemplate&quot;, propOrder = {
+    &quot;description&quot;,
+    &quot;accessPoint&quot;,
+    &quot;hostingRedirector&quot;,
+    &quot;tModelInstanceDetails&quot;
+})
+<span class="nc" id="L61">public class BindingTemplate {</span>
+
+    protected List&lt;Description&gt; description;
+    protected AccessPoint accessPoint;
+    protected HostingRedirector hostingRedirector;
+    @XmlElement(required = true)
+    protected TModelInstanceDetails tModelInstanceDetails;
+    @XmlAttribute(name = &quot;serviceKey&quot;)
+    protected String serviceKey;
+    @XmlAttribute(name = &quot;bindingKey&quot;, required = true)
+    protected String bindingKey;
+
+    /**
+     * Gets the value of the description property.
+     * 
+     * &lt;p&gt;
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a &lt;CODE&gt;set&lt;/CODE&gt; method for the description property.
+     * 
+     * &lt;p&gt;
+     * For example, to add a new item, do as follows:
+     * &lt;pre&gt;
+     *    getDescription().add(newItem);
+     * &lt;/pre&gt;
+     * 
+     * 
+     * &lt;p&gt;
+     * Objects of the following type(s) are allowed in the list
+     * {@link Description }
+     * 
+     * 
+     */
+    public List&lt;Description&gt; getDescription() {
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (description == null) {</span>
+<span class="nc" id="L97">            description = new ArrayList&lt;Description&gt;();</span>
+        }
+<span class="nc" id="L99">        return this.description;</span>
+    }
+
+    /**
+     * Gets the value of the accessPoint property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link AccessPoint }
+     *     
+     */
+    public AccessPoint getAccessPoint() {
+<span class="nc" id="L111">        return accessPoint;</span>
+    }
+
+    /**
+     * Sets the value of the accessPoint property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link AccessPoint }
+     *     
+     */
+    public void setAccessPoint(AccessPoint value) {
+<span class="nc" id="L123">        this.accessPoint = value;</span>
+<span class="nc" id="L124">    }</span>
+
+    /**
+     * Gets the value of the hostingRedirector property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link HostingRedirector }
+     *     
+     */
+    public HostingRedirector getHostingRedirector() {
+<span class="nc" id="L135">        return hostingRedirector;</span>
+    }
+
+    /**
+     * Sets the value of the hostingRedirector property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link HostingRedirector }
+     *     
+     */
+    public void setHostingRedirector(HostingRedirector value) {
+<span class="nc" id="L147">        this.hostingRedirector = value;</span>
+<span class="nc" id="L148">    }</span>
+
+    /**
+     * Gets the value of the tModelInstanceDetails property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link TModelInstanceDetails }
+     *     
+     */
+    public TModelInstanceDetails getTModelInstanceDetails() {
+<span class="nc" id="L159">        return tModelInstanceDetails;</span>
+    }
+
+    /**
+     * Sets the value of the tModelInstanceDetails property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link TModelInstanceDetails }
+     *     
+     */
+    public void setTModelInstanceDetails(TModelInstanceDetails value) {
+<span class="nc" id="L171">        this.tModelInstanceDetails = value;</span>
+<span class="nc" id="L172">    }</span>
+
+    /**
+     * Gets the value of the serviceKey property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getServiceKey() {
+<span class="nc" id="L183">        return serviceKey;</span>
+    }
+
+    /**
+     * Sets the value of the serviceKey property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setServiceKey(String value) {
+<span class="nc" id="L195">        this.serviceKey = value;</span>
+<span class="nc" id="L196">    }</span>
+
+    /**
+     * Gets the value of the bindingKey property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getBindingKey() {
+<span class="nc" id="L207">        return bindingKey;</span>
+    }
+
+    /**
+     * Sets the value of the bindingKey property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setBindingKey(String value) {
+<span class="nc" id="L219">        this.bindingKey = value;</span>
+<span class="nc" id="L220">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

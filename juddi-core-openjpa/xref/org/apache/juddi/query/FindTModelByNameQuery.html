@@ -59,7 +59,7 @@
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>  	@SuppressWarnings(<span class="jxr_string">"unused"</span>)
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Log log = LogFactory.getLog(FindTModelByNameQuery.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> List&lt;?&gt; select(EntityManager em, <a href="../../../../org/apache/juddi/query/util/FindQualifiers.html">FindQualifiers</a> fq, Name name, List&lt;?&gt; keysIn, DynamicQuery.Parameter... restrictions) {
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> List&lt;Object&gt; select(EntityManager em, <a href="../../../../org/apache/juddi/query/util/FindQualifiers.html">FindQualifiers</a> fq, Name name, List&lt;Object&gt; keysIn, DynamicQuery.Parameter... restrictions) {
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  		<em class="jxr_comment">// If keysIn is not null and empty, then search is over.</em>
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  		<strong class="jxr_keyword">if</strong> ((keysIn != <strong class="jxr_keyword">null</strong>) &amp;&amp; (keysIn.isEmpty()))
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  			<strong class="jxr_keyword">return</strong> keysIn;

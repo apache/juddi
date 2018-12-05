@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Uddiuddiorgidentifierisreplacedby.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.validation.vsv</a> &gt; <span class="el_source">Uddiuddiorgidentifierisreplacedby.java</span></div><h1>Uddiuddiorgidentifierisreplacedby.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2014 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.validation.vsv;
+
+import java.util.Collections;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.model.Tmodel;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.InvalidValueException;
+import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.api_v3.TModel;
+import org.uddi.api_v3.TModelInstanceInfo;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * UDDI provides a mechanism that may be used by publishers to tag their
+ * businessEntities and tModels with information that identifies them according
+ * to any number of identification systems. This tModel represents an identifier
+ * system that may be used to identify the tModel or businessEntity that
+ * logically replaces the tModel or businessEntity in which it is used. This
+ * version of the isReplacedBy identifier system replaces the prior version of
+ * this identifier system by providing a means for referring to replacement
+ * entities that have version 3 format keys.
+ *
+ * It is often desirable to gracefully retire a tModel in favor of a
+ * replacement. For example, when a Web service definition is replaced by an
+ * incompatible version, the publisher of the specification may wish to leave
+ * the tModel for the existing definition in place so that existing uses will
+ * not be disturbed, while at the same time making it clear that there is a
+ * replacement available. The UDDI isReplacedBy identifier system, coupled with
+ * the behavior of UDDI with respect to obsolete tModels, fills this need by
+ * allowing the obsolete tModel to point to its replacement. See Section 5.2.11
+ * delete_tModel.
+ *
+ * The isReplacedBy identifier system exists in prior versions of UDDI.
+ * keyedReferences that refer to this original isReplacedBy identifier system
+ * contain entity keys in the version 1 and 2 formats (as UUIDs with the uuid or
+ * no scheme prefix). When accessed using a prior version API in a multi-version
+ * registry, the older isReplacedBy identifier system yields valid references to
+ * businessEntity or tModel keys that are in the format of the prior version,
+ * and thus remain valid. When viewed using the version 3 UDDI API these same
+ * references to the earlier isReplacedBy identifier system contain invalid
+ * version 3 format keys. A new version of this identifier system is required to
+ * be able to reference the set of values defined by version 3 format keys.
+ * 
+* &lt;p class=&quot;MsoBodyText&quot;&gt;The keyValues in keyedReferences that refer to this
+ * tModel must be tModelKeys or businessKeys. Such a keyValue specifies the
+ * entity that is the replacement for the entity in which the keyedReference
+ * appears. The above and further validation requirements are as follows:&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;a.&lt;span
+ * style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/span&gt;In the case where a
+ * reference is made from an obsolete business entity the following validation
+ * rules apply:&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.25in;text-indent:-.25in&quot;&gt;1.&lt;span
+ * style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/span&gt;reference to a new
+ * business entity; this is a valid operation&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.25in;text-indent:-.25in&quot;&gt;2.&lt;span
+ * style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/span&gt;reference to self;
+ * this is invalid&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.25in;text-indent:-.25in&quot;&gt;3.&lt;span
+ * style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/span&gt;reference to a
+ * service, binding or tModel; this is an invalid operation given that the
+ * entity being pointed to must be a business&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.25in;text-indent:-.25in&quot;&gt;4.&lt;span
+ * style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/span&gt;reference to another
+ * publisher’s business; this is a valid operation; no ownership check is
+ * made&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.25in;text-indent:-.25in&quot;&gt;5.&lt;span
+ * style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/span&gt;reference to another
+ * publisher’s service, binding or tModel; this is an invalid operation because
+ * of a.3 above&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.25in;text-indent:-.25in&quot;&gt;6.&lt;span
+ * style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/span&gt;reference to invalid
+ * keys; this is an invalid operation; a key must be valid.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;b.&lt;span
+ * style=&quot;font:7.0pt &amp;quot;Times New Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;In the case where a reference is made from an obsolete tModel the
+ * following validation rules apply:&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.25in;text-indent:-.25in&quot;&gt;1.&lt;span
+ * style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/span&gt;reference to a new
+ * tModel; this is a valid operation&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.25in;text-indent:-.25in&quot;&gt;2.&lt;span
+ * style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/span&gt;reference to self;
+ * this is invalid&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.25in;text-indent:-.25in&quot;&gt;3.&lt;span
+ * style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/span&gt;reference to a
+ * service, binding or business; this is an invalid operation given that the
+ * entity being pointed to must be a tModel&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.25in;text-indent:-.25in&quot;&gt;4.&lt;span
+ * style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/span&gt;reference to another
+ * publisher’s tModel; this is a valid operation; no ownership check is made&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.25in;text-indent:-.25in&quot;&gt;5.&lt;span
+ * style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/span&gt;reference to another
+ * publisher’s service, binding or business; this is an invalid operation
+ * because of b.3 above&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.25in;text-indent:-.25in&quot;&gt;6.&lt;span
+ * style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/span&gt;reference to invalid
+ * keys; this is an invalid operation; a key must be valid.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.25in;text-indent:-.25in&quot;&gt;7.&lt;span
+ * style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/span&gt;reference to a
+ * hidden tModel; this is a valid operation&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;c.&lt;span
+ * style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/span&gt;Adding isReplacedBy
+ * to a service’s or binding’s category bag: this is a semantically wrong
+ * operation and will be rejected. &lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot;&gt;When returning an error encountered in the above,
+ * E_invalidValue will be returned to indicate that a value that was passed in a
+ * keyValue attribute did not pass validation.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot;&gt;While this validation is intended at save time,
+ * references to replacing business entities may become invalid if (A) the
+ * business is deleted and (B) in V3 the business is deleted and then the key is
+ * re-used for a different entity. As such, in a replicating registry, nodes
+ * processing changeRecords related to business entities or tModels that refer
+ * to (now) invalid or missing business or tModels entity keys respectively,
+ * MUST NOT raise replication errors.&lt;/p&gt;
+ *
+ * @author Alex O'Ree
+ */
+<span class="fc" id="L172">public class Uddiuddiorgidentifierisreplacedby implements ValueSetValidator {</span>
+
+        public String getMyKey(){
+<span class="fc" id="L175">                return &quot;uddi:uddi.org:identifier:isreplacedby&quot;;</span>
+        }
+
+        @Override
+        public void validateValuesBindingTemplate(List&lt;BindingTemplate&gt; items, String xpath) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L181">                        return;</span>
+                }
+
+<span class="pc bpc" id="L184" title="1 of 2 branches missed.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">                        if (items.get(i).getCategoryBag() != null) {</span>
+<span class="nc" id="L186">                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), getMyKey(), &quot;binding&quot;);</span>
+<span class="nc" id="L187">                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), getMyKey(), &quot;binding&quot;);</span>
+                        }
+<span class="nc bnc" id="L189" title="All 2 branches missed.">                        if (items.get(i).getTModelInstanceDetails() != null) {</span>
+<span class="nc bnc" id="L190" title="All 2 branches missed.">                                for (int k = 0; k &lt; items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">                                        if (items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k) != null) {</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">                                                if (getMyKey().equalsIgnoreCase(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey())) {</span>
+<span class="nc" id="L193">                                                        throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;not allowed on binding templates&quot;));</span>
+                                                }
+                                        }
+                                }
+                        }
+                }
+<span class="fc" id="L199">        }</span>
+
+        @Override
+        public void validateValuesBusinessEntity(List&lt;BusinessEntity&gt; items) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L204">                        return;</span>
+                }
+                //   In the case where a reference is made from an obsolete tModel the following validation rules apply:
+<span class="fc" id="L207">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L208">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L210">                        tx.begin();</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">                        for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">                                if (items.get(i).getCategoryBag() != null) {</span>
+<span class="fc bfc" id="L213" title="All 2 branches covered.">                                        for (int k = 0; k &lt; items.get(i).getCategoryBag().getKeyedReference().size(); k++) {</span>
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">                                                if (getMyKey().equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey())) {</span>
+                                                        //reference to self; this is invalid
+<span class="pc bpc" id="L216" title="1 of 2 branches missed.">                                                        if (items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey().equalsIgnoreCase(items.get(i).getBusinessKey())) {</span>
+<span class="nc" id="L217">                                                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Referenced key &quot; + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + &quot; can't reference itself&quot;));</span>
+                                                        }
+
+                                                        try {
+<span class="fc" id="L221">                                                                org.apache.juddi.model.BusinessEntity    find = em.find(org.apache.juddi.model.BusinessEntity.class, items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue());</span>
+<span class="fc bfc" id="L222" title="All 2 branches covered.">                                                                if (find == null) {</span>
+                                                                        // reference to a new tModel; this is a valid operation
+<span class="pc bpc" id="L224" title="1 of 2 branches missed.">                                                                        if (!ContainsBusinessKey(items, items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue())) {</span>
+<span class="nc" id="L225">                                                                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Referenced key &quot; + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + &quot; does not exist&quot;));</span>
+                                                                        }
+                                                                }
+<span class="nc" id="L228">                                                        } catch (ClassCastException c) {</span>
+                                                                // reference to a service, binding or business; this is an invalid operation given that the entity being pointed to must be a tModel
+<span class="nc" id="L230">                                                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Referenced key &quot; + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + &quot; must be a business&quot;));</span>
+
+<span class="fc" id="L232">                                                        }</span>
+                                                }
+                                        }
+                                }
+<span class="fc bfc" id="L236" title="All 2 branches covered.">                                if (items.get(i).getIdentifierBag() != null) {</span>
+<span class="fc bfc" id="L237" title="All 2 branches covered.">                                        for (int k = 0; k &lt; items.get(i).getIdentifierBag().getKeyedReference().size(); k++) {</span>
+<span class="pc bpc" id="L238" title="1 of 2 branches missed.">                                                if (getMyKey().equalsIgnoreCase(items.get(i).getIdentifierBag().getKeyedReference().get(k).getTModelKey())) {</span>
+                                                        //reference to self; this is invalid
+<span class="pc bpc" id="L240" title="1 of 2 branches missed.">                                                        if (items.get(i).getIdentifierBag().getKeyedReference().get(k).getTModelKey().equalsIgnoreCase(items.get(i).getBusinessKey())) {</span>
+<span class="nc" id="L241">                                                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Referenced key &quot; + items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue() + &quot; can't reference itself&quot;));</span>
+                                                        }
+
+                                                        try {
+<span class="fc" id="L245">                                                                org.apache.juddi.model.BusinessEntity find = em.find(org.apache.juddi.model.BusinessEntity.class, items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue());</span>
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">                                                                if (find == null) {</span>
+                                                                        // reference to a new tModel; this is a valid operation
+<span class="nc bnc" id="L248" title="All 2 branches missed.">                                                                        if (!ContainsBusinessKey(items, items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue())) {</span>
+<span class="nc" id="L249">                                                                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Referenced key &quot; + items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue() + &quot; does not exist&quot;));</span>
+                                                                        }
+                                                                }
+<span class="nc" id="L252">                                                        } catch (ClassCastException c) {</span>
+                                                                // reference to a service, binding or business; this is an invalid operation given that the entity being pointed to must be a tModel
+<span class="nc" id="L254">                                                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Referenced key &quot; + items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue() + &quot; must be a business&quot;));</span>
+
+<span class="fc" id="L256">                                                        }</span>
+                                                }
+                                        }
+                                }
+                        }
+<span class="fc" id="L261">                        tx.commit();</span>
+<span class="nc" id="L262">                } catch (DispositionReportFaultMessage d) {</span>
+<span class="nc" id="L263">                        throw d;</span>
+                } finally {
+<span class="pc bpc" id="L265" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L266">                                tx.rollback();</span>
+                        }
+<span class="pc" id="L268">                        em.close();</span>
+<span class="fc" id="L269">                }</span>
+<span class="fc" id="L270">        }</span>
+
+        @Override
+        public void validateValuesBusinessService(List&lt;BusinessService&gt; items, String xpath) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L274" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L275">                        return;</span>
+                }
+<span class="pc bpc" id="L277" title="1 of 2 branches missed.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">                        if (items.get(i).getCategoryBag() != null) {</span>
+<span class="nc" id="L279">                                AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getCategoryBag().getKeyedReference(), getMyKey(), &quot;service&quot;);</span>
+<span class="nc" id="L280">                                AbstractSimpleValidator.validateKeyNotPresentKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup(), getMyKey(), &quot;service&quot;);</span>
+                        }
+<span class="nc bnc" id="L282" title="All 2 branches missed.">                        if (items.get(i).getBindingTemplates() != null) {</span>
+<span class="nc" id="L283">                                validateValuesBindingTemplate(items.get(i).getBindingTemplates().getBindingTemplate(), xpath + xpath + &quot;businessService(&quot; + i + &quot;).identifierBag.&quot;);</span>
+                        }
+                }
+<span class="fc" id="L286">        }</span>
+
+        @Override
+        public void validateValuesPublisherAssertion(List&lt;PublisherAssertion&gt; items) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L290" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L291">                        return;</span>
+                }
+<span class="pc bpc" id="L293" title="1 of 2 branches missed.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="nc" id="L294">                        AbstractSimpleValidator.validateKeyNotPresentKeyRef(items.get(i).getKeyedReference(), getMyKey(), &quot;publisherAssertion&quot;);</span>
+                }
+<span class="fc" id="L296">        }</span>
+
+
+        @Override
+        public void validateTmodelInstanceDetails(List&lt;TModelInstanceInfo&gt; tModelInstanceInfo, String xpath) throws DispositionReportFaultMessage {
+<span class="nc bnc" id="L301" title="All 2 branches missed.">                if (tModelInstanceInfo == null) {</span>
+<span class="nc" id="L302">                        return;</span>
+                }
+<span class="nc bnc" id="L304" title="All 2 branches missed.">                for (int k = 0; k &lt; tModelInstanceInfo.size(); k++) {</span>
+<span class="nc bnc" id="L305" title="All 2 branches missed.">                        if (getMyKey().equalsIgnoreCase(tModelInstanceInfo.get(k).getTModelKey())) {</span>
+<span class="nc" id="L306">                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;not allowed on tModel instance info&quot;));</span>
+                        }
+                }
+<span class="nc" id="L309">        }</span>
+
+        @Override
+        public void validateValuesTModel(List&lt;TModel&gt; items) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L313" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L314">                        return;</span>
+                }
+                //   In the case where a reference is made from an obsolete tModel the following validation rules apply:
+<span class="fc" id="L317">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L318">                EntityTransaction tx = em.getTransaction();</span>
+                
+                try {
+<span class="fc" id="L321">                        tx.begin();</span>
+<span class="fc bfc" id="L322" title="All 2 branches covered.">                        for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="fc bfc" id="L323" title="All 2 branches covered.">                                if (items.get(i).getCategoryBag() != null) {</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">                                        for (int k = 0; k &lt; items.get(i).getCategoryBag().getKeyedReference().size(); k++) {</span>
+<span class="pc bpc" id="L325" title="1 of 2 branches missed.">                                                if (getMyKey().equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey())) {</span>
+                                                        //reference to self; this is invalid
+<span class="pc bpc" id="L327" title="1 of 2 branches missed.">                                                        if (items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey().equalsIgnoreCase(items.get(i).getTModelKey())) {</span>
+<span class="nc" id="L328">                                                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Referenced key &quot; + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + &quot; can't reference itself&quot;));</span>
+                                                        }
+
+<span class="fc" id="L331">                                                        Tmodel find = null;</span>
+                                                        try {
+<span class="fc" id="L333">                                                                find = em.find(org.apache.juddi.model.Tmodel.class, items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue());</span>
+
+<span class="nc" id="L335">                                                        } catch (ClassCastException c) {</span>
+                                                                // reference to a service, binding or business; this is an invalid operation given that the entity being pointed to must be a tModel
+<span class="nc" id="L337">                                                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Referenced key &quot; + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + &quot; must be a tModel&quot;));</span>
+
+<span class="fc" id="L339">                                                        }</span>
+<span class="fc bfc" id="L340" title="All 2 branches covered.">                                                        if (find == null) {</span>
+                                                                // reference to a new tModel; this is a valid operation
+<span class="nc bnc" id="L342" title="All 2 branches missed.">                                                                if (!ContainsKey(items, items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue())) {</span>
+<span class="nc" id="L343">                                                                        throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Referenced key &quot; + items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() + &quot; does not exist&quot;));</span>
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                }
+<span class="fc bfc" id="L349" title="All 2 branches covered.">                                if (items.get(i).getIdentifierBag() != null) {</span>
+<span class="fc bfc" id="L350" title="All 2 branches covered.">                                        for (int k = 0; k &lt; items.get(i).getIdentifierBag().getKeyedReference().size(); k++) {</span>
+<span class="pc bpc" id="L351" title="1 of 2 branches missed.">                                                if (getMyKey().equalsIgnoreCase(items.get(i).getIdentifierBag().getKeyedReference().get(k).getTModelKey())) {</span>
+                                                        //reference to self; this is invalid
+<span class="pc bpc" id="L353" title="1 of 2 branches missed.">                                                        if (items.get(i).getIdentifierBag().getKeyedReference().get(k).getTModelKey().equalsIgnoreCase(items.get(i).getTModelKey())) {</span>
+<span class="nc" id="L354">                                                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Referenced key &quot; + items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue() + &quot; can't reference itself&quot;));</span>
+                                                        }
+<span class="fc" id="L356">                                                        Tmodel find = null;</span>
+                                                        try {
+<span class="fc" id="L358">                                                                find = em.find(org.apache.juddi.model.Tmodel.class, items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue());</span>
+
+<span class="nc" id="L360">                                                        } catch (ClassCastException c) {</span>
+                                                                // reference to a service, binding or business; this is an invalid operation given that the entity being pointed to must be a tModel
+<span class="nc" id="L362">                                                                throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Referenced key &quot; + items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue() + &quot; must be a tModel&quot;));</span>
+
+<span class="fc" id="L364">                                                        }</span>
+<span class="pc bpc" id="L365" title="1 of 2 branches missed.">                                                        if (find == null) {</span>
+                                                                // reference to a new tModel; this is a valid operation
+<span class="nc bnc" id="L367" title="All 2 branches missed.">                                                                if (!ContainsKey(items, items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue())) {</span>
+<span class="nc" id="L368">                                                                        throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Referenced key &quot; + items.get(i).getIdentifierBag().getKeyedReference().get(k).getKeyValue() + &quot; does not exist&quot;));</span>
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+<span class="fc" id="L375">                        tx.commit();</span>
+<span class="nc" id="L376">                } catch (DispositionReportFaultMessage d) {</span>
+<span class="nc" id="L377">                        throw d;</span>
+                } finally {
+<span class="pc bpc" id="L379" title="2 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="pc" id="L380">                                tx.rollback();</span>
+                        }
+<span class="fc" id="L382">                        em.close();</span>
+<span class="fc" id="L383">                }</span>
+<span class="fc" id="L384">        }</span>
+
+        @Override
+        public List&lt;String&gt; getValidValues() {
+<span class="nc" id="L388">                return Collections.EMPTY_LIST;</span>
+        }
+
+        private boolean ContainsKey(List&lt;TModel&gt; items, String keyValue) {
+<span class="nc bnc" id="L392" title="All 2 branches missed.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="nc bnc" id="L393" title="All 2 branches missed.">                        if (items.get(i).getTModelKey().equalsIgnoreCase(keyValue)) {</span>
+<span class="nc" id="L394">                                return true;</span>
+                        }
+                }
+<span class="nc" id="L397">                return false;</span>
+        }
+
+        private boolean ContainsBusinessKey(List&lt;BusinessEntity&gt; items, String keyValue) {
+<span class="pc bpc" id="L401" title="1 of 2 branches missed.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="pc bpc" id="L402" title="1 of 2 branches missed.">                        if (items.get(i).getBusinessKey().equalsIgnoreCase(keyValue)) {</span>
+<span class="fc" id="L403">                                return true;</span>
+                        }
+                }
+<span class="nc" id="L406">                return false;</span>
+        }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

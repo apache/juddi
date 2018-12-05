@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReplicationConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.repl_v3</a> &gt; <span class="el_source">ReplicationConfiguration.java</span></div><h1>ReplicationConfiguration.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.uddi.repl_v3;
+
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import org.uddi.api_v3.Contact;
+import org.w3._2000._09.xmldsig_.SignatureType;
+
+
+/**
+ * &lt;p&gt;Java class for anonymous complex type.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * 
+ * &lt;pre&gt;
+ * &amp;lt;complexType&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;sequence&gt;
+ *         &amp;lt;element name=&quot;serialNumber&quot; type=&quot;{urn:uddi-org:repl_v3}USN_type&quot;/&gt;
+ *         &amp;lt;element name=&quot;timeOfConfigurationUpdate&quot; type=&quot;{urn:uddi-org:repl_v3}timeOfConfigurationUpdate_type&quot;/&gt;
+ *         &amp;lt;element name=&quot;registryContact&quot;&gt;
+ *           &amp;lt;complexType&gt;
+ *             &amp;lt;complexContent&gt;
+ *               &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *                 &amp;lt;sequence&gt;
+ *                   &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}contact&quot;/&gt;
+ *                 &amp;lt;/sequence&gt;
+ *               &amp;lt;/restriction&gt;
+ *             &amp;lt;/complexContent&gt;
+ *           &amp;lt;/complexType&gt;
+ *         &amp;lt;/element&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:repl_v3}operator&quot; maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:repl_v3}communicationGraph&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;maximumTimeToSyncRegistry&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}integer&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;maximumTimeToGetChanges&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}integer&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{http://www.w3.org/2000/09/xmldsig#}Signature&quot; maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot;/&gt;
+ *       &amp;lt;/sequence&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;&quot;, propOrder = {
+    &quot;serialNumber&quot;,
+    &quot;timeOfConfigurationUpdate&quot;,
+    &quot;registryContact&quot;,
+    &quot;operator&quot;,
+    &quot;communicationGraph&quot;,
+    &quot;maximumTimeToSyncRegistry&quot;,
+    &quot;maximumTimeToGetChanges&quot;,
+    &quot;signature&quot;
+})
+@XmlSeeAlso({
+        org.uddi.api_v3.ObjectFactory.class,
+        org.uddi.custody_v3.ObjectFactory.class,
+        org.apache.juddi.ObjectFactory.class,
+        org.apache.juddi.api_v3.ObjectFactory.class,
+        org.uddi.repl_v3.ObjectFactory.class,
+        org.w3._2000._09.xmldsig_.ObjectFactory.class
+        
+        }
+)
+@XmlRootElement(name = &quot;replicationConfiguration&quot;)
+<span class="fc" id="L93">public class ReplicationConfiguration implements Serializable{</span>
+	@XmlTransient
+	private static final long serialVersionUID = 621260248291581845L;
+    protected long serialNumber;
+    @XmlElement(required = true)
+    protected String timeOfConfigurationUpdate;
+    @XmlElement(required = true)
+    protected ReplicationConfiguration.RegistryContact registryContact;
+    protected List&lt;Operator&gt; operator;
+    protected CommunicationGraph communicationGraph;
+    protected BigInteger maximumTimeToSyncRegistry;
+    @XmlElement(required = true)
+    protected BigInteger maximumTimeToGetChanges;
+    @XmlElement(name = &quot;Signature&quot;, namespace = &quot;http://www.w3.org/2000/09/xmldsig#&quot;)
+    protected List&lt;SignatureType&gt; signature;
+
+    /**
+     * Gets the value of the serialNumber property.
+     * 
+     */
+    public long getSerialNumber() {
+<span class="nc" id="L114">        return serialNumber;</span>
+    }
+
+    /**
+     * Sets the value of the serialNumber property.
+     * 
+     */
+    public void setSerialNumber(long value) {
+<span class="fc" id="L122">        this.serialNumber = value;</span>
+<span class="fc" id="L123">    }</span>
+
+    /**
+     * Gets the value of the timeOfConfigurationUpdate property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getTimeOfConfigurationUpdate() {
+<span class="nc" id="L134">        return timeOfConfigurationUpdate;</span>
+    }
+
+    /**
+     * Sets the value of the timeOfConfigurationUpdate property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setTimeOfConfigurationUpdate(String value) {
+<span class="fc" id="L146">        this.timeOfConfigurationUpdate = value;</span>
+<span class="fc" id="L147">    }</span>
+
+    /**
+     * Gets the value of the registryContact property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ReplicationConfiguration.RegistryContact }
+     *     
+     */
+    public ReplicationConfiguration.RegistryContact getRegistryContact() {
+<span class="fc" id="L158">        return registryContact;</span>
+    }
+
+    /**
+     * Sets the value of the registryContact property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ReplicationConfiguration.RegistryContact }
+     *     
+     */
+    public void setRegistryContact(ReplicationConfiguration.RegistryContact value) {
+<span class="fc" id="L170">        this.registryContact = value;</span>
+<span class="fc" id="L171">    }</span>
+
+    /**
+     * Gets the value of the operator property.
+     * 
+     * &lt;p&gt;
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a &lt;CODE&gt;set&lt;/CODE&gt; method for the operator property.
+     * 
+     * &lt;p&gt;
+     * For example, to add a new item, do as follows:
+     * &lt;pre&gt;
+     *    getOperator().add(newItem);
+     * &lt;/pre&gt;
+     * 
+     * 
+     * &lt;p&gt;
+     * Objects of the following type(s) are allowed in the list
+     * {@link Operator }
+     * 
+     * 
+     */
+    public List&lt;Operator&gt; getOperator() {
+<span class="pc bpc" id="L196" title="1 of 2 branches missed.">        if (operator == null) {</span>
+<span class="fc" id="L197">            operator = new ArrayList&lt;Operator&gt;();</span>
+        }
+<span class="fc" id="L199">        return this.operator;</span>
+    }
+
+    /**
+     * Gets the value of the communicationGraph property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CommunicationGraph }
+     *     
+     */
+    public CommunicationGraph getCommunicationGraph() {
+<span class="fc" id="L211">        return communicationGraph;</span>
+    }
+
+    /**
+     * Sets the value of the communicationGraph property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CommunicationGraph }
+     *     
+     */
+    public void setCommunicationGraph(CommunicationGraph value) {
+<span class="fc" id="L223">        this.communicationGraph = value;</span>
+<span class="fc" id="L224">    }</span>
+
+    /**
+     * The element, maximumTimeToSyncRegistry, allows for the specification of when (in hours) a change made at any single node in the Registry is expected to be visible at all nodes within the registry.  The element, maximumTimeToGetChanges, allows for the specification of the maximum amount of time (in hours) that an individual node may wait to request changes.  Use of this element is determined by registry policy as detailed in Section 9.6.4 Replication Policies.
+
+
+     * Gets the value of the maximumTimeToSyncRegistry property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *     
+     */
+    public BigInteger getMaximumTimeToSyncRegistry() {
+<span class="nc" id="L238">        return maximumTimeToSyncRegistry;</span>
+    }
+
+    /**
+     * Sets the value of the maximumTimeToSyncRegistry property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *     
+     */
+    public void setMaximumTimeToSyncRegistry(BigInteger value) {
+<span class="nc" id="L250">        this.maximumTimeToSyncRegistry = value;</span>
+<span class="nc" id="L251">    }</span>
+
+    /**
+     * The element, maximumTimeToGetChanges, allows for the specification of the maximum amount of time (in hours) that an individual node may wait to request changes. Nodes MUST perform a get_changeRecords replication message within the time frame defined by the value of the maximumTimeToGetChanges element defined within the Replication Configuration Structure.  Thus, change data can always be propagated throughout the UDDI registry within a finite amount of time, while at the same time changes will often propagate quickly. Use of this element is determined by registry policy as detailed in Section 9.6.4 Replication Policies. 
+
+
+     * Gets the value of the maximumTimeToGetChanges property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *     
+     */
+    public BigInteger getMaximumTimeToGetChanges() {
+<span class="nc" id="L265">        return maximumTimeToGetChanges;</span>
+    }
+
+    /**
+     * Sets the value of the maximumTimeToGetChanges property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *     
+     */
+    public void setMaximumTimeToGetChanges(BigInteger value) {
+<span class="nc" id="L277">        this.maximumTimeToGetChanges = value;</span>
+<span class="nc" id="L278">    }</span>
+
+    /**
+     * Gets the value of the signature property.
+     * 
+     * &lt;p&gt;
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a &lt;CODE&gt;set&lt;/CODE&gt; method for the signature property.
+     * 
+     * &lt;p&gt;
+     * For example, to add a new item, do as follows:
+     * &lt;pre&gt;
+     *    getSignature().add(newItem);
+     * &lt;/pre&gt;
+     * 
+     * 
+     * &lt;p&gt;
+     * Objects of the following type(s) are allowed in the list
+     * {@link SignatureType }
+     * 
+     * 
+     */
+    public List&lt;SignatureType&gt; getSignature() {
+<span class="nc bnc" id="L303" title="All 2 branches missed.">        if (signature == null) {</span>
+<span class="nc" id="L304">            signature = new ArrayList&lt;SignatureType&gt;();</span>
+        }
+<span class="nc" id="L306">        return this.signature;</span>
+    }
+
+
+    /**
+     * &lt;p&gt;Java class for anonymous complex type.
+     * 
+     * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+     * 
+     * &lt;pre&gt;
+     * &amp;lt;complexType&gt;
+     *   &amp;lt;complexContent&gt;
+     *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+     *       &amp;lt;sequence&gt;
+     *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}contact&quot;/&gt;
+     *       &amp;lt;/sequence&gt;
+     *     &amp;lt;/restriction&gt;
+     *   &amp;lt;/complexContent&gt;
+     * &amp;lt;/complexType&gt;
+     * &lt;/pre&gt;
+     * 
+     * 
+     */
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = &quot;&quot;, namespace=&quot;urn:uddi-org:repl_v3&quot;, propOrder = {
+        &quot;contact&quot;
+    })
+<span class="fc" id="L333">    public static class RegistryContact {</span>
+
+        @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;, required = true)
+        protected Contact contact;
+
+        /**
+         * Gets the value of the contact property.
+         * 
+         * @return
+         *     possible object is
+         *     {@link Contact }
+         *     
+         */
+        public Contact getContact() {
+<span class="fc" id="L347">            return contact;</span>
+        }
+
+        /**
+         * Sets the value of the contact property.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link Contact }
+         *     
+         */
+        public void setContact(Contact value) {
+<span class="fc" id="L359">            this.contact = value;</span>
+<span class="fc" id="L360">        }</span>
+
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

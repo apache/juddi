@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DynamicQuery.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.query.util</a> &gt; <span class="el_source">DynamicQuery.java</span></div><h1>DynamicQuery.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.query.util;
+
+import java.util.StringTokenizer;
+import java.util.Vector;
+import java.util.List;
+import javax.persistence.Query;
+import javax.persistence.EntityManager;
+
+/**
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ * @author Steve Viens (steve@viens.net)
+ */
+public class DynamicQuery {
+	public static final String CLAUSE_WHERE = &quot;where&quot;;
+	public static final String CLAUSE_GROUPBY = &quot;group by&quot;;
+	public static final String CLAUSE_ORDERBY = &quot;order by&quot;;
+	public static final String CLAUSE_HAVING = &quot;having&quot;;
+	public static final String OPERATOR_OR = &quot;or&quot;;
+	public static final String OPERATOR_AND = &quot;and&quot;;
+	public static final String PREDICATE_EQUALS = &quot;=&quot;;
+	public static final String PREDICATE_NOTEQUALS = &quot;&lt;&gt;&quot;;
+	public static final String PREDICATE_LIKE = &quot;like&quot;;
+	public static final String PREDICATE_IN = &quot;in&quot;;
+	public static final String PREDICATE_GREATERTHAN = &quot;&gt;&quot;;
+	public static final String PREDICATE_LESSTHAN = &quot;&lt;&quot;;
+	public static final String SORT_ASC = &quot;asc&quot;;
+	public static final String SORT_DESC = &quot;desc&quot;;
+	public static final String WILDCARD = &quot;%&quot;;
+	
+<span class="fc" id="L47">	private Vector&lt;Object&gt; values = null;</span>
+<span class="fc" id="L48">	private StringBuffer sql = null;</span>
+
+<span class="fc" id="L50">	public DynamicQuery() {</span>
+<span class="fc" id="L51">		this.values = new Vector&lt;Object&gt;();</span>
+<span class="fc" id="L52">		this.sql = new StringBuffer();</span>
+<span class="fc" id="L53">	} </span>
+
+<span class="fc" id="L55">	public DynamicQuery(String sql) {</span>
+<span class="fc" id="L56">		this.values = new Vector&lt;Object&gt;();</span>
+<span class="fc" id="L57">		this.sql = new StringBuffer(sql);</span>
+<span class="fc" id="L58">	}</span>
+
+	public DynamicQuery append(String sql) {
+<span class="fc" id="L61">		this.sql.append(sql);</span>
+<span class="fc" id="L62">		return this;</span>
+	}
+
+	public DynamicQuery pad() {
+<span class="fc" id="L66">		this.sql.append(&quot; &quot;);</span>
+<span class="fc" id="L67">		return this;</span>
+	}
+	
+	public DynamicQuery openParen() {
+<span class="fc" id="L71">		this.sql.append(&quot;(&quot;);</span>
+<span class="fc" id="L72">		return this;</span>
+	}
+
+	public DynamicQuery closeParen() {
+<span class="fc" id="L76">		this.sql.append(&quot;)&quot;);</span>
+<span class="fc" id="L77">		return this;</span>
+	}
+
+	public DynamicQuery param() {
+<span class="fc" id="L81">		this.sql.append(&quot;?&quot;);</span>
+<span class="fc" id="L82">		return this;</span>
+	}
+	
+	public DynamicQuery comma() {
+<span class="fc" id="L86">		this.sql.append(&quot;,&quot;);</span>
+<span class="fc" id="L87">		return this;</span>
+	}
+
+	public DynamicQuery AND() {
+<span class="fc" id="L91">		this.sql.append(OPERATOR_AND);</span>
+<span class="fc" id="L92">		return this;</span>
+	}
+	
+	public DynamicQuery OR() {
+<span class="fc" id="L96">		this.sql.append(OPERATOR_OR);</span>
+<span class="fc" id="L97">		return this;</span>
+	}
+
+	public DynamicQuery WHERE() {
+<span class="fc" id="L101">		this.sql.append(CLAUSE_WHERE);</span>
+<span class="fc" id="L102">		return this;</span>
+	}
+
+	public DynamicQuery IN() {
+<span class="fc" id="L106">		this.sql.append(PREDICATE_IN);</span>
+<span class="fc" id="L107">		return this;</span>
+	}
+
+	public DynamicQuery GROUPBY() {
+<span class="nc" id="L111">		this.sql.append(CLAUSE_GROUPBY);</span>
+<span class="nc" id="L112">		return this;</span>
+	}
+
+	public DynamicQuery ORDERBY() {
+<span class="fc" id="L116">		this.sql.append(CLAUSE_ORDERBY);</span>
+<span class="fc" id="L117">		return this;</span>
+	}
+
+	public DynamicQuery HAVING() {
+<span class="nc" id="L121">		this.sql.append(CLAUSE_HAVING);</span>
+<span class="nc" id="L122">		return this;</span>
+	}
+	
+	public DynamicQuery appendGroupedAnd(Parameter... params) {
+<span class="fc" id="L126">		return appendCondition(OPERATOR_AND, params);</span>
+	}
+
+	public DynamicQuery appendGroupedOr(Parameter... params) {
+<span class="fc" id="L130">		return appendCondition(OPERATOR_OR, params);</span>
+	}
+
+	public DynamicQuery appendCondition(String operator, Parameter... params) {
+<span class="pc bpc" id="L134" title="2 of 4 branches missed.">		if (params == null || operator == null)</span>
+<span class="nc" id="L135">			return this;</span>
+		
+<span class="fc" id="L137">		openParen();</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">		for (int i = 0; i &lt; params.length; i++) {</span>
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">			if (params[i] != null) {</span>
+<span class="fc" id="L140">				append(params[i].getName()).pad().append(params[i].getPredicate()).pad().param();</span>
+<span class="fc" id="L141">				addValue(params[i].getValue());</span>
+				
+<span class="fc bfc" id="L143" title="All 2 branches covered.">				if (i + 1 &lt; params.length) {</span>
+<span class="fc" id="L144">					pad().append(operator).pad();</span>
+				}
+			}
+		}
+<span class="fc" id="L148">		closeParen().pad();</span>
+<span class="fc" id="L149">		return this;</span>
+		
+	}
+	
+	public DynamicQuery appendInListWithAnd(String term, List&lt;?&gt; list) {
+<span class="pc bpc" id="L154" title="2 of 4 branches missed.">		if (list == null || list.size() == 0)</span>
+<span class="nc" id="L155">			return this;</span>
+		
+<span class="fc" id="L157">		AND().pad();</span>
+		
+<span class="fc" id="L159">		return appendInList(term, list);</span>
+	}
+	
+	public DynamicQuery appendInList(String term, List&lt;?&gt; list) {
+<span class="pc bpc" id="L163" title="2 of 4 branches missed.">		if (list == null || list.size() == 0)</span>
+<span class="nc" id="L164">			return this;</span>
+		
+<span class="fc" id="L166">		append(term).pad().IN().pad().openParen().pad();</span>
+<span class="fc" id="L167">		int count = 0;</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">		for (Object item : list) {</span>
+<span class="fc" id="L169">			param();</span>
+<span class="fc" id="L170">			addValue(item);</span>
+			
+<span class="fc bfc" id="L172" title="All 2 branches covered.">			if (count + 1 &lt; list.size())</span>
+<span class="fc" id="L173">				comma().pad();</span>
+			
+<span class="fc" id="L175">			count++;</span>
+<span class="fc" id="L176">		}</span>
+<span class="fc" id="L177">		closeParen().pad();</span>
+<span class="fc" id="L178">		return this;</span>
+	}
+
+	public void addValue(Object obj) {
+<span class="fc" id="L182">		this.values.addElement(obj);</span>
+<span class="fc" id="L183">	}</span>
+	
+	public Query buildJPAQuery(EntityManager em) {
+<span class="fc" id="L186">		StringTokenizer tokenizer = new StringTokenizer(sql.toString(),&quot;?&quot;);</span>
+<span class="fc" id="L187">		StringBuffer sqlBuffer = new StringBuffer();</span>
+<span class="fc" id="L188">		int numberOfTokens = tokenizer.countTokens();</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">		for (int i=1; i&lt;numberOfTokens; i++) {</span>
+<span class="fc" id="L190">			sqlBuffer.append(tokenizer.nextToken() + &quot;?&quot; + i);</span>
+		}
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">		if (tokenizer.hasMoreTokens()) sqlBuffer.append(tokenizer.nextToken());</span>
+<span class="fc" id="L193">		Query qry = em.createQuery(sqlBuffer.toString());</span>
+		
+<span class="fc bfc" id="L195" title="All 2 branches covered.">		for (int i = 0; i &lt; values.size(); i++)</span>
+<span class="fc" id="L196">			qry.setParameter(i + 1, values.elementAt(i));</span>
+			
+<span class="fc" id="L198">		return qry;</span>
+	}
+
+	public String toString() { 
+<span class="fc" id="L202">		StringBuffer buffer = new StringBuffer(sql.toString());</span>
+<span class="fc" id="L203">		buffer.append(&quot;\n\n&quot;);</span>
+	
+<span class="fc bfc" id="L205" title="All 2 branches covered.">		for (int i=0; i&lt;values.size(); i++) {</span>
+<span class="fc" id="L206">			Object obj = values.elementAt(i);</span>
+	  
+<span class="fc" id="L208">			buffer.append(i+1);</span>
+<span class="fc" id="L209">			buffer.append(&quot;\t&quot;);</span>
+<span class="fc" id="L210">			buffer.append(obj.getClass().getName());</span>
+<span class="fc" id="L211">			buffer.append(&quot;\t&quot;);</span>
+<span class="fc" id="L212">			buffer.append(obj.toString());</span>
+<span class="fc" id="L213">			buffer.append(&quot;\n&quot;);</span>
+		}
+	    
+<span class="fc" id="L216">		return buffer.toString();</span>
+	}
+	
+	public static class Parameter {
+		private String name;
+		private Object value;
+		private String predicate;
+		
+<span class="fc" id="L224">		public Parameter(String name, Object value, String predicate) {</span>
+<span class="fc" id="L225">			this.name = name;</span>
+<span class="fc" id="L226">			this.value = value;</span>
+<span class="fc" id="L227">			this.predicate = predicate;</span>
+<span class="fc" id="L228">		}</span>
+
+		public String getName() {
+<span class="fc" id="L231">			return name;</span>
+		}
+		public void setName(String name) {
+<span class="nc" id="L234">			this.name = name;</span>
+<span class="nc" id="L235">		}</span>
+
+		public Object getValue() {
+<span class="fc" id="L238">			return value;</span>
+		}
+		public void setValue(Object value) {
+<span class="nc" id="L241">			this.value = value;</span>
+<span class="nc" id="L242">		}</span>
+
+		public String getPredicate() {
+<span class="fc" id="L245">			return predicate;</span>
+		}
+		public void setPredicate(String predicate) {
+<span class="nc" id="L248">			this.predicate = predicate;</span>
+<span class="nc" id="L249">		}</span>
+
+		
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

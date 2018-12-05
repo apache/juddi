@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JNDIRegistration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.rmi</a> &gt; <span class="el_source">JNDIRegistration.java</span></div><h1>JNDIRegistration.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.rmi;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * @author Kurt Stam (kstam@apache.org)
+ */
+public class JNDIRegistration
+{
+	public static final String JUDDI = &quot;/juddiv3&quot;;
+	public static final String UDDI_SECURITY_SERVICE    = JUDDI + &quot;/UDDISecurityService&quot;;
+	public static final String UDDI_PUBLICATION_SERVICE = JUDDI + &quot;/UDDIPublicationService&quot;;
+	public static final String UDDI_INQUIRY_SERVICE     = JUDDI + &quot;/UDDIInquiryService&quot;;
+	public static final String UDDI_SUBSCRIPTION_SERVICE = JUDDI + &quot;/UDDISubscriptionService&quot;;
+	public static final String UDDI_SUBSCRIPTION_LISTENER_SERVICE = JUDDI + &quot;/UDDISubscriptionListenerService&quot;;
+	public static final String UDDI_CUSTODY_TRANSFER_SERVICE = JUDDI + &quot;/UDDICustodyTransferService&quot;;
+	public static final String JUDDI_PUBLISHER_SERVICE  = JUDDI + &quot;/JUDDIApiService&quot;;
+	
+<span class="fc" id="L39">	private UDDISecurityService securityService = null;</span>
+<span class="fc" id="L40">	private UDDIPublicationService publicationService = null;</span>
+<span class="fc" id="L41">	private UDDIInquiryService inquiryService = null;</span>
+<span class="fc" id="L42">	private UDDISubscriptionService subscriptionService = null;</span>
+<span class="fc" id="L43">	private UDDISubscriptionListenerService subscriptionListenerService = null;</span>
+<span class="fc" id="L44">	private UDDICustodyTransferService custodyTransferService = null;</span>
+<span class="fc" id="L45">	private JUDDIApiService publisherService = null;</span>
+	
+<span class="fc" id="L47">	private Log log = LogFactory.getLog(this.getClass());</span>
+<span class="fc" id="L48">	InitialContext context = null;</span>
+<span class="fc" id="L49">	private static JNDIRegistration registration = null;</span>
+	
+	public static JNDIRegistration getInstance() throws NamingException {
+<span class="fc bfc" id="L52" title="All 2 branches covered.">		if (registration==null) {</span>
+<span class="fc" id="L53">			registration = new JNDIRegistration();</span>
+		}
+<span class="fc" id="L55">		return registration;</span>
+	}
+	
+	private JNDIRegistration() throws NamingException{
+<span class="fc" id="L59">		super();</span>
+<span class="fc" id="L60">		context = new InitialContext(); </span>
+<span class="fc" id="L61">	}</span>
+	/**
+	 * Registers the Publish and Inquiry Services to JNDI and instantiates a
+	 * instance of each so we can remotely attach to it later.
+	 */
+	public void register(int port) {
+		try {
+<span class="fc" id="L68">			Context juddiContext = context.createSubcontext(JUDDI);</span>
+			
+<span class="fc" id="L70">			securityService = new UDDISecurityService(port);</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">			if (log.isDebugEnabled()) log.debug(&quot;Setting &quot; + UDDI_SECURITY_SERVICE + &quot;, &quot; + securityService.getClass());</span>
+<span class="fc" id="L72">			juddiContext.bind(UDDI_SECURITY_SERVICE, securityService);</span>
+			
+<span class="fc" id="L74">			publicationService = new UDDIPublicationService(port);</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">			if (log.isDebugEnabled()) log.debug(&quot;Setting &quot; + UDDI_PUBLICATION_SERVICE + &quot;, &quot; + publicationService.getClass());</span>
+<span class="fc" id="L76">			juddiContext.bind(UDDI_PUBLICATION_SERVICE, publicationService);</span>
+			
+<span class="fc" id="L78">			inquiryService = new UDDIInquiryService(port);</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">			if (log.isDebugEnabled()) log.debug(&quot;Setting &quot; + UDDI_INQUIRY_SERVICE + &quot;, &quot; + inquiryService.getClass());</span>
+<span class="fc" id="L80">			juddiContext.bind(UDDI_INQUIRY_SERVICE, inquiryService);</span>
+			
+<span class="fc" id="L82">			subscriptionService = new UDDISubscriptionService(port);</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">			if (log.isDebugEnabled()) log.debug(&quot;Setting &quot; + UDDI_SUBSCRIPTION_SERVICE + &quot;, &quot; + subscriptionService.getClass());</span>
+<span class="fc" id="L84">			juddiContext.bind(UDDI_SUBSCRIPTION_SERVICE, subscriptionService);</span>
+			
+<span class="fc" id="L86">			subscriptionListenerService = new UDDISubscriptionListenerService(port);</span>
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">			if (log.isDebugEnabled()) log.debug(&quot;Setting &quot; + UDDI_SUBSCRIPTION_LISTENER_SERVICE + &quot;, &quot; + subscriptionListenerService.getClass());</span>
+<span class="fc" id="L88">			juddiContext.bind(UDDI_SUBSCRIPTION_LISTENER_SERVICE, subscriptionListenerService);</span>
+			
+<span class="fc" id="L90">			custodyTransferService = new UDDICustodyTransferService(port);</span>
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">			if (log.isDebugEnabled()) log.debug(&quot;Setting &quot; + UDDI_CUSTODY_TRANSFER_SERVICE + &quot;, &quot; + custodyTransferService.getClass());</span>
+<span class="fc" id="L92">			juddiContext.bind(UDDI_CUSTODY_TRANSFER_SERVICE, custodyTransferService);</span>
+			
+<span class="fc" id="L94">			publisherService = new JUDDIApiService(port);</span>
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">			if (log.isDebugEnabled()) log.debug(&quot;Setting &quot; + JUDDI_PUBLISHER_SERVICE + &quot;, &quot; + publisherService.getClass());</span>
+<span class="fc" id="L96">			juddiContext.bind(JUDDI_PUBLISHER_SERVICE, publisherService);</span>
+			
+<span class="nc" id="L98">		} catch (Exception e) {</span>
+<span class="nc" id="L99">			log.error(e.getMessage(),e);</span>
+<span class="fc" id="L100">		}</span>
+<span class="fc" id="L101">	}</span>
+	
+	public void unregister() {
+		
+		try {
+<span class="fc" id="L106">			context.unbind(UDDI_SECURITY_SERVICE);</span>
+<span class="nc" id="L107">		} catch (NamingException e) {</span>
+<span class="nc" id="L108">			log.error(e.getMessage(),e);</span>
+<span class="fc" id="L109">		}</span>
+<span class="fc" id="L110">		securityService = null;</span>
+		try {
+<span class="fc" id="L112">			context.unbind(UDDI_PUBLICATION_SERVICE);</span>
+<span class="nc" id="L113">		} catch (NamingException e) {</span>
+<span class="nc" id="L114">			log.error(e.getMessage(),e);</span>
+<span class="fc" id="L115">		}</span>
+<span class="fc" id="L116">		publicationService = null;</span>
+		try {
+<span class="fc" id="L118">			context.unbind(UDDI_INQUIRY_SERVICE);</span>
+<span class="nc" id="L119">		} catch (NamingException e) {</span>
+<span class="nc" id="L120">			log.error(e.getMessage(),e);</span>
+<span class="fc" id="L121">		}</span>
+<span class="fc" id="L122">		inquiryService = null;</span>
+		try {
+<span class="fc" id="L124">			context.unbind(UDDI_SUBSCRIPTION_SERVICE);</span>
+<span class="nc" id="L125">		} catch (NamingException e) {</span>
+<span class="nc" id="L126">			log.error(e.getMessage(),e);</span>
+<span class="fc" id="L127">		}</span>
+<span class="fc" id="L128">		subscriptionService = null;</span>
+		try {
+<span class="fc" id="L130">			context.unbind(UDDI_SUBSCRIPTION_LISTENER_SERVICE);</span>
+<span class="nc" id="L131">		} catch (NamingException e) {</span>
+<span class="nc" id="L132">			log.error(e.getMessage(),e);</span>
+<span class="fc" id="L133">		}</span>
+<span class="fc" id="L134">		subscriptionListenerService = null;</span>
+		try {
+<span class="fc" id="L136">			context.unbind(UDDI_CUSTODY_TRANSFER_SERVICE);</span>
+<span class="nc" id="L137">		} catch (NamingException e) {</span>
+<span class="nc" id="L138">			log.error(e.getMessage(),e);</span>
+<span class="fc" id="L139">		}</span>
+<span class="fc" id="L140">		custodyTransferService = null;</span>
+		try {
+<span class="fc" id="L142">			context.unbind(JUDDI_PUBLISHER_SERVICE);</span>
+<span class="nc" id="L143">		} catch (NamingException e) {</span>
+<span class="nc" id="L144">			log.error(e.getMessage(),e);</span>
+<span class="fc" id="L145">		}</span>
+<span class="fc" id="L146">		publisherService = null;</span>
+		try {
+<span class="fc" id="L148">			context.unbind(JUDDI);</span>
+<span class="nc" id="L149">		} catch (NamingException e) {</span>
+<span class="nc" id="L150">			log.error(e.getMessage(),e);</span>
+<span class="fc" id="L151">		}</span>
+		
+<span class="fc" id="L153">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

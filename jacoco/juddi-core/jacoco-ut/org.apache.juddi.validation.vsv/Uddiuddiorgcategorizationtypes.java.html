@@ -1,0 +1,1031 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Uddiuddiorgcategorizationtypes.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.validation.vsv</a> &gt; <span class="el_source">Uddiuddiorgcategorizationtypes.java</span></div><h1>Uddiuddiorgcategorizationtypes.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2014 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.validation.vsv;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.InvalidValueException;
+import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.KeyedReferenceGroup;
+import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.api_v3.TModel;
+import org.uddi.api_v3.TModelInstanceInfo;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * To distinguish among various types of concept, UDDI has established the Types
+ * category system. Publishers should categorize the tModels they publish using
+ * values from uddi-org:types to make them easy to find. The approach to
+ * categorization of tModels within the UDDI Type Category system is consistent
+ * with that used for categorizing other entities using other category systems.
+ * The categorization information for each tModel is added to the &lt;categoryBag&gt;
+ * elements in a save_tModel API. One or more &lt;keyedReference&gt; elements are
+ * added to the category bag to indicate the types of the tModel that is being
+ * registered. See Appendix F Using Categorization for more information.
+ *
+ * &lt;h4 style=&quot;margin-left:0in;text-indent:0in&quot;&gt;11.1.1.4 Valid Values&lt;/h4&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot;&gt;Checking of references to this value set consists of
+ * ensuring that the keyValues are from the set of categories listed
+ * below.&amp;nbsp; No contextual checks are performed unless otherwise specified
+ * for a given value.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot;&gt;The following constitute the value set for this
+ * category system. The valid values are those categories marked as being
+ * &quot;allowed&quot;. These values are used in the keyValue attributes of keyedReference
+ * elements that are contained in categoryBag elements.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot;&gt;&amp;nbsp;&lt;/p&gt;
+ *
+ * &lt;table class=&quot;specTable&quot;
+ * style=&quot;width:6.0in;margin-left:.5in;border-collapse:collapse;border:none&quot;
+ * border=&quot;1&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; width=&quot;576&quot;&gt;
+ * &lt;thead&gt;
+ * &lt;tr style=&quot;page-break-inside:avoid;height:6.75pt&quot;&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt;
+ * background:#FFFFCA;padding:0in 5.4pt 0in 5.4pt;height:6.75pt&quot; valign=&quot;top&quot;
+ * width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&lt;b&gt;ID&lt;/b&gt;&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border:solid black 1.0pt;
+ * border-left:none;background:#FFFFCA;padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&lt;b&gt;Parent ID&lt;/b&gt;&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border:solid black 1.0pt;
+ * border-left:none;background:#FFFFCA;padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&lt;b&gt;Allowed&lt;/b&gt;&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border:solid black 1.0pt;
+ * border-left:none;background:#FFFFCA;padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&lt;b&gt;Description&lt;/b&gt;&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;/thead&gt;
+ * &lt;tbody&gt;&lt;tr style=&quot;height:6.75pt&quot;&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;tModel&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp;&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;No&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;These types are used for tModels&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp; valueSet&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;tModel&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Value set&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr style=&quot;height:6.75pt&quot;&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; identifier&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;valueSet&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Identifier system&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr style=&quot;height:6.75pt&quot;&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; namespace&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;valueSet&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Namespace&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr style=&quot;height:6.75pt&quot;&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; categorization &lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;valueSet&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Categorization system&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr style=&quot;height:6.75pt&quot;&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; postalAddress&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;categorization&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Postal address system&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp; categorizationGroup&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;tModel&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Category group system &lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp; relationship&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;tModel&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Relationship type system&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr style=&quot;height:6.75pt&quot;&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp; specification &lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;tModel&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Specification for a Web service&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr style=&quot;height:6.75pt&quot;&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; xmlSpec&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;specification&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Specification for a Web service using XML messages&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr style=&quot;height:6.75pt&quot;&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; soapSpec&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;xmlSpec&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Specification for interaction with a Web service using
+ * SOAP messages&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr style=&quot;height:6.75pt&quot;&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; wsdlSpec&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;specification&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Specification for a Web service described in WSDL&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr style=&quot;height:6.75pt&quot;&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp; protocol&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;tModel&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Protocol&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr style=&quot;height:6.75pt&quot;&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; transport&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;protocol&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Wire/transport protocol&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr style=&quot;height:6.75pt&quot;&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp; signatureComponent&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;tModel&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Signature component&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr style=&quot;height:6.75pt&quot;&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp; unvalidatable&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;tModel&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in
+ * 5.4pt;height:6.75pt&quot; valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Prevents a checked value set from being used&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp; checked&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;tModel&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Checked value set&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp; unchecked&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;tModel&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Unchecked value set&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp; cacheable&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;tModel&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Cacheable checked value set&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp; uncacheable&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;tModel&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Uncacheable checked value set&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp; keyGenerator&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;tModel&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Key generator (Note: A contextual check is performed as
+ * specified below if this value is used)&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp; findQualifier&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;tModel&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Find qualifier&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; sortOrder&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;findQualifier&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Sort order&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp; useTypeDesignator&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;tModel&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Designates a kind of usage for the pieces of data with
+ * which it is associated&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;bindingTemplate&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp;&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;No&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;These types are used for bindingTemplates&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;tr&gt;
+ * &lt;td style=&quot;width:26.78%;border:solid black 1.0pt; border-top:none;padding:0in
+ * 5.4pt 0in 5.4pt&quot; valign=&quot;top&quot; width=&quot;26%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;&amp;nbsp; wsdlDeployment&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:19.4%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;19%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;bindingTemplate&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:13.14%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;13%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;Yes&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;td style=&quot;width:40.68%;border-top:none;border-left: none;border-bottom:solid
+ * black 1.0pt;border-right:solid black 1.0pt; padding:0in 5.4pt 0in 5.4pt&quot;
+ * valign=&quot;top&quot; width=&quot;40%&quot;&gt;
+ * &lt;p class=&quot;MsoNormal&quot;&gt;bindingTemplate represents the WSDL deployment of a Web
+ * service&lt;/p&gt;
+ * &lt;/td&gt;
+ * &lt;/tr&gt;
+ * &lt;/tbody&gt;&lt;/table&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot;&gt;&amp;nbsp;&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;tModel: The UDDI type category system is structured to allow
+ * for categorization of registry entries other than tModels. This key is the
+ * root of the branch of the category system that is intended for use in
+ * categorization of tModels within the UDDI registry. Categorization is not
+ * allowed with this key.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;valueSet: A valueSet is the parent branch for the identifier,
+ * namespace, and categorization values in this category system. A tModel
+ * categorized with this value indicates it can be referenced by some other
+ * value set tModel to indicate redefinition of purpose, derivation, extension
+ * or equivalence.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;identifier: An identifier tModel represents a specific set of
+ * values used to uniquely identify information. Identifier tModels are intended
+ * to be used in keyedReferences inside of identifierBags. For example, a Dun
+ * &amp;amp; Bradstreet D-U-N-S® Number uniquely identifies companies globally. The
+ * D-U-N-S® Number system is an identifier system. &lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;namespace: A namespace tModel represents a scoping constraint
+ * or domain for a set of information. In contrast to an identifier, a namespace
+ * does not have a predefined set of values within the domain, but acts to avoid
+ * collisions. It is similar to the namespace functionality used for XML. For
+ * example, the uddi-org:relationships tModel, which is used to assert
+ * relationships between businessEntity elements, is a namespace tModel.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;categorization: A categorization tModel is used for category
+ * systems within the UDDI registry. NAICS and UNSPSC are examples of
+ * categorization tModels.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;postalAddress: A postalAddress tModel is used to identify
+ * different forms of postal address within the UDDI registry. postalAddress
+ * tModels may be used with the address element to distinguish different forms
+ * of postal address.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;categorizationGroup: A categorizationGroup tModel is used to
+ * relate one or more category system tModels to one another so that they can be
+ * used in keyedReferenceGroups.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;relationship: A relationship tModel is used for relationship
+ * categorizations within the UDDI registry. relationship tModels are typically
+ * used in connection with publisher relationship assertions.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;specification: A specification tModel is used for tModels that
+ * define interactions with a Web service. These interactions typically include
+ * the definition of the set of requests and responses, or other types of
+ * interaction that are prescribed by the Web service. tModels describing XML,
+ * COM, CORBA, or any other Web services are specification tModels.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;xmlSpec: An xmlSpec tModel is a refinement of the specification
+ * tModel type. It is used to indicate that the interaction with the Web service
+ * is via XML. The UDDI API tModels are xmlSpec tModels.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;soapSpec: Further refining the xmlSpec tModel type, a soapSpec
+ * is used to indicate that the interaction with the Web service is via SOAP.
+ * The UDDI API tModels are soapSpec tModels, in addition to xmlSpec
+ * tModels.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;wsdlSpec: A tModel for a Web service described using WSDL is
+ * categorized as a wsdlSpec.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;protocol: A tModel describing a protocol of any sort.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;transport: A transport tModel is a specific type of protocol.
+ * HTTP, FTP, and SMTP are types of transport tModels.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;signatureComponent: A signature component is used to for cases
+ * where a single tModel can not represent a complete specification for a Web
+ * service. This is the case for specifications like RosettaNet, where
+ * implementation requires the composition of three tModels to be complete - a
+ * general tModel indicating RNIF, one for the specific PIP, and one for the
+ * error handling services. Each of these tModels would be of type signature
+ * component, in addition to any others as appropriate.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;unvalidatable: Used to mark a categorization or identifier
+ * tModel as unavailable for use by keyedReferences.&amp;nbsp; A value set provider
+ * may mark its value set tModel &lt;i&gt;unvalidatable&lt;/i&gt; if it wants to temporarily
+ * disallow its use.&amp;nbsp; See Section &lt;a href=&quot;#_Ref8981064 &quot;&gt;6.4&lt;/a&gt;
+ * &lt;i&gt;Checked Value Set Validation&lt;/i&gt; for more information.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;checked: Marking a tModel with this categorization asserts that
+ * it represents a value set or category group system whose use, through
+ * keyedReferences, may be checked.&amp;nbsp; Registry, and possibly node policy
+ * determines when and how a checked value set is supported.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;unchecked: Marking a tModel with this categorization asserts
+ * that it represents a value set or category group system whose use, through
+ * keyedReferences, is not checked.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;cacheable: Marking a tModel with this categorization asserts
+ * that it represents a checked value set or category group system whose values
+ * may be cached for validation.&amp;nbsp; The validation algorithm for a supported
+ * cacheable checked value set or category group system must rely solely upon
+ * matching references against the cached set of&amp;nbsp; values.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;uncacheable: Marking a tModel with this categorization asserts
+ * that it represents a checked value set or category group system whose values
+ * must not be cached for validation.&amp;nbsp; The validation algorithm for a
+ * supported uncacheable checked value set must be specified and associated with
+ * the tModel marked with this categorization and may consider contextual
+ * criteria involving the entity associated with the reference.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;keyGenerator: Marking a tModel with this categorization
+ * designates it as one whose tModelKey identifies a key generator partition
+ * that can be used by its owner to derive and assign other entity keys. This
+ * categorization is reserved for key generator tModels. Any attempt to use this
+ * categorization for something other than a key generator tModel will fail with
+ * E_valueNotAllowed returned. &lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;findQualifier: A findQualifier tModel is used as the value of a
+ * findQualifier element to indicate the type of processing to occur for the
+ * inquiry function in which it is included.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;sortOrder: A sort order tModel defines a collation sequence
+ * that can be used during inquiries to control ordering of the results.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;useTypeDesignator: A useTypeDesignator tModel is used to
+ * describe the way a piece of data should be interpreted.&amp;nbsp; It is
+ * frequently used to extend the space of resource types found at a URI, such as
+ * access points, overview URLs, and discovery URLs.&amp;nbsp; UDDI designates a set
+ * of common use types as simple strings; tModels of the useTypeDesignator type
+ * are used to describe others.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;bindingTemplate: This key is the root of the branch of the
+ * category system that is intended for use in categorization of
+ * bindingTemplates within the UDDI registry. Categorization is not allowed with
+ * this key.&lt;/p&gt;
+ *
+ * &lt;p class=&quot;MsoBodyText&quot; style=&quot;margin-left:1.0in;text-indent:-.25in&quot;&gt;&lt;span
+ * style=&quot;font-family:Symbol&quot;&gt;·&lt;span style=&quot;font:7.0pt &amp;quot;Times New
+ * Roman&amp;quot;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+ * &lt;/span&gt;&lt;/span&gt;wsdlDeployment: A bindingTemplate categorized as a
+ * wsdlDeployment contains within its accessPoint the endpoint for a WSDL
+ * deployment document.&lt;/p&gt;
+ *
+ * @author Alex O'Ree
+ */
+<span class="fc" id="L851">public class Uddiuddiorgcategorizationtypes implements ValueSetValidator {</span>
+
+        public static final String key = &quot;uddi:uddi.org:categorization:types&quot;;
+
+        private static Map&lt;String, Boolean&gt; NotAllowedOnBindings;
+        private static Map&lt;String, Boolean&gt; NotAllowedOnTModels;
+
+        static {
+<span class="fc" id="L859">                NotAllowedOnTModels = new HashMap&lt;String, Boolean&gt;();</span>
+<span class="fc" id="L860">                NotAllowedOnTModels.put(&quot;wsdlDeployment&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L861">                NotAllowedOnBindings = new HashMap&lt;String, Boolean&gt;();</span>
+<span class="fc" id="L862">                NotAllowedOnBindings.put(&quot;valueSet&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L863">                NotAllowedOnBindings.put(&quot;identifier&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L864">                NotAllowedOnBindings.put(&quot;namespace&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L865">                NotAllowedOnBindings.put(&quot;categorization&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L866">                NotAllowedOnBindings.put(&quot;postalAddress&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L867">                NotAllowedOnBindings.put(&quot;categorizationGroup&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L868">                NotAllowedOnBindings.put(&quot;relationship&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L869">                NotAllowedOnBindings.put(&quot;specification&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L870">                NotAllowedOnBindings.put(&quot;xmlSpec&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L871">                NotAllowedOnBindings.put(&quot;soapSpec&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L872">                NotAllowedOnBindings.put(&quot;wsdlSpec&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L873">                NotAllowedOnBindings.put(&quot;protocol&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L874">                NotAllowedOnBindings.put(&quot;transport&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L875">                NotAllowedOnBindings.put(&quot;signatureComponent&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L876">                NotAllowedOnBindings.put(&quot;unvalidatable&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L877">                NotAllowedOnBindings.put(&quot;checked&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L878">                NotAllowedOnBindings.put(&quot;unchecked&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L879">                NotAllowedOnBindings.put(&quot;cacheable&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L880">                NotAllowedOnBindings.put(&quot;uncacheable&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L881">                NotAllowedOnBindings.put(&quot;keyGenerator&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L882">                NotAllowedOnBindings.put(&quot;findQualifier&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L883">                NotAllowedOnBindings.put(&quot;sortOrder&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L884">                NotAllowedOnBindings.put(&quot;useTypeDesignator&quot;.toLowerCase(), true);</span>
+<span class="fc" id="L885">        }</span>
+
+        @Override
+        public void validateValuesBindingTemplate(List&lt;BindingTemplate&gt; items, String xpath) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L889" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L890">                        return;</span>
+                }
+                //can't use everything else
+<span class="fc bfc" id="L893" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="fc bfc" id="L894" title="All 2 branches covered.">                        if (items.get(i).getCategoryBag() != null) {</span>
+<span class="fc bfc" id="L895" title="All 2 branches covered.">                                for (int k = 0; k &lt; items.get(i).getCategoryBag().getKeyedReference().size(); k++) {</span>
+<span class="pc bpc" id="L896" title="1 of 2 branches missed.">                                        if (items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() != null) {</span>
+<span class="pc bpc" id="L897" title="1 of 2 branches missed.">                                                if (NotAllowedOnBindings.containsKey(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey().toLowerCase())) {</span>
+<span class="nc" id="L898">                                                        throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, xpath+&quot;(&quot; + i + &quot;).catbag.keyedReferences(&quot; +k +&quot;).tModelKey &quot; + &quot;Value [&quot; + items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() + &quot;] not allowed on bindingtemplates for key &quot; + key));</span>
+                                                }
+                                        }
+
+                                }
+
+<span class="pc bpc" id="L904" title="1 of 2 branches missed.">                                for (int k = 0; k &lt; items.get(i).getCategoryBag().getKeyedReferenceGroup().size(); k++) {</span>
+<span class="nc bnc" id="L905" title="All 2 branches missed.">                                        if (items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey() != null) {</span>
+<span class="nc bnc" id="L906" title="All 2 branches missed.">                                                if (NotAllowedOnBindings.containsKey(items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey().toLowerCase())) {</span>
+<span class="nc" id="L907">                                                        throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, xpath+&quot;(&quot; + i + &quot;).catbag.keyedReferenceGroup(&quot; +k +&quot;).tModelKey &quot; +&quot;Value [&quot; + items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey() + &quot;] not allowed on bindingtemplates for key &quot; + key));</span>
+                                                }
+<span class="nc bnc" id="L909" title="All 2 branches missed.">                                                for (int j = 0; j &lt; items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().size(); j++) {</span>
+<span class="nc bnc" id="L910" title="All 2 branches missed.">                                                        if (items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey() != null) {</span>
+<span class="nc bnc" id="L911" title="All 2 branches missed.">                                                                if (NotAllowedOnBindings.containsKey(items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey().toLowerCase())) {</span>
+<span class="nc" id="L912">                                                                        throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, xpath+&quot;(&quot; + i + &quot;).catbag.keyedReferenceGroup(&quot; +k +&quot;).keyedReference(&quot; + j + &quot;).tModel &quot; +&quot;Value [&quot; + items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey() + &quot;] not allowed on bindingtemplates for key &quot; + key));</span>
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+<span class="fc bfc" id="L919" title="All 2 branches covered.">                        if (items.get(i).getTModelInstanceDetails() != null) {</span>
+
+<span class="fc bfc" id="L921" title="All 2 branches covered.">                                for (int k = 0; k &lt; items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {</span>
+<span class="pc bpc" id="L922" title="1 of 2 branches missed.">                                        if (items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k) != null) {</span>
+<span class="pc bpc" id="L923" title="1 of 2 branches missed.">                                                if (key.equalsIgnoreCase(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey())) {</span>
+<span class="nc" id="L924">                                                        throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, xpath+&quot;tModelInstanceDetails(&quot; + k +&quot;).tModelKey &quot; + key + &quot; is not allowed on tModelInstanceInfos&quot;));</span>
+                                                }
+                                        }
+                                }
+                        }
+                }
+<span class="fc" id="L930">        }</span>
+
+        @Override
+        public void validateValuesBusinessEntity(List&lt;BusinessEntity&gt; items) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L934" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L935">                        return;</span>
+                }
+
+                //cant use the following
+                //wsdlDeployment
+<span class="fc bfc" id="L940" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+
+<span class="fc bfc" id="L942" title="All 2 branches covered.">                        if (items.get(i).getBusinessServices() != null) {</span>
+<span class="fc" id="L943">                                validateValuesBusinessService(items.get(i).getBusinessServices().getBusinessService(), &quot;businessEntity(&quot; + i + &quot;).&quot;);</span>
+                        }
+                }
+<span class="fc" id="L946">        }</span>
+
+        @Override
+        public void validateValuesBusinessService(List&lt;BusinessService&gt; items, String xpath) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L950" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L951">                        return;</span>
+                }
+<span class="fc bfc" id="L953" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="fc bfc" id="L954" title="All 2 branches covered.">                        if (items.get(i).getCategoryBag() != null) {</span>
+                                //No specific rules for business services
+
+                        }
+<span class="pc bpc" id="L958" title="1 of 2 branches missed.">                        if (items.get(i).getBindingTemplates() != null) {</span>
+<span class="fc" id="L959">                                validateValuesBindingTemplate(items.get(i).getBindingTemplates().getBindingTemplate(), xpath + &quot;businessService(&quot; + i + &quot;).bindingTemplates.&quot;);</span>
+                        }
+                }
+<span class="fc" id="L962">        }</span>
+
+        @Override
+        public void validateValuesPublisherAssertion(List&lt;PublisherAssertion&gt; items) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L966" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L967">                        return;</span>
+                }
+                //no rules for PA
+<span class="fc" id="L970">        }</span>
+
+        @Override
+        public void validateTmodelInstanceDetails(List&lt;TModelInstanceInfo&gt; tModelInstanceInfo, String xpath) throws DispositionReportFaultMessage {
+
+<span class="nc" id="L975">        }</span>
+
+        @Override
+        public List&lt;String&gt; getValidValues() {
+<span class="nc" id="L979">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
+<span class="nc" id="L980">                ret.addAll(NotAllowedOnBindings.keySet());</span>
+<span class="nc" id="L981">                ret.addAll(NotAllowedOnTModels.keySet());</span>
+<span class="nc" id="L982">                return ret;</span>
+        }
+
+        @Override
+        public void validateValuesTModel(List&lt;TModel&gt; items) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L987" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L988">                        return;</span>
+                }
+<span class="fc bfc" id="L990" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="pc bpc" id="L991" title="1 of 2 branches missed.">                        if (items.get(i).getCategoryBag() != null) {</span>
+<span class="fc bfc" id="L992" title="All 2 branches covered.">                                for (int k = 0; k &lt; items.get(i).getCategoryBag().getKeyedReference().size(); k++) {</span>
+<span class="pc bpc" id="L993" title="1 of 2 branches missed.">                                        if (items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() != null</span>
+<span class="fc bfc" id="L994" title="All 2 branches covered.">                                             &amp;&amp; key.equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey())) {</span>
+<span class="pc bpc" id="L995" title="1 of 4 branches missed.">                                                if (items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue() != null &amp;&amp; NotAllowedOnTModels.containsKey(items.get(i).getCategoryBag().getKeyedReference().get(k).getKeyValue().toLowerCase())) {</span>
+<span class="fc" id="L996">                                                        throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Value [&quot; + items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() + &quot;] not allowed on tModels for key &quot; + key));</span>
+                                                }
+                                        }
+
+                                }
+
+<span class="pc bpc" id="L1002" title="1 of 2 branches missed.">                                for (int k = 0; k &lt; items.get(i).getCategoryBag().getKeyedReferenceGroup().size(); k++) {</span>
+<span class="nc bnc" id="L1003" title="All 2 branches missed.">                                        if (items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getTModelKey() != null) {</span>
+
+<span class="nc bnc" id="L1005" title="All 2 branches missed.">                                                for (int j = 0; j &lt; items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().size(); j++) {</span>
+<span class="nc bnc" id="L1006" title="All 2 branches missed.">                                                        if (items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey() != null</span>
+<span class="nc bnc" id="L1007" title="All 2 branches missed.">                                                             &amp;&amp; key.equalsIgnoreCase(items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey())) {</span>
+<span class="nc bnc" id="L1008" title="All 2 branches missed.">                                                                if (items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getKeyValue() != null</span>
+<span class="nc bnc" id="L1009" title="All 2 branches missed.">                                                                     &amp;&amp; NotAllowedOnTModels.containsKey(items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getKeyValue().toLowerCase())) {</span>
+<span class="nc" id="L1010">                                                                        throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Value [&quot; + items.get(i).getCategoryBag().getKeyedReferenceGroup().get(k).getKeyedReference().get(j).getTModelKey() + &quot;] not allowed on tModels for key &quot; + key));</span>
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+<span class="pc bpc" id="L1017" title="1 of 2 branches missed.">                        if (items.get(i).getIdentifierBag() != null) {</span>
+<span class="nc bnc" id="L1018" title="All 2 branches missed.">                                for (int k = 0; k &lt; items.get(i).getCategoryBag().getKeyedReference().size(); k++) {</span>
+<span class="nc bnc" id="L1019" title="All 2 branches missed.">                                        if (items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() != null) {</span>
+<span class="nc bnc" id="L1020" title="All 2 branches missed.">                                                if (NotAllowedOnTModels.containsKey(items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey().toLowerCase())) {</span>
+<span class="nc" id="L1021">                                                        throw new InvalidValueException(new ErrorMessage(&quot;errors.valuesetvalidation.invalidcontent&quot;, &quot;Value [&quot; + items.get(i).getCategoryBag().getKeyedReference().get(k).getTModelKey() + &quot;] not allowed on tModels for key &quot; + key));</span>
+                                                }
+                                        }
+
+                                }
+                        }
+                }
+<span class="fc" id="L1028">        }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

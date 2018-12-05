@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UddiEntity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.model</a> &gt; <span class="el_source">UddiEntity.java</span></div><h1>UddiEntity.java</h1><pre class="source lang-java linenums">package org.apache.juddi.model;
+/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+/**
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+@Entity
+@Table(name = &quot;j3_uddi_entity&quot;)
+@Inheritance(strategy = InheritanceType.JOINED)
+<span class="fc" id="L35">public abstract class UddiEntity implements Comparable&lt;UddiEntity&gt;{</span>
+
+	protected String entityKey;
+	protected Date created;
+	protected Date modified;
+	protected Date modifiedIncludingChildren;
+	protected String nodeId;
+	protected String authorizedName;
+<span class="fc" id="L43">        protected boolean xfer = false;</span>
+	
+	@Id
+	@Column(name = &quot;entity_key&quot;, nullable = false, length = 255)
+	public String getEntityKey() {
+<span class="fc" id="L48">		return entityKey;</span>
+	}
+	public void setEntityKey(String entityKey) {
+<span class="fc" id="L51">		this.entityKey = entityKey;</span>
+<span class="fc" id="L52">	}</span>
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = &quot;created&quot;, length = 29)
+	public Date getCreated() {
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">		if (created!=null) {</span>
+<span class="fc" id="L58">			return new Date(created.getTime());</span>
+		} else {
+<span class="nc" id="L60">			return null;</span>
+		}
+	}
+	public void setCreated(Date created) {
+<span class="fc" id="L64">		this.created = created;</span>
+<span class="fc" id="L65">	}</span>
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = &quot;modified&quot;, nullable = false, length = 29)
+	public Date getModified() {
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">		if (modified!=null) {</span>
+<span class="fc" id="L71">			return new Date(modified.getTime());</span>
+		} else {
+<span class="nc" id="L73">			return null;</span>
+		}
+	}
+	public void setModified(Date modified) {
+<span class="fc" id="L77">		this.modified = modified;</span>
+<span class="fc" id="L78">	}</span>
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = &quot;modified_including_children&quot;, length = 29)
+	public Date getModifiedIncludingChildren() {
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">		if (modifiedIncludingChildren!=null) {</span>
+<span class="fc" id="L84">			return new Date(modifiedIncludingChildren.getTime());</span>
+		} else {
+<span class="nc" id="L86">			return null;</span>
+		}
+	}
+	public void setModifiedIncludingChildren(Date modifiedIncludingChildren) {
+<span class="fc" id="L90">		this.modifiedIncludingChildren = modifiedIncludingChildren;</span>
+<span class="fc" id="L91">	}</span>
+	
+        /**
+         * As of 3.2, node_id is a required field
+         * @return node id
+         */
+	@Column(name = &quot;node_id&quot;, nullable=false,length = 255)
+	public String getNodeId() {
+<span class="fc" id="L99">		return nodeId;</span>
+	}
+	public void setNodeId(String nodeId) {
+<span class="fc" id="L102">		this.nodeId = nodeId;</span>
+<span class="fc" id="L103">	}</span>
+
+	
+	@Column(name = &quot;authorized_name&quot;, nullable=false, length = 255)
+	public String getAuthorizedName() {
+<span class="fc" id="L108">		return authorizedName;</span>
+	}
+	public void setAuthorizedName(String authorizedName) {
+<span class="fc" id="L111">		this.authorizedName = authorizedName;</span>
+<span class="fc" id="L112">	}</span>
+	
+	public int compareTo(UddiEntity o) {
+<span class="nc bnc" id="L115" title="All 4 branches missed.">		if (o==null || o.getEntityKey()==null) return 0;</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">		if (o.getEntityKey().equals(getEntityKey())) return 1;</span>
+<span class="nc" id="L117">		else return 0;</span>
+	}
+
+        public void setIsTransferInProgress(boolean b) {
+<span class="fc" id="L121">                xfer = b;</span>
+<span class="fc" id="L122">        }</span>
+        @Column(name=&quot;xfer&quot;, nullable=false)
+        public boolean getIsTransferInProgress()
+        {
+<span class="fc" id="L126">                return xfer;</span>
+        }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

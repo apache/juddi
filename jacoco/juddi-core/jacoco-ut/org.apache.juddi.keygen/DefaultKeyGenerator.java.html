@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultKeyGenerator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.keygen</a> &gt; <span class="el_source">DefaultKeyGenerator.java</span></div><h1>DefaultKeyGenerator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.keygen;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.client.UDDIConstants;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * The default jUDDI key generator.  Generates a key like this:
+ * 
+ * uddiScheme : domain : UUID
+ * 
+ * where domain is the shortest keyGenerator domain. 
+ * 
+ * If no domain is set for this publihser, or the publisher is 'uddi' then
+ * it defaults to the RootDomain:
+ * 
+ * uddiScheme : RootDomain : UUID
+ * 
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+<span class="fc" id="L47">public class DefaultKeyGenerator implements KeyGenerator {</span>
+
+	public String generate(UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
+<span class="fc" id="L50">		String domain = getDomain(publisher);</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">		if (domain==null) {</span>
+<span class="fc" id="L52">			String rootPartition = &quot;&quot;;</span>
+			try 
+<span class="fc" id="L54">			{ rootPartition = AppConfig.getConfiguration().getString(Property.JUDDI_ROOT_PARTITION); }</span>
+<span class="nc" id="L55">			catch(ConfigurationException ce) </span>
+<span class="pc" id="L56">			{ throw new FatalErrorException(new ErrorMessage(&quot;errors.configuration.Retrieval&quot;, Property.JUDDI_ROOT_PARTITION));}</span>
+<span class="fc" id="L57">			domain = rootPartition;</span>
+		}
+<span class="fc" id="L59">		return domain + PARTITION_SEPARATOR + UUID.randomUUID();</span>
+	}
+	
+	public static String getDomain(UddiEntityPublisher publisher) {
+<span class="fc" id="L63">		String domain = null;</span>
+<span class="pc bpc" id="L64" title="1 of 4 branches missed.">		if (publisher==null || &quot;uddi&quot;.equalsIgnoreCase(publisher.getAuthorizedName())) return domain; //default to the rootPartition</span>
+<span class="fc" id="L65">		List&lt;String&gt; domains = publisher.getKeyGeneratorKeys();</span>
+<span class="fc bfc" id="L66" title="All 4 branches covered.">		if (domains!=null &amp;&amp; !domains.isEmpty()) {</span>
+<span class="fc" id="L67">			Iterator&lt;String&gt; iter = domains.iterator();</span>
+<span class="fc" id="L68">			int partsMax = 1000;</span>
+			//pick the KeyGenerator with the fewest amount of parts, ignoring the subdomain keys. 
+<span class="fc bfc" id="L70" title="All 2 branches covered.">			while (iter.hasNext()) {</span>
+<span class="fc" id="L71">				String thisDomain = iter.next();</span>
+<span class="fc" id="L72">				String[] parts = thisDomain.split(&quot;:&quot;);</span>
+<span class="pc bpc" id="L73" title="3 of 8 branches missed.">				if ((domain == null || (2 &lt;= parts.length &amp;&amp; parts.length &lt; partsMax)) &amp;&amp; thisDomain.length() + 37 &lt; 255) {</span>
+<span class="fc" id="L74">					partsMax = parts.length;</span>
+<span class="fc" id="L75">					domain = thisDomain;</span>
+				}
+<span class="fc" id="L77">			}</span>
+<span class="fc" id="L78">			domain = domain.substring(0, domain.lastIndexOf(&quot;:&quot;));</span>
+		}
+<span class="fc" id="L80">		return domain;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValidateValueSetValidation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.validation</a> &gt; <span class="el_source">ValidateValueSetValidation.java</span></div><h1>ValidateValueSetValidation.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.validation;
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api_v3.ValidValues;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.model.Tmodel;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
+import org.uddi.api_v3.TModel;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+ 
+/**
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ */
+public class ValidateValueSetValidation extends ValidateUDDIApi {
+
+<span class="nc" id="L42">        private static Log log = LogFactory.getLog(ValidateValueSetValidation.class);</span>
+
+        public ValidateValueSetValidation(UddiEntityPublisher publisher) {
+<span class="nc" id="L45">                super(publisher);</span>
+<span class="nc" id="L46">        }</span>
+
+        /**
+         * called from jUDDI API SetAllValidValues
+         *
+         * @param values
+         */
+        public void validateSetAllValidValues(List&lt;ValidValues&gt; values) throws ValueNotAllowedException {
+<span class="nc bnc" id="L54" title="All 4 branches missed.">                if (values == null || values.isEmpty()) {</span>
+<span class="nc" id="L55">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+                }
+
+<span class="nc bnc" id="L58" title="All 2 branches missed.">                for (int i = 0; i &lt; values.size(); i++) {</span>
+<span class="nc" id="L59">                        String key = values.get(i).getTModekKey();</span>
+<span class="nc bnc" id="L60" title="All 4 branches missed.">                        if (key == null || key.trim().length() == 0) {</span>
+<span class="nc" id="L61">                                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.NullInput&quot;, &quot;tModel key&quot;));</span>
+                        }
+                        //ensure tmodel exists
+<span class="nc" id="L64">                        Tmodel tm = GetTModel_MODEL_IfExists(values.get(i).getTModekKey());</span>
+                        
+<span class="nc bnc" id="L66" title="All 2 branches missed.">                        if (tm == null) {</span>
+<span class="nc" id="L67">                                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.invalidkey.TModelNotFound&quot;, key));</span>
+                        }
+                        //ensure caller owns the tModel
+<span class="nc bnc" id="L70" title="All 2 branches missed.">                        if (!this.publisher.isOwner(tm)) {</span>
+<span class="nc" id="L71">                                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.usermismatch.InvalidOwner&quot;, key ));</span>
+                        }
+
+                        //if we have no values, it may be to simply unset any values
+
+                        /*//validate that we have values
+                         if (values.get(i).getValue() == null || values.get(i).getValue().isEmpty()) {
+                         throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.NullInput&quot;, &quot;value[]&quot;));
+                         }
+                         //and that they aren't empty
+                         for (int k = 0; k &lt; values.get(i).getValue().size(); k++) {
+                         if (values.get(i).getValue().get(k) == null || values.get(i).getValue().get(k).trim().length() == 0) {
+                         throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.NullInput&quot;, &quot;value[&quot; + i + &quot;].value&quot;));
+                         }
+                         }*/
+                }
+<span class="nc" id="L87">        }</span>
+
+        /**
+         * return the publisher
+         *
+         * @param tmodelKey
+         * @return
+         * @throws ValueNotAllowedException
+         */
+        public static TModel GetTModel_API_IfExists(String tmodelKey) throws ValueNotAllowedException {
+<span class="nc" id="L97">                EntityManager em = PersistenceManager.getEntityManager();</span>
+
+<span class="nc" id="L99">                TModel apitmodel = null;</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">                if (em == null) {</span>
+                        //this is normally the Install class firing up
+<span class="nc" id="L102">                        log.warn(new ErrorMessage(&quot;errors.tmodel.ReferentialIntegrityNullEM&quot;));</span>
+<span class="nc" id="L103">                        return null;</span>
+                } else {
+
+
+<span class="nc" id="L107">                        EntityTransaction tx = em.getTransaction();</span>
+                        try {
+<span class="nc" id="L109">                                Tmodel modelTModel = null;</span>
+<span class="nc" id="L110">                                tx.begin();</span>
+<span class="nc" id="L111">                                modelTModel = em.find(org.apache.juddi.model.Tmodel.class, tmodelKey);</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">                                if (modelTModel != null) {</span>
+<span class="nc" id="L113">                                        apitmodel = new TModel();</span>
+                                        try {
+<span class="nc" id="L115">                                                MappingModelToApi.mapTModel(modelTModel, apitmodel);</span>
+<span class="nc" id="L116">                                        } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L117">                                                log.warn(ex);</span>
+<span class="nc" id="L118">                                                apitmodel=null;</span>
+<span class="nc" id="L119">                                        }</span>
+
+
+                                }
+<span class="nc" id="L123">                                tx.commit();</span>
+                        } finally {
+<span class="nc bnc" id="L125" title="All 4 branches missed.">                                if (tx.isActive()) {</span>
+<span class="nc" id="L126">                                        tx.rollback();</span>
+                                }
+<span class="nc" id="L128">                                em.close();</span>
+<span class="nc" id="L129">                        }</span>
+
+                }
+<span class="nc" id="L132">                return apitmodel;</span>
+        }
+        
+        
+        public static Tmodel GetTModel_MODEL_IfExists(String tmodelKey) throws ValueNotAllowedException {
+<span class="nc" id="L137">                EntityManager em = PersistenceManager.getEntityManager();</span>
+
+<span class="nc" id="L139">                Tmodel model = null;</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">                if (em == null) {</span>
+                        //this is normally the Install class firing up
+<span class="nc" id="L142">                        log.warn(new ErrorMessage(&quot;errors.tmodel.ReferentialIntegrityNullEM&quot;));</span>
+<span class="nc" id="L143">                        return null;</span>
+                } else {
+
+
+<span class="nc" id="L147">                        EntityTransaction tx = em.getTransaction();</span>
+                        try {
+                                
+<span class="nc" id="L150">                                tx.begin();</span>
+<span class="nc" id="L151">                                model = em.find(org.apache.juddi.model.Tmodel.class, tmodelKey);</span>
+<span class="nc" id="L152">                                tx.commit();</span>
+                        } finally {
+<span class="nc bnc" id="L154" title="All 4 branches missed.">                                if (tx.isActive()) {</span>
+<span class="nc" id="L155">                                        tx.rollback();</span>
+                                }
+<span class="nc" id="L157">                                em.close();</span>
+<span class="nc" id="L158">                        }</span>
+
+                }
+<span class="nc" id="L161">                return model;</span>
+        }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

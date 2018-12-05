@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UDDIInquiryImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.api.impl</a> &gt; <span class="el_source">UDDIInquiryImpl.java</span></div><h1>UDDIInquiryImpl.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.api.impl;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.jws.WebService;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.xml.bind.JAXB;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.util.InquiryQuery;
+import org.apache.juddi.api.util.QueryStatus;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.config.Property;
+import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.validation.ValidateInquiry;
+import org.uddi.api_v3.BindingDetail;
+import org.uddi.api_v3.BusinessDetail;
+import org.uddi.api_v3.BusinessList;
+import org.uddi.api_v3.FindBinding;
+import org.uddi.api_v3.FindBusiness;
+import org.uddi.api_v3.FindRelatedBusinesses;
+import org.uddi.api_v3.FindService;
+import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.GetBindingDetail;
+import org.uddi.api_v3.GetBusinessDetail;
+import org.uddi.api_v3.GetOperationalInfo;
+import org.uddi.api_v3.GetServiceDetail;
+import org.uddi.api_v3.GetTModelDetail;
+import org.uddi.api_v3.OperationalInfos;
+import org.uddi.api_v3.RelatedBusinessesList;
+import org.uddi.api_v3.ServiceDetail;
+import org.uddi.api_v3.ServiceList;
+import org.uddi.api_v3.TModelDetail;
+import org.uddi.api_v3.TModelList;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.uddi.v3_service.UDDIInquiryPortType;
+
+
+/**
+ * This implements the UDDI v3 Inquiry API web service
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+@WebService(serviceName=&quot;UDDIInquiryService&quot;,   
+			endpointInterface=&quot;org.uddi.v3_service.UDDIInquiryPortType&quot;,
+			targetNamespace = &quot;urn:uddi-org:api_v3_portType&quot;)
+public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiryPortType {
+
+
+<span class="fc" id="L74">    private static Log log = LogFactory.getLog(UDDIInquiryImpl.class);</span>
+
+        private static boolean isLogRequestPayloads() {
+<span class="fc" id="L77">                boolean result = false;</span>
+		try {
+<span class="fc" id="L79">			result = AppConfig.getConfiguration().getBoolean(Property.JUDDI_LOGGING_FindApiCalls, false);</span>
+<span class="nc" id="L80">		} catch (ConfigurationException e) {</span>
+<span class="nc" id="L81">			log.error(&quot;Configuration exception occurred retrieving: &quot; + Property.JUDDI_LOGGING_FindApiCalls, e);</span>
+<span class="fc" id="L82">		}</span>
+<span class="fc" id="L83">		return result;</span>
+        }
+    private UDDIServiceCounter serviceCounter;
+        
+    public UDDIInquiryImpl() {
+<span class="fc" id="L88">        super();</span>
+<span class="fc" id="L89">        serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDIInquiryImpl.class);</span>
+<span class="fc" id="L90">    }</span>
+    
+    
+    private static void LogFindRelatedBusinessRequest(FindRelatedBusinesses request) {
+<span class="fc" id="L94">                 request.setAuthInfo(null);</span>
+<span class="fc" id="L95">                 LogRequest(request);</span>
+<span class="fc" id="L96">        }</span>
+        private static void LogFindBindingRequest(FindBinding request) {
+<span class="fc" id="L98">                 request.setAuthInfo(null);</span>
+<span class="fc" id="L99">                 LogRequest(request);</span>
+<span class="fc" id="L100">        }</span>
+        private static void LogFindTModelRequest(FindTModel request) {
+<span class="fc" id="L102">                 request.setAuthInfo(null);</span>
+<span class="fc" id="L103">                 LogRequest(request);</span>
+<span class="fc" id="L104">        }</span>
+        private static void LogFindServiceRequest(FindService request) {
+<span class="fc" id="L106">                 request.setAuthInfo(null);</span>
+<span class="fc" id="L107">                 LogRequest(request);</span>
+<span class="fc" id="L108">        }</span>
+        private static void LogFindBusinessRequest(FindBusiness request) {
+<span class="fc" id="L110">                 request.setAuthInfo(null);</span>
+<span class="fc" id="L111">                 LogRequest(request);</span>
+<span class="fc" id="L112">        }</span>
+	 private static synchronized void LogRequest(Object request) {
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">                 if (isLogRequestPayloads())</span>
+                  try {
+<span class="nc" id="L116">                        File f = new File(System.currentTimeMillis()+&quot;.xml&quot;);</span>
+<span class="nc" id="L117">                        FileOutputStream fos = new FileOutputStream(f);</span>
+<span class="nc" id="L118">                        JAXB.marshal(request, fos);</span>
+<span class="nc" id="L119">                        fos.close();</span>
+<span class="nc" id="L120">                        f = null;</span>
+<span class="nc" id="L121">                } catch (Exception ex) {</span>
+<span class="nc" id="L122">                        logger.warn(&quot;Unable to log request payload&quot;, ex);</span>
+<span class="nc" id="L123">                }</span>
+<span class="fc" id="L124">         }</span>
+         
+         
+    public BindingDetail findBinding(FindBinding body)
+			throws DispositionReportFaultMessage {
+<span class="fc" id="L129">                long startTime = System.currentTimeMillis();</span>
+                try {
+<span class="fc" id="L131">                    new ValidateInquiry(null).validateFindBinding(body);</span>
+<span class="nc" id="L132">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L133">                    long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L134">                    serviceCounter.update(InquiryQuery.FIND_BINDING, QueryStatus.FAILED, procTime);                      </span>
+<span class="nc" id="L135">                    throw drfm;</span>
+<span class="fc" id="L136">                }</span>
+                
+<span class="fc" id="L138">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L139">		EntityTransaction tx = em.getTransaction();</span>
+		try {
+<span class="fc" id="L141">			tx.begin();</span>
+
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">			if (isAuthenticated())</span>
+<span class="nc" id="L144">				this.getEntityPublisher(em, body.getAuthInfo());</span>
+
+<span class="fc" id="L146">                        LogFindBindingRequest(body);</span>
+<span class="pc bpc" id="L147" title="1 of 4 branches missed.">                        if (body.getServiceKey() != null &amp;&amp; body.getServiceKey().length() &gt; 0) {</span>
+                            // Check that we were passed a valid serviceKey per
+                            // 5.1.12.4 of the UDDI v3 spec
+<span class="fc" id="L150">                            String serviceKey = body.getServiceKey();</span>
+<span class="fc" id="L151">                            org.apache.juddi.model.BusinessService modelBusinessService = null;</span>
+                            try {
+<span class="fc" id="L153">                                    modelBusinessService=em.find(org.apache.juddi.model.BusinessService.class, serviceKey);</span>
+<span class="nc" id="L154">                            } catch (Exception e) {</span>
+<span class="nc" id="L155">                                    log.debug(e.getMessage(), e);</span>
+<span class="fc" id="L156">                            }</span>
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">                            if (modelBusinessService == null)</span>
+<span class="nc" id="L158">                                throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.ServiceNotFound&quot;, serviceKey));</span>
+                        }
+
+<span class="fc" id="L161">			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();</span>
+<span class="fc" id="L162">			findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());</span>
+
+<span class="fc" id="L164">			List&lt;?&gt; keysFound = InquiryHelper.findBinding(body, findQualifiers, em);</span>
+
+<span class="fc" id="L166">			BindingDetail result = InquiryHelper.getBindingDetailFromKeys(body, findQualifiers, em, keysFound);</span>
+<span class="fc" id="L167">			tx.rollback();</span>
+<span class="fc" id="L168">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L169">                        serviceCounter.update(InquiryQuery.FIND_BINDING, QueryStatus.SUCCESS, procTime);                      </span>
+
+<span class="fc" id="L171">			return result;</span>
+		} finally {
+<span class="pc bpc" id="L173" title="3 of 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="nc" id="L174">				tx.rollback();</span>
+			}
+<span class="pc" id="L176">			em.close();</span>
+		}
+	}
+
+	
+    public BusinessList findBusiness(FindBusiness body)
+			throws DispositionReportFaultMessage {
+<span class="fc" id="L183">                long startTime = System.currentTimeMillis();</span>
+                try {
+<span class="fc" id="L185">                    new ValidateInquiry(null).validateFindBusiness(body);</span>
+<span class="nc" id="L186">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L187">                    long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L188">                    serviceCounter.update(InquiryQuery.FIND_BUSINESS, QueryStatus.FAILED, procTime);                      </span>
+<span class="nc" id="L189">                    throw drfm;</span>
+<span class="fc" id="L190">                }</span>
+
+<span class="fc" id="L192">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L193">		EntityTransaction tx = em.getTransaction();</span>
+		try {
+                        try {
+                                //AppConfig.reloadConfig();
+<span class="fc" id="L197">                                logger.info(&quot;FindBusiness with tModel bag filtering is enabled: &quot; +</span>
+<span class="fc" id="L198">                                        AppConfig.getConfiguration().getBoolean(Property.JUDDI_ENABLE_FIND_BUSINESS_TMODEL_BAG_FILTERING,true)</span>
+<span class="fc" id="L199">                                + &quot; loaded from &quot; + AppConfig.getConfigFileURL());</span>
+<span class="nc" id="L200">                        } catch (ConfigurationException ex) {</span>
+<span class="nc" id="L201">                                ex.printStackTrace();</span>
+<span class="fc" id="L202">                        }</span>
+<span class="fc" id="L203">			tx.begin();</span>
+
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">			if (isAuthenticated())</span>
+<span class="nc" id="L206">				this.getEntityPublisher(em, body.getAuthInfo());</span>
+<span class="fc" id="L207">                        LogFindBusinessRequest(body);</span>
+<span class="fc" id="L208">			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();</span>
+<span class="fc" id="L209">			findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());</span>
+
+<span class="fc" id="L211">			List&lt;?&gt; keysFound = InquiryHelper.findBusiness(body, findQualifiers, em);</span>
+
+<span class="fc" id="L213">			BusinessList result = InquiryHelper.getBusinessListFromKeys(body, findQualifiers, em, keysFound);</span>
+
+<span class="fc" id="L215">			tx.rollback();</span>
+<span class="fc" id="L216">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L217">                        serviceCounter.update(InquiryQuery.FIND_BUSINESS, QueryStatus.SUCCESS, procTime);                      </span>
+
+<span class="fc" id="L219">			return result;</span>
+		} finally {
+<span class="pc bpc" id="L221" title="3 of 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="nc" id="L222">				tx.rollback();</span>
+			}
+<span class="pc" id="L224">			em.close();</span>
+		}
+	}
+
+	
+    public RelatedBusinessesList findRelatedBusinesses(FindRelatedBusinesses body)
+			throws DispositionReportFaultMessage {
+<span class="fc" id="L231">                long startTime = System.currentTimeMillis();</span>
+                try {
+<span class="fc" id="L233">                    new ValidateInquiry(null).validateFindRelatedBusinesses(body, false);</span>
+<span class="nc" id="L234">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L235">                    long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L236">                    serviceCounter.update(InquiryQuery.FIND_RELATEDBUSINESSES, QueryStatus.FAILED, procTime);                      </span>
+<span class="nc" id="L237">                    throw drfm;</span>
+<span class="fc" id="L238">                }</span>
+
+<span class="fc" id="L240">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L241">		EntityTransaction tx = em.getTransaction();</span>
+		try {
+<span class="fc" id="L243">			tx.begin();</span>
+
+<span class="pc bpc" id="L245" title="1 of 2 branches missed.">			if (isAuthenticated())</span>
+<span class="nc" id="L246">				this.getEntityPublisher(em, body.getAuthInfo());</span>
+<span class="fc" id="L247">                        LogFindRelatedBusinessRequest(body);</span>
+
+			// TODO: findQualifiers aren't really used for this call, except maybe for sorting.  Sorting must be done in Java due to the retrieval method used.  Right now
+			// no sorting is performed.
+<span class="fc" id="L251">			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();</span>
+<span class="fc" id="L252">			findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());</span>
+
+<span class="fc" id="L254">			RelatedBusinessesList result = InquiryHelper.getRelatedBusinessesList(body, em);</span>
+
+<span class="fc" id="L256">			tx.rollback();</span>
+<span class="fc" id="L257">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L258">                        serviceCounter.update(InquiryQuery.FIND_RELATEDBUSINESSES, QueryStatus.SUCCESS, procTime);                      </span>
+
+<span class="fc" id="L260">			return result;</span>
+		} finally {
+<span class="pc bpc" id="L262" title="3 of 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="nc" id="L263">				tx.rollback();</span>
+			}
+<span class="pc" id="L265">			em.close();</span>
+		}
+	}
+
+	
+    public ServiceList findService(FindService body)
+			throws DispositionReportFaultMessage {
+<span class="fc" id="L272">                long startTime = System.currentTimeMillis();</span>
+                try {
+<span class="fc" id="L274">                    new ValidateInquiry(null).validateFindService(body);</span>
+<span class="nc" id="L275">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L276">                    long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L277">                    serviceCounter.update(InquiryQuery.FIND_SERVICE, QueryStatus.FAILED, procTime);                      </span>
+<span class="nc" id="L278">                    throw drfm;</span>
+<span class="fc" id="L279">                }</span>
+
+<span class="fc" id="L281">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L282">		EntityTransaction tx = em.getTransaction();</span>
+		try {
+<span class="fc" id="L284">			tx.begin();</span>
+
+<span class="pc bpc" id="L286" title="1 of 2 branches missed.">			if (isAuthenticated())</span>
+<span class="nc" id="L287">				this.getEntityPublisher(em, body.getAuthInfo());</span>
+<span class="fc" id="L288">                        LogFindServiceRequest(body);</span>
+<span class="fc" id="L289">			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();</span>
+<span class="fc" id="L290">			findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());</span>
+
+<span class="fc" id="L292">			List&lt;?&gt; keysFound = InquiryHelper.findService(body, findQualifiers, em);</span>
+
+<span class="fc bfc" id="L294" title="All 2 branches covered.">		        if (keysFound.size() == 0) {</span>
+<span class="pc bpc" id="L295" title="1 of 2 branches missed.">		            if (body.getBusinessKey() != null) {</span>
+		                // Check that we were passed a valid businessKey per
+    	                // 5.1.12.4 of the UDDI v3 spec
+<span class="nc" id="L298">    	                String businessKey = body.getBusinessKey();</span>
+<span class="nc" id="L299">    	                org.apache.juddi.model.BusinessEntity modelBusinessEntity = null;</span>
+    	                try {
+<span class="nc" id="L301">    	                	modelBusinessEntity = em.find(org.apache.juddi.model.BusinessEntity.class, businessKey);</span>
+<span class="nc" id="L302">    	                } catch (ClassCastException e) {}</span>
+<span class="nc bnc" id="L303" title="All 2 branches missed.">    	                if (modelBusinessEntity == null) {</span>
+<span class="nc" id="L304">    	                    throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.BusinessNotFound&quot;, businessKey));</span>
+    	                }
+		            }
+		        }
+
+<span class="fc" id="L309">			ServiceList result = InquiryHelper.getServiceListFromKeys(body, findQualifiers, em, keysFound);</span>
+
+<span class="fc" id="L311">			tx.rollback();</span>
+<span class="fc" id="L312">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L313">                        serviceCounter.update(InquiryQuery.FIND_SERVICE, QueryStatus.SUCCESS, procTime);                      </span>
+
+<span class="fc" id="L315">			return result;</span>
+		} finally {
+<span class="pc bpc" id="L317" title="3 of 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="nc" id="L318">				tx.rollback();</span>
+			}
+<span class="pc" id="L320">			em.close();</span>
+		}
+	}
+
+	
+    public TModelList findTModel(FindTModel body)
+			throws DispositionReportFaultMessage {
+<span class="fc" id="L327">                long startTime = System.currentTimeMillis();</span>
+                try {
+<span class="fc" id="L329">                    new ValidateInquiry(null).validateFindTModel(body, false);</span>
+<span class="nc" id="L330">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L331">                    long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L332">                    serviceCounter.update(InquiryQuery.FIND_TMODEL, QueryStatus.FAILED, procTime);                      </span>
+<span class="nc" id="L333">                    throw drfm;</span>
+<span class="fc" id="L334">                }</span>
+                    
+<span class="fc" id="L336">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L337">		EntityTransaction tx = em.getTransaction();</span>
+		try {
+<span class="fc" id="L339">			tx.begin();</span>
+
+<span class="pc bpc" id="L341" title="1 of 2 branches missed.">			if (isAuthenticated())</span>
+<span class="nc" id="L342">				this.getEntityPublisher(em, body.getAuthInfo());</span>
+<span class="fc" id="L343">                        LogFindTModelRequest(body);</span>
+<span class="fc" id="L344">			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();</span>
+<span class="fc" id="L345">			findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());</span>
+
+<span class="fc" id="L347">			List&lt;?&gt; keysFound = InquiryHelper.findTModel(body, findQualifiers, em);</span>
+
+<span class="fc" id="L349">			TModelList result = InquiryHelper.getTModelListFromKeys(body, findQualifiers, em, keysFound);</span>
+
+<span class="fc" id="L351">			tx.rollback();</span>
+<span class="fc" id="L352">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L353">                        serviceCounter.update(InquiryQuery.FIND_TMODEL, QueryStatus.SUCCESS, procTime);                      </span>
+
+<span class="fc" id="L355">			return result;</span>
+		} finally {
+<span class="pc bpc" id="L357" title="3 of 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="nc" id="L358">				tx.rollback();</span>
+			}
+<span class="pc" id="L360">			em.close();</span>
+		}
+	}
+
+	
+    public BindingDetail getBindingDetail(GetBindingDetail body)
+			throws DispositionReportFaultMessage {
+<span class="fc" id="L367">                long startTime = System.currentTimeMillis();</span>
+                try {
+<span class="fc" id="L369">                    new ValidateInquiry(null).validateGetBindingDetail(body);</span>
+<span class="nc" id="L370">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L371">                    long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L372">                    serviceCounter.update(InquiryQuery.FIND_TMODEL, QueryStatus.FAILED, procTime);                      </span>
+<span class="nc" id="L373">                    throw drfm;</span>
+<span class="fc" id="L374">                }</span>
+
+<span class="fc" id="L376">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L377">		EntityTransaction tx = em.getTransaction();</span>
+		try {
+<span class="fc" id="L379">			tx.begin();</span>
+
+<span class="pc bpc" id="L381" title="1 of 2 branches missed.">			if (isAuthenticated())</span>
+<span class="nc" id="L382">				this.getEntityPublisher(em, body.getAuthInfo());</span>
+
+<span class="fc" id="L384">			BindingDetail result = new BindingDetail();</span>
+
+<span class="fc" id="L386">			List&lt;String&gt; bindingKeyList = body.getBindingKey();</span>
+<span class="fc bfc" id="L387" title="All 2 branches covered.">			for (String bindingKey : bindingKeyList) {</span>
+<span class="fc" id="L388">				org.apache.juddi.model.BindingTemplate modelBindingTemplate = null;</span>
+				try {
+<span class="fc" id="L390">					modelBindingTemplate = em.find(org.apache.juddi.model.BindingTemplate.class, bindingKey);</span>
+<span class="pc" id="L391">				} catch (ClassCastException e) {}</span>
+<span class="pc bpc" id="L392" title="1 of 2 branches missed.">				if (modelBindingTemplate == null)</span>
+<span class="nc" id="L393">					throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.BindingTemplateNotFound&quot;, bindingKey));</span>
+
+<span class="fc" id="L395">				org.uddi.api_v3.BindingTemplate apiBindingTemplate = new org.uddi.api_v3.BindingTemplate();</span>
+
+<span class="fc" id="L397">				MappingModelToApi.mapBindingTemplate(modelBindingTemplate, apiBindingTemplate);</span>
+
+<span class="fc" id="L399">				result.getBindingTemplate().add(apiBindingTemplate);</span>
+<span class="fc" id="L400">			}</span>
+
+<span class="fc" id="L402">			tx.commit();</span>
+<span class="fc" id="L403">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L404">                        serviceCounter.update(InquiryQuery.GET_BINDINGDETAIL, QueryStatus.SUCCESS, procTime);                      </span>
+
+<span class="fc" id="L406">			return result;</span>
+		} finally {
+<span class="pc bpc" id="L408" title="3 of 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="nc" id="L409">				tx.rollback();</span>
+			}
+<span class="pc" id="L411">			em.close();</span>
+		}
+	}
+
+	
+    public BusinessDetail getBusinessDetail(GetBusinessDetail body)
+			throws DispositionReportFaultMessage {
+<span class="fc" id="L418">                long startTime = System.currentTimeMillis();</span>
+                try {
+<span class="fc" id="L420">                    new ValidateInquiry(null).validateGetBusinessDetail(body);</span>
+<span class="nc" id="L421">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L422">                    long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L423">                    serviceCounter.update(InquiryQuery.GET_BUSINESSDETAIL, QueryStatus.FAILED, procTime);                      </span>
+<span class="nc" id="L424">                    throw drfm;</span>
+<span class="fc" id="L425">                }</span>
+
+<span class="fc" id="L427">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L428">		EntityTransaction tx = em.getTransaction();</span>
+		try {
+<span class="fc" id="L430">			tx.begin();</span>
+
+<span class="pc bpc" id="L432" title="1 of 2 branches missed.">			if (isAuthenticated())</span>
+<span class="nc" id="L433">				this.getEntityPublisher(em, body.getAuthInfo());</span>
+
+<span class="fc" id="L435">			BusinessDetail result = new BusinessDetail();</span>
+
+<span class="fc" id="L437">			List&lt;String&gt; businessKeyList = body.getBusinessKey();</span>
+<span class="fc bfc" id="L438" title="All 2 branches covered.">			for (String businessKey : businessKeyList) {</span>
+<span class="fc" id="L439">				org.apache.juddi.model.BusinessEntity modelBusinessEntity = null;</span>
+				try {
+<span class="fc" id="L441">					modelBusinessEntity = em.find(org.apache.juddi.model.BusinessEntity.class, businessKey);</span>
+<span class="pc" id="L442">				} catch (ClassCastException e) {}</span>
+<span class="fc bfc" id="L443" title="All 2 branches covered.">				if (modelBusinessEntity == null)</span>
+<span class="fc" id="L444">					throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.BusinessNotFound&quot;, businessKey));</span>
+
+<span class="fc" id="L446">				org.uddi.api_v3.BusinessEntity apiBusinessEntity = new org.uddi.api_v3.BusinessEntity();</span>
+
+<span class="fc" id="L448">				MappingModelToApi.mapBusinessEntity(modelBusinessEntity, apiBusinessEntity);</span>
+
+<span class="fc" id="L450">				result.getBusinessEntity().add(apiBusinessEntity);</span>
+<span class="fc" id="L451">			}</span>
+
+<span class="fc" id="L453">			tx.commit();</span>
+<span class="fc" id="L454">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L455">                        serviceCounter.update(InquiryQuery.GET_BUSINESSDETAIL, QueryStatus.SUCCESS, procTime);                      </span>
+
+<span class="fc" id="L457">			return result;</span>
+		} finally {
+<span class="pc bpc" id="L459" title="2 of 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="pc" id="L460">				tx.rollback();</span>
+			}
+<span class="fc" id="L462">			em.close();</span>
+		}
+	}
+
+	
+    public OperationalInfos getOperationalInfo(GetOperationalInfo body)
+			throws DispositionReportFaultMessage {
+<span class="fc" id="L469">                long startTime = System.currentTimeMillis();</span>
+                try {
+<span class="fc" id="L471">                    new ValidateInquiry(null).validateGetOperationalInfo(body);</span>
+<span class="nc" id="L472">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L473">                    long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L474">                    serviceCounter.update(InquiryQuery.GET_OPERATIONALINFO, QueryStatus.FAILED, procTime);                      </span>
+<span class="nc" id="L475">                    throw drfm;</span>
+<span class="fc" id="L476">                }</span>
+
+<span class="fc" id="L478">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L479">		EntityTransaction tx = em.getTransaction();</span>
+		try {
+<span class="fc" id="L481">			tx.begin();</span>
+
+<span class="pc bpc" id="L483" title="1 of 2 branches missed.">			if (isAuthenticated())</span>
+<span class="nc" id="L484">				this.getEntityPublisher(em, body.getAuthInfo());</span>
+
+<span class="fc" id="L486">			OperationalInfos result = new OperationalInfos();</span>
+
+<span class="fc" id="L488">			List&lt;String&gt; entityKeyList = body.getEntityKey();</span>
+<span class="fc bfc" id="L489" title="All 2 branches covered.">			for (String entityKey : entityKeyList) {</span>
+<span class="fc" id="L490">				org.apache.juddi.model.UddiEntity modelUddiEntity = null;</span>
+				try {
+<span class="fc" id="L492">					modelUddiEntity = em.find(org.apache.juddi.model.UddiEntity.class, entityKey);</span>
+<span class="pc" id="L493">				} catch (ClassCastException e) {}</span>
+<span class="pc bpc" id="L494" title="1 of 2 branches missed.">				if (modelUddiEntity == null)</span>
+<span class="nc" id="L495">					throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.EntityNotFound&quot;, entityKey));</span>
+
+<span class="fc" id="L497">				org.uddi.api_v3.OperationalInfo apiOperationalInfo = new org.uddi.api_v3.OperationalInfo();</span>
+
+<span class="fc" id="L499">				MappingModelToApi.mapOperationalInfo(modelUddiEntity, apiOperationalInfo);</span>
+
+<span class="fc" id="L501">				result.getOperationalInfo().add(apiOperationalInfo);</span>
+<span class="fc" id="L502">			}</span>
+
+<span class="fc" id="L504">			tx.commit();</span>
+<span class="fc" id="L505">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L506">                        serviceCounter.update(InquiryQuery.GET_OPERATIONALINFO, QueryStatus.SUCCESS, procTime);                      </span>
+
+<span class="fc" id="L508">			return result;</span>
+		} finally {
+<span class="pc bpc" id="L510" title="3 of 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="nc" id="L511">				tx.rollback();</span>
+			}
+<span class="pc" id="L513">			em.close();</span>
+		}
+	}
+
+	
+    public ServiceDetail getServiceDetail(GetServiceDetail body)
+			throws DispositionReportFaultMessage {
+<span class="fc" id="L520">        long startTime = System.currentTimeMillis();</span>
+        try {
+<span class="fc" id="L522">            new ValidateInquiry(null).validateGetServiceDetail(body);</span>
+<span class="nc" id="L523">        } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L524">            long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L525">            serviceCounter.update(InquiryQuery.GET_SERVICEDETAIL, QueryStatus.FAILED, procTime);                      </span>
+<span class="nc" id="L526">            throw drfm;</span>
+<span class="fc" id="L527">        }</span>
+
+<span class="fc" id="L529">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L530">		EntityTransaction tx = em.getTransaction();</span>
+		try {
+<span class="fc" id="L532">			tx.begin();</span>
+
+<span class="pc bpc" id="L534" title="1 of 2 branches missed.">			if (isAuthenticated())</span>
+<span class="nc" id="L535">				this.getEntityPublisher(em, body.getAuthInfo());</span>
+
+<span class="fc" id="L537">			ServiceDetail result = new ServiceDetail();</span>
+
+<span class="fc" id="L539">			List&lt;String&gt; serviceKeyList = body.getServiceKey();</span>
+<span class="fc bfc" id="L540" title="All 2 branches covered.">			for (String serviceKey : serviceKeyList) {</span>
+<span class="fc" id="L541">				org.apache.juddi.model.BusinessService modelBusinessService = null;</span>
+				try {
+<span class="fc" id="L543">					modelBusinessService = em.find(org.apache.juddi.model.BusinessService.class, serviceKey);</span>
+<span class="pc" id="L544">				} catch (ClassCastException e){}</span>
+<span class="fc bfc" id="L545" title="All 2 branches covered.">				if (modelBusinessService == null)</span>
+<span class="fc" id="L546">					throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.ServiceNotFound&quot;, serviceKey));</span>
+
+<span class="fc" id="L548">				org.uddi.api_v3.BusinessService apiBusinessService = new org.uddi.api_v3.BusinessService();</span>
+
+<span class="fc" id="L550">				MappingModelToApi.mapBusinessService(modelBusinessService, apiBusinessService);</span>
+
+<span class="fc" id="L552">				result.getBusinessService().add(apiBusinessService);</span>
+<span class="fc" id="L553">			}</span>
+
+<span class="fc" id="L555">			tx.commit();</span>
+<span class="fc" id="L556">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L557">                        serviceCounter.update(InquiryQuery.GET_SERVICEDETAIL, QueryStatus.SUCCESS, procTime);                      </span>
+
+<span class="fc" id="L559">			return result;</span>
+
+		} finally {
+<span class="pc bpc" id="L562" title="2 of 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="pc" id="L563">				tx.rollback();</span>
+			}
+<span class="fc" id="L565">			em.close();</span>
+		}
+	}
+
+	
+    public TModelDetail getTModelDetail(GetTModelDetail body)
+			throws DispositionReportFaultMessage {
+<span class="fc" id="L572">                long startTime = System.currentTimeMillis();</span>
+                try {
+<span class="fc" id="L574">                    new ValidateInquiry(null).validateGetTModelDetail(body);</span>
+<span class="nc" id="L575">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L576">                    long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L577">                    serviceCounter.update(InquiryQuery.GET_TMODELDETAIL, QueryStatus.FAILED, procTime);                      </span>
+<span class="nc" id="L578">                    throw drfm;</span>
+<span class="fc" id="L579">                }</span>
+                    
+<span class="fc" id="L581">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L582">		EntityTransaction tx = em.getTransaction();</span>
+		try {
+<span class="fc" id="L584">			tx.begin();</span>
+
+<span class="pc bpc" id="L586" title="1 of 2 branches missed.">			if (isAuthenticated())</span>
+<span class="nc" id="L587">				this.getEntityPublisher(em, body.getAuthInfo());</span>
+
+<span class="fc" id="L589">			TModelDetail result = new TModelDetail();</span>
+
+<span class="fc" id="L591">			List&lt;String&gt; tmodelKeyList = body.getTModelKey();</span>
+<span class="fc bfc" id="L592" title="All 2 branches covered.">			for (String tmodelKey : tmodelKeyList) {</span>
+<span class="fc" id="L593">				org.apache.juddi.model.Tmodel modelTModel = null;</span>
+				try {
+<span class="fc" id="L595">					modelTModel = em.find(org.apache.juddi.model.Tmodel.class, tmodelKey);</span>
+<span class="pc" id="L596">				} catch (ClassCastException e) {}</span>
+<span class="fc bfc" id="L597" title="All 2 branches covered.">				if (modelTModel == null)</span>
+<span class="fc" id="L598">					throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.TModelNotFound&quot;, tmodelKey));</span>
+
+<span class="fc" id="L600">				org.uddi.api_v3.TModel apiTModel = new org.uddi.api_v3.TModel();</span>
+
+<span class="fc" id="L602">				MappingModelToApi.mapTModel(modelTModel, apiTModel);</span>
+
+<span class="fc" id="L604">				result.getTModel().add(apiTModel);</span>
+<span class="fc" id="L605">			}</span>
+
+<span class="fc" id="L607">			tx.commit();</span>
+<span class="fc" id="L608">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L609">                        serviceCounter.update(InquiryQuery.GET_TMODELDETAIL, QueryStatus.SUCCESS, procTime);                      </span>
+
+<span class="fc" id="L611">			return result;</span>
+		} finally {
+<span class="pc bpc" id="L613" title="2 of 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="pc" id="L614">				tx.rollback();</span>
+			}
+<span class="fc" id="L616">			em.close();</span>
+		}
+	}
+
+	private boolean isAuthenticated() {
+<span class="fc" id="L621">		boolean result = false;</span>
+		try {
+<span class="fc" id="L623">			result = AppConfig.getConfiguration().getBoolean(Property.JUDDI_AUTHENTICATE_INQUIRY);</span>
+<span class="nc" id="L624">		} catch (ConfigurationException e) {</span>
+<span class="nc" id="L625">			log.error(&quot;Configuration exception occurred retrieving: &quot; + Property.JUDDI_AUTHENTICATE_INQUIRY, e);</span>
+<span class="fc" id="L626">		}</span>
+<span class="fc" id="L627">		return result;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

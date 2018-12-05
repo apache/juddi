@@ -1,0 +1,1076 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DigSigUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.cryptor</a> &gt; <span class="el_source">DigSigUtil.java</span></div><h1>DigSigUtil.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2013 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.client.cryptor;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.Security;
+import java.security.cert.CRLException;
+import java.security.cert.CertPath;
+import java.security.cert.CertPathValidator;
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertPathValidatorResult;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.PKIXCertPathValidatorResult;
+import java.security.cert.PKIXParameters;
+import java.security.cert.TrustAnchor;
+import java.security.cert.X509CRL;
+import java.security.cert.X509CertSelector;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.atomic.AtomicReference;
+import javax.security.auth.x500.X500Principal;
+import javax.xml.bind.JAXB;
+import javax.xml.crypto.dsig.CanonicalizationMethod;
+import javax.xml.crypto.dsig.DigestMethod;
+import javax.xml.crypto.dsig.Reference;
+import javax.xml.crypto.dsig.SignatureMethod;
+import javax.xml.crypto.dsig.SignedInfo;
+import javax.xml.crypto.dsig.Transform;
+import javax.xml.crypto.dsig.XMLSignature;
+import javax.xml.crypto.dsig.XMLSignatureFactory;
+import javax.xml.crypto.dsig.dom.DOMSignContext;
+import javax.xml.crypto.dsig.dom.DOMValidateContext;
+import javax.xml.crypto.dsig.keyinfo.KeyInfo;
+import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
+import javax.xml.crypto.dsig.keyinfo.X509Data;
+import javax.xml.crypto.dsig.keyinfo.X509IssuerSerial;
+import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
+import javax.xml.crypto.dsig.spec.TransformParameterSpec;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import sun.security.provider.certpath.CertId;
+import sun.security.provider.certpath.OCSP;
+import sun.security.provider.certpath.OCSP.RevocationStatus;
+import static sun.security.provider.certpath.OCSP.getResponderURI;
+import sun.security.x509.X509CertImpl;
+
+
+/**
+ * A utility class for signing and verifying JAXB Objects, such as UDDI
+ * entities.
+ *
+ * Notes: This class only supports elements that are signed once. Multiple
+ * signature are not currently supported.
+ *
+ * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree &lt;/a&gt;
+ */
+public class DigSigUtil {
+        public final static String SIGNATURE_KEYSTORE_KEY_PASSWORD_PROVIDER=&quot;signatureKeystoreKeyPassENCProvider&quot;;
+        public final static String SIGNATURE_KEYSTORE_KEY_PASSWORD_WAS_ENC=&quot;signatureKeystoreKeyPassENC&quot;;
+        public final static String SIGNATURE_KEYSTORE_KEY_PASSWORD_CIPHER=&quot;signatureKeyStoreCipherPass&quot;;
+        
+        public final static String SIGNATURE_KEYSTORE_FILE_PASSWORD_WASENC=&quot;signatureKeystoreFilePassENC&quot;;
+        public final static String SIGNATURE_KEYSTORE_FILE_PASSWORD_PROVIDER=&quot;signatureKeystoreFileENCProvider&quot;;
+        public final static String TRUSTSTORE_FILE_PASSWORD_WASENC=&quot;truststoreFilePassENC&quot;;
+        public final static String TRUSTSTORE_FILE_PASSWORD_PROVIDER=&quot;truststoreFilePassENCProvider&quot;;
+        public final static String SIGNATURE_KEYSTORE_FILE_PASSWORD_CIPHER=&quot;signatureKeystoreFileKeyPass&quot;;
+        public final static String TRUSTSTORE_FILE_PASSWORD_CIPHER=&quot;truststoreFilePass&quot;;
+
+        /**
+         * Expects a properties object containing the desired configuration
+         *
+         * @param config
+         * @throws CertificateException
+         */
+<span class="nc" id="L115">        public DigSigUtil(Properties config) throws CertificateException {</span>
+<span class="nc" id="L116">                cf = CertificateFactory.getInstance(&quot;X.509&quot;);</span>
+<span class="nc" id="L117">                this.map = config;</span>
+<span class="nc" id="L118">        }</span>
+
+        /**
+         * Creates a new instance of the digital signature utility with no configuration options set.
+         * @throws CertificateException 
+         */
+<span class="fc" id="L124">        public DigSigUtil() throws CertificateException {</span>
+<span class="fc" id="L125">                cf = CertificateFactory.getInstance(&quot;X.509&quot;);</span>
+<span class="fc" id="L126">        }</span>
+<span class="pc" id="L127">        private Log logger = LogFactory.getLog(this.getClass());</span>
+
+        public void put(String key, String value) {
+<span class="fc" id="L130">                map.put(key, value);</span>
+<span class="fc" id="L131">        }</span>
+
+        /**
+         * clears the configuration for reuse
+         */
+        public void clear() {
+<span class="nc" id="L137">                map.clear();</span>
+<span class="nc" id="L138">        }</span>
+<span class="pc" id="L139">        private Properties map = new Properties();</span>
+        
+        
+        
+        /**
+         * This is the location of the keystore
+         *
+         * If referencing a Windows certificate store, use WINDOWS-MY as a value
+         * with a null password
+         */
+        public final static String SIGNATURE_KEYSTORE_FILE = &quot;keyStorePath&quot;;
+        /**
+         * The type of file, such as JKS for most Java applications, or
+         * WINDOWS-MY to use the Windows certificate store of the current user
+         * or KeychainStore for MacOS
+         */
+        public final static String SIGNATURE_KEYSTORE_FILETYPE = &quot;keyStoreType&quot;;
+        public final static String SIGNATURE_KEYSTORE_FILE_PASSWORD = &quot;filePassword&quot;;
+        public final static String SIGNATURE_KEYSTORE_KEY_PASSWORD = &quot;keyPassword&quot;;
+        public final static String SIGNATURE_KEYSTORE_KEY_ALIAS = &quot;keyAlias&quot;;
+        /**
+         *
+         * trust loaded as follows
+         * system property via file
+         * programmatically specified map via file
+         * programmatically specified map thread classloader lookup
+         * programmatically specified map this class's classloader lookup
+         * windows trust store
+         * JDK provided trust store
+         */
+        public final static String TRUSTSTORE_FILE = &quot;trustStorePath&quot;;
+        /**
+         *
+         * trust loaded as follows
+         * system property via file
+         * programmatically specified map via file
+         * programmatically specified map thread classloader lookup
+         * programmatically specified map this class's classloader lookup
+         * windows trust store
+         * JDK provided trust store
+         */
+        public final static String TRUSTSTORE_FILETYPE = &quot;trustStoreType&quot;;
+        /**
+         *
+         * trust loaded as follows
+         * system property via file
+         * programmatically specified map via file
+         * programmatically specified map thread classloader lookup
+         * programmatically specified map this class's classloader lookup
+         * windows trust store
+         * JDK provided trust store
+         */
+        public final static String TRUSTSTORE_FILE_PASSWORD = &quot;trustStorePassword&quot;;
+        /**
+         * default is CanonicalizationMethod.EXCLUSIVE
+         * http://www.w3.org/2001/10/xml-exc-c14n#
+         *
+         * @see CanonicalizationMethod
+         */
+        public final static String CANONICALIZATIONMETHOD = &quot;CanonicalizationMethod&quot;;
+        /**
+         * default is http://www.w3.org/2000/09/xmldsig#rsa-sha1
+         *
+         * @see SignatureMethod
+         */
+        public final static String SIGNATURE_METHOD = &quot;SignatureMethod&quot;;
+        /**
+         * Defines whether or not a certificate is included with the
+         * signature&lt;Br&gt;
+         * Values - Include whole X509 Public Key in the signature (recommended)
+         * (default) * Example
+         * &lt;pre&gt;
+         * Map map = new HashMap();
+         * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, &quot;true&quot;);&lt;/pre&gt;
+         * any value can be used.
+         */
+        public final static String SIGNATURE_OPTION_CERT_INCLUSION_BASE64 = &quot;BASE64&quot;;
+
+        /**
+         * Include the signer's serial of the public key and the issuer's
+         * subject name
+         *
+         * Clients will not be able to validate the signature unless they have a
+         * copy of the signer's public key in a trust store or the full
+         * certificate is included out of band
+         *
+         * Example
+         * &lt;pre&gt;
+         * Map map = new HashMap();
+         * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, &quot;true&quot;);&lt;/pre&gt;
+         * any value can be used.
+         * see {@link #SIGNATURE_OPTION_CERT_INCLUSION_BASE64 SIGNATURE_OPTION_CERT_INCLUSION_BASE64} 
+         */
+        public final static String SIGNATURE_OPTION_CERT_INCLUSION_SERIAL = &quot;SERIAL&quot;;
+        /**
+         * Include the signer's Subject DN of the public key.
+         *
+         * Clients will not be able to validate the signature unless they have a
+         * copy of the signer's public key in a trust store or the full
+         * certificate is included out of band
+         *
+         * Example
+         * &lt;pre&gt;
+         * Map map = new HashMap();
+         * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, &quot;true&quot;);&lt;/pre&gt;
+         * any value can be used.
+         *
+         * see {@link #SIGNATURE_OPTION_CERT_INCLUSION_BASE64 SIGNATURE_OPTION_CERT_INCLUSION_BASE64} 
+         */
+        public final static String SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN = &quot;SUBJECTDN&quot;;
+        /*
+         * Include the signer's X500 Prinicple of the public key.
+         *
+         * Clients will not be able to validate the signature unless they have a
+         * copy of the signer's public key in a trust store or the full certificate
+         * is included out of band
+         *
+         * Example
+         * &lt;pre&gt;
+         * Map map = new HashMap();
+         * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL, &quot;true&quot;);&lt;/pre&gt;
+         * any value can be used.
+         *
+         * @see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
+         */
+        //public final static String SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL = &quot;X500&quot;;
+
+        /**
+         * This is the namespace of the digital signature.
+         */
+        public final static String XML_DIGSIG_NS = &quot;http://www.w3.org/2000/09/xmldsig#&quot;;
+        /**
+         * Default value DigestMethod.SHA1 =
+         * &quot;http://www.w3.org/2000/09/xmldsig#sha1&quot;
+         *
+         * @see javax.xml.crypto.dsig.DigestMethod
+         */
+        public final static String SIGNATURE_OPTION_DIGEST_METHOD = &quot;digestMethod&quot;;
+        /**
+         * When validating a signature, include this field will validate that
+         * the signature is still valid with regards to timestamps NotBefore and
+         * OnOrAfter
+         *
+         * Example
+         * &lt;pre&gt;
+         * Map map = new HashMap();
+         * map.put(DigSigUtil.CHECK_TIMESTAMPS, true);&lt;/pre&gt; any value can be
+         * used.
+         */
+        public final static String CHECK_TIMESTAMPS = &quot;checkTimestamps&quot;;
+<span class="pc" id="L289">        private CertificateFactory cf = null;</span>
+        public final static String CHECK_REVOCATION_STATUS_OCSP = &quot;checkRevocationOCSP&quot;;
+        public final static String CHECK_REVOCATION_STATUS_CRL = &quot;checkRevocationCRL&quot;;
+        public final static String CHECK_TRUST_CHAIN = &quot;checkTrust&quot;;
+
+        /**
+         * Digital signs a UDDI entity, such as a business, service, tmodel or
+         * binding template using the map to provide certificate key stores and
+         * credentials&lt;br&gt;&lt;br&gt; The UDDI entity MUST support XML Digital
+         * Signatures (tModel, Business, Service, Binding Template)
+         *
+         * @param &lt;T&gt; Any UDDI entity that supports digital signatures
+         * @param jaxbObj
+         * @return an enveloped signed UDDI element, do not modify this object
+         * after signing
+         */
+        public &lt;T&gt; T signUddiEntity(T jaxbObj) {
+<span class="fc" id="L306">                DOMResult domResult = new DOMResult();</span>
+<span class="fc" id="L307">                JAXB.marshal(jaxbObj, domResult);</span>
+<span class="fc" id="L308">                Document doc = ((Document) domResult.getNode());</span>
+<span class="fc" id="L309">                Element docElement = doc.getDocumentElement();</span>
+
+                try {
+<span class="fc" id="L312">                        KeyStore ks = KeyStore.getInstance(map.getProperty(SIGNATURE_KEYSTORE_FILETYPE));</span>
+<span class="fc" id="L313">                        URL url = Thread.currentThread().getContextClassLoader().getResource(map.getProperty(SIGNATURE_KEYSTORE_FILE));</span>
+<span class="pc bpc" id="L314" title="1 of 2 branches missed.">                        if (url == null) {</span>
+                                try {
+<span class="fc" id="L316">                                        url = new File(map.getProperty(SIGNATURE_KEYSTORE_FILE)).toURI().toURL();</span>
+<span class="nc" id="L317">                                } catch (Exception x) {</span>
+<span class="fc" id="L318">                                }</span>
+                        }
+<span class="pc bpc" id="L320" title="1 of 2 branches missed.">                        if (url == null) {</span>
+                                try {
+<span class="nc" id="L322">                                        url = this.getClass().getClassLoader().getResource(map.getProperty(SIGNATURE_KEYSTORE_FILE));</span>
+<span class="nc" id="L323">                                } catch (Exception x) {</span>
+<span class="nc" id="L324">                                }</span>
+                        }
+<span class="fc" id="L326">                        KeyStore.PrivateKeyEntry keyEntry = null;</span>
+<span class="pc bpc" id="L327" title="1 of 2 branches missed.">                        if (!map.getProperty(SIGNATURE_KEYSTORE_FILETYPE).equalsIgnoreCase(&quot;WINDOWS-MY&quot;)) {</span>
+<span class="fc" id="L328">                                ks.load(url.openStream(), (map.getProperty(SIGNATURE_KEYSTORE_FILE_PASSWORD)).toCharArray());</span>
+<span class="pc bpc" id="L329" title="1 of 2 branches missed.">                                if (map.getProperty(SIGNATURE_KEYSTORE_KEY_PASSWORD) == null) {</span>
+<span class="fc" id="L330">                                        keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(map.getProperty(SIGNATURE_KEYSTORE_KEY_ALIAS),</span>
+<span class="fc" id="L331">                                                new KeyStore.PasswordProtection(map.getProperty(SIGNATURE_KEYSTORE_FILE_PASSWORD).toCharArray()));</span>
+                                } else {
+<span class="nc" id="L333">                                        keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(map.getProperty(SIGNATURE_KEYSTORE_KEY_ALIAS),</span>
+<span class="nc" id="L334">                                                new KeyStore.PasswordProtection(map.getProperty(SIGNATURE_KEYSTORE_KEY_PASSWORD).toCharArray()));</span>
+                                }
+                        } else {
+                                //Windows only
+<span class="nc" id="L338">                                ks.load(null, null);</span>
+<span class="nc" id="L339">                                keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(map.getProperty(SIGNATURE_KEYSTORE_KEY_ALIAS),</span>
+                                        null);
+                        }
+
+<span class="fc" id="L343">                        PrivateKey privateKey = keyEntry.getPrivateKey();</span>
+<span class="fc" id="L344">                        Certificate origCert = keyEntry.getCertificate();</span>
+                        //PublicKey validatingKey = origCert.getPublicKey();
+<span class="fc" id="L346">                        this.signDOM(docElement, privateKey, origCert);</span>
+
+<span class="fc" id="L348">                        DOMSource domSource = new DOMSource(doc);</span>
+<span class="fc" id="L349">                        T result = (T) JAXB.unmarshal(domSource, jaxbObj.getClass());</span>
+<span class="fc" id="L350">                        return result;</span>
+<span class="nc" id="L351">                } catch (Exception e) {</span>
+<span class="nc" id="L352">                        throw new RuntimeException(&quot;Signature failure due to: &quot; + e.getMessage(), e);</span>
+                }
+        }
+
+        /**
+         * Digitally signs a UDDI entity, such as a business, service, tmodel or
+         * binding template, provided you've already done the legwork to provide
+         * the signing keys &lt;br&gt;&lt;br&gt; The UDDI entity MUST support XML Digital
+         * Signatures (tModel, Business, Service, Binding Template)
+         *
+         * @param &lt;T&gt;
+         * @param jaxbObj
+         * @param publicKey
+         * @param privateKey
+         * @return a signed entity
+         */
+        public &lt;T&gt; T signUddiEntity(T jaxbObj, Certificate publicKey, PrivateKey privateKey) {
+<span class="nc" id="L369">                DOMResult domResult = new DOMResult();</span>
+<span class="nc" id="L370">                JAXB.marshal(jaxbObj, domResult);</span>
+<span class="nc" id="L371">                Document doc = ((Document) domResult.getNode());</span>
+<span class="nc" id="L372">                Element docElement = doc.getDocumentElement();</span>
+                try {
+
+                        //PublicKey validatingKey = origCert.getPublicKey();
+<span class="nc" id="L376">                        this.signDOM(docElement, privateKey, publicKey);</span>
+<span class="nc" id="L377">                        DOMSource domSource = new DOMSource(doc);</span>
+<span class="nc" id="L378">                        T result = (T) JAXB.unmarshal(domSource, jaxbObj.getClass());</span>
+<span class="nc" id="L379">                        return result;</span>
+<span class="nc" id="L380">                } catch (Exception e) {</span>
+<span class="nc" id="L381">                        throw new RuntimeException(&quot;Signature failure due to: &quot; + e.getMessage(), e);</span>
+                }
+        }
+
+        /**
+         * Serializes a JAXB object and prints to stdout
+         *
+         * @param obj
+         */
+        public static void JAXB_ToStdOut(Object obj) {
+<span class="nc" id="L391">                StringWriter sw = new StringWriter();</span>
+<span class="nc" id="L392">                JAXB.marshal(obj, sw);</span>
+<span class="nc" id="L393">                System.out.println(sw.toString());</span>
+<span class="nc" id="L394">        }</span>
+
+        /**
+         * Serializes a JAXB object and prints to stdout
+         *
+         * @param obj
+         * @return serialized text
+         */
+        public static String JAXB_ToString(Object obj) {
+<span class="nc" id="L403">                StringWriter sw = new StringWriter();</span>
+<span class="nc" id="L404">                JAXB.marshal(obj, sw);</span>
+<span class="nc" id="L405">                return (sw.toString());</span>
+        }
+
+        /**
+         *
+         * returns the public key of the signing certificate used for a signed
+         * JAXB object.
+         *
+         * @param obj
+         * @return null if the item is not signed or if it references a
+         * certificate that is not present in the current keystore
+         * @throws IllegalArgumentException for null input
+         * @throws java.security.cert.CertificateException
+         */
+        public X509Certificate getSigningCertificatePublicKey(Object obj) throws IllegalArgumentException, CertificateException {
+<span class="nc" id="L420">                DOMResult domResult = new DOMResult();</span>
+<span class="nc" id="L421">                JAXB.marshal(obj, domResult);</span>
+
+<span class="nc" id="L423">                Document doc = ((Document) domResult.getNode());</span>
+<span class="nc" id="L424">                Element docElement = doc.getDocumentElement();  //this is our signed node</span>
+<span class="nc" id="L425">                return getSigningCertificatePublicKey(docElement);</span>
+        }
+
+        /**
+         *
+         * returns the public key of the signing certificate used for a signed
+         * JAXB object.
+         *
+         * @param obj
+         * @return null if the item is not signed or if it references a
+         * certificate that is not present in the current keystore
+         * * @throws IllegalArgumentException for null input
+         */
+        private X509Certificate getSigningCertificatePublicKey(Element docElement) throws IllegalArgumentException, CertificateException {
+<span class="pc bpc" id="L439" title="1 of 2 branches missed.">                if (docElement == null) {</span>
+<span class="nc" id="L440">                        throw new IllegalArgumentException();</span>
+                }
+
+<span class="fc" id="L443">                NodeList childNodes = docElement.getChildNodes();   //children, one of these SHOULD be our signature element</span>
+                // X509Certificate signingcert = null;
+<span class="pc bpc" id="L445" title="1 of 2 branches missed.">                for (int i = 0; i &lt; childNodes.getLength(); i++) {</span>
+                        //System.out.println(childNodes.item(i).getNamespaceURI() + &quot; &quot; + childNodes.item(i).getNodeName());
+<span class="pc bpc" id="L447" title="1 of 4 branches missed.">                        if (childNodes.item(i).getNamespaceURI().equalsIgnoreCase(XML_DIGSIG_NS) &amp;&amp; childNodes.item(i).getLocalName().equalsIgnoreCase(&quot;Signature&quot;)) {</span>
+<span class="fc" id="L448">                                Node sig = childNodes.item(i);</span>
+<span class="pc bpc" id="L449" title="1 of 2 branches missed.">                                for (int k = 0; k &lt; sig.getChildNodes().getLength(); k++) {</span>
+                                        //      System.out.println(sig.getChildNodes().item(k).getNamespaceURI() + &quot; &quot; + sig.getChildNodes().item(k).getNodeName());
+<span class="fc bfc" id="L451" title="All 2 branches covered.">                                        if (&quot;KeyInfo&quot;.equalsIgnoreCase(sig.getChildNodes().item(k).getLocalName())) {</span>
+                                                //TODO figure out how to reference Subject DN, serial, thumbprint, etc
+<span class="fc bfc" id="L453" title="All 2 branches covered.">                                                for (int j = 0; j &lt; sig.getChildNodes().item(k).getChildNodes().getLength(); j++) {</span>
+<span class="pc bpc" id="L454" title="1 of 2 branches missed.">                                                        if (&quot;X509Data&quot;.equalsIgnoreCase(sig.getChildNodes().item(k).getChildNodes().item(j).getLocalName())) {</span>
+<span class="fc" id="L455">                                                                Node X509Data = sig.getChildNodes().item(k).getChildNodes().item(j);</span>
+<span class="fc bfc" id="L456" title="All 2 branches covered.">                                                                for (int x = 0; x &lt; X509Data.getChildNodes().getLength(); x++) {</span>
+<span class="fc bfc" id="L457" title="All 2 branches covered.">                                                                        if (&quot;X509Certificate&quot;.equalsIgnoreCase(X509Data.getChildNodes().item(x).getLocalName())) {</span>
+                                        //yay found it!
+
+<span class="fc" id="L460">                                                                                String c</span>
+                                                                                        = &quot;-----BEGIN CERTIFICATE-----\n&quot;
+<span class="fc" id="L462">                                                                                        + X509Data.getChildNodes().item(x).getTextContent()</span>
+                                                                                        + &quot;\n-----END CERTIFICATE-----&quot;;
+                                                                                //System.out.println(&quot;X509 Public key: &quot; + c);
+<span class="fc" id="L465">                                                                                InputStream is = new ByteArrayInputStream(c.getBytes());</span>
+<span class="fc" id="L466">                                                                                X509Certificate cert = (X509Certificate) cf.generateCertificate(is);</span>
+
+<span class="fc" id="L468">                                                                                logger.info(&quot;embedded certificate found, X509 public key &quot; + cert.getSubjectDN().toString());</span>
+<span class="fc" id="L469">                                                                                return cert;</span>
+
+                                                                        }
+
+                                    //if we have a 
+                                                                        //TODO other parsing items, lots of other potentials here
+                                                                }
+<span class="fc" id="L476">                                                                X509Certificate cert = FindCert(X509Data.getChildNodes());</span>
+<span class="fc bfc" id="L477" title="All 2 branches covered.">                                                                if (cert != null) {</span>
+<span class="fc" id="L478">                                                                        logger.info(&quot;certificate loaded from local trust store, X509 public key &quot; + cert.getSubjectDN().toString());</span>
+<span class="fc" id="L479">                                                                        return cert;</span>
+                                                                }
+                                                        }
+
+                                                }
+<span class="fc" id="L484">                                                break;</span>
+                                        }
+
+                                }
+
+<span class="fc" id="L489">                                break;</span>
+                        }
+                }
+<span class="fc" id="L492">                return null;</span>
+        }
+        
+        /**
+          * wrapper to overcome JDK differences between oracle vs openjdk
+          */
+          public static RevocationStatus check(X509Certificate cert,
+              X509Certificate issuerCert)
+              throws IOException, CertPathValidatorException, CertificateException {
+<span class="nc" id="L501">              CertId certId = null;</span>
+<span class="nc" id="L502">              URI responderURI = null;</span>
+              
+<span class="nc" id="L504">                  X509CertImpl certImpl = X509CertImpl.toImpl(cert);</span>
+<span class="nc" id="L505">                  responderURI = getResponderURI(certImpl);</span>
+<span class="nc bnc" id="L506" title="All 2 branches missed.">                  if (responderURI == null) {</span>
+<span class="nc" id="L507">                      throw new CertPathValidatorException</span>
+                          (&quot;No OCSP Responder URI in certificate&quot;);
+                  }
+<span class="nc" id="L510">                  return OCSP.check(cert, issuerCert, responderURI, cert, null);</span>
+         }
+
+        /**
+         * Verifies the signature on an enveloped digital signature on a UDDI
+         * entity, such as a business, service, tmodel or binding template.
+         * &lt;br&gt;&lt;Br&gt;
+         * It is expected that either the public key of the signing certificate
+         * is included within the signature keyinfo section OR that sufficient
+         * information is provided in the signature to reference a public key
+         * located within the Trust Store provided&lt;br&gt;&lt;Br&gt; Optionally, this
+         * function also validate the signing certificate using the options
+         * provided to the configuration map.
+         *
+         * @param obj an enveloped signed JAXB object
+         * @param OutErrorMessage a human readable error message explaining the
+         * reason for failure
+         * @return true if the validation passes the signature validation test,
+         * and optionally any certificate validation or trust chain validation
+         * @throws IllegalArgumentException for null input
+         */
+        public boolean verifySignedUddiEntity(Object obj, AtomicReference&lt;String&gt; OutErrorMessage) throws IllegalArgumentException {
+<span class="pc bpc" id="L532" title="1 of 2 branches missed.">                if (OutErrorMessage == null) {</span>
+<span class="nc" id="L533">                        OutErrorMessage = new AtomicReference&lt;String&gt;();</span>
+<span class="nc" id="L534">                        OutErrorMessage.set(&quot;&quot;);</span>
+                }
+<span class="pc bpc" id="L536" title="1 of 2 branches missed.">                if (obj == null) {</span>
+<span class="nc" id="L537">                        throw new IllegalArgumentException(&quot;obj&quot;);</span>
+                }
+                try {
+<span class="fc" id="L540">                        DOMResult domResult = new DOMResult();</span>
+<span class="fc" id="L541">                        JAXB.marshal(obj, domResult);</span>
+
+<span class="fc" id="L543">                        Document doc = ((Document) domResult.getNode());</span>
+<span class="fc" id="L544">                        Element docElement = doc.getDocumentElement();  //this is our signed node</span>
+
+<span class="fc" id="L546">                        X509Certificate signingcert = getSigningCertificatePublicKey(docElement);</span>
+
+<span class="fc bfc" id="L548" title="All 2 branches covered.">                        if (signingcert != null) {</span>
+<span class="fc" id="L549">                                logger.info(&quot;verifying signature based on X509 public key &quot; + signingcert.getSubjectDN().toString());</span>
+<span class="pc bpc" id="L550" title="3 of 4 branches missed.">                                if (map.containsKey(CHECK_TIMESTAMPS) &amp;&amp; Boolean.parseBoolean(map.getProperty(CHECK_TIMESTAMPS))) {</span>
+<span class="nc" id="L551">                                        signingcert.checkValidity();</span>
+                                }
+<span class="pc bpc" id="L553" title="1 of 2 branches missed.">                                if (map.containsKey(CHECK_REVOCATION_STATUS_OCSP)</span>
+<span class="nc bnc" id="L554" title="All 2 branches missed.">                                        &amp;&amp; Boolean.parseBoolean(map.getProperty(CHECK_REVOCATION_STATUS_OCSP))) {</span>
+<span class="nc" id="L555">                                        logger.info(&quot;verifying revocation status via OSCP for X509 public key &quot; + signingcert.getSubjectDN().toString());</span>
+<span class="nc" id="L556">                                        X500Principal issuerX500Principal = signingcert.getIssuerX500Principal();</span>
+<span class="nc" id="L557">                                        logger.info(&quot;certificate &quot; + signingcert.getSubjectDN().toString() + &quot; was issued by &quot; + issuerX500Principal.getName() + &quot;, attempting to retrieve certificate&quot;);</span>
+<span class="nc" id="L558">                                        Security.setProperty(&quot;ocsp.enable&quot;, &quot;false&quot;);</span>
+<span class="nc" id="L559">                                        X509Certificate issuer = FindCertByDN(issuerX500Principal);</span>
+<span class="nc bnc" id="L560" title="All 2 branches missed.">                                        if (issuer == null) {</span>
+<span class="nc" id="L561">                                                OutErrorMessage.set(&quot;Unable to verify certificate status from OCSP because the issuer of the certificate is not in the trust store. &quot; + OutErrorMessage.get());</span>
+                                        } else {
+<span class="nc" id="L563">                                                RevocationStatus check = check(signingcert, issuer);</span>
+<span class="nc" id="L564">                                                logger.info(&quot;certificate &quot; + signingcert.getSubjectDN().toString() + &quot; revocation status is &quot; + check.getCertStatus().toString() + &quot; reason &quot; + check.getRevocationReason().toString());</span>
+<span class="nc bnc" id="L565" title="All 2 branches missed.">                                                if (check.getCertStatus() != RevocationStatus.CertStatus.GOOD) {</span>
+<span class="nc" id="L566">                                                        OutErrorMessage.set(&quot;Certificate status is &quot; + check.getCertStatus().toString() + &quot; reason &quot; + check.getRevocationReason().toString() + &quot;.&quot; + OutErrorMessage.get());</span>
+                                                }
+                                               
+                                        }
+                                }
+<span class="pc bpc" id="L571" title="3 of 4 branches missed.">                                if (map.containsKey(CHECK_REVOCATION_STATUS_CRL) &amp;&amp; Boolean.parseBoolean(map.getProperty(CHECK_REVOCATION_STATUS_CRL))) {</span>
+<span class="nc" id="L572">                                        logger.info(&quot;verifying revokation status via CRL for X509 public key &quot; + signingcert.getSubjectDN().toString());</span>
+
+<span class="nc" id="L574">                                        Security.setProperty(&quot;ocsp.enable&quot;, &quot;false&quot;);</span>
+<span class="nc" id="L575">                                        System.setProperty(&quot;com.sun.security.enableCRLDP&quot;, &quot;true&quot;);</span>
+
+<span class="nc" id="L577">                                        X509CertSelector targetConstraints = new X509CertSelector();</span>
+<span class="nc" id="L578">                                        targetConstraints.setCertificate(signingcert);</span>
+<span class="nc" id="L579">                                        PKIXParameters params = new PKIXParameters(GetTrustStore());</span>
+<span class="nc" id="L580">                                        params.setRevocationEnabled(true);</span>
+<span class="nc" id="L581">                                        CertPath certPath = cf.generateCertPath(Arrays.asList(signingcert));</span>
+
+<span class="nc" id="L583">                                        CertPathValidator certPathValidator = CertPathValidator.getInstance(CertPathValidator.getDefaultType());</span>
+<span class="nc" id="L584">                                        CertPathValidatorResult result = certPathValidator.validate(certPath, params);</span>
+                                        try {
+<span class="nc" id="L586">                                                PKIXCertPathValidatorResult pkixResult = (PKIXCertPathValidatorResult) result;</span>
+<span class="nc" id="L587">                                                logger.info(&quot;revokation status via CRL PASSED for X509 public key &quot; + signingcert.getSubjectDN().toString() + &quot; &quot; + pkixResult.toString());</span>
+<span class="nc" id="L588">                                        } catch (Exception ex) {</span>
+<span class="nc" id="L589">                                                OutErrorMessage.set(&quot;Certificate status is via CRL Failed: &quot; + ex.getMessage() + &quot;.&quot; + OutErrorMessage.get());</span>
+<span class="nc" id="L590">                                        }</span>
+                                }
+<span class="pc bpc" id="L592" title="3 of 4 branches missed.">                                if (map.containsKey(CHECK_TRUST_CHAIN) &amp;&amp; Boolean.parseBoolean(map.getProperty(CHECK_TRUST_CHAIN))) {</span>
+<span class="nc" id="L593">                                        logger.info(&quot;verifying trust chain X509 public key &quot; + signingcert.getSubjectDN().toString());</span>
+                                        try {
+<span class="nc" id="L595">                                                PKIXParameters params = new PKIXParameters(GetTrustStore());</span>
+<span class="nc" id="L596">                                                params.setRevocationEnabled(false);</span>
+<span class="nc" id="L597">                                                CertPath certPath = cf.generateCertPath(Arrays.asList(signingcert));</span>
+
+<span class="nc" id="L599">                                                CertPathValidator certPathValidator = CertPathValidator.getInstance(CertPathValidator.getDefaultType());</span>
+<span class="nc" id="L600">                                                CertPathValidatorResult result = certPathValidator.validate(certPath, params);</span>
+
+<span class="nc" id="L602">                                                PKIXCertPathValidatorResult pkixResult = (PKIXCertPathValidatorResult) result;</span>
+
+<span class="nc" id="L604">                                                TrustAnchor ta = pkixResult.getTrustAnchor();</span>
+<span class="nc" id="L605">                                                X509Certificate cert = ta.getTrustedCert();</span>
+
+<span class="nc" id="L607">                                                logger.info(&quot;trust chain validated X509 public key &quot; + signingcert.getSubjectDN().toString() + &quot; issued by &quot; + cert.getPublicKey().toString());</span>
+<span class="nc" id="L608">                                        } catch (Exception ex) {</span>
+<span class="nc" id="L609">                                                OutErrorMessage.set(&quot;Certificate status Trust validation failed: &quot; + ex.getMessage() + &quot;.&quot; + OutErrorMessage.get());</span>
+<span class="nc" id="L610">                                        }</span>
+                                }
+<span class="fc" id="L612">                                boolean b = verifySignature(docElement, signingcert.getPublicKey(), OutErrorMessage);</span>
+<span class="pc bpc" id="L613" title="4 of 6 branches missed.">                                if ((OutErrorMessage.get() == null || OutErrorMessage.get().length() == 0) &amp;&amp; b) {</span>
+                                        //no error message and its cryptographically valid
+<span class="fc" id="L615">                                        return true;</span>
+                                }
+<span class="nc" id="L617">                                return false;</span>
+                        }
+
+                        //last chance validation
+<span class="fc" id="L621">                        logger.info(&quot;signature did not have an embedded X509 public key. reverting to user specified certificate&quot;);</span>
+                        //cert wasn't included in the signature, revert to some other means
+<span class="fc" id="L623">                        KeyStore ks = KeyStore.getInstance(map.getProperty(SIGNATURE_KEYSTORE_FILETYPE));</span>
+<span class="fc" id="L624">                        URL url = Thread.currentThread().getContextClassLoader().getResource(map.getProperty(SIGNATURE_KEYSTORE_FILE));</span>
+<span class="pc bpc" id="L625" title="1 of 2 branches missed.">                        if (url == null) {</span>
+                                try {
+<span class="fc" id="L627">                                        url = new File(map.getProperty(SIGNATURE_KEYSTORE_FILE)).toURI().toURL();</span>
+<span class="nc" id="L628">                                } catch (Exception x) {</span>
+<span class="fc" id="L629">                                }</span>
+                        }
+<span class="pc bpc" id="L631" title="1 of 2 branches missed.">                        if (url == null) {</span>
+                                try {
+<span class="nc" id="L633">                                        url = this.getClass().getClassLoader().getResource(map.getProperty(SIGNATURE_KEYSTORE_FILE));</span>
+<span class="nc" id="L634">                                } catch (Exception x) {</span>
+<span class="nc" id="L635">                                }</span>
+                        }
+<span class="pc bpc" id="L637" title="1 of 2 branches missed.">                        if (url == null) {</span>
+<span class="nc" id="L638">                                logger.error(&quot;&quot;);</span>
+<span class="nc" id="L639">                                OutErrorMessage.set(&quot;The signed entity is signed but does not have a certificate attached and&quot;</span>
+<span class="nc" id="L640">                                        + &quot;you didn't specify a keystore for me to look it up in. &quot; + OutErrorMessage.get());</span>
+<span class="nc" id="L641">                                return false;</span>
+                        }
+<span class="fc" id="L643">                        KeyStore.PrivateKeyEntry keyEntry = null;</span>
+
+<span class="fc" id="L645">                        ks.load(url.openStream(), map.getProperty(SIGNATURE_KEYSTORE_FILE_PASSWORD).toCharArray());</span>
+
+<span class="pc bpc" id="L647" title="1 of 2 branches missed.">                        if (map.getProperty(SIGNATURE_KEYSTORE_KEY_PASSWORD) == null) {</span>
+<span class="fc" id="L648">                                keyEntry</span>
+<span class="fc" id="L649">                                        = (KeyStore.PrivateKeyEntry) ks.getEntry(map.getProperty(SIGNATURE_KEYSTORE_KEY_ALIAS),</span>
+<span class="fc" id="L650">                                                new KeyStore.PasswordProtection(map.getProperty(SIGNATURE_KEYSTORE_FILE_PASSWORD).toCharArray()));</span>
+                        } else {
+<span class="nc" id="L652">                                keyEntry</span>
+<span class="nc" id="L653">                                        = (KeyStore.PrivateKeyEntry) ks.getEntry(map.getProperty(SIGNATURE_KEYSTORE_KEY_ALIAS),</span>
+<span class="nc" id="L654">                                                new KeyStore.PasswordProtection(map.getProperty(SIGNATURE_KEYSTORE_KEY_PASSWORD).toCharArray()));</span>
+                        }
+
+<span class="fc" id="L657">                        Certificate origCert = keyEntry.getCertificate();</span>
+<span class="pc bpc" id="L658" title="1 of 2 branches missed.">                        if (map.containsKey(CHECK_TIMESTAMPS)) {</span>
+<span class="nc bnc" id="L659" title="All 2 branches missed.">                                if (origCert.getPublicKey() instanceof X509Certificate) {</span>
+<span class="nc" id="L660">                                        X509Certificate x = (X509Certificate) origCert.getPublicKey();</span>
+<span class="nc" id="L661">                                        x.checkValidity();</span>
+                                }
+                        }
+<span class="fc" id="L664">                        PublicKey validatingKey = origCert.getPublicKey();</span>
+<span class="fc" id="L665">                        return verifySignature(docElement, validatingKey, OutErrorMessage);</span>
+<span class="nc" id="L666">                } catch (Exception e) {</span>
+                        //throw new RuntimeException(e);
+<span class="nc" id="L668">                        logger.error(&quot;Error caught validating signature&quot;, e);</span>
+<span class="nc" id="L669">                        OutErrorMessage.set(e.getMessage());</span>
+<span class="nc" id="L670">                        return false;</span>
+                }
+        }
+
+        /**
+         * trust loaded as follows
+         * system property via file
+         * programmatically specified map via file
+         * programmatically specified map thread classloader lookup
+         * programmatically specified map this class's classloader lookup
+         * windows trust store
+         * JDK provided trust store
+         * @return
+         * @throws Exception 
+         */
+        private KeyStore GetTrustStore() throws Exception {
+<span class="fc" id="L686">                String type = map.getProperty(TRUSTSTORE_FILETYPE);</span>
+<span class="pc bpc" id="L687" title="1 of 2 branches missed.">                if (type == null) {</span>
+<span class="nc" id="L688">                        type = &quot;JKS&quot;;</span>
+                }
+<span class="fc" id="L690">                KeyStore ks = KeyStore.getInstance(type);</span>
+<span class="fc" id="L691">                boolean ksLoaded = false;</span>
+
+<span class="pc bpc" id="L693" title="1 of 2 branches missed.">                if (!ksLoaded) {</span>
+<span class="fc" id="L694">                        String truststore = System.getProperty(&quot;javax.net.ssl.keyStore&quot;);</span>
+                        try {
+                                
+<span class="fc" id="L697">                                String pwd = System.getProperty(&quot;javax.net.ssl.keyStorePassword&quot;);</span>
+<span class="pc bpc" id="L698" title="3 of 4 branches missed.">                                if (truststore != null &amp;&amp; pwd != null) {</span>
+<span class="nc" id="L699">                                        ks.load(new File(truststore).toURI().toURL().openStream(), pwd.toCharArray());</span>
+<span class="nc" id="L700">                                        ksLoaded = true;</span>
+<span class="nc" id="L701">                                        logger.info(&quot;trust store loaded from sysprop &quot; + truststore);</span>
+                                }
+<span class="nc" id="L703">                        } catch (Exception ex) {</span>
+<span class="nc" id="L704">                                logger.warn(&quot;unable to load truststore from sysprop &quot; + truststore + &quot; &quot;  + ex.getMessage());</span>
+<span class="nc" id="L705">                                logger.debug(&quot;unable to load truststore from sysprop &quot; + ex.getMessage(),ex);</span>
+<span class="fc" id="L706">                        }</span>
+                }
+                
+<span class="fc" id="L709">                File f=new File(map.getProperty(TRUSTSTORE_FILE));</span>
+                 //load as a file
+<span class="pc bpc" id="L711" title="1 of 2 branches missed.">                if (!ksLoaded) {</span>
+                        try {
+<span class="pc bpc" id="L713" title="1 of 2 branches missed.">                                if (f.exists()){</span>
+<span class="fc" id="L714">                                URL url = f.toURI().toURL();</span>
+<span class="fc" id="L715">                                ks.load(url.openStream(), (map.getProperty(TRUSTSTORE_FILE_PASSWORD)).toCharArray());</span>
+<span class="fc" id="L716">                                ksLoaded = true;</span>
+<span class="fc" id="L717">                                logger.info(&quot;trust store loaded from file &quot; + map.getProperty(TRUSTSTORE_FILE));</span>
+                                }
+<span class="nc" id="L719">                        } catch (Exception x) {</span>
+<span class="nc" id="L720">                                logger.warn(&quot;unable to load truststore from file &quot;+map.getProperty(TRUSTSTORE_FILE)+&quot; &quot;+ x.getMessage());</span>
+<span class="nc" id="L721">                                logger.debug(&quot;unable to load truststore from file &quot;+ x.getMessage(), x);</span>
+                                
+<span class="fc" id="L723">                        }</span>
+                }
+                
+<span class="pc bpc" id="L726" title="1 of 2 branches missed.">                if (!ksLoaded) {</span>
+<span class="nc" id="L727">                        FileInputStream fis=null;</span>
+                        try {
+                                //File f = new File(map.getProperty(TRUSTSTORE_FILE));
+<span class="nc bnc" id="L730" title="All 2 branches missed.">                                if (f.exists())</span>
+                                {
+<span class="nc" id="L732">                                        fis = new FileInputStream(f);</span>
+<span class="nc" id="L733">                                        ks.load(fis, (map.getProperty(TRUSTSTORE_FILE_PASSWORD)).toCharArray());</span>
+<span class="nc" id="L734">                                        fis.close();</span>
+<span class="nc" id="L735">                                        ksLoaded = true;</span>
+<span class="nc" id="L736">                                logger.info(&quot;trust store loaded from file &quot; + map.getProperty(TRUSTSTORE_FILE));</span>
+                                }
+<span class="nc" id="L738">                        } catch (Exception x) {</span>
+<span class="nc" id="L739">                                logger.warn(&quot;unable to load truststore from file &quot;+map.getProperty(TRUSTSTORE_FILE)+&quot; &quot;+ x.getMessage());</span>
+<span class="nc" id="L740">                                logger.debug(&quot;unable to load truststore from file &quot;+ x.getMessage(), x);</span>
+                        }
+                        finally {
+<span class="nc bnc" id="L743" title="All 6 branches missed.">                                if (fis!=null)</span>
+<span class="nc" id="L744">                                        fis.close();</span>
+                        }
+                }
+
+                
+                
+                
+
+                //load from thread classloader
+<span class="pc bpc" id="L753" title="1 of 2 branches missed.">                if (!ksLoaded) {</span>
+                        try {
+<span class="nc" id="L755">                                URL url = Thread.currentThread().getContextClassLoader().getResource(map.getProperty(TRUSTSTORE_FILE));</span>
+<span class="nc" id="L756">                                ks.load(url.openStream(), (map.getProperty(TRUSTSTORE_FILE_PASSWORD)).toCharArray());</span>
+<span class="nc" id="L757">                                ksLoaded = true;</span>
+<span class="nc" id="L758">                                logger.info(&quot;trust store loaded from classpath(1) &quot; + map.getProperty(TRUSTSTORE_FILE));</span>
+<span class="nc" id="L759">                        } catch (Exception x) {</span>
+<span class="nc" id="L760">                                logger.warn(&quot;unable to load truststore from classpath&quot; + map.getProperty(TRUSTSTORE_FILE) + &quot; &quot; +x.getMessage());</span>
+<span class="nc" id="L761">                                logger.debug(&quot;unable to load truststore from classpath&quot;, x);</span>
+<span class="nc" id="L762">                        }</span>
+                }
+
+                //load from this classloader
+<span class="pc bpc" id="L766" title="1 of 2 branches missed.">                if (!ksLoaded) {</span>
+                        try {
+<span class="nc" id="L768">                                URL url = this.getClass().getClassLoader().getResource(map.getProperty(TRUSTSTORE_FILE));</span>
+<span class="nc" id="L769">                                ks.load(url.openStream(), (map.getProperty(TRUSTSTORE_FILE_PASSWORD)).toCharArray());</span>
+<span class="nc" id="L770">                                ksLoaded = true;</span>
+<span class="nc" id="L771">                                logger.info(&quot;trust store loaded from classpath(2) &quot; + map.getProperty(TRUSTSTORE_FILE));</span>
+<span class="nc" id="L772">                        } catch (Exception x) {</span>
+<span class="nc" id="L773">                                logger.warn(&quot;unable to load truststore from classpath &quot;+ map.getProperty(TRUSTSTORE_FILE) + &quot; &quot; +x.getMessage());</span>
+<span class="nc" id="L774">                                logger.debug(&quot;unable to load truststore from classpath&quot;, x);</span>
+<span class="nc" id="L775">                        }</span>
+                }
+               
+
+<span class="pc bpc" id="L779" title="1 of 2 branches missed.">                if (!ksLoaded) {</span>
+                        try {
+<span class="nc" id="L781">                                URL cacerts = new File(System.getenv(&quot;JAVA_HOME&quot;) + File.separator + &quot;lib&quot; + File.separator + &quot;security&quot; + File.separator + &quot;cacerts&quot;).toURI().toURL();</span>
+<span class="nc" id="L782">                                ks.load(cacerts.openStream(), &quot;changeit&quot;.toCharArray());</span>
+<span class="nc" id="L783">                                logger.info(&quot;trust store loaded from JRE &quot; + cacerts.toExternalForm());</span>
+<span class="nc" id="L784">                                ksLoaded = true;</span>
+<span class="nc" id="L785">                        } catch (Exception c) {</span>
+<span class="nc" id="L786">                                logger.warn(&quot;unable to load default JDK truststore &quot;+ c.getMessage());</span>
+<span class="nc" id="L787">                                logger.debug(&quot;unable to load default JDK truststore&quot;,c);</span>
+<span class="nc" id="L788">                        }</span>
+                }
+                
+                //try windows trust store first
+                try {
+<span class="pc bpc" id="L793" title="1 of 2 branches missed.">                        if (map.getProperty(TRUSTSTORE_FILETYPE).equalsIgnoreCase(&quot;WINDOWS-ROOT&quot;)) {</span>
+<span class="nc" id="L794">                                ks.load(null, null);</span>
+<span class="nc" id="L795">                                ksLoaded = true;</span>
+<span class="nc" id="L796">                                logger.info(&quot;trust store loaded from windows&quot;);</span>
+                        }
+<span class="nc" id="L798">                } catch (Exception ex) {</span>
+<span class="nc" id="L799">                        logger.warn(&quot;unable to load truststore from windows &quot; +ex.getMessage());</span>
+<span class="nc" id="L800">                        logger.debug(&quot;unable to load truststore from windows&quot;, ex);</span>
+<span class="fc" id="L801">                }</span>
+                
+<span class="pc bpc" id="L803" title="1 of 2 branches missed.">                if (!ksLoaded) {</span>
+                        try {
+<span class="nc" id="L805">                                URL cacerts = new File(System.getenv(&quot;JAVA_HOME&quot;) + File.separator + &quot;jre&quot; + File.separator + &quot;lib&quot; + File.separator + &quot;security&quot; + File.separator + &quot;cacerts&quot;).toURI().toURL();</span>
+<span class="nc" id="L806">                                ks.load(cacerts.openStream(), &quot;changeit&quot;.toCharArray());</span>
+<span class="nc" id="L807">                                logger.info(&quot;trust store loaded from JRE &quot; + cacerts.toExternalForm());</span>
+<span class="nc" id="L808">                                ksLoaded = true;</span>
+<span class="nc" id="L809">                        } catch (Exception c) {</span>
+<span class="nc" id="L810">                                logger.warn(&quot;unable to load default jdk/jre truststore &quot; +c.getMessage());</span>
+<span class="nc" id="L811">                                logger.debug(&quot;unable to load default jdk/jre truststore&quot;, c);</span>
+<span class="nc" id="L812">                        }</span>
+                }
+<span class="pc bpc" id="L814" title="1 of 2 branches missed.">                if (!ksLoaded) {</span>
+<span class="nc" id="L815">                        logger.warn(&quot;unable to load trust store!&quot;);</span>
+                }
+
+<span class="fc" id="L818">                return ks;</span>
+        }
+
+        private XMLSignatureFactory initXMLSigFactory() {
+<span class="fc" id="L822">                XMLSignatureFactory fac = XMLSignatureFactory.getInstance();</span>
+<span class="fc" id="L823">                return fac;</span>
+        }
+
+        private Reference initReference(XMLSignatureFactory fac) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+<span class="fc" id="L827">                List transformers = new ArrayList();</span>
+<span class="fc" id="L828">                transformers.add(fac.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null));</span>
+
+<span class="fc" id="L830">                String dm = map.getProperty(SIGNATURE_OPTION_DIGEST_METHOD);</span>
+<span class="pc bpc" id="L831" title="1 of 2 branches missed.">                if (dm == null) {</span>
+<span class="fc" id="L832">                        dm = DigestMethod.SHA1;</span>
+                }
+<span class="fc" id="L834">                Reference ref = fac.newReference(&quot;&quot;, fac.newDigestMethod(dm, null), transformers, null, null);</span>
+<span class="fc" id="L835">                return ref;</span>
+        }
+
+        private SignedInfo initSignedInfo(XMLSignatureFactory fac) throws Exception {
+<span class="fc" id="L839">                Reference ref = initReference(fac);</span>
+<span class="fc" id="L840">                String cm = null;</span>
+<span class="fc" id="L841">                cm = map.getProperty(CANONICALIZATIONMETHOD);</span>
+<span class="fc" id="L842">                String sigmethod = null;</span>
+<span class="fc" id="L843">                sigmethod = map.getProperty(SIGNATURE_METHOD);</span>
+<span class="pc bpc" id="L844" title="1 of 2 branches missed.">                if (sigmethod == null) {</span>
+<span class="fc" id="L845">                        sigmethod = SignatureMethod.RSA_SHA1;</span>
+                }
+<span class="pc bpc" id="L847" title="1 of 2 branches missed.">                if (cm == null) {</span>
+<span class="fc" id="L848">                        cm = CanonicalizationMethod.EXCLUSIVE;</span>
+                }
+<span class="fc" id="L850">                SignedInfo si = fac.newSignedInfo(fac.newCanonicalizationMethod(</span>
+                        cm,
+                        (C14NMethodParameterSpec) null),
+<span class="fc" id="L853">                        fac.newSignatureMethod(sigmethod,</span>
+<span class="fc" id="L854">                                null), Collections.singletonList(ref));</span>
+<span class="fc" id="L855">                return si;</span>
+        }
+
+        private boolean verifySignature(Element element, PublicKey validatingKey, AtomicReference&lt;String&gt; OutReadableErrorMessage) {
+<span class="pc bpc" id="L859" title="1 of 2 branches missed.">                if (OutReadableErrorMessage == null) {</span>
+<span class="nc" id="L860">                        OutReadableErrorMessage = new AtomicReference&lt;String&gt;();</span>
+                }
+<span class="fc" id="L862">                XMLSignatureFactory fac = initXMLSigFactory();</span>
+<span class="fc" id="L863">                NodeList nl = element.getElementsByTagNameNS(XMLSignature.XMLNS, &quot;Signature&quot;);</span>
+<span class="pc bpc" id="L864" title="1 of 2 branches missed.">                if (nl.getLength() == 0) {</span>
+<span class="nc" id="L865">                        throw new RuntimeException(&quot;Cannot find Signature element&quot;);</span>
+                }
+<span class="fc" id="L867">                DOMValidateContext valContext = new DOMValidateContext(validatingKey, nl.item(0));</span>
+                try {
+<span class="fc" id="L869">                        valContext.setProperty(&quot;javax.xml.crypto.dsig.cacheReference&quot;, Boolean.TRUE);</span>
+<span class="fc" id="L870">                        XMLSignature signature = fac.unmarshalXMLSignature(valContext);</span>
+<span class="fc" id="L871">                        boolean coreValidity = signature.validate(valContext);</span>
+                        // Check core validation status.
+<span class="pc bpc" id="L873" title="1 of 2 branches missed.">                        if (coreValidity == false) {</span>
+<span class="nc" id="L874">                                logger.warn(&quot;Signature failed core validation&quot;);</span>
+<span class="nc" id="L875">                                boolean sv = signature.getSignatureValue().validate(valContext);</span>
+<span class="nc" id="L876">                                logger.debug(&quot;signature validation status: &quot; + sv);</span>
+<span class="nc" id="L877">                                OutReadableErrorMessage.set(&quot;signature validation failed: &quot; + sv + &quot;.&quot; + OutReadableErrorMessage.get());</span>
+                                // Check the validation status of each Reference.
+                                @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L880">                                Iterator&lt;Reference&gt; i = signature.getSignedInfo().getReferences().iterator();</span>
+                                //System.out.println(&quot;---------------------------------------------&quot;);
+<span class="nc bnc" id="L882" title="All 2 branches missed.">                                for (int j = 0; i.hasNext(); j++) {</span>
+<span class="nc" id="L883">                                        Reference ref = (Reference) i.next();</span>
+<span class="nc" id="L884">                                        boolean refValid = ref.validate(valContext);</span>
+<span class="nc" id="L885">                                        logger.debug(j);</span>
+<span class="nc" id="L886">                                        logger.debug(&quot;ref[&quot; + j + &quot;] validity status: &quot; + refValid);</span>
+<span class="nc bnc" id="L887" title="All 2 branches missed.">                                        if (!refValid) {</span>
+<span class="nc" id="L888">                                                OutReadableErrorMessage.set(&quot;signature reference &quot; + j + &quot; invalid. &quot; + OutReadableErrorMessage.get());</span>
+                                        }
+<span class="nc" id="L890">                                        logger.debug(&quot;Ref type: &quot; + ref.getType() + &quot;, URI: &quot; + ref.getURI());</span>
+<span class="nc bnc" id="L891" title="All 2 branches missed.">                                        for (Object xform : ref.getTransforms()) {</span>
+<span class="nc" id="L892">                                                logger.debug(&quot;Transform: &quot; + xform);</span>
+<span class="nc" id="L893">                                        }</span>
+<span class="nc" id="L894">                                        String calcDigValStr = digestToString(ref.getCalculatedDigestValue());</span>
+<span class="nc" id="L895">                                        String expectedDigValStr = digestToString(ref.getDigestValue());</span>
+<span class="nc" id="L896">                                        logger.warn(&quot;    Calc Digest: &quot; + calcDigValStr);</span>
+<span class="nc" id="L897">                                        logger.warn(&quot;Expected Digest: &quot; + expectedDigValStr);</span>
+<span class="nc bnc" id="L898" title="All 2 branches missed.">                                        if (!calcDigValStr.equalsIgnoreCase(expectedDigValStr)) {</span>
+<span class="nc" id="L899">                                                OutReadableErrorMessage.set(&quot;digest mismatch for signature ref &quot; + j + &quot;.&quot; + OutReadableErrorMessage.get());</span>
+                                        }
+                                }
+<span class="nc" id="L902">                        } else {</span>
+<span class="fc" id="L903">                                logger.info(&quot;Signature passed core validation&quot;);</span>
+                        }
+<span class="fc" id="L905">                        return coreValidity;</span>
+<span class="nc" id="L906">                } catch (Exception e) {</span>
+<span class="nc" id="L907">                        OutReadableErrorMessage.set(&quot;signature validation failed: &quot; + e.getMessage() + OutReadableErrorMessage.get());</span>
+<span class="nc" id="L908">                        logger.fatal(e);</span>
+<span class="nc" id="L909">                        return false;</span>
+                }
+        }
+
+        private String digestToString(byte[] digest) {
+<span class="nc" id="L914">                StringBuilder sb = new StringBuilder();</span>
+<span class="nc bnc" id="L915" title="All 2 branches missed.">                for (byte b : digest) {</span>
+<span class="nc" id="L916">                        String hex = Integer.toHexString(0xFF &amp; b);</span>
+<span class="nc bnc" id="L917" title="All 2 branches missed.">                        if (hex.length() == 1) {</span>
+<span class="nc" id="L918">                                sb.append('0');</span>
+                        }
+<span class="nc" id="L920">                        sb.append(hex);</span>
+                }
+<span class="nc" id="L922">                return sb.toString();</span>
+        }
+
+        private void signDOM(Node node, PrivateKey privateKey, Certificate origCert) {
+<span class="fc" id="L926">                XMLSignatureFactory fac = initXMLSigFactory();</span>
+<span class="fc" id="L927">                X509Certificate cert = (X509Certificate) origCert;</span>
+                // Create the KeyInfo containing the X509Data.
+
+<span class="fc" id="L930">                KeyInfoFactory kif = fac.getKeyInfoFactory();</span>
+
+<span class="fc" id="L932">                List&lt;Object&gt; x509Content = null;//new ArrayList&lt;Object&gt;();</span>
+<span class="fc" id="L933">                List&lt;X509Data&gt; data = new ArrayList&lt;X509Data&gt;();</span>
+<span class="fc bfc" id="L934" title="All 2 branches covered.">                if (map.containsKey(SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN)) {</span>
+<span class="fc" id="L935">                        x509Content = new ArrayList&lt;Object&gt;();</span>
+
+<span class="fc" id="L937">                        x509Content.add(cert.getSubjectDN().getName());</span>
+            //  x509Content.add(cert);
+                        //x509Content.add(cert.getSubjectDN().getName());
+<span class="fc" id="L940">                        X509Data xd = kif.newX509Data(x509Content);</span>
+<span class="fc" id="L941">                        data.add(xd);</span>
+                }
+
+        //  if (map.containsKey(SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL)) {
+                // }
+<span class="fc bfc" id="L946" title="All 2 branches covered.">                if (map.containsKey(SIGNATURE_OPTION_CERT_INCLUSION_BASE64)) {</span>
+<span class="fc" id="L947">                        x509Content = new ArrayList&lt;Object&gt;();</span>
+<span class="fc" id="L948">                        x509Content.add(cert);</span>
+                        //x509Content.add(cert.getSubjectX500Principal().getName());
+<span class="fc" id="L950">                        X509Data xd = kif.newX509Data(x509Content);</span>
+<span class="fc" id="L951">                        data.add(xd);</span>
+                }
+<span class="fc bfc" id="L953" title="All 2 branches covered.">                if (map.containsKey(SIGNATURE_OPTION_CERT_INCLUSION_SERIAL)) {</span>
+<span class="fc" id="L954">                        x509Content = new ArrayList&lt;Object&gt;();</span>
+
+<span class="fc" id="L956">                        X509IssuerSerial issuer = kif.newX509IssuerSerial(cert.getIssuerX500Principal().getName(), cert.getSerialNumber());</span>
+
+<span class="fc" id="L958">                        x509Content.add(issuer);</span>
+<span class="fc" id="L959">                        X509Data xd = kif.newX509Data(x509Content);</span>
+<span class="fc" id="L960">                        data.add(xd);</span>
+                }
+
+        //  
+                //x509Content.add(cert);
+<span class="fc" id="L965">                KeyInfo ki = kif.newKeyInfo(data);</span>
+
+        // Create a DOMSignContext and specify the RSA PrivateKey and
+                // location of the resulting XMLSignature's parent element.
+<span class="fc" id="L969">                DOMSignContext dsc = new DOMSignContext(privateKey, node);</span>
+<span class="fc" id="L970">                dsc.putNamespacePrefix(XML_DIGSIG_NS, &quot;ns2&quot;);</span>
+
+                // Create the XMLSignature, but don't sign it yet.
+                try {
+<span class="fc" id="L974">                        SignedInfo si = initSignedInfo(fac);</span>
+<span class="fc" id="L975">                        XMLSignature signature = fac.newXMLSignature(si, ki);</span>
+
+                        // Marshal, generate, and sign the enveloped signature.
+<span class="fc" id="L978">                        signature.sign(dsc);</span>
+<span class="nc" id="L979">                } catch (Exception e) {</span>
+<span class="nc" id="L980">                        throw new RuntimeException(e);</span>
+<span class="fc" id="L981">                }</span>
+<span class="fc" id="L982">        }</span>
+
+        /**
+         * searches local keystores for a referenced signing certificate
+         *
+         * @param childNodes
+         * @return null or the public key of a signing certificate
+         */
+        private X509Certificate FindCert(NodeList childNodes) {
+                try {
+<span class="fc bfc" id="L992" title="All 2 branches covered.">                        for (int x = 0; x &lt; childNodes.getLength(); x++) {</span>
+<span class="fc bfc" id="L993" title="All 2 branches covered.">                                if (childNodes.item(x).getLocalName().equalsIgnoreCase(&quot;X509SubjectName&quot;)) {</span>
+
+<span class="fc" id="L995">                                        String dn = childNodes.item(x).getTextContent().trim();</span>
+<span class="fc" id="L996">                                        return FindCertByDN(new X500Principal(dn));</span>
+
+                                }
+<span class="pc bpc" id="L999" title="1 of 2 branches missed.">                                if (childNodes.item(x).getLocalName().equalsIgnoreCase(&quot;X509IssuerSerial&quot;)) {</span>
+<span class="fc" id="L1000">                                        String X509IssuerName = null;</span>
+<span class="fc" id="L1001">                                        String X509SerialNumber = null;</span>
+<span class="fc bfc" id="L1002" title="All 2 branches covered.">                                        for (int k = 0; k &lt; childNodes.item(x).getChildNodes().getLength(); k++) {</span>
+<span class="pc bpc" id="L1003" title="1 of 2 branches missed.">                                                if (childNodes.item(x).getChildNodes().item(x).getLocalName().equalsIgnoreCase(&quot;X509IssuerName&quot;)) {</span>
+<span class="fc" id="L1004">                                                        X509IssuerName = childNodes.item(x).getTextContent().trim();</span>
+                                                }
+<span class="pc bpc" id="L1006" title="1 of 2 branches missed.">                                                if (childNodes.item(x).getChildNodes().item(x).getLocalName().equalsIgnoreCase(&quot;X509SerialNumber&quot;)) {</span>
+<span class="nc" id="L1007">                                                        X509SerialNumber = childNodes.item(x).getTextContent().trim();</span>
+                                                }
+
+                                        }
+<span class="pc bpc" id="L1011" title="2 of 4 branches missed.">                                        if (X509IssuerName != null &amp;&amp; X509SerialNumber != null) {</span>
+<span class="nc" id="L1012">                                                return FindCertByIssuer(X509IssuerName, X509SerialNumber);</span>
+                                        }
+
+                                }
+                        }
+<span class="nc" id="L1017">                } catch (Exception ex) {</span>
+<span class="nc" id="L1018">                        logger.warn(&quot;error caught searching for a certificate&quot;, ex);</span>
+<span class="fc" id="L1019">                }</span>
+<span class="fc" id="L1020">                return null;</span>
+        }
+
+        private X509Certificate FindCertByDN(X500Principal name) throws Exception {
+<span class="fc" id="L1024">                KeyStore ks = GetTrustStore();</span>
+<span class="pc bpc" id="L1025" title="1 of 2 branches missed.">                if (ks == null) {</span>
+<span class="nc" id="L1026">                        return null;</span>
+                }
+<span class="fc" id="L1028">                Enumeration&lt;String&gt; aliases = ks.aliases();</span>
+<span class="pc bpc" id="L1029" title="1 of 2 branches missed.">                while (aliases.hasMoreElements()) {</span>
+<span class="fc" id="L1030">                        String nextElement = aliases.nextElement();</span>
+<span class="fc" id="L1031">                        Certificate certificate = ks.getCertificate(nextElement);</span>
+<span class="fc" id="L1032">                        X509Certificate x = (X509Certificate) certificate;</span>
+<span class="pc bpc" id="L1033" title="1 of 2 branches missed.">                        if (x.getSubjectX500Principal().equals(name)) {</span>
+<span class="fc" id="L1034">                                return x;</span>
+                        }
+<span class="nc" id="L1036">                }</span>
+<span class="nc" id="L1037">                return null;</span>
+        }
+
+        /**
+         * Downloads a CRL from given HTTP/HTTPS/FTP URL, e.g.
+         * http://crl.infonotary.com/crl/identity-ca.crl
+         */
+        private X509CRL downloadCRLFromWeb(String crlURL)
+                throws MalformedURLException, IOException, CertificateException,
+                CRLException {
+<span class="nc" id="L1047">                URL url = new URL(crlURL);</span>
+<span class="nc" id="L1048">                InputStream crlStream = url.openStream();</span>
+                try {
+                        //	CertificateFactory cf = CertificateFactory.getInstance(&quot;X.509&quot;);
+<span class="nc" id="L1051">                        X509CRL crl = (X509CRL) cf.generateCRL(crlStream);</span>
+<span class="nc" id="L1052">                        return crl;</span>
+                } finally {
+<span class="nc" id="L1054">                        crlStream.close();</span>
+                }
+        }
+
+        private X509Certificate FindCertByIssuer(String X509IssuerName, String X509SerialNumber) throws Exception {
+<span class="nc" id="L1059">                KeyStore ks = GetTrustStore();</span>
+<span class="nc bnc" id="L1060" title="All 2 branches missed.">                if (ks == null) {</span>
+<span class="nc" id="L1061">                        return null;</span>
+                }
+<span class="nc" id="L1063">                Enumeration&lt;String&gt; aliases = ks.aliases();</span>
+<span class="nc bnc" id="L1064" title="All 2 branches missed.">                while (aliases.hasMoreElements()) {</span>
+<span class="nc" id="L1065">                        String nextElement = aliases.nextElement();</span>
+<span class="nc" id="L1066">                        Certificate certificate = ks.getCertificate(nextElement);</span>
+<span class="nc" id="L1067">                        X509Certificate x = (X509Certificate) certificate;</span>
+<span class="nc bnc" id="L1068" title="All 2 branches missed.">                        if (x.getIssuerDN().getName().equals(X509IssuerName)</span>
+<span class="nc bnc" id="L1069" title="All 2 branches missed.">                                &amp;&amp; x.getSerialNumber().toString().equalsIgnoreCase(X509SerialNumber)) {</span>
+<span class="nc" id="L1070">                                return x;</span>
+                        }
+<span class="nc" id="L1072">                }</span>
+<span class="nc" id="L1073">                return null;</span>
+        }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthenticatorFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.auth</a> &gt; <span class="el_source">AuthenticatorFactory.java</span></div><h1>AuthenticatorFactory.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.v3.auth;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.ClassUtil;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
+
+
+/**
+ * @author Steve Viens (sviens@apache.org)
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+<span class="nc" id="L32">public class AuthenticatorFactory {</span>
+<span class="fc" id="L33">	private static Log log = LogFactory.getLog(AuthenticatorFactory.class);</span>
+
+	// Default authenticator implementation
+	private static final String DEFAULT_IMPL = &quot;org.apache.juddi.v3.auth.JUDDIAuthenticator&quot;;
+
+	// the shared Authenticator instance
+<span class="fc" id="L39">	private static Authenticator auth = null;</span>
+
+
+	/**
+	 * Returns a new instance of a AuthenticatorFactory.
+	 * 
+	 * @return Authenticator
+	 */
+	public static synchronized Authenticator getAuthenticator() {
+<span class="fc bfc" id="L48" title="All 2 branches covered.">		if (auth == null)</span>
+<span class="fc" id="L49">			auth = createAuthenticator();</span>
+<span class="fc" id="L50">		return auth;</span>
+	}
+
+	/**
+	 * Returns a new instance of a Authenticator.
+	 * 
+	 * @return Authenticator
+	 */
+	private static synchronized Authenticator createAuthenticator() {
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">		if (auth != null)</span>
+<span class="nc" id="L60">			return auth;</span>
+	
+<span class="fc" id="L62">		String className = DEFAULT_IMPL;</span>
+		try {
+			// grab class name of the Authenticator implementation to create
+<span class="fc" id="L65">			className = AppConfig.getConfiguration().getString(Property.JUDDI_AUTHENTICATOR, DEFAULT_IMPL);</span>
+		}
+<span class="nc" id="L67">		catch(ConfigurationException ce) {</span>
+<span class="nc" id="L68">			log.error(&quot;Configuration exception occurred retrieving: &quot; + Property.JUDDI_AUTHENTICATOR);</span>
+<span class="fc" id="L69">		}</span>
+	
+		// write the Authenticator implementation name to the log
+<span class="fc" id="L72">		log.debug(&quot;Authenticator Implementation = &quot; + className);</span>
+	
+<span class="fc" id="L74">		Class&lt;?&gt; authClass = null;</span>
+		try {
+			// Use Loader to locate &amp; load the Authenticator implementation
+<span class="fc" id="L77">			authClass = ClassUtil.forName(className, AuthenticatorFactory.class);</span>
+		}
+<span class="nc" id="L79">		catch(ClassNotFoundException e) {</span>
+<span class="nc" id="L80">			log.error(&quot;The specified Authenticator class '&quot; + className + &quot;' was not found in classpath.&quot;);</span>
+<span class="nc" id="L81">			log.error(e);</span>
+<span class="fc" id="L82">		}</span>
+	
+		try {
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">			if (authClass!=null) {</span>
+				// try to instantiate the Authenticator implementation
+<span class="fc" id="L87">				auth = (Authenticator)authClass.newInstance();</span>
+			} else {
+<span class="nc" id="L89">				log.error(&quot;Could not load &quot; + className + &quot; authClass is null&quot;);</span>
+			}
+		}
+<span class="nc" id="L92">		catch(Exception e) {</span>
+<span class="nc" id="L93">			log.error(&quot;Exception while attempting to instantiate the implementation of Authenticator: &quot; + className + &quot;\n&quot; + e.getMessage());</span>
+<span class="nc" id="L94">			log.error(e);</span>
+<span class="fc" id="L95">		}</span>
+	
+<span class="fc" id="L97">		return auth;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

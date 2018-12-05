@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JAXBMarshaller.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.jaxb</a> &gt; <span class="el_source">JAXBMarshaller.java</span></div><h1>JAXBMarshaller.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.jaxb;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Element;
+
+/**
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+<span class="nc" id="L40">public class JAXBMarshaller {</span>
+<span class="fc" id="L41">	private static Log logger = LogFactory.getLog(JAXBMarshaller.class);</span>
+	
+	public static final String PACKAGE_UDDIAPI = &quot;org.uddi.api_v3&quot;;
+	public static final String PACKAGE_SUBSCRIPTION = &quot;org.uddi.sub_v3&quot;;
+	public static final String PACKAGE_SUBSCR_RES = &quot;org.uddi.subr_v3&quot;;
+	public static final String PACKAGE_JUDDIAPI = &quot;org.apache.juddi.api_v3&quot;;
+	public static final String PACKAGE_JUDDI = &quot;org.apache.juddi&quot;;
+<span class="fc" id="L48">	private static final Map&lt;String, JAXBContext&gt; JAXBContexts = new HashMap&lt;String, JAXBContext&gt;();</span>
+
+	private static JAXBContext getContext(String packageName) {
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">		if (!JAXBContexts.containsKey(packageName)) {</span>
+			try {
+<span class="fc" id="L53">				JAXBContexts.put(packageName, JAXBContext.newInstance(packageName));</span>
+<span class="nc" id="L54">			} catch (JAXBException e) {</span>
+<span class="nc" id="L55">				logger.error(&quot;Initialization of JAXBMarshaller failed:&quot; + e, e);</span>
+<span class="nc" id="L56">				throw new ExceptionInInitializerError(e);</span>
+<span class="fc" id="L57">			}</span>
+		}
+		
+<span class="fc" id="L60">		return JAXBContexts.get(packageName);</span>
+	}
+	
+	@SuppressWarnings(&quot;rawtypes&quot;)
+	public static Object unmarshallFromInputStream(InputStream inputStream, String thePackage) throws JAXBException {
+<span class="fc" id="L65">		Object obj = null;</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">		if (inputStream != null) {</span>
+<span class="fc" id="L67">			JAXBContext jc = getContext(thePackage);</span>
+<span class="fc" id="L68">			Unmarshaller unmarshaller = jc.createUnmarshaller();</span>
+<span class="fc" id="L69">			obj = ((JAXBElement)unmarshaller.unmarshal(inputStream)).getValue();</span>
+<span class="fc" id="L70">		}</span>
+		else
+<span class="nc" id="L72">			logger.error(&quot;A null input stream was provided&quot;);</span>
+
+<span class="fc" id="L74">		return obj;</span>
+		
+	}
+	
+	public static Object unmarshallFromFileResource(String fileName, String thePackage) throws JAXBException, IOException {
+<span class="nc" id="L79">		Object obj = null;</span>
+<span class="nc" id="L80">		URL url = Thread.currentThread().getContextClassLoader().getResource(fileName);</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">		if (url==null) {</span>
+<span class="nc" id="L82">			logger.error(&quot;Could not find resource: &quot; + fileName);</span>
+		} else {
+<span class="nc" id="L84">			InputStream resourceStream =url.openStream();</span>
+	
+<span class="nc" id="L86">			obj = unmarshallFromInputStream(resourceStream, thePackage);</span>
+		}
+<span class="nc" id="L88">		return obj;</span>
+	}
+
+	public static Object unmarshallFromString(String rawObject, String thePackage) throws JAXBException {
+<span class="fc" id="L92">		Object obj = null;</span>
+<span class="pc bpc" id="L93" title="2 of 4 branches missed.">		if (rawObject != null &amp;&amp; rawObject.length() &gt; 0) {</span>
+<span class="fc" id="L94">			ByteArrayInputStream bais = new ByteArrayInputStream(rawObject.getBytes());</span>
+<span class="fc" id="L95">			obj = unmarshallFromInputStream(bais, thePackage);</span>
+<span class="fc" id="L96">		}</span>
+		else
+<span class="nc" id="L98">			logger.error(&quot;The raw object provided is null or empty&quot;);</span>
+<span class="fc" id="L99">		return obj;</span>
+	}
+
+	public static String marshallToString(Object object, String thePackage) {
+<span class="nc" id="L103">		String rawObject = null;</span>
+
+		try {
+<span class="nc" id="L106">			JAXBContext jc = getContext(thePackage);</span>
+<span class="nc" id="L107">			Marshaller marshaller = jc.createMarshaller();</span>
+<span class="nc" id="L108">			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE);</span>
+<span class="nc" id="L109">			marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);</span>
+<span class="nc" id="L110">			marshaller.setProperty(Marshaller.JAXB_ENCODING, &quot;UTF-8&quot;);</span>
+<span class="nc" id="L111">			ByteArrayOutputStream baos = new ByteArrayOutputStream();</span>
+<span class="nc" id="L112">			marshaller.marshal(object, baos);</span>
+<span class="nc" id="L113">			rawObject = baos.toString();</span>
+<span class="nc" id="L114">		} catch (JAXBException e) {</span>
+<span class="nc" id="L115">			logger.error(e.getMessage(),e);</span>
+<span class="nc" id="L116">		}</span>
+		
+<span class="nc" id="L118">		return rawObject;</span>
+	}
+
+	public static Element marshallToElement(Object object, String thePackage, Element element) throws JAXBException {
+		
+<span class="nc" id="L123">		JAXBContext jc = getContext(thePackage);</span>
+<span class="nc" id="L124">		Marshaller marshaller = jc.createMarshaller();</span>
+<span class="nc" id="L125">		marshaller.marshal(object, element);	</span>
+<span class="nc" id="L126">		return element;</span>
+	}
+	
+	public static Object unmarshallFromElement(Element element, String thePackage) throws JAXBException {
+<span class="nc" id="L130">		JAXBContext jc = getContext(thePackage);</span>
+<span class="nc" id="L131">		Unmarshaller unmarshaller = jc.createUnmarshaller();</span>
+		@SuppressWarnings(&quot;rawtypes&quot;)
+<span class="nc" id="L133">		Object obj = ((JAXBElement) unmarshaller.unmarshal(element)).getValue();</span>
+<span class="nc" id="L134">		return obj;</span>
+	}
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

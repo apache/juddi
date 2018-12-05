@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServiceLocator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.mapping</a> &gt; <span class="el_source">ServiceLocator.java</span></div><h1>ServiceLocator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2011 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.client.mapping;
+
+import java.net.BindException;
+import java.net.URL;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Properties;
+
+import javax.xml.namespace.QName;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api_v3.AccessPointType;
+import org.apache.juddi.v3.client.ClassUtil;
+import org.apache.juddi.v3.client.config.UDDIClerk;
+import org.apache.juddi.v3.client.config.UDDIKeyConvention;
+import org.apache.juddi.v3.client.subscription.SubscriptionCallbackListener;
+import org.apache.juddi.v3.client.transport.TransportException;
+import org.uddi.api_v3.AccessPoint;
+import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BindingTemplates;
+import org.uddi.api_v3.BusinessService;
+
+/**
+ * The ServiceLocator contacts the UDDI registry to lookup an Endpoint given a UDDI ServiceKey.&lt;br&gt;
+ * This class does NOT chase down WSDL, hosting redirectors or other binding references from
+ * access point useType values. See 
+ * {@link org.apache.juddi.v3.client.config.UDDIClerk#getEndpoints UDDIClerk.getEndpoints}
+ * @see SubscriptionCallbackListener
+ * @author &lt;a href=&quot;mailto:kstam@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ */
+public class ServiceLocator {
+	
+<span class="pc" id="L49">	private Log log = LogFactory.getLog(this.getClass());</span>
+	
+	private UDDIClerk clerk;
+<span class="pc" id="L52">	private Properties properties = new Properties();</span>
+<span class="pc" id="L53">	private UDDIServiceCache serviceCache = null;</span>
+<span class="pc" id="L54">	private String policy = null;</span>
+<span class="pc" id="L55">	private SelectionPolicy selectionPolicy = null;</span>
+<span class="pc" id="L56">	private URLLocalizer urlLocalizer = null;</span>
+	
+	/**
+	 * Requirement in the config is a clerk with access credentials to the UDDI server
+	 * you want the locator to do lookups to. When a live cache is used the clerk
+	 * will register a callback into this UDDI server and the clerk will therefore need
+	 * inquiry and publish access. The credentials can be set in the uddi-client.xml
+	 * configuration file.
+	 *  
+	 * @param clerk a UDDI Clerk with publish access to the UDDI Server.
+	 * @throws ConfigurationException
+	 */
+	public ServiceLocator(UDDIClerk clerk) {
+<span class="nc" id="L69">		super();</span>
+<span class="nc" id="L70">		this.clerk = clerk;</span>
+<span class="nc" id="L71">		properties =clerk.getUDDINode().getProperties();</span>
+<span class="nc" id="L72">	}</span>
+	
+	public ServiceLocator(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) throws ConfigurationException	{
+<span class="fc" id="L75">		super();</span>
+<span class="fc" id="L76">		this.clerk = clerk;</span>
+<span class="fc" id="L77">		this.urlLocalizer = urlLocalizer;</span>
+<span class="fc" id="L78">		this.properties = properties;</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">		if (properties == null) </span>
+<span class="fc" id="L80">                        this.properties = clerk.getUDDINode().getProperties();</span>
+<span class="fc" id="L81">	}</span>
+	
+	public ServiceLocator withCache(URL baseCallbackURL) throws ConfigurationException {
+<span class="nc bnc" id="L84" title="All 2 branches missed.">		if (serviceCache == null) {</span>
+<span class="nc" id="L85">			serviceCache = initCache(baseCallbackURL);</span>
+		}
+<span class="nc" id="L87">		return this;</span>
+	}
+	
+	/**
+	 * A live cache will receive callbacks from the UDDI server in case there is an update to
+	 * a service's bindings. All callbacks will clear the UDDIClientCache ensuring that subsequent
+	 * lookups will contact the UDDI server for the latest binding information.
+	 * 
+	 * The baseCallbackURL can be set to solve binding issue. If
+	 * 
+	 * @param baseCallbackURL
+	 * @return a service locator object
+	 * @throws ConfigurationException
+	 * @throws BindException
+	 */
+	public ServiceLocator withLiveCache(URL baseCallbackURL) throws ConfigurationException, BindException {
+<span class="nc bnc" id="L103" title="All 2 branches missed.">		if (serviceCache == null) {</span>
+<span class="nc" id="L104">			serviceCache = initCache(baseCallbackURL);</span>
+<span class="nc" id="L105">			serviceCache.registerAsMBean();</span>
+		}
+<span class="nc bnc" id="L107" title="All 2 branches missed.">		if (! serviceCache.hasListener()) {</span>
+<span class="nc" id="L108">			serviceCache.publishAndRegisterHttpCallbackEndpoint();</span>
+		}
+<span class="nc" id="L110">		return this;</span>
+	}
+	
+	public UDDIServiceCache getUDDIServiceCache() {
+<span class="nc" id="L114">		return serviceCache;</span>
+	}
+	
+	/**
+	 * The policy selection can be set as property &quot;juddi.client.selection.policy&quot;
+	 * or it can be set programmatically using this method. A Policy is a class which 
+	 * implements the SelectionPolicy interface. Known implementations are
+	 * org.apache.juddi.v3.client.mapping.PolicyLocalFirst and 
+	 * org.apache.juddi.v3.client.mapping.PolicyRoundRobin. If the policy is not
+	 * set the default org.apache.juddi.v3.client.mapping.PolicyLocalFirst is used.
+	 * 
+	 * @param policy - the desired policy.
+	 * @return ServiceLocator
+	 * @see org.apache.juddi.v3.client.mapping.PolicyLocalFirst
+	 * @see org.apache.juddi.v3.client.mapping.PolicyRoundRobin
+	 */
+	public ServiceLocator setPolicy(String policy) {
+<span class="fc" id="L131">		this.policy = policy;</span>
+<span class="fc" id="L132">		return this;</span>
+	}
+	/**
+	 * Returns the selection policy in use by this instance of the ServiceLocator.
+	 * 
+	 * @return SelectionPolicy - the selection policy.
+	 * @throws ConfigurationException
+	 */
+	public SelectionPolicy getPolicy() throws ConfigurationException {
+		try {
+<span class="nc bnc" id="L142" title="All 2 branches missed.">			if (selectionPolicy==null) {</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">				if (policy==null) {</span>
+                                        //TODO update .NET schema file to support this
+<span class="nc" id="L145">					policy = properties.getProperty(&quot;juddi.client.selection.policy&quot;, &quot;org.apache.juddi.v3.client.mapping.PolicyLocalFirst&quot;);</span>
+				}
+				@SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L148">				Class&lt;? extends SelectionPolicy&gt; selectionPolicyClass = (Class&lt;? extends SelectionPolicy&gt;)</span>
+<span class="nc" id="L149">					ClassUtil.forName(policy, this.getClass());</span>
+<span class="nc" id="L150">				selectionPolicy =  selectionPolicyClass.getConstructor(Properties.class).newInstance(properties);</span>
+			}
+<span class="nc" id="L152">			return selectionPolicy;</span>
+<span class="nc" id="L153">		} catch (Exception e) {</span>
+<span class="nc" id="L154">			throw new ConfigurationException(e.getMessage(),e);</span>
+		}
+	}
+	
+	/**
+	 * Creates a new UDDIServiceCache, which brings up a new WebService Endpoint. This
+	 * EndPoint will be called by the UDDI server if any service changes. A callback
+	 * will result in cleaning the cache. 
+	 * 
+	 * @param baseCallbackURL
+	 * @throws ConfigurationException
+	 */
+	private UDDIServiceCache initCache(URL baseCallbackURL) throws ConfigurationException {
+<span class="nc bnc" id="L167" title="All 2 branches missed.">		if (clerk==null) throw new ConfigurationException(&quot;The UDDIClerk is needed to use the UDDIServiceCache and is null&quot;);</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">		if (urlLocalizer==null) urlLocalizer = new URLLocalizerDefaultImpl(baseCallbackURL);</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">                if (properties==null) properties = new Properties();</span>
+		try {
+<span class="nc" id="L171">			log.info(&quot;Creating a UDDICLientCache&quot;);</span>
+<span class="nc" id="L172">			return new UDDIServiceCache(clerk, urlLocalizer, properties);</span>
+<span class="nc" id="L173">		} catch (Exception e) {</span>
+<span class="nc" id="L174">			throw new ConfigurationException(e.getMessage(),e);</span>
+		}
+	}
+	
+	/**
+	 * 
+	 * @throws RemoteException
+	 * @throws ConfigurationException
+	 * @throws TransportException
+	 */
+	public void shutdown() throws RemoteException, ConfigurationException, TransportException {
+<span class="nc" id="L185">		serviceCache.shutdown();</span>
+<span class="nc" id="L186">	}</span>
+	/**
+	 * Looks up the Endpoints for a Service. If the cache is in use it will try to 
+	 * obtain them from the cache. If no Endpoints are found, or if the cache is not
+	 * in use, the clerk will do a lookup for this service. After Endpoints are found
+	 * it will use a policy to pick one Endpoint to return. Returns null if no endpoints
+	 * are found.
+	 * 
+	 * @param serviceKey
+	 * @return endpoint
+	 * @throws RemoteException
+	 * @throws ConfigurationException
+	 * @throws TransportException
+	 */
+	public String lookupEndpoint(String serviceKey) throws RemoteException, ConfigurationException, TransportException {
+<span class="nc" id="L201">		Topology topology = null;</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">		if (serviceCache==null) { //nocache in use</span>
+<span class="nc" id="L203">			topology = lookupEndpointInUDDI(serviceKey);</span>
+		} else { //with cache
+			//try to get it from the cache first
+<span class="nc" id="L206">			topology = serviceCache.lookupService(serviceKey);</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">			if (topology==null) { //not found in the cache</span>
+<span class="nc" id="L208">				topology = lookupEndpointInUDDI(serviceKey);</span>
+			}
+		}
+<span class="nc bnc" id="L211" title="All 4 branches missed.">	    if (topology!=null &amp;&amp; topology.getEprs().size() &gt; 0) {</span>
+<span class="nc" id="L212">	    	String epr = getPolicy().select(topology);</span>
+<span class="nc" id="L213">	    	return epr;</span>
+	    } else {
+<span class="nc" id="L215">	    	return null;</span>
+	    }
+	}
+	
+	/** 
+	 * Looks up the Endpoints for a Service. If the cache is in use it will try to 
+	 * obtain them from the cache. If no Endpoints are found, or if the cache is not
+	 * in use, the clerk will do a lookup for this service. After Endpoints are found
+	 * it will use a policy to pick one Endpoint to return. Returns null if no endpoints
+	 * are found.
+	 * 
+	 * @param serviceQName
+	 * @param portName
+	 * @return Returns null if no endpoints
+	 * are found.
+	 * @throws TransportException 
+	 * @throws ConfigurationException 
+	 * @throws RemoteException 
+	 */
+	public String lookupEndpoint(QName serviceQName, String portName) throws RemoteException, ConfigurationException, TransportException {
+<span class="nc" id="L235">		String serviceKey = UDDIKeyConvention.getServiceKey(properties, serviceQName.getLocalPart());</span>
+<span class="nc" id="L236">		return lookupEndpoint(serviceKey);</span>
+	}
+	
+	private Topology lookupEndpointInUDDI(String serviceKey) throws RemoteException, ConfigurationException, TransportException {
+<span class="nc" id="L240">		Topology topology = null;</span>
+		
+<span class="nc" id="L242">		BusinessService service = clerk.getServiceDetail(serviceKey);</span>
+<span class="nc bnc" id="L243" title="All 2 branches missed.">		if (service==null) {</span>
+<span class="nc" id="L244">			log.warn(&quot;No Service with key &quot; + serviceKey + &quot; was found in the registry.&quot;);</span>
+			//TODO find service by tModel
+		}
+<span class="nc bnc" id="L247" title="All 6 branches missed.">		if (service!=null &amp;&amp; service.getBindingTemplates()!=null &amp;&amp; service.getBindingTemplates().getBindingTemplate() != null) {</span>
+<span class="nc" id="L248">			ArrayList&lt;String&gt; eprs = new ArrayList&lt;String&gt;();</span>
+<span class="nc" id="L249">			BindingTemplates bindingTemplates = service.getBindingTemplates();</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">			if (bindingTemplates==null) {</span>
+<span class="nc" id="L251">				log.warn(&quot;Found service &quot; + service.getName().get(0).getValue()</span>
+						  + &quot; with serviceKey '&quot; + serviceKey + &quot;'&quot; 
+						  + &quot; but no EPRs&quot;);
+			} else {
+<span class="nc" id="L255">				log.debug(&quot;Found service &quot; + service.getName().get(0).getValue()</span>
+						  + &quot; with serviceKey '&quot; + serviceKey + &quot;'&quot; 
+<span class="nc" id="L257">						  + &quot; and &quot; + bindingTemplates.getBindingTemplate().size() + &quot; EPRs&quot;);</span>
+				//Loop over all bindingTemplates found and get the endpoints.
+<span class="nc bnc" id="L259" title="All 2 branches missed.">				for (BindingTemplate bindingTemplate : bindingTemplates.getBindingTemplate()) {</span>
+<span class="nc" id="L260">					AccessPoint accessPoint = bindingTemplate.getAccessPoint();</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">                                        if (accessPoint!=null){</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">					if (AccessPointType.END_POINT.toString().equals(accessPoint.getUseType())) {</span>
+<span class="nc" id="L263">						String url = accessPoint.getValue();</span>
+<span class="nc" id="L264">						log.debug(&quot;epr= &quot; + url);</span>
+<span class="nc" id="L265">						eprs.add(url);</span>
+<span class="nc bnc" id="L266" title="All 2 branches missed.">					} else if(AccessPointType.WSDL_DEPLOYMENT.toString().equals(accessPoint.getUseType())) {</span>
+					//do something here
+                                            //try to open that wsdl, then grab the endpoints
+<span class="nc bnc" id="L269" title="All 2 branches missed.">					}  else if(AccessPointType.BINDING_TEMPLATE.toString().equals(accessPoint.getUseType())) {</span>
+					//do something here
+                                            //grab that binding template and use that address
+					}
+                                                }
+<span class="nc" id="L274">				}</span>
+<span class="nc bnc" id="L275" title="All 2 branches missed.">				if (eprs.size()&gt;0) {</span>
+<span class="nc" id="L276">					topology = new Topology(eprs);</span>
+				}
+			}
+		}
+<span class="nc bnc" id="L280" title="All 4 branches missed.">		if (serviceCache!=null &amp;&amp; topology!=null) { //add to cache</span>
+<span class="nc" id="L281">			serviceCache.addService(serviceKey, topology);</span>
+		}
+<span class="nc" id="L283">		return topology;</span>
+	}
+	
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

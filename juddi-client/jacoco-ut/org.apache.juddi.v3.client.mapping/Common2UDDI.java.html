@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Common2UDDI.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.mapping</a> &gt; <span class="el_source">Common2UDDI.java</span></div><h1>Common2UDDI.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2014 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.client.mapping;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.juddi.v3.client.UDDIConstants;
+import org.uddi.api_v3.Description;
+
+/**
+ * Common parsing functions for converting to UDDI's data structures
+ * @author Alex O'Ree
+ */
+<span class="nc" id="L27">public abstract class Common2UDDI {</span>
+
+        public static List&lt;Description&gt; mapDescription(String content, String lang) {
+
+<span class="fc" id="L31">                List&lt;Description&gt; ret = new ArrayList&lt;Description&gt;();</span>
+<span class="pc bpc" id="L32" title="1 of 2 branches missed.">                if (content == null) {</span>
+<span class="nc" id="L33">                        return ret;</span>
+                }
+<span class="fc bfc" id="L35" title="All 2 branches covered.">                if (content.length() &gt; UDDIConstants.MAX_description_length) {</span>
+<span class="fc" id="L36">                        int offset = 0;</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">                        while (offset &lt; content.length()) {</span>
+<span class="fc" id="L38">                                Description description = new Description();</span>
+<span class="fc" id="L39">                                description.setLang(lang);</span>
+<span class="fc" id="L40">                                int trim = offset + UDDIConstants.MAX_description_length;</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">                                if (trim &gt; content.length()) {</span>
+<span class="fc" id="L42">                                        trim = content.length()-1;</span>
+                                }
+<span class="fc" id="L44">                                description.setValue(content.substring(offset, trim));</span>
+<span class="fc" id="L45">                                offset = offset + UDDIConstants.MAX_description_length;</span>
+<span class="fc" id="L46">                                ret.add(description);</span>
+                                
+<span class="fc" id="L48">                        }</span>
+<span class="fc" id="L49">                } else {</span>
+<span class="fc" id="L50">                        ret.add(new Description(content, lang));</span>
+                }
+<span class="fc" id="L52">                return ret;</span>
+
+        }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

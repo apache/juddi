@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Transport.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.transport</a> &gt; <span class="el_source">Transport.java</span></div><h1>Transport.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.v3.client.transport;
+
+import org.apache.juddi.v3_service.JUDDIApiPortType;
+import org.uddi.v3_service.UDDICustodyTransferPortType;
+import org.uddi.v3_service.UDDIInquiryPortType;
+import org.uddi.v3_service.UDDIPublicationPortType;
+import org.uddi.v3_service.UDDISecurityPortType;
+import org.uddi.v3_service.UDDISubscriptionListenerPortType;
+import org.uddi.v3_service.UDDISubscriptionPortType;;
+
+/**
+ * This abstract class defined the basic model for accessing different transport mechanisms
+ * using the same interfaces for UDDIv3.
+ * @see JAXWSTransport
+ * @see RMITransport
+ * @see InVMTransport
+ * 
+ */
+<span class="fc" id="L35">public abstract class Transport {</span>
+	
+	public final static String DEFAULT_NODE_NAME             = &quot;default&quot;;
+	
+	public abstract UDDIInquiryPortType getUDDIInquiryService(String endpointURL)           throws TransportException;
+	public abstract UDDISecurityPortType getUDDISecurityService(String endpointURL)         throws TransportException;
+	public abstract UDDIPublicationPortType getUDDIPublishService(String endpointURL)       throws TransportException;
+	public abstract UDDISubscriptionPortType getUDDISubscriptionService(String endpointURL) throws TransportException;
+	public abstract UDDICustodyTransferPortType getUDDICustodyTransferService(String endpointURL) throws TransportException;
+	public abstract UDDISubscriptionListenerPortType getUDDISubscriptionListenerService(String endpointURL) throws TransportException;
+	public abstract JUDDIApiPortType getJUDDIApiService(String endpointURL) throws TransportException;
+	
+	public UDDIInquiryPortType getUDDIInquiryService() throws TransportException {
+<span class="fc" id="L48">		return getUDDIInquiryService(null);</span>
+	}
+	public UDDISecurityPortType getUDDISecurityService() throws TransportException {
+<span class="fc" id="L51">		return getUDDISecurityService(null);</span>
+	}
+	public UDDIPublicationPortType getUDDIPublishService() throws TransportException {
+<span class="fc" id="L54">		return getUDDIPublishService(null);</span>
+	}
+	public UDDISubscriptionPortType getUDDISubscriptionService() throws TransportException {
+<span class="fc" id="L57">		return getUDDISubscriptionService(null);</span>
+	}
+	public UDDISubscriptionListenerPortType getUDDISubscriptionListenerService() throws TransportException {
+<span class="fc" id="L60">		return getUDDISubscriptionListenerService(null);</span>
+	}
+	public UDDICustodyTransferPortType getUDDICustodyTransferService() throws TransportException {
+<span class="fc" id="L63">		return getUDDICustodyTransferService(null);</span>
+	}
+	public JUDDIApiPortType getJUDDIApiService() throws TransportException {
+<span class="fc" id="L66">		return getJUDDIApiService(null);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

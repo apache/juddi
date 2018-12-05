@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Address.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.model</a> &gt; <span class="el_source">Address.java</span></div><h1>Address.java</h1><pre class="source lang-java linenums">package org.apache.juddi.model;
+/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+
+/**
+ * @author &lt;a href=&quot;mailto:kurt@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+@Entity
+@Table(name = &quot;j3_address&quot;)
+public class Address implements java.io.Serializable {
+
+	private static final long serialVersionUID = 7767275374035531912L;
+	private Long id;
+	private Contact contact;
+	private String useType;
+	private String sortCode;
+	private String tmodelKey;
+<span class="pc" id="L47">	private List&lt;AddressLine&gt; addressLines = new ArrayList&lt;AddressLine&gt;(0);</span>
+
+<span class="fc" id="L49">	public Address() {</span>
+<span class="fc" id="L50">	}</span>
+
+<span class="fc" id="L52">	public Address(Contact contact) {</span>
+<span class="fc" id="L53">		this.contact = contact;</span>
+<span class="fc" id="L54">	}</span>
+	public Address(Long id, Contact contact, String useType,
+<span class="nc" id="L56">			String sortCode, String tmodelKey, List&lt;AddressLine&gt; addressLines) {</span>
+<span class="nc" id="L57">		this.contact = contact;</span>
+<span class="nc" id="L58">		this.useType = useType;</span>
+<span class="nc" id="L59">		this.sortCode = sortCode;</span>
+<span class="nc" id="L60">		this.tmodelKey = tmodelKey;</span>
+<span class="nc" id="L61">		this.addressLines = addressLines;</span>
+<span class="nc" id="L62">	}</span>
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
+<span class="fc" id="L67">		return this.id;</span>
+	}
+	public void setId(Long id) {
+<span class="fc" id="L70">		this.id = id;</span>
+<span class="fc" id="L71">	}</span>
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = &quot;address_id&quot;, nullable = false)
+	public Contact getContact() {
+<span class="fc" id="L76">		return this.contact;</span>
+	}
+	public void setContact(Contact contact) {
+<span class="fc" id="L79">		this.contact = contact;</span>
+<span class="fc" id="L80">	}</span>
+
+	@Column(name = &quot;use_type&quot;)
+	public String getUseType() {
+<span class="fc" id="L84">		return this.useType;</span>
+	}
+	public void setUseType(String useType) {
+<span class="fc" id="L87">		this.useType = useType;</span>
+<span class="fc" id="L88">	}</span>
+
+	@Column(name = &quot;sort_code&quot;, length = 10)
+	public String getSortCode() {
+<span class="fc" id="L92">		return this.sortCode;</span>
+	}
+	public void setSortCode(String sortCode) {
+<span class="fc" id="L95">		this.sortCode = sortCode;</span>
+<span class="fc" id="L96">	}</span>
+
+	@Column(name = &quot;tmodel_key&quot;, length = 255)
+	public String getTmodelKey() {
+<span class="fc" id="L100">		return this.tmodelKey;</span>
+	}
+	public void setTmodelKey(String tmodelKey) {
+<span class="fc" id="L103">		this.tmodelKey = tmodelKey;</span>
+<span class="fc" id="L104">	}</span>
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;address&quot;)
+	@OrderBy
+	public List&lt;AddressLine&gt; getAddressLines() {
+<span class="fc" id="L109">		return this.addressLines;</span>
+	}
+	public void setAddressLines(List&lt;AddressLine&gt; addressLines) {
+<span class="fc" id="L112">		this.addressLines = addressLines;</span>
+<span class="fc" id="L113">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

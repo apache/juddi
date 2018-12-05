@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JNDI_RMINotifier.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.subscription.notify</a> &gt; <span class="el_source">JNDI_RMINotifier.java</span></div><h1>JNDI_RMINotifier.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.subscription.notify;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.Properties;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.xml.bind.JAXBException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.InitialContextInfo;
+import org.apache.juddi.Property;
+import org.apache.juddi.api_v3.AccessPointType;
+import org.apache.juddi.jaxb.JAXBMarshaller;
+import org.apache.juddi.model.BindingTemplate;
+import org.apache.juddi.model.TmodelInstanceInfo;
+import org.uddi.api_v3.DispositionReport;
+import org.uddi.subr_v3.NotifySubscriptionListener;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.uddi.v3_service.UDDISubscriptionListenerPortType;
+
+public class JNDI_RMINotifier implements Notifier {
+	
+<span class="fc" id="L45">	Log log = LogFactory.getLog(this.getClass());</span>
+<span class="fc" id="L46">	UDDISubscriptionListenerPortType  subscriptionListenerPort = null;</span>
+	public static final String JNDI_RMI_TRANSPORT_KEY = &quot;uddi:uddi.org:transport:jndi-rmi&quot;;
+	
+	public JNDI_RMINotifier(BindingTemplate bindingTemplate) throws IOException, 
+	URISyntaxException, NotBoundException, NamingException, JAXBException {
+<span class="fc" id="L51">		super();</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">		if (!AccessPointType.END_POINT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType())) {</span>
+<span class="nc" id="L53">			log.error(&quot;jndi-rmi enpoints only support AccessPointType &quot; + AccessPointType.END_POINT);</span>
+		}
+<span class="fc" id="L55">		String accessPointUrl = bindingTemplate.getAccessPointUrl().toLowerCase();</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">		if (!accessPointUrl.startsWith(&quot;jndi-rmi&quot;)) {</span>
+<span class="nc" id="L57">			log.warn(&quot;jndi-rmi accessPointUrl for bindingTemplate &quot; + bindingTemplate.getEntityKey() + </span>
+					&quot; should start with 'jndi-rmi'&quot;);
+		}
+<span class="fc" id="L60">		InitialContext context = new InitialContext();</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">		for (TmodelInstanceInfo tModelInstanceInfo : bindingTemplate.getTmodelInstanceInfos()) {</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">			if (tModelInstanceInfo.getTmodelKey().equals(JNDI_RMI_TRANSPORT_KEY)) {</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">				if (log.isDebugEnabled()) log.debug(&quot;Found transport tModelKey &quot; + tModelInstanceInfo.getTmodelKey());</span>
+<span class="fc" id="L64">				String instanceParmsStr = tModelInstanceInfo.getInstanceParms();</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">				if (instanceParmsStr!=null) {</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">					if (log.isDebugEnabled()) log.debug(&quot;Found instanceParms with value: &quot; + instanceParmsStr);</span>
+<span class="nc" id="L67">					InitialContextInfo icInfo = (InitialContextInfo) JAXBMarshaller.unmarshallFromString(instanceParmsStr, JAXBMarshaller.PACKAGE_JUDDI);</span>
+<span class="nc" id="L68">					Properties properties = new Properties();</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">					for (Property property: icInfo.getContextProperty()) {</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">						if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L71">							log.debug(&quot;Initial Context Property from instanceParms &quot; + </span>
+<span class="nc" id="L72">									   property.getName() + &quot;:&quot; + property.getValue());</span>
+						}	
+<span class="nc" id="L74">						properties.put(property.getName(), property.getValue());</span>
+<span class="nc" id="L75">					}</span>
+<span class="nc" id="L76">					context = new InitialContext(properties);</span>
+<span class="nc" id="L77">					break;</span>
+				}
+			}
+<span class="fc" id="L80">		}</span>
+<span class="fc" id="L81">		URI accessPointURI = new URI(accessPointUrl);</span>
+<span class="fc" id="L82">		String path = accessPointURI.getPath();</span>
+		
+<span class="nc" id="L84">		subscriptionListenerPort = (UDDISubscriptionListenerPortType) context.lookup(path);</span>
+<span class="nc" id="L85">		log.info(&quot;Successfully located &quot; + path);</span>
+<span class="nc" id="L86">	}</span>
+
+	public DispositionReport notifySubscriptionListener(NotifySubscriptionListener body) throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L89">		return subscriptionListenerPort.notifySubscriptionListener(body);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

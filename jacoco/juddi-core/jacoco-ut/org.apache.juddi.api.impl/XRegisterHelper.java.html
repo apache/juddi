@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XRegisterHelper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.api.impl</a> &gt; <span class="el_source">XRegisterHelper.java</span></div><h1>XRegisterHelper.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.api.impl;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api_v3.Clerk;
+import org.apache.juddi.v3.client.config.UDDIClerk;
+import org.apache.juddi.v3.client.config.XRegistration;
+import org.uddi.api_v3.BindingDetail;
+import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BusinessDetail;
+import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.BusinessInfo;
+import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.ServiceDetail;
+import org.uddi.api_v3.ServiceInfo;
+import org.uddi.sub_v3.SubscriptionResultsList;
+
+/**
+ * Used to factor out inquiry functionality as it is used in more than one spot.
+ * 
+ * @author &lt;a href=&quot;mailto:kstam@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ */
+<span class="nc" id="L39">public class XRegisterHelper {</span>
+
+<span class="nc" id="L41">	private static Log log = LogFactory.getLog(XRegisterHelper.class);</span>
+
+	public static void handle(Clerk fromClerk, Clerk toClerk, SubscriptionResultsList list) {
+
+<span class="nc" id="L45">		UDDIClerk uddiToClerk = new UDDIClerk(toClerk);</span>
+<span class="nc" id="L46">		UDDIClerk uddiFromClerk = new UDDIClerk(fromClerk);</span>
+		//SERVICE LIST
+<span class="nc bnc" id="L48" title="All 2 branches missed.">		if (list.getServiceList()!=null) {</span>
+<span class="nc" id="L49">			log.info(&quot;Subscription result for ServiceList with subscription key=&quot; + list.getSubscription().getSubscriptionKey());</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">			for (ServiceInfo serviceInfo : list.getServiceList().getServiceInfos().getServiceInfo() ) {</span>
+				
+<span class="nc" id="L52">				BusinessEntity existingBusinessEntity = null;</span>
+				try {
+<span class="nc bnc" id="L54" title="All 2 branches missed.">					if (existingBusinessEntity==null) {</span>
+<span class="nc" id="L55">						existingBusinessEntity = uddiToClerk.findBusiness(serviceInfo.getBusinessKey(), toClerk.getNode());</span>
+					}
+<span class="nc bnc" id="L57" title="All 2 branches missed.">					if (existingBusinessEntity!=null) {</span>
+<span class="nc" id="L58">						log.debug(&quot;Found business with key &quot; +  existingBusinessEntity.getBusinessKey() + &quot;. No need to add it again&quot;);</span>
+					} else {
+<span class="nc" id="L60">						log.info(&quot;Business was not found in the destination UDDI &quot; + toClerk.getNode().getName() </span>
+								+ &quot;, going to add it in.&quot;);
+<span class="nc" id="L62">						new XRegistration(serviceInfo.getBusinessKey(), new UDDIClerk(fromClerk), new UDDIClerk(toClerk)).xRegisterBusiness();</span>
+					}
+<span class="nc" id="L64">					new XRegistration(serviceInfo.getServiceKey(), new UDDIClerk(fromClerk), new UDDIClerk(toClerk)).xRegisterServiceAndBindings();</span>
+<span class="nc" id="L65">				} catch (Exception e) {</span>
+<span class="nc" id="L66">					log.error(e.getMessage(),e);	</span>
+<span class="nc" id="L67">				}</span>
+<span class="nc" id="L68">			}</span>
+		}
+		//SERVICE DETAIL
+<span class="nc bnc" id="L71" title="All 2 branches missed.">		if (list.getServiceDetail()!=null) {</span>
+<span class="nc" id="L72">			log.info(&quot;Subscription result for ServiceDetail with subscription key=&quot; + list.getSubscription().getSubscriptionKey());</span>
+<span class="nc" id="L73">			ServiceDetail serviceDetail = list.getServiceDetail();</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">			if (serviceDetail.isTruncated()) {</span>
+<span class="nc" id="L75">				log.info(&quot;The serviceDetail is truncated, the maxEntries must have been hit. The number of services is &quot; + serviceDetail.getBusinessService().size());</span>
+			}
+<span class="nc bnc" id="L77" title="All 2 branches missed.">			for (BusinessService service : serviceDetail.getBusinessService()) {</span>
+<span class="nc" id="L78">				BusinessEntity existingBusinessEntity = null;</span>
+				try {
+<span class="nc bnc" id="L80" title="All 2 branches missed.">					if (existingBusinessEntity==null) {</span>
+<span class="nc" id="L81">						existingBusinessEntity = uddiToClerk.findBusiness(service.getBusinessKey(), toClerk.getNode());</span>
+					}
+<span class="nc bnc" id="L83" title="All 2 branches missed.">					if (existingBusinessEntity!=null) {</span>
+<span class="nc" id="L84">						log.debug(&quot;Found business with key &quot; +  existingBusinessEntity.getBusinessKey() + &quot;. No need to add it again&quot;);</span>
+					} else {
+<span class="nc" id="L86">						log.info(&quot;Business was not found in the destination UDDI &quot; + toClerk.getNode().getName() </span>
+								+ &quot;, going to add it in.&quot;);
+<span class="nc" id="L88">						new XRegistration(service.getBusinessKey(), new UDDIClerk(fromClerk), new UDDIClerk(toClerk)).xRegisterBusiness();</span>
+					}
+<span class="nc" id="L90">					new XRegistration(service.getServiceKey(), new UDDIClerk(fromClerk), new UDDIClerk(toClerk)).xRegisterServiceAndBindings();</span>
+<span class="nc" id="L91">				} catch (Exception e) {</span>
+<span class="nc" id="L92">					log.error(e.getMessage(),e);	</span>
+<span class="nc" id="L93">				}</span>
+<span class="nc" id="L94">			}</span>
+		}
+		
+		//BUSINESS LIST
+<span class="nc bnc" id="L98" title="All 2 branches missed.">		if (list.getBusinessList()!=null) {</span>
+<span class="nc" id="L99">			log.info(&quot;Subscription result for BusinessList with subscription key=&quot; + list.getSubscription().getSubscriptionKey());</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">			for (BusinessInfo businessInfo : list.getBusinessList().getBusinessInfos().getBusinessInfo()) {</span>
+<span class="nc" id="L101">				new XRegistration(businessInfo.getBusinessKey(), new UDDIClerk(fromClerk), new UDDIClerk(toClerk)).xRegisterBusinessAndServices();</span>
+<span class="nc" id="L102">			}</span>
+		}
+		
+		//BUSINESS DETAIL
+<span class="nc bnc" id="L106" title="All 2 branches missed.">		if (list.getBusinessDetail()!=null) {</span>
+<span class="nc" id="L107">			log.info(&quot;Subscription result for BusinessDetail with subscription key=&quot; + list.getSubscription().getSubscriptionKey());</span>
+<span class="nc" id="L108">			BusinessDetail businessDetail = list.getBusinessDetail();</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">			if (businessDetail.isTruncated()) {</span>
+<span class="nc" id="L110">				log.info(&quot;The businessDetail is truncated, the maxEntries must have been hit. The number of businesses is &quot; + businessDetail.getBusinessEntity().size());</span>
+			}
+<span class="nc bnc" id="L112" title="All 2 branches missed.">			for (BusinessEntity businessEntity : businessDetail.getBusinessEntity()) {</span>
+<span class="nc" id="L113">				new XRegistration(businessEntity.getBusinessKey(), new UDDIClerk(fromClerk), new UDDIClerk(toClerk)).xRegisterBusinessAndServices();</span>
+<span class="nc" id="L114">			}</span>
+		}
+		
+		//KEY BAG, NOT IMPLEMENTED
+<span class="nc bnc" id="L118" title="All 2 branches missed.">		if (list.getKeyBag()!=null) {</span>
+<span class="nc" id="L119">			log.info(&quot;Returning results when a 'brief' format is selected, please do not use 'brief' results when using the XRegistration functionality&quot;);</span>
+		}
+		
+		//BINDING DETAIL
+<span class="nc bnc" id="L123" title="All 2 branches missed.">		if (list.getBindingDetail()!=null) {</span>
+<span class="nc" id="L124">			log.info(&quot;Subscription result for BindingDetail with subscription key=&quot; + list.getSubscription().getSubscriptionKey());</span>
+<span class="nc" id="L125">			BindingDetail bindingDetail = list.getBindingDetail();</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">			if (bindingDetail.isTruncated()) {</span>
+<span class="nc" id="L127">				log.info(&quot;The bindingDetail is truncated, the maxEntries must have been hit. The number of bindings is &quot; + bindingDetail.getBindingTemplate().size());</span>
+			}
+<span class="nc bnc" id="L129" title="All 2 branches missed.">			for (BindingTemplate bindingTemplate : bindingDetail.getBindingTemplate()) {</span>
+				try {
+					//check if the service exist
+<span class="nc" id="L132">					BusinessService existingToService = uddiToClerk.findService(bindingTemplate.getServiceKey(), toClerk.getNode());</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">					if (existingToService!=null) {</span>
+<span class="nc" id="L134">						log.debug(&quot;Found service with key &quot; +  existingToService.getServiceKey() + &quot;. No need to add it again&quot;);</span>
+					} else {
+<span class="nc" id="L136">						BusinessService fromService = uddiFromClerk.findService(bindingTemplate.getServiceKey(), fromClerk.getNode());</span>
+						//check if the business exist
+<span class="nc" id="L138">						BusinessEntity existingBusinessEntity = uddiToClerk.findBusiness(fromService.getBusinessKey(), toClerk.getNode());</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">						if (existingBusinessEntity!=null) {</span>
+<span class="nc" id="L140">							log.debug(&quot;Found business with key &quot; +  existingBusinessEntity.getBusinessKey() + &quot;. No need to add it again&quot;);</span>
+						} else {
+<span class="nc" id="L142">							log.info(&quot;Business was not found in the destination UDDI &quot; + toClerk.getNode().getName() </span>
+									+ &quot;, going to add it in.&quot;);
+<span class="nc" id="L144">							new XRegistration(fromService.getBusinessKey(), new UDDIClerk(fromClerk), new UDDIClerk(toClerk)).xRegisterBusiness();</span>
+						}
+<span class="nc" id="L146">						log.info(&quot;Service was not found in the destination UDDI &quot; + toClerk.getNode().getName() </span>
+								+ &quot;, going to add it in.&quot;);
+<span class="nc" id="L148">						new XRegistration(fromService.getServiceKey(), new UDDIClerk(fromClerk), new UDDIClerk(toClerk)).xRegisterService();</span>
+					} 
+					//now the service exists in the toNode and we can add this binding
+<span class="nc" id="L151">					new XRegistration(bindingTemplate.getBindingKey(), new UDDIClerk(fromClerk), new UDDIClerk(toClerk)).xRegisterServiceBinding();</span>
+<span class="nc" id="L152">				} catch (Exception e) {</span>
+<span class="nc" id="L153">					log.error(e.getMessage(),e);	</span>
+<span class="nc" id="L154">				}</span>
+<span class="nc" id="L155">			}</span>
+		}
+		
+		//RELATED BUSINESSES
+<span class="nc bnc" id="L159" title="All 2 branches missed.">		if (list.getRelatedBusinessesList()!=null) {</span>
+<span class="nc" id="L160">			log.info(&quot;Subscription result for RelatedBusinesses with subscription key=&quot; + list.getSubscription().getSubscriptionKey());</span>
+<span class="nc" id="L161">			log.info(&quot;The jUDDI Listener is not doing anything with this subscription at this moment&quot;);</span>
+		}
+		
+		//ASSERTION STATUS REPORT
+<span class="nc bnc" id="L165" title="All 2 branches missed.">		if (list.getAssertionStatusReport()!=null) {</span>
+<span class="nc" id="L166">			log.info(&quot;Subscription result for AssertionStatusReport with subscription key=&quot; + list.getSubscription().getSubscriptionKey());</span>
+<span class="nc" id="L167">			log.info(&quot;The jUDDI Listener is not doing anything with this subscription at this moment&quot;);</span>
+		}
+		
+		//TMODELS
+<span class="nc bnc" id="L171" title="All 2 branches missed.">		if (list.getTModelList()!=null ){</span>
+<span class="nc" id="L172">			log.info(&quot;Subscription result for tModelList with subscription key=&quot; + list.getSubscription().getSubscriptionKey());</span>
+<span class="nc" id="L173">			log.info(&quot;The jUDDI Listener is not doing anything with this subscription at this moment&quot;);</span>
+		}
+<span class="nc" id="L175">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Release.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client</a> &gt; <span class="el_source">Release.java</span></div><h1>Release.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2004 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.client;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+
+/**
+ * The release class is a utility for obtaining the version number
+ */
+public class Release {
+	
+	private static final String UDDI_VERSION = &quot;3.0&quot;;
+	private static final String JAR_NAME = &quot;juddi-client&quot;;
+<span class="fc" id="L32">	private static String registryVersion = null;</span>
+        public static final String UNKNOWN = &quot;unknown&quot;;
+<span class="nc" id="L34">	private Release () {</span>
+<span class="nc" id="L35">	}</span>
+
+        /**
+         * Returns the version of this jUDDI-Client jar as defined in the manifest.
+         * Calls getRegistryVersion()
+         * @return  the version number of the release
+         * @since 3.2
+         */
+        public static String getjUDDIClientVersion() {
+<span class="fc" id="L44">            return getRegistryVersion();</span>
+        }
+        /**
+         * Returns the version of this jUDDI-Client jar as defined in the manifest.
+         * This function is poorly named, but left in place for backward compatibility
+         * @return  the version number of the release
+         */
+	public static String getRegistryVersion() {
+<span class="fc bfc" id="L52" title="All 2 branches covered.">		if (registryVersion == null) {</span>
+<span class="fc" id="L53">			registryVersion = getVersionFromManifest(JAR_NAME);</span>
+		}
+<span class="fc" id="L55">		return registryVersion;</span>
+		
+	}
+
+	public static String getUDDIVersion() {
+<span class="nc" id="L60">		return UDDI_VERSION;	</span>
+	} 
+	
+	public static String getVersionFromManifest(String jarName) {
+		Enumeration&lt;URL&gt; resEnum;
+        try {
+<span class="fc" id="L66">            resEnum = Thread.currentThread().getContextClassLoader().getResources(JarFile.MANIFEST_NAME);</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">            while (resEnum.hasMoreElements()) {</span>
+                try {
+<span class="fc" id="L69">                    URL url = (URL) resEnum.nextElement();</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">                    if (url.toString().toLowerCase().contains(jarName)) {</span>
+<span class="fc" id="L71">                        InputStream is = url.openStream();</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">                        if (is != null) {</span>
+<span class="fc" id="L73">                            Manifest manifest = new Manifest(is);</span>
+<span class="fc" id="L74">                            Attributes mainAttribs = manifest.getMainAttributes();</span>
+<span class="fc" id="L75">                            String version = mainAttribs.getValue(&quot;Bundle-Version&quot;);</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                            if (version != null) {</span>
+<span class="nc" id="L77">                                return (version);</span>
+                            }
+                        }
+                    }
+<span class="nc" id="L81">                } catch (Exception e) {</span>
+                    // Silently ignore wrong manifests on classpath?
+<span class="pc" id="L83">                }</span>
+            }
+<span class="nc" id="L85">         } catch (IOException e1) {</span>
+            // Silently ignore wrong manifests on classpath?
+<span class="fc" id="L87">         }</span>
+<span class="fc" id="L88">         return UNKNOWN;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

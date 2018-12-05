@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValidateSubscription.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.validation</a> &gt; <span class="el_source">ValidateSubscription.java</span></div><h1>ValidateSubscription.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.validation;
+
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
+
+import org.apache.juddi.keygen.KeyGenerator;
+import org.apache.juddi.keygen.KeyGeneratorFactory;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.InvalidTimeException;
+import org.apache.juddi.v3.error.KeyUnavailableException;
+import org.apache.juddi.v3.error.UserMismatchException;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
+import org.uddi.sub_v3.CoveragePeriod;
+import org.uddi.sub_v3.DeleteSubscription;
+import org.uddi.sub_v3.GetSubscriptionResults;
+import org.uddi.sub_v3.SubscriptionFilter;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+public class ValidateSubscription extends ValidateUDDIApi {
+
+    public ValidateSubscription(UddiEntityPublisher publisher) {
+<span class="fc" id="L53">        super(publisher);</span>
+<span class="fc" id="L54">    }</span>
+<span class="fc" id="L55">    private DatatypeFactory df = null;</span>
+
+    public void validateSubscriptions(EntityManager em, List&lt;org.uddi.sub_v3.Subscription&gt; entityList, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
+
+        // No null or empty list
+<span class="pc bpc" id="L60" title="2 of 4 branches missed.">        if (entityList == null || entityList.size() == 0) {</span>
+<span class="nc" id="L61">            throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.savesubscription.NoInput&quot;));</span>
+        }
+
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        for (org.uddi.sub_v3.Subscription entity : entityList) {</span>
+<span class="fc" id="L65">            validateSubscription(em, entity, publisher);</span>
+<span class="fc" id="L66">        }</span>
+<span class="fc" id="L67">    }</span>
+
+    private void validateSubscription(EntityManager em, org.uddi.sub_v3.Subscription subscription, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
+
+        // A supplied subscription can't be null
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">        if (subscription == null) {</span>
+<span class="nc" id="L73">            throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.subscription.NullInput&quot;));</span>
+        }
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if (df == null) {</span>
+            try {
+<span class="fc" id="L77">                df = DatatypeFactory.newInstance();</span>
+<span class="nc" id="L78">            } catch (DatatypeConfigurationException ex) {</span>
+<span class="nc" id="L79">                throw new FatalErrorException(new ErrorMessage(&quot;errors.DatatypeFactor&quot;));</span>
+<span class="fc" id="L80">            }</span>
+        }
+<span class="fc" id="L82">        boolean entityExists = false;</span>
+<span class="fc" id="L83">        String entityKey = subscription.getSubscriptionKey();</span>
+        //no key specified, make a new one
+<span class="pc bpc" id="L85" title="1 of 4 branches missed.">        if (entityKey == null || entityKey.length() == 0) {</span>
+<span class="fc" id="L86">            KeyGenerator keyGen = KeyGeneratorFactory.getKeyGenerator();</span>
+<span class="fc" id="L87">            entityKey = keyGen.generate(publisher);</span>
+<span class="fc" id="L88">            subscription.setSubscriptionKey(entityKey);</span>
+<span class="fc" id="L89">        } else {</span>
+            //key specified, validate it
+            // Per section 4.4: keys must be case-folded
+<span class="fc" id="L92">            entityKey = entityKey.toLowerCase();</span>
+<span class="fc" id="L93">            subscription.setSubscriptionKey(entityKey);</span>
+<span class="fc" id="L94">            ValidatePublish.validateKeyLength(entityKey);</span>
+<span class="fc" id="L95">            Object obj = em.find(org.apache.juddi.model.Subscription.class, entityKey);</span>
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">            if (obj != null) {</span>
+<span class="nc" id="L97">                entityExists = true;</span>
+                //revising a new item
+                // Make sure publisher owns this entity.
+<span class="nc bnc" id="L100" title="All 2 branches missed.">                if (!publisher.getAuthorizedName().equals(((org.apache.juddi.model.Subscription) obj).getAuthorizedName())) {</span>
+<span class="nc" id="L101">                    throw new UserMismatchException(new ErrorMessage(&quot;errors.usermismatch.InvalidOwner&quot;, entityKey));</span>
+                }
+            } else {
+                //new item
+                // Inside this block, we have a key proposed by the publisher on a new entity
+
+                // Validate key and then check to see that the proposed key is valid for this publisher
+<span class="fc" id="L108">                ValidateUDDIKey.validateUDDIv3Key(entityKey);</span>
+                
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">                if (!publisher.isValidPublisherKey(em, entityKey)) {</span>
+<span class="nc" id="L111">                    throw new KeyUnavailableException(new ErrorMessage(&quot;errors.keyunavailable.BadPartition&quot;, entityKey));</span>
+                }
+
+            }
+
+        }
+
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">        if (!entityExists) {</span>
+            // Check to make sure key isn't used by another entity.
+<span class="pc bpc" id="L120" title="1 of 2 branches missed.">            if (!isUniqueKey(em, entityKey)) {</span>
+<span class="nc" id="L121">                throw new KeyUnavailableException(new ErrorMessage(&quot;errors.keyunavailable.KeyExists&quot;, entityKey));</span>
+            }
+        }
+        //AO, if it's already expired, why even allow it?
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        if (subscription.getExpiresAfter() != null) {</span>
+<span class="fc" id="L126">            long expiresat = subscription.getExpiresAfter().toGregorianCalendar().getTimeInMillis();</span>
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">            if (System.currentTimeMillis() &gt; expiresat) {</span>
+<span class="nc" id="L128">                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.subscription.expired&quot;));</span>
+            }
+        }
+<span class="fc bfc" id="L131" title="All 2 branches covered.">        if (subscription.getMaxEntities() != null) {</span>
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">            if (subscription.getMaxEntities().intValue() &lt;= 0) {</span>
+<span class="nc" id="L133">                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.subscription.maxrecordstoosmall&quot;));</span>
+            }
+        }
+        //maxEntities:  This optional integer specifies the maximum number of entities in a notification returned to a subscription listener. 
+        //If not specified, the number of entities sent is not limited, unless by node policy.
+        try {
+<span class="fc bfc" id="L139" title="All 2 branches covered.">            if (subscription.getMaxEntities() == null</span>
+<span class="pc bpc" id="L140" title="1 of 2 branches missed.">                    || subscription.getMaxEntities().intValue() &gt; AppConfig.getConfiguration().getInt(Property.JUDDI_SUBSCRIPTION_MAXENTITIES, 1000)) {</span>
+<span class="fc" id="L141">                subscription.setMaxEntities(AppConfig.getConfiguration().getInt(Property.JUDDI_SUBSCRIPTION_MAXENTITIES, 1000));</span>
+            }
+<span class="nc" id="L143">        } catch (ConfigurationException x) {</span>
+<span class="nc" id="L144">            subscription.setMaxEntities(1000);</span>
+<span class="fc" id="L145">        }</span>
+        /*
+         *  notificationInterval:  This optional argument is only required when asynchronous notifications are used. 
+         * It is of type xsd:duration and specifies how often change notifications are to be provided to a subscriber. 
+         * If the notificationInterval specified is not acceptable due to node policy, then the node adjusts the value to
+         * match the next longer time period that is supported.  The adjusted value is provided with the returns from this
+         * API.  Also see Section 5.5.1.1 Specifying Durations.
+         */
+<span class="pc bpc" id="L153" title="1 of 4 branches missed.">        if (subscription.getNotificationInterval() == null &amp;&amp; subscription.getBindingKey() != null) {</span>
+<span class="nc" id="L154">            throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.subscription.notificationintervalnotdefined&quot;));</span>
+        }
+        
+        //validate that the binding key exists
+<span class="fc" id="L158">        validateSubscriptionBindingkeyExists(em,subscription.getBindingKey());</span>
+        
+<span class="fc" id="L160">        validateSubscriptionFilter(subscription.getSubscriptionFilter(), entityExists);</span>
+<span class="fc" id="L161">    }</span>
+
+    /**
+     * this handles just the filter items only
+     *
+     * @param subscriptionFilter
+     * @param entityExists or more accurately, is this a new item or not?
+     * @throws DispositionReportFaultMessage
+     */
+    private void validateSubscriptionFilter(SubscriptionFilter subscriptionFilter, boolean entityExists) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L171" title="2 of 4 branches missed.">        if (!entityExists &amp;&amp; subscriptionFilter == null) {</span>
+<span class="nc" id="L172">            throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.subscription.NoFilterOnNewSubscription&quot;));</span>
+        }
+
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">        if (subscriptionFilter != null) {</span>
+<span class="fc" id="L176">            int filterCount = 0;</span>
+<span class="fc" id="L177">            ValidateInquiry validateInquiry = new ValidateInquiry(publisher);</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">            if (subscriptionFilter.getFindBinding() != null) {</span>
+<span class="nc" id="L179">                filterCount++;</span>
+<span class="nc" id="L180">                validateInquiry.validateFindBinding(subscriptionFilter.getFindBinding());</span>
+            }
+<span class="fc bfc" id="L182" title="All 2 branches covered.">            if (subscriptionFilter.getFindBusiness() != null) {</span>
+<span class="fc" id="L183">                filterCount++;</span>
+<span class="fc" id="L184">                validateInquiry.validateFindBusiness(subscriptionFilter.getFindBusiness());</span>
+            }
+<span class="fc bfc" id="L186" title="All 2 branches covered.">            if (subscriptionFilter.getFindService() != null) {</span>
+<span class="fc" id="L187">                filterCount++;</span>
+<span class="fc" id="L188">                validateInquiry.validateFindService(subscriptionFilter.getFindService());</span>
+            }
+<span class="fc bfc" id="L190" title="All 2 branches covered.">            if (subscriptionFilter.getFindTModel() != null) {</span>
+<span class="fc" id="L191">                filterCount++;</span>
+<span class="fc" id="L192">                validateInquiry.validateFindTModel(subscriptionFilter.getFindTModel(), false);</span>
+            }
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">            if (subscriptionFilter.getFindRelatedBusinesses() != null) {</span>
+<span class="nc" id="L195">                filterCount++;</span>
+<span class="nc" id="L196">                validateInquiry.validateFindRelatedBusinesses(subscriptionFilter.getFindRelatedBusinesses(), false);</span>
+            }
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">            if (subscriptionFilter.getGetBindingDetail() != null) {</span>
+<span class="nc" id="L199">                filterCount++;</span>
+<span class="nc" id="L200">                validateInquiry.validateGetBindingDetail(subscriptionFilter.getGetBindingDetail());</span>
+            }
+<span class="fc bfc" id="L202" title="All 2 branches covered.">            if (subscriptionFilter.getGetBusinessDetail() != null) {</span>
+<span class="fc" id="L203">                filterCount++;</span>
+<span class="fc" id="L204">                validateInquiry.validateGetBusinessDetail(subscriptionFilter.getGetBusinessDetail());</span>
+            }
+<span class="pc bpc" id="L206" title="1 of 2 branches missed.">            if (subscriptionFilter.getGetServiceDetail() != null) {</span>
+<span class="nc" id="L207">                filterCount++;</span>
+<span class="nc" id="L208">                validateInquiry.validateGetServiceDetail(subscriptionFilter.getGetServiceDetail());</span>
+            }
+<span class="fc bfc" id="L210" title="All 2 branches covered.">            if (subscriptionFilter.getGetTModelDetail() != null) {</span>
+<span class="fc" id="L211">                filterCount++;</span>
+<span class="fc" id="L212">                validateInquiry.validateGetTModelDetail(subscriptionFilter.getGetTModelDetail());</span>
+            }
+<span class="fc bfc" id="L214" title="All 2 branches covered.">            if (subscriptionFilter.getGetAssertionStatusReport() != null) {</span>
+<span class="fc" id="L215">                filterCount++;</span>
+            }
+
+<span class="pc bpc" id="L218" title="1 of 2 branches missed.">            if (filterCount == 0) {</span>
+<span class="nc" id="L219">                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.subscription.BlankFilter&quot;));</span>
+            }
+            //the spec defines subscription filters as a switch, exactly one is required
+<span class="pc bpc" id="L222" title="1 of 2 branches missed.">            if (filterCount &gt; 1) {</span>
+<span class="nc" id="L223">                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.subscription.TooManyFilters&quot;, String.valueOf(filterCount)));</span>
+            }
+
+        }
+
+<span class="fc" id="L228">    }</span>
+
+    public void validateDeleteSubscription(EntityManager em, DeleteSubscription body) throws DispositionReportFaultMessage {
+        // No null input
+<span class="pc bpc" id="L232" title="1 of 2 branches missed.">        if (body == null) {</span>
+<span class="nc" id="L233">            throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+        }
+
+        // No null or empty list
+<span class="fc" id="L237">        List&lt;String&gt; entityKeyList = body.getSubscriptionKey();</span>
+<span class="pc bpc" id="L238" title="2 of 4 branches missed.">        if (entityKeyList == null || entityKeyList.size() == 0) {</span>
+<span class="nc" id="L239">            throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.NoKeys&quot;));</span>
+        }
+
+<span class="fc" id="L242">        HashSet&lt;String&gt; dupCheck = new HashSet&lt;String&gt;();</span>
+<span class="fc" id="L243">        int i = 0;</span>
+<span class="fc bfc" id="L244" title="All 2 branches covered.">        for (String entityKey : entityKeyList) {</span>
+
+            // Per section 4.4: keys must be case-folded
+<span class="fc" id="L247">            entityKey = entityKey.toLowerCase();</span>
+<span class="fc" id="L248">            entityKeyList.set(i, entityKey);</span>
+
+<span class="fc" id="L250">            boolean inserted = dupCheck.add(entityKey);</span>
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">            if (!inserted) {</span>
+<span class="nc" id="L252">                throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.DuplicateKey&quot;, entityKey));</span>
+            }
+
+<span class="fc" id="L255">            Object obj = em.find(org.apache.juddi.model.Subscription.class, entityKey);</span>
+<span class="pc bpc" id="L256" title="1 of 2 branches missed.">            if (obj == null) {</span>
+<span class="nc" id="L257">                throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.SubscriptionNotFound&quot;, entityKey));</span>
+            }
+
+            // Make sure publisher owns this entity.
+<span class="pc bpc" id="L261" title="1 of 2 branches missed.">            if (!publisher.getAuthorizedName().equals(((org.apache.juddi.model.Subscription) obj).getAuthorizedName())) {</span>
+<span class="nc" id="L262">                throw new UserMismatchException(new ErrorMessage(&quot;errors.usermismatch.InvalidOwner&quot;, entityKey));</span>
+            }
+
+<span class="fc" id="L265">            i++;</span>
+<span class="fc" id="L266">        }</span>
+<span class="fc" id="L267">    }</span>
+
+    public void validateGetSubscriptionResults(EntityManager em, GetSubscriptionResults body) throws DispositionReportFaultMessage {
+        // No null input
+<span class="pc bpc" id="L271" title="1 of 2 branches missed.">        if (body == null) {</span>
+<span class="nc" id="L272">            throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+        }
+
+<span class="fc" id="L275">        String subscriptionKey = body.getSubscriptionKey();</span>
+<span class="pc bpc" id="L276" title="2 of 4 branches missed.">        if (subscriptionKey == null || subscriptionKey.length() == 0) {</span>
+<span class="nc" id="L277">            throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.NullKey&quot;, subscriptionKey));</span>
+        }
+
+        // Per section 4.4: keys must be case-folded
+<span class="fc" id="L281">        subscriptionKey = subscriptionKey.toLowerCase();</span>
+<span class="fc" id="L282">        body.setSubscriptionKey(subscriptionKey);</span>
+
+<span class="fc" id="L284">        Object obj = em.find(org.apache.juddi.model.Subscription.class, subscriptionKey);</span>
+<span class="pc bpc" id="L285" title="1 of 2 branches missed.">        if (obj == null) {</span>
+<span class="nc" id="L286">            throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.SubscriptionNotFound&quot;, subscriptionKey));</span>
+        }
+
+<span class="fc" id="L289">        Date expiresAfter = ((org.apache.juddi.model.Subscription) obj).getExpiresAfter();</span>
+<span class="fc" id="L290">        Date now = new Date();</span>
+<span class="pc bpc" id="L291" title="1 of 2 branches missed.">        if (expiresAfter.getTime() &lt; now.getTime()) {</span>
+<span class="nc" id="L292">            throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.getsubscriptionresult.SubscriptionExpired&quot;, subscriptionKey));</span>
+        }
+
+<span class="fc" id="L295">        CoveragePeriod coveragePeriod = body.getCoveragePeriod();</span>
+<span class="pc bpc" id="L296" title="1 of 2 branches missed.">        if (coveragePeriod == null) {</span>
+<span class="nc" id="L297">            throw new InvalidTimeException(new ErrorMessage(&quot;errors.getsubscriptionresult.NullCoveragePeriod&quot;));</span>
+        }
+
+<span class="pc bpc" id="L300" title="2 of 4 branches missed.">        if (coveragePeriod.getStartPoint() == null || coveragePeriod.getEndPoint() == null) {</span>
+<span class="nc" id="L301">            throw new InvalidTimeException(new ErrorMessage(&quot;errors.getsubscriptionresult.InvalidDateInCoveragePeriod&quot;));</span>
+        }
+
+<span class="fc" id="L304">        GregorianCalendar startPoint = coveragePeriod.getStartPoint().toGregorianCalendar();</span>
+<span class="fc" id="L305">        GregorianCalendar endPoint = coveragePeriod.getEndPoint().toGregorianCalendar();</span>
+<span class="pc bpc" id="L306" title="1 of 2 branches missed.">        if (startPoint.getTimeInMillis() &gt; endPoint.getTimeInMillis()) {</span>
+<span class="nc" id="L307">            throw new InvalidTimeException(new ErrorMessage(&quot;errors.getsubscriptionresult.StartPointAfterEndPoint&quot;, startPoint.toString()));</span>
+        }
+<span class="fc" id="L309">    }</span>
+
+    private void validateSubscriptionBindingkeyExists(EntityManager em, String bindingKey) throws ValueNotAllowedException {
+<span class="pc bpc" id="L312" title="1 of 4 branches missed.">        if (bindingKey==null || bindingKey.length()==0) {</span>
+<span class="fc" id="L313">            return;</span>
+        }
+<span class="fc" id="L315">        Object obj = em.find(org.apache.juddi.model.BindingTemplate.class, bindingKey);</span>
+<span class="pc bpc" id="L316" title="1 of 2 branches missed.">        if (obj==null) {</span>
+<span class="nc" id="L317">            throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.subscription.BindingDoesntExist&quot;,bindingKey));</span>
+        }
+<span class="fc" id="L319">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

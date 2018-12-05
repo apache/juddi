@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Inquiry3to2.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.transport.wrapper</a> &gt; <span class="el_source">Inquiry3to2.java</span></div><h1>Inquiry3to2.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2014 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.client.transport.wrapper;
+
+import java.rmi.RemoteException;
+import java.util.Map;
+import javax.xml.ws.Binding;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.EndpointReference;
+import javax.xml.ws.soap.SOAPFaultException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.v3.client.UDDIServiceV2;
+import org.apache.juddi.v3.client.mapping.MapUDDIv2Tov3;
+import org.apache.juddi.v3.client.mapping.MapUDDIv3Tov2;
+import org.uddi.api_v3.BindingDetail;
+import org.uddi.api_v3.BusinessDetail;
+import org.uddi.api_v3.BusinessList;
+import org.uddi.api_v3.FindBinding;
+import org.uddi.api_v3.FindBusiness;
+import org.uddi.api_v3.FindRelatedBusinesses;
+import org.uddi.api_v3.FindService;
+import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.GetBindingDetail;
+import org.uddi.api_v3.GetBusinessDetail;
+import org.uddi.api_v3.GetOperationalInfo;
+import org.uddi.api_v3.GetServiceDetail;
+import org.uddi.api_v3.GetTModelDetail;
+import org.uddi.api_v3.OperationalInfo;
+import org.uddi.api_v3.OperationalInfos;
+import org.uddi.api_v3.RelatedBusinessesList;
+import org.uddi.api_v3.ServiceDetail;
+import org.uddi.api_v3.ServiceList;
+import org.uddi.api_v3.TModelDetail;
+import org.uddi.api_v3.TModelList;
+import org.uddi.v2_service.DispositionReport;
+import org.uddi.v2_service.Inquire;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.uddi.v3_service.UDDIInquiryPortType;
+
+/**
+ * This class provides a wrapper to enable UDDIv3 clients to talk to UDDIv2 servers
+ * via JAXWS Transport. It handles all translations for Inquiry service methods.
+ * @author &lt;a href=&quot;alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ * @since 3.2
+ */
+public class Inquiry3to2 implements UDDIInquiryPortType, BindingProvider {
+
+<span class="fc" id="L62">        private static Log logger = LogFactory.getLog(Inquiry3to2.class);</span>
+<span class="fc" id="L63">        Inquire inquiryService = null;</span>
+
+<span class="fc" id="L65">        public Inquiry3to2() {</span>
+
+<span class="fc" id="L67">                UDDIServiceV2 service = new UDDIServiceV2();</span>
+<span class="fc" id="L68">                inquiryService = service.getInquire();</span>
+
+<span class="fc" id="L70">        }</span>
+        
+        public Inquire getUDDIv2WebServiceClient(){
+<span class="nc" id="L73">             return inquiryService;</span>
+        }
+
+        @Override
+        public BindingDetail findBinding(FindBinding body) throws DispositionReportFaultMessage, RemoteException {
+                try {
+<span class="nc" id="L79">                        return MapUDDIv2Tov3.MapBindingDetail(inquiryService.findBinding(MapUDDIv3Tov2.MapFindBinding(body)));</span>
+<span class="nc" id="L80">                } catch (DispositionReport ex) {</span>
+<span class="nc" id="L81">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L82">                } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L83">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+                }
+        }
+
+        @Override
+        public BusinessList findBusiness(FindBusiness body) throws DispositionReportFaultMessage, RemoteException {
+                try {
+<span class="nc" id="L90">                        org.uddi.api_v2.FindBusiness MapFindBusiness = MapUDDIv3Tov2.MapFindBusiness(body);</span>
+<span class="nc" id="L91">                        org.uddi.api_v2.BusinessList s = inquiryService.findBusiness(MapFindBusiness);</span>
+<span class="nc" id="L92">                        return MapUDDIv2Tov3.MapBusinessList(s);</span>
+<span class="nc" id="L93">                } catch (DispositionReport ex) {</span>
+<span class="nc" id="L94">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L95">                } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L96">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+                }
+        }
+
+        @Override
+        public RelatedBusinessesList findRelatedBusinesses(FindRelatedBusinesses body) throws DispositionReportFaultMessage, RemoteException {
+                try {
+<span class="nc" id="L103">                        return MapUDDIv2Tov3.MapRelatedBusinessesList(inquiryService.findRelatedBusinesses(MapUDDIv3Tov2.MapFindRelatedBusiness(body)));</span>
+<span class="nc" id="L104">                } catch (DispositionReport ex) {</span>
+<span class="nc" id="L105">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L106">                } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L107">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+                }
+        }
+
+        @Override
+        public ServiceList findService(FindService body) throws DispositionReportFaultMessage, RemoteException {
+                try {
+<span class="nc" id="L114">                        return MapUDDIv2Tov3.MapServiceList(inquiryService.findService(MapUDDIv3Tov2.MapFindService(body)));</span>
+<span class="nc" id="L115">                } catch (DispositionReport ex) {</span>
+<span class="nc" id="L116">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L117">                } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L118">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+                }
+        }
+
+        @Override
+        public TModelList findTModel(FindTModel body) throws DispositionReportFaultMessage, RemoteException {
+                try {
+<span class="nc" id="L125">                        return MapUDDIv2Tov3.MapTModelList(inquiryService.findTModel(MapUDDIv3Tov2.MapFindTModel(body)));</span>
+<span class="nc" id="L126">                } catch (DispositionReport ex) {</span>
+<span class="nc" id="L127">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L128">                } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L129">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+                }
+        }
+
+        @Override
+        public BindingDetail getBindingDetail(GetBindingDetail body) throws DispositionReportFaultMessage, RemoteException {
+                try {
+<span class="nc" id="L136">                        return MapUDDIv2Tov3.MapBindingDetail(inquiryService.getBindingDetail(MapUDDIv3Tov2.MapGetBindingDetail(body)));</span>
+<span class="nc" id="L137">                } catch (DispositionReport ex) {</span>
+<span class="nc" id="L138">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L139">                } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L140">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+                }
+        }
+
+        @Override
+        public BusinessDetail getBusinessDetail(GetBusinessDetail body) throws DispositionReportFaultMessage, RemoteException {
+                try {
+<span class="nc" id="L147">                        return MapUDDIv2Tov3.MapBusinessDetail(inquiryService.getBusinessDetail(MapUDDIv3Tov2.MapGetBusinessDetail(body)));</span>
+<span class="nc" id="L148">                } catch (DispositionReport ex) {</span>
+<span class="nc" id="L149">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L150">                } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L151">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+                }
+        }
+
+        public static final String VERSION = &quot;2.0&quot;;
+
+        @Override
+        public OperationalInfos getOperationalInfo(GetOperationalInfo body) throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L159">                OperationalInfos ret = new OperationalInfos();</span>
+
+<span class="nc bnc" id="L161" title="All 2 branches missed.">                for (int i = 0; i &lt; body.getEntityKey().size(); i++) {</span>
+<span class="nc" id="L162">                        OperationalInfo oi = new OperationalInfo();</span>
+<span class="nc" id="L163">                        oi.setEntityKey(body.getEntityKey().get(i));</span>
+                        try {
+<span class="nc" id="L165">                                org.uddi.api_v2.GetBusinessDetail businessDetail = new org.uddi.api_v2.GetBusinessDetail();</span>
+<span class="nc" id="L166">                                businessDetail.setGeneric(VERSION);</span>
+<span class="nc" id="L167">                                businessDetail.getBusinessKey().add(body.getEntityKey().get(i));</span>
+<span class="nc" id="L168">                                org.uddi.api_v2.BusinessDetail z = inquiryService.getBusinessDetail(businessDetail);</span>
+<span class="nc" id="L169">                                oi.setNodeID(z.getOperator());</span>
+<span class="nc" id="L170">                                oi.setAuthorizedName(z.getBusinessEntity().get(0).getAuthorizedName());</span>
+<span class="nc" id="L171">                        } catch (Exception ex) {</span>
+<span class="nc" id="L172">                                logger.warn(ex.getMessage(), ex);</span>
+<span class="nc" id="L173">                        }</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">                        if (oi.getAuthorizedName() != null) {</span>
+<span class="nc" id="L175">                                continue;</span>
+                        }
+                        try {
+<span class="nc" id="L178">                                org.uddi.api_v2.GetTModelDetail tModelDetail = new org.uddi.api_v2.GetTModelDetail();</span>
+<span class="nc" id="L179">                                tModelDetail.setGeneric(VERSION);</span>
+<span class="nc" id="L180">                                tModelDetail.getTModelKey().add(body.getEntityKey().get(i));</span>
+<span class="nc" id="L181">                                org.uddi.api_v2.TModelDetail z = inquiryService.getTModelDetail(tModelDetail);</span>
+<span class="nc" id="L182">                                oi.setNodeID(z.getOperator());</span>
+<span class="nc" id="L183">                                oi.setAuthorizedName(z.getTModel().get(0).getAuthorizedName());</span>
+<span class="nc" id="L184">                        } catch (Exception ex) {</span>
+<span class="nc" id="L185">                                logger.warn(ex.getMessage(), ex);</span>
+<span class="nc" id="L186">                        }</span>
+<span class="nc bnc" id="L187" title="All 2 branches missed.">                        if (oi.getAuthorizedName() != null) {</span>
+<span class="nc" id="L188">                                continue;</span>
+                        }
+                        try {
+                                //get the service
+<span class="nc" id="L192">                                org.uddi.api_v2.GetServiceDetail serviceDetail = new org.uddi.api_v2.GetServiceDetail();</span>
+<span class="nc" id="L193">                                serviceDetail.setGeneric(VERSION);</span>
+<span class="nc" id="L194">                                serviceDetail.getServiceKey().add(body.getEntityKey().get(i));</span>
+<span class="nc" id="L195">                                org.uddi.api_v2.ServiceDetail z = inquiryService.getServiceDetail(serviceDetail);</span>
+<span class="nc" id="L196">                                oi.setNodeID(z.getOperator());</span>
+
+<span class="nc" id="L198">                                org.uddi.api_v2.GetBusinessDetail businessDetail = new org.uddi.api_v2.GetBusinessDetail();</span>
+<span class="nc" id="L199">                                businessDetail.setGeneric(VERSION);</span>
+                                //its owning business
+<span class="nc" id="L201">                                businessDetail.getBusinessKey().add(z.getBusinessService().get(0).getBusinessKey());</span>
+<span class="nc" id="L202">                                org.uddi.api_v2.BusinessDetail z2 = inquiryService.getBusinessDetail(businessDetail);</span>
+<span class="nc" id="L203">                                oi.setNodeID(z.getOperator());</span>
+<span class="nc" id="L204">                                oi.setAuthorizedName(z2.getBusinessEntity().get(0).getAuthorizedName());</span>
+<span class="nc" id="L205">                        } catch (Exception ex) {</span>
+<span class="nc" id="L206">                                logger.warn(ex.getMessage(), ex);</span>
+<span class="nc" id="L207">                        }</span>
+<span class="nc" id="L208">                        ret.getOperationalInfo().add(oi);</span>
+<span class="nc" id="L209">                        ret.setTruncated(false);</span>
+                }
+<span class="nc" id="L211">                return ret;</span>
+        }
+
+        @Override
+        public ServiceDetail getServiceDetail(GetServiceDetail body) throws DispositionReportFaultMessage, RemoteException {
+                try {
+<span class="nc" id="L217">                        return MapUDDIv2Tov3.MapServiceDetail(inquiryService.getServiceDetail(MapUDDIv3Tov2.MapGetServiceDetail(body)));</span>
+<span class="nc" id="L218">                } catch (DispositionReport ex) {</span>
+<span class="nc" id="L219">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L220">                } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L221">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+                }
+        }
+
+        @Override
+        public TModelDetail getTModelDetail(GetTModelDetail body) throws DispositionReportFaultMessage, RemoteException {
+                try {
+<span class="nc" id="L228">                        return MapUDDIv2Tov3.MapTModelDetail(inquiryService.getTModelDetail(MapUDDIv3Tov2.MapGetTModelDetail(body)));</span>
+<span class="nc" id="L229">                } catch (DispositionReport ex) {</span>
+<span class="nc" id="L230">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L231">                } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L232">                        throw MapUDDIv2Tov3.MapException(ex);</span>
+                }
+        }
+
+        @Override
+        public Map&lt;String, Object&gt; getRequestContext() {
+<span class="fc" id="L238">                return ((BindingProvider) inquiryService).getRequestContext();</span>
+        }
+
+        @Override
+        public Map&lt;String, Object&gt; getResponseContext() {
+<span class="nc" id="L243">                return ((BindingProvider) inquiryService).getResponseContext();</span>
+        }
+
+        @Override
+        public Binding getBinding() {
+<span class="nc" id="L248">                return ((BindingProvider) inquiryService).getBinding();</span>
+        }
+
+        @Override
+        public EndpointReference getEndpointReference() {
+<span class="nc" id="L253">                return ((BindingProvider) inquiryService).getEndpointReference();</span>
+        }
+
+        @Override
+        public &lt;T extends EndpointReference&gt; T getEndpointReference(Class&lt;T&gt; clazz) {
+<span class="nc" id="L258">                return ((BindingProvider) inquiryService).getEndpointReference(clazz);</span>
+        }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

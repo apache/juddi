@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KeyType.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.api_v3</a> &gt; <span class="el_source">KeyType.java</span></div><h1>KeyType.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+package org.uddi.api_v3;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+import javax.xml.bind.annotation.XmlType;
+
+
+/**
+ * &lt;p&gt;Java class for keyType.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * &lt;p&gt;
+ * &lt;pre&gt;
+ * &amp;lt;simpleType name=&quot;keyType&quot;&gt;
+ *   &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}NMTOKEN&quot;&gt;
+ *     &amp;lt;enumeration value=&quot;businessKey&quot;/&gt;
+ *     &amp;lt;enumeration value=&quot;tModelKey&quot;/&gt;
+ *     &amp;lt;enumeration value=&quot;serviceKey&quot;/&gt;
+ *     &amp;lt;enumeration value=&quot;bindingKey&quot;/&gt;
+ *     &amp;lt;enumeration value=&quot;subscriptionKey&quot;/&gt;
+ *   &amp;lt;/restriction&gt;
+ * &amp;lt;/simpleType&gt;
+ * &lt;/pre&gt;
+ * 
+ */
+<span class="pc" id="L46">@XmlType(name = &quot;keyType&quot;)</span>
+@XmlEnum
+public enum KeyType implements Serializable{
+
+<span class="fc" id="L50">    @XmlEnumValue(&quot;businessKey&quot;)</span>
+    BUSINESS_KEY(&quot;businessKey&quot;),
+<span class="fc" id="L52">    @XmlEnumValue(&quot;tModelKey&quot;)</span>
+    T_MODEL_KEY(&quot;tModelKey&quot;),
+<span class="fc" id="L54">    @XmlEnumValue(&quot;serviceKey&quot;)</span>
+    SERVICE_KEY(&quot;serviceKey&quot;),
+<span class="fc" id="L56">    @XmlEnumValue(&quot;bindingKey&quot;)</span>
+    BINDING_KEY(&quot;bindingKey&quot;),
+<span class="fc" id="L58">    @XmlEnumValue(&quot;subscriptionKey&quot;)</span>
+    SUBSCRIPTION_KEY(&quot;subscriptionKey&quot;);
+    private final String value;
+
+<span class="fc" id="L62">    KeyType(String v) {</span>
+<span class="fc" id="L63">        value = v;</span>
+<span class="fc" id="L64">    }</span>
+
+    public String value() {
+<span class="nc" id="L67">        return value;</span>
+    }
+
+    public static KeyType fromValue(String v) {
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        for (KeyType c: KeyType.values()) {</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            if (c.value.equals(v)) {</span>
+<span class="nc" id="L73">                return c;</span>
+            }
+        }
+<span class="nc" id="L76">        throw new IllegalArgumentException(v);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

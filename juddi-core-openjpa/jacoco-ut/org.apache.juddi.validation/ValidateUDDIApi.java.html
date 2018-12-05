@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValidateUDDIApi.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.validation</a> &gt; <span class="el_source">ValidateUDDIApi.java</span></div><h1>ValidateUDDIApi.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.validation;
+
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.EntityManager;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
+
+import org.apache.juddi.model.Subscription;
+import org.apache.juddi.model.UddiEntity;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.UnsupportedException;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+public abstract class ValidateUDDIApi {
+
+	protected UddiEntityPublisher publisher;
+<span class="fc" id="L41">   protected String nodeID=null;</span>
+		
+   /**
+    * This is used only during the install process to prevent infinite loops
+    * @param publisher
+    * @param nodeid 
+    */
+<span class="fc" id="L48">	public ValidateUDDIApi(UddiEntityPublisher publisher, String nodeid) {</span>
+<span class="fc" id="L49">		this.publisher = publisher;</span>
+<span class="fc" id="L50">      this.nodeID = nodeid;</span>
+<span class="fc" id="L51">	}</span>
+   
+<span class="fc" id="L53">   public ValidateUDDIApi(UddiEntityPublisher publisher) {</span>
+<span class="fc" id="L54">		this.publisher = publisher;</span>
+      try {
+<span class="fc" id="L56">         this.nodeID = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);</span>
+<span class="nc" id="L57">      } catch (ConfigurationException ex) {</span>
+<span class="nc" id="L58">         Logger.getLogger(ValidateUDDIApi.class.getName()).log(Level.SEVERE, &quot;unable to get the current node id, this may cause access control problems&quot;</span>
+                 + &quot; and must be fixed. set &quot; + Property.JUDDI_NODE_ID + &quot; in juddiv3.xml&quot;, ex);
+<span class="fc" id="L60">      }</span>
+<span class="fc" id="L61">	}</span>
+
+	public UddiEntityPublisher getPublisher() {
+<span class="fc" id="L64">		return publisher;</span>
+	}
+
+	public void setPublisher(UddiEntityPublisher publisher) {
+<span class="nc" id="L68">		this.publisher = publisher;</span>
+<span class="nc" id="L69">	}</span>
+	
+	public static void unsupportedAPICall() throws DispositionReportFaultMessage {
+<span class="nc" id="L72">		throw new UnsupportedException(new ErrorMessage(&quot;errors.Unsupported&quot;));</span>
+	}
+	
+	public static boolean isUniqueKey(EntityManager em, String entityKey) {
+<span class="fc" id="L76">		Object obj = em.find(UddiEntity.class, entityKey);</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">		if (obj != null)</span>
+<span class="nc" id="L78">			return false;</span>
+		
+<span class="fc" id="L80">		obj = em.find(Subscription.class, entityKey);</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">		if (obj != null)</span>
+<span class="nc" id="L82">			return false;</span>
+		
+<span class="fc" id="L84">		return true;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

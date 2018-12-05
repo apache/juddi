@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ChangeRecord.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.model</a> &gt; <span class="el_source">ChangeRecord.java</span></div><h1>ChangeRecord.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.model;
+
+import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.UniqueConstraint;
+
+@Entity
+@Table(name = &quot;j3_chg_record&quot;
+        //, uniqueConstraints = @UniqueConstraint(columnNames = {&quot;node_id&quot;, &quot;orginating_usn&quot;}) 
+)
+ 
+<span class="fc" id="L35">public class ChangeRecord implements Serializable {</span>
+
+        private static final long serialVersionUID = 1L;
+
+        protected String nodeID;
+        protected Long originatingUSN;
+        private byte[] contents;
+<span class="fc" id="L42">        private RecordType e = RecordType.ChangeRecordNull;</span>
+        private Long id;
+        private String entityKey;
+<span class="fc" id="L45">        private boolean appliedLocally = false;</span>
+
+        @Column(name = &quot;change_contents&quot;)
+        @Lob
+        public byte[] getContents() {
+<span class="fc" id="L50">                return contents;</span>
+        }
+
+        public void setContents(byte[] contents) {
+<span class="fc" id="L54">                this.contents = contents;</span>
+<span class="fc" id="L55">        }</span>
+
+<span class="pc" id="L57">        public enum RecordType {</span>
+
+<span class="fc" id="L59">                ChangeRecordNewData,</span>
+<span class="fc" id="L60">                ChangeRecordDelete,</span>
+<span class="fc" id="L61">                ChangeRecordPublisherAssertion,</span>
+<span class="fc" id="L62">                ChangeRecordHide,</span>
+<span class="fc" id="L63">                ChangeRecordDeleteAssertion,</span>
+<span class="fc" id="L64">                ChangeRecordAcknowledgement,</span>
+<span class="fc" id="L65">                ChangeRecordCorrection,</span>
+<span class="fc" id="L66">                ChangeRecordNewDataConditional,</span>
+<span class="fc" id="L67">                ChangeRecordConditionFailed,</span>
+<span class="fc" id="L68">                ChangeRecordNull</span>
+        }
+
+        public void setRecordType(RecordType e) {
+<span class="fc" id="L72">                this.e = e;</span>
+<span class="fc" id="L73">        }</span>
+
+        @Column(name = &quot;record_type&quot;)
+        public RecordType getRecordType() {
+<span class="fc" id="L77">                return e;</span>
+        }
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.TABLE,
+             generator = &quot;personGen&quot;)
+        @TableGenerator(name = &quot;personGen&quot;,
+             table = &quot;JPAGEN_GENERATORS&quot;,
+             pkColumnName = &quot;NAME&quot;,
+             pkColumnValue = &quot;JPAGEN_PERSON_GEN&quot;,
+             valueColumnName = &quot;VALUE&quot;)
+        public Long getId() {
+<span class="fc" id="L89">                return id;</span>
+        }
+
+        public void setId(Long id) {
+<span class="fc" id="L93">                this.id = id;</span>
+<span class="fc" id="L94">        }</span>
+
+        @Column(name = &quot;node_id&quot;)
+        public String getNodeID() {
+<span class="fc" id="L98">                return nodeID;</span>
+        }
+
+        public void setNodeID(String value) {
+<span class="fc" id="L102">                this.nodeID = value;</span>
+<span class="fc" id="L103">        }</span>
+
+        @Column(name = &quot;entity_key&quot;)
+        public String getEntityKey() {
+<span class="fc" id="L107">                return entityKey;</span>
+        }
+
+        public void setEntityKey(String value) {
+<span class="fc" id="L111">                this.entityKey = value;</span>
+<span class="fc" id="L112">        }</span>
+
+        @Column(name = &quot;orginating_usn&quot;)
+        public Long getOriginatingUSN() {
+<span class="fc" id="L116">                return originatingUSN;</span>
+        }
+
+        public void setOriginatingUSN(Long value) {
+<span class="fc" id="L120">                this.originatingUSN = value;</span>
+<span class="fc" id="L121">        }</span>
+        
+        /**
+         * returns true if the changes represented by this change record were applied successfully at this node
+         * @return 
+         */
+        @Column(name = &quot;appliedlocal&quot;)
+        public boolean getIsAppliedLocally() {
+<span class="fc" id="L129">                return appliedLocally;</span>
+        }
+
+        public void setIsAppliedLocally(boolean value) {
+<span class="fc" id="L133">                this.appliedLocally = value;</span>
+<span class="fc" id="L134">        }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

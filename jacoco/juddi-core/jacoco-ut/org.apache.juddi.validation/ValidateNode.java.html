@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValidateNode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.validation</a> &gt; <span class="el_source">ValidateNode.java</span></div><h1>ValidateNode.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.validation;
+
+import java.util.List;
+import java.util.logging.Logger;
+
+import javax.persistence.EntityManager;
+
+import org.apache.juddi.api_v3.Node;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * @author &lt;a href=&quot;mailto:kstam@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ */
+public class ValidateNode extends ValidateUDDIApi {
+
+        public ValidateNode(UddiEntityPublisher publisher) {
+<span class="fc" id="L38">                super(publisher);</span>
+<span class="fc" id="L39">        }</span>
+<span class="fc" id="L40">        private static final Logger logger = Logger.getLogger(ValidateNode.class.getCanonicalName());</span>
+        /*-------------------------------------------------------------------
+         validateSaveNode functions are specific to jUDDI.
+         --------------------------------------------------------------------*/
+
+        public void validateSaveNode(EntityManager em, org.apache.juddi.api_v3.SaveNode body) throws DispositionReportFaultMessage {
+
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L48">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+                }
+
+                // No null or empty list
+<span class="fc" id="L52">                List&lt;Node&gt; nodes = body.getNode();</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">                if (nodes == null) {</span>
+<span class="nc" id="L54">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.saveNodes.NoInput&quot;));</span>
+                }
+
+<span class="fc bfc" id="L57" title="All 2 branches covered.">                for (Node clerk : body.getNode()) {</span>
+<span class="fc" id="L58">                        validateNode(clerk);</span>
+<span class="fc" id="L59">                }</span>
+
+<span class="fc" id="L61">        }</span>
+
+        public void validateNode(org.apache.juddi.api_v3.Node node) throws DispositionReportFaultMessage {
+
+                // No null input
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">                if (node == null) {</span>
+<span class="nc" id="L67">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NullInput&quot;));</span>
+                }
+
+<span class="fc" id="L70">                String name = node.getName();</span>
+<span class="pc bpc" id="L71" title="5 of 10 branches missed.">                if (name == null || name.length() == 0 || name.length()&gt;255 || node.getClientName()==null|| node.getClientName().length() &gt; 255) {</span>
+<span class="nc" id="L72">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoName&quot;));</span>
+                }
+<span class="pc bpc" id="L74" title="3 of 6 branches missed.">                if (node.getDescription() == null || node.getDescription().length() == 0 || node.getDescription().length() &gt; 255) {</span>
+<span class="nc" id="L75">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoDescription&quot;));</span>
+                }
+<span class="pc bpc" id="L77" title="3 of 6 branches missed.">                if (node.getClientName() == null || node.getClientName().length() == 0 || node.getClientName().length() &gt; 255) {</span>
+<span class="nc" id="L78">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoClientName&quot;));</span>
+                }
+<span class="pc bpc" id="L80" title="3 of 6 branches missed.">                if (node.getCustodyTransferUrl() == null || node.getCustodyTransferUrl().length() == 0 || node.getClientName().length() &gt; 255) {</span>
+<span class="nc" id="L81">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoNCT&quot;));</span>
+                }
+<span class="pc bpc" id="L83" title="3 of 6 branches missed.">                if (node.getInquiryUrl() == null || node.getInquiryUrl().length() == 0 || node.getInquiryUrl().length() &gt; 255) {</span>
+<span class="nc" id="L84">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoIN&quot;));</span>
+                }
+<span class="pc bpc" id="L86" title="3 of 6 branches missed.">                if (node.getPublishUrl() == null || node.getPublishUrl().length() == 0 || node.getPublishUrl().length() &gt; 255) {</span>
+<span class="nc" id="L87">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoPUB&quot;));</span>
+                }
+<span class="pc bpc" id="L89" title="3 of 6 branches missed.">                if (node.getSubscriptionListenerUrl() == null || node.getSubscriptionListenerUrl().length() == 0 || node.getSubscriptionListenerUrl().length() &gt; 255) {</span>
+                //        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoSUBL&quot;));
+                }
+<span class="pc bpc" id="L92" title="2 of 6 branches missed.">                if (node.getReplicationUrl() == null || node.getReplicationUrl().length() == 0 || node.getReplicationUrl().length() &gt; 255) {</span>
+                        //throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoSUBL&quot;));
+                        //logger.log(Level.WARNING, &quot;No replication url on save node request!&quot;);
+                }
+<span class="pc bpc" id="L96" title="3 of 6 branches missed.">                if (node.getSubscriptionUrl() == null || node.getSubscriptionUrl().length() == 0 || node.getSubscriptionUrl().length() &gt; 255) {</span>
+<span class="nc" id="L97">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoSUB&quot;));</span>
+                }
+<span class="pc bpc" id="L99" title="3 of 6 branches missed.">                if (node.getSecurityUrl()== null || node.getSecurityUrl().length() == 0 || node.getSecurityUrl().length() &gt; 255) {</span>
+<span class="nc" id="L100">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoSec&quot;));</span>
+                }
+<span class="pc bpc" id="L102" title="3 of 6 branches missed.">                if (node.getProxyTransport() == null || node.getProxyTransport().length() == 0 || node.getProxyTransport().length() &gt; 255) {</span>
+<span class="nc" id="L103">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoProxy&quot;));</span>
+                } else {
+                        try {
+                                //validate that the class exists and that it is of type
+                                //org.apache.juddi.v3.client.transport.Transport
+<span class="fc" id="L108">                                Class&lt;?&gt; forName = Class.forName(node.getProxyTransport());</span>
+<span class="fc" id="L109">                                Object j = forName.newInstance();</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">                                if (!(j instanceof org.apache.juddi.v3.client.transport.Transport)) {</span>
+<span class="nc" id="L111">                                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.illegalProxyTransport&quot;));</span>
+                                }
+<span class="fc" id="L113">                        } catch (Exception ex) {</span>
+<span class="fc" id="L114">                                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.illegalProxyTransport&quot;));</span>
+<span class="fc" id="L115">                        }</span>
+                }
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">                if (node.getProxyTransport().equalsIgnoreCase(org.apache.juddi.v3.client.transport.RMITransport.class.getCanonicalName())) {</span>
+<span class="nc bnc" id="L118" title="All 6 branches missed.">                        if (node.getFactoryInitial() == null || node.getFactoryInitial().length() == 0 || node.getFactoryInitial().length() &gt; 255) {</span>
+<span class="nc" id="L119">                                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoRMIData&quot;));</span>
+                        }
+<span class="nc bnc" id="L121" title="All 6 branches missed.">                        if (node.getFactoryNamingProvider() == null || node.getFactoryNamingProvider().length() == 0 || node.getFactoryNamingProvider().length() &gt; 255) {</span>
+<span class="nc" id="L122">                                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoRMIData&quot;));</span>
+                        }
+<span class="nc bnc" id="L124" title="All 6 branches missed.">                        if (node.getFactoryURLPkgs() == null || node.getFactoryURLPkgs().length() == 0 || node.getFactoryURLPkgs().length() &gt; 255) {</span>
+<span class="nc" id="L125">                                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoRMIDataF&quot;));</span>
+                        }
+                }
+
+<span class="fc" id="L129">        }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

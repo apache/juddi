@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Publish3to2.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.transport.wrapper</a> &gt; <span class="el_source">Publish3to2.java</span></div><h1>Publish3to2.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2014 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.client.transport.wrapper;
+
+import java.rmi.RemoteException;
+import java.util.List;
+import java.util.Map;
+import javax.xml.ws.Binding;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.EndpointReference;
+import javax.xml.ws.Holder;
+import javax.xml.ws.soap.SOAPFaultException;
+import org.apache.juddi.v3.client.UDDIServiceV2;
+import org.apache.juddi.v3.client.mapping.MapUDDIv2Tov3;
+import org.apache.juddi.v3.client.mapping.MapUDDIv3Tov2;
+import org.uddi.api_v2.AssertionStatusReport;
+import org.uddi.api_v2.PublisherAssertions;
+import org.uddi.api_v2.SetPublisherAssertions;
+import org.uddi.api_v3.AddPublisherAssertions;
+import org.uddi.api_v3.AssertionStatusItem;
+import org.uddi.api_v3.BindingDetail;
+import org.uddi.api_v3.BusinessDetail;
+import org.uddi.api_v3.CompletionStatus;
+import org.uddi.api_v3.DeleteBinding;
+import org.uddi.api_v3.DeleteBusiness;
+import org.uddi.api_v3.DeletePublisherAssertions;
+import org.uddi.api_v3.DeleteService;
+import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.GetRegisteredInfo;
+import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.api_v3.RegisteredInfo;
+import org.uddi.api_v3.SaveBinding;
+import org.uddi.api_v3.SaveBusiness;
+import org.uddi.api_v3.SaveService;
+import org.uddi.api_v3.SaveTModel;
+import org.uddi.api_v3.ServiceDetail;
+import org.uddi.api_v3.TModelDetail;
+import org.uddi.v2_service.DispositionReport;
+import org.uddi.v2_service.Publish;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.uddi.v3_service.UDDIPublicationPortType;
+
+/**
+ * This class provides a wrapper to enable UDDIv3 clients to talk to UDDIv2
+ * servers via JAXWS Transport. It handles all translations for Publish 
+ * service methods.
+ *
+ * @author &lt;a href=&quot;alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ * @since 3.2
+ */
+public class Publish3to2 implements UDDIPublicationPortType, BindingProvider {
+
+<span class="fc" id="L66">   Publish publishService = null;</span>
+
+<span class="fc" id="L68">   public Publish3to2() {</span>
+
+<span class="fc" id="L70">      UDDIServiceV2 service = new UDDIServiceV2();</span>
+<span class="fc" id="L71">      publishService = service.getPublish();</span>
+
+<span class="fc" id="L73">   }</span>
+   
+   public Publish getUDDIv2PublishWebServiceClient(){
+<span class="nc" id="L76">        return publishService;</span>
+   }
+
+   @Override
+   public void addPublisherAssertions(AddPublisherAssertions body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+<span class="nc" id="L82">         publishService.addPublisherAssertions(MapUDDIv3Tov2.MapAddPublisherAssertions(body));</span>
+<span class="nc" id="L83">      } catch (DispositionReport ex) {</span>
+<span class="nc" id="L84">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L85">      } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L86">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L87">      }</span>
+<span class="nc" id="L88">   }</span>
+
+   @Override
+   public void deleteBinding(DeleteBinding body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+<span class="nc" id="L93">         publishService.deleteBinding(MapUDDIv3Tov2.MapDeleteBinding(body));</span>
+<span class="nc" id="L94">      } catch (DispositionReport ex) {</span>
+<span class="nc" id="L95">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L96">      } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L97">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L98">      }</span>
+<span class="nc" id="L99">   }</span>
+
+   @Override
+   public void deleteBusiness(DeleteBusiness body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+<span class="nc" id="L104">         publishService.deleteBusiness(MapUDDIv3Tov2.MapDeleteBusiness(body));</span>
+<span class="nc" id="L105">      } catch (DispositionReport ex) {</span>
+<span class="nc" id="L106">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L107">      } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L108">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L109">      }</span>
+<span class="nc" id="L110">   }</span>
+
+   @Override
+   public void deletePublisherAssertions(DeletePublisherAssertions body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+<span class="nc" id="L115">         publishService.deletePublisherAssertions(MapUDDIv3Tov2.MapDeletePublisherAssertions(body));</span>
+<span class="nc" id="L116">      } catch (DispositionReport ex) {</span>
+<span class="nc" id="L117">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L118">      } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L119">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L120">      }</span>
+<span class="nc" id="L121">   }</span>
+
+   @Override
+   public void deleteService(DeleteService body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+<span class="nc" id="L126">         publishService.deleteService(MapUDDIv3Tov2.MapDeleteService(body));</span>
+<span class="nc" id="L127">      } catch (DispositionReport ex) {</span>
+<span class="nc" id="L128">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L129">      } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L130">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L131">      }</span>
+<span class="nc" id="L132">   }</span>
+
+   @Override
+   public void deleteTModel(DeleteTModel body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+<span class="nc" id="L137">         publishService.deleteTModel(MapUDDIv3Tov2.MapDeleteTModel(body));</span>
+<span class="nc" id="L138">      } catch (DispositionReport ex) {</span>
+<span class="nc" id="L139">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L140">      } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L141">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L142">      }</span>
+<span class="nc" id="L143">   }</span>
+
+   @Override
+   public List&lt;AssertionStatusItem&gt; getAssertionStatusReport(String authInfo, CompletionStatus completionStatus) throws DispositionReportFaultMessage, RemoteException {
+      try {
+<span class="nc" id="L148">         AssertionStatusReport assertionStatusReport = publishService.getAssertionStatusReport(MapUDDIv3Tov2.MapGetAssertionStatusReport(authInfo, completionStatus));</span>
+<span class="nc" id="L149">         return MapUDDIv2Tov3.MapAssertionStatusItems(assertionStatusReport);</span>
+<span class="nc" id="L150">      } catch (DispositionReport ex) {</span>
+<span class="nc" id="L151">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L152">      } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L153">         throw MapUDDIv2Tov3.MapException(ex);</span>
+      }
+   }
+
+   @Override
+   public List&lt;PublisherAssertion&gt; getPublisherAssertions(String authInfo) throws DispositionReportFaultMessage, RemoteException {
+      try {
+<span class="nc" id="L160">         return MapUDDIv2Tov3.MapListPublisherAssertion(publishService.getPublisherAssertions(MapUDDIv3Tov2.MapGetPublisherAssertions(authInfo)));</span>
+<span class="nc" id="L161">      } catch (DispositionReport ex) {</span>
+<span class="nc" id="L162">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L163">      } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L164">         throw MapUDDIv2Tov3.MapException(ex);</span>
+      }
+   }
+
+   @Override
+   public RegisteredInfo getRegisteredInfo(GetRegisteredInfo body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+<span class="nc" id="L171">         return MapUDDIv2Tov3.MapListRegisteredInfo(publishService.getRegisteredInfo(MapUDDIv3Tov2.MapGetRegisteredInfo(body)));</span>
+<span class="nc" id="L172">      } catch (DispositionReport ex) {</span>
+<span class="nc" id="L173">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L174">      } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L175">         throw MapUDDIv2Tov3.MapException(ex);</span>
+      }
+
+   }
+
+   @Override
+   public BindingDetail saveBinding(SaveBinding body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+<span class="nc" id="L183">         return MapUDDIv2Tov3.MapBindingDetail(publishService.saveBinding(MapUDDIv3Tov2.MapSaveBinding(body)));</span>
+<span class="nc" id="L184">      } catch (DispositionReport ex) {</span>
+<span class="nc" id="L185">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L186">      } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L187">         throw MapUDDIv2Tov3.MapException(ex);</span>
+      }
+   }
+
+   @Override
+   public BusinessDetail saveBusiness(SaveBusiness body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+<span class="nc" id="L194">         return MapUDDIv2Tov3.MapBusinessDetail(publishService.saveBusiness(MapUDDIv3Tov2.MapSaveBusiness(body)));</span>
+<span class="nc" id="L195">      } catch (DispositionReport ex) {</span>
+<span class="nc" id="L196">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L197">      } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L198">         throw MapUDDIv2Tov3.MapException(ex);</span>
+      }
+   }
+
+   @Override
+   public ServiceDetail saveService(SaveService body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+<span class="nc" id="L205">         return MapUDDIv2Tov3.MapServiceDetail(publishService.saveService(MapUDDIv3Tov2.MapSaveService(body)));</span>
+<span class="nc" id="L206">      } catch (DispositionReport ex) {</span>
+<span class="nc" id="L207">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L208">      } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L209">         throw MapUDDIv2Tov3.MapException(ex);</span>
+      }
+   }
+
+   @Override
+   public TModelDetail saveTModel(SaveTModel body) throws DispositionReportFaultMessage, RemoteException {
+      try {
+<span class="nc" id="L216">         return MapUDDIv2Tov3.MapTModelDetail(publishService.saveTModel(MapUDDIv3Tov2.MapSaveTModel(body)));</span>
+<span class="nc" id="L217">      } catch (DispositionReport ex) {</span>
+<span class="nc" id="L218">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L219">      } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L220">         throw MapUDDIv2Tov3.MapException(ex);</span>
+      }
+
+   }
+
+   @Override
+   public void setPublisherAssertions(String authInfo, Holder&lt;List&lt;PublisherAssertion&gt;&gt; publisherAssertion) throws DispositionReportFaultMessage, RemoteException {
+      try {
+<span class="nc" id="L228">         SetPublisherAssertions req = MapUDDIv3Tov2.MapSetPublisherAssertions(publisherAssertion.value);</span>
+<span class="nc" id="L229">         req.setAuthInfo(authInfo);</span>
+<span class="nc" id="L230">         PublisherAssertions setPublisherAssertions = publishService.setPublisherAssertions(req);</span>
+<span class="nc" id="L231">         publisherAssertion.value = MapUDDIv2Tov3.MapListPublisherAssertion(setPublisherAssertions);</span>
+
+<span class="nc" id="L233">      } catch (DispositionReport ex) {</span>
+<span class="nc" id="L234">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L235">      } catch (SOAPFaultException ex) {</span>
+<span class="nc" id="L236">         throw MapUDDIv2Tov3.MapException(ex);</span>
+<span class="nc" id="L237">      }</span>
+<span class="nc" id="L238">   }</span>
+
+   @Override
+   public Map&lt;String, Object&gt; getRequestContext() {
+<span class="fc" id="L242">      return ((BindingProvider) publishService).getRequestContext();</span>
+   }
+
+   @Override
+   public Map&lt;String, Object&gt; getResponseContext() {
+<span class="nc" id="L247">      return ((BindingProvider) publishService).getResponseContext();</span>
+   }
+
+   @Override
+   public Binding getBinding() {
+<span class="nc" id="L252">      return ((BindingProvider) publishService).getBinding();</span>
+   }
+
+   @Override
+   public EndpointReference getEndpointReference() {
+<span class="nc" id="L257">      return ((BindingProvider) publishService).getEndpointReference();</span>
+   }
+
+   @Override
+   public &lt;T extends EndpointReference&gt; T getEndpointReference(Class&lt;T&gt; clazz) {
+<span class="nc" id="L262">      return ((BindingProvider) publishService).getEndpointReference(clazz);</span>
+   }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

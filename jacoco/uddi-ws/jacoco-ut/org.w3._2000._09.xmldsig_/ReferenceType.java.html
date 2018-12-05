@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReferenceType.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.w3._2000._09.xmldsig_</a> &gt; <span class="el_source">ReferenceType.java</span></div><h1>ReferenceType.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+package org.w3._2000._09.xmldsig_;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+
+/**
+ * &lt;p&gt;Java class for ReferenceType complex type.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * 
+ * &lt;pre&gt;
+ * &amp;lt;complexType name=&quot;ReferenceType&quot;&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;sequence&gt;
+ *         &amp;lt;element ref=&quot;{http://www.w3.org/2000/09/xmldsig#}Transforms&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{http://www.w3.org/2000/09/xmldsig#}DigestMethod&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{http://www.w3.org/2000/09/xmldsig#}DigestValue&quot;/&gt;
+ *       &amp;lt;/sequence&gt;
+ *       &amp;lt;attribute name=&quot;Id&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}ID&quot; /&gt;
+ *       &amp;lt;attribute name=&quot;URI&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}anyURI&quot; /&gt;
+ *       &amp;lt;attribute name=&quot;Type&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}anyURI&quot; /&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;ReferenceType&quot;, propOrder = {
+    &quot;transforms&quot;,
+    &quot;digestMethod&quot;,
+    &quot;digestValue&quot;
+})
+<span class="nc" id="L62">public class ReferenceType {</span>
+
+    @XmlElement(name = &quot;Transforms&quot;)
+    protected TransformsType transforms;
+    @XmlElement(name = &quot;DigestMethod&quot;, required = true)
+    protected DigestMethodType digestMethod;
+    @XmlElement(name = &quot;DigestValue&quot;, required = true)
+    protected byte[] digestValue;
+    @XmlAttribute(name = &quot;Id&quot;)
+    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+    @XmlID
+    @XmlSchemaType(name = &quot;ID&quot;)
+    protected String id;
+    @XmlAttribute(name = &quot;URI&quot;)
+    @XmlSchemaType(name = &quot;anyURI&quot;)
+    protected String uri;
+    @XmlAttribute(name = &quot;Type&quot;)
+    @XmlSchemaType(name = &quot;anyURI&quot;)
+    protected String type;
+
+    /**
+     * Gets the value of the transforms property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link TransformsType }
+     *     
+     */
+    public TransformsType getTransforms() {
+<span class="nc" id="L91">        return transforms;</span>
+    }
+
+    /**
+     * Sets the value of the transforms property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link TransformsType }
+     *     
+     */
+    public void setTransforms(TransformsType value) {
+<span class="nc" id="L103">        this.transforms = value;</span>
+<span class="nc" id="L104">    }</span>
+
+    /**
+     * Gets the value of the digestMethod property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link DigestMethodType }
+     *     
+     */
+    public DigestMethodType getDigestMethod() {
+<span class="nc" id="L115">        return digestMethod;</span>
+    }
+
+    /**
+     * Sets the value of the digestMethod property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link DigestMethodType }
+     *     
+     */
+    public void setDigestMethod(DigestMethodType value) {
+<span class="nc" id="L127">        this.digestMethod = value;</span>
+<span class="nc" id="L128">    }</span>
+
+    /**
+     * Gets the value of the digestValue property.
+     * 
+     * @return
+     *     possible object is
+     *     byte[]
+     */
+    public byte[] getDigestValue() {
+<span class="nc" id="L138">        return digestValue;</span>
+    }
+
+    /**
+     * Sets the value of the digestValue property.
+     * 
+     * @param value
+     *     allowed object is
+     *     byte[]
+     */
+    public void setDigestValue(byte[] value) {
+<span class="nc" id="L149">        this.digestValue = ((byte[]) value);</span>
+<span class="nc" id="L150">    }</span>
+
+    /**
+     * Gets the value of the id property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getId() {
+<span class="nc" id="L161">        return id;</span>
+    }
+
+    /**
+     * Sets the value of the id property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setId(String value) {
+<span class="nc" id="L173">        this.id = value;</span>
+<span class="nc" id="L174">    }</span>
+
+    /**
+     * Gets the value of the uri property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getURI() {
+<span class="nc" id="L185">        return uri;</span>
+    }
+
+    /**
+     * Sets the value of the uri property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setURI(String value) {
+<span class="nc" id="L197">        this.uri = value;</span>
+<span class="nc" id="L198">    }</span>
+
+    /**
+     * Gets the value of the type property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getType() {
+<span class="nc" id="L209">        return type;</span>
+    }
+
+    /**
+     * Sets the value of the type property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setType(String value) {
+<span class="nc" id="L221">        this.type = value;</span>
+<span class="nc" id="L222">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

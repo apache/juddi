@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Reference.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.model</a> &gt; <span class="el_source">Reference.java</span></div><h1>Reference.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2012 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.model;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+
+/**
+ *
+ */
+@Entity
+@Table(name=&quot;j3_reference&quot;)
+<span class="fc" id="L39">public class Reference {</span>
+    private static final long serialVersionUID = -3233157941119408701L;
+    
+    private Long id;
+    private SignedInfo signedInfo;
+<span class="fc" id="L44">    private List&lt;SignatureTransform&gt; transforms = new ArrayList&lt;SignatureTransform&gt;(0);</span>
+    private String digestMethod;
+    private byte[] digestValue;
+    private String xmlID;
+    private String uri;
+    private String type;
+    
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    public Long getId() {
+<span class="fc" id="L54">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="fc" id="L58">        this.id = id;</span>
+<span class="fc" id="L59">    }</span>
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;signed_info_key&quot;, nullable = false)
+    public SignedInfo getSignedInfo() {
+<span class="fc" id="L64">        return signedInfo;</span>
+    }
+
+    public void setSignedInfo(SignedInfo signedInfo) {
+<span class="fc" id="L68">        this.signedInfo = signedInfo;</span>
+<span class="fc" id="L69">    }</span>
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;reference&quot;)
+    @OrderBy
+    public List&lt;SignatureTransform&gt; getTransforms() {
+<span class="fc" id="L74">        return transforms;</span>
+    }
+
+    public void setTransforms(List&lt;SignatureTransform&gt; transforms) {
+<span class="fc" id="L78">        this.transforms = transforms;</span>
+<span class="fc" id="L79">    }</span>
+
+    @Column(name=&quot;digest_method&quot;)
+    public String getDigestMethod() {
+<span class="fc" id="L83">        return digestMethod;</span>
+    }
+
+    public void setDigestMethod(String digestMethod) {
+<span class="fc" id="L87">        this.digestMethod = digestMethod;</span>
+<span class="fc" id="L88">    }</span>
+
+    @Lob
+    @Column(name=&quot;digest_value&quot;, length = 65636)
+    public byte[] getDigestValue() {
+<span class="fc" id="L93">        return digestValue;</span>
+    }
+
+    public void setDigestValue(byte[] digestValue) {
+<span class="fc" id="L97">        this.digestValue = digestValue;</span>
+<span class="fc" id="L98">    }</span>
+
+    @Column(name=&quot;uri&quot;)
+    public String getUri() {
+<span class="fc" id="L102">        return uri;</span>
+    }
+
+    public void setUri(String uri) {
+<span class="fc" id="L106">        this.uri = uri;</span>
+<span class="fc" id="L107">    }</span>
+
+    public String getType() {
+<span class="fc" id="L110">        return type;</span>
+    }
+
+    public void setType(String type) {
+<span class="fc" id="L114">        this.type = type;</span>
+<span class="fc" id="L115">    }</span>
+    
+    @Column(name=&quot;xml_id&quot;)
+    public String getXmlID() {
+<span class="fc" id="L119">        return xmlID;</span>
+    }
+
+    public void setXmlID(String xmlID) {
+<span class="fc" id="L123">        this.xmlID = xmlID;</span>
+<span class="fc" id="L124">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

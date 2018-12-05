@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Contact.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.model</a> &gt; <span class="el_source">Contact.java</span></div><h1>Contact.java</h1><pre class="source lang-java linenums">package org.apache.juddi.model;
+/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+
+/**
+ * @author &lt;a href=&quot;mailto:kurt@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+@Entity
+@Table(name = &quot;j3_contact&quot;)
+public class Contact implements java.io.Serializable {
+
+	private static final long serialVersionUID = 3350341195850056589L;
+	private Long id;
+	private BusinessEntity businessEntity;
+        private ReplicationConfiguration replicationConfigSerial;
+	private String useType;
+<span class="pc" id="L48">	private List&lt;PersonName&gt; personNames = new ArrayList&lt;PersonName&gt;(0);</span>
+<span class="pc" id="L49">	private List&lt;ContactDescr&gt; contactDescrs = new ArrayList&lt;ContactDescr&gt;(0);</span>
+<span class="pc" id="L50">	private List&lt;Email&gt; emails = new ArrayList&lt;Email&gt;(0);</span>
+<span class="pc" id="L51">	private List&lt;Phone&gt; phones = new ArrayList&lt;Phone&gt;(0);</span>
+<span class="pc" id="L52">	private List&lt;Address&gt; addresses = new ArrayList&lt;Address&gt;(0);</span>
+
+<span class="fc" id="L54">	public Contact() {</span>
+<span class="fc" id="L55">	}</span>
+
+<span class="fc" id="L57">	public Contact(BusinessEntity businessEntity) {</span>
+<span class="fc" id="L58">		this.businessEntity = businessEntity;</span>
+<span class="fc" id="L59">	}</span>
+	public Contact(BusinessEntity businessEntity, String useType,
+			List&lt;PersonName&gt; personNames, List&lt;ContactDescr&gt; contactDescrs,
+<span class="nc" id="L62">			List&lt;Email&gt; emails, List&lt;Phone&gt; phones, List&lt;Address&gt; addresses) {</span>
+<span class="nc" id="L63">		this.businessEntity = businessEntity;</span>
+<span class="nc" id="L64">		this.useType = useType;</span>
+<span class="nc" id="L65">		this.personNames = personNames;</span>
+<span class="nc" id="L66">		this.contactDescrs = contactDescrs;</span>
+<span class="nc" id="L67">		this.emails = emails;</span>
+<span class="nc" id="L68">		this.phones = phones;</span>
+<span class="nc" id="L69">		this.addresses = addresses;</span>
+<span class="nc" id="L70">	}</span>
+
+        @OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = &quot;replicationCfgId&quot;, nullable = true)
+        public ReplicationConfiguration getReplicationConfigId() {
+<span class="fc" id="L75">		return this.replicationConfigSerial;</span>
+	}
+	public void setReplicationConfigId(ReplicationConfiguration id) {
+<span class="fc" id="L78">		this.replicationConfigSerial = id;</span>
+<span class="fc" id="L79">	}</span>
+        
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
+<span class="fc" id="L84">		return this.id;</span>
+	}
+	public void setId(Long id) {
+<span class="fc" id="L87">		this.id = id;</span>
+<span class="fc" id="L88">	}</span>
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = &quot;entity_key&quot;, nullable = true)
+	public BusinessEntity getBusinessEntity() {
+<span class="fc" id="L93">		return this.businessEntity;</span>
+	}
+	public void setBusinessEntity(BusinessEntity businessEntity) {
+<span class="fc" id="L96">		this.businessEntity = businessEntity;</span>
+<span class="fc" id="L97">	}</span>
+
+	@Column(name = &quot;use_type&quot;)
+	public String getUseType() {
+<span class="fc" id="L101">		return this.useType;</span>
+	}
+	public void setUseType(String useType) {
+<span class="fc" id="L104">		this.useType = useType;</span>
+<span class="fc" id="L105">	}</span>
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;contact&quot;)
+	@OrderBy
+	public List&lt;PersonName&gt; getPersonNames() {
+<span class="fc" id="L110">		return this.personNames;</span>
+	}
+	public void setPersonNames(List&lt;PersonName&gt; personNames) {
+<span class="fc" id="L113">		this.personNames = personNames;</span>
+<span class="fc" id="L114">	}</span>
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;contact&quot;)
+	@OrderBy
+	public List&lt;ContactDescr&gt; getContactDescrs() {
+<span class="fc" id="L119">		return this.contactDescrs;</span>
+	}
+	public void setContactDescrs(List&lt;ContactDescr&gt; contactDescrs) {
+<span class="fc" id="L122">		this.contactDescrs = contactDescrs;</span>
+<span class="fc" id="L123">	}</span>
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;contact&quot;)
+	@OrderBy
+	public List&lt;Email&gt; getEmails() {
+<span class="fc" id="L128">		return this.emails;</span>
+	}
+	public void setEmails(List&lt;Email&gt; emails) {
+<span class="fc" id="L131">		this.emails = emails;</span>
+<span class="fc" id="L132">	}</span>
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;contact&quot;)
+	@OrderBy
+	public List&lt;Phone&gt; getPhones() {
+<span class="fc" id="L137">		return this.phones;</span>
+	}
+	public void setPhones(List&lt;Phone&gt; phones) {
+<span class="fc" id="L140">		this.phones = phones;</span>
+<span class="fc" id="L141">	}</span>
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;contact&quot;)
+	@OrderBy
+	public List&lt;Address&gt; getAddresses() {
+<span class="fc" id="L146">		return this.addresses;</span>
+	}
+	public void setAddresses(List&lt;Address&gt; addresses) {
+<span class="fc" id="L149">		this.addresses = addresses;</span>
+<span class="fc" id="L150">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

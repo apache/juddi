@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TmodelInstanceInfo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.model</a> &gt; <span class="el_source">TmodelInstanceInfo.java</span></div><h1>TmodelInstanceInfo.java</h1><pre class="source lang-java linenums">package org.apache.juddi.model;
+/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+
+/**
+ * @author &lt;a href=&quot;mailto:kurt@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+@Entity
+@Table(name = &quot;j3_tmodel_instance_info&quot;)
+public class TmodelInstanceInfo implements java.io.Serializable {
+
+	private static final long serialVersionUID = -6375499794977257231L;
+	private Long id;
+	private BindingTemplate bindingTemplate;
+	private String tmodelKey;
+<span class="pc" id="L46">	private List&lt;TmodelInstanceInfoDescr&gt; tmodelInstanceInfoDescrs = new ArrayList&lt;TmodelInstanceInfoDescr&gt;(0);</span>
+
+	private String instanceParms;
+<span class="pc" id="L49">	private List&lt;OverviewDoc&gt; overviewDocs = new ArrayList&lt;OverviewDoc&gt;(0);</span>
+<span class="pc" id="L50">	private List&lt;InstanceDetailsDescr&gt; instanceDetailsDescrs = new ArrayList&lt;InstanceDetailsDescr&gt;(0);</span>
+	
+<span class="fc" id="L52">	public TmodelInstanceInfo() {</span>
+<span class="fc" id="L53">	}</span>
+
+<span class="fc" id="L55">	public TmodelInstanceInfo(BindingTemplate bindingTemplate, String tmodelKey) {</span>
+<span class="fc" id="L56">		this.bindingTemplate = bindingTemplate;</span>
+<span class="fc" id="L57">		this.tmodelKey = tmodelKey;</span>
+<span class="fc" id="L58">	}</span>
+	public TmodelInstanceInfo(BindingTemplate bindingTemplate, String tmodelKey,
+			String instanceParms,
+			List&lt;OverviewDoc&gt; overviewDocs,
+			List&lt;InstanceDetailsDescr&gt; instanceDetailsDescrs,
+<span class="nc" id="L63">			List&lt;TmodelInstanceInfoDescr&gt; tmodelInstanceInfoDescrs) {</span>
+<span class="nc" id="L64">		this.bindingTemplate = bindingTemplate;</span>
+<span class="nc" id="L65">		this.tmodelKey = tmodelKey;</span>
+<span class="nc" id="L66">		this.instanceParms = instanceParms;</span>
+<span class="nc" id="L67">		this.overviewDocs = overviewDocs;</span>
+<span class="nc" id="L68">		this.instanceDetailsDescrs = instanceDetailsDescrs;</span>
+<span class="nc" id="L69">		this.tmodelInstanceInfoDescrs = tmodelInstanceInfoDescrs;</span>
+<span class="nc" id="L70">	}</span>
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
+<span class="fc" id="L75">		return this.id;</span>
+	}
+	public void setId(Long id) {
+<span class="fc" id="L78">		this.id = id;</span>
+<span class="fc" id="L79">	}</span>
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = &quot;entity_key&quot;, nullable = false)
+	public BindingTemplate getBindingTemplate() {
+<span class="fc" id="L84">		return this.bindingTemplate;</span>
+	}
+	public void setBindingTemplate(BindingTemplate bindingTemplate) {
+<span class="fc" id="L87">		this.bindingTemplate = bindingTemplate;</span>
+<span class="fc" id="L88">	}</span>
+
+	@Column(name = &quot;tmodel_key&quot;, nullable = false, length = 255)
+	public String getTmodelKey() {
+<span class="fc" id="L92">		return this.tmodelKey;</span>
+	}
+	public void setTmodelKey(String tmodelKey) {
+<span class="fc" id="L95">		this.tmodelKey = tmodelKey;</span>
+<span class="fc" id="L96">	}</span>
+
+	@Column(name = &quot;instance_parms&quot;, length = 8192)
+	public String getInstanceParms() {
+<span class="fc" id="L100">		return this.instanceParms;</span>
+	}
+	public void setInstanceParms(String instanceParms) {
+<span class="fc" id="L103">		this.instanceParms = instanceParms;</span>
+<span class="fc" id="L104">	}</span>
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;tmodelInstanceInfo&quot;)
+	@OrderBy
+	public List&lt;OverviewDoc&gt; getOverviewDocs() {
+<span class="fc" id="L109">		return this.overviewDocs;</span>
+	}
+	public void setOverviewDocs(
+			List&lt;OverviewDoc&gt; overviewDocs) {
+<span class="fc" id="L113">		this.overviewDocs = overviewDocs;</span>
+<span class="fc" id="L114">	}</span>
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;tmodelInstanceInfo&quot;)
+	@OrderBy
+	public List&lt;InstanceDetailsDescr&gt; getInstanceDetailsDescrs() {
+<span class="fc" id="L119">		return this.instanceDetailsDescrs;</span>
+	}
+	public void setInstanceDetailsDescrs(
+			List&lt;InstanceDetailsDescr&gt; instanceDetailsDescrs) {
+<span class="fc" id="L123">		this.instanceDetailsDescrs = instanceDetailsDescrs;</span>
+<span class="fc" id="L124">	}</span>
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;tmodelInstanceInfo&quot;)
+	@OrderBy
+	public List&lt;TmodelInstanceInfoDescr&gt; getTmodelInstanceInfoDescrs() {
+<span class="fc" id="L129">		return this.tmodelInstanceInfoDescrs;</span>
+	}
+	public void setTmodelInstanceInfoDescrs(
+			List&lt;TmodelInstanceInfoDescr&gt; tmodelInstanceInfoDescrs) {
+<span class="fc" id="L133">		this.tmodelInstanceInfoDescrs = tmodelInstanceInfoDescrs;</span>
+<span class="fc" id="L134">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

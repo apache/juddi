@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UDDIPublicationService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.rmi</a> &gt; <span class="el_source">UDDIPublicationService.java</span></div><h1>UDDIPublicationService.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.rmi;
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
+
+import javax.xml.ws.Holder;
+
+import org.apache.juddi.api.impl.UDDIPublicationImpl;
+import org.uddi.api_v3.AddPublisherAssertions;
+import org.uddi.api_v3.AssertionStatusItem;
+import org.uddi.api_v3.BindingDetail;
+import org.uddi.api_v3.BusinessDetail;
+import org.uddi.api_v3.CompletionStatus;
+import org.uddi.api_v3.DeleteBinding;
+import org.uddi.api_v3.DeleteBusiness;
+import org.uddi.api_v3.DeletePublisherAssertions;
+import org.uddi.api_v3.DeleteService;
+import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.GetRegisteredInfo;
+import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.api_v3.RegisteredInfo;
+import org.uddi.api_v3.SaveBinding;
+import org.uddi.api_v3.SaveBusiness;
+import org.uddi.api_v3.SaveService;
+import org.uddi.api_v3.SaveTModel;
+import org.uddi.api_v3.ServiceDetail;
+import org.uddi.api_v3.TModelDetail;
+import org.uddi.v3_service.UDDIPublicationPortType;
+/**
+ * UDDIPublicationPortType wrapper so it can be exposed as a service over RMI.
+ * 
+ * @author &lt;a href=&quot;mailto:kstam@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ *
+ */
+public class UDDIPublicationService extends UnicastRemoteObject implements UDDIPublicationPortType {
+
+	private static final long serialVersionUID = 8342463046574333026L;
+<span class="fc" id="L55">	private transient UDDIPublicationPortType publication = new UDDIPublicationImpl();</span>
+	
+	protected UDDIPublicationService(int port) throws RemoteException {
+<span class="fc" id="L58">		super(port);</span>
+<span class="fc" id="L59">	}</span>
+
+	public void addPublisherAssertions(AddPublisherAssertions body)
+			throws RemoteException {
+<span class="nc" id="L63">		publication.addPublisherAssertions(body);</span>
+<span class="nc" id="L64">	}</span>
+
+	public void deleteBinding(DeleteBinding body)
+			throws RemoteException {
+<span class="nc" id="L68">		publication.deleteBinding(body);</span>
+<span class="nc" id="L69">	}</span>
+
+	public void deleteBusiness(DeleteBusiness body)
+			throws RemoteException {
+<span class="nc" id="L73">		publication.deleteBusiness(body);</span>
+<span class="nc" id="L74">	}</span>
+
+	public void deletePublisherAssertions(DeletePublisherAssertions body)
+			throws RemoteException {
+<span class="nc" id="L78">		publication.deletePublisherAssertions(body);</span>
+<span class="nc" id="L79">	}</span>
+
+	public void deleteService(DeleteService body)
+			throws RemoteException {
+<span class="nc" id="L83">		publication.deleteService(body);</span>
+<span class="nc" id="L84">	}</span>
+
+	public void deleteTModel(DeleteTModel body)
+			throws RemoteException {
+<span class="nc" id="L88">		publication.deleteTModel(body);</span>
+<span class="nc" id="L89">	}</span>
+
+	public List&lt;AssertionStatusItem&gt; getAssertionStatusReport(String authInfo,
+			CompletionStatus completionStatus)
+			throws RemoteException {
+<span class="nc" id="L94">		return publication.getAssertionStatusReport(authInfo, completionStatus);</span>
+	}
+
+	public List&lt;PublisherAssertion&gt; getPublisherAssertions(String authInfo)
+			throws RemoteException {
+<span class="nc" id="L99">		return publication.getPublisherAssertions(authInfo);</span>
+	}
+
+	public RegisteredInfo getRegisteredInfo(GetRegisteredInfo body)
+			throws RemoteException {
+<span class="nc" id="L104">		return publication.getRegisteredInfo(body);</span>
+	}
+
+	public BindingDetail saveBinding(SaveBinding body)
+			throws RemoteException {
+<span class="nc" id="L109">		return publication.saveBinding(body);</span>
+	}
+
+	public BusinessDetail saveBusiness(SaveBusiness body)
+			throws RemoteException {
+<span class="nc" id="L114">		return publication.saveBusiness(body);</span>
+	}
+
+	public ServiceDetail saveService(SaveService body)
+			throws RemoteException {
+<span class="nc" id="L119">		return publication.saveService(body);</span>
+	}
+
+	public TModelDetail saveTModel(SaveTModel body)
+			throws RemoteException {
+<span class="nc" id="L124">		return publication.saveTModel(body);</span>
+	}
+
+	public void setPublisherAssertions(String authInfo,
+			Holder&lt;List&lt;PublisherAssertion&gt;&gt; publisherAssertion)
+			throws RemoteException {
+<span class="nc" id="L130">		publication.setPublisherAssertions(authInfo, publisherAssertion);</span>
+<span class="nc" id="L131">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

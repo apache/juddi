@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TripleDESCrytor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.cryptor</a> &gt; <span class="el_source">TripleDESCrytor.java</span></div><h1>TripleDESCrytor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2013 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.client.cryptor;
+
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.KeySpec;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESedeKeySpec;
+import org.apache.commons.codec.binary.Base64;
+
+/**
+ * Triple DES, 168 bit key
+ * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ */
+public class TripleDESCrytor implements Cryptor {
+
+    private static final String UNICODE_FORMAT = &quot;UTF8&quot;;
+    private static final String DESEDE_ENCRYPTION_SCHEME = &quot;DESede&quot;;
+    private KeySpec ks;
+    private SecretKeyFactory skf;
+    private Cipher cipher;
+    byte[] arrayBytes;
+    private String myEncryptionKey;
+    private String myEncryptionScheme;
+    SecretKey key;
+    
+    /**
+     *default constructor
+     * @throws Exception
+     */
+<span class="fc" id="L52">    public TripleDESCrytor() throws Exception {</span>
+<span class="fc" id="L53">        String keyfromfile = CryptorFactory.loadKeyFromFile(&quot;TripleDESCrytor&quot;);</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (keyfromfile!=null)</span>
+<span class="fc" id="L55">                    myEncryptionKey=keyfromfile;</span>
+        else
+<span class="fc" id="L57">                myEncryptionKey = &quot;rioTEBCe/RAHRs6tTyYxDqettnVbZA6z&quot;;</span>
+<span class="fc" id="L58">        myEncryptionScheme = DESEDE_ENCRYPTION_SCHEME;</span>
+<span class="fc" id="L59">        arrayBytes = myEncryptionKey.getBytes(UNICODE_FORMAT);</span>
+<span class="fc" id="L60">        ks = new DESedeKeySpec(arrayBytes);</span>
+<span class="fc" id="L61">        skf = SecretKeyFactory.getInstance(myEncryptionScheme);</span>
+<span class="fc" id="L62">        cipher = Cipher.getInstance(myEncryptionScheme);</span>
+<span class="fc" id="L63">        key = skf.generateSecret(ks);</span>
+<span class="fc" id="L64">    }</span>
+
+    @Override
+    public String encrypt(String clear) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+<span class="fc" id="L68">        String encryptedString = null;</span>
+        try {
+<span class="fc" id="L70">            cipher.init(Cipher.ENCRYPT_MODE, key);</span>
+<span class="fc" id="L71">            byte[] plainText = clear.getBytes(UNICODE_FORMAT);</span>
+<span class="fc" id="L72">            byte[] encryptedText = cipher.doFinal(plainText);</span>
+<span class="fc" id="L73">            encryptedString = new String(Base64.encodeBase64(encryptedText), UNICODE_FORMAT);</span>
+<span class="nc" id="L74">        } catch (Exception e) {</span>
+<span class="nc" id="L75">            e.printStackTrace();</span>
+<span class="fc" id="L76">        }</span>
+<span class="fc" id="L77">        return encryptedString;</span>
+    }
+
+    /**
+     * generates a new key
+     * @return a new key
+     */
+    public static String GEN() {
+        KeyGenerator kgen;
+        try {
+<span class="fc" id="L87">            kgen = KeyGenerator.getInstance(DESEDE_ENCRYPTION_SCHEME);</span>
+<span class="fc" id="L88">            kgen.init(168);</span>
+<span class="fc" id="L89">            SecretKey skey = kgen.generateKey();</span>
+<span class="fc" id="L90">            byte[] raw = skey.getEncoded();</span>
+<span class="fc" id="L91">            return new String(Base64.encodeBase64(raw),UNICODE_FORMAT);</span>
+<span class="nc" id="L92">        } catch (Exception ex) {</span>
+<span class="nc" id="L93">            ex.printStackTrace();;</span>
+        }
+<span class="nc" id="L95">        return null;</span>
+    }
+
+    @Override
+    public String decrypt(String str) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+<span class="fc" id="L100">        String encryptedString = str;</span>
+        try {
+<span class="fc" id="L102">            cipher.init(Cipher.DECRYPT_MODE, key);</span>
+<span class="fc" id="L103">            byte[] encryptedText = Base64.decodeBase64(str.getBytes(UNICODE_FORMAT));</span>
+<span class="fc" id="L104">            byte[] plainTest = cipher.doFinal(encryptedText);</span>
+<span class="fc" id="L105">            encryptedString = new String(plainTest, UNICODE_FORMAT);</span>
+<span class="nc" id="L106">        } catch (Exception e) {</span>
+<span class="nc" id="L107">            e.printStackTrace();</span>
+<span class="fc" id="L108">        }</span>
+<span class="fc" id="L109">        return encryptedString;</span>
+    }
+
+        @Override
+        public String newKey() {
+<span class="fc" id="L114">                return GEN();</span>
+        }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

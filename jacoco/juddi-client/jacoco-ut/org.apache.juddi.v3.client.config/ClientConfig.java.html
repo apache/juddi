@@ -1,0 +1,866 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClientConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.config</a> &gt; <span class="el_source">ClientConfig.java</span></div><h1>ClientConfig.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.v3.client.config;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.xml.crypto.dsig.CanonicalizationMethod;
+
+import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.SystemConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api_v3.Node;
+import org.apache.juddi.v3.client.cryptor.CryptorFactory;
+import org.apache.juddi.v3.client.cryptor.DigSigUtil;
+import org.apache.juddi.v3.client.subscription.SubscriptionCallbackListener;
+
+/**
+ * Handles the client configuration of the uddi-client. By default it first
+ * looks at system properties. Then loads from the config file from the system
+ * property &quot;uddi.client.xml&quot;, next the user specified file, finally,
+ * &quot;META-INF/uddi.xml&quot;
+ *
+ * @author &lt;a href=&quot;mailto:kstam@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ */
+public class ClientConfig {
+
+        public final static String UDDI_CONFIG_FILENAME_PROPERTY = &quot;uddi.client.xml&quot;;
+        public final static String DEFAULT_UDDI_CONFIG = &quot;META-INF/uddi.xml&quot;;
+<span class="fc" id="L57">        private Log log = LogFactory.getLog(ClientConfig.class);</span>
+<span class="fc" id="L58">        private Configuration config = null;</span>
+
+<span class="fc" id="L60">        private Map&lt;String, UDDINode&gt; uddiNodes = null;</span>
+<span class="fc" id="L61">        private Map&lt;String, UDDIClerk&gt; uddiClerks = null;</span>
+<span class="fc" id="L62">        private Set&lt;XRegistration&gt; xBusinessRegistrations = null;</span>
+<span class="fc" id="L63">        private Set&lt;XRegistration&gt; xServiceBindingRegistrations = null;</span>
+<span class="fc" id="L64">        private String clientName = null;</span>
+<span class="fc" id="L65">        private String clientCallbackUrl = null;</span>
+<span class="fc" id="L66">        private String configurationFile = null;</span>
+
+        /**
+         * Constructor (note Singleton pattern).
+         *
+         * @throws ConfigurationException
+         */
+<span class="fc" id="L73">        public ClientConfig(String configurationFile) throws ConfigurationException {</span>
+<span class="fc" id="L74">                loadConfiguration(configurationFile, null);</span>
+<span class="fc" id="L75">        }</span>
+
+        /**
+         * Constructor (note Singleton pattern).
+         *
+         * @throws ConfigurationException
+         */
+<span class="fc" id="L82">        public ClientConfig(String configurationFile, Properties properties) throws ConfigurationException {</span>
+<span class="fc" id="L83">                loadConfiguration(configurationFile, properties);</span>
+<span class="fc" id="L84">        }</span>
+
+        /**
+         * Attempts to save any changes made to the configuration back to disk
+         * Revised in 3.2.1 to reconstruct the file from the in memory data
+         * structure, enable you to programmatically add nodes.
+         * &lt;br&gt;&lt;br&gt;
+         * For previous functionality see, saveConfigRaw()
+         *
+         * @throws ConfigurationException
+         */
+        public void saveConfig() throws ConfigurationException {
+
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">                if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L98">                        System.out.println(&quot;DEBUG dumping current cfg&quot;);</span>
+<span class="nc" id="L99">                        Iterator&lt;String&gt; keys = config.getKeys();</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">                        while (keys.hasNext()) {</span>
+<span class="nc" id="L101">                                String k = keys.next();</span>
+<span class="nc" id="L102">                                System.out.println(k + &quot; = &quot; + config.getProperty(k));</span>
+<span class="nc" id="L103">                        }</span>
+                }
+<span class="fc" id="L105">                XMLConfiguration saveConfiguration = new XMLConfiguration();</span>
+<span class="fc" id="L106">                Configuration cc = new CompositeConfiguration(saveConfiguration);</span>
+
+<span class="fc" id="L108">                saveConfiguration.setRootElementName(&quot;uddi&quot;);</span>
+
+                                
+<span class="fc" id="L111">                cc.addProperty(&quot;client(0).selection.policy&quot;, config.getProperty(&quot;client.selection.policy&quot;));</span>
+<span class="fc" id="L112">                cc.addProperty(&quot;reloadDelay&quot;, config.getProperty(&quot;reloadDelay&quot;));</span>
+<span class="fc" id="L113">                addCurrentNodeConfig(cc);</span>
+<span class="fc" id="L114">                addCurrentClerks(cc);</span>
+                try {
+<span class="fc" id="L116">                        addDigitalSubscription(cc);</span>
+<span class="nc" id="L117">                } catch (Exception ex) {</span>
+<span class="nc" id="L118">                        throw new ConfigurationException(&quot;error&quot;, ex);</span>
+<span class="fc" id="L119">                }</span>
+<span class="fc" id="L120">                addSubscriptionCallback(cc);</span>
+<span class="fc" id="L121">                addXRegistration(cc);</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">                if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L123">                        System.out.println(&quot;DEBUG dumping NEW cfg&quot;);</span>
+<span class="nc" id="L124">                        Iterator&lt;String&gt; keys = cc.getKeys();</span>
+
+<span class="nc bnc" id="L126" title="All 2 branches missed.">                        while (keys.hasNext()) {</span>
+<span class="nc" id="L127">                                String k = keys.next();</span>
+<span class="nc" id="L128">                                System.out.println(k + &quot; = &quot; + config.getProperty(k));</span>
+<span class="nc" id="L129">                        }</span>
+                }
+
+<span class="fc" id="L132">                saveConfiguration.save(configurationFile);</span>
+<span class="fc" id="L133">        }</span>
+        
+        /**
+         * Use this method to attempt to save the jUDDI configuration file after
+         * you've modified it using the Apache Commons Configuration settings.
+         * This is especially useful if you've constructed a user interface for manipulating
+         * the configuration like a properties sheet and is used by the juddi-gui (web ui)
+         * @since 3.2.1
+         * @throws org.apache.commons.configuration.ConfigurationException
+         */
+        public void saveConfigRaw() throws ConfigurationException{
+<span class="nc" id="L144">         XMLConfiguration saveConfiguration = new XMLConfiguration(configurationFile);</span>
+<span class="nc" id="L145">            Configuration cc = new CompositeConfiguration(saveConfiguration);</span>
+<span class="nc" id="L146">            Iterator&lt;String&gt; keys = this.config.getKeys();</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">            while (keys.hasNext()){</span>
+<span class="nc" id="L148">                String key = keys.next();</span>
+<span class="nc bnc" id="L149" title="All 4 branches missed.">                if (key.startsWith(&quot;client&quot;) || key.startsWith(&quot;config&quot;))</span>
+                {
+<span class="nc" id="L151">                    cc.setProperty(key, config.getProperty(key));</span>
+                }
+<span class="nc" id="L153">            }</span>
+<span class="nc" id="L154">            saveConfiguration.save();</span>
+
+<span class="nc" id="L156">        }</span>
+        protected void readConfig(Properties properties) throws ConfigurationException {
+<span class="fc" id="L158">                uddiNodes = readNodeConfig(config, properties);</span>
+<span class="fc" id="L159">                uddiClerks = readClerkConfig(config, uddiNodes);</span>
+<span class="fc" id="L160">                xServiceBindingRegistrations = readXServiceBindingRegConfig(config, uddiClerks);</span>
+<span class="fc" id="L161">                xBusinessRegistrations = readXBusinessRegConfig(config, uddiClerks);</span>
+<span class="fc" id="L162">        }</span>
+
+        /**
+         * Does the actual work of reading the configuration from System
+         * Properties and/or uddi.xml file. When the uddi.xml file is updated
+         * the file will be reloaded. By default the reloadDelay is set to 1
+         * second to prevent excessive date stamp checking.
+         */
+        private void loadConfiguration(String configurationFile, Properties properties) throws ConfigurationException {
+                //Properties from system properties
+<span class="fc" id="L172">                CompositeConfiguration compositeConfig = new CompositeConfiguration();</span>
+<span class="fc" id="L173">                compositeConfig.addConfiguration(new SystemConfiguration());</span>
+                //Properties from XML file
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">                if (System.getProperty(UDDI_CONFIG_FILENAME_PROPERTY) != null) {</span>
+<span class="nc" id="L176">                        log.info(&quot;Using system property config override&quot;);</span>
+<span class="nc" id="L177">                        configurationFile = System.getProperty(UDDI_CONFIG_FILENAME_PROPERTY);</span>
+                }
+<span class="fc" id="L179">                XMLConfiguration xmlConfig = null;</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">                if (configurationFile != null) {</span>
+<span class="fc" id="L181">                        xmlConfig = new XMLConfiguration(configurationFile);</span>
+                } else {
+<span class="fc" id="L183">                        final String filename = System.getProperty(UDDI_CONFIG_FILENAME_PROPERTY);</span>
+<span class="pc bpc" id="L184" title="1 of 2 branches missed.">                        if (filename != null) {</span>
+<span class="nc" id="L185">                                xmlConfig = new XMLConfiguration(filename);</span>
+                        } else {
+<span class="fc" id="L187">                                xmlConfig = new XMLConfiguration(DEFAULT_UDDI_CONFIG);</span>
+                        }
+                }
+<span class="fc" id="L190">                log.info(&quot;Reading UDDI Client properties file &quot; + xmlConfig.getBasePath() + &quot; use -D&quot; + UDDI_CONFIG_FILENAME_PROPERTY + &quot; to override&quot;);</span>
+<span class="fc" id="L191">                this.configurationFile = xmlConfig.getBasePath();</span>
+<span class="fc" id="L192">                long refreshDelay = xmlConfig.getLong(Property.UDDI_RELOAD_DELAY, 1000l);</span>
+<span class="fc" id="L193">                log.debug(&quot;Setting refreshDelay to &quot; + refreshDelay);</span>
+<span class="fc" id="L194">                FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();</span>
+<span class="fc" id="L195">                fileChangedReloadingStrategy.setRefreshDelay(refreshDelay);</span>
+<span class="fc" id="L196">                xmlConfig.setReloadingStrategy(fileChangedReloadingStrategy);</span>
+<span class="fc" id="L197">                compositeConfig.addConfiguration(xmlConfig);</span>
+                //Making the new configuration globally accessible.
+<span class="fc" id="L199">                config = compositeConfig;</span>
+<span class="fc" id="L200">                readConfig(properties);</span>
+
+<span class="fc" id="L202">                validateConfig();</span>
+<span class="fc" id="L203">        }</span>
+
+        private Map&lt;String, UDDIClerk&gt; readClerkConfig(Configuration config, Map&lt;String, UDDINode&gt; uddiNodes)
+             throws ConfigurationException {
+<span class="fc" id="L207">                clientName = config.getString(&quot;client[@name]&quot;);</span>
+<span class="fc" id="L208">                clientCallbackUrl = config.getString(&quot;client[@callbackUrl]&quot;);</span>
+<span class="fc" id="L209">                Map&lt;String, UDDIClerk&gt; clerks = new HashMap&lt;String, UDDIClerk&gt;();</span>
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">                if (config.containsKey(&quot;client.clerks.clerk[@name]&quot;)) {</span>
+<span class="fc" id="L211">                        String[] names = config.getStringArray(&quot;client.clerks.clerk[@name]&quot;);</span>
+
+<span class="fc" id="L213">                        log.debug(&quot;clerk names=&quot; + names.length);</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">                        for (int i = 0; i &lt; names.length; i++) {</span>
+<span class="fc" id="L215">                                UDDIClerk uddiClerk = new UDDIClerk();</span>
+<span class="fc" id="L216">                                uddiClerk.setManagerName(clientName);</span>
+<span class="fc" id="L217">                                uddiClerk.setName(config.getString(&quot;client.clerks.clerk(&quot; + i + &quot;)[@name]&quot;));</span>
+<span class="fc" id="L218">                                String nodeRef = config.getString(&quot;client.clerks.clerk(&quot; + i + &quot;)[@node]&quot;);</span>
+<span class="pc bpc" id="L219" title="1 of 2 branches missed.">                                if (!uddiNodes.containsKey(nodeRef)) {</span>
+<span class="nc" id="L220">                                        throw new ConfigurationException(&quot;Could not find Node with name=&quot; + nodeRef);</span>
+                                }
+<span class="fc" id="L222">                                UDDINode uddiNode = uddiNodes.get(nodeRef);</span>
+<span class="fc" id="L223">                                uddiClerk.setUDDINode(uddiNode);</span>
+<span class="fc" id="L224">                                uddiClerk.setPublisher(config.getString(&quot;client.clerks.clerk(&quot; + i + &quot;)[@publisher]&quot;));</span>
+<span class="fc" id="L225">                                uddiClerk.setPassword(config.getString(&quot;client.clerks.clerk(&quot; + i + &quot;)[@password]&quot;));</span>
+<span class="fc" id="L226">                                uddiClerk.setIsPasswordEncrypted(config.getBoolean(&quot;client.clerks.clerk(&quot; + i + &quot;)[@isPasswordEncrypted]&quot;, false));</span>
+<span class="fc" id="L227">                                uddiClerk.setCryptoProvider(config.getString(&quot;client.clerks.clerk(&quot; + i + &quot;)[@cryptoProvider]&quot;));</span>
+
+<span class="fc" id="L229">                                String clerkBusinessKey = config.getString(&quot;client.clerks.clerk(&quot; + i + &quot;)[@businessKey]&quot;);</span>
+<span class="fc" id="L230">                                String clerkBusinessName = config.getString(&quot;client.clerks.clerk(&quot; + i + &quot;)[@businessName]&quot;);</span>
+<span class="fc" id="L231">                                String clerkKeyDomain = config.getString(&quot;client.clerks.clerk(&quot; + i + &quot;)[@keyDomain]&quot;);</span>
+
+<span class="fc" id="L233">                                String[] classes = config.getStringArray(&quot;client.clerks.clerk(&quot; + i + &quot;).class&quot;);</span>
+<span class="fc" id="L234">                                uddiClerk.setClassWithAnnotations(classes);</span>
+
+<span class="fc" id="L236">                                int numberOfWslds = config.getStringArray(&quot;client.clerks.clerk(&quot; + i + &quot;).wsdl&quot;).length;</span>
+<span class="fc bfc" id="L237" title="All 2 branches covered.">                                if (numberOfWslds &gt; 0) {</span>
+<span class="fc" id="L238">                                        UDDIClerk.WSDL[] wsdls = new UDDIClerk.WSDL[numberOfWslds];</span>
+<span class="fc bfc" id="L239" title="All 2 branches covered.">                                        for (int w = 0; w &lt; wsdls.length; w++) {</span>
+
+<span class="fc" id="L241">                                                UDDIClerk.WSDL wsdl = new UDDIClerk.WSDL();</span>
+<span class="fc" id="L242">                                                String fileName = config.getString(&quot;client.clerks.clerk(&quot; + i + &quot;).wsdl(&quot; + w + &quot;)&quot;);</span>
+<span class="fc" id="L243">                                                wsdl.setFileName(fileName);</span>
+<span class="pc bpc" id="L244" title="1 of 2 branches missed.">                                                if (!new File(fileName).exists()) {</span>
+<span class="fc" id="L245">                                                        log.warn(&quot;The wsdl file referenced in the config at '&quot; + fileName + &quot;' doesn't exist!&quot;);</span>
+                                                }
+<span class="fc" id="L247">                                                String businessKey = config.getString(&quot;client.clerks.clerk(&quot; + i + &quot;).wsdl(&quot; + w + &quot;)[@businessKey]&quot;);</span>
+<span class="fc" id="L248">                                                String businessName = config.getString(&quot;client.clerks.clerk(&quot; + i + &quot;).wsdl(&quot; + w + &quot;)[@businessName]&quot;);</span>
+<span class="fc" id="L249">                                                String keyDomain = config.getString(&quot;client.clerks.clerk(&quot; + i + &quot;).wsdl(&quot; + w + &quot;)[@keyDomain]&quot;);</span>
+<span class="pc bpc" id="L250" title="1 of 2 branches missed.">                                                if (businessKey == null) {</span>
+<span class="nc" id="L251">                                                        businessKey = clerkBusinessKey;</span>
+                                                }
+<span class="pc bpc" id="L253" title="1 of 2 branches missed.">                                                if (businessKey == null) {</span>
+<span class="nc" id="L254">                                                        businessKey = uddiClerk.getUDDINode().getProperties().getProperty(&quot;businessKey&quot;);</span>
+                                                }
+<span class="pc bpc" id="L256" title="1 of 2 branches missed.">                                                if (businessKey == null) {</span>
+                                                        //use key convention to build the businessKey
+<span class="nc bnc" id="L258" title="All 2 branches missed.">                                                        if (businessName == null) {</span>
+<span class="nc" id="L259">                                                                businessName = clerkBusinessName;</span>
+                                                        }
+<span class="nc bnc" id="L261" title="All 2 branches missed.">                                                        if (keyDomain == null) {</span>
+<span class="nc" id="L262">                                                                keyDomain = clerkKeyDomain;</span>
+                                                        }
+<span class="nc bnc" id="L264" title="All 2 branches missed.">                                                        if (keyDomain == null) {</span>
+<span class="nc" id="L265">                                                                keyDomain = uddiClerk.getUDDINode().getProperties().getProperty(&quot;keyDomain&quot;);</span>
+                                                        }
+<span class="nc bnc" id="L267" title="All 6 branches missed.">                                                        if ((businessName == null &amp;&amp; !uddiClerk.getUDDINode().getProperties().containsKey(&quot;businessName&quot;))</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">                                                             || keyDomain == null &amp;&amp; !uddiClerk.getUDDINode().getProperties().containsKey(&quot;keyDomain&quot;)) {</span>
+<span class="nc" id="L269">                                                                throw new ConfigurationException(&quot;Either the wsdl(&quot; + wsdls[w]</span>
+                                                                     + &quot;) or clerk (&quot; + uddiClerk.name + &quot;) elements require a businessKey, or businessName &amp; keyDomain attributes&quot;);
+                                                        } else {
+<span class="nc" id="L272">                                                                Properties properties = new Properties(uddiClerk.getUDDINode().getProperties());</span>
+<span class="nc bnc" id="L273" title="All 2 branches missed.">                                                                if (businessName != null) {</span>
+<span class="nc" id="L274">                                                                        properties.put(&quot;businessName&quot;, businessName);</span>
+                                                                }
+<span class="nc bnc" id="L276" title="All 2 branches missed.">                                                                if (keyDomain != null) {</span>
+<span class="nc" id="L277">                                                                        properties.put(&quot;keyDomain&quot;, keyDomain);</span>
+                                                                }
+<span class="nc" id="L279">                                                                businessKey = UDDIKeyConvention.getBusinessKey(properties);</span>
+                                                        }
+                                                }
+<span class="pc bpc" id="L282" title="2 of 4 branches missed.">                                                if (!businessKey.toLowerCase().startsWith(&quot;uddi:&quot;) || !businessKey.substring(5).contains(&quot;:&quot;)) {</span>
+<span class="nc" id="L283">                                                        throw new ConfigurationException(&quot;The businessKey '&quot; + businessKey + &quot;' does not implement a valid UDDI v3 key format. See config file at client.clerks.clerk(&quot; + i + &quot;).wsdl(&quot; + w + &quot;)[@businessKey]&quot;);</span>
+                                                }
+<span class="fc" id="L285">                                                wsdl.setBusinessKey(businessKey);</span>
+<span class="pc bpc" id="L286" title="1 of 2 branches missed.">                                                if (keyDomain == null) {</span>
+<span class="nc" id="L287">                                                        keyDomain = businessKey.split(&quot;:&quot;)[1];</span>
+                                                }
+<span class="fc" id="L289">                                                wsdl.setKeyDomain(keyDomain);</span>
+<span class="fc" id="L290">                                                wsdls[w] = wsdl;</span>
+                                        }
+<span class="fc" id="L292">                                        uddiClerk.setWsdls(wsdls);</span>
+                                }
+
+<span class="fc" id="L295">                                clerks.put(names[i], uddiClerk);</span>
+                        }
+                }
+<span class="fc" id="L298">                return clerks;</span>
+        }
+
+        /**
+         * signals that the specified classes/wsdls are registered with the UDDI
+         * server when UDDIClient.start() is called
+         * client.clerks[@registerOnStartup]
+         *
+         * @return true/false
+         */
+        public boolean isRegisterOnStartup() {
+<span class="fc" id="L309">                boolean isRegisterOnStartup = false;</span>
+<span class="pc bpc" id="L310" title="1 of 2 branches missed.">                if (config.containsKey(&quot;client.clerks[@registerOnStartup]&quot;)) {</span>
+<span class="fc" id="L311">                        isRegisterOnStartup = config.getBoolean(&quot;client.clerks[@registerOnStartup]&quot;);</span>
+                }
+<span class="fc" id="L313">                return isRegisterOnStartup;</span>
+        }
+
+        private Map&lt;String, UDDINode&gt; readNodeConfig(Configuration config, Properties properties)
+             throws ConfigurationException {
+<span class="fc" id="L318">                String[] names = config.getStringArray(&quot;client.nodes.node.name&quot;);</span>
+<span class="fc" id="L319">                Map&lt;String, UDDINode&gt; nodes = new HashMap&lt;String, UDDINode&gt;();</span>
+<span class="fc" id="L320">                log.debug(&quot;node names=&quot; + names.length);</span>
+<span class="fc bfc" id="L321" title="All 2 branches covered.">                for (int i = 0; i &lt; names.length; i++) {</span>
+<span class="fc" id="L322">                        UDDINode uddiNode = new UDDINode();</span>
+<span class="fc" id="L323">                        String nodeName = config.getString(&quot;client.nodes.node(&quot; + i + &quot;).name&quot;);</span>
+<span class="fc" id="L324">                        String[] propertyKeys = config.getStringArray(&quot;client.nodes.node(&quot; + i + &quot;).properties.property[@name]&quot;);</span>
+
+<span class="pc bpc" id="L326" title="1 of 4 branches missed.">                        if (propertyKeys != null &amp;&amp; propertyKeys.length &gt; 0) {</span>
+<span class="fc bfc" id="L327" title="All 2 branches covered.">                                if (properties == null) {</span>
+<span class="fc" id="L328">                                        properties = new Properties();</span>
+                                }
+<span class="fc bfc" id="L330" title="All 2 branches covered.">                                for (int p = 0; p &lt; propertyKeys.length; p++) {</span>
+<span class="fc" id="L331">                                        String name = config.getString(&quot;client.nodes.node(&quot; + i + &quot;).properties.property(&quot; + p + &quot;)[@name]&quot;);</span>
+<span class="fc" id="L332">                                        String value = config.getString(&quot;client.nodes.node(&quot; + i + &quot;).properties.property(&quot; + p + &quot;)[@value]&quot;);</span>
+<span class="fc" id="L333">                                        log.debug(&quot;Property: name=&quot; + name + &quot; value=&quot; + value);</span>
+<span class="fc" id="L334">                                        properties.put(name, value);</span>
+                                }
+<span class="fc" id="L336">                                uddiNode.setProperties(properties);</span>
+                        }
+
+<span class="fc" id="L339">                        uddiNode.setHomeJUDDI(config.getBoolean(&quot;client.nodes.node(&quot; + i + &quot;)[@isHomeJUDDI]&quot;, false));</span>
+<span class="fc" id="L340">                        uddiNode.setName(TokenResolver.replaceTokens(config.getString(&quot;client.nodes.node(&quot; + i + &quot;).name&quot;), properties));</span>
+<span class="fc" id="L341">                        uddiNode.setClientName(TokenResolver.replaceTokens(config.getString(&quot;client[@name]&quot;), properties));</span>
+<span class="fc" id="L342">                        uddiNode.setDescription(TokenResolver.replaceTokens(config.getString(&quot;client.nodes.node(&quot; + i + &quot;).description&quot;), properties));</span>
+<span class="fc" id="L343">                        uddiNode.setProxyTransport(TokenResolver.replaceTokens(config.getString(&quot;client.nodes.node(&quot; + i + &quot;).proxyTransport&quot;), properties));</span>
+<span class="fc" id="L344">                        uddiNode.setInquiryUrl(TokenResolver.replaceTokens(config.getString(&quot;client.nodes.node(&quot; + i + &quot;).inquiryUrl&quot;), properties));</span>
+<span class="fc" id="L345">                        uddiNode.setInquiryRESTUrl(TokenResolver.replaceTokens(config.getString(&quot;client.nodes.node(&quot; + i + &quot;).inquiryRESTUrl&quot;), properties));</span>
+<span class="fc" id="L346">                        uddiNode.setPublishUrl(TokenResolver.replaceTokens(config.getString(&quot;client.nodes.node(&quot; + i + &quot;).publishUrl&quot;), properties));</span>
+<span class="fc" id="L347">                        uddiNode.setCustodyTransferUrl(TokenResolver.replaceTokens(config.getString(&quot;client.nodes.node(&quot; + i + &quot;).custodyTransferUrl&quot;), properties));</span>
+<span class="fc" id="L348">                        uddiNode.setSecurityUrl(TokenResolver.replaceTokens(config.getString(&quot;client.nodes.node(&quot; + i + &quot;).securityUrl&quot;), properties));</span>
+<span class="fc" id="L349">                        uddiNode.setReplicationUrl(TokenResolver.replaceTokens(config.getString(&quot;client.nodes.node(&quot; + i + &quot;).replicationUrl&quot;), properties));</span>
+<span class="fc" id="L350">                        uddiNode.setSubscriptionUrl(TokenResolver.replaceTokens(config.getString(&quot;client.nodes.node(&quot; + i + &quot;).subscriptionUrl&quot;), properties));</span>
+<span class="fc" id="L351">                        uddiNode.setSubscriptionListenerUrl(TokenResolver.replaceTokens(config.getString(&quot;client.nodes.node(&quot; + i + &quot;).subscriptionListenerUrl&quot;), properties));</span>
+<span class="fc" id="L352">                        uddiNode.setJuddiApiUrl(TokenResolver.replaceTokens(config.getString(&quot;client.nodes.node(&quot; + i + &quot;).juddiApiUrl&quot;), properties));</span>
+<span class="fc" id="L353">                        uddiNode.setFactoryInitial(TokenResolver.replaceTokens(config.getString(&quot;client.nodes.node(&quot; + i + &quot;).javaNamingFactoryInitial&quot;), properties));</span>
+<span class="fc" id="L354">                        uddiNode.setFactoryURLPkgs(TokenResolver.replaceTokens(config.getString(&quot;client.nodes.node(&quot; + i + &quot;).javaNamingFactoryUrlPkgs&quot;), properties));</span>
+<span class="fc" id="L355">                        uddiNode.setFactoryNamingProvider(TokenResolver.replaceTokens(config.getString(&quot;client.nodes.node(&quot; + i + &quot;).javaNamingProviderUrl&quot;), properties));</span>
+<span class="fc" id="L356">                        nodes.put(nodeName, uddiNode);</span>
+                }
+<span class="fc" id="L358">                return nodes;</span>
+        }
+
+        private Set&lt;XRegistration&gt; readXBusinessRegConfig(Configuration config, Map&lt;String, UDDIClerk&gt; clerks)
+             throws ConfigurationException {
+<span class="fc" id="L363">                return readXRegConfig(config, clerks, &quot;business&quot;);</span>
+        }
+
+        private Set&lt;XRegistration&gt; readXServiceBindingRegConfig(Configuration config, Map&lt;String, UDDIClerk&gt; clerks)
+             throws ConfigurationException {
+<span class="fc" id="L368">                return readXRegConfig(config, clerks, &quot;servicebinding&quot;);</span>
+        }
+
+        private Set&lt;XRegistration&gt; readXRegConfig(Configuration config, Map&lt;String, UDDIClerk&gt; clerks, String entityType)
+             throws ConfigurationException {
+<span class="fc" id="L373">                String[] entityKeys = config.getStringArray(&quot;client.clerks.xregister.&quot; + entityType + &quot;[@entityKey]&quot;);</span>
+<span class="fc" id="L374">                Set&lt;XRegistration&gt; xRegistrations = new HashSet&lt;XRegistration&gt;();</span>
+<span class="pc bpc" id="L375" title="1 of 2 branches missed.">                if (entityKeys.length &gt; 0) {</span>
+<span class="nc" id="L376">                        log.info(&quot;XRegistration &quot; + entityKeys.length + &quot; &quot; + entityType + &quot;Keys&quot;);</span>
+                }
+<span class="pc bpc" id="L378" title="1 of 2 branches missed.">                for (int i = 0; i &lt; entityKeys.length; i++) {</span>
+<span class="nc" id="L379">                        XRegistration xRegistration = new XRegistration();</span>
+<span class="nc" id="L380">                        xRegistration.setEntityKey(config.getString(&quot;client.clerks.xregister.&quot; + entityType + &quot;(&quot; + i + &quot;)[@entityKey]&quot;));</span>
+
+<span class="nc" id="L382">                        String fromClerkRef = config.getString(&quot;client.clerks.xregister.&quot; + entityType + &quot;(&quot; + i + &quot;)[@fromClerk]&quot;);</span>
+<span class="nc bnc" id="L383" title="All 2 branches missed.">                        if (!clerks.containsKey(fromClerkRef)) {</span>
+<span class="nc" id="L384">                                throw new ConfigurationException(&quot;Could not find fromClerk with name=&quot; + fromClerkRef);</span>
+                        }
+<span class="nc" id="L386">                        UDDIClerk fromClerk = clerks.get(fromClerkRef);</span>
+<span class="nc" id="L387">                        xRegistration.setFromClerk(fromClerk);</span>
+
+<span class="nc" id="L389">                        String toClerkRef = config.getString(&quot;client.clerks.xregister.&quot; + entityType + &quot;(&quot; + i + &quot;)[@toClerk]&quot;);</span>
+<span class="nc bnc" id="L390" title="All 2 branches missed.">                        if (!clerks.containsKey(toClerkRef)) {</span>
+<span class="nc" id="L391">                                throw new ConfigurationException(&quot;Could not find toClerk with name=&quot; + toClerkRef);</span>
+                        }
+<span class="nc" id="L393">                        UDDIClerk toClerk = clerks.get(toClerkRef);</span>
+<span class="nc" id="L394">                        xRegistration.setToClerk(toClerk);</span>
+<span class="nc" id="L395">                        log.debug(xRegistration);</span>
+
+<span class="nc" id="L397">                        xRegistrations.add(xRegistration);</span>
+                }
+<span class="fc" id="L399">                return xRegistrations;</span>
+        }
+
+        protected Map&lt;String, UDDINode&gt; getUDDINodes() {
+<span class="nc" id="L403">                return uddiNodes;</span>
+        }
+
+        /**
+         * gets the current configuration's node list Only a copy of these
+         * values are returned
+         *
+         * @return a list of nodes representing the config file as described
+         * @since 3.3 updated to return all fields
+         * @since 3.2
+         */
+        public List&lt;Node&gt; getUDDINodeList() {
+<span class="fc" id="L415">                List&lt;Node&gt; ret = new ArrayList&lt;Node&gt;();</span>
+<span class="fc" id="L416">                Iterator&lt;UDDINode&gt; it = uddiNodes.values().iterator();</span>
+<span class="fc bfc" id="L417" title="All 2 branches covered.">                while (it.hasNext()) {</span>
+<span class="fc" id="L418">                        UDDINode next = it.next();</span>
+<span class="fc" id="L419">                        Node n = new Node();</span>
+<span class="fc" id="L420">                        n.setClientName(next.getClientName());</span>
+<span class="fc" id="L421">                        n.setDescription(next.getDescription());</span>
+<span class="fc" id="L422">                        n.setName(next.getName());</span>
+<span class="fc" id="L423">                        n.setProxyTransport(next.getProxyTransport());</span>
+<span class="fc" id="L424">                        n.setCustodyTransferUrl(next.getCustodyTransferUrl());</span>
+<span class="fc" id="L425">                        n.setFactoryInitial(next.getFactoryInitial());</span>
+<span class="fc" id="L426">                        n.setFactoryNamingProvider(next.getFactoryNamingProvider());</span>
+<span class="fc" id="L427">                        n.setFactoryURLPkgs(next.getFactoryURLPkgs());</span>
+<span class="fc" id="L428">                        n.setInquiryUrl(next.getInquiryUrl());</span>
+<span class="fc" id="L429">                        n.setJuddiApiUrl(next.getJuddiApiUrl());</span>
+<span class="fc" id="L430">                        n.setPublishUrl(next.getPublishUrl());</span>
+<span class="fc" id="L431">                        n.setReplicationUrl(next.getReplicationUrl());</span>
+<span class="fc" id="L432">                        n.setSecurityUrl(next.getSecurityUrl());</span>
+<span class="fc" id="L433">                        n.setSubscriptionListenerUrl(next.getSubscriptionListenerUrl());</span>
+<span class="fc" id="L434">                        n.setSubscriptionUrl(next.getSubscriptionUrl());</span>
+<span class="fc" id="L435">                        ret.add(n);</span>
+<span class="fc" id="L436">                }</span>
+<span class="fc" id="L437">                return ret;</span>
+        }
+
+        public UDDINode getHomeNode() throws ConfigurationException {
+<span class="pc bpc" id="L441" title="1 of 2 branches missed.">                if (uddiNodes == null) {</span>
+<span class="nc" id="L442">                        throw new ConfigurationException(&quot;The juddi client configuration &quot;</span>
+                             + &quot;must contain at least one node element.&quot;);
+                }
+<span class="fc bfc" id="L445" title="All 2 branches covered.">                if (uddiNodes.values().size() == 1) {</span>
+<span class="fc" id="L446">                        return uddiNodes.values().iterator().next();</span>
+                }
+<span class="fc" id="L448">                UDDINode ret = null;</span>
+<span class="fc bfc" id="L449" title="All 2 branches covered.">                for (UDDINode uddiNode : uddiNodes.values()) {</span>
+<span class="fc bfc" id="L450" title="All 2 branches covered.">                        if (uddiNode.isHomeJUDDI()) {</span>
+<span class="pc bpc" id="L451" title="1 of 2 branches missed.">                                if (ret != null) {</span>
+<span class="nc" id="L452">                                        throw new ConfigurationException(&quot;Only one of the node elements in the client configuration needs to a 'isHomeJUDDI=\&quot;true\&quot;' attribute.&quot;);</span>
+                                }
+<span class="fc" id="L454">                                ret = uddiNode;</span>
+                        }
+<span class="fc" id="L456">                }</span>
+<span class="pc bpc" id="L457" title="1 of 2 branches missed.">                if (ret != null) {</span>
+<span class="fc" id="L458">                        return ret;</span>
+                }
+<span class="nc" id="L460">                throw new ConfigurationException(&quot;One of the node elements in the client configuration needs to a 'isHomeJUDDI=\&quot;true\&quot;' attribute.&quot;);</span>
+        }
+
+        /**
+         * returns the named uddi node from config or throws if one is not found
+         * @param nodeName
+         * @return
+         * @throws ConfigurationException 
+         */
+        public UDDINode getUDDINode(String nodeName) throws ConfigurationException {
+<span class="pc bpc" id="L470" title="1 of 2 branches missed.">                if (!uddiNodes.containsKey(nodeName)) {</span>
+<span class="nc" id="L471">                        throw new ConfigurationException(&quot;Node '&quot; + nodeName</span>
+<span class="nc" id="L472">                             + &quot;' cannot be found in the config '&quot; + getClientName() + &quot;'&quot;);</span>
+                }
+<span class="fc" id="L474">                return uddiNodes.get(nodeName);</span>
+        }
+
+        public Map&lt;String, UDDIClerk&gt; getUDDIClerks() {
+<span class="fc" id="L478">                return uddiClerks;</span>
+        }
+
+        public Set&lt;XRegistration&gt; getXServiceBindingRegistrations() {
+<span class="nc" id="L482">                return xServiceBindingRegistrations;</span>
+        }
+
+        public Set&lt;XRegistration&gt; getXBusinessRegistrations() {
+<span class="nc" id="L486">                return xBusinessRegistrations;</span>
+        }
+
+        public Configuration getConfiguration() {
+<span class="fc" id="L490">                return config;</span>
+        }
+
+        public String getClientName() {
+<span class="fc" id="L494">                return clientName;</span>
+        }
+
+        @Deprecated
+        public String getClientCallbackUrl() {
+<span class="nc" id="L499">                return clientCallbackUrl;</span>
+        }
+
+        public String getConfigurationFile() {
+<span class="nc" id="L503">                return configurationFile;</span>
+        }
+
+        /**
+         * Used for WADL/WSDL to WSDL
+         *
+         * @return true/false
+         */
+        public boolean isX_To_Wsdl_Ignore_SSL_Errors() {
+<span class="fc" id="L512">                return this.config.getBoolean(&quot;client.XtoWsdl.IgnoreSSLErrors&quot;, false);</span>
+        }
+
+        /**
+         * Fetches all digital signature related properties for the digital
+         * signature utility. warning, this will decrypt all passwords
+         *
+         * @return a properties object
+         * @throws Exception
+         * @see DigSigUtil
+         * @see Properties
+         */
+        public Properties getDigitalSignatureConfiguration() throws Exception {
+<span class="fc" id="L525">                Properties p = new Properties();</span>
+<span class="fc" id="L526">                p.setProperty(DigSigUtil.CANONICALIZATIONMETHOD, this.config.getString(&quot;client.signature.canonicalizationMethod&quot;, CanonicalizationMethod.EXCLUSIVE));</span>
+<span class="fc" id="L527">                p.setProperty(DigSigUtil.CHECK_TIMESTAMPS, ((Boolean) (this.config.getBoolean(&quot;client.signature.checkTimestamps&quot;, true))).toString());</span>
+<span class="fc" id="L528">                p.setProperty(DigSigUtil.CHECK_REVOCATION_STATUS_CRL, ((Boolean) (this.config.getBoolean(&quot;client.signature.checkRevocationCRL&quot;, true))).toString());</span>
+<span class="fc" id="L529">                p.setProperty(DigSigUtil.CHECK_REVOCATION_STATUS_OCSP, ((Boolean) (this.config.getBoolean(&quot;client.signature.checkRevocationOCSP&quot;, true))).toString());</span>
+<span class="fc" id="L530">                p.setProperty(DigSigUtil.CHECK_TRUST_CHAIN, ((Boolean) (this.config.getBoolean(&quot;client.signature.checkTrust&quot;, true))).toString());</span>
+
+<span class="fc" id="L532">                p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE, this.config.getString(&quot;client.signature.signingKeyStorePath&quot;, &quot;&quot;));</span>
+<span class="fc" id="L533">                p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE, this.config.getString(&quot;client.signature.signingKeyStoreType&quot;, &quot;&quot;));</span>
+
+<span class="pc bpc" id="L535" title="1 of 2 branches missed.">                if (this.config.getBoolean(&quot;client.signature.signingKeyPassword[@isPasswordEncrypted]&quot;, false)) {</span>
+<span class="nc" id="L536">                        String enc = this.config.getString(&quot;client.signature.signingKeyPassword&quot;, &quot;&quot;);</span>
+<span class="nc" id="L537">                        String prov = this.config.getString(&quot;client.signature.signingKeyPassword[@cryptoProvider]&quot;, &quot;&quot;);</span>
+<span class="nc" id="L538">                        p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD, CryptorFactory.getCryptor(prov).decrypt(enc));</span>
+<span class="nc" id="L539">                        p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD_WAS_ENC, &quot;true&quot;);</span>
+<span class="nc" id="L540">                        p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD_PROVIDER, prov);</span>
+<span class="nc" id="L541">                        p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD_CIPHER, enc);</span>
+<span class="nc" id="L542">                } else {</span>
+<span class="fc" id="L543">                        log.warn(&quot;Hey, you should consider encrypting your key password!&quot;);</span>
+<span class="fc" id="L544">                        p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD, this.config.getString(&quot;client.signature.signingKeyPassword&quot;, &quot;&quot;));</span>
+<span class="fc" id="L545">                        p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD_WAS_ENC, &quot;false&quot;);</span>
+                }
+<span class="pc bpc" id="L547" title="1 of 2 branches missed.">                if (this.config.getBoolean(&quot;client.signature.signingKeyStoreFilePassword[@isPasswordEncrypted]&quot;, false)) {</span>
+<span class="nc" id="L548">                        String enc = this.config.getString(&quot;client.signature.signingKeyStoreFilePassword&quot;, &quot;&quot;);</span>
+<span class="nc" id="L549">                        String prov = this.config.getString(&quot;client.signature.signingKeyStoreFilePassword[@cryptoProvider]&quot;, &quot;&quot;);</span>
+<span class="nc" id="L550">                        p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, CryptorFactory.getCryptor(prov).decrypt(enc));</span>
+<span class="nc" id="L551">                        p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD_PROVIDER, (prov));</span>
+<span class="nc" id="L552">                        p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD_CIPHER, (enc));</span>
+<span class="nc" id="L553">                } else {</span>
+<span class="fc" id="L554">                        log.warn(&quot;Hey, you should consider encrypting your keystore password!&quot;);</span>
+<span class="fc" id="L555">                        p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, this.config.getString(&quot;client.signature.signingKeyStoreFilePassword&quot;, &quot;&quot;));</span>
+                }
+
+<span class="fc" id="L558">                p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS, this.config.getString(&quot;client.signature.signingKeyAlias&quot;, &quot;&quot;));</span>
+<span class="fc" id="L559">                p.setProperty(DigSigUtil.SIGNATURE_METHOD, this.config.getString(&quot;client.signature.signatureMethod&quot;, &quot;http://www.w3.org/2000/09/xmldsig#rsa-sha1&quot;));</span>
+<span class="fc" id="L560">                p.setProperty(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, this.config.getString(&quot;client.signature.keyInfoInclusionSubjectDN&quot;, &quot;true&quot;));</span>
+<span class="fc" id="L561">                p.setProperty(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, this.config.getString(&quot;client.signature.keyInfoInclusionBase64PublicKey&quot;, &quot;true&quot;));</span>
+<span class="fc" id="L562">                p.setProperty(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, this.config.getString(&quot;client.signature.keyInfoInclusionSerial&quot;, &quot;true&quot;));</span>
+
+<span class="fc" id="L564">                p.setProperty(DigSigUtil.SIGNATURE_OPTION_DIGEST_METHOD, this.config.getString(&quot;client.signature.digestMethod&quot;, &quot;http://www.w3.org/2000/09/xmldsig#sha1&quot;));</span>
+
+<span class="fc" id="L566">                p.setProperty(DigSigUtil.TRUSTSTORE_FILE, this.config.getString(&quot;client.signature.trustStorePath&quot;, &quot;&quot;));</span>
+<span class="fc" id="L567">                p.setProperty(DigSigUtil.TRUSTSTORE_FILETYPE, this.config.getString(&quot;client.signature.trustStoreType&quot;, &quot;&quot;));</span>
+
+<span class="pc bpc" id="L569" title="1 of 2 branches missed.">                if (this.config.getBoolean(&quot;client.signature.trustStorePassword[@isPasswordEncrypted]&quot;, false)) {</span>
+<span class="nc" id="L570">                        String enc = this.config.getString(&quot;client.signature.trustStorePassword&quot;, &quot;&quot;);</span>
+<span class="nc" id="L571">                        String prov = this.config.getString(&quot;client.signature.trustStorePassword[@cryptoProvider]&quot;, &quot;&quot;);</span>
+<span class="nc" id="L572">                        p.setProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, CryptorFactory.getCryptor(prov).decrypt(enc));</span>
+<span class="nc" id="L573">                        p.setProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD_PROVIDER, (prov));</span>
+<span class="nc" id="L574">                        p.setProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD_CIPHER, (enc));</span>
+<span class="nc" id="L575">                } else {</span>
+<span class="fc" id="L576">                        log.warn(&quot;Hey, you should consider encrypting your trust store password!&quot;);</span>
+<span class="fc" id="L577">                        p.setProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, this.config.getString(&quot;client.signature.trustStorePassword&quot;, &quot;&quot;));</span>
+                }
+
+<span class="fc" id="L580">                return p;</span>
+        }
+
+        /**
+         * adds a new node to the client configuration section. Don't forget to
+         * call save to persist the changes
+         *
+         * @param node
+         * @throws org.apache.commons.configuration.ConfigurationException
+         * @since 3.3
+         */
+        public void addUDDINode(UDDINode node) throws ConfigurationException {
+<span class="pc bpc" id="L592" title="1 of 2 branches missed.">                if (node == null) {</span>
+<span class="nc" id="L593">                        throw new ConfigurationException(&quot;The new node is null&quot;);</span>
+                }
+<span class="pc bpc" id="L595" title="1 of 2 branches missed.">                if (this.uddiNodes.containsKey(node.getName())) {</span>
+<span class="nc" id="L596">                        throw new ConfigurationException(&quot;Node '&quot; + node.getName() + &quot;' already existings in the collection!&quot;);</span>
+                }
+<span class="pc bpc" id="L598" title="3 of 4 branches missed.">                if (node.getClientName() == null || &quot;&quot;.equalsIgnoreCase(node.getClientName())) {</span>
+<span class="fc" id="L599">                        log.info(&quot;ClientName wasn't specified, I'll configure it with the defaults&quot;);</span>
+<span class="fc" id="L600">                        node.setClientName(this.clientName);</span>
+                }
+<span class="pc bpc" id="L602" title="2 of 4 branches missed.">                if (node.getName() == null || &quot;&quot;.equalsIgnoreCase(node.getName())) {</span>
+<span class="nc" id="L603">                       throw new ConfigurationException(&quot;Node Name wasn't specified. It cannot be null&quot;);</span>
+                }
+<span class="fc" id="L605">                this.uddiNodes.put(node.getName(), node);</span>
+
+<span class="fc" id="L607">        }</span>
+
+        /**
+         * removes the named node from the client configuration section. don't
+         * forget to save to persist the changes
+         *
+         * @param name expecting the Node name, not the &quot;clientName&quot;
+         * @throws ConfigurationException
+         */
+        public void removeUDDINode(String name) throws ConfigurationException {
+<span class="nc bnc" id="L617" title="All 2 branches missed.">                if (this.uddiNodes.containsKey(name)) {</span>
+<span class="nc" id="L618">                        this.uddiNodes.remove(name);</span>
+                }
+<span class="nc" id="L620">        }</span>
+
+        /**
+         * performs some basic validation tests on the config setting that was
+         * read from file
+         */
+        private void validateConfig() throws ConfigurationException {
+<span class="pc bpc" id="L627" title="1 of 2 branches missed.">                if (config == null) {</span>
+<span class="nc" id="L628">                        throw new ConfigurationException(&quot;config is null!&quot;);</span>
+                }
+<span class="pc bpc" id="L630" title="1 of 2 branches missed.">                if (uddiNodes == null) {</span>
+<span class="nc" id="L631">                        throw new ConfigurationException(&quot;nodes is null!&quot;);</span>
+                }
+<span class="pc bpc" id="L633" title="1 of 2 branches missed.">                if (uddiClerks == null) {</span>
+<span class="nc" id="L634">                        throw new ConfigurationException(&quot;clerks is null!&quot;);</span>
+                }
+<span class="fc" id="L636">                Iterator&lt;Map.Entry&lt;String, UDDIClerk&gt;&gt; it = uddiClerks.entrySet().iterator();</span>
+<span class="fc bfc" id="L637" title="All 2 branches covered.">                while (it.hasNext()) {</span>
+<span class="fc" id="L638">                        Map.Entry&lt;String, UDDIClerk&gt; next = it.next();</span>
+<span class="pc bpc" id="L639" title="1 of 2 branches missed.">                        if (next.getValue().uddiNode == null) {</span>
+<span class="nc" id="L640">                                throw new ConfigurationException(&quot;clerk &quot; + next.getValue().name + &quot; references a node that doesn't exist!&quot;);</span>
+                        }
+<span class="fc" id="L642">                }</span>
+<span class="fc" id="L643">        }</span>
+
+        private void addCurrentNodeConfig(Configuration cc) {
+
+<span class="fc" id="L647">                cc.addProperty(&quot;[@xmlns]&quot;, config.getProperty(&quot;[@xmlns]&quot;));</span>
+<span class="fc" id="L648">                cc.addProperty(&quot;client(0)[@name]&quot;, clientName);</span>
+<span class="fc" id="L649">                Iterator&lt;Map.Entry&lt;String, UDDINode&gt;&gt; iterator = uddiNodes.entrySet().iterator();</span>
+<span class="fc" id="L650">                int i = 0;</span>
+<span class="fc bfc" id="L651" title="All 2 branches covered.">                while (iterator.hasNext()) {</span>
+<span class="fc" id="L652">                        log.debug(&quot;node names=&quot; + uddiNodes.size());</span>
+
+<span class="fc" id="L654">                        UDDINode uddiNode = iterator.next().getValue();</span>
+
+<span class="fc" id="L656">                        Properties properties = uddiNode.getProperties();</span>
+
+<span class="fc bfc" id="L658" title="All 2 branches covered.">                        if (properties == null) {</span>
+<span class="fc" id="L659">                                properties = new Properties();</span>
+                        }
+<span class="fc" id="L661">                        Iterator&lt;Map.Entry&lt;Object, Object&gt;&gt; iterator1 = properties.entrySet().iterator();</span>
+<span class="fc" id="L662">                        int x = 0;</span>
+<span class="fc bfc" id="L663" title="All 2 branches covered.">                        while (iterator1.hasNext()) {</span>
+<span class="fc" id="L664">                                Map.Entry&lt;Object, Object&gt; next = iterator1.next();</span>
+<span class="fc" id="L665">                                cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).properties.property(&quot; + x + &quot;)[@name]&quot;, next.getKey());</span>
+<span class="fc" id="L666">                                cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).properties.property(&quot; + x + &quot;)[@value]&quot;, next.getValue());</span>
+
+<span class="fc" id="L668">                                log.debug(&quot;Property: name=&quot; + next.getKey() + &quot; value=&quot; + next.getValue());</span>
+
+<span class="fc" id="L670">                                x++;</span>
+<span class="fc" id="L671">                        }</span>
+
+<span class="fc" id="L673">                        cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;)[@isHomeJUDDI]&quot;, uddiNode.isHomeJUDDI());</span>
+<span class="fc" id="L674">                        cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).name&quot;, uddiNode.getName());</span>
+<span class="fc" id="L675">                        cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).description&quot;, uddiNode.getDescription());</span>
+<span class="fc" id="L676">                        cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).proxyTransport&quot;, uddiNode.getProxyTransport());</span>
+<span class="fc" id="L677">                        cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).inquiryUrl&quot;, uddiNode.getInquiryUrl());</span>
+<span class="fc" id="L678">                        cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).inquiryRESTUrl&quot;, uddiNode.getInquiry_REST_Url());</span>
+<span class="fc" id="L679">                        cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).publishUrl&quot;, uddiNode.getPublishUrl());</span>
+<span class="fc" id="L680">                        cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).custodyTransferUrl&quot;, uddiNode.getCustodyTransferUrl());</span>
+<span class="fc" id="L681">                        cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).securityUrl&quot;, uddiNode.getSecurityUrl());</span>
+<span class="fc" id="L682">                        cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).replicationUrl&quot;, uddiNode.getReplicationUrl());</span>
+<span class="fc" id="L683">                        cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).subscriptionUrl&quot;, uddiNode.getSubscriptionUrl());</span>
+<span class="fc" id="L684">                        cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).juddiApiUrl&quot;, uddiNode.getJuddiApiUrl());</span>
+<span class="fc" id="L685">                        cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).subscriptionListenerUrl&quot;, uddiNode.getSubscriptionListenerUrl());</span>
+<span class="fc" id="L686">                        cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).javaNamingFactoryInitial&quot;, uddiNode.getFactoryInitial());</span>
+<span class="fc" id="L687">                        cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).javaNamingFactoryUrlPkgs&quot;, uddiNode.getFactoryURLPkgs());</span>
+<span class="fc" id="L688">                        cc.addProperty(&quot;client(0).nodes.node(&quot; + i + &quot;).javaNamingProviderUrl&quot;, uddiNode.getFactoryNamingProvider());</span>
+
+<span class="fc" id="L690">                        i++;</span>
+<span class="fc" id="L691">                }</span>
+
+<span class="fc" id="L693">        }</span>
+
+        private void addCurrentClerks(Configuration cc) {
+
+<span class="fc" id="L697">                Iterator&lt;Map.Entry&lt;String, UDDIClerk&gt;&gt; iterator = uddiClerks.entrySet().iterator();</span>
+<span class="fc" id="L698">                clientName = config.getString(&quot;client[@name]&quot;);</span>
+<span class="fc" id="L699">                clientCallbackUrl = config.getString(&quot;client(0)[@callbackUrl]&quot;);</span>
+
+<span class="fc" id="L701">                cc.addProperty(&quot;client(0).clerks[@registerOnStartup]&quot;, isRegisterOnStartup());</span>
+<span class="fc" id="L702">                int i = 0;</span>
+<span class="fc bfc" id="L703" title="All 2 branches covered.">                while (iterator.hasNext()) {</span>
+
+<span class="fc" id="L705">                        UDDIClerk uddiClerk = iterator.next().getValue();</span>
+<span class="fc" id="L706">                        cc.addProperty(&quot;client(0).clerks.clerk(&quot; + i + &quot;)[@name]&quot;, uddiClerk.getName());</span>
+                        //registerOnStartup
+<span class="fc" id="L708">                        cc.addProperty(&quot;client(0).clerks.clerk(&quot; + i + &quot;)[@node]&quot;, uddiClerk.getUDDINode().getName());</span>
+
+<span class="fc" id="L710">                        cc.addProperty(&quot;client(0).clerks.clerk(&quot; + i + &quot;)[@publisher]&quot;, uddiClerk.getPublisher());</span>
+<span class="fc" id="L711">                        cc.addProperty(&quot;client(0).clerks.clerk(&quot; + i + &quot;)[@password]&quot;, uddiClerk.getRawPassword());</span>
+
+<span class="fc" id="L713">                        cc.addProperty(&quot;client(0).clerks.clerk(&quot; + i + &quot;)[@isPasswordEncrypted]&quot;, uddiClerk.getIsPasswordEncrypted());</span>
+
+<span class="fc" id="L715">                        cc.addProperty(&quot;client(0).clerks.clerk(&quot; + i + &quot;)[@cryptoProvider]&quot;, uddiClerk.getCryptoProvider());</span>
+
+<span class="fc" id="L717">                        String[] classes = uddiClerk.getClassWithAnnotations();</span>
+<span class="pc bpc" id="L718" title="1 of 2 branches missed.">                        if (classes != null) {</span>
+<span class="fc bfc" id="L719" title="All 2 branches covered.">                                for (int x = 0; x &lt; classes.length; x++) {</span>
+<span class="fc" id="L720">                                        cc.addProperty(&quot;client(0).clerks.clerk(&quot; + i + &quot;).class(&quot; + x + &quot;)&quot;, classes[x]);</span>
+                                }
+                        }
+
+<span class="fc" id="L724">                        UDDIClerk.WSDL[] wsdls = uddiClerk.getWsdls();</span>
+<span class="fc bfc" id="L725" title="All 2 branches covered.">                        if (wsdls != null) {</span>
+<span class="fc bfc" id="L726" title="All 2 branches covered.">                                for (int w = 0; w &lt; wsdls.length; w++) {</span>
+<span class="fc" id="L727">                                        cc.addProperty(&quot;client(0).clerks.clerk(&quot; + i + &quot;).wsdl(&quot; + w + &quot;)&quot;, wsdls[w].getFileName());</span>
+<span class="fc" id="L728">                                        cc.addProperty(&quot;client(0).clerks.clerk(&quot; + i + &quot;).wsdl(&quot; + w + &quot;)[@businessKey]&quot;, wsdls[w].getBusinessKey());</span>
+<span class="fc" id="L729">                                        cc.addProperty(&quot;client(0).clerks.clerk(&quot; + i + &quot;).wsdl(&quot; + w + &quot;)[@keyDomain]&quot;, wsdls[w].getKeyDomain());</span>
+                                }
+                        }
+<span class="fc" id="L732">                        i++;</span>
+<span class="fc" id="L733">                }</span>
+
+<span class="pc bpc" id="L735" title="1 of 2 branches missed.">                if (xBusinessRegistrations != null) {</span>
+<span class="fc" id="L736">                        Iterator&lt;XRegistration&gt; iterator1 = xBusinessRegistrations.iterator();</span>
+<span class="fc" id="L737">                        int x = 0;</span>
+<span class="pc bpc" id="L738" title="1 of 2 branches missed.">                        while (iterator1.hasNext()) {</span>
+<span class="nc" id="L739">                                XRegistration next = iterator1.next();</span>
+<span class="nc" id="L740">                                cc.addProperty(&quot;client(0).clerks.business(&quot; + x + &quot;)[@fromClerk]&quot;, next.getFromClerk().name);</span>
+<span class="nc" id="L741">                                cc.addProperty(&quot;client(0).clerks.business(&quot; + x + &quot;)[@toClerk]&quot;, next.getToClerk().name);</span>
+<span class="nc" id="L742">                                cc.addProperty(&quot;client(0).clerks.business(&quot; + x + &quot;)[@entityKey]&quot;, next.getEntityKey());</span>
+<span class="nc" id="L743">                                x++;</span>
+<span class="nc" id="L744">                        }</span>
+                }
+<span class="pc bpc" id="L746" title="1 of 2 branches missed.">                if (xServiceBindingRegistrations != null) {</span>
+<span class="fc" id="L747">                        Iterator&lt;XRegistration&gt; iterator1 = xServiceBindingRegistrations.iterator();</span>
+<span class="fc" id="L748">                        int x = 0;</span>
+<span class="pc bpc" id="L749" title="1 of 2 branches missed.">                        while (iterator1.hasNext()) {</span>
+<span class="nc" id="L750">                                XRegistration next = iterator1.next();</span>
+<span class="nc" id="L751">                                cc.addProperty(&quot;client(0).clerks.servicebinding(&quot; + x + &quot;)[@fromClerk]&quot;, next.getFromClerk().name);</span>
+<span class="nc" id="L752">                                cc.addProperty(&quot;client(0).clerks.servicebinding(&quot; + x + &quot;)[@toClerk]&quot;, next.getToClerk().name);</span>
+<span class="nc" id="L753">                                cc.addProperty(&quot;client(0).clerks.servicebinding(&quot; + x + &quot;)[@entityKey]&quot;, next.getEntityKey());</span>
+<span class="nc" id="L754">                                x++;</span>
+<span class="nc" id="L755">                        }</span>
+                }
+<span class="fc" id="L757">        }</span>
+
+        private void addSubscriptionCallback(Configuration cc) {
+<span class="pc bpc" id="L760" title="1 of 2 branches missed.">                if (this.config.containsKey(SubscriptionCallbackListener.PROPERTY_AUTOREG_BT)) {</span>
+<span class="fc" id="L761">                        cc.addProperty(SubscriptionCallbackListener.PROPERTY_AUTOREG_BT, this.config.getProperty(SubscriptionCallbackListener.PROPERTY_AUTOREG_BT));</span>
+                }
+<span class="pc bpc" id="L763" title="1 of 2 branches missed.">                if (this.config.containsKey(SubscriptionCallbackListener.PROPERTY_AUTOREG_SERVICE_KEY)) {</span>
+<span class="fc" id="L764">                        cc.addProperty(SubscriptionCallbackListener.PROPERTY_AUTOREG_SERVICE_KEY, this.config.getProperty(SubscriptionCallbackListener.PROPERTY_AUTOREG_SERVICE_KEY));</span>
+                }
+<span class="pc bpc" id="L766" title="1 of 2 branches missed.">                if (this.config.containsKey(SubscriptionCallbackListener.PROPERTY_KEYDOMAIN)) {</span>
+<span class="fc" id="L767">                        cc.addProperty(SubscriptionCallbackListener.PROPERTY_KEYDOMAIN, this.config.getProperty(SubscriptionCallbackListener.PROPERTY_KEYDOMAIN));</span>
+                }
+<span class="pc bpc" id="L769" title="1 of 2 branches missed.">                if (this.config.containsKey(SubscriptionCallbackListener.PROPERTY_LISTENURL)) {</span>
+<span class="fc" id="L770">                        cc.addProperty(SubscriptionCallbackListener.PROPERTY_LISTENURL, this.config.getProperty(SubscriptionCallbackListener.PROPERTY_LISTENURL));</span>
+                }
+<span class="pc bpc" id="L772" title="1 of 2 branches missed.">                if (this.config.containsKey(SubscriptionCallbackListener.PROPERTY_NODE)) {</span>
+<span class="nc" id="L773">                        cc.addProperty(SubscriptionCallbackListener.PROPERTY_NODE, this.config.getProperty(SubscriptionCallbackListener.PROPERTY_NODE));</span>
+                }
+<span class="pc bpc" id="L775" title="1 of 2 branches missed.">                if (this.config.containsKey(SubscriptionCallbackListener.PROPERTY_SIGNATURE_BEHAVIOR)) {</span>
+<span class="fc" id="L776">                        cc.addProperty(SubscriptionCallbackListener.PROPERTY_SIGNATURE_BEHAVIOR, this.config.getProperty(SubscriptionCallbackListener.PROPERTY_SIGNATURE_BEHAVIOR));</span>
+                }
+<span class="fc" id="L778">        }</span>
+
+        private void addDigitalSubscription(Configuration cc) throws Exception {
+<span class="fc" id="L781">                Properties p = this.getDigitalSignatureConfiguration();</span>
+<span class="fc" id="L782">                Iterator&lt;Map.Entry&lt;Object, Object&gt;&gt; it = p.entrySet().iterator();</span>
+<span class="fc bfc" id="L783" title="All 2 branches covered.">                while (it.hasNext()) {</span>
+<span class="fc" id="L784">                        Map.Entry&lt;Object, Object&gt; next = it.next();</span>
+<span class="fc" id="L785">                        String key = (String) next.getKey();</span>
+<span class="fc" id="L786">                        Object val = next.getValue();</span>
+<span class="pc bpc" id="L787" title="1 of 2 branches missed.">                        if (val == null) {</span>
+<span class="nc" id="L788">                                continue;</span>
+                        }
+<span class="fc bfc" id="L790" title="All 2 branches covered.">                        if (key.equalsIgnoreCase(DigSigUtil.CANONICALIZATIONMETHOD)) {</span>
+<span class="fc" id="L791">                                cc.addProperty(&quot;client(0).signature.canonicalizationMethod&quot;, val);</span>
+<span class="fc bfc" id="L792" title="All 2 branches covered.">                        } else if (key.equalsIgnoreCase(DigSigUtil.CHECK_TIMESTAMPS)) {</span>
+<span class="fc" id="L793">                                cc.addProperty(&quot;client(0).signature.checkTimestamps&quot;, val);</span>
+<span class="fc bfc" id="L794" title="All 2 branches covered.">                        } else if (key.equalsIgnoreCase(DigSigUtil.CHECK_REVOCATION_STATUS_CRL)) {</span>
+<span class="fc" id="L795">                                cc.addProperty(&quot;client(0).signature.checkRevocationCRL&quot;, val);</span>
+<span class="fc bfc" id="L796" title="All 2 branches covered.">                        } else if (key.equalsIgnoreCase(DigSigUtil.CHECK_REVOCATION_STATUS_OCSP)) {</span>
+<span class="fc" id="L797">                                cc.addProperty(&quot;client(0).signature.checkRevocationOCSP&quot;, val);</span>
+<span class="fc bfc" id="L798" title="All 2 branches covered.">                        } else if (key.equalsIgnoreCase(DigSigUtil.CHECK_TRUST_CHAIN)) {</span>
+<span class="fc" id="L799">                                cc.addProperty(&quot;client(0).signature.checkTrust&quot;, val);</span>
+<span class="fc bfc" id="L800" title="All 2 branches covered.">                        } else if (key.equalsIgnoreCase(DigSigUtil.SIGNATURE_KEYSTORE_FILE)) {</span>
+<span class="fc" id="L801">                                cc.addProperty(&quot;client(0).signature.signingKeyStorePath&quot;, val);</span>
+<span class="fc bfc" id="L802" title="All 2 branches covered.">                        } else if (key.equalsIgnoreCase(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE)) {</span>
+<span class="fc" id="L803">                                cc.addProperty(&quot;client(0).signature.signingKeyStoreType&quot;, val);</span>
+<span class="fc bfc" id="L804" title="All 2 branches covered.">                        } else if (key.equalsIgnoreCase(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD)) {</span>
+<span class="fc" id="L805">                                cc.addProperty(&quot;client(0).signature.signingKeyPassword&quot;, val);</span>
+<span class="fc bfc" id="L806" title="All 2 branches covered.">                        } else if (key.equalsIgnoreCase(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD_WAS_ENC)) {</span>
+<span class="fc" id="L807">                                cc.addProperty(&quot;client(0).signature.signingKeyPassword[@isPasswordEncrypted]&quot;, val);</span>
+<span class="pc bpc" id="L808" title="1 of 2 branches missed.">                        } else if (key.equalsIgnoreCase(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD_PROVIDER)) {</span>
+<span class="nc" id="L809">                                cc.addProperty(&quot;client(0).signature.signingKeyPassword[@cryptoProvider]&quot;, val);</span>
+<span class="pc bpc" id="L810" title="1 of 2 branches missed.">                        } else if (key.equalsIgnoreCase(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD_CIPHER)) {</span>
+<span class="nc" id="L811">                                cc.addProperty(&quot;client(0).signature.signingKeyPassword&quot;, val);</span>
+<span class="fc bfc" id="L812" title="All 2 branches covered.">                        } else if (key.equalsIgnoreCase(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS)) {</span>
+<span class="fc" id="L813">                                cc.addProperty(&quot;client(0).signature.signingKeyAlias&quot;, val);</span>
+<span class="fc bfc" id="L814" title="All 2 branches covered.">                        } else if (key.equalsIgnoreCase(DigSigUtil.SIGNATURE_METHOD)) {</span>
+<span class="fc" id="L815">                                cc.addProperty(&quot;client(0).signature.signatureMethod&quot;, val);</span>
+<span class="fc bfc" id="L816" title="All 2 branches covered.">                        } else if (key.equalsIgnoreCase(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN)) {</span>
+<span class="fc" id="L817">                                cc.addProperty(&quot;client(0).signature.keyInfoInclusionSubjectDN&quot;, val);</span>
+<span class="fc bfc" id="L818" title="All 2 branches covered.">                        } else if (key.equalsIgnoreCase(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64)) {</span>
+<span class="fc" id="L819">                                cc.addProperty(&quot;client(0).signature.keyInfoInclusionBase64PublicKey&quot;, val);</span>
+<span class="fc bfc" id="L820" title="All 2 branches covered.">                        } else if (key.equalsIgnoreCase(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL)) {</span>
+<span class="fc" id="L821">                                cc.addProperty(&quot;client(0).signature.keyInfoInclusionSerial&quot;, val);</span>
+<span class="fc bfc" id="L822" title="All 2 branches covered.">                        } else if (key.equalsIgnoreCase(DigSigUtil.SIGNATURE_OPTION_DIGEST_METHOD)) {</span>
+<span class="fc" id="L823">                                cc.addProperty(&quot;client(0).signature.digestMethod&quot;, val);</span>
+<span class="fc bfc" id="L824" title="All 2 branches covered.">                        } else if (key.equalsIgnoreCase(DigSigUtil.TRUSTSTORE_FILE)) {</span>
+<span class="fc" id="L825">                                cc.addProperty(&quot;client(0).signature.trustStorePath&quot;, val);</span>
+<span class="fc bfc" id="L826" title="All 2 branches covered.">                        } else if (key.equalsIgnoreCase(DigSigUtil.TRUSTSTORE_FILETYPE)) {</span>
+<span class="fc" id="L827">                                cc.addProperty(&quot;client(0).signature.trustStoreType&quot;, val);</span>
+<span class="pc bpc" id="L828" title="1 of 2 branches missed.">                        } else if (key.equalsIgnoreCase(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD_WASENC)) {</span>
+<span class="nc" id="L829">                                cc.addProperty(&quot;client(0).signature.signingKeyStoreFilePassword[@isPasswordEncrypted]&quot;, val);</span>
+<span class="pc bpc" id="L830" title="1 of 2 branches missed.">                        } else if (key.equalsIgnoreCase(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD_PROVIDER)) {</span>
+<span class="nc" id="L831">                                cc.addProperty(&quot;client(0).signature.signingKeyStoreFilePassword[@cryptoProvider]&quot;, val);</span>
+<span class="pc bpc" id="L832" title="1 of 2 branches missed.">                        } else if (key.equalsIgnoreCase(DigSigUtil.TRUSTSTORE_FILE_PASSWORD_WASENC)) {</span>
+<span class="nc" id="L833">                                cc.addProperty(&quot;client(0).signature.trustStorePassword[@isPasswordEncrypted]&quot;, val);</span>
+<span class="pc bpc" id="L834" title="1 of 2 branches missed.">                        } else if (key.equalsIgnoreCase(DigSigUtil.TRUSTSTORE_FILE_PASSWORD_PROVIDER)) {</span>
+<span class="nc" id="L835">                                cc.addProperty(&quot;client(0).signature.trustStorePassword[@cryptoProvider]&quot;, val);</span>
+                        }
+
+<span class="fc" id="L838">                }</span>
+
+<span class="pc bpc" id="L840" title="1 of 2 branches missed.">                if (p.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD_WASENC, &quot;false&quot;).equalsIgnoreCase(&quot;true&quot;)) {</span>
+<span class="nc" id="L841">                        cc.addProperty(&quot;client(0).signature.signingKeyStoreFilePassword&quot;, p.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD_CIPHER));</span>
+                } else {
+<span class="fc" id="L843">                        cc.addProperty(&quot;client(0).signature.signingKeyStoreFilePassword&quot;, p.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD));</span>
+                }
+
+<span class="pc bpc" id="L846" title="1 of 2 branches missed.">                if (p.getProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD_WASENC, &quot;false&quot;).equalsIgnoreCase(&quot;true&quot;)) {</span>
+<span class="nc" id="L847">                        cc.addProperty(&quot;client(0).signature.trustStorePassword&quot;, p.getProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD_CIPHER));</span>
+                } else {
+<span class="fc" id="L849">                        cc.addProperty(&quot;client(0).signature.trustStorePassword&quot;, p.getProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD));</span>
+                }
+
+<span class="pc bpc" id="L852" title="1 of 2 branches missed.">                if (p.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD_WAS_ENC, &quot;false&quot;).equalsIgnoreCase(&quot;true&quot;)) {</span>
+<span class="nc" id="L853">                        cc.addProperty(&quot;client(0).signature.signingKeyPassword&quot;, p.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD_CIPHER));</span>
+                } else {
+<span class="fc" id="L855">                        cc.addProperty(&quot;client(0).signature.signingKeyPassword&quot;, p.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD));</span>
+                }
+
+<span class="fc" id="L858">        }</span>
+
+        private void addXRegistration(Configuration cc) {
+
+<span class="fc" id="L862">                cc.addProperty(&quot;client.XtoWsdl.IgnoreSSLErrors&quot;, isX_To_Wsdl_Ignore_SSL_Errors());</span>
+<span class="fc" id="L863">        }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

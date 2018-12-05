@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UDDIv2InquiryImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.api.impl</a> &gt; <span class="el_source">UDDIv2InquiryImpl.java</span></div><h1>UDDIv2InquiryImpl.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2014 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.api.impl;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.jws.WebService;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
+import org.apache.juddi.v3.client.mapping.MapUDDIv2Tov3;
+import org.apache.juddi.v3.client.mapping.MapUDDIv3Tov2;
+import org.apache.juddi.validation.ValidateUDDIv2Inquiry;
+import org.uddi.api_v2.BindingDetail;
+import org.uddi.api_v2.BusinessDetail;
+import org.uddi.api_v2.BusinessDetailExt;
+import org.uddi.api_v2.BusinessList;
+import org.uddi.api_v2.FindBinding;
+import org.uddi.api_v2.FindBusiness;
+import org.uddi.api_v2.FindRelatedBusinesses;
+import org.uddi.api_v2.FindService;
+import org.uddi.api_v2.FindTModel;
+import org.uddi.api_v2.GetBindingDetail;
+import org.uddi.api_v2.GetBusinessDetail;
+import org.uddi.api_v2.GetBusinessDetailExt;
+import org.uddi.api_v2.GetServiceDetail;
+import org.uddi.api_v2.GetTModelDetail;
+import org.uddi.api_v2.RelatedBusinessesList;
+import org.uddi.api_v2.ServiceDetail;
+import org.uddi.api_v2.ServiceList;
+import org.uddi.api_v2.TModelDetail;
+import org.uddi.api_v2.TModelList;
+import org.uddi.v2_service.DispositionReport;
+import org.uddi.v2_service.Inquire;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * UDDI v2 Implementation for the Inquiry service. This implementation is
+ * basically a wrapper and API translator that translates and forwards the
+ * request to our UDDIv3 Inquiry implementation.&lt;br&gt;&lt;br&gt;
+ * This class is a BETA feature and is largely untested. Please report any
+ * issues
+ *
+ * @author &lt;a href=&quot;mailto:alexoree.apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ * @since 3.2
+ */
+@WebService(serviceName = &quot;Inquire&quot;, targetNamespace = &quot;urn:uddi-org:inquiry_v2&quot;,
+        endpointInterface = &quot;org.uddi.v2_service.Inquire&quot;)
+public class UDDIv2InquiryImpl implements Inquire {
+
+<span class="nc" id="L70">        private static Log logger = LogFactory.getLog(UDDIv2InquiryImpl.class);</span>
+<span class="nc" id="L71">        static UDDIInquiryImpl inquiryService = new UDDIInquiryImpl();</span>
+
+<span class="nc" id="L73">        public UDDIv2InquiryImpl() {</span>
+<span class="nc" id="L74">                logger.warn(&quot;This implementation of UDDIv2 Inquire service &quot; + UDDIv2InquiryImpl.class.getCanonicalName() + &quot; is considered BETA. Please&quot;</span>
+                        + &quot; report any issues to https://issues.apache.org/jira/browse/JUDDI&quot;);
+<span class="nc" id="L76">        }</span>
+
+<span class="nc" id="L78">        static String nodeId=null;</span>
+        public static String getNodeID(){
+                 try {
+<span class="nc" id="L81">                         nodeId=AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);</span>
+<span class="nc" id="L82">                 } catch (ConfigurationException ex) {</span>
+<span class="nc" id="L83">                         logger.warn(ex.getMessage());</span>
+<span class="nc" id="L84">                         nodeId=&quot;JUDDI_v3&quot;;</span>
+<span class="nc" id="L85">                 }</span>
+<span class="nc" id="L86">                 return nodeId;</span>
+        }
+        
+        @Override
+        public BindingDetail findBinding(FindBinding body) throws DispositionReport {
+<span class="nc" id="L91">                ValidateUDDIv2Inquiry.validateFindBinding(body);</span>
+                try {
+<span class="nc" id="L93">                        return MapUDDIv3Tov2.MapBindingDetail(inquiryService.findBinding(MapUDDIv2Tov3.MapFindBinding(body)), getNodeID());</span>
+<span class="nc" id="L94">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L95">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+        @Override
+        public BusinessList findBusiness(FindBusiness body) throws DispositionReport {
+<span class="nc" id="L101">                ValidateUDDIv2Inquiry.validateFindBusiness(body);</span>
+                try {
+<span class="nc" id="L103">                        return MapUDDIv3Tov2.MapBusinessListEntity(inquiryService.findBusiness(MapUDDIv2Tov3.MapFindBusiness(body)), getNodeID());</span>
+<span class="nc" id="L104">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L105">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+
+        }
+
+        @Override
+        public RelatedBusinessesList findRelatedBusinesses(FindRelatedBusinesses body) throws DispositionReport {
+<span class="nc" id="L112">                ValidateUDDIv2Inquiry.validateFindRelatedBusinesses(body);</span>
+                try {
+<span class="nc" id="L114">                        return MapUDDIv3Tov2.MapRelatedBusinessList(inquiryService.findRelatedBusinesses(MapUDDIv2Tov3.MapFindRelatedBusiness(body)), getNodeID());</span>
+<span class="nc" id="L115">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L116">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+        @Override
+        public ServiceList findService(FindService body) throws DispositionReport {
+<span class="nc" id="L122">                ValidateUDDIv2Inquiry.validateFindService(body);</span>
+                try {
+<span class="nc" id="L124">                        return MapUDDIv3Tov2.MapServiceList(inquiryService.findService(MapUDDIv2Tov3.MapFindService(body)), getNodeID());</span>
+<span class="nc" id="L125">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L126">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+        @Override
+        public TModelList findTModel(FindTModel body) throws DispositionReport {
+<span class="nc" id="L132">                ValidateUDDIv2Inquiry.validateFindTModel(body);</span>
+                try {
+<span class="nc" id="L134">                        return MapUDDIv3Tov2.MapTModelListElement(inquiryService.findTModel(MapUDDIv2Tov3.MapFindTModel(body)), getNodeID());</span>
+<span class="nc" id="L135">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L136">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+        @Override
+        public BindingDetail getBindingDetail(GetBindingDetail body) throws DispositionReport {
+<span class="nc" id="L142">                ValidateUDDIv2Inquiry.validateGetBindingDetail(body);</span>
+                try {
+<span class="nc" id="L144">                        return MapUDDIv3Tov2.MapBindingDetail(inquiryService.getBindingDetail(MapUDDIv2Tov3.MapGetBindingDetail(body)), getNodeID());</span>
+<span class="nc" id="L145">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L146">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+        @Override
+        public BusinessDetail getBusinessDetail(GetBusinessDetail body) throws DispositionReport {
+<span class="nc" id="L152">                ValidateUDDIv2Inquiry.validateGetBusinessDetail(body);</span>
+                try {
+<span class="nc" id="L154">                        BusinessDetail MapBusinessDetail = MapUDDIv3Tov2.MapBusinessDetail(inquiryService.getBusinessDetail(MapUDDIv2Tov3.MapGetBusinessDetail(body)), getNodeID());</span>
+                       // StringWriter sw = new StringWriter();
+                       // JAXB.marshal(MapBusinessDetail, sw);
+                      //  logger.info(sw.toString());
+<span class="nc" id="L158">                        return MapBusinessDetail;</span>
+<span class="nc" id="L159">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L160">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+        @Override
+        public BusinessDetailExt getBusinessDetailExt(GetBusinessDetailExt body) throws DispositionReport {
+<span class="nc" id="L166">                ValidateUDDIv2Inquiry.validateBusinessDetailExt(body);</span>
+                try {
+<span class="nc" id="L168">                        return MapUDDIv3Tov2.MapBusinessDetailExt(inquiryService.getBusinessDetail(MapUDDIv2Tov3.MapGetBusinessDetailExt(body)), getNodeID());</span>
+<span class="nc" id="L169">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L170">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+        @Override
+        public ServiceDetail getServiceDetail(GetServiceDetail body) throws DispositionReport {
+<span class="nc" id="L176">                ValidateUDDIv2Inquiry.validateGetServiceDetail(body);</span>
+                try {
+<span class="nc" id="L178">                        return MapUDDIv3Tov2.MapServiceDetail(inquiryService.getServiceDetail(MapUDDIv2Tov3.MapGetServiceDetail(body)), getNodeID());</span>
+<span class="nc" id="L179">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L180">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+        @Override
+        public TModelDetail getTModelDetail(GetTModelDetail body) throws DispositionReport {
+<span class="nc" id="L186">                ValidateUDDIv2Inquiry.validateGetTModelDetail(body);</span>
+                try {
+                	//remove duplicates using a set
+<span class="nc" id="L189">                	Set&lt;String&gt; keyList = new HashSet(body.getTModelKey());</span>
+<span class="nc" id="L190">                	body.getTModelKey().clear();</span>
+<span class="nc" id="L191">                	body.getTModelKey().addAll(keyList);</span>
+<span class="nc" id="L192">                        return MapUDDIv3Tov2.MapTModelDetail(inquiryService.getTModelDetail(MapUDDIv2Tov3.MapGetTModelDetail(body)), getNodeID());</span>
+<span class="nc" id="L193">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L194">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
+                }
+        }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

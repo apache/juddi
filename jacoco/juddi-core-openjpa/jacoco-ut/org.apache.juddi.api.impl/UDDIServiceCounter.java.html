@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UDDIServiceCounter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.api.impl</a> &gt; <span class="el_source">UDDIServiceCounter.java</span></div><h1>UDDIServiceCounter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.api.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.AttributeNotFoundException;
+import javax.management.DynamicMBean;
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.InvalidAttributeValueException;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanException;
+import javax.management.MBeanInfo;
+import javax.management.MBeanOperationInfo;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
+import javax.management.MBeanServerFactory;
+import javax.management.MalformedObjectNameException;
+import javax.management.NotCompliantMBeanException;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.util.QueryStatus;
+import org.apache.juddi.api.util.UDDIQuery;
+
+/**
+ * This class provides MBean functionality that offers metrics on UDDI service method invocations
+ * and various management functions (documented by Alex O'Ree)
+ * @author Tom Cunningham
+ */
+<span class="fc" id="L52">public class UDDIServiceCounter implements DynamicMBean, Serializable {</span>
+
+<span class="fc" id="L54">    private static Log log = LogFactory.getLog(UDDIServiceCounter.class);</span>
+
+    private Hashtable &lt;String, LongHolder&gt; queryProcessingTime;
+    private Hashtable &lt;String, IntHolder&gt; totalQueryCounter;
+    private Hashtable &lt;String, IntHolder&gt; successQueryCounter;
+    private Hashtable &lt;String, IntHolder&gt; faultQueryCounter;
+
+<span class="fc" id="L61">    private ObjectName listObjectName = null;</span>
+    
+    private int totalApiCounter;
+    private int successApiCounter;
+    private int faultApiCounter;
+    
+    private static final String PROCESSING_TIME = &quot;processing time&quot;;
+    private static final String TOTAL_QUERIES = &quot;total queries&quot;;
+    private static final String SUCCESSFUL_QUERIES = &quot;successful queries&quot;;
+    private static final String FAILED_QUERIES = &quot;failed queries&quot;;
+    
+    private static final String TOTAL_API_QUERIES = &quot;Total API Queries&quot;;
+    private static final String SUCCESSFUL_API_QUERIES = &quot;Successful API Queries&quot;;
+    private static final String FAILED_API_QUERIES = &quot;Failed API Queries&quot;;
+    
+    public static final String RESET_COUNTER = &quot;resetCounts&quot;;
+        
+    public void initList(Class klass, List&lt;String&gt; queries) {
+        try {
+<span class="fc" id="L80">            listObjectName = new ObjectName(&quot;apache.juddi:&quot; + &quot;counter=&quot; + klass.getName());</span>
+<span class="nc" id="L81">        } catch (MalformedObjectNameException mone) {</span>
+<span class="nc" id="L82">            log.error(mone);</span>
+<span class="fc" id="L83">        }</span>
+        
+<span class="fc" id="L85">        queryProcessingTime = new Hashtable&lt;String,LongHolder&gt;();</span>
+<span class="fc" id="L86">        totalQueryCounter = new Hashtable&lt;String, IntHolder&gt;();</span>
+<span class="fc" id="L87">        successQueryCounter = new Hashtable&lt;String, IntHolder&gt;();</span>
+<span class="fc" id="L88">        faultQueryCounter = new Hashtable&lt;String, IntHolder&gt;();</span>
+            
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        for (String query : queries) {</span>
+<span class="fc" id="L91">            queryProcessingTime.put(query + &quot; &quot; +  PROCESSING_TIME, new LongHolder());</span>
+<span class="fc" id="L92">            totalQueryCounter.put(query + &quot; &quot; + TOTAL_QUERIES, new IntHolder());</span>
+<span class="fc" id="L93">            successQueryCounter.put(query + &quot; &quot; + SUCCESSFUL_QUERIES, new IntHolder());</span>
+<span class="fc" id="L94">            faultQueryCounter.put(query + &quot; &quot; + FAILED_QUERIES, new IntHolder());</span>
+<span class="fc" id="L95">        }</span>
+        
+<span class="fc" id="L97">        totalApiCounter = 0;</span>
+<span class="fc" id="L98">        successApiCounter = 0;</span>
+<span class="fc" id="L99">        faultApiCounter = 0;</span>
+
+<span class="fc" id="L101">    }</span>
+    
+    protected void registerMBean() {
+<span class="fc" id="L104">        MBeanServer mbeanServer = null;</span>
+        
+<span class="fc" id="L106">        mbeanServer = getServer();</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        if (mbeanServer == null) {</span>
+            try {
+//                mbeanServer = MBeanServerLocator.locateJBoss();
+            } catch (IllegalStateException ise) {
+                // If we can't find a JBoss MBeanServer, just return
+                // Needed for unit tests
+                return;
+            }            
+        }
+        
+        try {
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">        	if (! mbeanServer.isRegistered(listObjectName))</span>
+<span class="fc" id="L119">        		mbeanServer.registerMBean(this, listObjectName);</span>
+<span class="nc" id="L120">        } catch (InstanceAlreadyExistsException e) {</span>
+<span class="nc" id="L121">            log.warn(&quot;&quot;, e);</span>
+<span class="nc" id="L122">        } catch (MBeanRegistrationException e) {</span>
+<span class="nc" id="L123">            log.warn(&quot;&quot;, e);</span>
+<span class="nc" id="L124">        } catch (NotCompliantMBeanException e) {</span>
+<span class="nc" id="L125">            log.warn(&quot;&quot;, e);</span>
+<span class="pc" id="L126">        }   </span>
+<span class="fc" id="L127">    }</span>
+        
+    private MBeanServer getServer() {
+<span class="fc" id="L130">        MBeanServer mbserver = null;</span>
+
+<span class="fc" id="L132">        ArrayList mbservers = MBeanServerFactory.findMBeanServer(null);</span>
+
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">        if (mbservers.size() &gt; 0) {</span>
+<span class="fc" id="L135">          mbserver = (MBeanServer) mbservers.get(0);</span>
+        }
+
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">        if (mbserver != null) {</span>
+<span class="fc" id="L139">	  log.info(&quot;Found MBean server&quot;);</span>
+        } else {
+<span class="nc" id="L141">          mbserver = MBeanServerFactory.createMBeanServer();</span>
+        } 
+
+<span class="fc" id="L144">        return mbserver;</span>
+    }
+    
+    public void resetCounts() {
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        for (String key : queryProcessingTime.keySet()) {</span>
+<span class="nc" id="L149">            queryProcessingTime.put(key, new LongHolder());</span>
+<span class="nc" id="L150">        }</span>
+        
+<span class="nc bnc" id="L152" title="All 2 branches missed.">        for (String key : totalQueryCounter.keySet()) {</span>
+<span class="nc" id="L153">            totalQueryCounter.put(key, new IntHolder());</span>
+<span class="nc" id="L154">        }</span>
+        
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        for (String key : successQueryCounter.keySet()) {</span>
+<span class="nc" id="L157">            successQueryCounter.put(key, new IntHolder());</span>
+<span class="nc" id="L158">        }</span>
+        
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        for (String key : faultQueryCounter.keySet()) {</span>
+<span class="nc" id="L161">            faultQueryCounter.put(key, new IntHolder());</span>
+<span class="nc" id="L162">        }</span>
+        
+<span class="nc" id="L164">        totalApiCounter = 0;</span>
+<span class="nc" id="L165">        successApiCounter = 0;</span>
+<span class="nc" id="L166">        faultApiCounter = 0;</span>
+
+<span class="nc" id="L168">    }</span>
+
+    /**
+     * This updates the performance metrics for a given service.
+     * 
+     * Note, as of jUDDI 3.2, procTime MUST be in milliseconds. Prior to 3.2 used nanoseconds
+     * @param queryObject the item that was executed
+     * @param queryStatus success or fail status
+     * @param procTime Expects time in milliseconds
+     */
+    public synchronized void update(UDDIQuery queryObject, QueryStatus queryStatus, 
+            long procTime) {        
+        //log.info(&quot;Updating &quot; + queryObject.getQuery() + &quot; time &quot; + procTime);
+<span class="fc" id="L181">        String query = queryObject.getQuery();</span>
+        
+<span class="fc" id="L183">        LongHolder totalProcTime = queryProcessingTime.get(query + &quot; &quot; +  PROCESSING_TIME);</span>
+<span class="pc bpc" id="L184" title="1 of 2 branches missed.">        if (totalProcTime != null) {</span>
+<span class="fc" id="L185">            totalProcTime.value += procTime;</span>
+<span class="fc" id="L186">            totalApiCounter++;</span>
+        } else {
+<span class="nc" id="L188">            throw new RuntimeException(&quot;Exception in Update : &quot; + queryObject.getQuery() </span>
+                    + &quot; time &quot; + procTime + &quot; queryprocessingtime.size() + &quot;
+<span class="nc" id="L190">                    + queryProcessingTime.size());</span>
+        }
+        
+<span class="fc" id="L193">        IntHolder queryCounter = totalQueryCounter.get(query + &quot; &quot; + TOTAL_QUERIES);</span>
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">        if (queryCounter != null) { </span>
+<span class="fc" id="L195">            queryCounter.value++;</span>
+        } else {
+<span class="nc" id="L197">            throw new RuntimeException(&quot;Exception in Update : &quot; + queryObject.getQuery() </span>
+                    + &quot; time &quot; + procTime + &quot; totalQueryCounter.size() + &quot;
+<span class="nc" id="L199">                    + totalQueryCounter.size());</span>
+        }
+
+<span class="fc bfc" id="L202" title="All 2 branches covered.">        if (queryStatus == QueryStatus.SUCCESS) {</span>
+<span class="fc" id="L203">            IntHolder successQuery = successQueryCounter.get(query + &quot; &quot; + SUCCESSFUL_QUERIES);</span>
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">            if (successQuery != null) {</span>
+<span class="fc" id="L205">                successQuery.value++;</span>
+<span class="fc" id="L206">                successApiCounter++;</span>
+            } else {
+<span class="nc" id="L208">                throw new RuntimeException(&quot;Exception in Update : &quot; + queryObject.getQuery() </span>
+                        + &quot; time &quot; + procTime + &quot; successQueryCounter.size() &quot;
+<span class="nc" id="L210">                        + successQueryCounter.size());</span>
+            }
+<span class="pc bpc" id="L212" title="1 of 2 branches missed.">        } else if (queryStatus == queryStatus.FAILED) {</span>
+<span class="fc" id="L213">            IntHolder faultQuery = faultQueryCounter.get(query + &quot; &quot; + FAILED_QUERIES);</span>
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">            if (faultQuery != null) {</span>
+<span class="fc" id="L215">                faultQuery.value++;</span>
+<span class="fc" id="L216">                faultApiCounter++;</span>
+            } else {
+<span class="nc" id="L218">                throw new RuntimeException(&quot;Exception in Update : &quot; + queryObject.getQuery() </span>
+                        + &quot; time &quot; + procTime + &quot; faultQueryCounter.size() &quot;
+<span class="nc" id="L220">                        + faultQueryCounter.size());</span>
+            }            
+        }        
+<span class="fc" id="L223">    }</span>
+    
+    @Override
+    public Object getAttribute(String attribute)
+            throws AttributeNotFoundException, MBeanException,
+            ReflectionException {
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">        if (queryProcessingTime.containsKey(attribute)) {</span>
+<span class="nc" id="L230">            return queryProcessingTime.get(attribute);</span>
+<span class="pc bpc" id="L231" title="1 of 2 branches missed.">        } else if (totalQueryCounter.containsKey(attribute)) {</span>
+<span class="nc" id="L232">            return totalQueryCounter.get(attribute);</span>
+<span class="pc bpc" id="L233" title="1 of 2 branches missed.">        } else if (successQueryCounter.containsKey(attribute)) {</span>
+<span class="fc" id="L234">            return successQueryCounter.get(attribute);</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">        } else if (faultQueryCounter.containsKey(attribute)) {</span>
+<span class="nc" id="L236">            return faultQueryCounter.get(attribute);</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">        } else if (attribute.equals(TOTAL_API_QUERIES)) {</span>
+<span class="nc" id="L238">            return totalApiCounter;</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">        } else if (attribute.equals(SUCCESSFUL_API_QUERIES)) {</span>
+<span class="nc" id="L240">            return successApiCounter;</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">        } else if (attribute.equals(FAILED_API_QUERIES)) {</span>
+<span class="nc" id="L242">            return faultApiCounter;</span>
+        }
+<span class="nc" id="L244">        return null;</span>
+    }
+
+    @Override
+    public void setAttribute(Attribute attribute)
+            throws AttributeNotFoundException, InvalidAttributeValueException,
+            MBeanException, ReflectionException {
+        
+<span class="nc" id="L252">    }</span>
+
+    @Override
+    public AttributeList getAttributes(String[] attributes) {
+<span class="nc" id="L256">        AttributeList attributeList = new AttributeList();</span>
+
+<span class="nc" id="L258">        attributeList.add(new Attribute(TOTAL_API_QUERIES, totalApiCounter));</span>
+<span class="nc" id="L259">        attributeList.add(new Attribute(SUCCESSFUL_API_QUERIES, successApiCounter));</span>
+<span class="nc" id="L260">        attributeList.add(new Attribute(FAILED_API_QUERIES, faultApiCounter));</span>
+
+<span class="nc bnc" id="L262" title="All 2 branches missed.">        for (String key : queryProcessingTime.keySet()) {</span>
+<span class="nc" id="L263">            Attribute at = new Attribute(key, queryProcessingTime.get(key).toString());</span>
+<span class="nc" id="L264">            attributeList.add(at);</span>
+<span class="nc" id="L265">        }</span>
+                
+<span class="nc bnc" id="L267" title="All 2 branches missed.">        for (String key : totalQueryCounter.keySet()) {</span>
+<span class="nc" id="L268">            Attribute at = new Attribute(key, totalQueryCounter.get(key).toString());</span>
+<span class="nc" id="L269">            attributeList.add(at);</span>
+<span class="nc" id="L270">        }</span>
+        
+<span class="nc bnc" id="L272" title="All 2 branches missed.">        for (String key : successQueryCounter.keySet()) {</span>
+<span class="nc" id="L273">            Attribute at = new Attribute(key, successQueryCounter.get(key).toString());</span>
+<span class="nc" id="L274">            attributeList.add(at);</span>
+<span class="nc" id="L275">        }</span>
+
+<span class="nc bnc" id="L277" title="All 2 branches missed.">        for (String key : faultQueryCounter.keySet()) {</span>
+<span class="nc" id="L278">            Attribute at = new Attribute(key, faultQueryCounter.get(key).toString());</span>
+<span class="nc" id="L279">            attributeList.add(at);</span>
+<span class="nc" id="L280">        }</span>
+        
+<span class="nc" id="L282">        return attributeList;</span>
+    }
+
+    @Override
+    public AttributeList setAttributes(AttributeList attributes) {
+<span class="nc" id="L287">        return null;</span>
+    }
+
+    @Override
+    public Object invoke(String actionName, Object[] params, String[] signature)
+            throws MBeanException, ReflectionException {
+<span class="nc bnc" id="L293" title="All 2 branches missed.">        if (actionName.equalsIgnoreCase(RESET_COUNTER)) {</span>
+<span class="nc" id="L294">            resetCounts();</span>
+<span class="nc" id="L295">            return &quot;Invoking the &quot; + actionName + &quot; on the lifecycle.&quot;;</span>
+        } else {
+<span class="nc" id="L297">            throw new ReflectionException(new NoSuchMethodException(actionName));</span>
+        }
+    }
+
+    @Override
+    public MBeanInfo getMBeanInfo() {
+        // the extra 3 added are for totalApiQueries, faultApiQueries, and
+        // successfulApiQueries
+<span class="fc" id="L305">        int count = queryProcessingTime.size() + totalQueryCounter.size() +</span>
+<span class="fc" id="L306">            successQueryCounter.size() + faultQueryCounter.size() + 3;  </span>
+
+<span class="fc" id="L308">        MBeanAttributeInfo[] attrs = new MBeanAttributeInfo[count];</span>
+<span class="fc" id="L309">        int counter = 0;</span>
+
+<span class="fc" id="L311">        attrs[counter] = new MBeanAttributeInfo(</span>
+                TOTAL_API_QUERIES, &quot;java.lang.Integer&quot;, &quot;Property &quot; + TOTAL_API_QUERIES,
+                true, false, false);
+<span class="fc" id="L314">        counter++;</span>
+        
+<span class="fc" id="L316">        attrs[counter] = new MBeanAttributeInfo(</span>
+                SUCCESSFUL_API_QUERIES, &quot;java.lang.Integer&quot;, &quot;Property &quot; + SUCCESSFUL_API_QUERIES,
+                true, false, false);
+<span class="fc" id="L319">        counter++;</span>
+        
+<span class="fc" id="L321">        attrs[counter] =  new MBeanAttributeInfo(</span>
+                FAILED_API_QUERIES, &quot;java.lang.Integer&quot;, &quot;Property &quot; + FAILED_API_QUERIES,
+                true, false, false);
+<span class="fc" id="L324">        counter++;</span>
+        
+<span class="fc bfc" id="L326" title="All 2 branches covered.">        for (String key : queryProcessingTime.keySet()) {</span>
+<span class="fc" id="L327">            attrs[counter] = new MBeanAttributeInfo(</span>
+                    key, &quot;java.lang.Double&quot;, &quot;Property &quot; + key, true, false, false);
+<span class="fc" id="L329">            counter++;</span>
+<span class="fc" id="L330">        }</span>
+
+<span class="fc bfc" id="L332" title="All 2 branches covered.">        for (String key : totalQueryCounter.keySet()) {</span>
+<span class="fc" id="L333">            attrs[counter] = new MBeanAttributeInfo(</span>
+                    key, &quot;java.lang.Integer&quot;, &quot;Property &quot; + key, true, false, false);
+<span class="fc" id="L335">            counter++;</span>
+<span class="fc" id="L336">        }</span>
+
+<span class="fc bfc" id="L338" title="All 2 branches covered.">        for (String key : successQueryCounter.keySet()) {</span>
+<span class="fc" id="L339">            attrs[counter] = new MBeanAttributeInfo(</span>
+                    key, &quot;java.lang.Integer&quot;, &quot;Property &quot; + key, true, false, false);
+<span class="fc" id="L341">            counter++;</span>
+<span class="fc" id="L342">        }</span>
+
+<span class="fc bfc" id="L344" title="All 2 branches covered.">        for (String key : faultQueryCounter.keySet()) {</span>
+<span class="fc" id="L345">            attrs[counter] = new MBeanAttributeInfo(</span>
+                    key, &quot;java.lang.Integer&quot;, &quot;Property &quot; + key, true, false, false);
+<span class="fc" id="L347">            counter++;</span>
+<span class="fc" id="L348">        }</span>
+        
+<span class="fc" id="L350">        MBeanOperationInfo[] opers = {</span>
+                new MBeanOperationInfo(
+                        RESET_COUNTER, &quot;Reset the counter&quot;,
+                        null, &quot;void&quot;, MBeanOperationInfo.ACTION)
+        };        
+        
+<span class="fc" id="L356">        return new MBeanInfo(this.getClass().getName(), &quot;Service Counter MBean&quot;, </span>
+                attrs, null, opers, null);
+    }
+    
+<span class="fc" id="L360">    private static final class IntHolder implements Serializable</span>
+    {
+            int value ;
+            @Override
+            public String toString() {
+<span class="fc" id="L365">                    return Integer.toString(value);</span>
+            }
+    }
+
+<span class="fc" id="L369">    private static final class LongHolder implements Serializable</span>
+    {
+            long value ;
+            @Override
+            public String toString() {
+<span class="nc" id="L374">                    return Long.toString(value);</span>
+            }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

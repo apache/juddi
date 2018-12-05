@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UDDISecurityService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.transport.wrapper</a> &gt; <span class="el_source">UDDISecurityService.java</span></div><h1>UDDISecurityService.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2010 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.v3.client.transport.wrapper;
+
+import java.util.HashMap;
+
+import org.apache.juddi.v3.client.ClassUtil;
+import org.apache.juddi.v3.client.config.UDDIClient;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
+import org.apache.juddi.v3.client.transport.Transport;
+import org.uddi.api_v3.DiscardAuthToken;
+import org.uddi.api_v3.GetAuthToken;
+import org.uddi.v3_service.UDDISecurityPortType;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+/**
+ * @author Tom Cunningham (tcunning@apache.org)
+ * @author Kurt Stam (kurt.stam@redhat.com)
+ */
+public class UDDISecurityService {
+
+	private final static String DEFAULT_NODE_NAME = &quot;default&quot;;
+
+<span class="nc" id="L39">	private String clientName = null;</span>
+<span class="nc" id="L40">	private String nodeName = null;</span>
+	// collection of valid operations
+<span class="nc" id="L42">	private HashMap&lt;String, Handler&gt; operations = null;</span>
+
+	public UDDISecurityService() {
+<span class="nc" id="L45">		super();</span>
+<span class="nc" id="L46">		clientName = System.getProperty(&quot;org.apache.juddi.v3.client.name&quot;); </span>
+<span class="nc" id="L47">		nodeName    = System.getProperty(&quot;org.apache.juddi.v3.client.node.name&quot;,DEFAULT_NODE_NAME);</span>
+<span class="nc" id="L48">		operations = new HashMap&lt;String, Handler&gt;();</span>
+<span class="nc" id="L49">		operations.put(&quot;get_authToken&quot;, new Handler(&quot;getAuthToken&quot;, GetAuthToken.class));</span>
+<span class="nc" id="L50">		operations.put(&quot;discard_authToken&quot;, new Handler(&quot;discardAuthToken&quot;, DiscardAuthToken.class));</span>
+<span class="nc" id="L51">	}</span>
+
+	//Verify that the appropriate endpoint was targeted for
+	// this service request.  The validateRequest method will
+	// throw an UnsupportedOperationException if anything's amiss.
+	public void validateRequest(String operation)
+			throws UnsupportedOperationException
+	{
+<span class="nc bnc" id="L59" title="All 4 branches missed.">	    if ((operation == null) || (operation.trim().length() == 0))</span>
+<span class="nc" id="L60">	    	throw new UnsupportedOperationException(&quot;operation &quot; + operation + &quot; not supported&quot;);</span>
+<span class="nc" id="L61">	  }</span>
+	
+	public Node secure(Element uddiReq) throws Exception {
+<span class="nc" id="L64">	    return secure(uddiReq, nodeName, clientName);</span>
+	}
+
+	public Node secure(Element uddiReq, String nodeName, String clientName) throws Exception
+	{
+<span class="nc" id="L69">	    UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);</span>
+<span class="nc" id="L70">	    String clazz = client.getClientConfig().getUDDINode(nodeName).getProxyTransport();</span>
+<span class="nc" id="L71">            Class&lt;?&gt; transportClass = ClassUtil.forName(clazz, this.getClass());</span>
+<span class="nc" id="L72">            Transport transport = (Transport) transportClass.getConstructor(String.class, String.class).newInstance(clientName, nodeName);</span>
+<span class="nc" id="L73">	    UDDISecurityPortType security = transport.getUDDISecurityService();</span>
+
+	    //new RequestHandler on it's own thread
+<span class="nc" id="L76">	    RequestHandler requestHandler = new RequestHandler();</span>
+<span class="nc" id="L77">	    requestHandler.setPortType(security);</span>
+
+<span class="nc" id="L79">	    String operation = requestHandler.getOperation(uddiReq);</span>
+<span class="nc" id="L80">	    Handler opHandler = operations.get(operation);</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">	    if (opHandler == null) {</span>
+<span class="nc" id="L82">	        throw new IllegalArgumentException(&quot;Operation not found: &quot; + operation);</span>
+	    }
+
+<span class="nc" id="L85">	    requestHandler.setMethodName(opHandler.getMethodName());</span>
+<span class="nc" id="L86">	    requestHandler.setOperationClass(opHandler.getParameter());</span>
+
+	    @SuppressWarnings(&quot;unused&quot;)
+<span class="nc" id="L89">	    String version   = requestHandler.getVersion(uddiReq, operation);</span>
+<span class="nc" id="L90">	    validateRequest(operation);</span>
+<span class="nc" id="L91">	    return requestHandler.invoke(uddiReq);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

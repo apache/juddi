@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FindEntityByIdentifierQuery.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.query</a> &gt; <span class="el_source">FindEntityByIdentifierQuery.java</span></div><h1>FindEntityByIdentifierQuery.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.query;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.config.Constants;
+import org.apache.juddi.query.util.DynamicQuery;
+import org.apache.juddi.query.util.FindQualifiers;
+import org.apache.juddi.query.util.KeyedRefTModelComparator;
+import org.uddi.api_v3.IdentifierBag;
+import org.uddi.api_v3.KeyedReference;
+
+/**
+ * Returns the list of &quot;entity&quot; keys possessing the keyedReferences in the passed identifier bag.
+ * Output is restricted by list of &quot;entity&quot; keys passed in.  If null, all entities are searched.
+ * Output is produced by building the appropriate JPA query based on input and find qualifiers.
+ * 
+ * NOTES:
+ * 1) Identifiers are grouped with a logical OR by default.
+ * 2) In the case that the &quot;andAllKeys&quot; find qualifier is used the identifiers are AND'd together.  The only way this can be done
+ *    with a single query was to create a self-join for each identifier.  If there are a lot of identifiers, the performance could suffer.
+ *    TODO:  Test performance with multiple AND'd identifiers.  If too slow, look to process this query in multiple steps.
+ * 3) The &quot;orLikeKeys&quot; qualifier complicates matters.  The &quot;like&quot; keys are OR'd together and these groups of &quot;like&quot; keys are AND'd together.
+ *    As with &quot;andAllKeys&quot;, self-joins are created but only one for each group of &quot;like&quot; keys.  If none of the keyedReferences passed are alike then this
+ *    will reduce to an &quot;andAllKeys&quot; query.  If all are alike, then this will query will exhibit the default behavior of OR'ing all keys.
+ * 
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+public class FindEntityByIdentifierQuery extends EntityQuery {
+	
+	@SuppressWarnings(&quot;unused&quot;)
+<span class="fc" id="L53">	private final static Log log = LogFactory.getLog(FindEntityByIdentifierQuery.class);</span>
+
+	private final String entityName;
+	private final String entityAlias;
+	private final String keyName;
+	private final String entityField;
+	private final String entityNameChild;
+	private final String entityAliasChild;
+	private final String selectSQL;
+	private String signaturePresent;
+
+	public FindEntityByIdentifierQuery(String entityName, String entityAlias, String keyName, 
+<span class="fc" id="L65">			String entityField, String entityNameChild, String signaturePresent) {</span>
+<span class="fc" id="L66">		this.entityName = entityName;</span>
+<span class="fc" id="L67">		this.entityAlias = entityAlias;</span>
+<span class="fc" id="L68">		this.keyName = keyName;</span>
+<span class="fc" id="L69">		this.entityField = entityField;</span>
+<span class="fc" id="L70">		this.entityNameChild = entityNameChild;</span>
+<span class="fc" id="L71">		this.entityAliasChild = buildAlias(entityNameChild);</span>
+<span class="fc" id="L72">		this.signaturePresent = signaturePresent;</span>
+		
+<span class="fc" id="L74">		StringBuilder sql = new StringBuilder(200);</span>
+<span class="fc" id="L75">		sql.append(&quot;select distinct &quot;).append(entityAlias).append(&quot;.&quot;).append(keyName).append(&quot; from &quot;).append(entityName).append(&quot; &quot;).append(entityAlias).append(&quot; &quot;);</span>
+<span class="fc" id="L76">		selectSQL = sql.toString();</span>
+<span class="fc" id="L77">	}</span>
+	
+	public String getEntityName() {
+<span class="nc" id="L80">		return entityName;</span>
+	}
+
+	public String getEntityAlias() {
+<span class="nc" id="L84">		return entityAlias;</span>
+	}
+
+	public String getKeyName() {
+<span class="nc" id="L88">		return keyName;</span>
+	}
+
+	public String getEntityField() {
+<span class="nc" id="L92">		return entityField;</span>
+	}
+
+	public String getEntityNameChild() {
+<span class="nc" id="L96">		return entityNameChild;</span>
+	}
+	
+	public String getEntityAliasChild() {
+<span class="nc" id="L100">		return entityAliasChild;</span>
+	}
+	
+	public String getSelectSQL() {
+<span class="nc" id="L104">		return selectSQL;</span>
+	}
+	
+	public String getSignaturePresent() {
+<span class="nc" id="L108">		return signaturePresent;</span>
+	}
+
+	public void setSignaturePresent(String signaturePresent) {
+<span class="nc" id="L112">		this.signaturePresent = signaturePresent;</span>
+<span class="nc" id="L113">	}</span>
+
+	
+	public List&lt;Object&gt; select(EntityManager em, FindQualifiers fq, IdentifierBag identifiers, List&lt;Object&gt; keysIn, DynamicQuery.Parameter... restrictions) {
+		// If keysIn is not null and empty, then search is over.
+<span class="pc bpc" id="L118" title="1 of 4 branches missed.">		if ((keysIn != null) &amp;&amp; (keysIn.size() == 0))</span>
+<span class="nc" id="L119">			return keysIn;</span>
+		
+<span class="fc bfc" id="L121" title="All 2 branches covered.">		if (identifiers == null)</span>
+<span class="fc" id="L122">			return keysIn;</span>
+		
+<span class="fc" id="L124">		List&lt;KeyedReference&gt; keyedRefs = identifiers.getKeyedReference();</span>
+<span class="pc bpc" id="L125" title="2 of 4 branches missed.">		if (keyedRefs == null || keyedRefs.size() == 0)</span>
+<span class="nc" id="L126">			return keysIn;</span>
+		
+<span class="fc" id="L128">		DynamicQuery dynamicQry = new DynamicQuery(selectSQL);</span>
+<span class="fc" id="L129">		appendConditions(dynamicQry, fq, keyedRefs);</span>
+<span class="pc bpc" id="L130" title="1 of 4 branches missed.">		if (restrictions != null &amp;&amp; restrictions.length &gt; 0)</span>
+<span class="fc" id="L131">			dynamicQry.AND().pad().appendGroupedAnd(restrictions);</span>
+
+<span class="fc" id="L133">		return getQueryResult(em, dynamicQry, keysIn, entityAlias + &quot;.&quot; + keyName);</span>
+	}
+	
+	
+	/*
+	 * Appends the conditions to the query based on the keyedReference list.  With the default or when &quot;andAllKeys&quot; is passed, the keyedReferences are autonomous and are
+	 * all OR'd or AND'd respectively.  However, &quot;orLikeKeys&quot; requires special treatment.  The goal is to create the conditions in this format:
+	 * 
+	 * (likeKey1 = X or likeKey1 = Y) and (likeKey2 = A or likeKey2 = B or likeKey2 = C) 
+	 * 
+	 * ie. the &quot;like&quot; KeyedReferences are OR'd and the groups of &quot;like&quot; KeyedReferences are AND'd with each other.
+	 */
+	public void appendConditions(DynamicQuery qry, FindQualifiers fq, List&lt;KeyedReference&gt; keyedRefs) {
+		
+		// Append the necessary tables (one will always be added connecting the entity to its identifier table).
+<span class="fc" id="L148">		appendJoinTables(qry, fq, keyedRefs);</span>
+<span class="fc" id="L149">		qry.AND().pad().openParen().pad();</span>
+		
+<span class="fc" id="L151">		String predicate = DynamicQuery.PREDICATE_EQUALS;</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">		if (fq.isApproximateMatch()) {</span>
+<span class="fc" id="L153">			predicate = DynamicQuery.PREDICATE_LIKE;</span>
+		}
+		
+		// Sorting the collection by tModel Key
+<span class="fc" id="L157">		Collections.sort(keyedRefs, new KeyedRefTModelComparator());</span>
+
+<span class="fc" id="L159">		String prevTModelKey = null;</span>
+<span class="fc" id="L160">		int count = 0;</span>
+<span class="fc" id="L161">		int tblCount = -1;</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">		for(KeyedReference keyedRef : keyedRefs) {</span>
+<span class="fc" id="L163">			String tmodelKey = keyedRef.getTModelKey();</span>
+<span class="fc" id="L164">			String keyValue = keyedRef.getKeyValue();</span>
+<span class="fc" id="L165">			String keyName = keyedRef.getKeyName();</span>
+			
+<span class="fc bfc" id="L167" title="All 2 branches covered.">			if (fq.isApproximateMatch()) {</span>
+				// JUDDI-235: wildcards are provided by user (only commenting in case a new interpretation arises)
+				//keyValue = keyValue.endsWith(DynamicQuery.WILDCARD)?keyValue:keyValue + DynamicQuery.WILDCARD;
+				//keyName = keyName.endsWith(DynamicQuery.WILDCARD)?keyName:keyName + DynamicQuery.WILDCARD;
+			}
+
+			// Either opening up (and AND'ing) a new &quot;group&quot; of like keys or simply appending an &quot;or&quot;.  If this is not &quot;orLikeKeys&quot;, then just need to increment
+			// the table count.
+<span class="fc bfc" id="L175" title="All 2 branches covered.">			if (fq.isOrLikeKeys()) {</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">				if (count == 0) {</span>
+<span class="fc" id="L177">					qry.openParen().pad();</span>
+<span class="fc" id="L178">					tblCount++;</span>
+				}
+				else {
+<span class="pc bpc" id="L181" title="1 of 2 branches missed.">					if (!tmodelKey.equals(prevTModelKey)) {</span>
+<span class="nc" id="L182">						qry.closeParen().pad().AND().pad().openParen().pad();</span>
+<span class="nc" id="L183">						tblCount++;</span>
+					}
+					else
+<span class="fc" id="L186">						qry.OR().pad();</span>
+				}
+			}
+			else
+<span class="fc" id="L190">				tblCount++;</span>
+			
+<span class="pc bpc" id="L192" title="1 of 4 branches missed.">			String keyValueTerm = (fq.isAndAllKeys()||fq.isOrLikeKeys()?entityAliasChild + tblCount:entityAliasChild + &quot;0&quot;) + &quot;.keyValue&quot;;</span>
+<span class="pc bpc" id="L193" title="1 of 4 branches missed.">			String keyNameTerm = (fq.isAndAllKeys()||fq.isOrLikeKeys()?entityAliasChild + tblCount:entityAliasChild + &quot;0&quot;) + &quot;.keyName&quot;;</span>
+<span class="pc bpc" id="L194" title="1 of 4 branches missed.">			String tmodelKeyTerm = (fq.isAndAllKeys()||fq.isOrLikeKeys()?entityAliasChild + tblCount:entityAliasChild + &quot;0&quot;) + &quot;.tmodelKeyRef&quot;;</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">			if (fq.isCaseInsensitiveMatch()) {</span>
+<span class="fc" id="L196">				keyValueTerm = &quot;upper(&quot; + keyValueTerm + &quot;)&quot;;</span>
+<span class="fc" id="L197">				keyValue = keyValue.toUpperCase();</span>
+				
+<span class="fc" id="L199">				keyNameTerm = &quot;upper(&quot; + keyNameTerm + &quot;)&quot;;</span>
+<span class="fc" id="L200">				keyName = keyName.toUpperCase();</span>
+			}
+			
+			
+			// According to specification, if the &quot;general keyword&quot; tmodel is used, then the keyName must be part of the query.
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">			if (Constants.GENERAL_KEYWORD_TMODEL.equalsIgnoreCase(tmodelKey)) {</span>
+<span class="nc" id="L206">				qry.appendGroupedAnd(new DynamicQuery.Parameter(tmodelKeyTerm, tmodelKey, DynamicQuery.PREDICATE_EQUALS),</span>
+									 new DynamicQuery.Parameter(keyValueTerm, keyValue, predicate),
+									 new DynamicQuery.Parameter(keyNameTerm, keyName, predicate));
+			}
+			else {
+<span class="fc" id="L211">				qry.appendGroupedAnd(new DynamicQuery.Parameter(tmodelKeyTerm, tmodelKey, DynamicQuery.PREDICATE_EQUALS),</span>
+									 new DynamicQuery.Parameter(keyValueTerm, keyValue, predicate));
+				
+			}
+			
+<span class="fc bfc" id="L216" title="All 2 branches covered.">			if (count + 1 &lt; keyedRefs.size()) {</span>
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">				if (fq.isAndAllKeys())</span>
+<span class="nc" id="L218">					qry.AND().pad();</span>
+<span class="pc bpc" id="L219" title="1 of 2 branches missed.">				else if (fq.isOrLikeKeys()) {</span>
+				}
+				else
+<span class="nc" id="L222">					qry.OR().pad();</span>
+			}
+			
+			// The &quot;orLikeKeys&quot; will always leave an unclosed parenthesis.  This will close it.
+<span class="fc bfc" id="L226" title="All 4 branches covered.">			if (fq.isOrLikeKeys() &amp;&amp; (count + 1 == keyedRefs.size()))</span>
+<span class="fc" id="L227">				qry.closeParen().pad();</span>
+
+<span class="fc" id="L229">			prevTModelKey = tmodelKey;</span>
+<span class="fc" id="L230">			count++;</span>
+<span class="fc" id="L231">		}</span>
+<span class="fc" id="L232">		qry.closeParen().pad();</span>
+		
+<span class="fc" id="L234">	}</span>
+	
+	/*
+	 * Appends the necessary join table for the child entity and additional tables for when keys are AND'd.  When &quot;orLikeKeys&quot; is used, 
+	 * we only need an extra table for each distinct tmodelKey.
+	 */
+	public void appendJoinTables(DynamicQuery qry, FindQualifiers fq, List&lt;KeyedReference&gt; keyedRefs) {
+		
+<span class="pc bpc" id="L242" title="2 of 4 branches missed.">		if (keyedRefs != null &amp;&amp; keyedRefs.size() &gt; 0) {</span>
+			// Sorting the collection by tModel Key
+<span class="fc" id="L244">			Collections.sort(keyedRefs, new KeyedRefTModelComparator());</span>
+
+<span class="fc" id="L246">			StringBuffer thetaJoins = new StringBuffer(200);</span>
+<span class="fc" id="L247">			int tblCount = 0;</span>
+<span class="fc" id="L248">			int count = 0;</span>
+<span class="fc" id="L249">			String curTModelKey = null;</span>
+<span class="fc" id="L250">			String prevTModelKey = null;</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">			for(KeyedReference kr : keyedRefs) {</span>
+<span class="fc" id="L252">				curTModelKey = kr.getTModelKey();</span>
+<span class="fc bfc" id="L253" title="All 2 branches covered.">				if (count != 0) {</span>
+<span class="pc bpc" id="L254" title="2 of 4 branches missed.">					if (fq.isOrLikeKeys() &amp;&amp; curTModelKey.equals(prevTModelKey)) {</span>
+						// Do nothing
+					}
+					else {
+<span class="nc" id="L258">						tblCount++;</span>
+<span class="nc" id="L259">						qry.comma().pad().append(entityNameChild + &quot; &quot; + entityAliasChild + tblCount).pad();</span>
+<span class="nc" id="L260">						thetaJoins.append(entityAliasChild + (tblCount - 1) + &quot;.&quot; + entityField + &quot;.&quot; + keyName + &quot; = &quot; + entityAliasChild + tblCount + &quot;.&quot; + entityField + &quot;.&quot; + keyName + &quot; &quot;);</span>
+<span class="nc" id="L261">						thetaJoins.append(DynamicQuery.OPERATOR_AND + &quot; &quot;);</span>
+					}
+
+				}
+				else {
+<span class="fc" id="L266">					qry.comma().pad().append(entityNameChild + &quot; &quot; + entityAliasChild + tblCount).pad();</span>
+<span class="fc" id="L267">					thetaJoins.append(entityAlias + &quot;.&quot; + keyName + &quot; = &quot; + entityAliasChild + tblCount + &quot;.&quot; + entityField + &quot;.&quot; + keyName + &quot; &quot;);</span>
+<span class="fc" id="L268">					thetaJoins.append(DynamicQuery.OPERATOR_AND + &quot; &quot;);</span>
+				}
+<span class="fc" id="L270">				prevTModelKey = curTModelKey;</span>
+<span class="fc" id="L271">				count++;</span>
+<span class="fc" id="L272">			}</span>
+			
+<span class="fc" id="L274">			qry.WHERE().pad().openParen().pad();</span>
+
+<span class="fc" id="L276">			String thetaJoinsStr = thetaJoins.toString();</span>
+<span class="pc bpc" id="L277" title="1 of 2 branches missed.">			if (thetaJoinsStr.endsWith(DynamicQuery.OPERATOR_AND + &quot; &quot;))</span>
+<span class="fc" id="L278">				thetaJoinsStr = thetaJoinsStr.substring(0, thetaJoinsStr.length() - (DynamicQuery.OPERATOR_AND + &quot; &quot;).length());</span>
+<span class="fc" id="L279">			qry.append(thetaJoinsStr);</span>
+
+<span class="fc" id="L281">			qry.closeParen().pad();</span>
+<span class="pc bpc" id="L282" title="2 of 4 branches missed.">			if (fq!=null &amp;&amp; fq.isSignaturePresent()) {</span>
+<span class="nc" id="L283">				qry.AND().pad().openParen().pad().append(getSignaturePresent()).pad().closeParen().pad();</span>
+			}
+		}
+<span class="fc" id="L286">	}</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

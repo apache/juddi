@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RMITransport.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.transport</a> &gt; <span class="el_source">RMITransport.java</span></div><h1>RMITransport.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.v3.client.transport;
+
+import java.net.URI;
+import java.util.Properties;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.v3.client.config.Property;
+import org.apache.juddi.v3.client.config.UDDIClient;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
+import org.apache.juddi.v3_service.JUDDIApiPortType;
+import org.uddi.v3_service.UDDICustodyTransferPortType;
+import org.uddi.v3_service.UDDIInquiryPortType;
+import org.uddi.v3_service.UDDIPublicationPortType;
+import org.uddi.v3_service.UDDISecurityPortType;
+import org.uddi.v3_service.UDDISubscriptionListenerPortType;
+import org.uddi.v3_service.UDDISubscriptionPortType;
+
+
+public class RMITransport extends Transport {
+
+<span class="nc" id="L42">	InitialContext context = null;</span>
+<span class="nc" id="L43">	private Log logger = LogFactory.getLog(this.getClass());</span>
+<span class="nc" id="L44">	private String nodeName = null;</span>
+<span class="nc" id="L45">	private String clientName = null;</span>
+	
+	public RMITransport() {
+<span class="nc" id="L48">		super();</span>
+<span class="nc" id="L49">		this.nodeName = Transport.DEFAULT_NODE_NAME;</span>
+<span class="nc" id="L50">	}</span>
+	
+	public RMITransport(String nodeName) throws NamingException, ConfigurationException {
+<span class="nc" id="L53">		super();</span>
+<span class="nc" id="L54">		this.nodeName = nodeName;</span>
+<span class="nc" id="L55">		initContext();</span>
+<span class="nc" id="L56">	}</span>
+	
+	public RMITransport(String clientName, String nodeName) throws NamingException, ConfigurationException {
+<span class="nc" id="L59">		super();</span>
+<span class="nc" id="L60">		this.nodeName = nodeName;</span>
+<span class="nc" id="L61">		this.clientName = clientName;</span>
+<span class="nc" id="L62">		initContext();</span>
+<span class="nc" id="L63">	}</span>
+	
+	private void initContext() throws NamingException, ConfigurationException {
+<span class="nc" id="L66">		Properties env = new Properties();</span>
+<span class="nc" id="L67">		UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);</span>
+<span class="nc" id="L68">		String factoryInitial = client.getClientConfig().getHomeNode().getFactoryInitial();</span>
+<span class="nc" id="L69">		String factoryURLPkgs = client.getClientConfig().getHomeNode().getFactoryURLPkgs();</span>
+<span class="nc" id="L70">		String factoryNamingProvider = client.getClientConfig().getHomeNode().getFactoryNamingProvider();</span>
+<span class="nc bnc" id="L71" title="All 4 branches missed.">        if (factoryInitial!=null &amp;&amp; !&quot;&quot;.equals(factoryInitial)) env.setProperty(Property.UDDI_PROXY_FACTORY_INITIAL, factoryInitial);</span>
+<span class="nc bnc" id="L72" title="All 4 branches missed.">        if (factoryURLPkgs!=null &amp;&amp; !&quot;&quot;.equals(factoryURLPkgs)) env.setProperty(Property.UDDI_PROXY_FACTORY_URL_PKS, factoryURLPkgs);</span>
+<span class="nc bnc" id="L73" title="All 4 branches missed.">        if (factoryNamingProvider!=null &amp;&amp; !&quot;&quot;.equals(factoryNamingProvider)) env.setProperty(Property.UDDI_PROXY_PROVIDER_URL, factoryNamingProvider);</span>
+<span class="nc" id="L74">    	logger.debug(&quot;Initial Context using env=&quot; + env.toString());</span>
+<span class="nc" id="L75">    	context = new InitialContext(env);</span>
+<span class="nc" id="L76">	}</span>
+
+<span class="nc" id="L78">	private UDDIInquiryPortType inquiryService = null;</span>
+<span class="nc" id="L79">	private UDDISecurityPortType securityService = null;</span>
+<span class="nc" id="L80">	private UDDIPublicationPortType publishService = null;</span>
+<span class="nc" id="L81">	private UDDISubscriptionPortType subscriptionService = null;</span>
+<span class="nc" id="L82">	private UDDISubscriptionListenerPortType subscriptionListenerService = null;</span>
+<span class="nc" id="L83">	private UDDICustodyTransferPortType custodyTransferService = null;</span>
+<span class="nc" id="L84">	private JUDDIApiPortType publisherService = null;</span>
+	
+
+	public UDDIInquiryPortType getUDDIInquiryService(String endpointURL) throws TransportException {
+<span class="nc bnc" id="L88" title="All 2 branches missed.">		if (inquiryService==null) {</span>
+			try {
+<span class="nc bnc" id="L90" title="All 2 branches missed.">				if (endpointURL==null) {</span>
+<span class="nc" id="L91">					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);</span>
+<span class="nc" id="L92">					endpointURL = client.getClientConfig().getUDDINode(nodeName).getInquiryUrl();</span>
+				}
+<span class="nc" id="L94">				URI endpointURI = new URI(endpointURL);</span>
+<span class="nc" id="L95">		    	String service    = endpointURI.getPath();</span>
+<span class="nc" id="L96">		    	logger.debug(&quot;Looking up service=&quot; + service);</span>
+<span class="nc" id="L97">		    	Object requestHandler = context.lookup(service);</span>
+<span class="nc" id="L98">		    	inquiryService = (UDDIInquiryPortType) requestHandler;</span>
+<span class="nc" id="L99">			} catch (Exception e) {</span>
+<span class="nc" id="L100">				throw new TransportException(e.getMessage(), e);</span>
+<span class="nc" id="L101">			}</span>
+		}
+<span class="nc" id="L103">		return inquiryService;</span>
+	}
+	
+	public UDDISecurityPortType getUDDISecurityService(String endpointURL) throws TransportException {
+<span class="nc bnc" id="L107" title="All 2 branches missed.">		if (securityService==null) {</span>
+			try {
+<span class="nc bnc" id="L109" title="All 2 branches missed.">				if (endpointURL==null) {</span>
+<span class="nc" id="L110">					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);</span>
+<span class="nc" id="L111">					endpointURL = client.getClientConfig().getUDDINode(nodeName).getSecurityUrl();</span>
+				}
+<span class="nc" id="L113">				URI endpointURI = new URI(endpointURL);</span>
+<span class="nc" id="L114">		    	String service    = endpointURI.getPath();</span>
+<span class="nc" id="L115">		    	logger.debug(&quot;Looking up service=&quot; + service);</span>
+<span class="nc" id="L116">		    	Object requestHandler = context.lookup(service);</span>
+<span class="nc" id="L117">				securityService = (UDDISecurityPortType) requestHandler;</span>
+<span class="nc" id="L118">			} catch (Exception e) {</span>
+<span class="nc" id="L119">				throw new TransportException(e.getMessage(), e);</span>
+<span class="nc" id="L120">			}</span>
+		}
+<span class="nc" id="L122">		return securityService;</span>
+	}
+	
+	public UDDIPublicationPortType getUDDIPublishService(String endpointURL) throws TransportException {
+<span class="nc bnc" id="L126" title="All 2 branches missed.">		if (publishService==null) {</span>
+			try {
+<span class="nc bnc" id="L128" title="All 2 branches missed.">				if (endpointURL==null) {</span>
+<span class="nc" id="L129">					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);</span>
+<span class="nc" id="L130">					endpointURL = client.getClientConfig().getUDDINode(nodeName).getPublishUrl();</span>
+				}
+<span class="nc" id="L132">				URI endpointURI = new URI(endpointURL);</span>
+<span class="nc" id="L133">		    	String service    = endpointURI.getPath();</span>
+<span class="nc" id="L134">		    	logger.debug(&quot;Looking up service=&quot; + service);</span>
+<span class="nc" id="L135">		    	Object requestHandler = context.lookup(service);</span>
+<span class="nc" id="L136">				publishService = (UDDIPublicationPortType) requestHandler;</span>
+<span class="nc" id="L137">			} catch (Exception e) {</span>
+<span class="nc" id="L138">				throw new TransportException(e.getMessage(), e);</span>
+<span class="nc" id="L139">			}</span>
+		}
+<span class="nc" id="L141">		return publishService;</span>
+	}
+	
+	public UDDISubscriptionPortType getUDDISubscriptionService(String endpointURL) throws TransportException {
+<span class="nc bnc" id="L145" title="All 2 branches missed.">		if (subscriptionService==null) {</span>
+			try {
+<span class="nc bnc" id="L147" title="All 2 branches missed.">				if (endpointURL==null) {</span>
+<span class="nc" id="L148">					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);</span>
+<span class="nc" id="L149">					endpointURL = client.getClientConfig().getUDDINode(nodeName).getSubscriptionUrl();</span>
+				}
+<span class="nc" id="L151">				URI endpointURI = new URI(endpointURL);</span>
+<span class="nc" id="L152">		    	String service    = endpointURI.getPath();</span>
+<span class="nc" id="L153">		    	logger.debug(&quot;Looking up service=&quot; + service);</span>
+<span class="nc" id="L154">		    	Object requestHandler = context.lookup(service);</span>
+<span class="nc" id="L155">		    	subscriptionService = (UDDISubscriptionPortType) requestHandler;</span>
+<span class="nc" id="L156">			} catch (Exception e) {</span>
+<span class="nc" id="L157">				throw new TransportException(e.getMessage(), e);</span>
+<span class="nc" id="L158">			}</span>
+		}
+<span class="nc" id="L160">		return subscriptionService;</span>
+	}
+	
+	public UDDISubscriptionListenerPortType getUDDISubscriptionListenerService(String endpointURL) throws TransportException {
+<span class="nc bnc" id="L164" title="All 2 branches missed.">		if (subscriptionListenerService==null) {</span>
+			try {
+<span class="nc bnc" id="L166" title="All 2 branches missed.">				if (endpointURL==null) {</span>
+<span class="nc" id="L167">					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);</span>
+<span class="nc" id="L168">					endpointURL = client.getClientConfig().getUDDINode(nodeName).getSubscriptionListenerUrl();</span>
+				}
+<span class="nc" id="L170">				URI endpointURI = new URI(endpointURL);</span>
+<span class="nc" id="L171">		    	String service    = endpointURI.getPath();</span>
+<span class="nc" id="L172">		    	logger.debug(&quot;Looking up service=&quot; + service);</span>
+<span class="nc" id="L173">		    	Object requestHandler = context.lookup(service);</span>
+<span class="nc" id="L174">		    	subscriptionListenerService = (UDDISubscriptionListenerPortType)  requestHandler;</span>
+<span class="nc" id="L175">			} catch (Exception e) {</span>
+<span class="nc" id="L176">				throw new TransportException(e.getMessage(), e);</span>
+<span class="nc" id="L177">			}</span>
+		}
+<span class="nc" id="L179">		return subscriptionListenerService;</span>
+	}
+	
+	public UDDICustodyTransferPortType getUDDICustodyTransferService(String endpointURL) throws TransportException {
+<span class="nc bnc" id="L183" title="All 2 branches missed.">		if (custodyTransferService==null) {</span>
+			try {
+<span class="nc bnc" id="L185" title="All 2 branches missed.">				if (endpointURL==null) {</span>
+<span class="nc" id="L186">					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);</span>
+<span class="nc" id="L187">					endpointURL = client.getClientConfig().getUDDINode(nodeName).getCustodyTransferUrl();</span>
+				}
+<span class="nc" id="L189">				URI endpointURI = new URI(endpointURL);</span>
+<span class="nc" id="L190">		    	String service    = endpointURI.getPath();</span>
+<span class="nc" id="L191">		    	logger.debug(&quot;Looking up service=&quot; + service);</span>
+<span class="nc" id="L192">		    	Object requestHandler = context.lookup(service);</span>
+<span class="nc" id="L193">		    	custodyTransferService = (UDDICustodyTransferPortType)  requestHandler;</span>
+<span class="nc" id="L194">			} catch (Exception e) {</span>
+<span class="nc" id="L195">				throw new TransportException(e.getMessage(), e);</span>
+<span class="nc" id="L196">			}</span>
+		}
+<span class="nc" id="L198">		return custodyTransferService;</span>
+	}
+	
+	public JUDDIApiPortType getJUDDIApiService(String endpointURL) throws TransportException {
+<span class="nc bnc" id="L202" title="All 2 branches missed.">		if (publisherService==null) {</span>
+			try {
+<span class="nc bnc" id="L204" title="All 2 branches missed.">				if (endpointURL==null) {</span>
+<span class="nc" id="L205">					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);</span>
+<span class="nc" id="L206">					endpointURL = client.getClientConfig().getUDDINode(nodeName).getJuddiApiUrl();</span>
+				}
+<span class="nc" id="L208">				URI endpointURI = new URI(endpointURL);</span>
+<span class="nc" id="L209">		    	String service    = endpointURI.getPath();</span>
+<span class="nc" id="L210">		    	logger.debug(&quot;Looking up service=&quot; + service);</span>
+<span class="nc" id="L211">		    	Object requestHandler = context.lookup(service);</span>
+<span class="nc" id="L212">		    	publisherService = (JUDDIApiPortType)  requestHandler;</span>
+<span class="nc" id="L213">			} catch (Exception e) {</span>
+<span class="nc" id="L214">				throw new TransportException(e.getMessage(), e);</span>
+<span class="nc" id="L215">			}</span>
+		}
+<span class="nc" id="L217">		return publisherService;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

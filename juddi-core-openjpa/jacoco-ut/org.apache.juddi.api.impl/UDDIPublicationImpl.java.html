@@ -1,0 +1,1604 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UDDIPublicationImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.api.impl</a> &gt; <span class="el_source">UDDIPublicationImpl.java</span></div><h1>UDDIPublicationImpl.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.api.impl;
+
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import javax.jws.WebService;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
+import javax.xml.bind.JAXB;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.ws.Holder;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.util.PublicationQuery;
+import org.apache.juddi.api.util.QueryStatus;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.config.Property;
+import org.apache.juddi.mapping.MappingApiToModel;
+import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.model.BindingTemplate;
+import org.apache.juddi.model.BusinessEntity;
+import org.apache.juddi.model.BusinessService;
+import org.apache.juddi.model.ChangeRecord;
+import org.apache.juddi.model.Signature;
+import org.apache.juddi.model.Tmodel;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.query.FetchBusinessEntitiesQuery;
+import org.apache.juddi.query.FetchTModelsQuery;
+import org.apache.juddi.query.FindBusinessByPublisherQuery;
+import org.apache.juddi.query.FindPublisherAssertionByBusinessQuery;
+import org.apache.juddi.query.FindTModelByPublisherQuery;
+import org.apache.juddi.query.TModelQuery;
+import org.apache.juddi.query.util.DynamicQuery;
+import org.apache.juddi.query.util.FindQualifiers;
+import org.apache.juddi.replication.ReplicationNotifier;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.InvalidValueException;
+import org.apache.juddi.validation.ValidatePublish;
+import org.uddi.api_v3.AddPublisherAssertions;
+import org.uddi.api_v3.AssertionStatusItem;
+import org.uddi.api_v3.BindingDetail;
+import org.uddi.api_v3.BusinessDetail;
+import org.uddi.api_v3.CompletionStatus;
+import org.uddi.api_v3.DeleteBinding;
+import org.uddi.api_v3.DeleteBusiness;
+import org.uddi.api_v3.DeletePublisherAssertions;
+import org.uddi.api_v3.DeleteService;
+import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.GetRegisteredInfo;
+import org.uddi.api_v3.InfoSelection;
+import org.uddi.api_v3.ListDescription;
+import org.uddi.api_v3.OperationalInfo;
+import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.api_v3.RegisteredInfo;
+import org.uddi.api_v3.SaveBinding;
+import org.uddi.api_v3.SaveBusiness;
+import org.uddi.api_v3.SaveService;
+import org.uddi.api_v3.SaveTModel;
+import org.uddi.api_v3.ServiceDetail;
+import org.uddi.api_v3.TModel;
+import org.uddi.api_v3.TModelDetail;
+import org.uddi.repl_v3.ChangeRecordDelete;
+import org.uddi.repl_v3.ChangeRecordDeleteAssertion;
+import org.uddi.repl_v3.ChangeRecordHide;
+import org.uddi.repl_v3.ChangeRecordIDType;
+import org.uddi.repl_v3.ChangeRecordNewData;
+import org.uddi.repl_v3.ChangeRecordNewDataConditional;
+import org.uddi.repl_v3.ChangeRecordPublisherAssertion;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.uddi.v3_service.UDDIPublicationPortType;
+
+/**
+ * This class implements the UDDI Publication Service
+ *
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt; (and many others)
+ * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt; added support for
+ * replication and several bug fixes
+ */
+@WebService(serviceName = &quot;UDDIPublicationService&quot;,
+        endpointInterface = &quot;org.uddi.v3_service.UDDIPublicationPortType&quot;,
+        targetNamespace = &quot;urn:uddi-org:api_v3_portType&quot;)
+public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPublicationPortType {
+
+<span class="fc" id="L108">        private static Log log = LogFactory.getLog(UDDIInquiryImpl.class);</span>
+        private UDDIServiceCounter serviceCounter;
+
+     
+        public UDDIPublicationImpl() {
+<span class="fc" id="L113">                super();</span>
+<span class="fc" id="L114">                serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDIPublicationImpl.class);</span>
+                
+<span class="fc" id="L116">        }</span>
+
+        @Override
+        public void addPublisherAssertions(AddPublisherAssertions body)
+                throws DispositionReportFaultMessage {
+<span class="fc" id="L121">                long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L123">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L124">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L126">                        tx.begin();</span>
+
+<span class="fc" id="L128">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());</span>
+
+<span class="fc" id="L130">                        new ValidatePublish(publisher).validateAddPublisherAssertions(em, body);</span>
+
+<span class="fc" id="L132">                        List&lt;org.uddi.api_v3.PublisherAssertion&gt; apiPubAssertionList = body.getPublisherAssertion();</span>
+<span class="fc" id="L133">                        List&lt;ChangeRecord&gt; changes = new ArrayList&lt;ChangeRecord&gt;();</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">                        for (org.uddi.api_v3.PublisherAssertion apiPubAssertion : apiPubAssertionList) {</span>
+
+<span class="fc" id="L136">                                org.apache.juddi.model.PublisherAssertion modelPubAssertion = new org.apache.juddi.model.PublisherAssertion();</span>
+
+<span class="fc" id="L138">                                MappingApiToModel.mapPublisherAssertion(apiPubAssertion, modelPubAssertion);</span>
+
+<span class="fc" id="L140">                                org.apache.juddi.model.PublisherAssertion existingPubAssertion = em.find(modelPubAssertion.getClass(), modelPubAssertion.getId());</span>
+<span class="fc" id="L141">                                boolean persistNewAssertion = true;</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">                                if (existingPubAssertion != null) {</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">                                        if (modelPubAssertion.getTmodelKey().equalsIgnoreCase(existingPubAssertion.getTmodelKey())</span>
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">                                                &amp;&amp; modelPubAssertion.getKeyName().equalsIgnoreCase(existingPubAssertion.getKeyName())</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">                                                &amp;&amp; modelPubAssertion.getKeyValue().equalsIgnoreCase(existingPubAssertion.getKeyValue())) {</span>
+                                                // This pub assertion is already been &quot;asserted&quot;.  Simply need to set the &quot;check&quot; value on the existing (and persistent) assertion
+<span class="fc bfc" id="L147" title="All 2 branches covered.">                                                if (publisher.isOwner(existingPubAssertion.getBusinessEntityByFromKey())) {</span>
+<span class="fc" id="L148">                                                        existingPubAssertion.setFromCheck(&quot;true&quot;);</span>
+                                                }
+<span class="fc bfc" id="L150" title="All 2 branches covered.">                                                if (publisher.isOwner(existingPubAssertion.getBusinessEntityByToKey())) {</span>
+<span class="fc" id="L151">                                                        existingPubAssertion.setToCheck(&quot;true&quot;);</span>
+                                                }
+                                                //it's also possible that the signatures have changed
+<span class="fc" id="L154">                                                removeExistingPublisherAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(), existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), em);</span>
+<span class="fc" id="L155">                                                savePushliserAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(), existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), modelPubAssertion.getSignatures(), em);</span>
+
+<span class="fc" id="L157">                                                em.merge(existingPubAssertion);</span>
+<span class="fc" id="L158">                                                persistNewAssertion = false;</span>
+<span class="fc" id="L159">                                                changes.add(getChangeRecord_deletePublisherAssertion(apiPubAssertion, getNode(), existingPubAssertion.getToCheck().equalsIgnoreCase(&quot;false&quot;), existingPubAssertion.getFromCheck().equalsIgnoreCase(&quot;false&quot;), System.currentTimeMillis()));</span>
+                                        } else {
+                                                // Otherwise, it is a new relationship between these entities.  Remove the old one so the new one can be added.
+                                                // TODO: the model only seems to allow one assertion per two business (primary key is fromKey and toKey). Spec seems to imply as 
+                                                // many relationships as desired (the differentiator would be the keyedRef values).
+<span class="nc" id="L164">                                                removeExistingPublisherAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(), existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), em);</span>
+<span class="nc" id="L165">                                                em.remove(existingPubAssertion);</span>
+<span class="nc" id="L166">                                                changes.add(getChangeRecord_deletePublisherAssertion(apiPubAssertion, getNode(), true, true, System.currentTimeMillis()));</span>
+                                        }
+                                }
+
+<span class="fc bfc" id="L170" title="All 2 branches covered.">                                if (persistNewAssertion) {</span>
+<span class="fc" id="L171">                                        org.apache.juddi.model.BusinessEntity beFrom = em.find(org.apache.juddi.model.BusinessEntity.class, modelPubAssertion.getId().getFromKey());</span>
+<span class="fc" id="L172">                                        org.apache.juddi.model.BusinessEntity beTo = em.find(org.apache.juddi.model.BusinessEntity.class, modelPubAssertion.getId().getToKey());</span>
+<span class="fc" id="L173">                                        modelPubAssertion.setBusinessEntityByFromKey(beFrom);</span>
+<span class="fc" id="L174">                                        modelPubAssertion.setBusinessEntityByToKey(beTo);</span>
+
+<span class="fc" id="L176">                                        modelPubAssertion.setFromCheck(&quot;false&quot;);</span>
+<span class="fc" id="L177">                                        modelPubAssertion.setToCheck(&quot;false&quot;);</span>
+
+<span class="fc bfc" id="L179" title="All 2 branches covered.">                                        if (publisher.isOwner(modelPubAssertion.getBusinessEntityByFromKey())) {</span>
+<span class="fc" id="L180">                                                modelPubAssertion.setFromCheck(&quot;true&quot;);</span>
+                                        }
+<span class="fc bfc" id="L182" title="All 2 branches covered.">                                        if (publisher.isOwner(modelPubAssertion.getBusinessEntityByToKey())) {</span>
+<span class="fc" id="L183">                                                modelPubAssertion.setToCheck(&quot;true&quot;);</span>
+                                        }
+<span class="fc" id="L185">                                        modelPubAssertion.setModified(new Date());</span>
+<span class="fc" id="L186">                                         savePushliserAssertionSignatures(modelPubAssertion.getBusinessEntityByFromKey().getEntityKey(), modelPubAssertion.getBusinessEntityByToKey().getEntityKey(), modelPubAssertion.getSignatures(), em);</span>
+
+<span class="fc" id="L188">                                        em.persist(modelPubAssertion);</span>
+
+<span class="fc" id="L190">                                        changes.add(getChangeRecord_NewAssertion(apiPubAssertion, modelPubAssertion, getNode()));</span>
+
+                                }
+
+<span class="fc" id="L194">                        }</span>
+
+<span class="fc" id="L196">                        tx.commit();</span>
+<span class="fc bfc" id="L197" title="All 2 branches covered.">                        for (int i = 0; i &lt; changes.size(); i++) {</span>
+<span class="fc" id="L198">                                ReplicationNotifier.enqueue(changes.get(i));</span>
+                        }
+
+<span class="fc" id="L201">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L202">                        serviceCounter.update(PublicationQuery.ADD_PUBLISHERASSERTIONS,</span>
+                                QueryStatus.SUCCESS, procTime);
+<span class="nc" id="L204">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L205">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L206">                        serviceCounter.update(PublicationQuery.ADD_PUBLISHERASSERTIONS, QueryStatus.FAILED, procTime);</span>
+<span class="nc" id="L207">                        throw drfm;</span>
+                } finally {
+<span class="pc bpc" id="L209" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L210">                                tx.rollback();</span>
+                        }
+<span class="pc" id="L212">                        em.close();</span>
+<span class="fc" id="L213">                }</span>
+<span class="fc" id="L214">        }</span>
+
+        public void deleteBinding(DeleteBinding body)
+                throws DispositionReportFaultMessage {
+<span class="fc" id="L218">                long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L220">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L221">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L223">                        tx.begin();</span>
+
+<span class="fc" id="L225">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());</span>
+
+<span class="fc" id="L227">                        new ValidatePublish(publisher).validateDeleteBinding(em, body);</span>
+
+<span class="fc" id="L229">                        List&lt;String&gt; entityKeyList = body.getBindingKey();</span>
+<span class="fc" id="L230">                        List&lt;ChangeRecord&gt; changes = new ArrayList&lt;ChangeRecord&gt;();</span>
+<span class="fc bfc" id="L231" title="All 2 branches covered.">                        for (String entityKey : entityKeyList) {</span>
+<span class="fc" id="L232">                                deleteBinding(entityKey, em);</span>
+<span class="fc" id="L233">                                changes.add(getChangeRecord_deleteBinding(entityKey, getNode()));</span>
+<span class="fc" id="L234">                        }</span>
+<span class="fc" id="L235">                        tx.commit();</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">                        for (int i = 0; i &lt; changes.size(); i++) {</span>
+<span class="fc" id="L237">                                ReplicationNotifier.enqueue(changes.get(i));</span>
+                        }
+
+<span class="fc" id="L240">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L241">                        serviceCounter.update(PublicationQuery.DELETE_BINDING,</span>
+                                QueryStatus.SUCCESS, procTime);
+<span class="nc" id="L243">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L244">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L245">                        serviceCounter.update(PublicationQuery.DELETE_BINDING, QueryStatus.FAILED, procTime);</span>
+<span class="nc" id="L246">                        throw drfm;</span>
+                } finally {
+<span class="pc bpc" id="L248" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L249">                                tx.rollback();</span>
+                        }
+<span class="pc" id="L251">                        em.close();</span>
+<span class="fc" id="L252">                }</span>
+<span class="fc" id="L253">        }</span>
+
+        /**
+         * deletes the referenced object, assuming authorization rules are
+         * already processed and there is already an open transaction
+         *
+         * @param entityKey
+         * @param em
+         * @throws DispositionReportFaultMessage
+         */
+        protected void deleteBinding(String entityKey, EntityManager em) throws DispositionReportFaultMessage {
+
+<span class="fc" id="L265">                Object obj = em.find(org.apache.juddi.model.BindingTemplate.class, entityKey);</span>
+
+<span class="fc" id="L267">                ((org.apache.juddi.model.BindingTemplate) obj).getBusinessService().setModifiedIncludingChildren(new Date());</span>
+                // JUDDI-421:  now the businessEntity parent will have it's modifiedIncludingChildren set
+<span class="fc" id="L269">                ((org.apache.juddi.model.BindingTemplate) obj).getBusinessService().getBusinessEntity().setModifiedIncludingChildren(new Date());</span>
+
+<span class="fc" id="L271">                em.remove(obj);</span>
+
+<span class="fc" id="L273">        }</span>
+
+        public void deleteBusiness(DeleteBusiness body)
+                throws DispositionReportFaultMessage {
+<span class="fc" id="L277">                long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L279">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L280">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L282">                        tx.begin();</span>
+
+<span class="fc" id="L284">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());</span>
+
+<span class="fc" id="L286">                        new ValidatePublish(publisher).validateDeleteBusiness(em, body);</span>
+
+<span class="fc" id="L288">                        List&lt;String&gt; entityKeyList = body.getBusinessKey();</span>
+<span class="fc" id="L289">                        List&lt;ChangeRecord&gt; changes = new ArrayList&lt;ChangeRecord&gt;();</span>
+<span class="fc bfc" id="L290" title="All 2 branches covered.">                        for (String entityKey : entityKeyList) {</span>
+<span class="fc" id="L291">                                deleteBusiness(entityKey, em);</span>
+<span class="fc" id="L292">                                changes.add(getChangeRecord_deleteBusiness(entityKey, getNode()));</span>
+<span class="fc" id="L293">                        }</span>
+
+<span class="fc" id="L295">                        tx.commit();</span>
+<span class="fc bfc" id="L296" title="All 2 branches covered.">                        for (int i = 0; i &lt; changes.size(); i++) {</span>
+<span class="fc" id="L297">                                ReplicationNotifier.enqueue(changes.get(i));</span>
+                        }
+<span class="fc" id="L299">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L300">                        serviceCounter.update(PublicationQuery.DELETE_BUSINESS, QueryStatus.SUCCESS, procTime);</span>
+<span class="nc" id="L301">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L302">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L303">                        serviceCounter.update(PublicationQuery.DELETE_BUSINESS, QueryStatus.FAILED, procTime);</span>
+<span class="nc" id="L304">                        throw drfm;</span>
+                } finally {
+<span class="pc bpc" id="L306" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L307">                                tx.rollback();</span>
+                        }
+<span class="pc" id="L309">                        em.close();</span>
+<span class="fc" id="L310">                }</span>
+<span class="fc" id="L311">        }</span>
+
+        /**
+         * deletes the referenced object, assuming authorization rules are
+         * already processed and there is already an open transaction
+         *
+         * @param entityKey
+         * @param em
+         * @throws DispositionReportFaultMessage
+         */
+        protected void deleteBusiness(String key, EntityManager em) throws DispositionReportFaultMessage {
+<span class="fc" id="L322">                Object obj = em.find(org.apache.juddi.model.BusinessEntity.class, key);</span>
+<span class="fc" id="L323">                em.remove(obj);</span>
+<span class="fc" id="L324">        }</span>
+
+        public void deletePublisherAssertions(DeletePublisherAssertions body)
+                throws DispositionReportFaultMessage {
+<span class="fc" id="L328">                long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L330">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L331">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L333">                        tx.begin();</span>
+
+<span class="fc" id="L335">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());</span>
+
+<span class="fc" id="L337">                        new ValidatePublish(publisher).validateDeletePublisherAssertions(em, body);</span>
+
+<span class="fc" id="L339">                        List&lt;org.uddi.api_v3.PublisherAssertion&gt; entityList = body.getPublisherAssertion();</span>
+<span class="fc" id="L340">                        List&lt;ChangeRecord&gt; changes = new ArrayList&lt;ChangeRecord&gt;();</span>
+<span class="fc bfc" id="L341" title="All 2 branches covered.">                        for (org.uddi.api_v3.PublisherAssertion entity : entityList) {</span>
+<span class="fc" id="L342">                                org.apache.juddi.model.PublisherAssertion modelPubAssertion = new org.apache.juddi.model.PublisherAssertion();</span>
+
+<span class="fc" id="L344">                                MappingApiToModel.mapPublisherAssertion(entity, modelPubAssertion);</span>
+
+<span class="fc" id="L346">                                org.apache.juddi.model.PublisherAssertion existingPubAssertion = em.find(org.apache.juddi.model.PublisherAssertion.class,</span>
+<span class="fc" id="L347">                                        modelPubAssertion.getId());</span>
+<span class="pc bpc" id="L348" title="1 of 2 branches missed.">                                if (existingPubAssertion == null) {</span>
+<span class="nc" id="L349">                                        throw new InvalidValueException(new ErrorMessage(&quot;E_assertionNotFound&quot;));</span>
+                                }
+
+<span class="fc" id="L352">                                boolean fromkey = publisher.isOwner(em.find(BusinessEntity.class, entity.getFromKey()));</span>
+<span class="fc" id="L353">                                boolean tokey = publisher.isOwner(em.find(BusinessEntity.class, entity.getToKey()));</span>
+<span class="fc bfc" id="L354" title="All 2 branches covered.">                                if (fromkey) {</span>
+<span class="fc" id="L355">                                        existingPubAssertion.setFromCheck(&quot;false&quot;);</span>
+                                }
+<span class="fc bfc" id="L357" title="All 2 branches covered.">                                if (tokey) {</span>
+<span class="fc" id="L358">                                        existingPubAssertion.setToCheck(&quot;false&quot;);</span>
+                                }
+<span class="fc bfc" id="L360" title="All 2 branches covered.">                                if (&quot;false&quot;.equalsIgnoreCase(existingPubAssertion.getToCheck())</span>
+<span class="pc bpc" id="L361" title="1 of 2 branches missed.">                                        &amp;&amp; &quot;false&quot;.equalsIgnoreCase(existingPubAssertion.getFromCheck())) {</span>
+<span class="fc" id="L362">                                        logger.info(&quot;Publisher assertion updated database via replication&quot;);</span>
+<span class="fc" id="L363">                                        removeExistingPublisherAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(), existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), em);</span>
+<span class="fc" id="L364">                                        em.remove(existingPubAssertion);</span>
+                                } else {
+<span class="fc" id="L366">                                        existingPubAssertion.setModified(new Date());</span>
+<span class="fc" id="L367">                                        logger.info(&quot;Publisher assertion updated database via replication&quot;);</span>
+<span class="fc" id="L368">                                        removeExistingPublisherAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(), existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), em);</span>
+<span class="fc" id="L369">                                        savePushliserAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(),</span>
+<span class="fc" id="L370">                                                existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), modelPubAssertion.getSignatures(), em);</span>
+<span class="fc" id="L371">                                        em.persist(existingPubAssertion);</span>
+                                }
+
+<span class="fc" id="L374">                                changes.add(getChangeRecord_deletePublisherAssertion(entity, getNode(), tokey, fromkey, existingPubAssertion.getModified().getTime()));</span>
+<span class="fc" id="L375">                        }</span>
+
+<span class="fc" id="L377">                        tx.commit();</span>
+<span class="fc bfc" id="L378" title="All 2 branches covered.">                        for (int i = 0; i &lt; changes.size(); i++) {</span>
+<span class="fc" id="L379">                                ReplicationNotifier.enqueue(changes.get(i));</span>
+                        }
+<span class="fc" id="L381">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L382">                        serviceCounter.update(PublicationQuery.DELETE_PUBLISHERASSERTIONS,</span>
+                                QueryStatus.SUCCESS, procTime);
+<span class="fc" id="L384">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="fc" id="L385">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L386">                        serviceCounter.update(PublicationQuery.DELETE_PUBLISHERASSERTIONS, QueryStatus.FAILED, procTime);</span>
+<span class="fc" id="L387">                        throw drfm;</span>
+                } finally {
+<span class="pc bpc" id="L389" title="2 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="pc" id="L390">                                tx.rollback();</span>
+                        }
+<span class="fc" id="L392">                        em.close();</span>
+<span class="fc" id="L393">                }</span>
+<span class="fc" id="L394">        }</span>
+
+        /**
+         * deletes the referenced object, assuming authorization rules are
+         * already processed and there is already an open transaction. this is
+         * primarily used to support replication calls, i.e. another node just
+         * changed a PA record and let us know
+         *
+         * @param entityKey
+         * @param em
+         * @throws DispositionReportFaultMessage
+         */
+        protected void deletePublisherAssertion(org.uddi.repl_v3.ChangeRecordDeleteAssertion entity, EntityManager em) throws DispositionReportFaultMessage {
+
+<span class="nc" id="L408">                org.apache.juddi.model.PublisherAssertion modelPubAssertion = new org.apache.juddi.model.PublisherAssertion();</span>
+
+<span class="nc" id="L410">                MappingApiToModel.mapPublisherAssertion(entity.getPublisherAssertion(), modelPubAssertion);</span>
+
+<span class="nc" id="L412">                org.apache.juddi.model.PublisherAssertion existingPubAssertion = em.find(org.apache.juddi.model.PublisherAssertion.class,</span>
+<span class="nc" id="L413">                        modelPubAssertion.getId());</span>
+
+<span class="nc bnc" id="L415" title="All 2 branches missed.">                if (existingPubAssertion == null) {</span>
+<span class="nc" id="L416">                        throw new FatalErrorException(new ErrorMessage(&quot;E_assertionNotFound&quot;));</span>
+                }
+<span class="nc" id="L418">                boolean fromkey = entity.isFromBusinessCheck();// publisher.isOwner(em.find(BusinessEntity.class, entity.getFromKey()));</span>
+<span class="nc" id="L419">                boolean tokey = entity.isToBusinessCheck();//  publisher.isOwner(em.find(BusinessEntity.class, entity.getToKey()));</span>
+<span class="nc bnc" id="L420" title="All 2 branches missed.">                if (fromkey) {</span>
+<span class="nc" id="L421">                        existingPubAssertion.setFromCheck(&quot;false&quot;);</span>
+                }
+<span class="nc bnc" id="L423" title="All 2 branches missed.">                if (tokey) {</span>
+<span class="nc" id="L424">                        existingPubAssertion.setToCheck(&quot;false&quot;);</span>
+                }
+<span class="nc bnc" id="L426" title="All 2 branches missed.">                if (&quot;false&quot;.equalsIgnoreCase(existingPubAssertion.getToCheck())</span>
+<span class="nc bnc" id="L427" title="All 2 branches missed.">                        &amp;&amp; &quot;false&quot;.equalsIgnoreCase(existingPubAssertion.getFromCheck())) {</span>
+<span class="nc" id="L428">                        logger.info(&quot;Deletion of publisher assertion from database via replication&quot;);</span>
+<span class="nc" id="L429">                        removeExistingPublisherAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(), existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), em);</span>
+<span class="nc" id="L430">                        em.remove(existingPubAssertion);</span>
+                } else {
+<span class="nc" id="L432">                        existingPubAssertion.setModified(new Date());</span>
+<span class="nc" id="L433">                        logger.info(&quot;Publisher assertion updated database via replication&quot;);</span>
+<span class="nc" id="L434">                        removeExistingPublisherAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(), existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), em);</span>
+<span class="nc" id="L435">                        savePushliserAssertionSignatures(existingPubAssertion.getBusinessEntityByFromKey().getEntityKey(),</span>
+<span class="nc" id="L436">                                existingPubAssertion.getBusinessEntityByToKey().getEntityKey(), modelPubAssertion.getSignatures(), em);</span>
+<span class="nc" id="L437">                        em.persist(existingPubAssertion);</span>
+                }
+
+<span class="nc" id="L440">        }</span>
+
+        public void deleteService(DeleteService body)
+                throws DispositionReportFaultMessage {
+<span class="fc" id="L444">                long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L446">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L447">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L449">                        tx.begin();</span>
+
+<span class="fc" id="L451">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());</span>
+
+<span class="fc" id="L453">                        new ValidatePublish(publisher).validateDeleteService(em, body);</span>
+
+<span class="fc" id="L455">                        List&lt;String&gt; entityKeyList = body.getServiceKey();</span>
+<span class="fc" id="L456">                        List&lt;ChangeRecord&gt; changes = new ArrayList&lt;ChangeRecord&gt;();</span>
+<span class="fc bfc" id="L457" title="All 2 branches covered.">                        for (String entityKey : entityKeyList) {</span>
+<span class="fc" id="L458">                                deleteService(entityKey, em);</span>
+<span class="fc" id="L459">                                changes.add(getChangeRecord_deleteService(entityKey, getNode()));</span>
+<span class="fc" id="L460">                        }</span>
+
+<span class="fc" id="L462">                        tx.commit();</span>
+<span class="fc bfc" id="L463" title="All 2 branches covered.">                        for (int i = 0; i &lt; changes.size(); i++) {</span>
+<span class="fc" id="L464">                                ReplicationNotifier.enqueue(changes.get(i));</span>
+                        }
+<span class="fc" id="L466">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L467">                        serviceCounter.update(PublicationQuery.DELETE_SERVICE,</span>
+                                QueryStatus.SUCCESS, procTime);
+<span class="nc" id="L469">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L470">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L471">                        serviceCounter.update(PublicationQuery.DELETE_SERVICE, QueryStatus.FAILED, procTime);</span>
+<span class="nc" id="L472">                        throw drfm;</span>
+                } finally {
+<span class="pc bpc" id="L474" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L475">                                tx.rollback();</span>
+                        }
+<span class="pc" id="L477">                        em.close();</span>
+<span class="fc" id="L478">                }</span>
+<span class="fc" id="L479">        }</span>
+
+        /**
+         * deletes the referenced object, assuming authorization rules are
+         * already processed and there is already an open transaction
+         *
+         * @param entityKey
+         * @param em
+         * @throws DispositionReportFaultMessage
+         */
+        protected void deleteService(String key, EntityManager em) throws DispositionReportFaultMessage {
+<span class="fc" id="L490">                Object obj = em.find(org.apache.juddi.model.BusinessService.class, key);</span>
+                //((org.apache.juddi.model.BusinessService) obj).getBusinessEntity().setModifiedIncludingChildren(new Date());
+<span class="pc bpc" id="L492" title="1 of 2 branches missed.">                if (obj != null) {</span>
+<span class="fc" id="L493">                        em.remove(obj);</span>
+                } else {
+<span class="nc" id="L495">                        logger.warn(&quot;Unable to remove service with the key '&quot; + key + &quot;', it doesn't exist in the database&quot;);</span>
+                }
+<span class="fc" id="L497">        }</span>
+
+        /**
+         * {@inheritDoc }
+         */
+        @Override
+        public void deleteTModel(DeleteTModel body)
+                throws DispositionReportFaultMessage {
+<span class="fc" id="L505">                long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L507">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L508">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L510">                        tx.begin();</span>
+
+<span class="fc" id="L512">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());</span>
+
+<span class="fc" id="L514">                        new ValidatePublish(publisher).validateDeleteTModel(em, body);</span>
+
+                        // tModels are only lazily deleted!
+<span class="fc" id="L517">                        List&lt;String&gt; entityKeyList = body.getTModelKey();</span>
+<span class="fc" id="L518">                        List&lt;ChangeRecord&gt; changes = new ArrayList&lt;ChangeRecord&gt;();</span>
+<span class="fc bfc" id="L519" title="All 2 branches covered.">                        for (String entityKey : entityKeyList) {</span>
+<span class="fc" id="L520">                                deleteTModel(entityKey, em);</span>
+<span class="fc" id="L521">                                changes.add(getChangeRecord_deleteTModelHide(entityKey, getNode()));</span>
+<span class="fc" id="L522">                        }</span>
+
+<span class="fc" id="L524">                        tx.commit();</span>
+
+<span class="fc bfc" id="L526" title="All 2 branches covered.">                        for (int i = 0; i &lt; changes.size(); i++) {</span>
+<span class="fc" id="L527">                                ReplicationNotifier.enqueue(changes.get(i));</span>
+                        }
+<span class="fc" id="L529">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L530">                        serviceCounter.update(PublicationQuery.DELETE_TMODEL, QueryStatus.SUCCESS, procTime);</span>
+<span class="nc" id="L531">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L532">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L533">                        serviceCounter.update(PublicationQuery.DELETE_TMODEL, QueryStatus.FAILED, procTime);</span>
+<span class="nc" id="L534">                        throw drfm;</span>
+                } finally {
+<span class="pc bpc" id="L536" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L537">                                tx.rollback();</span>
+                        }
+<span class="pc" id="L539">                        em.close();</span>
+<span class="fc" id="L540">                }</span>
+<span class="fc" id="L541">        }</span>
+
+        /**
+         * deletes the referenced object, assuming authorization rules are
+         * already processed and there is already an open transaction
+         *
+         * @param entityKey
+         * @param em
+         * @throws DispositionReportFaultMessage
+         */
+        protected void deleteTModel(String key, EntityManager em) {
+<span class="fc" id="L552">                Object obj = em.find(org.apache.juddi.model.Tmodel.class, key);</span>
+<span class="fc" id="L553">                ((org.apache.juddi.model.Tmodel) obj).setDeleted(true);</span>
+<span class="fc" id="L554">        }</span>
+
+        /**
+         * {@inheritDoc }
+         */
+        @Override
+        public List&lt;AssertionStatusItem&gt; getAssertionStatusReport(String authInfo,
+                CompletionStatus completionStatus)
+                throws DispositionReportFaultMessage {
+<span class="fc" id="L563">                long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L565">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L566">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L568">                        tx.begin();</span>
+
+<span class="fc" id="L570">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);</span>
+
+<span class="fc" id="L572">                        List&lt;org.uddi.api_v3.AssertionStatusItem&gt; result = PublicationHelper.getAssertionStatusItemList(publisher, completionStatus, em);</span>
+
+<span class="fc" id="L574">                        tx.commit();</span>
+<span class="fc" id="L575">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L576">                        serviceCounter.update(PublicationQuery.GET_ASSERTIONSTATUSREPORT,</span>
+                                QueryStatus.SUCCESS, procTime);
+
+<span class="fc" id="L579">                        return result;</span>
+<span class="nc" id="L580">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L581">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L582">                        serviceCounter.update(PublicationQuery.GET_ASSERTIONSTATUSREPORT, QueryStatus.FAILED, procTime);</span>
+<span class="nc" id="L583">                        throw drfm;</span>
+                } finally {
+<span class="pc bpc" id="L585" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L586">                                tx.rollback();</span>
+                        }
+<span class="pc" id="L588">                        em.close();</span>
+                }
+        }
+
+        public List&lt;PublisherAssertion&gt; getPublisherAssertions(String authInfo)
+                throws DispositionReportFaultMessage {
+<span class="fc" id="L594">                long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L596">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L597">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L599">                        tx.begin();</span>
+
+<span class="fc" id="L601">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);</span>
+
+<span class="fc" id="L603">                        List&lt;org.uddi.api_v3.PublisherAssertion&gt; result = new ArrayList&lt;org.uddi.api_v3.PublisherAssertion&gt;(0);</span>
+
+<span class="fc" id="L605">                        List&lt;?&gt; businessKeysFound = null;</span>
+<span class="fc" id="L606">                        businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);</span>
+
+<span class="fc" id="L608">                        List&lt;org.apache.juddi.model.PublisherAssertion&gt; pubAssertionList = FindPublisherAssertionByBusinessQuery.select(em, businessKeysFound, null);</span>
+<span class="pc bpc" id="L609" title="1 of 2 branches missed.">                        if (pubAssertionList != null) {</span>
+<span class="fc bfc" id="L610" title="All 2 branches covered.">                                for (org.apache.juddi.model.PublisherAssertion modelPubAssertion : pubAssertionList) {</span>
+<span class="fc" id="L611">                                        org.uddi.api_v3.PublisherAssertion apiPubAssertion = new org.uddi.api_v3.PublisherAssertion();</span>
+
+<span class="fc" id="L613">                                        MappingModelToApi.mapPublisherAssertion(modelPubAssertion, apiPubAssertion);</span>
+
+<span class="fc" id="L615">                                        result.add(apiPubAssertion);</span>
+<span class="fc" id="L616">                                }</span>
+                        }
+
+<span class="fc" id="L619">                        tx.commit();</span>
+<span class="fc" id="L620">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L621">                        serviceCounter.update(PublicationQuery.GET_PUBLISHERASSERTIONS,</span>
+                                QueryStatus.SUCCESS, procTime);
+<span class="fc" id="L623">                        return result;</span>
+<span class="fc" id="L624">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="fc" id="L625">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L626">                        serviceCounter.update(PublicationQuery.GET_PUBLISHERASSERTIONS,</span>
+                                QueryStatus.FAILED, procTime);
+<span class="fc" id="L628">                        throw drfm;</span>
+                } finally {
+<span class="pc bpc" id="L630" title="2 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="pc" id="L631">                                tx.rollback();</span>
+                        }
+<span class="fc" id="L633">                        em.close();</span>
+                }
+        }
+
+        /**
+         * {@inheritdoc}
+         *
+         */
+        public RegisteredInfo getRegisteredInfo(GetRegisteredInfo body)
+                throws DispositionReportFaultMessage {
+<span class="fc" id="L643">                long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L645">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L646">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L648">                        tx.begin();</span>
+
+<span class="fc" id="L650">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());</span>
+
+<span class="fc" id="L652">                        new ValidatePublish(publisher).validateRegisteredInfo(body);</span>
+
+<span class="fc" id="L654">                        List&lt;?&gt; businessKeysFound = null;</span>
+<span class="fc" id="L655">                        businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);</span>
+
+<span class="fc" id="L657">                        List&lt;?&gt; tmodelKeysFound = null;</span>
+
+<span class="pc bpc" id="L659" title="1 of 2 branches missed.">                        if (body.getInfoSelection().equals(InfoSelection.HIDDEN)) {</span>
+<span class="nc" id="L660">                                tmodelKeysFound = FindTModelByPublisherQuery.select(em, null, publisher, tmodelKeysFound, new DynamicQuery.Parameter(TModelQuery.ENTITY_ALIAS + &quot;.deleted&quot;, Boolean.TRUE, DynamicQuery.PREDICATE_EQUALS));</span>
+<span class="pc bpc" id="L661" title="1 of 2 branches missed.">                        } else if (body.getInfoSelection().equals(InfoSelection.VISIBLE)) {</span>
+<span class="nc" id="L662">                                tmodelKeysFound = FindTModelByPublisherQuery.select(em, null, publisher, tmodelKeysFound, new DynamicQuery.Parameter(TModelQuery.ENTITY_ALIAS + &quot;.deleted&quot;, Boolean.FALSE, DynamicQuery.PREDICATE_EQUALS));</span>
+                        } else {
+<span class="fc" id="L664">                                tmodelKeysFound = FindTModelByPublisherQuery.select(em, null, publisher, tmodelKeysFound);</span>
+                        }
+
+<span class="fc" id="L667">                        RegisteredInfo result = new RegisteredInfo();</span>
+
+                        // Sort and retrieve the final results
+<span class="fc" id="L670">                        List&lt;?&gt; queryResults = FetchBusinessEntitiesQuery.select(em, new FindQualifiers(), businessKeysFound, null, null, null);</span>
+<span class="pc bpc" id="L671" title="1 of 2 branches missed.">                        if (queryResults.size() &gt; 0) {</span>
+<span class="nc" id="L672">                                result.setBusinessInfos(new org.uddi.api_v3.BusinessInfos());</span>
+
+<span class="nc bnc" id="L674" title="All 2 branches missed.">                                for (Object item : queryResults) {</span>
+<span class="nc" id="L675">                                        org.apache.juddi.model.BusinessEntity modelBusinessEntity = (org.apache.juddi.model.BusinessEntity) item;</span>
+<span class="nc" id="L676">                                        org.uddi.api_v3.BusinessInfo apiBusinessInfo = new org.uddi.api_v3.BusinessInfo();</span>
+
+<span class="nc" id="L678">                                        MappingModelToApi.mapBusinessInfo(modelBusinessEntity, apiBusinessInfo);</span>
+
+<span class="nc" id="L680">                                        result.getBusinessInfos().getBusinessInfo().add(apiBusinessInfo);</span>
+<span class="nc" id="L681">                                }</span>
+                        }
+
+                        // Sort and retrieve the final results
+<span class="fc" id="L685">                        queryResults = FetchTModelsQuery.select(em, new FindQualifiers(), tmodelKeysFound, null, null, null);</span>
+<span class="pc bpc" id="L686" title="1 of 2 branches missed.">                        if (queryResults.size() &gt; 0) {</span>
+<span class="nc" id="L687">                                result.setTModelInfos(new org.uddi.api_v3.TModelInfos());</span>
+
+<span class="nc bnc" id="L689" title="All 2 branches missed.">                                for (Object item : queryResults) {</span>
+<span class="nc" id="L690">                                        org.apache.juddi.model.Tmodel modelTModel = (org.apache.juddi.model.Tmodel) item;</span>
+<span class="nc" id="L691">                                        org.uddi.api_v3.TModelInfo apiTModelInfo = new org.uddi.api_v3.TModelInfo();</span>
+
+<span class="nc" id="L693">                                        MappingModelToApi.mapTModelInfo(modelTModel, apiTModelInfo);</span>
+
+<span class="nc" id="L695">                                        result.getTModelInfos().getTModelInfo().add(apiTModelInfo);</span>
+<span class="nc" id="L696">                                }</span>
+                        }
+
+<span class="fc" id="L699">                        tx.commit();</span>
+<span class="fc" id="L700">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L701">                        serviceCounter.update(PublicationQuery.GET_REGISTEREDINFO,</span>
+                                QueryStatus.SUCCESS, procTime);
+
+<span class="fc" id="L704">                        return result;</span>
+<span class="nc" id="L705">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L706">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L707">                        serviceCounter.update(PublicationQuery.GET_REGISTEREDINFO,</span>
+                                QueryStatus.FAILED, procTime);
+<span class="nc" id="L709">                        throw drfm;</span>
+                } finally {
+<span class="pc bpc" id="L711" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L712">                                tx.rollback();</span>
+                        }
+<span class="pc" id="L714">                        em.close();</span>
+                }
+        }
+
+        /**
+         * {@inheritdoc}
+         *
+         */
+        public BindingDetail saveBinding(SaveBinding body)
+                throws DispositionReportFaultMessage {
+<span class="fc" id="L724">                long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L726">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L727">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L729">                        tx.begin();</span>
+
+<span class="fc" id="L731">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());</span>
+<span class="fc" id="L732">                        publisher.populateKeyGeneratorKeys(em);</span>
+<span class="fc" id="L733">                        ValidatePublish validator = new ValidatePublish(publisher);</span>
+<span class="fc" id="L734">                        validator.validateSaveBinding(em, body, null, publisher);</span>
+
+<span class="fc" id="L736">                        BindingDetail result = new BindingDetail();</span>
+<span class="fc" id="L737">                        result.setListDescription(new ListDescription());</span>
+<span class="fc" id="L738">                        List&lt;org.uddi.api_v3.BindingTemplate&gt; apiBindingTemplateList = body.getBindingTemplate();</span>
+<span class="fc" id="L739">                        List&lt;org.apache.juddi.model.ChangeRecord&gt; changes = new ArrayList&lt;ChangeRecord&gt;();</span>
+
+<span class="fc bfc" id="L741" title="All 2 branches covered.">                        for (org.uddi.api_v3.BindingTemplate apiBindingTemplate : apiBindingTemplateList) {</span>
+
+<span class="fc" id="L743">                                org.apache.juddi.model.BindingTemplate modelBindingTemplate = new org.apache.juddi.model.BindingTemplate();</span>
+
+<span class="fc" id="L745">                                org.apache.juddi.model.BusinessService modelBusinessService = new org.apache.juddi.model.BusinessService();</span>
+<span class="fc" id="L746">                                modelBusinessService.setEntityKey(apiBindingTemplate.getServiceKey());</span>
+
+<span class="fc" id="L748">                                MappingApiToModel.mapBindingTemplate(apiBindingTemplate, modelBindingTemplate, modelBusinessService);</span>
+
+<span class="fc" id="L750">                                setOperationalInfo(em, modelBindingTemplate, publisher, true);</span>
+
+<span class="fc" id="L752">                                em.persist(modelBindingTemplate);</span>
+
+<span class="fc" id="L754">                                result.getBindingTemplate().add(apiBindingTemplate);</span>
+<span class="fc" id="L755">                                result.getListDescription().setActualCount(result.getListDescription().getActualCount() + 1);</span>
+<span class="fc" id="L756">                                result.getListDescription().setIncludeCount(result.getListDescription().getIncludeCount() + 1);</span>
+<span class="fc" id="L757">                                validator.validateSaveBindingMax(em, modelBindingTemplate.getBusinessService().getEntityKey());</span>
+<span class="fc" id="L758">                                changes.add(getChangeRecord(modelBindingTemplate, apiBindingTemplate, getNode()));</span>
+<span class="fc" id="L759">                        }</span>
+
+<span class="fc" id="L761">                        tx.commit();</span>
+<span class="fc bfc" id="L762" title="All 2 branches covered.">                        for (int i = 0; i &lt; changes.size(); i++) {</span>
+<span class="fc" id="L763">                                ReplicationNotifier.enqueue(changes.get(i));</span>
+                        }
+<span class="fc" id="L765">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L766">                        serviceCounter.update(PublicationQuery.SAVE_BINDING,</span>
+                                QueryStatus.SUCCESS, procTime);
+
+<span class="fc" id="L769">                        return result;</span>
+<span class="fc" id="L770">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="fc" id="L771">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L772">                        serviceCounter.update(PublicationQuery.SAVE_BINDING,</span>
+                                QueryStatus.FAILED, procTime);
+<span class="fc" id="L774">                        throw drfm;</span>
+                } finally {
+<span class="pc bpc" id="L776" title="2 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="pc" id="L777">                                tx.rollback();</span>
+                        }
+<span class="fc" id="L779">                        em.close();</span>
+                }
+        }
+
+        /**
+         * {@inheritdoc}
+         *
+         */
+        public BusinessDetail saveBusiness(SaveBusiness body)
+                throws DispositionReportFaultMessage {
+<span class="fc" id="L789">                long startTime = System.currentTimeMillis();</span>
+                
+<span class="fc" id="L791">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L792">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L794">                        tx.begin();</span>
+
+<span class="fc" id="L796">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());</span>
+<span class="fc" id="L797">                        publisher.populateKeyGeneratorKeys(em);</span>
+<span class="fc" id="L798">                        ValidatePublish validator = new ValidatePublish(publisher);</span>
+<span class="fc" id="L799">                        validator.validateSaveBusiness(em, body, null, publisher);</span>
+
+<span class="fc" id="L801">                        BusinessDetail result = new BusinessDetail();</span>
+
+<span class="fc" id="L803">                        List&lt;org.uddi.api_v3.BusinessEntity&gt; apiBusinessEntityList = body.getBusinessEntity();</span>
+<span class="fc" id="L804">                        List&lt;ChangeRecord&gt; changes = new ArrayList&lt;ChangeRecord&gt;();</span>
+
+<span class="fc bfc" id="L806" title="All 2 branches covered.">                        for (org.uddi.api_v3.BusinessEntity apiBusinessEntity : apiBusinessEntityList) {</span>
+
+<span class="fc" id="L808">                                org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();</span>
+
+<span class="fc" id="L810">                                MappingApiToModel.mapBusinessEntity(apiBusinessEntity, modelBusinessEntity);</span>
+
+<span class="fc" id="L812">                                setOperationalInfo(em, modelBusinessEntity, publisher);</span>
+<span class="fc" id="L813">                                log.debug(&quot;Saving business &quot; + modelBusinessEntity.getEntityKey());</span>
+
+<span class="fc" id="L815">                                em.persist(modelBusinessEntity);</span>
+<span class="fc" id="L816">                                changes.add(getChangeRecord(modelBusinessEntity, apiBusinessEntity, getNode()));</span>
+<span class="fc" id="L817">                                result.getBusinessEntity().add(apiBusinessEntity);</span>
+<span class="fc" id="L818">                        }</span>
+
+                        //check how many business this publisher owns.
+<span class="fc" id="L821">                        validator.validateSaveBusinessMax(em);</span>
+
+<span class="fc" id="L823">                        tx.commit();</span>
+<span class="fc bfc" id="L824" title="All 2 branches covered.">                        for (int i = 0; i &lt; changes.size(); i++) {</span>
+<span class="fc" id="L825">                                ReplicationNotifier.enqueue(changes.get(i));</span>
+                        }
+<span class="fc" id="L827">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L828">                        serviceCounter.update(PublicationQuery.SAVE_BUSINESS,</span>
+                                QueryStatus.SUCCESS, procTime);
+
+<span class="fc" id="L831">                        return result;</span>
+<span class="fc" id="L832">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="fc" id="L833">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L834">                        serviceCounter.update(PublicationQuery.SAVE_BUSINESS,</span>
+                                QueryStatus.FAILED, procTime);
+<span class="fc" id="L836">                        throw drfm;</span>
+<span class="nc" id="L837">                } catch (Exception ex) {</span>
+<span class="nc" id="L838">                        StringWriter sw = new StringWriter();</span>
+<span class="nc bnc" id="L839" title="All 2 branches missed.">                        if (body != null) {</span>
+<span class="nc" id="L840">                                JAXB.marshal(body, sw);</span>
+                        }
+<span class="nc" id="L842">                        log.fatal(&quot;unexpected error!&quot; + sw.toString(), ex);</span>
+<span class="nc" id="L843">                        throw new FatalErrorException(new ErrorMessage(&quot;E_fatalError&quot;, ex.getMessage()));</span>
+                } finally {
+<span class="pc bpc" id="L845" title="2 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="pc" id="L846">                                tx.rollback();</span>
+                        }
+<span class="fc" id="L848">                        em.close();</span>
+                }
+        }
+
+        /**
+         * {@inheritdoc}
+         *
+         */
+        public ServiceDetail saveService(SaveService body)
+                throws DispositionReportFaultMessage {
+<span class="fc" id="L858">                long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L860">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L861">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L863">                        tx.begin();</span>
+
+<span class="fc" id="L865">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());</span>
+<span class="fc" id="L866">                        publisher.populateKeyGeneratorKeys(em);</span>
+<span class="fc" id="L867">                        ValidatePublish validator = new ValidatePublish(publisher);</span>
+<span class="fc" id="L868">                        validator.validateSaveService(em, body, null, publisher);</span>
+
+<span class="fc" id="L870">                        ServiceDetail result = new ServiceDetail();</span>
+
+<span class="fc" id="L872">                        List&lt;org.uddi.api_v3.BusinessService&gt; apiBusinessServiceList = body.getBusinessService();</span>
+<span class="fc" id="L873">                        List&lt;ChangeRecord&gt; changes = new ArrayList&lt;ChangeRecord&gt;();</span>
+<span class="fc bfc" id="L874" title="All 2 branches covered.">                        for (org.uddi.api_v3.BusinessService apiBusinessService : apiBusinessServiceList) {</span>
+
+<span class="fc" id="L876">                                org.apache.juddi.model.BusinessService modelBusinessService = new org.apache.juddi.model.BusinessService();</span>
+<span class="fc" id="L877">                                org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();</span>
+<span class="fc" id="L878">                                modelBusinessEntity.setEntityKey(apiBusinessService.getBusinessKey());</span>
+
+<span class="fc" id="L880">                                MappingApiToModel.mapBusinessService(apiBusinessService, modelBusinessService, modelBusinessEntity);</span>
+
+<span class="fc" id="L882">                                setOperationalInfo(em, modelBusinessService, publisher, false);</span>
+
+<span class="fc" id="L884">                                em.persist(modelBusinessService);</span>
+
+<span class="fc" id="L886">                                result.getBusinessService().add(apiBusinessService);</span>
+
+<span class="fc" id="L888">                                validator.validateSaveServiceMax(em, modelBusinessService.getBusinessEntity().getEntityKey());</span>
+<span class="fc" id="L889">                                changes.add(getChangeRecord(modelBusinessService, apiBusinessService, getNode()));</span>
+<span class="fc" id="L890">                        }</span>
+
+<span class="fc" id="L892">                        tx.commit();</span>
+<span class="fc bfc" id="L893" title="All 2 branches covered.">                        for (int i = 0; i &lt; changes.size(); i++) {</span>
+<span class="fc" id="L894">                                ReplicationNotifier.enqueue(changes.get(i));</span>
+                        }
+<span class="fc" id="L896">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L897">                        serviceCounter.update(PublicationQuery.SAVE_SERVICE,</span>
+                                QueryStatus.SUCCESS, procTime);
+
+<span class="fc" id="L900">                        return result;</span>
+<span class="fc" id="L901">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="fc" id="L902">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L903">                        serviceCounter.update(PublicationQuery.SAVE_SERVICE,</span>
+                                QueryStatus.FAILED, procTime);
+<span class="fc" id="L905">                        throw drfm;</span>
+                } finally {
+<span class="pc bpc" id="L907" title="2 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="pc" id="L908">                                tx.rollback();</span>
+                        }
+<span class="fc" id="L910">                        em.close();</span>
+                }
+        }
+
+        /**
+         * {@inheritdoc}
+         *
+         */
+        @Override
+        public TModelDetail saveTModel(SaveTModel body)
+                throws DispositionReportFaultMessage {
+<span class="fc" id="L921">                long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L923">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L924">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L926">                        tx.begin();</span>
+
+<span class="fc" id="L928">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());</span>
+<span class="fc" id="L929">                        publisher.populateKeyGeneratorKeys(em);</span>
+<span class="fc" id="L930">                        new ValidatePublish(publisher).validateSaveTModel(em, body, null, publisher);</span>
+
+<span class="fc" id="L932">                        TModelDetail result = new TModelDetail();</span>
+
+<span class="fc" id="L934">                        List&lt;org.uddi.api_v3.TModel&gt; apiTModelList = body.getTModel();</span>
+<span class="fc" id="L935">                        List&lt;ChangeRecord&gt; changes = new ArrayList&lt;ChangeRecord&gt;();</span>
+<span class="fc bfc" id="L936" title="All 2 branches covered.">                        for (org.uddi.api_v3.TModel apiTModel : apiTModelList) {</span>
+
+                                // Object obj=em.find( org.apache.juddi.model.Tmodel.class, apiTModel.getTModelKey());
+                                //just making changes to an existing tModel, no worries
+<span class="fc" id="L940">                                org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();</span>
+
+<span class="fc" id="L942">                                MappingApiToModel.mapTModel(apiTModel, modelTModel);</span>
+
+<span class="fc" id="L944">                                setOperationalInfo(em, modelTModel, publisher);</span>
+
+<span class="fc" id="L946">                                em.persist(modelTModel);</span>
+
+<span class="fc" id="L948">                                result.getTModel().add(apiTModel);</span>
+<span class="fc" id="L949">                                changes.add(getChangeRecord(modelTModel, apiTModel, getNode()));</span>
+                                /*
+                                 //TODO JUDDI-915
+                                 if (obj != null) {
+
+                                 changes.add(getChangeRecord(modelTModel, apiTModel, node));
+                                 } else {
+                                 //special case for replication, must setup a new data conditional change record
+                                 changes.add(getChangeRecordConditional(modelTModel, apiTModel, node));
+                                 }*/
+
+<span class="fc" id="L960">                        }</span>
+
+<span class="fc" id="L962">                        tx.commit();</span>
+<span class="fc bfc" id="L963" title="All 2 branches covered.">                        for (int i = 0; i &lt; changes.size(); i++) {</span>
+<span class="fc" id="L964">                                ReplicationNotifier.enqueue(changes.get(i));</span>
+                        }
+<span class="fc" id="L966">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L967">                        serviceCounter.update(PublicationQuery.SAVE_TMODEL,</span>
+                                QueryStatus.SUCCESS, procTime);
+
+<span class="fc" id="L970">                        return result;</span>
+<span class="fc" id="L971">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="fc" id="L972">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L973">                        serviceCounter.update(PublicationQuery.SAVE_TMODEL,</span>
+                                QueryStatus.FAILED, procTime);
+<span class="fc" id="L975">                        throw drfm;</span>
+                } finally {
+<span class="pc bpc" id="L977" title="2 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="pc" id="L978">                                tx.rollback();</span>
+                        }
+<span class="fc" id="L980">                        em.close();</span>
+                }
+        }
+
+        /**
+         * {@inheritdoc}
+         *
+         */
+        @Override
+        public void setPublisherAssertions(String authInfo,
+                Holder&lt;List&lt;PublisherAssertion&gt;&gt; publisherAssertion)
+                throws DispositionReportFaultMessage {
+<span class="fc" id="L992">                long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L994">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L995">                EntityTransaction tx = em.getTransaction();</span>
+<span class="fc" id="L996">                List&lt;ChangeRecord&gt; changes = new ArrayList&lt;ChangeRecord&gt;();</span>
+                try {
+<span class="fc" id="L998">                        tx.begin();</span>
+
+<span class="fc" id="L1000">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);</span>
+
+<span class="fc" id="L1002">                        new ValidatePublish(publisher).validateSetPublisherAssertions(em, publisherAssertion);</span>
+
+<span class="fc" id="L1004">                        List&lt;?&gt; businessKeysFound = null;</span>
+<span class="fc" id="L1005">                        businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);</span>
+
+                        //TODO this has to be reworked to record what was deleted.
+                        // First, identify all previous assertions that need to be removed
+<span class="fc" id="L1009">                        List&lt;org.apache.juddi.model.PublisherAssertion&gt; existingAssertions = FindPublisherAssertionByBusinessQuery.select(em, businessKeysFound, null);</span>
+
+<span class="fc" id="L1011">                        logger.debug(&quot;&gt;&gt;&gt;&gt; Existing assertions &quot; + existingAssertions.size() + &quot;, inbound set &quot; + publisherAssertion.value.size());</span>
+<span class="fc" id="L1012">                        List&lt;org.apache.juddi.model.PublisherAssertion&gt; deleteMe = diff(publisherAssertion.value, existingAssertions);</span>
+<span class="fc" id="L1013">                        logger.debug(&quot;&gt;&gt;&gt;&gt; DIFF size is &quot; + deleteMe.size());</span>
+<span class="fc bfc" id="L1014" title="All 2 branches covered.">                        for (org.apache.juddi.model.PublisherAssertion del : deleteMe) {</span>
+<span class="fc" id="L1015">                                logger.debug(&quot;&gt;&gt;&gt;&gt; PROCESSING &quot; + del.getBusinessEntityByFromKey().getEntityKey() + &quot; &quot; + del.getBusinessEntityByToKey().getEntityKey());</span>
+<span class="fc" id="L1016">                                boolean from = false;</span>
+<span class="pc bpc" id="L1017" title="1 of 2 branches missed.">                                if (del.getFromCheck() != null) {</span>
+<span class="fc" id="L1018">                                        del.getFromCheck().equalsIgnoreCase(&quot;true&quot;);</span>
+                                }
+<span class="fc" id="L1020">                                boolean to = false;</span>
+<span class="pc bpc" id="L1021" title="1 of 2 branches missed.">                                if (del.getToCheck() != null) {</span>
+<span class="fc" id="L1022">                                        del.getToCheck().equalsIgnoreCase(&quot;true&quot;);</span>
+                                }
+<span class="pc bpc" id="L1024" title="1 of 2 branches missed.">                                if (publisher.isOwner(del.getBusinessEntityByFromKey())) {</span>
+<span class="fc" id="L1025">                                        from = false;</span>
+                                }
+<span class="pc bpc" id="L1027" title="1 of 2 branches missed.">                                if (publisher.isOwner(del.getBusinessEntityByToKey())) {</span>
+<span class="nc" id="L1028">                                        to = false;</span>
+                                }
+<span class="fc" id="L1030">                                PublisherAssertion api = new PublisherAssertion();</span>
+<span class="fc" id="L1031">                                MappingModelToApi.mapPublisherAssertion(del, api);</span>
+
+<span class="pc bpc" id="L1033" title="2 of 4 branches missed.">                                if (!to &amp;&amp; !from) {</span>
+<span class="fc" id="L1034">                                        logger.debug(&quot;&gt;&gt;&gt;&gt; DELETE ME &quot; + del.getBusinessEntityByFromKey().getEntityKey() + &quot; &quot; + del.getBusinessEntityByToKey().getEntityKey());</span>
+<span class="fc" id="L1035">                                        em.remove(del);</span>
+                                } else {
+<span class="nc" id="L1037">                                        logger.debug(&quot;&gt;&gt;&gt;&gt; MERGING ME &quot; + del.getBusinessEntityByFromKey().getEntityKey() + &quot; &quot; + del.getBusinessEntityByToKey().getEntityKey());</span>
+<span class="nc bnc" id="L1038" title="All 2 branches missed.">                                        del.setFromCheck(from ? &quot;true&quot; : &quot;false&quot;);</span>
+<span class="nc bnc" id="L1039" title="All 2 branches missed.">                                        del.setToCheck(to ? &quot;true&quot; : &quot;false&quot;);</span>
+<span class="nc" id="L1040">                                        del.setModified(new Date());</span>
+<span class="nc" id="L1041">                                        em.merge(del);</span>
+                                }
+<span class="fc" id="L1043">                                changes.add(getChangeRecord_deletePublisherAssertion(api, getNode(), to, from, System.currentTimeMillis()));</span>
+<span class="fc" id="L1044">                        }</span>
+                        //DeletePublisherAssertionByBusinessQuery.delete(em, businessKeysFound);
+
+                        // Slate is clean for all assertions involving this publisher, now we simply need to add the new ones (and they will all be &quot;new&quot;).
+                        /*List&lt;org.uddi.api_v3.PublisherAssertion&gt; apiPubAssertionList = publisherAssertion.value;
+
+                        
+                         for (org.uddi.api_v3.PublisherAssertion apiPubAssertion : apiPubAssertionList) {
+
+                         org.apache.juddi.model.PublisherAssertion modelPubAssertion = new org.apache.juddi.model.PublisherAssertion();
+
+                         MappingApiToModel.mapPublisherAssertion(apiPubAssertion, modelPubAssertion);
+                                
+                         org.apache.juddi.model.BusinessEntity beFrom = em.find(org.apache.juddi.model.BusinessEntity.class, modelPubAssertion.getId().getFromKey());
+                         org.apache.juddi.model.BusinessEntity beTo = em.find(org.apache.juddi.model.BusinessEntity.class, modelPubAssertion.getId().getToKey());
+                         modelPubAssertion.setBusinessEntityByFromKey(beFrom);
+                         modelPubAssertion.setBusinessEntityByToKey(beTo);
+
+                         modelPubAssertion.setFromCheck(&quot;false&quot;);
+                         modelPubAssertion.setToCheck(&quot;false&quot;);
+
+                         if (publisher.isOwner(modelPubAssertion.getBusinessEntityByFromKey())) {
+                         modelPubAssertion.setFromCheck(&quot;true&quot;);
+                         }
+                         if (publisher.isOwner(modelPubAssertion.getBusinessEntityByToKey())) {
+                         modelPubAssertion.setToCheck(&quot;true&quot;);
+                         }
+                         em.persist(modelPubAssertion);
+
+                         changes.add(getChangeRecord_NewAssertion(apiPubAssertion, modelPubAssertion, node));
+
+                         }*/
+<span class="fc" id="L1076">                        tx.commit();</span>
+<span class="fc bfc" id="L1077" title="All 2 branches covered.">                        if (!publisherAssertion.value.isEmpty()) {</span>
+<span class="fc" id="L1078">                                AddPublisherAssertions addPublisherAssertions = new AddPublisherAssertions();</span>
+<span class="fc" id="L1079">                                addPublisherAssertions.setAuthInfo(authInfo);</span>
+<span class="fc" id="L1080">                                addPublisherAssertions.getPublisherAssertion().addAll(publisherAssertion.value);</span>
+<span class="fc" id="L1081">                                addPublisherAssertions(addPublisherAssertions);</span>
+                        }
+<span class="fc bfc" id="L1083" title="All 2 branches covered.">                        for (int i = 0; i &lt; changes.size(); i++) {</span>
+<span class="fc" id="L1084">                                ReplicationNotifier.enqueue(changes.get(i));</span>
+                        }
+<span class="fc" id="L1086">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L1087">                        serviceCounter.update(PublicationQuery.SET_PUBLISHERASSERTIONS,</span>
+                                QueryStatus.SUCCESS, procTime);
+<span class="nc" id="L1089">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L1090">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L1091">                        serviceCounter.update(PublicationQuery.SET_PUBLISHERASSERTIONS,</span>
+                                QueryStatus.FAILED, procTime);
+<span class="nc" id="L1093">                        throw drfm;</span>
+                } finally {
+<span class="pc bpc" id="L1095" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L1096">                                tx.rollback();</span>
+                        }
+<span class="pc" id="L1098">                        em.close();</span>
+<span class="fc" id="L1099">                }</span>
+<span class="fc" id="L1100">        }</span>
+
+        private void setOperationalInfo(EntityManager em, org.apache.juddi.model.BusinessEntity uddiEntity, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
+
+<span class="fc" id="L1104">                uddiEntity.setAuthorizedName(publisher.getAuthorizedName());</span>
+
+<span class="fc" id="L1106">                Date now = new Date();</span>
+<span class="fc" id="L1107">                uddiEntity.setModified(now);</span>
+<span class="fc" id="L1108">                uddiEntity.setModifiedIncludingChildren(now);</span>
+
+<span class="fc" id="L1110">                String nodeId = &quot;&quot;;</span>
+                try {
+<span class="fc" id="L1112">                        nodeId = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);</span>
+<span class="nc" id="L1113">                } catch (ConfigurationException ce) {</span>
+<span class="nc" id="L1114">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.configuration.Retrieval&quot;, Property.JUDDI_NODE_ID));</span>
+<span class="fc" id="L1115">                }</span>
+<span class="fc" id="L1116">                uddiEntity.setNodeId(nodeId);</span>
+
+<span class="fc" id="L1118">                org.apache.juddi.model.BusinessEntity existingUddiEntity = em.find(uddiEntity.getClass(), uddiEntity.getEntityKey());</span>
+<span class="fc bfc" id="L1119" title="All 2 branches covered.">                if (existingUddiEntity != null) {</span>
+<span class="fc" id="L1120">                        uddiEntity.setCreated(existingUddiEntity.getCreated());</span>
+                } else {
+<span class="fc" id="L1122">                        uddiEntity.setCreated(now);</span>
+                }
+
+<span class="fc" id="L1125">                List&lt;org.apache.juddi.model.BusinessService&gt; serviceList = uddiEntity.getBusinessServices();</span>
+<span class="fc bfc" id="L1126" title="All 2 branches covered.">                for (org.apache.juddi.model.BusinessService service : serviceList) {</span>
+<span class="fc" id="L1127">                        setOperationalInfo(em, service, publisher, true);</span>
+<span class="fc" id="L1128">                }</span>
+
+<span class="fc bfc" id="L1130" title="All 2 branches covered.">                if (existingUddiEntity != null) {</span>
+<span class="fc" id="L1131">                        em.remove(existingUddiEntity);</span>
+                }
+
+<span class="fc" id="L1134">        }</span>
+
+        private void setOperationalInfo(EntityManager em, org.apache.juddi.model.BusinessService uddiEntity, UddiEntityPublisher publisher, boolean isChild) throws DispositionReportFaultMessage {
+
+<span class="fc" id="L1138">                uddiEntity.setAuthorizedName(publisher.getAuthorizedName());</span>
+
+<span class="fc" id="L1140">                Date now = new Date();</span>
+<span class="fc" id="L1141">                uddiEntity.setModified(now);</span>
+<span class="fc" id="L1142">                uddiEntity.setModifiedIncludingChildren(now);</span>
+
+<span class="fc bfc" id="L1144" title="All 2 branches covered.">                if (!isChild) {</span>
+<span class="fc" id="L1145">                        org.apache.juddi.model.BusinessEntity parent = em.find(org.apache.juddi.model.BusinessEntity.class, uddiEntity.getBusinessEntity().getEntityKey());</span>
+<span class="fc" id="L1146">                        parent.setModifiedIncludingChildren(now);</span>
+<span class="fc" id="L1147">                        em.persist(parent);</span>
+                }
+
+<span class="fc" id="L1150">                String nodeId = &quot;&quot;;</span>
+                try {
+<span class="fc" id="L1152">                        nodeId = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);</span>
+<span class="nc" id="L1153">                } catch (ConfigurationException ce) {</span>
+<span class="nc" id="L1154">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.configuration.Retrieval&quot;, Property.JUDDI_NODE_ID));</span>
+<span class="fc" id="L1155">                }</span>
+<span class="fc" id="L1156">                uddiEntity.setNodeId(nodeId);</span>
+
+<span class="fc" id="L1158">                org.apache.juddi.model.BusinessService existingUddiEntity = em.find(uddiEntity.getClass(), uddiEntity.getEntityKey());</span>
+<span class="fc bfc" id="L1159" title="All 2 branches covered.">                if (existingUddiEntity != null) {</span>
+<span class="fc" id="L1160">                        uddiEntity.setCreated(existingUddiEntity.getCreated());</span>
+                } else {
+<span class="fc" id="L1162">                        uddiEntity.setCreated(now);</span>
+                }
+
+<span class="fc" id="L1165">                List&lt;org.apache.juddi.model.BindingTemplate&gt; bindingList = uddiEntity.getBindingTemplates();</span>
+<span class="fc bfc" id="L1166" title="All 2 branches covered.">                for (org.apache.juddi.model.BindingTemplate binding : bindingList) {</span>
+<span class="fc" id="L1167">                        setOperationalInfo(em, binding, publisher, true);</span>
+<span class="fc" id="L1168">                }</span>
+
+<span class="fc bfc" id="L1170" title="All 2 branches covered.">                if (existingUddiEntity != null) {</span>
+<span class="fc" id="L1171">                        em.remove(existingUddiEntity);</span>
+                }
+
+<span class="fc" id="L1174">        }</span>
+
+        private void setOperationalInfo(EntityManager em, org.apache.juddi.model.BindingTemplate uddiEntity, UddiEntityPublisher publisher, boolean isChild) throws DispositionReportFaultMessage {
+
+<span class="fc" id="L1178">                uddiEntity.setAuthorizedName(publisher.getAuthorizedName());</span>
+
+<span class="fc" id="L1180">                Date now = new Date();</span>
+<span class="fc" id="L1181">                uddiEntity.setModified(now);</span>
+<span class="fc" id="L1182">                uddiEntity.setModifiedIncludingChildren(now);</span>
+
+                //if (!isChild) {
+<span class="fc" id="L1185">                org.apache.juddi.model.BusinessService parent = em.find(org.apache.juddi.model.BusinessService.class, uddiEntity.getBusinessService().getEntityKey());</span>
+<span class="fc bfc" id="L1186" title="All 2 branches covered.">                if (parent != null) {</span>
+<span class="fc" id="L1187">                        parent.setModifiedIncludingChildren(now);</span>
+<span class="fc" id="L1188">                        em.persist(parent);</span>
+
+                        // JUDDI-421:  now the businessEntity parent will have it's modifiedIncludingChildren set
+<span class="fc" id="L1191">                        org.apache.juddi.model.BusinessEntity businessParent = em.find(org.apache.juddi.model.BusinessEntity.class, parent.getBusinessEntity().getEntityKey());</span>
+<span class="pc bpc" id="L1192" title="1 of 2 branches missed.">                        if (businessParent != null) {</span>
+<span class="fc" id="L1193">                                businessParent.setModifiedIncludingChildren(now);</span>
+<span class="fc" id="L1194">                                em.persist(businessParent);</span>
+                        } else {
+<span class="nc" id="L1196">                                logger.debug(&quot;Parent business is null for saved binding template!&quot;);</span>
+                        }
+<span class="fc" id="L1198">                } else {</span>
+<span class="fc" id="L1199">                        logger.debug(&quot;Parent service is null for saved binding template!&quot;);</span>
+                }
+                // }
+
+<span class="fc" id="L1203">                String nodeId = &quot;&quot;;</span>
+                try {
+<span class="fc" id="L1205">                        nodeId = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);</span>
+<span class="nc" id="L1206">                } catch (ConfigurationException ce) {</span>
+<span class="nc" id="L1207">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.configuration.Retrieval&quot;, Property.JUDDI_NODE_ID));</span>
+<span class="fc" id="L1208">                }</span>
+<span class="fc" id="L1209">                uddiEntity.setNodeId(nodeId);</span>
+
+<span class="fc" id="L1211">                org.apache.juddi.model.BindingTemplate existingUddiEntity = em.find(uddiEntity.getClass(), uddiEntity.getEntityKey());</span>
+<span class="fc bfc" id="L1212" title="All 2 branches covered.">                if (existingUddiEntity != null) {</span>
+<span class="fc" id="L1213">                        uddiEntity.setCreated(existingUddiEntity.getCreated());</span>
+                } else {
+<span class="fc" id="L1215">                        uddiEntity.setCreated(now);</span>
+                }
+
+<span class="fc bfc" id="L1218" title="All 2 branches covered.">                if (existingUddiEntity != null) {</span>
+<span class="fc" id="L1219">                        em.remove(existingUddiEntity);</span>
+                }
+
+<span class="fc" id="L1222">        }</span>
+
+        private void setOperationalInfo(EntityManager em, org.apache.juddi.model.Tmodel uddiEntity, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
+
+<span class="fc" id="L1226">                uddiEntity.setAuthorizedName(publisher.getAuthorizedName());</span>
+
+<span class="fc" id="L1228">                Date now = new Date();</span>
+<span class="fc" id="L1229">                uddiEntity.setModified(now);</span>
+<span class="fc" id="L1230">                uddiEntity.setModifiedIncludingChildren(now);</span>
+
+<span class="fc" id="L1232">                String nodeId = &quot;&quot;;</span>
+                try {
+<span class="fc" id="L1234">                        nodeId = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);</span>
+<span class="nc" id="L1235">                } catch (ConfigurationException ce) {</span>
+<span class="nc" id="L1236">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.configuration.Retrieval&quot;, Property.JUDDI_NODE_ID));</span>
+<span class="fc" id="L1237">                }</span>
+<span class="fc" id="L1238">                uddiEntity.setNodeId(nodeId);</span>
+
+<span class="fc" id="L1240">                org.apache.juddi.model.Tmodel existingUddiEntity = em.find(uddiEntity.getClass(), uddiEntity.getEntityKey());</span>
+<span class="fc bfc" id="L1241" title="All 2 branches covered.">                if (existingUddiEntity != null) {</span>
+<span class="fc" id="L1242">                        uddiEntity.setCreated(existingUddiEntity.getCreated());</span>
+                } else {
+<span class="fc" id="L1244">                        uddiEntity.setCreated(now);</span>
+                }
+
+<span class="fc bfc" id="L1247" title="All 2 branches covered.">                if (existingUddiEntity != null) {</span>
+<span class="fc" id="L1248">                        em.remove(existingUddiEntity);</span>
+                }
+
+<span class="fc" id="L1251">        }</span>
+
+        public static ChangeRecord getChangeRecord(BindingTemplate modelBindingTemplate, org.uddi.api_v3.BindingTemplate api, String node) throws DispositionReportFaultMessage {
+<span class="fc" id="L1254">                ChangeRecord cr = new ChangeRecord();</span>
+<span class="fc" id="L1255">                cr.setEntityKey(modelBindingTemplate.getEntityKey());</span>
+<span class="fc" id="L1256">                cr.setNodeID(node);</span>
+
+<span class="fc" id="L1258">                cr.setRecordType(ChangeRecord.RecordType.ChangeRecordNewData);</span>
+<span class="fc" id="L1259">                org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();</span>
+<span class="fc" id="L1260">                crapi.setChangeID(new ChangeRecordIDType(node, -1L));</span>
+<span class="fc" id="L1261">                crapi.setChangeRecordNewData(new ChangeRecordNewData());</span>
+<span class="fc" id="L1262">                crapi.getChangeRecordNewData().setBindingTemplate(api);</span>
+<span class="fc" id="L1263">                crapi.getChangeRecordNewData().setOperationalInfo(new OperationalInfo());</span>
+<span class="fc" id="L1264">                MappingModelToApi.mapOperationalInfo(modelBindingTemplate, crapi.getChangeRecordNewData().getOperationalInfo());</span>
+<span class="fc" id="L1265">                StringWriter sw = new StringWriter();</span>
+<span class="fc" id="L1266">                JAXB.marshal(crapi, sw);</span>
+                try {
+<span class="fc" id="L1268">                        cr.setContents(sw.toString().getBytes(&quot;UTF8&quot;));</span>
+<span class="nc" id="L1269">                } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L1270">                        logger.error(ex);</span>
+<span class="fc" id="L1271">                }</span>
+<span class="fc" id="L1272">                return cr;</span>
+        }
+
+        public static ChangeRecord getChangeRecord(BusinessService model, org.uddi.api_v3.BusinessService api, String node) throws DispositionReportFaultMessage {
+<span class="fc" id="L1276">                ChangeRecord cr = new ChangeRecord();</span>
+<span class="fc" id="L1277">                cr.setEntityKey(model.getEntityKey());</span>
+<span class="fc" id="L1278">                cr.setNodeID(node);</span>
+
+<span class="fc" id="L1280">                cr.setRecordType(ChangeRecord.RecordType.ChangeRecordNewData);</span>
+<span class="fc" id="L1281">                org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();</span>
+<span class="fc" id="L1282">                crapi.setChangeID(new ChangeRecordIDType(node, -1L));</span>
+<span class="fc" id="L1283">                crapi.setChangeRecordNewData(new ChangeRecordNewData());</span>
+<span class="fc" id="L1284">                crapi.getChangeRecordNewData().setBusinessService(api);</span>
+<span class="fc" id="L1285">                crapi.getChangeRecordNewData().setOperationalInfo(new OperationalInfo());</span>
+<span class="fc" id="L1286">                MappingModelToApi.mapOperationalInfo(model, crapi.getChangeRecordNewData().getOperationalInfo());</span>
+<span class="fc" id="L1287">                StringWriter sw = new StringWriter();</span>
+<span class="fc" id="L1288">                JAXB.marshal(crapi, sw);</span>
+                try {
+<span class="fc" id="L1290">                        cr.setContents(sw.toString().getBytes(&quot;UTF8&quot;));</span>
+<span class="nc" id="L1291">                } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L1292">                        logger.error(ex);</span>
+<span class="fc" id="L1293">                }</span>
+<span class="fc" id="L1294">                return cr;</span>
+        }
+
+        public ChangeRecord getChangeRecord_deleteBusiness(String entityKey, String node) {
+<span class="fc" id="L1298">                ChangeRecord cr = new ChangeRecord();</span>
+<span class="fc" id="L1299">                cr.setEntityKey(entityKey);</span>
+<span class="fc" id="L1300">                cr.setNodeID(node);</span>
+
+<span class="fc" id="L1302">                cr.setRecordType(ChangeRecord.RecordType.ChangeRecordDelete);</span>
+<span class="fc" id="L1303">                org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();</span>
+<span class="fc" id="L1304">                crapi.setChangeID(new ChangeRecordIDType(node, -1L));</span>
+<span class="fc" id="L1305">                crapi.setChangeRecordDelete(new ChangeRecordDelete());</span>
+<span class="fc" id="L1306">                crapi.getChangeRecordDelete().setBusinessKey(entityKey);</span>
+<span class="fc" id="L1307">                crapi.getChangeRecordDelete().setModified(df.newXMLGregorianCalendar(new GregorianCalendar()));</span>
+
+<span class="fc" id="L1309">                StringWriter sw = new StringWriter();</span>
+<span class="fc" id="L1310">                JAXB.marshal(crapi, sw);</span>
+                try {
+<span class="fc" id="L1312">                        cr.setContents(sw.toString().getBytes(&quot;UTF8&quot;));</span>
+<span class="nc" id="L1313">                } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L1314">                        logger.error(ex);</span>
+<span class="fc" id="L1315">                }</span>
+<span class="fc" id="L1316">                return cr;</span>
+        }
+
+        public ChangeRecord getChangeRecord_deleteService(String entityKey, String node) {
+<span class="fc" id="L1320">                ChangeRecord cr = new ChangeRecord();</span>
+<span class="fc" id="L1321">                cr.setEntityKey(entityKey);</span>
+<span class="fc" id="L1322">                cr.setNodeID(node);</span>
+
+<span class="fc" id="L1324">                cr.setRecordType(ChangeRecord.RecordType.ChangeRecordDelete);</span>
+<span class="fc" id="L1325">                org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();</span>
+<span class="fc" id="L1326">                crapi.setChangeID(new ChangeRecordIDType(node, -1L));</span>
+<span class="fc" id="L1327">                crapi.setChangeRecordDelete(new ChangeRecordDelete());</span>
+<span class="fc" id="L1328">                crapi.getChangeRecordDelete().setServiceKey(entityKey);</span>
+<span class="fc" id="L1329">                crapi.getChangeRecordDelete().setModified(df.newXMLGregorianCalendar(new GregorianCalendar()));</span>
+
+<span class="fc" id="L1331">                StringWriter sw = new StringWriter();</span>
+<span class="fc" id="L1332">                JAXB.marshal(crapi, sw);</span>
+                try {
+<span class="fc" id="L1334">                        cr.setContents(sw.toString().getBytes(&quot;UTF8&quot;));</span>
+<span class="nc" id="L1335">                } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L1336">                        logger.error(ex);</span>
+<span class="fc" id="L1337">                }</span>
+<span class="fc" id="L1338">                return cr;</span>
+        }
+
+        /**
+         * this is for &quot;hiding&quot; a tmodel, not removing it entirely
+         *
+         * @param entityKey
+         * @param node
+         * @return
+         */
+        public ChangeRecord getChangeRecord_deleteTModelHide(String entityKey, String node) {
+<span class="fc" id="L1349">                ChangeRecord cr = new ChangeRecord();</span>
+<span class="fc" id="L1350">                cr.setEntityKey(entityKey);</span>
+<span class="fc" id="L1351">                cr.setNodeID(node);</span>
+<span class="fc" id="L1352">                cr.setRecordType(ChangeRecord.RecordType.ChangeRecordHide);</span>
+<span class="fc" id="L1353">                org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();</span>
+<span class="fc" id="L1354">                crapi.setChangeID(new ChangeRecordIDType(node, -1L));</span>
+
+<span class="fc" id="L1356">                crapi.setChangeRecordHide(new ChangeRecordHide());</span>
+<span class="fc" id="L1357">                crapi.getChangeRecordHide().setTModelKey(entityKey);</span>
+<span class="fc" id="L1358">                crapi.getChangeRecordHide().setModified(df.newXMLGregorianCalendar(new GregorianCalendar()));</span>
+
+<span class="fc" id="L1360">                StringWriter sw = new StringWriter();</span>
+<span class="fc" id="L1361">                JAXB.marshal(crapi, sw);</span>
+                //JAXB.marshal(crapi, System.out);
+                try {
+<span class="fc" id="L1364">                        cr.setContents(sw.toString().getBytes(&quot;UTF8&quot;));</span>
+<span class="nc" id="L1365">                } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L1366">                        logger.error(ex);</span>
+<span class="fc" id="L1367">                }</span>
+<span class="fc" id="L1368">                return cr;</span>
+        }
+
+        /**
+         * this is for deleting a tmodel, not hiding it
+         *
+         * @param entityKey
+         * @param node
+         * @return
+         */
+        public static ChangeRecord getChangeRecord_deleteTModelDelete(String entityKey, String node, DatatypeFactory df) {
+<span class="nc" id="L1379">                ChangeRecord cr = new ChangeRecord();</span>
+<span class="nc" id="L1380">                cr.setEntityKey(entityKey);</span>
+<span class="nc" id="L1381">                cr.setNodeID(node);</span>
+<span class="nc" id="L1382">                cr.setRecordType(ChangeRecord.RecordType.ChangeRecordDelete);</span>
+<span class="nc" id="L1383">                org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();</span>
+<span class="nc" id="L1384">                crapi.setChangeID(new ChangeRecordIDType(node, -1L));</span>
+
+<span class="nc" id="L1386">                crapi.setChangeRecordDelete(new ChangeRecordDelete());</span>
+<span class="nc" id="L1387">                crapi.getChangeRecordDelete().setTModelKey(entityKey);</span>
+<span class="nc" id="L1388">                crapi.getChangeRecordDelete().setModified(df.newXMLGregorianCalendar(new GregorianCalendar()));</span>
+
+<span class="nc" id="L1390">                StringWriter sw = new StringWriter();</span>
+<span class="nc" id="L1391">                JAXB.marshal(crapi, sw);</span>
+                //JAXB.marshal(crapi, System.out);
+                try {
+<span class="nc" id="L1394">                        cr.setContents(sw.toString().getBytes(&quot;UTF8&quot;));</span>
+<span class="nc" id="L1395">                } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L1396">                        logger.error(ex);</span>
+<span class="nc" id="L1397">                }</span>
+<span class="nc" id="L1398">                return cr;</span>
+        }
+
+        public static ChangeRecord getChangeRecord(BusinessEntity modelBusinessEntity, org.uddi.api_v3.BusinessEntity apiBusinessEntity, String node) throws DispositionReportFaultMessage {
+<span class="fc" id="L1402">                ChangeRecord cr = new ChangeRecord();</span>
+<span class="fc" id="L1403">                cr.setEntityKey(modelBusinessEntity.getEntityKey());</span>
+<span class="fc" id="L1404">                cr.setNodeID(node);</span>
+
+<span class="fc" id="L1406">                cr.setRecordType(ChangeRecord.RecordType.ChangeRecordNewData);</span>
+<span class="fc" id="L1407">                org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();</span>
+<span class="fc" id="L1408">                crapi.setChangeID(new ChangeRecordIDType(node, -1L));</span>
+<span class="fc" id="L1409">                crapi.setChangeRecordNewData(new ChangeRecordNewData());</span>
+<span class="fc" id="L1410">                crapi.getChangeRecordNewData().setBusinessEntity(apiBusinessEntity);</span>
+<span class="fc" id="L1411">                crapi.getChangeRecordNewData().setOperationalInfo(new OperationalInfo());</span>
+<span class="fc" id="L1412">                MappingModelToApi.mapOperationalInfo(modelBusinessEntity, crapi.getChangeRecordNewData().getOperationalInfo());</span>
+<span class="fc" id="L1413">                StringWriter sw = new StringWriter();</span>
+<span class="fc" id="L1414">                JAXB.marshal(crapi, sw);</span>
+                try {
+<span class="fc" id="L1416">                        cr.setContents(sw.toString().getBytes(&quot;UTF8&quot;));</span>
+<span class="nc" id="L1417">                } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L1418">                        logger.error(ex);</span>
+<span class="fc" id="L1419">                }</span>
+<span class="fc" id="L1420">                return cr;</span>
+        }
+
+        public static ChangeRecord getChangeRecord(Tmodel modelBusinessEntity, org.uddi.api_v3.TModel apiBusinessEntity, String node) throws DispositionReportFaultMessage {
+<span class="fc" id="L1424">                ChangeRecord cr = new ChangeRecord();</span>
+<span class="pc bpc" id="L1425" title="1 of 2 branches missed.">                if (!apiBusinessEntity.getTModelKey().equals(modelBusinessEntity.getEntityKey())) {</span>
+<span class="nc" id="L1426">                        throw new FatalErrorException(new ErrorMessage(&quot;E_fatalError&quot;, &quot;the model and api keys do not match when saving a tmodel!&quot;));</span>
+                }
+<span class="fc" id="L1428">                cr.setEntityKey(modelBusinessEntity.getEntityKey());</span>
+<span class="fc" id="L1429">                cr.setNodeID(node);</span>
+
+<span class="fc" id="L1431">                cr.setRecordType(ChangeRecord.RecordType.ChangeRecordNewData);</span>
+<span class="fc" id="L1432">                org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();</span>
+<span class="fc" id="L1433">                crapi.setChangeID(new ChangeRecordIDType(node, -1L));</span>
+<span class="fc" id="L1434">                crapi.setChangeRecordNewData(new ChangeRecordNewData());</span>
+<span class="fc" id="L1435">                crapi.getChangeRecordNewData().setTModel(apiBusinessEntity);</span>
+<span class="fc" id="L1436">                crapi.getChangeRecordNewData().getTModel().setTModelKey(modelBusinessEntity.getEntityKey());</span>
+<span class="fc" id="L1437">                crapi.getChangeRecordNewData().setOperationalInfo(new OperationalInfo());</span>
+<span class="fc" id="L1438">                MappingModelToApi.mapOperationalInfo(modelBusinessEntity, crapi.getChangeRecordNewData().getOperationalInfo());</span>
+<span class="fc" id="L1439">                StringWriter sw = new StringWriter();</span>
+<span class="fc" id="L1440">                JAXB.marshal(crapi, sw);</span>
+                try {
+<span class="fc" id="L1442">                        cr.setContents(sw.toString().getBytes(&quot;UTF8&quot;));</span>
+<span class="nc" id="L1443">                } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L1444">                        logger.error(ex);</span>
+<span class="fc" id="L1445">                }</span>
+<span class="fc" id="L1446">                return cr;</span>
+        }
+
+        public ChangeRecord getChangeRecord_deleteBinding(String entityKey, String node) {
+<span class="fc" id="L1450">                ChangeRecord cr = new ChangeRecord();</span>
+<span class="fc" id="L1451">                cr.setEntityKey(entityKey);</span>
+<span class="fc" id="L1452">                cr.setNodeID(node);</span>
+
+<span class="fc" id="L1454">                cr.setRecordType(ChangeRecord.RecordType.ChangeRecordDelete);</span>
+<span class="fc" id="L1455">                org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();</span>
+<span class="fc" id="L1456">                crapi.setChangeID(new ChangeRecordIDType(node, -1L));</span>
+<span class="fc" id="L1457">                crapi.setChangeRecordDelete(new ChangeRecordDelete());</span>
+<span class="fc" id="L1458">                crapi.getChangeRecordDelete().setBindingKey(entityKey);</span>
+<span class="fc" id="L1459">                crapi.getChangeRecordDelete().setModified(df.newXMLGregorianCalendar(new GregorianCalendar()));</span>
+
+<span class="fc" id="L1461">                StringWriter sw = new StringWriter();</span>
+<span class="fc" id="L1462">                JAXB.marshal(crapi, sw);</span>
+                try {
+<span class="fc" id="L1464">                        cr.setContents(sw.toString().getBytes(&quot;UTF8&quot;));</span>
+<span class="nc" id="L1465">                } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L1466">                        logger.error(ex);</span>
+<span class="fc" id="L1467">                }</span>
+<span class="fc" id="L1468">                return cr;</span>
+        }
+
+        public ChangeRecord getChangeRecord_deletePublisherAssertion(PublisherAssertion entity, String node, boolean ToBusinessDelete, boolean FromBusinessDelete, long timestamp) {
+<span class="fc" id="L1472">                ChangeRecord cr = new ChangeRecord();</span>
+
+<span class="fc" id="L1474">                cr.setNodeID(node);</span>
+
+<span class="fc" id="L1476">                cr.setRecordType(ChangeRecord.RecordType.ChangeRecordDeleteAssertion);</span>
+<span class="fc" id="L1477">                org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();</span>
+<span class="fc" id="L1478">                crapi.setChangeID(new ChangeRecordIDType(node, -1L));</span>
+<span class="fc" id="L1479">                crapi.setChangeRecordDeleteAssertion(new ChangeRecordDeleteAssertion());</span>
+<span class="fc" id="L1480">                crapi.getChangeRecordDeleteAssertion().setPublisherAssertion(entity);</span>
+<span class="fc" id="L1481">                crapi.getChangeRecordDeleteAssertion().setToBusinessCheck(ToBusinessDelete);</span>
+<span class="fc" id="L1482">                crapi.getChangeRecordDeleteAssertion().setFromBusinessCheck(FromBusinessDelete);</span>
+<span class="fc" id="L1483">                GregorianCalendar gcal = new GregorianCalendar();</span>
+<span class="fc" id="L1484">                gcal.setTimeInMillis(timestamp);</span>
+<span class="fc" id="L1485">                crapi.getChangeRecordDeleteAssertion().setModified(df.newXMLGregorianCalendar(gcal));</span>
+
+<span class="fc" id="L1487">                StringWriter sw = new StringWriter();</span>
+<span class="fc" id="L1488">                JAXB.marshal(crapi, sw);</span>
+                try {
+<span class="fc" id="L1490">                        cr.setContents(sw.toString().getBytes(&quot;UTF8&quot;));</span>
+<span class="nc" id="L1491">                } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L1492">                        logger.error(ex);</span>
+<span class="fc" id="L1493">                }</span>
+<span class="fc" id="L1494">                return cr;</span>
+        }
+
+        public ChangeRecord getChangeRecord_NewAssertion(PublisherAssertion apiPubAssertion, org.apache.juddi.model.PublisherAssertion modelPubAssertion, String node) {
+<span class="fc" id="L1498">                ChangeRecord cr = new ChangeRecord();</span>
+
+<span class="fc" id="L1500">                cr.setNodeID(node);</span>
+
+<span class="fc" id="L1502">                cr.setRecordType(ChangeRecord.RecordType.ChangeRecordPublisherAssertion);</span>
+<span class="fc" id="L1503">                org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();</span>
+<span class="fc" id="L1504">                crapi.setChangeID(new ChangeRecordIDType(node, -1L));</span>
+<span class="fc" id="L1505">                crapi.setChangeRecordPublisherAssertion(new ChangeRecordPublisherAssertion());</span>
+<span class="fc" id="L1506">                crapi.getChangeRecordPublisherAssertion().setFromBusinessCheck(modelPubAssertion.getFromCheck().equalsIgnoreCase(&quot;true&quot;));</span>
+<span class="fc" id="L1507">                crapi.getChangeRecordPublisherAssertion().setToBusinessCheck(modelPubAssertion.getToCheck().equalsIgnoreCase(&quot;true&quot;));</span>
+<span class="fc" id="L1508">                crapi.getChangeRecordPublisherAssertion().setPublisherAssertion(apiPubAssertion);</span>
+
+<span class="fc" id="L1510">                crapi.getChangeRecordPublisherAssertion().setModified(df.newXMLGregorianCalendar(new GregorianCalendar()));</span>
+
+<span class="fc" id="L1512">                StringWriter sw = new StringWriter();</span>
+<span class="fc" id="L1513">                JAXB.marshal(crapi, sw);</span>
+                try {
+<span class="fc" id="L1515">                        cr.setContents(sw.toString().getBytes(&quot;UTF8&quot;));</span>
+<span class="nc" id="L1516">                } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L1517">                        logger.error(ex);</span>
+<span class="fc" id="L1518">                }</span>
+<span class="fc" id="L1519">                return cr;</span>
+        }
+
+        /**
+         *
+         * @param value keep these
+         * @param existingAssertions return a list of these that are NOT in
+         * 'value'
+         * @return
+         * @throws DispositionReportFaultMessage
+         */
+        private List&lt;org.apache.juddi.model.PublisherAssertion&gt; diff(List&lt;PublisherAssertion&gt; value, List&lt;org.apache.juddi.model.PublisherAssertion&gt; existingAssertions) throws DispositionReportFaultMessage {
+<span class="fc" id="L1531">                List&lt;org.apache.juddi.model.PublisherAssertion&gt; ret = new ArrayList&lt;org.apache.juddi.model.PublisherAssertion&gt;();</span>
+<span class="pc bpc" id="L1532" title="1 of 4 branches missed.">                if (value == null || value.isEmpty()) {</span>
+<span class="fc" id="L1533">                        return existingAssertions;</span>
+                }
+<span class="pc bpc" id="L1535" title="1 of 2 branches missed.">                if (existingAssertions == null) {</span>
+<span class="nc" id="L1536">                        return new ArrayList&lt;org.apache.juddi.model.PublisherAssertion&gt;();</span>
+                }
+<span class="fc bfc" id="L1538" title="All 2 branches covered.">                for (org.apache.juddi.model.PublisherAssertion model : existingAssertions) {</span>
+
+<span class="fc" id="L1540">                        boolean found = false;</span>
+<span class="fc bfc" id="L1541" title="All 2 branches covered.">                        for (PublisherAssertion paapi : value) {</span>
+<span class="pc bpc" id="L1542" title="1 of 2 branches missed.">                                if (model.getBusinessEntityByFromKey().getEntityKey().equalsIgnoreCase(paapi.getFromKey())</span>
+<span class="fc bfc" id="L1543" title="All 2 branches covered.">                                        &amp;&amp; model.getBusinessEntityByToKey().getEntityKey().equalsIgnoreCase(paapi.getToKey())</span>
+<span class="pc bpc" id="L1544" title="1 of 2 branches missed.">                                        &amp;&amp; model.getKeyName().equals(paapi.getKeyedReference().getKeyName())</span>
+<span class="pc bpc" id="L1545" title="1 of 2 branches missed.">                                        &amp;&amp; model.getKeyValue().equals(paapi.getKeyedReference().getKeyValue())</span>
+<span class="pc bpc" id="L1546" title="1 of 2 branches missed.">                                        &amp;&amp; model.getTmodelKey().equalsIgnoreCase(paapi.getKeyedReference().getTModelKey())) {</span>
+<span class="fc" id="L1547">                                        found = true;</span>
+<span class="fc" id="L1548">                                        break;</span>
+                                }
+<span class="fc" id="L1550">                        }</span>
+<span class="fc bfc" id="L1551" title="All 2 branches covered.">                        if (!found) {</span>
+<span class="fc" id="L1552">                                ret.add(model);</span>
+                        }
+<span class="fc" id="L1554">                }</span>
+<span class="fc" id="L1555">                return ret;</span>
+        }
+
+        private static ChangeRecord getChangeRecordConditional(Tmodel modelTModel, TModel apiTModel, String node) throws DispositionReportFaultMessage {
+<span class="nc" id="L1559">                ChangeRecord cr = new ChangeRecord();</span>
+<span class="nc bnc" id="L1560" title="All 2 branches missed.">                if (!apiTModel.getTModelKey().equals(modelTModel.getEntityKey())) {</span>
+<span class="nc" id="L1561">                        throw new FatalErrorException(new ErrorMessage(&quot;E_fatalError&quot;, &quot;the model and api keys do not match when saving a tmodel!&quot;));</span>
+                }
+<span class="nc" id="L1563">                cr.setEntityKey(modelTModel.getEntityKey());</span>
+<span class="nc" id="L1564">                cr.setNodeID(node);</span>
+
+<span class="nc" id="L1566">                cr.setRecordType(ChangeRecord.RecordType.ChangeRecordNewDataConditional);</span>
+<span class="nc" id="L1567">                org.uddi.repl_v3.ChangeRecord crapi = new org.uddi.repl_v3.ChangeRecord();</span>
+<span class="nc" id="L1568">                crapi.setChangeID(new ChangeRecordIDType(node, -1L));</span>
+<span class="nc" id="L1569">                crapi.setChangeRecordNewDataConditional(new ChangeRecordNewDataConditional());</span>
+<span class="nc" id="L1570">                crapi.getChangeRecordNewDataConditional().setChangeRecordNewData(new ChangeRecordNewData());</span>
+<span class="nc" id="L1571">                crapi.getChangeRecordNewDataConditional().getChangeRecordNewData().setTModel(apiTModel);</span>
+<span class="nc" id="L1572">                crapi.getChangeRecordNewDataConditional().getChangeRecordNewData().getTModel().setTModelKey(modelTModel.getEntityKey());</span>
+<span class="nc" id="L1573">                crapi.getChangeRecordNewDataConditional().getChangeRecordNewData().setOperationalInfo(new OperationalInfo());</span>
+<span class="nc" id="L1574">                MappingModelToApi.mapOperationalInfo(modelTModel, crapi.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo());</span>
+<span class="nc" id="L1575">                StringWriter sw = new StringWriter();</span>
+<span class="nc" id="L1576">                JAXB.marshal(crapi, sw);</span>
+                try {
+<span class="nc" id="L1578">                        cr.setContents(sw.toString().getBytes(&quot;UTF8&quot;));</span>
+<span class="nc" id="L1579">                } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L1580">                        logger.error(ex);</span>
+<span class="nc" id="L1581">                }</span>
+<span class="nc" id="L1582">                return cr;</span>
+        }
+
+        private void removeExistingPublisherAssertionSignatures(String from, String to, EntityManager em) {
+<span class="fc" id="L1586">                Query createQuery = em.createQuery(&quot;delete from Signature pa where pa.publisherAssertionFromKey=:from and pa.publisherAssertionToKey=:to&quot;);</span>
+<span class="fc" id="L1587">                createQuery.setParameter(&quot;from&quot;, from);</span>
+<span class="fc" id="L1588">                createQuery.setParameter(&quot;to&quot;, to);</span>
+<span class="fc" id="L1589">                createQuery.executeUpdate();</span>
+<span class="fc" id="L1590">        }</span>
+
+        private void savePushliserAssertionSignatures(String from, String to, List&lt;Signature&gt; signatures, EntityManager em) {
+<span class="pc bpc" id="L1593" title="1 of 2 branches missed.">                if (signatures == null) {</span>
+<span class="nc" id="L1594">                        return;</span>
+                }
+<span class="fc bfc" id="L1596" title="All 2 branches covered.">                for (Signature s : signatures) {</span>
+<span class="fc" id="L1597">                        s.setPublisherAssertionFromKey(from);</span>
+<span class="fc" id="L1598">                        s.setPublisherAssertionToKey(to);</span>
+<span class="fc" id="L1599">                        em.persist(s);</span>
+<span class="fc" id="L1600">                }</span>
+<span class="fc" id="L1601">        }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

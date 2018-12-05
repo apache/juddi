@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UDDINode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.config</a> &gt; <span class="el_source">UDDINode.java</span></div><h1>UDDINode.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2010 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.v3.client.config;
+
+import java.io.Serializable;
+import java.util.Properties;
+
+import org.apache.juddi.api_v3.Node;
+import org.apache.juddi.v3.client.ClassUtil;
+import org.apache.juddi.v3.client.transport.Transport;
+import org.apache.juddi.v3.client.transport.TransportException;
+
+/**
+ * Connection information to a UDDI node.
+ * 
+ * @author kstam
+ *
+ */
+public class UDDINode implements Serializable {
+
+	private static final long serialVersionUID = 5721040459195558161L;
+	private Properties properties;
+	private transient Transport transport;
+	
+	private boolean isHomeJUDDI;
+	private String name;
+	private String clientName;
+	private String description;
+	private String custodyTransferUrl;
+	private String inquiryUrl;
+	private String inquiryRESTUrl;
+	private String publishUrl;
+	private String securityUrl;
+        private String replicationUrl;
+	private String subscriptionUrl;
+	private String subscriptionListenerUrl;
+	private String juddiApiUrl;
+	private String proxyTransport;
+	private String factoryInitial;
+	private String factoryURLPkgs;
+	private String factoryNamingProvider;
+	
+	
+	public UDDINode() {
+<span class="fc" id="L59">		super();</span>
+<span class="fc" id="L60">	}</span>
+	
+	public UDDINode(Node node) {
+<span class="fc" id="L63">		super();</span>
+<span class="fc" id="L64">		name = node.getName();</span>
+<span class="fc" id="L65">		clientName = node.getClientName();</span>
+<span class="fc" id="L66">		description = node.getDescription();</span>
+<span class="fc" id="L67">		custodyTransferUrl = node.getCustodyTransferUrl();</span>
+<span class="fc" id="L68">		inquiryUrl = node.getInquiryUrl();</span>
+                //TODO need juddi schema updat inquiryRESTUrl = node.getInquiryRESTUrl()
+<span class="fc" id="L70">		publishUrl = node.getPublishUrl();</span>
+<span class="fc" id="L71">		securityUrl = node.getSecurityUrl();</span>
+<span class="fc" id="L72">		subscriptionUrl = node.getSubscriptionUrl();</span>
+<span class="fc" id="L73">		subscriptionListenerUrl = node.getSubscriptionListenerUrl();</span>
+<span class="fc" id="L74">                replicationUrl=node.getReplicationUrl();</span>
+<span class="fc" id="L75">		juddiApiUrl = node.getJuddiApiUrl();</span>
+<span class="fc" id="L76">		proxyTransport = node.getProxyTransport();</span>
+<span class="fc" id="L77">		factoryInitial = node.getFactoryInitial();</span>
+<span class="fc" id="L78">		factoryURLPkgs = node.getFactoryURLPkgs();</span>
+<span class="fc" id="L79">		factoryNamingProvider = node.getFactoryNamingProvider();</span>
+<span class="fc" id="L80">	}</span>
+
+	public Properties getProperties() {
+<span class="fc" id="L83">		return properties;</span>
+	}
+
+	public void setProperties(Properties properties) {
+<span class="fc" id="L87">		this.properties = properties;</span>
+<span class="fc" id="L88">	}</span>
+	
+	public Node getApiNode() {
+<span class="nc" id="L91">		Node apiNode = new Node();</span>
+<span class="nc" id="L92">		apiNode.setClientName(clientName);</span>
+<span class="nc" id="L93">                apiNode.setCustodyTransferUrl(custodyTransferUrl);</span>
+<span class="nc" id="L94">		apiNode.setDescription(description);</span>
+<span class="nc" id="L95">		apiNode.setFactoryInitial(factoryInitial);</span>
+<span class="nc" id="L96">		apiNode.setFactoryNamingProvider(factoryNamingProvider);</span>
+<span class="nc" id="L97">		apiNode.setFactoryURLPkgs(factoryURLPkgs);</span>
+<span class="nc" id="L98">		apiNode.setInquiryUrl(inquiryUrl);</span>
+                //no mapping for this apiNode.setInquiryRESTUrl(name);
+<span class="nc" id="L100">		apiNode.setJuddiApiUrl(juddiApiUrl);</span>
+		
+<span class="nc" id="L102">		apiNode.setName(name);</span>
+<span class="nc" id="L103">		apiNode.setProxyTransport(proxyTransport);</span>
+<span class="nc" id="L104">		apiNode.setPublishUrl(publishUrl);</span>
+<span class="nc" id="L105">                apiNode.setReplicationUrl(replicationUrl);</span>
+<span class="nc" id="L106">		apiNode.setSecurityUrl(securityUrl);</span>
+<span class="nc" id="L107">		apiNode.setSubscriptionUrl(subscriptionUrl);</span>
+<span class="nc" id="L108">                apiNode.setSubscriptionListenerUrl(subscriptionListenerUrl);</span>
+<span class="nc" id="L109">		return apiNode;</span>
+	}
+	
+	
+	public Transport getTransport() throws TransportException {
+<span class="nc bnc" id="L114" title="All 2 branches missed.">		if (transport==null) {</span>
+<span class="nc" id="L115">                        String clazz = getProxyTransport();</span>
+			try {
+				
+<span class="nc" id="L118">				Class&lt;?&gt; transportClass = ClassUtil.forName(clazz,this.getClass());</span>
+<span class="nc" id="L119">				transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(clientName,name);</span>
+<span class="nc" id="L120">			} catch (Exception e) {</span>
+<span class="nc" id="L121">				throw new TransportException(e.getMessage() + &quot; node &quot; + name + &quot; transport class: &quot; + clazz,e);</span>
+<span class="nc" id="L122">			}</span>
+		}
+<span class="nc" id="L124">		return transport;</span>
+	}
+
+	public String getName() {
+<span class="fc" id="L128">		return name;</span>
+	}
+
+	public void setName(String name) {
+<span class="fc" id="L132">		this.name = name;</span>
+<span class="fc" id="L133">	}</span>
+
+	public String getClientName() {
+<span class="fc" id="L136">		return clientName;</span>
+	}
+
+	public void setClientName(String clientName) {
+<span class="fc" id="L140">		this.clientName = clientName;</span>
+<span class="fc" id="L141">	}</span>
+
+	public String getDescription() {
+<span class="fc" id="L144">		return description;</span>
+	}
+
+	public void setDescription(String description) {
+<span class="fc" id="L148">		this.description = description;</span>
+<span class="fc" id="L149">	}</span>
+
+	public String getCustodyTransferUrl() {
+<span class="fc" id="L152">		return custodyTransferUrl;</span>
+	}
+
+	public void setCustodyTransferUrl(String custodyTransferUrl) {
+<span class="fc" id="L156">		this.custodyTransferUrl = custodyTransferUrl;</span>
+<span class="fc" id="L157">	}</span>
+
+	public String getInquiryUrl() {
+<span class="fc" id="L160">		return inquiryUrl;</span>
+	}
+        /**
+         * @since 3.2.1
+         * @return 
+         */
+        public String getReplicationUrl() {
+<span class="fc" id="L167">		return replicationUrl;</span>
+	}
+        /**
+         * @since 3.2.1
+         * @param value 
+         */
+        public void setReplicationUrl(String value) {
+<span class="fc" id="L174">		replicationUrl=value;</span>
+<span class="fc" id="L175">	}</span>
+        
+        /**
+         * used ONLY for UDDI's HTTP GET (REST) endpoint
+         * @since 3.2
+         * @param url 
+         */
+        public void setInquiryRESTUrl(String url){
+<span class="fc" id="L183">                this.inquiryRESTUrl = url;</span>
+<span class="fc" id="L184">        }</span>
+        /**
+         * used ONLY for jUDDI's HTTP GET (REST) endpoint
+         * @since 3.2
+         * @return the REST url for the Inquiry, not supported by all registries 
+         */
+        public String getInquiry_REST_Url() {
+<span class="fc" id="L191">		return inquiryRESTUrl;</span>
+	}
+
+	public void setInquiryUrl(String inquiryUrl) {
+<span class="fc" id="L195">		this.inquiryUrl = inquiryUrl;</span>
+<span class="fc" id="L196">	}</span>
+
+	public String getPublishUrl() {
+<span class="fc" id="L199">		return publishUrl;</span>
+	}
+
+	public void setPublishUrl(String publishUrl) {
+<span class="fc" id="L203">		this.publishUrl = publishUrl;</span>
+<span class="fc" id="L204">	}</span>
+
+	public String getSecurityUrl() {
+<span class="fc" id="L207">		return securityUrl;</span>
+	}
+
+	public void setSecurityUrl(String securityUrl) {
+<span class="fc" id="L211">		this.securityUrl = securityUrl;</span>
+<span class="fc" id="L212">	}</span>
+
+	public String getSubscriptionUrl() {
+<span class="fc" id="L215">		return subscriptionUrl;</span>
+	}
+
+	public void setSubscriptionUrl(String subscriptionUrl) {
+<span class="fc" id="L219">		this.subscriptionUrl = subscriptionUrl;</span>
+<span class="fc" id="L220">	}</span>
+
+	public String getSubscriptionListenerUrl() {
+<span class="fc" id="L223">		return subscriptionListenerUrl;</span>
+	}
+
+	public void setSubscriptionListenerUrl(String subscriptionListenerUrl) {
+<span class="fc" id="L227">		this.subscriptionListenerUrl = subscriptionListenerUrl;</span>
+<span class="fc" id="L228">	}</span>
+
+	public String getJuddiApiUrl() {
+<span class="fc" id="L231">		return juddiApiUrl;</span>
+	}
+
+	public void setJuddiApiUrl(String juddiApiUrl) {
+<span class="fc" id="L235">		this.juddiApiUrl = juddiApiUrl;</span>
+<span class="fc" id="L236">	}</span>
+
+	public String getProxyTransport() {
+<span class="fc" id="L239">		return proxyTransport;</span>
+	}
+
+	public void setProxyTransport(String proxyTransport) {
+<span class="fc" id="L243">		this.proxyTransport = proxyTransport;</span>
+<span class="fc" id="L244">	}</span>
+
+	public String getFactoryInitial() {
+<span class="fc" id="L247">		return factoryInitial;</span>
+	}
+
+	public void setFactoryInitial(String factoryInitial) {
+<span class="fc" id="L251">		this.factoryInitial = factoryInitial;</span>
+<span class="fc" id="L252">	}</span>
+
+	public String getFactoryURLPkgs() {
+<span class="fc" id="L255">		return factoryURLPkgs;</span>
+	}
+
+	public void setFactoryURLPkgs(String factoryURLPkgs) {
+<span class="fc" id="L259">		this.factoryURLPkgs = factoryURLPkgs;</span>
+<span class="fc" id="L260">	}</span>
+
+	public String getFactoryNamingProvider() {
+<span class="fc" id="L263">		return factoryNamingProvider;</span>
+	}
+
+	public void setFactoryNamingProvider(String factoryNamingProvider) {
+<span class="fc" id="L267">		this.factoryNamingProvider = factoryNamingProvider;</span>
+<span class="fc" id="L268">	}</span>
+
+	public boolean isHomeJUDDI() {
+<span class="fc" id="L271">		return isHomeJUDDI;</span>
+	}
+
+	public void setHomeJUDDI(boolean isHomeJUDDI) {
+<span class="fc" id="L275">		this.isHomeJUDDI = isHomeJUDDI;</span>
+<span class="fc" id="L276">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

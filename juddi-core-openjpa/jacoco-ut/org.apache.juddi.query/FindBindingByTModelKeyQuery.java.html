@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FindBindingByTModelKeyQuery.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.query</a> &gt; <span class="el_source">FindBindingByTModelKeyQuery.java</span></div><h1>FindBindingByTModelKeyQuery.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.query;
+
+import java.util.List;
+import javax.persistence.EntityManager;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.query.util.DynamicQuery;
+import org.apache.juddi.query.util.FindQualifiers;
+import org.uddi.api_v3.TModelBag;
+
+/**
+ * Returns the list of binding keys possessing the tModels in the passed tModelBag.
+ * Output is restricted by list of binding keys passed in.  If null, all bindings are searched.
+ * Output is produced by building the appropriate JPA query based on input and find qualifiers.
+ * 
+ * From specification:
+ * &quot;This collection of tModelKey elements represent in part or in whole the technical fingerprint of the bindingTemplate 
+ * structures for which the search is being performed. At least one of either a tModelBag or a find_tModel argument SHOULD be 
+ * supplied, unless a categoryBag based search is being used.  
+
+ * If a find_tModel argument is specified (see above), it is treated as an embedded inquiry.  The tModelKeys returned as a 
+ * result of this embedded find_tModel argument are used as if they had been 
+ * supplied in a tModelBag argument. Changing the order of the keys in the collection or specifying the same tModelKey more than 
+ * once does not change the behavior of the find.  
+ * 
+ * By default, only bindingTemplates that have a technical fingerprint containing 
+ * all of the supplied tModelKeys match (logical AND). Specifying appropriate findQualifiers can override this behavior so that 
+ * bindingTemplates with a technical fingerprint containing any of the specified tModelKeys are returned (logical OR).&quot; 
+ *  
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+<span class="nc" id="L50">public class FindBindingByTModelKeyQuery extends BindingTemplateQuery {</span>
+	
+	@SuppressWarnings(&quot;unused&quot;)
+<span class="fc" id="L53">	private static Log log = LogFactory.getLog(FindBindingByTModelKeyQuery.class);</span>
+
+	public static final String ENTITY_NAME_CHILD = &quot;TmodelInstanceInfo&quot;;
+	
+	protected static final String entityAliasChild;
+	
+	static {
+<span class="fc" id="L60">		entityAliasChild = buildAlias(ENTITY_NAME_CHILD);</span>
+<span class="fc" id="L61">	}</span>
+
+	public static List&lt;Object&gt; select(EntityManager em, FindQualifiers fq, TModelBag tModels, String parentKey, 
+			List&lt;Object&gt; keysIn, DynamicQuery.Parameter... restrictions) {
+		// If keysIn is not null and empty, then search is over.
+		//if ((keysIn != null) &amp;&amp; (keysIn.size() == 0))
+		//	return keysIn;
+		
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">		if (tModels == null)</span>
+<span class="nc" id="L70">			return keysIn;</span>
+		
+<span class="fc" id="L72">		List&lt;String&gt; tmodelKeys = tModels.getTModelKey();</span>
+<span class="pc bpc" id="L73" title="1 of 4 branches missed.">		if (tmodelKeys == null || tmodelKeys.size() == 0)</span>
+<span class="fc" id="L74">			return keysIn;</span>
+		
+<span class="fc" id="L76">		DynamicQuery dynamicQry = new DynamicQuery(selectSQL);</span>
+<span class="fc" id="L77">		appendConditions(dynamicQry, fq, tmodelKeys);</span>
+<span class="pc bpc" id="L78" title="3 of 4 branches missed.">		if (parentKey != null &amp;&amp; parentKey.length() &gt; 0)</span>
+<span class="nc" id="L79">			dynamicQry.AND().pad().appendGroupedAnd(new DynamicQuery.Parameter(BindingTemplateQuery.ENTITY_ALIAS + &quot;.&quot; + BindingTemplateQuery.KEY_NAME_PARENT, parentKey, DynamicQuery.PREDICATE_EQUALS));</span>
+		
+<span class="pc bpc" id="L81" title="2 of 4 branches missed.">		if (restrictions != null &amp;&amp; restrictions.length &gt; 0)</span>
+<span class="nc" id="L82">			dynamicQry.AND().pad().appendGroupedAnd(restrictions);</span>
+		
+<span class="fc" id="L84">		return getQueryResult(em, dynamicQry, keysIn, ENTITY_ALIAS + &quot;.&quot; + KEY_NAME);</span>
+	}
+	
+	
+	/*
+	 * Appends the conditions to the query based on the tModelKey list.  With the default or when &quot;orAllKeys&quot; is passed, the keyedReferences are autonomous and are
+	 * all AND'd or OR'd respectively.  
+	 *	 
+	 */
+	public static void appendConditions(DynamicQuery qry, FindQualifiers fq, List&lt;String&gt; tmodelKeys) {
+		
+		// Append the necessary tables (one will always be added connecting the entity to its instanceinfo table).
+<span class="fc" id="L96">		appendJoinTables(qry, fq, tmodelKeys);</span>
+<span class="fc" id="L97">		qry.AND().pad().openParen().pad();</span>
+		
+<span class="fc" id="L99">		int count = 0;</span>
+<span class="fc" id="L100">		int tblCount = -1;</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">		for(String tmodelKey : tmodelKeys) {</span>
+			
+<span class="fc" id="L103">			tblCount++;</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">			String tmodelKeyTerm = (fq.isOrAllKeys()?entityAliasChild + &quot;0&quot;:entityAliasChild + tblCount) + &quot;.tmodelKey&quot;;</span>
+<span class="fc" id="L105">			qry.appendGroupedAnd(new DynamicQuery.Parameter(tmodelKeyTerm, tmodelKey, DynamicQuery.PREDICATE_EQUALS));</span>
+			
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">			if (count + 1 &lt; tmodelKeys.size()) {</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">				if (fq.isOrAllKeys())</span>
+<span class="nc" id="L109">					qry.OR().pad();</span>
+				else
+<span class="nc" id="L111">					qry.AND().pad();</span>
+			}
+			
+<span class="fc" id="L114">			count++;</span>
+<span class="fc" id="L115">		}</span>
+<span class="fc" id="L116">		qry.closeParen().pad();</span>
+		
+<span class="fc" id="L118">	}</span>
+	
+	/*
+	 * Appends the necessary join table for the child entity and additional tables for when keys are AND'd.  This is the default behavior 
+	 * so only need to add additional tables if &quot;orAllKeys&quot; has not been set.
+	 */
+	public static void appendJoinTables(DynamicQuery qry, FindQualifiers fq, List&lt;String&gt; tmodelKeys) {
+		
+<span class="pc bpc" id="L126" title="2 of 4 branches missed.">		if (tmodelKeys != null &amp;&amp; tmodelKeys.size() &gt; 0) {</span>
+
+<span class="fc" id="L128">			StringBuffer thetaJoins = new StringBuffer(200);</span>
+<span class="fc" id="L129">			int tblCount = 0;</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">			for(int count = 0; count &lt; tmodelKeys.size(); count++) {</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">				if (count != 0) {</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">					if (!fq.isOrAllKeys()) {</span>
+<span class="nc" id="L133">						tblCount++;</span>
+<span class="nc" id="L134">						qry.comma().pad().append(ENTITY_NAME_CHILD + &quot; &quot; + entityAliasChild + tblCount).pad();</span>
+<span class="nc" id="L135">						thetaJoins.append(entityAliasChild + (tblCount - 1) + &quot;.&quot; + ENTITY_FIELD + &quot;.&quot; + KEY_NAME + &quot; = &quot; + entityAliasChild + tblCount + &quot;.&quot; + ENTITY_FIELD + &quot;.&quot; + KEY_NAME + &quot; &quot;);</span>
+<span class="nc" id="L136">						thetaJoins.append(DynamicQuery.OPERATOR_AND + &quot; &quot;);</span>
+					}
+				}
+				else {
+<span class="fc" id="L140">					qry.comma().pad().append(ENTITY_NAME_CHILD + &quot; &quot; + entityAliasChild + tblCount).pad();</span>
+<span class="fc" id="L141">					thetaJoins.append(ENTITY_ALIAS + &quot;.&quot; + KEY_NAME + &quot; = &quot; + entityAliasChild + tblCount + &quot;.&quot; + ENTITY_FIELD + &quot;.&quot; + KEY_NAME + &quot; &quot;);</span>
+<span class="fc" id="L142">					thetaJoins.append(DynamicQuery.OPERATOR_AND + &quot; &quot;);</span>
+				}
+			}
+			
+<span class="fc" id="L146">			qry.WHERE().pad().openParen().pad();</span>
+
+<span class="fc" id="L148">			String thetaJoinsStr = thetaJoins.toString();</span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">			if (thetaJoinsStr.endsWith(DynamicQuery.OPERATOR_AND + &quot; &quot;))</span>
+<span class="fc" id="L150">				thetaJoinsStr = thetaJoinsStr.substring(0, thetaJoinsStr.length() - (DynamicQuery.OPERATOR_AND + &quot; &quot;).length());</span>
+<span class="fc" id="L151">			qry.append(thetaJoinsStr);</span>
+
+<span class="fc" id="L153">			qry.closeParen().pad();</span>
+<span class="pc bpc" id="L154" title="1 of 4 branches missed.">			if (fq!=null &amp;&amp; fq.isSignaturePresent()) {</span>
+<span class="fc" id="L155">				qry.AND().pad().openParen().pad().append(BindingTemplateQuery.SIGNATURE_PRESENT).pad().closeParen().pad();</span>
+			}
+		}
+<span class="fc" id="L158">	}</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

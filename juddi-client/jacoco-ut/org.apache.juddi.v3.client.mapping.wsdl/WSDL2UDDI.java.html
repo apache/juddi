@@ -1,0 +1,1000 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WSDL2UDDI.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.mapping.wsdl</a> &gt; <span class="el_source">WSDL2UDDI.java</span></div><h1>WSDL2UDDI.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2011 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.v3.client.mapping.wsdl;
+
+import org.apache.juddi.v3.client.mapping.Common2UDDI;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.wsdl.Binding;
+import javax.wsdl.Definition;
+import javax.wsdl.Port;
+import javax.wsdl.PortType;
+import javax.wsdl.Service;
+import javax.wsdl.WSDLException;
+import javax.wsdl.extensions.http.HTTPAddress;
+import javax.wsdl.extensions.http.HTTPBinding;
+import javax.wsdl.extensions.soap.SOAPAddress;
+import javax.wsdl.extensions.soap.SOAPBinding;
+import javax.wsdl.extensions.soap12.SOAP12Address;
+import javax.wsdl.extensions.soap12.SOAP12Binding;
+import javax.xml.namespace.QName;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api_v3.AccessPointType;
+import org.apache.juddi.jaxb.PrintUDDI;
+import org.apache.juddi.v3.client.config.Property;
+import org.apache.juddi.v3.client.config.UDDIClerk;
+import org.apache.juddi.v3.client.config.UDDIClient;
+import org.apache.juddi.v3.client.config.UDDIKeyConvention;
+import org.apache.juddi.v3.client.mapping.ServiceRegistrationResponse;
+import org.apache.juddi.v3.client.mapping.URLLocalizer;
+import org.apache.juddi.v3.client.mapping.wadl.WADL2UDDI;
+import org.apache.juddi.v3.client.transport.TransportException;
+import org.uddi.api_v3.AccessPoint;
+import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BindingTemplates;
+import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.BusinessServices;
+import org.uddi.api_v3.CategoryBag;
+import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.InstanceDetails;
+import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.Name;
+import org.uddi.api_v3.OverviewDoc;
+import org.uddi.api_v3.OverviewURL;
+import org.uddi.api_v3.TModel;
+import org.uddi.api_v3.TModelDetail;
+import org.uddi.api_v3.TModelInstanceDetails;
+import org.uddi.api_v3.TModelInstanceInfo;
+import org.w3c.dom.Element;
+
+/**
+ * This class implements the OASIS &lt;a
+ * href=&quot;http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v202-20040631.htm&quot;&gt;
+ * 'Using WSDL in a UDDI Registry, Version 2.0.2'&lt;/a&gt; technote. This class
+ * creates a detailed mapping of WSDL 1.1 artifacts to the UDDI V3 data model.
+ * &lt;ul&gt; &lt;th&gt;Section 2.4 in the technote&lt;/th&gt; &lt;li&gt;2.4.1 wsdl:portType -&gt;
+ * uddi:tModel - {@link #createWSDLPortTypeTModels(String, Map)}&lt;/li&gt; &lt;li&gt;2.4.2
+ * wsdl:binding -&gt; uddi:tModel -
+ * {@link #createWSDLBindingTModels(String, Map)}&lt;/li&gt; &lt;li&gt;TODO: 2.4.3
+ * wsdl:service -&gt; uddi:businessService&lt;/li&gt; &lt;li&gt;TODO: 2.4.4 wsdl:port -&gt;
+ * uddi:bindingTemplate&lt;/li&gt; &lt;li&gt;TODO: 2.4.5 wsdl:port Address Extensions -&gt;
+ * uddi:bindingTemplate&lt;/li&gt; &lt;/ul&gt;
+ *
+ * @see WADL2UDDI
+ * @see BPEL2UDDI
+ * @author Kurt T Stam
+ * @since 3.1.5
+ */
+public class WSDL2UDDI {
+
+<span class="fc" id="L95">        private static final Log log = LogFactory.getLog(WSDL2UDDI.class);</span>
+        private String keyDomainURI;
+        private String businessKey;
+        private String lang;
+<span class="fc" id="L99">        private UDDIClerk clerk = null;</span>
+<span class="fc" id="L100">        private Properties properties = null;</span>
+        private URLLocalizer urlLocalizer;
+
+        /**
+         * Required Properties are: businessName, for example: 'Apache'
+         * nodeName, for example: 'uddi.example.org_80' keyDomain, for example:
+         * juddi.apache.org
+         *
+         * Optional Properties are: lang: for example: 'nl'
+         *
+         * @param clerk - can be null if register/unregister methods are not
+         * used.
+         * @param urlLocalizer - A reference to an custom
+         * @param properties - required values keyDomain, businessKey, nodeName
+         * @throws ConfigurationException
+         */
+        public WSDL2UDDI(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) throws ConfigurationException {
+<span class="fc" id="L117">                super();</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">                if (properties == null) {</span>
+<span class="fc" id="L119">                        throw new IllegalArgumentException(&quot;properties&quot;);</span>
+                }
+<span class="fc" id="L121">                this.clerk = clerk;</span>
+<span class="fc" id="L122">                this.urlLocalizer = urlLocalizer;</span>
+<span class="fc" id="L123">                this.properties = properties;</span>
+
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">                if (clerk != null) {</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">                        if (!properties.containsKey(&quot;keyDomain&quot;)) {</span>
+<span class="nc" id="L127">                                throw new ConfigurationException(&quot;Property keyDomain is a required property when using WSDL2UDDI.&quot;);</span>
+                        }
+<span class="nc bnc" id="L129" title="All 4 branches missed.">                        if (!properties.containsKey(&quot;businessKey&quot;) &amp;&amp; !properties.containsKey(&quot;businessName&quot;)) {</span>
+<span class="nc" id="L130">                                throw new ConfigurationException(&quot;Either property businessKey, or businessName, is a required property when using WSDL2UDDI.&quot;);</span>
+                        }
+<span class="nc bnc" id="L132" title="All 2 branches missed.">                        if (!properties.containsKey(&quot;nodeName&quot;)) {</span>
+<span class="nc bnc" id="L133" title="All 4 branches missed.">                                if (properties.containsKey(&quot;serverName&quot;) &amp;&amp; properties.containsKey(&quot;serverPort&quot;)) {</span>
+<span class="nc" id="L134">                                        String nodeName = properties.getProperty(&quot;serverName&quot;) + &quot;_&quot; + properties.getProperty(&quot;serverPort&quot;);</span>
+<span class="nc" id="L135">                                        properties.setProperty(&quot;nodeName&quot;, nodeName);</span>
+<span class="nc" id="L136">                                } else {</span>
+<span class="nc" id="L137">                                        throw new ConfigurationException(&quot;Property nodeName is not defined and is a required property when using WSDL2UDDI.&quot;);</span>
+                                }
+                        }
+                }
+
+                //Obtaining values from the properties
+<span class="fc" id="L143">                this.keyDomainURI = &quot;uddi:&quot; + properties.getProperty(&quot;keyDomain&quot;) + &quot;:&quot;;</span>
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">                if (properties.contains(Property.BUSINESS_KEY)) {</span>
+<span class="nc" id="L145">                        this.businessKey = properties.getProperty(Property.BUSINESS_KEY);</span>
+                } else {
+                        //using the BusinessKey Template, and the businessName to construct the key 
+<span class="fc" id="L148">                        this.businessKey = UDDIKeyConvention.getBusinessKey(properties);</span>
+                }
+<span class="fc" id="L150">                this.lang = properties.getProperty(Property.LANG, Property.DEFAULT_LANG);</span>
+<span class="fc" id="L151">        }</span>
+
+        public BusinessServices registerBusinessServices(Definition wsdlDefinition) throws RemoteException, ConfigurationException, TransportException, WSDLException, MalformedURLException {
+
+<span class="nc" id="L155">                BusinessServices businessServices = new BusinessServices();</span>
+
+<span class="nc bnc" id="L157" title="All 2 branches missed.">                for (Object serviceName : wsdlDefinition.getAllServices().keySet()) {</span>
+<span class="nc" id="L158">                        QName serviceQName = (QName) serviceName;</span>
+<span class="nc" id="L159">                        Service service = wsdlDefinition.getService(serviceQName);</span>
+<span class="nc" id="L160">                        BusinessService businessService = null;</span>
+                        //add service
+<span class="nc" id="L162">                        URL serviceUrl = null;</span>
+<span class="nc bnc" id="L163" title="All 4 branches missed.">                        if (service.getPorts() != null &amp;&amp; service.getPorts().size() &gt; 0) {</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">                                for (Object portName : service.getPorts().keySet()) {</span>
+<span class="nc" id="L165">                                        businessService = registerBusinessService(serviceQName, (String) portName, serviceUrl, wsdlDefinition).getBusinessService();</span>
+<span class="nc" id="L166">                                }</span>
+                        }
+<span class="nc bnc" id="L168" title="All 2 branches missed.">                        if (businessService != null) {</span>
+<span class="nc" id="L169">                                businessServices.getBusinessService().add(businessService);</span>
+                        }
+<span class="nc" id="L171">                }</span>
+
+<span class="nc" id="L173">                return businessServices;</span>
+
+        }
+
+        @SuppressWarnings(&quot;unchecked&quot;)
+        public ServiceRegistrationResponse registerBusinessService(QName serviceQName, String portName, URL serviceUrl, Definition wsdlDefinition) throws RemoteException, ConfigurationException, TransportException, WSDLException, MalformedURLException {
+
+<span class="nc" id="L180">                String genericWSDLURL = wsdlDefinition.getDocumentBaseURI();   //TODO maybe point to repository version</span>
+<span class="nc" id="L181">                ServiceRegistrationResponse response = new ServiceRegistrationResponse();</span>
+<span class="nc" id="L182">                String serviceKey = UDDIKeyConvention.getServiceKey(properties, serviceQName.getLocalPart());</span>
+<span class="nc" id="L183">                BusinessService businessService = lookupService(serviceKey);</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">                if (businessService == null) {</span>
+<span class="nc" id="L185">                        List&lt;TModel&gt; tModels = new ArrayList&lt;TModel&gt;();</span>
+                        // Create the PortType tModels
+<span class="nc" id="L187">                        Map&lt;QName, PortType&gt; portTypes = (Map&lt;QName, PortType&gt;) wsdlDefinition.getAllPortTypes();</span>
+<span class="nc" id="L188">                        tModels.addAll(createWSDLPortTypeTModels(genericWSDLURL, portTypes));</span>
+                        // Create the Binding tModels
+<span class="nc" id="L190">                        Map&lt;QName, Binding&gt; bindings = (Map&lt;QName, Binding&gt;) wsdlDefinition.getAllBindings();</span>
+<span class="nc" id="L191">                        tModels.addAll(createWSDLBindingTModels(genericWSDLURL, bindings));</span>
+                        // Register these tModels
+<span class="nc bnc" id="L193" title="All 2 branches missed.">                        for (TModel tModel : tModels) {</span>
+<span class="nc" id="L194">                                clerk.register(tModel);</span>
+<span class="nc" id="L195">                        }</span>
+                        // Service
+<span class="nc" id="L197">                        businessService = createBusinessService(serviceQName, wsdlDefinition);</span>
+                        // Register this Service
+<span class="nc" id="L199">                        clerk.register(businessService);</span>
+                }
+                //Add the BindingTemplate to this Service
+<span class="nc" id="L202">                BindingTemplate binding = createWSDLBinding(serviceQName, portName, serviceUrl, wsdlDefinition);</span>
+                // Register BindingTemplate
+<span class="nc bnc" id="L204" title="All 2 branches missed.">                if (binding.getAccessPoint() != null) {</span>
+<span class="nc" id="L205">                        clerk.register(binding);</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">                        if (businessService.getBindingTemplates() == null) {</span>
+<span class="nc" id="L207">                                businessService.setBindingTemplates(new BindingTemplates());</span>
+                        }
+<span class="nc" id="L209">                        businessService.getBindingTemplates().getBindingTemplate().add(binding);</span>
+<span class="nc" id="L210">                        response.setBindingKey(binding.getBindingKey());</span>
+                }
+<span class="nc" id="L212">                response.setBusinessService(businessService);</span>
+<span class="nc" id="L213">                return response;</span>
+        }
+
+        public String[] unRegisterBusinessServices(Definition wsdlDefinition) throws RemoteException, ConfigurationException, TransportException, MalformedURLException {
+
+<span class="nc" id="L218">                String[] businessServices = new String[wsdlDefinition.getAllServices().size()];</span>
+<span class="nc" id="L219">                int i = 0;</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">                for (Object serviceName : wsdlDefinition.getAllServices().keySet()) {</span>
+<span class="nc" id="L221">                        QName serviceQName = (QName) serviceName;</span>
+<span class="nc" id="L222">                        Service service = wsdlDefinition.getService(serviceQName);</span>
+                        //unregister service
+<span class="nc" id="L224">                        URL serviceUrl = null;</span>
+<span class="nc bnc" id="L225" title="All 4 branches missed.">                        if (service.getPorts() != null &amp;&amp; service.getPorts().size() &gt; 0) {</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">                                for (Object portName : service.getPorts().keySet()) {</span>
+                                        //construct the accessURL
+<span class="nc" id="L228">                                        serviceUrl = new URL(getBindingURL((Port) service.getPorts().get(portName)));</span>
+<span class="nc" id="L229">                                        businessServices[i++] = unRegisterBusinessService(serviceQName, (String) portName, serviceUrl);</span>
+<span class="nc" id="L230">                                }</span>
+                        }
+<span class="nc" id="L232">                }</span>
+<span class="nc" id="L233">                return businessServices;</span>
+        }
+
+        public String unRegisterBusinessService(QName serviceName, String portName, URL serviceUrl) throws RemoteException, ConfigurationException, TransportException {
+
+<span class="nc" id="L238">                String serviceKey = UDDIKeyConvention.getServiceKey(properties, serviceName.getLocalPart());</span>
+<span class="nc" id="L239">                BusinessService service = lookupService(serviceKey);</span>
+<span class="nc" id="L240">                boolean isRemoveServiceIfNoTemplates = true;</span>
+<span class="nc" id="L241">                String bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceName, portName, serviceUrl);</span>
+                //check if this bindingKey is in the service's binding templates
+<span class="nc bnc" id="L243" title="All 2 branches missed.">                for (BindingTemplate bindingTemplate : service.getBindingTemplates().getBindingTemplate()) {</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">                        if (bindingKey.equals(bindingTemplate.getBindingKey())) {</span>
+<span class="nc" id="L245">                                clerk.unRegisterBinding(bindingKey);</span>
+                                //if this is the last binding for this service, and 
+<span class="nc bnc" id="L247" title="All 4 branches missed.">                                if (service.getBindingTemplates().getBindingTemplate().size() == 1 &amp;&amp; isRemoveServiceIfNoTemplates) {</span>
+<span class="nc" id="L248">                                        clerk.unRegisterService(serviceKey);</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">                                        if (bindingTemplate.getTModelInstanceDetails() != null</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">                                                &amp;&amp; bindingTemplate.getTModelInstanceDetails().getTModelInstanceInfo() != null) {</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">                                                for (TModelInstanceInfo tModelInstanceInfo : bindingTemplate.getTModelInstanceDetails().getTModelInstanceInfo()) {</span>
+<span class="nc" id="L252">                                                        String tModelKey = tModelInstanceInfo.getTModelKey();</span>
+<span class="nc" id="L253">                                                        TModelDetail tModelDetail = clerk.getTModelDetail(tModelKey);</span>
+                                                        //delete all tModels assuming they are the portType and Binding tModels.
+<span class="nc bnc" id="L255" title="All 4 branches missed.">                                                        if (tModelDetail.getTModel() != null &amp;&amp; tModelDetail.getTModel().size() &gt; 0) {</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">                                                                for (TModel tModel : tModelDetail.getTModel()) {</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">                                                                        if (!tModel.getTModelKey().startsWith(&quot;uddi:uddi.org:&quot;)) {</span>
+<span class="nc" id="L258">                                                                                clerk.unRegisterTModel(tModel.getTModelKey());</span>
+                                                                        } else {
+<span class="nc" id="L260">                                                                                log.info(&quot;Skipping the removal of &quot; + tModel.getTModelKey() + &quot; because it starts with uddi.org&quot;);</span>
+                                                                        }
+<span class="nc" id="L262">                                                                }</span>
+                                                        }
+<span class="nc" id="L264">                                                }</span>
+                                        }
+                                }
+                        }
+<span class="nc" id="L268">                }</span>
+<span class="nc" id="L269">                return serviceKey;</span>
+        }
+
+        public String getKeyDomainURI() {
+<span class="nc" id="L273">                return keyDomainURI;</span>
+        }
+
+        public void setKeyDomain(String keyDomainURI) {
+<span class="nc" id="L277">                this.keyDomainURI = keyDomainURI;</span>
+<span class="nc" id="L278">        }</span>
+
+        public String getLang() {
+<span class="nc" id="L281">                return lang;</span>
+        }
+
+        public void setLang(String lang) {
+<span class="nc" id="L285">                this.lang = lang;</span>
+<span class="nc" id="L286">        }</span>
+
+        /**
+         * &lt;h3&gt;2.4.2 wsdl:binding -&gt; uddi:tModel&lt;/h3&gt;
+         *
+         * &lt;p&gt;
+         * A wsdl:binding MUST be modeled as a uddi:tModel. The minimum
+         * information that must be captured about a binding is its entity type,
+         * its local name, its namespace, the location of the WSDL document that
+         * defines the binding, the portType that it implements, its protocol,
+         * and, optionally, the transport information. Capturing the entity type
+         * enables users to search for tModels that represent binding artifacts.
+         * Capturing the local name, namespace, and WSDL location enables users
+         * to locate the definition of the specified binding artifact. The link
+         * to the portType enables users to search for bindings that implement a
+         * particular portType.&lt;/p&gt;
+         *
+         * &lt;p&gt;
+         * A wsdl:binding corresponds to a WSDL service interface definition as
+         * defined by the mapping in the Version 1 Best Practice. To maintain
+         * compatibility with the previous mapping, the binding must also be
+         * characterized as type &quot;wsdlSpec&quot;.&lt;/p&gt;
+         *
+         * &lt;p&gt;
+         * The wsdl:binding information is captured as follows:&lt;/p&gt;
+         *
+         * &lt;p&gt;
+         * The uddi:name element of the tModel MUST be the value of the name
+         * attribute of the wsdl:binding.&lt;/p&gt;
+         *
+         * &lt;p&gt;
+         * The tModel MUST contain a categoryBag, and the categoryBag MUST
+         * contain at least the following keyedReference elements:&lt;/p&gt; &lt;ol&gt; &lt;li&gt;
+         * A keyedReference with a tModelKey of the WSDL Entity Type category
+         * system and a keyValue of &quot;binding&quot;.&lt;/li&gt; &lt;li&gt; A keyedReference with a
+         * tModelKey of the WSDL portType Reference category system and a
+         * keyValue of the tModelKey that models the wsdl:portType to which the
+         * wsdl:binding relates.&lt;/li&gt; &lt;li&gt; A keyedReference with a tModelKey of
+         * the UDDI Types category system and a keyValue of &quot;wsdlSpec&quot; for
+         * backward compatibility[1].&lt;/li&gt; &lt;li&gt; One or two keyedReferences as
+         * required to capture the protocol and optionally the transport
+         * information refer to the next section.&lt;/li&gt; &lt;/ol&gt;
+         *
+         * &lt;p&gt;
+         * If the wsdl:binding has a targetNamespace then the categoryBag MUST
+         * also contain an additional keyedReference with a tModelKey of the XML
+         * Namespace category system and a keyValue of the target namespace of
+         * the wsdl:definitions element that contains the wsdl:binding. If the
+         * targetNamespace is absent from the binding, a categoryBag MUST NOT
+         * contain a keyedReference to the XML Namespace category system.&lt;/p&gt;
+         *
+         * &lt;p&gt;
+         * The tModel MUST contain an overviewDoc with an overviewURL containing
+         * the location of the WSDL document that describes the
+         * wsdl:binding.&lt;/p&gt;
+         *
+         * &lt;h4&gt;2.4.2.1 wsdl:binding Extensions&lt;/h4&gt;
+         *
+         * &lt;p&gt;
+         * Information about the protocol and transport, if applicable,
+         * specified in an extension to the wsdl:binding is used to categorize
+         * the binding tModel as described in the following sections. This
+         * information is specified using two of the category systems defined in
+         * this Technical Note:&lt;/p&gt; &lt;ol&gt; &lt;li&gt; Protocol Categorization&lt;/li&gt; &lt;li&gt;
+         * Transport Categorization&lt;/li&gt; &lt;/ol&gt;
+         * &lt;p&gt;
+         * The valid values for the Protocol Categorization category system are
+         * tModelKeys of tModels that are categorized as protocol tModels.
+         * Similarly, the valid values for the Transport Categorization category
+         * system are tModelKeys of tModels that are categorized as transport
+         * tModels.&lt;/p&gt;
+         * &lt;p&gt;
+         * The reason for having these two categorization schemes that take
+         * tModel keys as values is to allow other standard or proprietary
+         * protocols and transports to be defined and used in the same way as
+         * the standard SOAP and HTTP protocols and transport.&lt;/p&gt;
+         *
+         * &lt;h4&gt;2.4.2.1.1 soap:binding&lt;/h4&gt;
+         *
+         * &lt;p&gt;
+         * If the wsdl:binding contains a soap:binding extensibility element
+         * from the http://schemas.xmlsoap.org/wsdl/soap/ namespace then the
+         * categoryBag MUST include a keyedReference with a tModelKey of the
+         * Protocol Categorization category system and a keyValue of the
+         * tModelKey of the SOAP Protocol tModel.&lt;/p&gt;
+         *
+         * &lt;p&gt;
+         * If the value of the transport attribute of the soap:binding element
+         * is http://schemas.xmlsoap.org/soap/http then the categoryBag MUST
+         * include a keyedReference with a tModelKey of the Transport
+         * Categorization category system and a keyValue of the tModelKey of the
+         * HTTP Transport tModel.&lt;/p&gt;
+         *
+         * &lt;p&gt;
+         * If the value of the transport attribute is anything else, then the
+         * bindingTemplate MUST include an additional keyedReference with a
+         * tModelKey of the Transport Categorization category system and a
+         * keyValue of the tModelKey of an appropriate transport tModel.&lt;/p&gt;
+         *
+         * &lt;h4&gt;2.4.2.1.2 http:binding&lt;/h4&gt;
+         *
+         * &lt;p&gt;
+         * If the wsdl:binding contains an http:binding extensibility element
+         * from the http://schemas.xmlsoap.org/wsdl/http/ namespace then the
+         * categoryBag MUST include a keyedReference with a tModelKey of the
+         * Protocol Categorization category system and a keyValue of the
+         * tModelKey of the HTTP Protocol tModel.&lt;/p&gt;
+         *
+         * &lt;p&gt;
+         * Note that this is a different tModel from the HTTP Transport tModel,
+         * and in this case there is no separate transport tModel, and therefore
+         * no keyedReference in the categoryBag from the Transport
+         * Categorization category system.&lt;/p&gt;
+         *
+         * &lt;h4&gt;2.4.2.1.3 Other wsdl:binding Extensions&lt;/h4&gt;
+         *
+         * &lt;p&gt;
+         * Other wsdl:binding extensibility elements are handled in a similar
+         * fashion. It is assumed that vendors who provide other bindings will
+         * provide the appropriate protocol and transport tModels.&lt;/p&gt;
+         *
+         * Example Code
+         * &lt;pre&gt;
+         * URL url = new URL(&quot;http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl&quot;);
+         * String domain = url.getHost();
+         * ReadWSDL rw = new ReadWSDL();
+         * Definition wsdlDefinition = rw.readWSDL(url);
+         * properties.put(&quot;keyDomain&quot;, domain);
+         * properties.put(&quot;businessName&quot;, domain);
+         * properties.put(&quot;serverName&quot;, url.getHost());
+         * properties.put(&quot;serverPort&quot;, url.getPort());
+         * wsdlURL = wsdlDefinition.getDocumentBaseURI();
+         * WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
+         * Map allBindings = wsdlDefinition.getAllBindings();
+         * Set&lt;TModel&gt; createWSDLBindingTModels = wsdl2UDDI.createWSDLBindingTModels(url.toString(), allBindings);
+         * &lt;/pre&gt;
+         *
+         * @param wsdlURL
+         * @param bindings Map
+         * @return set of WSDL Binding tModels
+         * @throws WSDLException
+         */
+        public Set&lt;TModel&gt; createWSDLBindingTModels(String wsdlURL, Map&lt;QName, Binding&gt; bindings) throws WSDLException {
+
+<span class="fc" id="L430">                Set&lt;TModel&gt; tModels = new HashSet&lt;TModel&gt;();</span>
+                //Register a tModel for each portType
+<span class="fc bfc" id="L432" title="All 2 branches covered.">                for (QName qName : bindings.keySet()) {</span>
+<span class="fc" id="L433">                        String localpart = qName.getLocalPart();</span>
+<span class="fc" id="L434">                        String namespace = qName.getNamespaceURI();</span>
+                        // Build the tModel
+<span class="fc" id="L436">                        TModel tModel = new TModel();</span>
+                        // Set the Key
+<span class="fc" id="L438">                        tModel.setTModelKey(keyDomainURI + localpart);</span>
+                        // Set the Name
+<span class="fc" id="L440">                        Name name = new Name();</span>
+<span class="fc" id="L441">                        name.setLang(lang);</span>
+<span class="fc" id="L442">                        name.setValue(localpart);</span>
+<span class="fc" id="L443">                        tModel.setName(name);</span>
+                        // Set the OverviewURL
+<span class="fc" id="L445">                        OverviewURL overviewURL = new OverviewURL();</span>
+<span class="fc" id="L446">                        overviewURL.setUseType(AccessPointType.WSDL_DEPLOYMENT.toString());</span>
+<span class="fc" id="L447">                        overviewURL.setValue(wsdlURL);</span>
+<span class="fc" id="L448">                        OverviewDoc overviewDoc = new OverviewDoc();</span>
+<span class="fc" id="L449">                        overviewDoc.setOverviewURL(overviewURL);</span>
+<span class="fc" id="L450">                        tModel.getOverviewDoc().add(overviewDoc);</span>
+                        // Set the categoryBag
+<span class="fc" id="L452">                        CategoryBag categoryBag = new CategoryBag();</span>
+
+<span class="pc bpc" id="L454" title="2 of 4 branches missed.">                        if (namespace != null &amp;&amp; !&quot;&quot;.equals(namespace)) {</span>
+                                // A keyedReference with a tModelKey of the WSDL Entity Type category system and a keyValue of &quot;binding&quot;.
+<span class="fc" id="L456">                                KeyedReference namespaceReference = newKeyedReference(</span>
+                                        &quot;uddi:uddi.org:xml:namespace&quot;, &quot;uddi-org:xml:namespace&quot;, namespace);
+<span class="fc" id="L458">                                categoryBag.getKeyedReference().add(namespaceReference);</span>
+                        }
+
+                        // A keyedReference with a tModelKey of the WSDL Entity Type category system and a keyValue of &quot;binding&quot;.
+<span class="fc" id="L462">                        KeyedReference typesReference = newKeyedReference(</span>
+                                &quot;uddi:uddi.org:wsdl:types&quot;, &quot;uddi-org:wsdl:types&quot;, &quot;binding&quot;);
+<span class="fc" id="L464">                        categoryBag.getKeyedReference().add(typesReference);</span>
+
+            // A keyedReference with a tModelKey of the WSDL portType Reference category system and a keyValue 
+                        // of the tModelKey that models the wsdl:portType to which the wsdl:binding relates.
+<span class="fc" id="L468">                        Binding binding = bindings.get(qName);</span>
+<span class="fc" id="L469">                        String portTypeKey = keyDomainURI + binding.getPortType().getQName().getLocalPart();</span>
+<span class="fc" id="L470">                        KeyedReference namespaceReference = newKeyedReference(</span>
+                                &quot;uddi:uddi.org:wsdl:porttypereference&quot;, &quot;uddi-org:wsdl:portTypeReference&quot;,
+                                portTypeKey);
+<span class="fc" id="L473">                        categoryBag.getKeyedReference().add(namespaceReference);</span>
+
+            //  A keyedReference with a tModelKey of the UDDI Types category system and a keyValue of 
+                        // &quot;wsdlSpec&quot; for backward compatibility.
+<span class="fc" id="L477">                        KeyedReference typesReferenceBackwardsCompatible = newKeyedReference(</span>
+                                &quot;uddi:uddi.org:categorization:types&quot;, &quot;uddi-org:types&quot;, &quot;wsdlSpec&quot;);
+<span class="fc" id="L479">                        categoryBag.getKeyedReference().add(typesReferenceBackwardsCompatible);</span>
+
+                        // One or two keyedReferences as required to capture the protocol
+<span class="fc bfc" id="L482" title="All 2 branches covered.">                        for (Object object : binding.getExtensibilityElements()) {</span>
+<span class="fc" id="L483">                                SOAPBinding sb = null;</span>
+<span class="fc" id="L484">                                SOAP12Binding sb12 = null;</span>
+<span class="fc" id="L485">                                HTTPBinding hb = null;</span>
+
+                                try {
+<span class="nc" id="L488">                                        hb = (HTTPBinding) object;</span>
+<span class="fc" id="L489">                                } catch (Exception x) {</span>
+<span class="nc" id="L490">                                }</span>
+                                try {
+<span class="fc" id="L492">                                        sb = (SOAPBinding) object;</span>
+<span class="nc" id="L493">                                } catch (Exception x) {</span>
+<span class="fc" id="L494">                                }</span>
+                                try {
+<span class="nc" id="L496">                                        sb12 = (SOAP12Binding) object;</span>
+<span class="fc" id="L497">                                } catch (Exception x) {</span>
+<span class="nc" id="L498">                                }</span>
+<span class="pc bpc" id="L499" title="1 of 2 branches missed.">                                if (sb != null) {</span>
+                    // If the wsdl:binding contains a soap:binding extensibility element from the 
+                                        // 'http://schemas.xmlsoap.org/wsdl/soap/' namespace then the categoryBag MUST 
+                                        //include a keyedReference with a tModelKey of the Protocol Categorization 
+                                        // category system and a keyValue of the tModelKey of the SOAP Protocol tModel.
+<span class="fc" id="L504">                                        SOAPBinding soapBinding = sb;</span>
+<span class="fc" id="L505">                                        KeyedReference soapProtocol = newKeyedReference(</span>
+                                                &quot;uddi:uddi.org:wsdl:categorization:protocol&quot;, &quot;uddi-org:protocol:soap&quot;, &quot;uddi:uddi.org:protocol:soap&quot;);
+<span class="fc" id="L507">                                        categoryBag.getKeyedReference().add(soapProtocol);</span>
+                    // If the value of the transport attribute of the soap:binding element 
+                                        // is 'http://schemas.xmlsoap.org/soap/http' then the categoryBag MUST 
+                                        // include a keyedReference with a tModelKey of the Transport Categorization 
+                                        // category system and a keyValue of the tModelKey of the HTTP Transport tModel.
+<span class="pc bpc" id="L512" title="1 of 2 branches missed.">                                        if (&quot;http://schemas.xmlsoap.org/soap/http&quot;.equals(soapBinding.getTransportURI())) {</span>
+<span class="fc" id="L513">                                                KeyedReference httpTransport = newKeyedReference(</span>
+                                                        &quot;uddi:uddi.org:wsdl:categorization:transport&quot;, &quot;uddi-org:http&quot;, &quot;uddi:uddi.org:transport:http&quot;);
+<span class="fc" id="L515">                                                categoryBag.getKeyedReference().add(httpTransport);</span>
+<span class="pc bnc" id="L516" title="All 2 branches missed.">                                        } else if (soapBinding.getTransportURI() != null) {</span>
+                        // TODO If the value of the transport attribute is anything else, 
+                                                // then the bindingTemplate MUST include an additional keyedReference with a tModelKey 
+                                                // of the Transport Categorization category system and a keyValue of the tModelKey of 
+                                                // an appropriate transport tModel.
+<span class="nc" id="L521">                                                log.warn(&quot;not implemented, binding transport is &quot; + soapBinding.getTransportURI());</span>
+                                        }
+
+<span class="pc bnc" id="L524" title="All 2 branches missed.">                                } else if (hb != null) {</span>
+
+                    // If the wsdl:binding contains an http:binding extensibility element from the 
+                                        // http://schemas.xmlsoap.org/wsdl/http/ namespace then the categoryBag MUST 
+                                        // include a keyedReference with a tModelKey of the Protocol Categorization 
+                                        // category system and a keyValue of the tModelKey of the HTTP Protocol tModel.
+<span class="nc" id="L530">                                        KeyedReference soapProtocol = newKeyedReference(</span>
+                                                &quot;uddi:uddi.org:wsdl:categorization:protocol&quot;, &quot;uddi-org:protocol:http&quot;, &quot;uddi:uddi.org:protocol:http&quot;);
+<span class="nc" id="L532">                                        categoryBag.getKeyedReference().add(soapProtocol);</span>
+<span class="nc bnc" id="L533" title="All 2 branches missed.">                                } else if (sb12 != null) {</span>
+                    // If the wsdl:binding contains a soap:binding extensibility element from the 
+                                        // 'http://schemas.xmlsoap.org/wsdl/soap/' namespace then the categoryBag MUST 
+                                        //include a keyedReference with a tModelKey of the Protocol Categorization 
+                                        // category system and a keyValue of the tModelKey of the SOAP Protocol tModel.
+
+<span class="nc" id="L539">                                        KeyedReference soapProtocol = newKeyedReference(</span>
+                                                &quot;uddi:uddi.org:wsdl:categorization:protocol&quot;, &quot;uddi-org:protocol:soap&quot;, &quot;uddi:uddi.org:protocol:soap&quot;);
+<span class="nc" id="L541">                                        categoryBag.getKeyedReference().add(soapProtocol);</span>
+                    // If the value of the transport attribute of the soap:binding element 
+                                        // is 'http://schemas.xmlsoap.org/soap/http' then the categoryBag MUST 
+                                        // include a keyedReference with a tModelKey of the Transport Categorization 
+                                        // category system and a keyValue of the tModelKey of the HTTP Transport tModel.
+<span class="nc bnc" id="L546" title="All 2 branches missed.">                                        if (&quot;http://schemas.xmlsoap.org/soap/http&quot;.equals(sb12.getTransportURI())) {</span>
+<span class="nc" id="L547">                                                KeyedReference httpTransport = newKeyedReference(</span>
+                                                        &quot;uddi:uddi.org:wsdl:categorization:transport&quot;, &quot;uddi-org:http&quot;, &quot;uddi:uddi.org:transport:http&quot;);
+<span class="nc" id="L549">                                                categoryBag.getKeyedReference().add(httpTransport);</span>
+<span class="nc bnc" id="L550" title="All 2 branches missed.">                                        } else if (sb12.getTransportURI() != null) {</span>
+                        // TODO If the value of the transport attribute is anything else, 
+                                                // then the bindingTemplate MUST include an additional keyedReference with a tModelKey 
+                                                // of the Transport Categorization category system and a keyValue of the tModelKey of 
+                                                // an appropriate transport tModel.
+<span class="nc" id="L555">                                                log.warn(&quot;not implemented, binding transport is &quot; + sb12.getTransportURI());</span>
+                                        }
+
+<span class="nc" id="L558">                                } else {</span>
+<span class="nc" id="L559">                                        log.warn(&quot;Unrecongnized binding type: &quot; + object.getClass().getCanonicalName() + &quot;. Generated&quot;</span>
+                                                + &quot;binding tModel may be missing the required (according to WSDL2UDDI spec) &quot;
+                                                + &quot;uddi:uddi.org:wsdl:categorization:protocol keyedReference.&quot;);
+
+                                }
+<span class="fc" id="L564">                        }</span>
+
+<span class="fc" id="L566">                        tModel.setCategoryBag(categoryBag);</span>
+<span class="fc" id="L567">                        tModels.add(tModel);</span>
+<span class="fc" id="L568">                }</span>
+<span class="fc" id="L569">                return tModels;</span>
+        }
+
+        /**
+         * &lt;h3&gt;2.4.1 wsdl:portType -&gt; uddi:tModel&lt;/h3&gt;
+         *
+         * &lt;p&gt;
+         * A wsdl:portType MUST be modeled as a uddi:tModel.&lt;/p&gt;
+         *
+         * &lt;p&gt;
+         * The minimum information that must be captured about a portType is its
+         * entity type, its local name, its namespace, and the location of the
+         * WSDL document that defines the portType. Capturing the entity type
+         * enables users to search for tModels that represent portType
+         * artifacts. Capturing the local name, namespace, and WSDL location
+         * enables users to locate the definition of the specified portType
+         * artifact.&lt;/p&gt;
+         *
+         * &lt;p&gt;
+         * The wsdl:portType information is captured as follows:&lt;/p&gt;
+         *
+         * &lt;p&gt;
+         * The uddi:name element of the tModel MUST be the value of the name
+         * attribute of the wsdl:portType.&lt;/p&gt;
+         *
+         * &lt;p&gt;
+         * The tModel MUST contain a categoryBag, and the categoryBag MUST
+         * contain a keyedReference with a tModelKey of the WSDL Entity Type
+         * category system and a keyValue of &quot;portType&quot;.&lt;/p&gt;
+         *
+         * &lt;p&gt;
+         * If the wsdl:portType has a targetNamespace then the categoryBag MUST
+         * also contain an additional keyedReference with a tModelKey of the XML
+         * Namespace category system and a keyValue of the target namespace of
+         * the wsdl:definitions element that contains the wsdl:portType. If the
+         * targetNamespace is absent from the portType, a categoryBag MUST NOT
+         * contain a keyedReference to the XML Namespace category system.&lt;/p&gt;
+         *
+         * &lt;p&gt;
+         * The tModel MUST contain an overviewDoc with an overviewURL containing
+         * the location of the WSDL document that describes the
+         * wsdl:portType.&lt;/p&gt;
+         * Example Code
+         * &lt;pre&gt;
+         * URL url = new URL(&quot;http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl&quot;);
+         * String domain = url.getHost();
+         * ReadWSDL rw = new ReadWSDL();
+         * Definition wsdlDefinition = rw.readWSDL(url);
+         * properties.put(&quot;keyDomain&quot;, domain);
+         * properties.put(&quot;businessName&quot;, domain);
+         * properties.put(&quot;serverName&quot;, url.getHost());
+         * properties.put(&quot;serverPort&quot;, url.getPort());
+         * wsdlURL = wsdlDefinition.getDocumentBaseURI();
+         * WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
+         * Map&lt;QName, PortType&gt; portTypes = (Map&lt;QName, PortType&gt;) wsdlDefinition.getAllPortTypes();
+         * Set&lt;TModel&gt; portTypeTModels = wsdl2UDDI.createWSDLPortTypeTModels(wsdlURL, portTypes);
+         * &lt;/pre&gt;
+         *
+         * @param wsdlURL This is used to set the Overview URL
+         * @param portTypes Map
+         * @return set of WSDL PortType tModels
+         * @throws WSDLException
+         */
+        public Set&lt;TModel&gt; createWSDLPortTypeTModels(String wsdlURL, Map&lt;QName, PortType&gt; portTypes) throws WSDLException {
+<span class="fc" id="L633">                Set&lt;TModel&gt; tModels = new HashSet&lt;TModel&gt;();</span>
+                // Create a tModel for each portType
+<span class="fc bfc" id="L635" title="All 2 branches covered.">                for (QName qName : portTypes.keySet()) {</span>
+                        // Build the tModel
+<span class="fc" id="L637">                        TModel tModel = new TModel();</span>
+<span class="fc" id="L638">                        String localpart = qName.getLocalPart();</span>
+<span class="fc" id="L639">                        String namespace = qName.getNamespaceURI();</span>
+                        // Set the Key
+<span class="fc" id="L641">                        tModel.setTModelKey(keyDomainURI + localpart);</span>
+            // Set the Name. The uddi:name element of the tModel MUST be the value of
+                        // the name attribute of the wsdl:portType.
+<span class="fc" id="L644">                        Name name = new Name();</span>
+<span class="fc" id="L645">                        name.setLang(lang);</span>
+<span class="fc" id="L646">                        name.setValue(localpart);</span>
+<span class="fc" id="L647">                        tModel.setName(name);</span>
+            // Set the OverviewURL. The tModel MUST contain an overviewDoc with an 
+                        // overviewURL containing the location of the WSDL document that 
+                        // describes the wsdl:portType.
+<span class="fc" id="L651">                        OverviewURL overviewURL = new OverviewURL();</span>
+<span class="fc" id="L652">                        overviewURL.setUseType(AccessPointType.WSDL_DEPLOYMENT.toString());</span>
+<span class="fc" id="L653">                        overviewURL.setValue(wsdlURL);</span>
+<span class="fc" id="L654">                        OverviewDoc overviewDoc = new OverviewDoc();</span>
+<span class="fc" id="L655">                        overviewDoc.setOverviewURL(overviewURL);</span>
+<span class="fc" id="L656">                        tModel.getOverviewDoc().add(overviewDoc);</span>
+                        // Create the categoryBag, The tModel MUST contain a categoryBag
+<span class="fc" id="L658">                        CategoryBag categoryBag = new CategoryBag();</span>
+
+            // the categoryBag MUST contain a keyedReference with a tModelKey of the WSDL 
+                        // Entity Type category system and a keyValue of &quot;portType&quot;.
+<span class="fc" id="L662">                        KeyedReference typesReference = newKeyedReference(</span>
+                                &quot;uddi:uddi.org:wsdl:types&quot;, &quot;uddi-org:wsdl:types&quot;, &quot;portType&quot;);
+<span class="fc" id="L664">                        categoryBag.getKeyedReference().add(typesReference);</span>
+
+            // If the wsdl:portType has a targetNamespace then the categoryBag MUST also contain an 
+                        // additional keyedReference with a tModelKey of the XML Namespace category system and a 
+                        // keyValue of the target namespace of the wsdl:definitions element that contains the 
+                        // wsdl:portType. If the targetNamespace is absent from the portType, a categoryBag 
+                        // MUST NOT contain a keyedReference to the XML Namespace category system.
+<span class="pc bpc" id="L671" title="2 of 4 branches missed.">                        if (namespace != null &amp;&amp; !&quot;&quot;.equals(namespace)) {</span>
+<span class="fc" id="L672">                                KeyedReference namespaceReference = newKeyedReference(</span>
+                                        &quot;uddi:uddi.org:xml:namespace&quot;, &quot;uddi-org:xml:namespace&quot;, namespace);
+<span class="fc" id="L674">                                categoryBag.getKeyedReference().add(namespaceReference);</span>
+                        }
+
+<span class="fc" id="L677">                        tModel.setCategoryBag(categoryBag);</span>
+<span class="fc" id="L678">                        tModels.add(tModel);</span>
+<span class="fc" id="L679">                }</span>
+<span class="fc" id="L680">                return tModels;</span>
+        }
+
+        protected static KeyedReference newKeyedReference(String tModelKey, String keyName, String value) {
+<span class="fc" id="L684">                KeyedReference typesReference = new KeyedReference();</span>
+<span class="fc" id="L685">                typesReference.setTModelKey(tModelKey);</span>
+<span class="fc" id="L686">                typesReference.setKeyName(keyName);</span>
+<span class="fc" id="L687">                typesReference.setKeyValue(value);</span>
+<span class="fc" id="L688">                return typesReference;</span>
+        }
+
+        /**
+         * Builds a finder to find the binding tModels for a portType.
+         *
+         * @param portType
+         * @param namespace
+         * @return tModel info
+         */
+        public static FindTModel createFindBindingTModelForPortType(String portType, String namespace) {
+
+<span class="nc" id="L700">                FindTModel findTModel = new FindTModel();</span>
+<span class="nc" id="L701">                CategoryBag categoryBag = new CategoryBag();</span>
+
+<span class="nc bnc" id="L703" title="All 4 branches missed.">                if (namespace != null &amp;&amp; namespace.length() != 0) {</span>
+<span class="nc" id="L704">                        KeyedReference namespaceReference = newKeyedReference(</span>
+                                &quot;uddi:uddi.org:xml:namespace&quot;, &quot;uddi-org:xml:namespace&quot;, namespace);
+<span class="nc" id="L706">                        categoryBag.getKeyedReference().add(namespaceReference);</span>
+                }
+<span class="nc" id="L708">                KeyedReference bindingReference = newKeyedReference(</span>
+                        &quot;uddi:uddi.org:wsdl:types&quot;, &quot;uddi-org:wsdl:types&quot;, &quot;binding&quot;);
+<span class="nc" id="L710">                categoryBag.getKeyedReference().add(bindingReference);</span>
+
+<span class="nc" id="L712">                KeyedReference portTypeReference = newKeyedReference(</span>
+                        &quot;uddi:uddi.org:wsdl:porttypereference&quot;, &quot;uddi-org:wsdl:portTypeReference&quot;, portType);
+<span class="nc" id="L714">                categoryBag.getKeyedReference().add(portTypeReference);</span>
+
+<span class="nc" id="L716">                findTModel.setCategoryBag(categoryBag);</span>
+
+<span class="nc bnc" id="L718" title="All 2 branches missed.">                if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L719">                        log.debug(new PrintUDDI&lt;FindTModel&gt;().print(findTModel));</span>
+                }
+<span class="nc" id="L721">                return findTModel;</span>
+        }
+
+        /**
+         * Builds a finder to find the portType tModels for a portType.
+         *
+         * @param portTypeName
+         * @param namespace
+         * @return tModel info
+         */
+        public static FindTModel createFindPortTypeTModelForPortType(String portTypeName, String namespace) {
+
+<span class="nc" id="L733">                FindTModel findTModel = new FindTModel();</span>
+<span class="nc" id="L734">                Name name = new Name();</span>
+<span class="nc" id="L735">                name.setLang(&quot;en&quot;);</span>
+<span class="nc" id="L736">                name.setValue(portTypeName);</span>
+<span class="nc" id="L737">                findTModel.setName(name);</span>
+
+<span class="nc" id="L739">                CategoryBag categoryBag = new CategoryBag();</span>
+<span class="nc bnc" id="L740" title="All 4 branches missed.">                if (namespace != null &amp;&amp; namespace.length() != 0) {</span>
+<span class="nc" id="L741">                        KeyedReference namespaceReference = newKeyedReference(</span>
+                                &quot;uddi:uddi.org:xml:namespace&quot;, &quot;uddi-org:xml:namespace&quot;, namespace);
+<span class="nc" id="L743">                        categoryBag.getKeyedReference().add(namespaceReference);</span>
+                }
+<span class="nc" id="L745">                KeyedReference bindingReference = newKeyedReference(</span>
+                        &quot;uddi:uddi.org:wsdl:types&quot;, &quot;uddi-org:wsdl:types&quot;, &quot;portType&quot;);
+<span class="nc" id="L747">                categoryBag.getKeyedReference().add(bindingReference);</span>
+
+<span class="nc" id="L749">                findTModel.setCategoryBag(categoryBag);</span>
+
+<span class="nc bnc" id="L751" title="All 2 branches missed.">                if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L752">                        log.debug(new PrintUDDI&lt;FindTModel&gt;().print(findTModel));</span>
+                }
+<span class="nc" id="L754">                return findTModel;</span>
+        }
+
+        /**
+         * Perform a lookup by serviceKey, and will return null if not found.
+         *
+         * @param serviceKey
+         * @return business service
+         * @throws RemoteException
+         * @throws ConfigurationException
+         * @throws TransportException
+         */
+        private BusinessService lookupService(String serviceKey) throws RemoteException, ConfigurationException, TransportException {
+
+                //Checking if this serviceKey already exist
+<span class="nc" id="L769">                BusinessService service = clerk.getServiceDetail(serviceKey);</span>
+<span class="nc" id="L770">                return service;</span>
+        }
+
+        /**
+         * Creates a business service based off of a WSDL definition&lt;Br&gt;No
+         * changes are made to the UDDI endpoints using this method
+         * &lt;br&gt;
+         * Example Code:
+         * &lt;pre&gt;
+         * URL url = new URL(&quot;http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl&quot;);
+         * String domain = url.getHost();
+         * ReadWSDL rw = new ReadWSDL();
+         * Definition wsdlDefinition = rw.readWSDL(url);
+         * properties.put(&quot;keyDomain&quot;, domain);
+         * properties.put(&quot;businessName&quot;, domain);
+         * properties.put(&quot;serverName&quot;, url.getHost());
+         * properties.put(&quot;serverPort&quot;, url.getPort());
+         * wsdlURL = wsdlDefinition.getDocumentBaseURI();
+         * WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
+         * BusinessServices businessServices = wsdl2UDDI.createBusinessServices(wsdlDefinition);
+         * &lt;/pre&gt;
+         *
+         * @param wsdlDefinition must not be null
+         * @return a business service
+         * @throws MalformedURLException
+         * @throws IllegalArgumentException if the wsdlDefinition is null
+         */
+        public BusinessServices createBusinessServices(Definition wsdlDefinition) throws MalformedURLException {
+<span class="pc bpc" id="L798" title="1 of 2 branches missed.">                if (wsdlDefinition == null) {</span>
+<span class="nc" id="L799">                        throw new IllegalArgumentException();</span>
+                }
+<span class="fc" id="L801">                BusinessServices businessServices = new BusinessServices();</span>
+<span class="fc bfc" id="L802" title="All 2 branches covered.">                for (Object serviceName : wsdlDefinition.getAllServices().keySet()) {</span>
+<span class="fc" id="L803">                        QName serviceQName = (QName) serviceName;</span>
+<span class="fc" id="L804">                        Service service = wsdlDefinition.getService(serviceQName);</span>
+<span class="fc" id="L805">                        BusinessService businessService = createBusinessService(serviceQName, wsdlDefinition);</span>
+            //service.getExtensibilityElements().
+                        //add the bindingTemplates
+<span class="fc" id="L808">                        URL serviceUrl = null;</span>
+<span class="pc bpc" id="L809" title="2 of 4 branches missed.">                        if (service.getPorts() != null &amp;&amp; service.getPorts().size() &gt; 0) {</span>
+<span class="fc" id="L810">                                businessService.setBindingTemplates(new BindingTemplates());</span>
+<span class="fc bfc" id="L811" title="All 2 branches covered.">                                for (Object portName : service.getPorts().keySet()) {</span>
+<span class="fc" id="L812">                                        BindingTemplate bindingTemplate = createWSDLBinding(serviceQName, (String) portName, serviceUrl, wsdlDefinition);</span>
+<span class="fc" id="L813">                                        businessService.getBindingTemplates().getBindingTemplate().add(bindingTemplate);</span>
+<span class="fc" id="L814">                                }</span>
+                        }
+<span class="fc" id="L816">                        businessServices.getBusinessService().add(businessService);</span>
+<span class="fc" id="L817">                }</span>
+
+<span class="fc" id="L819">                return businessServices;</span>
+        }
+
+        /**
+         * Creates a UDDI Business Service.
+         *
+         * @param serviceQName
+         * @param wsdlDefinition
+         * @return a business service
+         */
+        protected BusinessService createBusinessService(QName serviceQName, Definition wsdlDefinition) {
+
+<span class="fc" id="L831">                log.debug(&quot;Constructing Service UDDI Information for &quot; + serviceQName);</span>
+<span class="fc" id="L832">                BusinessService service = new BusinessService();</span>
+                // BusinessKey
+<span class="fc" id="L834">                service.setBusinessKey(businessKey);</span>
+                // ServiceKey
+<span class="fc" id="L836">                service.setServiceKey(UDDIKeyConvention.getServiceKey(properties, serviceQName.getLocalPart()));</span>
+                // Description
+<span class="fc" id="L838">                String serviceDescription = properties.getProperty(Property.SERVICE_DESCRIPTION, Property.DEFAULT_SERVICE_DESCRIPTION);</span>
+                // Override with the service description from the WSDL if present
+<span class="pc bpc" id="L840" title="1 of 2 branches missed.">                if (wsdlDefinition.getService(serviceQName) != null) {</span>
+<span class="fc" id="L841">                        Element docElement = wsdlDefinition.getService(serviceQName).getDocumentationElement();</span>
+<span class="pc bpc" id="L842" title="1 of 4 branches missed.">                        if (docElement != null &amp;&amp; docElement.getTextContent() != null) {</span>
+<span class="fc" id="L843">                                serviceDescription = docElement.getTextContent();</span>
+                        }
+                }
+
+<span class="fc" id="L847">                service.getDescription().addAll(Common2UDDI.mapDescription(serviceDescription, lang));</span>
+
+                // Service name
+<span class="fc" id="L850">                Name sName = new Name();</span>
+<span class="fc" id="L851">                sName.setLang(lang);</span>
+<span class="fc" id="L852">                sName.setValue(serviceQName.getLocalPart());</span>
+<span class="fc" id="L853">                service.getName().add(sName);</span>
+
+<span class="fc" id="L855">                CategoryBag categoryBag = new CategoryBag();</span>
+
+<span class="fc" id="L857">                String namespace = serviceQName.getNamespaceURI();</span>
+<span class="pc bpc" id="L858" title="2 of 4 branches missed.">                if (namespace != null &amp;&amp; namespace.length() != 0) {</span>
+<span class="fc" id="L859">                        KeyedReference namespaceReference = newKeyedReference(</span>
+                                &quot;uddi:uddi.org:xml:namespace&quot;, &quot;uddi-org:xml:namespace&quot;, namespace);
+<span class="fc" id="L861">                        categoryBag.getKeyedReference().add(namespaceReference);</span>
+                }
+
+<span class="fc" id="L864">                KeyedReference serviceReference = newKeyedReference(</span>
+                        &quot;uddi:uddi.org:wsdl:types&quot;, &quot;uddi-org:wsdl:types&quot;, &quot;service&quot;);
+<span class="fc" id="L866">                categoryBag.getKeyedReference().add(serviceReference);</span>
+
+<span class="fc" id="L868">                KeyedReference localNameReference = newKeyedReference(</span>
+<span class="fc" id="L869">                        &quot;uddi:uddi.org:xml:localname&quot;, &quot;uddi-org:xml:localName&quot;, serviceQName.getLocalPart());</span>
+<span class="fc" id="L870">                categoryBag.getKeyedReference().add(localNameReference);</span>
+
+<span class="fc" id="L872">                service.setCategoryBag(categoryBag);</span>
+
+<span class="fc" id="L874">                return service;</span>
+        }
+
+        protected BindingTemplate createWSDLBinding(QName serviceQName, String portName, URL serviceUrl, Definition wsdlDefinition) throws MalformedURLException {
+
+<span class="fc" id="L879">                BindingTemplate bindingTemplate = new BindingTemplate();</span>
+                // Set BusinessService Key
+<span class="fc" id="L881">                bindingTemplate.setServiceKey(UDDIKeyConvention.getServiceKey(properties, serviceQName.getLocalPart()));</span>
+
+<span class="pc bpc" id="L883" title="1 of 2 branches missed.">                if (serviceUrl != null) {</span>
+                        // Set AccessPoint
+<span class="nc" id="L885">                        AccessPoint accessPoint = new AccessPoint();</span>
+<span class="nc" id="L886">                        accessPoint.setUseType(AccessPointType.END_POINT.toString());</span>
+<span class="nc" id="L887">                        accessPoint.setValue(urlLocalizer.rewrite(serviceUrl));</span>
+<span class="nc" id="L888">                        bindingTemplate.setAccessPoint(accessPoint);</span>
+                        // Set Binding Key
+<span class="nc" id="L890">                        String bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceQName, portName, serviceUrl);</span>
+<span class="nc" id="L891">                        bindingTemplate.setBindingKey(bindingKey);</span>
+                }
+
+<span class="fc" id="L894">                Service service = wsdlDefinition.getService(serviceQName);</span>
+<span class="pc bpc" id="L895" title="1 of 2 branches missed.">                if (service != null) {</span>
+<span class="fc" id="L896">                        TModelInstanceDetails tModelInstanceDetails = new TModelInstanceDetails();</span>
+
+<span class="fc" id="L898">                        Port port = service.getPort(portName);</span>
+<span class="pc bpc" id="L899" title="1 of 2 branches missed.">                        if (port != null) {</span>
+<span class="pc bpc" id="L900" title="1 of 2 branches missed.">                                if (serviceUrl == null) {</span>
+<span class="pc bpc" id="L901" title="1 of 2 branches missed.">                                        for (Object element : port.getExtensibilityElements()) {</span>
+<span class="fc" id="L902">                                                String location = null;</span>
+<span class="pc bpc" id="L903" title="1 of 2 branches missed.">                                                if (element instanceof SOAPAddress) {</span>
+<span class="fc" id="L904">                                                        SOAPAddress address = (SOAPAddress) element;</span>
+<span class="fc" id="L905">                                                        location = urlLocalizer.rewrite(new URL(address.getLocationURI()));</span>
+<span class="pc bnc" id="L906" title="All 2 branches missed.">                                                } else if (element instanceof HTTPAddress) {</span>
+<span class="nc" id="L907">                                                        HTTPAddress address = (HTTPAddress) element;</span>
+<span class="nc" id="L908">                                                        urlLocalizer.rewrite(new URL(location = address.getLocationURI()));</span>
+<span class="nc bnc" id="L909" title="All 2 branches missed.">                                                } else if (element instanceof SOAP12Address) {</span>
+<span class="nc" id="L910">                                                        SOAP12Address address = (SOAP12Address) element;</span>
+<span class="nc" id="L911">                                                        location = urlLocalizer.rewrite(new URL(address.getLocationURI()));</span>
+                                                }
+<span class="pc bpc" id="L913" title="1 of 2 branches missed.">                                                if (location != null) {</span>
+                                                        try {
+<span class="fc" id="L915">                                                                URL locationURI = new URL(location);</span>
+<span class="fc" id="L916">                                                                AccessPoint accessPoint = new AccessPoint();</span>
+<span class="fc" id="L917">                                                                accessPoint.setUseType(AccessPointType.END_POINT.toString());</span>
+<span class="fc" id="L918">                                                                accessPoint.setValue(urlLocalizer.rewrite(locationURI));</span>
+<span class="fc" id="L919">                                                                bindingTemplate.setAccessPoint(accessPoint);</span>
+                                                                // Set Binding Key
+<span class="fc" id="L921">                                                                String bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceQName, portName, locationURI);</span>
+<span class="fc" id="L922">                                                                bindingTemplate.setBindingKey(bindingKey);</span>
+<span class="fc" id="L923">                                                                break;</span>
+<span class="nc" id="L924">                                                        } catch (MalformedURLException e) {</span>
+<span class="nc" id="L925">                                                                log.error(e.getMessage());</span>
+                                                        }
+                                                }
+<span class="nc" id="L928">                                        }</span>
+
+                                }
+<span class="fc" id="L931">                                Binding binding = port.getBinding();</span>
+                                // Set the Binding Description
+<span class="fc" id="L933">                                String bindingDescription = properties.getProperty(Property.BINDING_DESCRIPTION, Property.DEFAULT_BINDING_DESCRIPTION);</span>
+                                // Override with the service description from the WSDL if present
+<span class="fc" id="L935">                                Element docElement = binding.getDocumentationElement();</span>
+<span class="pc bpc" id="L936" title="1 of 4 branches missed.">                                if (docElement != null &amp;&amp; docElement.getTextContent() != null) {</span>
+<span class="fc" id="L937">                                        bindingDescription = docElement.getTextContent();</span>
+                                }
+
+<span class="fc" id="L940">                                bindingTemplate.getDescription().addAll(Common2UDDI.mapDescription(bindingDescription, lang));</span>
+
+                                // reference wsdl:binding tModel
+<span class="fc" id="L943">                                TModelInstanceInfo tModelInstanceInfoBinding = new TModelInstanceInfo();</span>
+<span class="fc" id="L944">                                tModelInstanceInfoBinding.setTModelKey(keyDomainURI + binding.getQName().getLocalPart());</span>
+<span class="fc" id="L945">                                InstanceDetails instanceDetails = new InstanceDetails();</span>
+<span class="fc" id="L946">                                instanceDetails.setInstanceParms(portName);</span>
+<span class="fc" id="L947">                                tModelInstanceInfoBinding.setInstanceDetails(instanceDetails);</span>
+
+<span class="fc" id="L949">                                tModelInstanceInfoBinding.getDescription().addAll(Common2UDDI.mapDescription(&quot;The wsdl:binding that this wsdl:port implements. &quot; + bindingDescription</span>
+                                        + &quot; The instanceParms specifies the port local name.&quot;, lang));
+<span class="fc" id="L951">                                tModelInstanceDetails.getTModelInstanceInfo().add(tModelInstanceInfoBinding);</span>
+
+                                // reference wsdl:portType tModel
+<span class="fc" id="L954">                                PortType portType = binding.getPortType();</span>
+<span class="fc" id="L955">                                TModelInstanceInfo tModelInstanceInfoPortType = new TModelInstanceInfo();</span>
+<span class="fc" id="L956">                                tModelInstanceInfoPortType.setTModelKey(keyDomainURI + portType.getQName().getLocalPart());</span>
+<span class="fc" id="L957">                                String portTypeDescription = &quot;&quot;;</span>
+<span class="fc" id="L958">                                docElement = portType.getDocumentationElement();</span>
+<span class="pc bpc" id="L959" title="1 of 4 branches missed.">                                if (docElement != null &amp;&amp; docElement.getTextContent() != null) {</span>
+<span class="fc" id="L960">                                        portTypeDescription = docElement.getTextContent();</span>
+                                }
+
+<span class="fc" id="L963">                                tModelInstanceInfoPortType.getDescription().addAll(Common2UDDI.mapDescription(&quot;The wsdl:portType that this wsdl:port implements.&quot; + portTypeDescription, lang));</span>
+<span class="fc" id="L964">                                tModelInstanceDetails.getTModelInstanceInfo().add(tModelInstanceInfoPortType);</span>
+
+<span class="fc" id="L966">                                bindingTemplate.setTModelInstanceDetails(tModelInstanceDetails);</span>
+<span class="fc" id="L967">                        } else {</span>
+<span class="nc" id="L968">                                log.error(&quot;Could not find Port with portName: &quot; + portName);</span>
+                        }
+<span class="fc" id="L970">                } else {</span>
+<span class="nc" id="L971">                        log.error(&quot;Could not find Service with serviceName: &quot; + serviceQName.getLocalPart());</span>
+                }
+
+<span class="fc" id="L974">                return UDDIClient.addSOAPtModels(bindingTemplate);</span>
+        }
+
+        /**
+         * Obtains the accessUrl from the WSDL
+         *
+         * @param port
+         * @return a string url
+         * @throws MalformedURLException
+         */
+        private String getBindingURL(Port port) throws MalformedURLException {
+
+<span class="nc" id="L986">                String bindingUrl = null;</span>
+<span class="nc bnc" id="L987" title="All 2 branches missed.">                for (Object element : port.getExtensibilityElements()) {</span>
+<span class="nc bnc" id="L988" title="All 2 branches missed.">                        if (element instanceof SOAPAddress) {</span>
+<span class="nc" id="L989">                                SOAPAddress address = (SOAPAddress) element;</span>
+<span class="nc" id="L990">                                URL locationURI = new URL(address.getLocationURI());</span>
+<span class="nc bnc" id="L991" title="All 2 branches missed.">                                if (locationURI != null) {</span>
+<span class="nc" id="L992">                                        bindingUrl = urlLocalizer.rewrite(locationURI);</span>
+<span class="nc" id="L993">                                        break;</span>
+                                }
+                        }
+<span class="nc" id="L996">                }</span>
+<span class="nc" id="L997">                return bindingUrl;</span>
+        }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

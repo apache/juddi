@@ -68,7 +68,7 @@
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  		entityAliasChild = buildAlias(ENTITY_NAME_CHILD);
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  	}
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> List&lt;?&gt; select(EntityManager em, <a href="../../../../org/apache/juddi/query/util/FindQualifiers.html">FindQualifiers</a> fq, TModelBag tModels, List&lt;?&gt; keysIn, DynamicQuery.Parameter... restrictions) {
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> List&lt;Object&gt; select(EntityManager em, <a href="../../../../org/apache/juddi/query/util/FindQualifiers.html">FindQualifiers</a> fq, TModelBag tModels, List&lt;Object&gt; keysIn, DynamicQuery.Parameter... restrictions) {
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  		<em class="jxr_comment">// If keysIn is not null and empty, then search is over.</em>
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  		<strong class="jxr_keyword">if</strong> ((keysIn != <strong class="jxr_keyword">null</strong>) &amp;&amp; (keysIn.isEmpty()))
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  			<strong class="jxr_keyword">return</strong> keysIn;

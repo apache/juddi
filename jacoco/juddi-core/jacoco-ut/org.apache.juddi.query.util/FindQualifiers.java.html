@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FindQualifiers.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.query.util</a> &gt; <span class="el_source">FindQualifiers.java</span></div><h1>FindQualifiers.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.query.util;
+
+import java.util.List;
+
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.UnsupportedException;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+public class FindQualifiers {
+
+	public static final String AND_ALL_KEYS = &quot;andAllKeys&quot;;
+	public static final String AND_ALL_KEYS_TMODEL = &quot;uddi:uddi.org:findqualifier:andallkeys&quot;;
+
+	public static final String APPROXIMATE_MATCH = &quot;approximateMatch&quot;;
+	public static final String APPROXIMATE_MATCH_TMODEL = &quot;uddi:uddi.org:findqualifier:approximatematch&quot;;
+
+	public static final String BINARY_SORT = &quot;binarySort&quot;;
+	public static final String BINARY_SORT_TMODEL = &quot;uddi:uddi.org:sortorder:binarysort&quot;;
+
+	public static final String BINDING_SUBSET = &quot;bindingSubset&quot;;
+	public static final String BINDING_SUBSET_TMODEL = &quot;uddi:uddi.org:findqualifier:bindingsubset&quot;;
+
+	public static final String CASE_INSENSITIVE_SORT = &quot;caseInsensitiveSort&quot;;
+	public static final String CASE_INSENSITIVE_SORT_TMODEL = &quot;uddi:uddi.org:findqualifier:caseinsensitivesort&quot;;
+
+	public static final String CASE_INSENSITIVE_MATCH = &quot;caseInsensitiveMatch&quot;;
+	public static final String CASE_INSENSITIVE_MATCH_TMODEL = &quot;uddi:uddi.org:findqualifier:caseinsensitivematch&quot;;
+
+	public static final String CASE_SENSITIVE_SORT = &quot;caseSensitiveSort&quot;;
+	public static final String CASE_SENSITIVE_SORT_TMODEL = &quot;uddi:uddi.org:findqualifier:casesensitivesort&quot;;
+
+	public static final String CASE_SENSITIVE_MATCH = &quot;caseSensitiveMatch&quot;;
+	public static final String CASE_SENSITIVE_MATCH_TMODEL = &quot;uddi:uddi.org:findqualifier:casesensitivematch&quot;;
+
+	public static final String COMBINE_CATEGORY_BAGS = &quot;combineCategoryBags&quot;;
+	public static final String COMBINE_CATEGORY_BAGS_TMODEL = &quot;uddi:uddi.org:findqualifier:combinecategorybags&quot;;
+
+	public static final String DIACRITIC_INSENSITIVE_MATCH = &quot;diacriticInsensitiveMatch&quot;;
+	public static final String DIACRITIC_INSENSITIVE_MATCH_TMODEL = &quot;uddi:uddi.org:findqualifier:diacriticsinsensitivematch&quot;;
+
+	public static final String DIACRITIC_SENSITIVE_MATCH = &quot;diacriticSensitiveMatch&quot;;
+	public static final String DIACRITIC_SENSITIVE_MATCH_TMODEL = &quot;uddi:uddi.org:findqualifier:diacriticssensitivematch&quot;;
+
+	public static final String EXACT_MATCH = &quot;exactMatch&quot;;
+	public static final String EXACT_MATCH_TMODEL = &quot;uddi:uddi.org:findqualifier:exactmatch&quot;;
+
+	public static final String SIGNATURE_PRESENT = &quot;signaturePresent&quot;;
+	public static final String SIGNATURE_PRESENT_TMODEL = &quot;uddi:uddi.org:findqualifier:signaturepresent&quot;;
+
+	public static final String OR_ALL_KEYS = &quot;orAllKeys&quot;;
+	public static final String OR_ALL_KEYS_TMODEL = &quot;uddi:uddi.org:findqualifier:orallkeys&quot;;
+
+	public static final String OR_LIKE_KEYS = &quot;orLikeKeys&quot;;
+	public static final String OR_LIKE_KEYS_TMODEL = &quot;uddi:uddi.org:findqualifier:orlikekeys&quot;;
+
+	public static final String SERVICE_SUBSET = &quot;serviceSubset&quot;;
+	public static final String SERVICE_SUBSET_TMODEL = &quot;uddi:uddi.org:findqualifier:servicesubset&quot;;
+
+	public static final String SORT_BY_NAME_ASC = &quot;sortByNameAsc&quot;;
+	public static final String SORT_BY_NAME_ASC_TMODEL = &quot;uddi:uddi.org:findqualifier:sortbynameasc&quot;;
+
+	public static final String SORT_BY_NAME_DESC = &quot;sortByNameDesc&quot;;
+	public static final String SORT_BY_NAME_DESC_TMODEL = &quot;uddi:uddi.org:findqualifier:sortbynamedesc&quot;;
+
+	public static final String SORT_BY_DATE_ASC = &quot;sortByDateAsc&quot;;
+	public static final String SORT_BY_DATE_ASC_TMODEL = &quot;uddi:uddi.org:findqualifier:sortbydateasc&quot;;
+	
+	public static final String SORT_BY_DATE_DESC = &quot;sortByDateDesc&quot;;
+	public static final String SORT_BY_DATE_DESC_TMODEL = &quot;uddi:uddi.org:findqualifier:sortbydatedesc&quot;;
+
+	public static final String SUPPRESS_PROJECTED_SERVICES = &quot;suppressProjectedServices&quot;;
+	public static final String SUPPRESS_PROJECTED_SERVICES_TMODEL = &quot;uddi:uddi.org:findqualifier:suppressprojectedservices&quot;;
+
+	public static final String UTS_10 = &quot;UTS-10&quot;;
+	public static final String UTS_10_TMODEL = &quot;uddi:uddi.org:sortorder:uts-10&quot;;
+	
+<span class="fc" id="L97">	private boolean andAllKeys = false;</span>
+<span class="fc" id="L98">	private boolean approximateMatch = false;</span>
+<span class="fc" id="L99">	private boolean binarySort = false;</span>
+<span class="fc" id="L100">	private boolean bindingSubset = false;</span>
+<span class="fc" id="L101">	private boolean caseInsensitiveSort = false;</span>
+<span class="fc" id="L102">	private boolean caseInsensitiveMatch = false;</span>
+<span class="fc" id="L103">	private boolean caseSensitiveSort = false;</span>
+<span class="fc" id="L104">	private boolean caseSensitiveMatch = false;</span>
+<span class="fc" id="L105">	private boolean combineCategoryBags = false;</span>
+<span class="fc" id="L106">	private boolean diacriticInsensitiveMatch = false;</span>
+<span class="fc" id="L107">	private boolean diacriticSensitiveMatch = false;</span>
+<span class="fc" id="L108">	private boolean exactMatch = false;</span>
+<span class="fc" id="L109">	private boolean signaturePresent = false;</span>
+<span class="fc" id="L110">	private boolean orAllKeys = false;</span>
+<span class="fc" id="L111">	private boolean orLikeKeys = false;</span>
+<span class="fc" id="L112">	private boolean serviceSubset = false;</span>
+<span class="fc" id="L113">	private boolean sortByNameAsc = false;</span>
+<span class="fc" id="L114">	private boolean sortByNameDesc = false;</span>
+<span class="fc" id="L115">	private boolean sortByDateAsc = false;</span>
+<span class="fc" id="L116">	private boolean sortByDateDesc = false;</span>
+<span class="fc" id="L117">	private boolean suppressProjectedServices = false;</span>
+<span class="fc" id="L118">	private boolean uts10 = false;</span>
+
+<span class="fc" id="L120">	public FindQualifiers() {</span>
+		// These are the defaults as defined by the UDDI specification.
+<span class="fc" id="L122">		this.setExactMatch(true);</span>
+<span class="fc" id="L123">		this.setCaseSensitiveMatch(true);</span>
+<span class="fc" id="L124">		this.setCaseSensitiveSort(true);</span>
+<span class="fc" id="L125">		this.setDiacriticSensitiveMatch(true);</span>
+		
+<span class="fc" id="L127">	}</span>
+
+	public void mapApiFindQualifiers(org.uddi.api_v3.FindQualifiers apiFindQualifiers) 
+			throws DispositionReportFaultMessage {
+<span class="fc bfc" id="L131" title="All 2 branches covered.">		if (apiFindQualifiers == null)</span>
+<span class="fc" id="L132">			return;</span>
+		
+<span class="fc" id="L134">		List&lt;String&gt; fqList = apiFindQualifiers.getFindQualifier();</span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">		if (fqList != null) {</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">			for (String fq : fqList) {</span>
+<span class="pc bpc" id="L137" title="1 of 4 branches missed.">				if (fq.equalsIgnoreCase(AND_ALL_KEYS) || fq.equalsIgnoreCase(AND_ALL_KEYS_TMODEL))</span>
+<span class="fc" id="L138">					this.setAndAllKeys(true);</span>
+<span class="pc bpc" id="L139" title="1 of 4 branches missed.">				else if (fq.equalsIgnoreCase(APPROXIMATE_MATCH) || fq.equalsIgnoreCase(APPROXIMATE_MATCH_TMODEL))</span>
+<span class="fc" id="L140">					this.setApproximateMatch(true);</span>
+<span class="pc bpc" id="L141" title="2 of 4 branches missed.">				else if (fq.equalsIgnoreCase(BINARY_SORT) || fq.equalsIgnoreCase(BINARY_SORT_TMODEL))</span>
+<span class="nc" id="L142">					this.setBinarySort(true);</span>
+<span class="pc bpc" id="L143" title="2 of 4 branches missed.">				else if (fq.equalsIgnoreCase(BINDING_SUBSET) || fq.equalsIgnoreCase(BINDING_SUBSET_TMODEL))</span>
+<span class="nc" id="L144">					this.setBindingSubset(true);</span>
+<span class="pc bpc" id="L145" title="2 of 4 branches missed.">				else if (fq.equalsIgnoreCase(CASE_INSENSITIVE_SORT) || fq.equalsIgnoreCase(CASE_INSENSITIVE_SORT_TMODEL))</span>
+<span class="nc" id="L146">					this.setCaseInsensitiveSort(true);</span>
+<span class="pc bpc" id="L147" title="1 of 4 branches missed.">				else if (fq.equalsIgnoreCase(CASE_INSENSITIVE_MATCH) || fq.equalsIgnoreCase(CASE_INSENSITIVE_MATCH_TMODEL))</span>
+<span class="fc" id="L148">					this.setCaseInsensitiveMatch(true);</span>
+<span class="pc bpc" id="L149" title="2 of 4 branches missed.">				else if (fq.equalsIgnoreCase(CASE_SENSITIVE_SORT) || fq.equalsIgnoreCase(CASE_SENSITIVE_SORT_TMODEL))</span>
+<span class="nc" id="L150">					this.setCaseSensitiveSort(true);</span>
+<span class="pc bpc" id="L151" title="2 of 4 branches missed.">				else if (fq.equalsIgnoreCase(CASE_SENSITIVE_MATCH) || fq.equalsIgnoreCase(CASE_SENSITIVE_MATCH_TMODEL))</span>
+<span class="nc" id="L152">					this.setCaseSensitiveMatch(true);</span>
+<span class="pc bpc" id="L153" title="1 of 4 branches missed.">				else if (fq.equalsIgnoreCase(COMBINE_CATEGORY_BAGS) || fq.equalsIgnoreCase(COMBINE_CATEGORY_BAGS_TMODEL))</span>
+<span class="fc" id="L154">					this.setCombineCategoryBags(true);</span>
+<span class="pc bpc" id="L155" title="2 of 4 branches missed.">				else if (fq.equalsIgnoreCase(DIACRITIC_INSENSITIVE_MATCH) || fq.equalsIgnoreCase(DIACRITIC_INSENSITIVE_MATCH_TMODEL))</span>
+<span class="nc" id="L156">					this.setDiacriticInsensitiveMatch(true);</span>
+<span class="pc bpc" id="L157" title="2 of 4 branches missed.">				else if (fq.equalsIgnoreCase(DIACRITIC_SENSITIVE_MATCH) || fq.equalsIgnoreCase(DIACRITIC_SENSITIVE_MATCH_TMODEL))</span>
+<span class="nc" id="L158">					this.setDiacriticSensitiveMatch(true);</span>
+<span class="pc bpc" id="L159" title="1 of 4 branches missed.">				else if (fq.equalsIgnoreCase(EXACT_MATCH) || fq.equalsIgnoreCase(EXACT_MATCH_TMODEL))</span>
+<span class="fc" id="L160">					this.setExactMatch(true);</span>
+<span class="pc bpc" id="L161" title="1 of 4 branches missed.">				else if (fq.equalsIgnoreCase(SIGNATURE_PRESENT) || fq.equalsIgnoreCase(SIGNATURE_PRESENT_TMODEL))</span>
+<span class="fc" id="L162">					this.setSignaturePresent(true);</span>
+<span class="pc bpc" id="L163" title="1 of 4 branches missed.">				else if (fq.equalsIgnoreCase(OR_ALL_KEYS) || fq.equalsIgnoreCase(OR_ALL_KEYS_TMODEL))</span>
+<span class="fc" id="L164">					this.setOrAllKeys(true);</span>
+<span class="pc bpc" id="L165" title="1 of 4 branches missed.">				else if (fq.equalsIgnoreCase(OR_LIKE_KEYS) || fq.equalsIgnoreCase(OR_LIKE_KEYS_TMODEL))</span>
+<span class="fc" id="L166">					this.setOrLikeKeys(true);</span>
+<span class="pc bpc" id="L167" title="2 of 4 branches missed.">				else if (fq.equalsIgnoreCase(SERVICE_SUBSET) || fq.equalsIgnoreCase(SERVICE_SUBSET_TMODEL))</span>
+<span class="nc" id="L168">					this.setServiceSubset(true);</span>
+<span class="pc bpc" id="L169" title="1 of 4 branches missed.">				else if (fq.equalsIgnoreCase(SORT_BY_NAME_ASC) || fq.equalsIgnoreCase(SORT_BY_NAME_ASC_TMODEL))</span>
+<span class="fc" id="L170">					this.setSortByNameAsc(true);</span>
+<span class="pc bpc" id="L171" title="1 of 4 branches missed.">				else if (fq.equalsIgnoreCase(SORT_BY_NAME_DESC) || fq.equalsIgnoreCase(SORT_BY_NAME_DESC_TMODEL))</span>
+<span class="fc" id="L172">					this.setSortByNameDesc(true);</span>
+<span class="pc bpc" id="L173" title="3 of 4 branches missed.">				else if (fq.equalsIgnoreCase(SORT_BY_DATE_ASC) || fq.equalsIgnoreCase(SORT_BY_DATE_ASC_TMODEL))</span>
+<span class="fc" id="L174">					this.setSortByDateAsc(true);</span>
+<span class="nc bnc" id="L175" title="All 4 branches missed.">				else if (fq.equalsIgnoreCase(SORT_BY_DATE_DESC) || fq.equalsIgnoreCase(SORT_BY_DATE_DESC_TMODEL))</span>
+<span class="nc" id="L176">					this.setSortByDateDesc(true);</span>
+<span class="nc bnc" id="L177" title="All 4 branches missed.">				else if (fq.equalsIgnoreCase(SUPPRESS_PROJECTED_SERVICES) || fq.equalsIgnoreCase(SUPPRESS_PROJECTED_SERVICES_TMODEL))</span>
+<span class="nc" id="L178">					this.setSuppressProjectedServices(true);</span>
+<span class="nc bnc" id="L179" title="All 4 branches missed.">				else if (fq.equalsIgnoreCase(UTS_10) || fq.equalsIgnoreCase(UTS_10_TMODEL))</span>
+<span class="nc" id="L180">					this.setUts10(true);</span>
+				else 
+<span class="nc" id="L182">					throw new UnsupportedException(new ErrorMessage(&quot;errors.Unsupported.findQualifier&quot;, fq));</span>
+<span class="fc" id="L183">			}</span>
+		}
+<span class="fc" id="L185">	}</span>
+	
+	public boolean isAndAllKeys() {
+<span class="fc" id="L188">		return andAllKeys;</span>
+	}
+	public void setAndAllKeys(boolean andAllKeys) {
+<span class="fc" id="L191">		this.andAllKeys = andAllKeys;</span>
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">		this.orAllKeys = !andAllKeys;</span>
+<span class="pc bpc" id="L193" title="1 of 2 branches missed.">		this.orLikeKeys = !andAllKeys;</span>
+<span class="fc" id="L194">	}</span>
+
+	public boolean isApproximateMatch() {
+<span class="fc" id="L197">		return approximateMatch;</span>
+	}
+	public void setApproximateMatch(boolean approximateMatch) {
+<span class="fc" id="L200">		this.approximateMatch = approximateMatch;</span>
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">		this.exactMatch = !approximateMatch;</span>
+<span class="fc" id="L202">	}</span>
+
+	public boolean isBinarySort() {
+<span class="nc" id="L205">		return binarySort;</span>
+	}
+	public void setBinarySort(boolean binarySort) {
+<span class="nc" id="L208">		this.binarySort = binarySort;</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">		this.uts10 = !binarySort;</span>
+<span class="nc" id="L210">	}</span>
+
+	public boolean isBindingSubset() {
+<span class="nc" id="L213">		return bindingSubset;</span>
+	}
+	public void setBindingSubset(boolean bindingSubset) {
+<span class="nc" id="L216">		this.bindingSubset = bindingSubset;</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">		this.combineCategoryBags = !bindingSubset;</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">		this.bindingSubset = !bindingSubset;</span>
+<span class="nc" id="L219">	}</span>
+
+	public boolean isCaseInsensitiveSort() {
+<span class="fc" id="L222">		return caseInsensitiveSort;</span>
+	}
+	public void setCaseInsensitiveSort(boolean caseInsensitiveSort) {
+<span class="nc" id="L225">		this.caseInsensitiveSort = caseInsensitiveSort;</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">		this.caseSensitiveSort = !caseInsensitiveSort;</span>
+<span class="nc" id="L227">	}</span>
+
+	public boolean isCaseInsensitiveMatch() {
+<span class="fc" id="L230">		return caseInsensitiveMatch;</span>
+	}
+	public void setCaseInsensitiveMatch(boolean caseInsensitiveMatch) {
+<span class="fc" id="L233">		this.caseInsensitiveMatch = caseInsensitiveMatch;</span>
+<span class="pc bpc" id="L234" title="1 of 2 branches missed.">		this.caseSensitiveMatch = !caseInsensitiveMatch;</span>
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">		this.exactMatch = !caseInsensitiveMatch;</span>
+<span class="fc" id="L236">	}</span>
+
+	public boolean isCaseSensitiveSort() {
+<span class="nc" id="L239">		return caseSensitiveSort;</span>
+	}
+	public void setCaseSensitiveSort(boolean caseSensitiveSort) {
+<span class="fc" id="L242">		this.caseSensitiveSort = caseSensitiveSort;</span>
+<span class="pc bpc" id="L243" title="1 of 2 branches missed.">		this.caseInsensitiveSort = !caseSensitiveSort;</span>
+<span class="fc" id="L244">	}</span>
+
+	public boolean isCaseSensitiveMatch() {
+<span class="nc" id="L247">		return caseSensitiveMatch;</span>
+	}
+	public void setCaseSensitiveMatch(boolean caseSensitiveMatch) {
+<span class="fc" id="L250">		this.caseSensitiveMatch = caseSensitiveMatch;</span>
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">		this.caseInsensitiveMatch = !caseSensitiveMatch;</span>
+<span class="fc" id="L252">	}</span>
+	
+	public boolean isCombineCategoryBags() {
+<span class="fc" id="L255">		return combineCategoryBags;</span>
+	}
+	public void setCombineCategoryBags(boolean combineCategoryBags) {
+<span class="fc" id="L258">		this.combineCategoryBags = combineCategoryBags;</span>
+<span class="pc bpc" id="L259" title="1 of 2 branches missed.">		this.serviceSubset = !combineCategoryBags;</span>
+<span class="pc bpc" id="L260" title="1 of 2 branches missed.">		this.bindingSubset = !combineCategoryBags;</span>
+<span class="fc" id="L261">	}</span>
+
+	public boolean isDiacriticInsensitiveMatch() {
+<span class="nc" id="L264">		return diacriticInsensitiveMatch;</span>
+	}
+	public void setDiacriticInsensitiveMatch(boolean diacriticInsensitiveMatch) {
+<span class="nc" id="L267">		this.diacriticInsensitiveMatch = diacriticInsensitiveMatch;</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">		this.diacriticSensitiveMatch = !diacriticInsensitiveMatch;</span>
+<span class="nc" id="L269">	}</span>
+
+	public boolean isDiacriticSensitiveMatch() {
+<span class="nc" id="L272">		return diacriticSensitiveMatch;</span>
+	}
+	public void setDiacriticSensitiveMatch(boolean diacriticSensitiveMatch) {
+<span class="fc" id="L275">		this.diacriticSensitiveMatch = diacriticSensitiveMatch;</span>
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">		this.diacriticInsensitiveMatch = !diacriticSensitiveMatch;</span>
+<span class="fc" id="L277">	}</span>
+
+	public boolean isExactMatch() {
+<span class="nc" id="L280">		return exactMatch;</span>
+	}
+	public void setExactMatch(boolean exactMatch) {
+<span class="fc" id="L283">		this.exactMatch = exactMatch;</span>
+<span class="pc bpc" id="L284" title="1 of 2 branches missed.">		this.approximateMatch = !exactMatch;</span>
+<span class="pc bpc" id="L285" title="1 of 2 branches missed.">		this.caseInsensitiveMatch = !exactMatch;</span>
+<span class="fc" id="L286">	}</span>
+
+	public boolean isSignaturePresent() {
+<span class="fc" id="L289">		return signaturePresent;</span>
+	}
+	public void setSignaturePresent(boolean signaturePresent) {
+<span class="fc" id="L292">		this.signaturePresent = signaturePresent;</span>
+<span class="fc" id="L293">	}</span>
+
+	public boolean isOrAllKeys() {
+<span class="fc" id="L296">		return orAllKeys;</span>
+	}
+	public void setOrAllKeys(boolean orAllKeys) {
+<span class="fc" id="L299">		this.orAllKeys = orAllKeys;</span>
+<span class="pc bpc" id="L300" title="1 of 2 branches missed.">		this.andAllKeys = !orAllKeys;</span>
+<span class="pc bpc" id="L301" title="1 of 2 branches missed.">		this.orLikeKeys = !orAllKeys;</span>
+<span class="fc" id="L302">	}</span>
+
+	public boolean isOrLikeKeys() {
+<span class="fc" id="L305">		return orLikeKeys;</span>
+	}
+	public void setOrLikeKeys(boolean orLikeKeys) {
+<span class="fc" id="L308">		this.orLikeKeys = orLikeKeys;</span>
+<span class="pc bpc" id="L309" title="1 of 2 branches missed.">		this.andAllKeys = !orLikeKeys;</span>
+<span class="pc bpc" id="L310" title="1 of 2 branches missed.">		this.orAllKeys = !orLikeKeys;</span>
+<span class="fc" id="L311">	}</span>
+
+	public boolean isServiceSubset() {
+<span class="nc" id="L314">		return serviceSubset;</span>
+	}
+	public void setServiceSubset(boolean serviceSubset) {
+<span class="nc" id="L317">		this.serviceSubset = serviceSubset;</span>
+<span class="nc bnc" id="L318" title="All 2 branches missed.">		this.combineCategoryBags = !serviceSubset;</span>
+<span class="nc bnc" id="L319" title="All 2 branches missed.">		this.bindingSubset = !serviceSubset;</span>
+<span class="nc" id="L320">	}</span>
+
+	public boolean isSortByNameAsc() {
+<span class="fc" id="L323">		return sortByNameAsc;</span>
+	}
+	public void setSortByNameAsc(boolean sortByNameAsc) {
+<span class="fc" id="L326">		this.sortByNameAsc = sortByNameAsc;</span>
+<span class="pc bpc" id="L327" title="1 of 2 branches missed.">		this.sortByNameDesc = !sortByNameAsc;</span>
+<span class="fc" id="L328">	}</span>
+
+	public boolean isSortByNameDesc() {
+<span class="fc" id="L331">		return sortByNameDesc;</span>
+	}
+	public void setSortByNameDesc(boolean sortByNameDesc) {
+<span class="fc" id="L334">		this.sortByNameDesc = sortByNameDesc;</span>
+<span class="pc bpc" id="L335" title="1 of 2 branches missed.">		this.sortByNameAsc = !sortByNameDesc;</span>
+<span class="fc" id="L336">	}</span>
+
+	public boolean isSortByDateAsc() {
+<span class="fc" id="L339">		return sortByDateAsc;</span>
+	}
+	public void setSortByDateAsc(boolean sortByDateAsc) {
+<span class="fc" id="L342">		this.sortByDateAsc = sortByDateAsc;</span>
+<span class="pc bpc" id="L343" title="1 of 2 branches missed.">		this.sortByDateDesc = !sortByDateAsc;</span>
+<span class="fc" id="L344">	}</span>
+
+	public boolean isSortByDateDesc() {
+<span class="fc" id="L347">		return sortByDateDesc;</span>
+	}
+	public void setSortByDateDesc(boolean sortByDateDesc) {
+<span class="nc" id="L350">		this.sortByDateDesc = sortByDateDesc;</span>
+<span class="nc bnc" id="L351" title="All 2 branches missed.">		this.sortByDateAsc = !sortByDateDesc;</span>
+<span class="nc" id="L352">	}</span>
+
+	public boolean isSuppressProjectedServices() {
+<span class="nc" id="L355">		return suppressProjectedServices;</span>
+	}
+	public void setSuppressProjectedServices(boolean suppressProjectedServices) {
+<span class="nc" id="L358">		this.suppressProjectedServices = suppressProjectedServices;</span>
+<span class="nc" id="L359">	}</span>
+
+	public boolean isUts10() {
+<span class="nc" id="L362">		return uts10;</span>
+	}
+	public void setUts10(boolean uts10) {
+<span class="nc" id="L365">		this.uts10 = uts10;</span>
+<span class="nc bnc" id="L366" title="All 2 branches missed.">		this.binarySort = !uts10;</span>
+<span class="nc" id="L367">	}</span>
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

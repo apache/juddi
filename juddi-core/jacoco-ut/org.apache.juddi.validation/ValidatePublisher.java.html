@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValidatePublisher.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.validation</a> &gt; <span class="el_source">ValidatePublisher.java</span></div><h1>ValidatePublisher.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.validation;
+
+import java.util.HashSet;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.apache.juddi.api_v3.DeletePublisher;
+import org.apache.juddi.api_v3.GetAllPublisherDetail;
+import org.apache.juddi.api_v3.GetPublisherDetail;
+import org.apache.juddi.api_v3.SavePublisher;
+import org.apache.juddi.model.Publisher;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.UserMismatchException;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+
+/**
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+public class ValidatePublisher extends ValidateUDDIApi {
+
+	public ValidatePublisher(UddiEntityPublisher publisher) {
+<span class="fc" id="L45">		super(publisher);</span>
+<span class="fc" id="L46">	}</span>
+
+	
+	
+	/*-------------------------------------------------------------------
+	 Publisher functions are specific to jUDDI.
+	 --------------------------------------------------------------------*/
+	
+	public void validateDeletePublisher(EntityManager em, DeletePublisher body) throws DispositionReportFaultMessage {
+
+		// No null input
+<span class="nc bnc" id="L57" title="All 2 branches missed.">		if (body == null)</span>
+<span class="nc" id="L58">			throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+		
+		// No null or empty list
+<span class="nc" id="L61">		List&lt;String&gt; entityKeyList = body.getPublisherId();</span>
+<span class="nc bnc" id="L62" title="All 4 branches missed.">		if (entityKeyList == null || entityKeyList.size() == 0)</span>
+<span class="nc" id="L63">			throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.NoKeys&quot;));</span>
+		
+<span class="nc bnc" id="L65" title="All 2 branches missed.">		if (!((Publisher)publisher).isAdmin())</span>
+<span class="nc" id="L66">			throw new UserMismatchException(new ErrorMessage(&quot;errors.deletepublisher.AdminReqd&quot;));</span>
+
+<span class="nc" id="L68">		HashSet&lt;String&gt; dupCheck = new HashSet&lt;String&gt;();</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">		for (String entityKey : entityKeyList) {</span>
+<span class="nc" id="L70">			boolean inserted = dupCheck.add(entityKey);</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">			if (!inserted)</span>
+<span class="nc" id="L72">				throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.DuplicateKey&quot;, entityKey));</span>
+			
+<span class="nc" id="L74">			Object obj = em.find(org.apache.juddi.model.Publisher.class, entityKey);</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">			if (obj == null)</span>
+<span class="nc" id="L76">				throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.PublisherNotFound&quot;, entityKey));</span>
+			
+<span class="nc" id="L78">		}</span>
+<span class="nc" id="L79">	}</span>
+
+	public void validateSavePublisher(EntityManager em, SavePublisher body) throws DispositionReportFaultMessage {
+
+		// No null input
+<span class="nc bnc" id="L84" title="All 2 branches missed.">		if (body == null)</span>
+<span class="nc" id="L85">			throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+		
+		// No null or empty list
+<span class="nc" id="L88">		List&lt;org.apache.juddi.api_v3.Publisher&gt; entityList = body.getPublisher();</span>
+<span class="nc bnc" id="L89" title="All 4 branches missed.">		if (entityList == null || entityList.size() == 0)</span>
+<span class="nc" id="L90">			throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.savepublisher.NoInput&quot;));</span>
+		
+<span class="nc bnc" id="L92" title="All 2 branches missed.">		if (!((Publisher)publisher).isAdmin())</span>
+<span class="nc" id="L93">			throw new UserMismatchException(new ErrorMessage(&quot;errors.savepublisher.AdminReqd&quot;));</span>
+		
+<span class="nc bnc" id="L95" title="All 2 branches missed.">		for (org.apache.juddi.api_v3.Publisher entity : entityList) {</span>
+<span class="nc" id="L96">			validatePublisher(em, entity);</span>
+<span class="nc" id="L97">		}</span>
+<span class="nc" id="L98">	}</span>
+
+	public void validatePublisher(EntityManager em, org.apache.juddi.api_v3.Publisher publisher) throws DispositionReportFaultMessage {
+
+		// No null input
+<span class="nc bnc" id="L103" title="All 2 branches missed.">		if (publisher == null)</span>
+<span class="nc" id="L104">			throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.publisher.NullInput&quot;));</span>
+		
+<span class="nc" id="L106">		String authorizedName = publisher.getAuthorizedName();</span>
+<span class="nc bnc" id="L107" title="All 4 branches missed.">		if (authorizedName == null || authorizedName.length() == 0)</span>
+<span class="nc" id="L108">			throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.publisher.NoAuthorizedName&quot;));</span>
+	
+<span class="nc" id="L110">		String publisherName = publisher.getPublisherName();</span>
+<span class="nc bnc" id="L111" title="All 4 branches missed.">		if (publisherName == null || publisherName.length() == 0)</span>
+<span class="nc" id="L112">			throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.publisher.NoPublisherName&quot;));</span>
+
+<span class="nc" id="L114">	}</span>
+	
+	public void validateGetPublisherDetail(GetPublisherDetail body) throws DispositionReportFaultMessage {
+
+		// No null input
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">		if (body == null)</span>
+<span class="nc" id="L120">			throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+		
+		// No null or empty list
+<span class="fc" id="L123">		List&lt;String&gt; publisherIdList = body.getPublisherId();</span>
+<span class="pc bpc" id="L124" title="2 of 4 branches missed.">		if (publisherIdList == null || publisherIdList.size() == 0)</span>
+<span class="nc" id="L125">			throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.NoKeys&quot;));</span>
+
+<span class="fc" id="L127">		HashSet&lt;String&gt; dupCheck = new HashSet&lt;String&gt;();</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">		for (String publisherId : publisherIdList) {</span>
+<span class="fc" id="L129">			boolean inserted = dupCheck.add(publisherId);</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">			if (!inserted)</span>
+<span class="nc" id="L131">				throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.DuplicateKey&quot;, publisherId));</span>
+<span class="fc" id="L132">		}</span>
+<span class="fc" id="L133">	}</span>
+	
+	public void validateGetAllPublisherDetail(GetAllPublisherDetail body) throws DispositionReportFaultMessage {
+
+		// No null input
+<span class="nc bnc" id="L138" title="All 2 branches missed.">		if (body == null)</span>
+<span class="nc" id="L139">			throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+		
+<span class="nc" id="L141">	}</span>
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

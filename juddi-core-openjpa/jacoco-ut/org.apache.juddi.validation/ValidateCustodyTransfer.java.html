@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValidateCustodyTransfer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.validation</a> &gt; <span class="el_source">ValidateCustodyTransfer.java</span></div><h1>ValidateCustodyTransfer.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.validation;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Vector;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import static org.apache.juddi.api.impl.AuthenticatedService.UTF8;
+
+import org.apache.juddi.model.TransferTokenKey;
+import org.apache.juddi.model.UddiEntity;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.query.util.DynamicQuery;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.InvalidValueException;
+import org.apache.juddi.v3.error.TokenAlreadyExistsException;
+import org.apache.juddi.v3.error.TransferNotAllowedException;
+import org.apache.juddi.v3.error.UserMismatchException;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
+import org.uddi.custody_v3.DiscardTransferToken;
+import org.uddi.custody_v3.KeyBag;
+import org.uddi.custody_v3.TransferEntities;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+public class ValidateCustodyTransfer extends ValidateUDDIApi {
+
+        public ValidateCustodyTransfer(UddiEntityPublisher publisher) {
+<span class="fc" id="L53">                super(publisher);</span>
+<span class="fc" id="L54">        }</span>
+
+        public void validateDiscardTransferToken(EntityManager em, DiscardTransferToken body) throws DispositionReportFaultMessage {
+                // No null input
+<span class="nc bnc" id="L58" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L59">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+                }
+
+<span class="nc" id="L62">                KeyBag keyBag = body.getKeyBag();</span>
+
+                // The call must contain at least a transfer token or keyBag
+<span class="nc bnc" id="L65" title="All 4 branches missed.">                if (body.getTransferToken() == null &amp;&amp; keyBag == null) {</span>
+<span class="nc" id="L66">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.discardtransfertoken.NoInput&quot;));</span>
+                }
+
+<span class="nc bnc" id="L69" title="All 2 branches missed.">                if (keyBag != null) {</span>
+<span class="nc" id="L70">                        List&lt;String&gt; keyList = keyBag.getKey();</span>
+<span class="nc bnc" id="L71" title="All 4 branches missed.">                        if (keyList == null || keyList.size() == 0) {</span>
+<span class="nc" id="L72">                                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.keybag.NoInput&quot;));</span>
+                        }
+
+                        // Test that publisher owns keys using operational info.
+<span class="nc" id="L76">                        int i = 0;</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                        for (String key : keyList) {</span>
+                                // Per section 4.4: keys must be case-folded
+<span class="nc" id="L79">                                key = key.toLowerCase();</span>
+<span class="nc" id="L80">                                keyList.set(i, key);</span>
+
+<span class="nc" id="L82">                                UddiEntity uddiEntity = em.find(UddiEntity.class, key);</span>
+
+				// According to spec, it's ok if a key doesn't match any known entities, it will just be ignored.  However, the publisher must own
+                                // the entity in order to discard the associated token.
+<span class="nc bnc" id="L86" title="All 2 branches missed.">                                if (uddiEntity != null) {</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">                                        if (!publisher.isOwner(uddiEntity)) {</span>
+<span class="nc" id="L88">                                                throw new UserMismatchException(new ErrorMessage(&quot;errors.usermismatch.InvalidOwner&quot;, key));</span>
+                                        }
+
+                                }
+
+<span class="nc" id="L93">                                i++;</span>
+<span class="nc" id="L94">                        }</span>
+
+                }
+
+<span class="nc" id="L98">        }</span>
+
+        public void validateGetTransferToken(EntityManager em, KeyBag keyBag) throws DispositionReportFaultMessage {
+
+                // No null input
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">                if (keyBag == null) {</span>
+<span class="nc" id="L104">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+                }
+
+<span class="fc" id="L107">                List&lt;String&gt; keyList = keyBag.getKey();</span>
+<span class="pc bpc" id="L108" title="2 of 4 branches missed.">                if (keyList == null || keyList.size() == 0) {</span>
+<span class="nc" id="L109">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.keybag.NoInput&quot;));</span>
+                }
+
+                // Test that publisher owns keys using operational info.
+<span class="fc" id="L113">                Vector&lt;DynamicQuery.Parameter&gt; params = new Vector&lt;DynamicQuery.Parameter&gt;(0);</span>
+<span class="fc" id="L114">                int i = 0;</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">                for (String key : keyList) {</span>
+                        // Per section 4.4: keys must be case-folded
+<span class="fc" id="L117">                        key = key.toLowerCase();</span>
+<span class="fc" id="L118">                        keyList.set(i, key);</span>
+
+<span class="fc" id="L120">                        UddiEntity uddiEntity = em.find(UddiEntity.class, key);</span>
+
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">                        if (uddiEntity == null) {</span>
+<span class="nc" id="L123">                                throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.EntityNotFound&quot;, key));</span>
+                        }
+
+                        // Only BusinessEntities or TModels are allowed to be transferred
+<span class="pc bpc" id="L127" title="3 of 4 branches missed.">                        if (!(uddiEntity instanceof org.apache.juddi.model.BusinessEntity)</span>
+                                &amp;&amp; !(uddiEntity instanceof org.apache.juddi.model.Tmodel)) {
+<span class="nc" id="L129">                                throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.gettransfertoken.InvalidEntity&quot;, key));</span>
+                        }
+
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">                        if (!publisher.isOwner(uddiEntity)) {</span>
+<span class="nc" id="L133">                                throw new UserMismatchException(new ErrorMessage(&quot;errors.usermismatch.InvalidOwner&quot;, key));</span>
+                        }
+
+                        // Creating parameters for key-checking query
+<span class="fc" id="L137">                        DynamicQuery.Parameter param = new DynamicQuery.Parameter(&quot;UPPER(ttk.entityKey)&quot;,</span>
+<span class="fc" id="L138">                                key.toUpperCase(),</span>
+                                DynamicQuery.PREDICATE_EQUALS);
+<span class="fc" id="L140">                        params.add(param);</span>
+
+<span class="fc" id="L142">                }</span>
+
+                // Make sure keys aren't implicated in another transfer request
+<span class="fc" id="L145">                DynamicQuery checkKeysQry = new DynamicQuery();</span>
+<span class="fc" id="L146">                checkKeysQry.append(&quot;select ttk.entityKey from TransferTokenKey ttk &quot;);</span>
+<span class="fc" id="L147">                checkKeysQry.WHERE().pad().appendGroupedOr(params.toArray(new DynamicQuery.Parameter[0]));</span>
+
+<span class="fc" id="L149">                Query qry = checkKeysQry.buildJPAQuery(em);</span>
+<span class="fc" id="L150">                List&lt;?&gt; obj = qry.getResultList();</span>
+<span class="pc bpc" id="L151" title="2 of 4 branches missed.">                if (obj != null &amp;&amp; obj.size() &gt; 0) {</span>
+<span class="nc" id="L152">                        throw new TokenAlreadyExistsException(new ErrorMessage(&quot;errors.gettransfertoken.KeyExists&quot;, (String) obj.get(0)));</span>
+                }
+
+<span class="fc" id="L155">        }</span>
+        
+        public void validateTransferLocalEntities(EntityManager em, String transferTokenId, List&lt;String&gt; apiKeyList) throws DispositionReportFaultMessage {
+<span class="fc" id="L158">                org.apache.juddi.model.TransferToken modelTransferToken = em.find(org.apache.juddi.model.TransferToken.class, transferTokenId);</span>
+                        //JUDDI-272 only block transfer if the destination is not the originator of the token
+<span class="pc bpc" id="L160" title="1 of 2 branches missed.">                        if (modelTransferToken == null) {</span>
+<span class="nc" id="L161">                                throw new TransferNotAllowedException(new ErrorMessage(&quot;errors.transferentities.TokenNotFound&quot;, transferTokenId));</span>
+                        }
+
+<span class="fc" id="L164">                        Date now = new Date();</span>
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">                        if (now.after(modelTransferToken.getExpirationDate())) {</span>
+<span class="nc" id="L166">                                throw new TransferNotAllowedException(new ErrorMessage(&quot;errors.transferentities.TokenExpired&quot;, transferTokenId));</span>
+                        }
+
+<span class="fc" id="L169">                        List&lt;TransferTokenKey&gt; transferKeyList = modelTransferToken.getTransferKeys();</span>
+<span class="fc" id="L170">                        List&lt;String&gt; modelKeyList = new ArrayList&lt;String&gt;(0);</span>
+<span class="pc bpc" id="L171" title="2 of 4 branches missed.">                        if (transferKeyList != null &amp;&amp; transferKeyList.size() &gt; 0) {</span>
+<span class="fc bfc" id="L172" title="All 2 branches covered.">                                for (TransferTokenKey ttk : transferKeyList) {</span>
+<span class="fc" id="L173">                                        modelKeyList.add(ttk.getEntityKey());</span>
+<span class="fc" id="L174">                                }</span>
+                        }
+
+                        // The keys in the supplied key bag must match exactly the keys in the stored transfer and the entities must exist
+<span class="fc" id="L178">                        Collections.sort(apiKeyList);</span>
+<span class="fc" id="L179">                        Collections.sort(modelKeyList);</span>
+<span class="fc" id="L180">                        int count = 0;</span>
+<span class="pc bpc" id="L181" title="1 of 2 branches missed.">                        if (modelKeyList.size() != apiKeyList.size()) {</span>
+<span class="nc" id="L182">                                throw new TransferNotAllowedException(new ErrorMessage(&quot;errors.transferentities.KeySizeMismatch&quot;));</span>
+                        }
+<span class="fc bfc" id="L184" title="All 2 branches covered.">                        for (String key : apiKeyList) {</span>
+                                // Per section 4.4: keys must be case-folded
+<span class="fc" id="L186">                                key = key.toLowerCase();</span>
+<span class="fc" id="L187">                                apiKeyList.set(count, key);</span>
+
+<span class="pc bpc" id="L189" title="1 of 2 branches missed.">                                if (!key.equalsIgnoreCase(modelKeyList.get(count))) {</span>
+<span class="nc" id="L190">                                        throw new TransferNotAllowedException(new ErrorMessage(&quot;errors.transferentities.KeyMismatch&quot;, key + &quot; &amp; &quot; + modelKeyList.get(count)));</span>
+                                }
+
+<span class="fc" id="L193">                                UddiEntity uddiEntity = em.find(UddiEntity.class, key);</span>
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">                                if (uddiEntity == null) {</span>
+<span class="nc" id="L195">                                        throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.EntityNotFound&quot;, key));</span>
+                                }
+<span class="fc" id="L197">                                count++;</span>
+<span class="fc" id="L198">                        }</span>
+
+<span class="fc" id="L200">        }</span>
+
+        /**
+         * returns true if all items to be transfered are within this node (no
+         * node to node transfers) false for transfer between nodes
+         *
+         * @param em
+         * @param body
+         * @return
+         * @throws DispositionReportFaultMessage
+         */
+        public boolean validateTransferEntities(EntityManager em, TransferEntities body) throws DispositionReportFaultMessage {
+
+<span class="fc" id="L213">                boolean ret = true;</span>
+                // No null input
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L216">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+                }
+
+<span class="fc" id="L219">                org.uddi.custody_v3.TransferToken apiTransferToken = body.getTransferToken();</span>
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">                if (apiTransferToken == null) {</span>
+<span class="nc" id="L221">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.transfertoken.NullInput&quot;));</span>
+                }
+
+<span class="fc" id="L224">                KeyBag keyBag = body.getKeyBag();</span>
+<span class="pc bpc" id="L225" title="1 of 2 branches missed.">                if (keyBag == null) {</span>
+<span class="nc" id="L226">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.keybag.NullInput&quot;));</span>
+                }
+
+<span class="fc" id="L229">                List&lt;String&gt; apiKeyList = keyBag.getKey();</span>
+<span class="pc bpc" id="L230" title="2 of 4 branches missed.">                if (apiKeyList == null || apiKeyList.size() == 0) {</span>
+<span class="nc" id="L231">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.keybag.NoInput&quot;));</span>
+                }
+
+<span class="fc" id="L234">                String transferTokenId = null;</span>
+                try{
+<span class="fc" id="L236">                    transferTokenId = new String(apiTransferToken.getOpaqueToken(), UTF8);</span>
+<span class="nc" id="L237">                } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L238">                    throw new InvalidValueException(new ErrorMessage(&quot;errors.stringEncoding&quot;));</span>
+<span class="fc" id="L239">                }</span>
+<span class="pc bpc" id="L240" title="1 of 2 branches missed.">                if (nodeID.equals(apiTransferToken.getNodeID())) {</span>
+<span class="fc" id="L241">                        validateTransferLocalEntities(em, transferTokenId, apiKeyList);</span>
+                } else {
+<span class="nc" id="L243">                        return false;</span>
+                }
+<span class="fc" id="L245">                return ret;</span>
+        }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

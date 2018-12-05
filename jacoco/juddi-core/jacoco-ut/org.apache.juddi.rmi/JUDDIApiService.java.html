@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JUDDIApiService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.rmi</a> &gt; <span class="el_source">JUDDIApiService.java</span></div><h1>JUDDIApiService.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.rmi;
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
+import javax.xml.ws.Holder;
+
+import org.apache.juddi.api.impl.JUDDIApiImpl;
+import org.apache.juddi.api_v3.AdminSaveBusinessWrapper;
+import org.apache.juddi.api_v3.AdminSaveTModelWrapper;
+import org.apache.juddi.api_v3.ClerkDetail;
+import org.apache.juddi.api_v3.ClerkList;
+import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
+import org.apache.juddi.api_v3.DeleteClerk;
+import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
+import org.apache.juddi.api_v3.DeleteNode;
+import org.apache.juddi.api_v3.DeletePublisher;
+import org.apache.juddi.api_v3.GetAllPublisherDetail;
+import org.apache.juddi.api_v3.GetEntityHistoryMessageRequest;
+import org.apache.juddi.api_v3.GetEntityHistoryMessageResponse;
+import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageRequest;
+import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageResponse;
+import org.apache.juddi.api_v3.GetPublisherDetail;
+import org.apache.juddi.api_v3.NodeDetail;
+import org.apache.juddi.api_v3.NodeList;
+import org.apache.juddi.api_v3.PublisherDetail;
+import org.apache.juddi.api_v3.SaveClerk;
+import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
+import org.apache.juddi.api_v3.SaveNode;
+import org.apache.juddi.api_v3.SavePublisher;
+import org.apache.juddi.api_v3.SubscriptionWrapper;
+import org.apache.juddi.api_v3.SyncSubscription;
+import org.apache.juddi.api_v3.SyncSubscriptionDetail;
+import org.apache.juddi.api_v3.ValidValues;
+import org.apache.juddi.v3_service.JUDDIApiPortType;
+import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.DispositionReport;
+import org.uddi.repl_v3.ReplicationConfiguration;
+import org.uddi.sub_v3.Subscription;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+/**
+ * UDDIPublicationPortType wrapper so it can be exposed as a service over RMI.
+ * 
+ * @author &lt;a href=&quot;mailto:kstam@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ *
+ */
+public class JUDDIApiService extends UnicastRemoteObject implements JUDDIApiPortType {
+
+	private static final long serialVersionUID = 1404805184314952141L;
+<span class="fc" id="L66">	private JUDDIApiPortType juddiAPI = new JUDDIApiImpl();</span>
+	
+	protected JUDDIApiService(int port) throws RemoteException {
+<span class="fc" id="L69">		super(port);</span>
+<span class="fc" id="L70">	}</span>
+
+	public void deletePublisher(DeletePublisher body)
+			throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L74">		juddiAPI.deletePublisher(body);</span>
+<span class="nc" id="L75">	}</span>
+
+	public PublisherDetail getAllPublisherDetail(GetAllPublisherDetail body)
+			throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L79">		return juddiAPI.getAllPublisherDetail(body);</span>
+	}
+ 
+	public PublisherDetail getPublisherDetail(GetPublisherDetail body)
+			throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L84">		return juddiAPI.getPublisherDetail(body);</span>
+	}
+
+	public PublisherDetail savePublisher(SavePublisher body)
+			throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L89">		return juddiAPI.savePublisher(body);</span>
+	}
+
+	public void adminDeleteTModel(DeleteTModel body)
+			throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L94">		juddiAPI.adminDeleteTModel(body);</span>
+<span class="nc" id="L95">	}</span>
+
+	public void deleteClientSubscriptionInfo(DeleteClientSubscriptionInfo body)
+			throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L99">		juddiAPI.deleteClientSubscriptionInfo(body);</span>
+<span class="nc" id="L100">	}</span>
+
+	public ClientSubscriptionInfoDetail saveClientSubscriptionInfo(SaveClientSubscriptionInfo body)
+			throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L104">		return juddiAPI.saveClientSubscriptionInfo(body);</span>
+		
+	}
+	
+	public ClerkDetail saveClerk(SaveClerk body)
+			throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L110">		return juddiAPI.saveClerk(body);</span>
+
+	}
+	
+	public NodeDetail saveNode(SaveNode body)
+			throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L116">		return juddiAPI.saveNode(body);</span>
+	
+	}
+
+	public SyncSubscriptionDetail invokeSyncSubscription(SyncSubscription body)
+			throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L122">		return juddiAPI.invokeSyncSubscription(body);</span>
+	}
+
+        @Override
+        public NodeList getAllNodes(String authInfo) throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L127">                return juddiAPI.getAllNodes(authInfo);</span>
+        }
+
+        @Override
+        public ClerkList getAllClerks(String authInfo) throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L132">                return juddiAPI.getAllClerks(authInfo);</span>
+        }
+
+        @Override
+        public void deleteNode(DeleteNode body) throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L137">                juddiAPI.deleteNode(body);</span>
+<span class="nc" id="L138">        }</span>
+
+        @Override
+        public void deleteClerk(DeleteClerk request) throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L142">                juddiAPI.deleteClerk(request);</span>
+<span class="nc" id="L143">        }</span>
+
+        @Override
+        public DispositionReport adminSaveBusiness(String authInfo, List&lt;AdminSaveBusinessWrapper&gt; values) throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L147">                return juddiAPI.adminSaveBusiness(authInfo, values);</span>
+        }
+
+        @Override
+        public DispositionReport adminSaveTModel(String authInfo, List&lt;AdminSaveTModelWrapper&gt; values) throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L152">                return juddiAPI.adminSaveTModel(authInfo, values);</span>
+        }
+
+        @Override
+        public ReplicationConfiguration getReplicationNodes(String authInfo) throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L157">                return juddiAPI.getReplicationNodes(authInfo);</span>
+        }
+
+        @Override
+        public DispositionReport setReplicationNodes(String authInfo, ReplicationConfiguration replicationConfiguration) throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L162">                return juddiAPI.setReplicationNodes(authInfo, replicationConfiguration);</span>
+        }
+
+        @Override
+        public List&lt;SubscriptionWrapper&gt; getAllClientSubscriptionInfo(String authInfo) throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L167">                return juddiAPI.getAllClientSubscriptionInfo(authInfo);</span>
+        }
+
+        @Override
+        public void adminDeleteSubscription(String authInfo, List&lt;String&gt; subscriptionKey) throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L172">                juddiAPI.adminDeleteSubscription(authInfo, subscriptionKey);</span>
+<span class="nc" id="L173">        }</span>
+
+        @Override
+        public void adminSaveSubscription(String authInfo, String publisherOrUsername, Holder&lt;List&lt;Subscription&gt;&gt; subscriptions) throws DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L177">                juddiAPI.adminSaveSubscription(authInfo, publisherOrUsername, subscriptions);</span>
+<span class="nc" id="L178">        }</span>
+
+        @Override
+        public GetEntityHistoryMessageResponse getEntityHistory(GetEntityHistoryMessageRequest body) throws DispositionReportFaultMessage,RemoteException {
+<span class="nc" id="L182">               return juddiAPI.getEntityHistory(body);</span>
+               
+        }
+
+        @Override
+        public GetFailedReplicationChangeRecordsMessageResponse getFailedReplicationChangeRecords(GetFailedReplicationChangeRecordsMessageRequest body) throws DispositionReportFaultMessage,RemoteException {
+<span class="nc" id="L188">                return juddiAPI.getFailedReplicationChangeRecords(body);</span>
+        }
+
+      
+	
+	
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

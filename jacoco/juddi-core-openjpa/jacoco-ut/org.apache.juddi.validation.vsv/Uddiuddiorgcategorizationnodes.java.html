@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Uddiuddiorgcategorizationnodes.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.validation.vsv</a> &gt; <span class="el_source">Uddiuddiorgcategorizationnodes.java</span></div><h1>Uddiuddiorgcategorizationnodes.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2014 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.validation.vsv;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * UDDI provides a mechanism that may be used by publishers to categorize
+ * businessEntity and tModel elements according to any number of category
+ * systems and by inquirers to discover entities so categorized. See Appendix F
+ * Using Categorization for more information.
+ *
+ * This section defines a tModel used to categorize a businessEntity as
+ * representing a UDDI node in the registry in which the businessEntity appears.
+ * See Section 6.2.2.1 Normative Modeling of Node Business Entity.
+ *
+ * 11.1.3.2 Design Goals Each UDDI registry can be comprised of a number of
+ * nodes. Each UDDI node has a special businessEntity associated with it, called
+ * its Node Business Entity. The businessService elements in this businessEntity
+ * represent Web services that relate to the node's role in the UDDI registry.
+ *
+ * The uddi-org:nodes category system is designed to allow reliable discovery of
+ * the Node Business Entity structures for nodes in a UDDI registry so that UDDI
+ * clients can locate the businessService structures associated with the
+ * operation of the registry.
+ *
+ * Checking of references to this value set consists of ensuring that the
+ * publisher is the UDDI node and the keyValue has the value &quot;node&quot;. Each node
+ * allows the use of uddi-org:nodes only by itself, only on its own Node
+ * Business Entity, and only with the value of &quot;node&quot;. This value is used in the
+ * keyValue attributes of keyedReference elements that are contained in
+ * categoryBag elements to locate the Node Business Entity elements in the
+ * registry.
+ *
+ *
+ * @author Alex O'Ree
+ */
+<span class="fc" id="L52">public class Uddiuddiorgcategorizationnodes extends AbstractSimpleValidator {</span>
+
+        
+        @Override
+        public List&lt;String&gt; getValidValues() {
+<span class="fc" id="L57">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L58">                ret.add(&quot;node&quot;);</span>
+<span class="fc" id="L59">                return ret;</span>
+        }
+
+        @Override
+        public String getMyKey() {
+<span class="fc" id="L64">                return &quot;uddi:uddi.org:categorization:nodes&quot;;</span>
+        }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

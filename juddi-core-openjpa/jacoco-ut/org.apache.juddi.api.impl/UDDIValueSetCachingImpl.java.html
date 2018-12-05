@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UDDIValueSetCachingImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.api.impl</a> &gt; <span class="el_source">UDDIValueSetCachingImpl.java</span></div><h1>UDDIValueSetCachingImpl.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.api.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.ws.Holder;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.util.QueryStatus;
+import org.apache.juddi.api.util.ValueSetCachingQuery;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.uddi.v3_service.UDDIValueSetCachingPortType;
+import org.uddi.vscache_v3.ValidValue;
+
+//@WebService(serviceName=&quot;UDDIValueSetCachingService&quot;, 
+//			endpointInterface=&quot;org.uddi.v3_service.UDDIValueSetCachingPortType&quot;,
+//			targetNamespace = &quot;urn:uddi-org:v3_service&quot;)
+public class UDDIValueSetCachingImpl extends AuthenticatedService implements UDDIValueSetCachingPortType {
+
+<span class="nc" id="L37">        private static Log logger = LogFactory.getLog(UDDIValueSetCachingImpl.class);</span>
+        private UDDIServiceCounter serviceCounter;
+
+        public UDDIValueSetCachingImpl() {
+<span class="nc" id="L41">                super();</span>
+<span class="nc" id="L42">                serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());</span>
+<span class="nc" id="L43">        }</span>
+
+        /**
+         *
+         * @param authInfo An optional element that contains an authentication
+         * token. Authentication tokens are obtained using the get_authToken API
+         * call or through some other means external to this specification.
+         * Providers of get_allValidValues Web services that serve multiple
+         * registries and providers that restrict who can use their service may
+         * require authInfo for this API.
+         * @param modelKey A required uddiKey value that identifies the specific
+         * instance of the tModel which describes the value set or category
+         * group system for which a Web service to get all valid values has been
+         * provided. It uniquely identifies the category, identifier, or
+         * category group system for which valid values are being requested.
+         * @param chunkToken Optional element used to retrieve subsequent groups
+         * of data when the first invocation of this API indicates more data is
+         * available. This occurs when a chunkToken is returned whose value is
+         * not &quot;0&quot; in the validValuesList structure described in the next
+         * section. To retrieve the next chunk of data, the chunkToken returned
+         * should be used as an argument to the next invocation of this API.
+         * @param validValue A validValuesList structure is returned containing
+         * the set of valid values for the external category or identifier
+         * system. The list MUST contain a chunkToken if the Web service
+         * provider wishes to provide the data in packets.
+         * @throws DispositionReportFaultMessage
+         */
+        @Override
+        public void getAllValidValues(String authInfo, String modelKey,
+                Holder&lt;String&gt; chunkToken, Holder&lt;List&lt;ValidValue&gt;&gt; validValue)
+                throws DispositionReportFaultMessage {
+
+<span class="nc" id="L75">                long startTime = System.currentTimeMillis();</span>
+<span class="nc" id="L76">                List&lt;String&gt; validValues = UDDIValueSetValidationImpl.getValidValues(modelKey);</span>
+
+<span class="nc" id="L78">                Holder&lt;List&lt;ValidValue&gt;&gt; ret = new Holder&lt;List&lt;ValidValue&gt;&gt;(new ArrayList&lt;ValidValue&gt;());</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">                if (validValues != null) {</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                        for (int i = 0; i &lt; validValues.size(); i++) {</span>
+<span class="nc" id="L81">                                ValidValue x = new ValidValue(validValues.get(i));</span>
+<span class="nc" id="L82">                                ret.value.add(x);</span>
+                        }
+                }
+                //findbugs will flag the following as &quot;UC_USELESS_OBJECT&quot; when in fact
+                //it is returned as part of the service call
+<span class="nc" id="L87">                chunkToken = new Holder&lt;String&gt;();</span>
+<span class="nc" id="L88">                chunkToken.value =&quot;0&quot;;</span>
+
+<span class="nc" id="L90">                long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L91">                serviceCounter.update(ValueSetCachingQuery.GET_ALLVALIDVALUES,</span>
+                        QueryStatus.SUCCESS, procTime);
+
+
+<span class="nc" id="L95">        }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

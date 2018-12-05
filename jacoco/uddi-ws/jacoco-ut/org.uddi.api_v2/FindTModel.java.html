@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FindTModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.api_v2</a> &gt; <span class="el_source">FindTModel.java</span></div><h1>FindTModel.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.uddi.api_v2;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlType;
+
+
+/**
+ * &lt;p&gt;Java class for find_tModel complex type.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * 
+ * &lt;pre&gt;
+ * &amp;lt;complexType name=&quot;find_tModel&quot;&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;sequence&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v2}findQualifiers&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v2}name&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v2}identifierBag&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v2}categoryBag&quot; minOccurs=&quot;0&quot;/&gt;
+ *       &amp;lt;/sequence&gt;
+ *       &amp;lt;attribute name=&quot;generic&quot; use=&quot;required&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; /&gt;
+ *       &amp;lt;attribute name=&quot;maxRows&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}int&quot; /&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;find_tModel&quot;, propOrder = {
+    &quot;findQualifiers&quot;,
+    &quot;name&quot;,
+    &quot;identifierBag&quot;,
+    &quot;categoryBag&quot;
+})
+<span class="nc" id="L56">public class FindTModel {</span>
+
+    protected FindQualifiers findQualifiers;
+    protected Name name;
+    protected IdentifierBag identifierBag;
+    protected CategoryBag categoryBag;
+<span class="nc" id="L62">    @XmlAttribute(name = &quot;generic&quot;, required = true)</span>
+    protected String generic=&quot;2.0&quot;;
+    @XmlAttribute(name = &quot;maxRows&quot;)
+    protected Integer maxRows;
+
+    /**
+     * Gets the value of the findQualifiers property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link FindQualifiers }
+     *     
+     */
+    public FindQualifiers getFindQualifiers() {
+<span class="nc" id="L76">        return findQualifiers;</span>
+    }
+
+    /**
+     * Sets the value of the findQualifiers property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link FindQualifiers }
+     *     
+     */
+    public void setFindQualifiers(FindQualifiers value) {
+<span class="nc" id="L88">        this.findQualifiers = value;</span>
+<span class="nc" id="L89">    }</span>
+
+    /**
+     * Gets the value of the name property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Name }
+     *     
+     */
+    public Name getName() {
+<span class="nc" id="L100">        return name;</span>
+    }
+
+    /**
+     * Sets the value of the name property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Name }
+     *     
+     */
+    public void setName(Name value) {
+<span class="nc" id="L112">        this.name = value;</span>
+<span class="nc" id="L113">    }</span>
+
+    /**
+     * Gets the value of the identifierBag property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link IdentifierBag }
+     *     
+     */
+    public IdentifierBag getIdentifierBag() {
+<span class="nc" id="L124">        return identifierBag;</span>
+    }
+
+    /**
+     * Sets the value of the identifierBag property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link IdentifierBag }
+     *     
+     */
+    public void setIdentifierBag(IdentifierBag value) {
+<span class="nc" id="L136">        this.identifierBag = value;</span>
+<span class="nc" id="L137">    }</span>
+
+    /**
+     * Gets the value of the categoryBag property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CategoryBag }
+     *     
+     */
+    public CategoryBag getCategoryBag() {
+<span class="nc" id="L148">        return categoryBag;</span>
+    }
+
+    /**
+     * Sets the value of the categoryBag property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CategoryBag }
+     *     
+     */
+    public void setCategoryBag(CategoryBag value) {
+<span class="nc" id="L160">        this.categoryBag = value;</span>
+<span class="nc" id="L161">    }</span>
+
+    /**
+     * Gets the value of the generic property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getGeneric() {
+<span class="nc" id="L172">        return generic;</span>
+    }
+
+    /**
+     * Sets the value of the generic property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setGeneric(String value) {
+<span class="nc" id="L184">        this.generic = value;</span>
+<span class="nc" id="L185">    }</span>
+
+    /**
+     * Gets the value of the maxRows property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getMaxRows() {
+<span class="nc" id="L196">        return maxRows;</span>
+    }
+
+    /**
+     * Sets the value of the maxRows property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setMaxRows(Integer value) {
+<span class="nc" id="L208">        this.maxRows = value;</span>
+<span class="nc" id="L209">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

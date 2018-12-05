@@ -1,0 +1,1866 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UDDIClerk.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.config</a> &gt; <span class="el_source">UDDIClerk.java</span></div><h1>UDDIClerk.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2010 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.v3.client.config;
+
+import java.io.Serializable;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.net.URL;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.wsdl.Definition;
+import javax.xml.ws.Holder;
+import javax.xml.ws.soap.SOAPFaultException;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api_v3.AccessPointType;
+import org.apache.juddi.api_v3.Clerk;
+import org.apache.juddi.api_v3.ClerkDetail;
+import org.apache.juddi.api_v3.Node;
+import org.apache.juddi.api_v3.NodeDetail;
+import org.apache.juddi.api_v3.SaveClerk;
+import org.apache.juddi.api_v3.SaveNode;
+import org.apache.juddi.v3.client.UDDIConstants;
+import org.apache.juddi.v3.client.cryptor.CryptorFactory;
+import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
+import org.apache.juddi.v3.client.mapping.wsdl.ReadWSDL;
+import org.apache.juddi.v3.client.mapping.wsdl.WSDL2UDDI;
+import org.apache.juddi.v3.client.transport.TransportException;
+import org.uddi.api_v3.BindingDetail;
+import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BusinessDetail;
+import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.BusinessServices;
+import org.uddi.api_v3.CategoryBag;
+import org.uddi.api_v3.DeleteBinding;
+import org.uddi.api_v3.DeleteBusiness;
+import org.uddi.api_v3.DeleteService;
+import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.Description;
+import org.uddi.api_v3.DiscardAuthToken;
+import org.uddi.api_v3.DispositionReport;
+import org.uddi.api_v3.FindRelatedBusinesses;
+import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.GetAuthToken;
+import org.uddi.api_v3.GetBindingDetail;
+import org.uddi.api_v3.GetBusinessDetail;
+import org.uddi.api_v3.GetServiceDetail;
+import org.uddi.api_v3.GetTModelDetail;
+import org.uddi.api_v3.InstanceDetails;
+import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.Name;
+import org.uddi.api_v3.OverviewDoc;
+import org.uddi.api_v3.OverviewURL;
+import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.api_v3.PublisherAssertions;
+import org.uddi.api_v3.RelatedBusinessesList;
+import org.uddi.api_v3.Result;
+import org.uddi.api_v3.SaveBinding;
+import org.uddi.api_v3.SaveBusiness;
+import org.uddi.api_v3.SaveService;
+import org.uddi.api_v3.SaveTModel;
+import org.uddi.api_v3.ServiceDetail;
+import org.uddi.api_v3.TModel;
+import org.uddi.api_v3.TModelDetail;
+import org.uddi.api_v3.TModelInstanceInfo;
+import org.uddi.api_v3.TModelList;
+import org.uddi.sub_v3.DeleteSubscription;
+import org.uddi.sub_v3.Subscription;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * The UDDIClerk provides an easy way to access a UDDI service. The clerk can be
+ * configured programmatically, but it is recommended to specify the server
+ * endpoint and access credentials in a uddi.xml file.
+ *
+ * Recommended use:
+ * &lt;pre&gt;
+ * {@code
+ * UDDIClient uddiClient = new UDDIClient();
+ * UDDIClerk clerk = uddiClient.getClerk(clerkName);
+ * }
+ * &lt;/pre&gt; where the clerkName &quot;MyClerk&quot; is defined as attribute on the clerk
+ * element
+ * &lt;pre&gt;
+ * {@code
+ *  &lt;clerks registerOnStartup=&quot;true&quot;&gt;
+ *    &lt;clerk name=&quot;MyClerk&quot; node=&quot;default&quot; publisher=&quot;root&quot; password=&quot;root&quot; isPasswordEncrypted=&quot;false&quot; cryptoProvider=&quot;&quot;&gt;
+ *      &lt;class&gt;org.apache.juddi.example.HelloWorldImpl&lt;/class&gt;
+ *    &lt;/clerk&gt;
+ *  &lt;/clerks&gt;
+ * }
+ * &lt;/pre&gt; Credentials: In the clerk section you need to specify the publisher to
+ * be used, as well the password. The password can be encrypted and a
+ * cryptoProvider class can be set.
+ *
+ * UDDI Annotations: If you want to register classes containing UDDIAnnotations,
+ * then you need to set registerOnStartup=&quot;true&quot; and you can list the classes
+ * with the annotations as subelements. See the HelloWorldImpl class above, as
+ * well as the uddi-annotations example.
+ *
+ * @author kstam
+ *
+ */
+public class UDDIClerk implements Serializable {
+
+        private static final long serialVersionUID = -8597375975981358134L;
+
+<span class="fc" id="L132">        private static final Log log = LogFactory.getLog(UDDIClerk.class);</span>
+        protected String name;
+        protected UDDINode uddiNode;
+        protected String publisher;
+        protected String password;
+        private Date tokenBirthDate;
+        private String authToken;
+        private String cryptoProvider;
+<span class="pc" id="L140">        private boolean isencrypted = false;</span>
+        private String[] classWithAnnotations;
+        private WSDL[] wsdls;
+        private String managerName;
+<span class="pc" id="L144">        private Map&lt;String, Properties&gt; services = new HashMap&lt;String, Properties&gt;();</span>
+
+        /**
+         * use caution calling the default constructor, many of the functions of
+         * the UDDI Clerk will not function unless manually set. The Node must
+         * be set for using most of the functions provided by this class.
+         */
+        public UDDIClerk() {
+<span class="fc" id="L152">                super();</span>
+<span class="fc" id="L153">        }</span>
+
+        public UDDIClerk(Clerk clerk) {
+<span class="nc" id="L156">                super();</span>
+<span class="nc" id="L157">                this.name = clerk.getName();</span>
+<span class="nc" id="L158">                this.password = clerk.getPassword();</span>
+<span class="nc" id="L159">                this.publisher = clerk.getPublisher();</span>
+<span class="nc" id="L160">                this.uddiNode = new UDDINode(clerk.getNode());</span>
+<span class="nc" id="L161">        }</span>
+
+        /**
+         * A list of classes defined in the config file that have UDDI
+         * Annotations on them for automated registration
+         * &lt;br&gt;client.clerks.clerk(&quot; + i + &quot;).class
+         *
+         * @return classes with UDDI Annotations
+         * @see org.apache.juddi.v3.annotations.UDDIService
+         * @see org.apache.juddi.v3.annotations.UDDIServiceBinding
+         */
+        public String[] getClassWithAnnotations() {
+<span class="fc" id="L173">                return classWithAnnotations;</span>
+        }
+
+        /**
+         * Returns the UDDI node that this clerk is associated with
+         * client.clerks.clerk(&quot; + i + &quot;)@node
+         *
+         * @return UDDINode
+         */
+        public UDDINode getUDDINode() {
+<span class="fc" id="L183">                return this.uddiNode;</span>
+        }
+        
+        public UDDINode getUDDINode(Node apinode) {
+<span class="nc bnc" id="L187" title="All 2 branches missed.">                if (apinode==null)</span>
+<span class="nc" id="L188">                        return this.uddiNode;</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">                if (nodecache.containsKey(apinode.getClientName() + apinode+getName()))</span>
+<span class="nc" id="L190">                        return nodecache.get(apinode.getClientName() + apinode+getName());</span>
+<span class="nc" id="L191">                UDDINode node = new UDDINode(apinode);</span>
+<span class="nc" id="L192">                nodecache.put(apinode.getClientName() + apinode+getName(),node);</span>
+<span class="nc" id="L193">                return node;</span>
+        }
+<span class="pc" id="L195">        Map &lt;String, UDDINode&gt; nodecache = new HashMap&lt;String, UDDINode&gt;();</span>
+        /**
+         * A list of classes defined in the config file that have UDDI
+         * Annotations on them for automated registration
+         * &lt;br&gt;client.clerks.clerk(&quot; + i + &quot;).class
+         *
+         * @see org.apache.juddi.v3.annotations.UDDIService
+         * @see org.apache.juddi.v3.annotations.UDDIServiceBinding
+         */
+        public void setClassWithAnnotations(String[] classWithAnnotations) {
+<span class="fc" id="L205">                this.classWithAnnotations = classWithAnnotations;</span>
+<span class="fc" id="L206">        }</span>
+
+        /**
+         * This is not used within the jUDDI code base and will be removed in the next release
+         *
+         * @return a map
+         * @deprecated 
+         */
+        @Deprecated
+        public Map&lt;String, Properties&gt; getServices() {
+<span class="nc" id="L216">                return services;</span>
+        }
+
+        /**
+         * This is not used within the jUDDI code base and will be removed in the next release
+         * @param services
+         * @deprecated 
+         */
+        @Deprecated
+        public void setServices(Map&lt;String, Properties&gt; services) {
+<span class="nc" id="L226">                this.services = services;</span>
+<span class="nc" id="L227">        }</span>
+
+        /**
+         * The client manager name as defined in the config file client[@name]
+         *
+         * @return the manager name
+         */
+        public String getManagerName() {
+<span class="nc" id="L235">                return managerName;</span>
+        }
+
+        /**
+         * The client manager name as defined in the config file client[@name]
+         *
+         * @param managerName
+         */
+        public void setManagerName(String managerName) {
+<span class="fc" id="L244">                this.managerName = managerName;</span>
+<span class="fc" id="L245">        }</span>
+
+        /**
+         * Performans the process of parsing the configuration defined wsdls to
+         * UDDI. This is a convenience wrapper Note, if registration fails, no
+         * exception is thrown
+         */
+        public void registerWsdls() {
+<span class="nc" id="L253">                registerWsdls(null);</span>
+<span class="nc" id="L254">        }</span>
+
+        /**
+         * Registers the WSDL files referenced in the clerk onto the UDDI node
+         * referenced by the clerk. Note, if registration fails, no exception is
+         * thrown
+         * &lt;pre&gt;
+         * {@code
+         * &lt;clerks registerOnStartup=&quot;false&quot;&gt;
+         *     &lt;clerk name=&quot;joe&quot; node=&quot;default&quot; publisher=&quot;joepublisher&quot; password=&quot;joepublisher&quot; isPasswordEncrypted=&quot;false&quot; cryptoProvider=&quot;&quot;&gt;
+         *        &lt;wsdl businessName=&quot;WSDL-Business&quot;&gt;wsdl/helloworld.wsdl&lt;/wsdl&gt;
+         *     &lt;/clerk&gt;
+         *  &lt;/clerks&gt;
+         * }
+         * &lt;/pre&gt;
+         *
+         * @param localizerBaseUrl - The baseUrl part which will be used when
+         * building the bindingTemplate.
+         */
+        public void registerWsdls(URL localizerBaseUrl) {
+<span class="nc bnc" id="L274" title="All 2 branches missed.">                if (this.getWsdls() != null) {</span>
+<span class="nc" id="L275">                        Properties properties = new Properties();</span>
+<span class="nc" id="L276">                        properties.putAll(this.getUDDINode().getProperties());</span>
+
+<span class="nc bnc" id="L278" title="All 2 branches missed.">                        for (WSDL wsdl : this.getWsdls()) {</span>
+                                try {
+<span class="nc" id="L280">                                        URL wsdlUrl = this.getClass().getClassLoader().getResource(wsdl.getFileName());</span>
+<span class="nc" id="L281">                                        ReadWSDL rw = new ReadWSDL();</span>
+<span class="nc" id="L282">                                        Definition wsdlDefinition = rw.readWSDL(wsdlUrl);</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">                                        if (wsdl.keyDomain != null) {</span>
+<span class="nc" id="L284">                                                properties.setProperty(&quot;keyDomain&quot;, wsdl.keyDomain);</span>
+                                        }
+<span class="nc bnc" id="L286" title="All 2 branches missed.">                                        if (wsdl.businessKey != null) {</span>
+<span class="nc" id="L287">                                                properties.setProperty(&quot;businessKey&quot;, wsdl.getBusinessKey());</span>
+                                        }
+
+<span class="nc" id="L290">                                        WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(this, new URLLocalizerDefaultImpl(localizerBaseUrl), properties);</span>
+<span class="nc" id="L291">                                        wsdl2UDDI.registerBusinessServices(wsdlDefinition);</span>
+<span class="nc" id="L292">                                } catch (Exception e) {</span>
+<span class="nc" id="L293">                                        log.error(&quot;Unable to register wsdl &quot; + wsdl.getFileName() + &quot; .&quot; + e.getMessage(), e);</span>
+<span class="nc" id="L294">                                } catch (Throwable t) {</span>
+<span class="nc" id="L295">                                        log.error(&quot;Unable to register wsdl &quot; + wsdl.getFileName() + &quot; .&quot; + t.getMessage(), t);</span>
+<span class="nc" id="L296">                                }</span>
+                        }
+                }
+<span class="nc" id="L299">        }</span>
+
+        /**
+         * Registers a WSDL Definition onto the UDDI node referenced by the
+         * clerk. Note, if registration fails, no exception is thrown
+         *
+         * @param wsdlDefinition - the WSDL Definition
+         * @param keyDomain - the keyDomain which will be used to construct the
+         * UDDI key IDs. If left null the keyDomain defined in the node's
+         * properties will be used.
+         * @param businessKey - the key of the business to which this service
+         * belongs. If left null the businessKey defined in the node's
+         * properties will be used.
+         *
+         */
+        public void registerWsdls(Definition wsdlDefinition, String keyDomain, String businessKey) {
+
+                try {
+<span class="nc" id="L317">                        Properties properties = new Properties();</span>
+<span class="nc" id="L318">                        properties.putAll(this.getUDDINode().getProperties());</span>
+<span class="nc bnc" id="L319" title="All 2 branches missed.">                        if (keyDomain != null) {</span>
+<span class="nc" id="L320">                                properties.setProperty(&quot;keyDomain&quot;, keyDomain);</span>
+                        }
+<span class="nc bnc" id="L322" title="All 2 branches missed.">                        if (businessKey != null) {</span>
+<span class="nc" id="L323">                                properties.setProperty(&quot;businessKey&quot;, businessKey);</span>
+                        }
+
+<span class="nc" id="L326">                        WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(this, new URLLocalizerDefaultImpl(), properties);</span>
+<span class="nc" id="L327">                        wsdl2UDDI.registerBusinessServices(wsdlDefinition);</span>
+<span class="nc" id="L328">                } catch (Exception e) {</span>
+<span class="nc" id="L329">                        log.error(&quot;Unable to register wsdl &quot; + &quot; .&quot; + e.getMessage(), e);</span>
+<span class="nc" id="L330">                } catch (Throwable t) {</span>
+<span class="nc" id="L331">                        log.error(&quot;Unable to register wsdl &quot; + &quot; .&quot; + t.getMessage(), t);</span>
+<span class="nc" id="L332">                }</span>
+<span class="nc" id="L333">        }</span>
+
+        /**
+         * Removes the UDDI data structures belonging to the WSDLs for this
+         * clerk from the UDDI node. Note, if registration fails, no exception
+         * is thrown
+         */
+        public void unRegisterWsdls() {
+<span class="nc bnc" id="L341" title="All 2 branches missed.">                if (this.getWsdls() != null) {</span>
+<span class="nc" id="L342">                        Properties properties = new Properties();</span>
+<span class="nc" id="L343">                        properties.putAll(this.getUDDINode().getProperties());</span>
+
+<span class="nc bnc" id="L345" title="All 2 branches missed.">                        for (WSDL wsdl : this.getWsdls()) {</span>
+                                try {
+<span class="nc" id="L347">                                        URL wsdlUrl = this.getClass().getClassLoader().getResource(wsdl.getFileName());</span>
+<span class="nc" id="L348">                                        ReadWSDL rw = new ReadWSDL();</span>
+<span class="nc" id="L349">                                        Definition wsdlDefinition = rw.readWSDL(wsdlUrl);</span>
+<span class="nc bnc" id="L350" title="All 2 branches missed.">                                        if (wsdl.keyDomain != null) {</span>
+<span class="nc" id="L351">                                                properties.setProperty(&quot;keyDomain&quot;, wsdl.keyDomain);</span>
+                                        }
+<span class="nc bnc" id="L353" title="All 2 branches missed.">                                        if (wsdl.businessKey != null) {</span>
+<span class="nc" id="L354">                                                properties.setProperty(&quot;businessKey&quot;, wsdl.getBusinessKey());</span>
+                                        }
+
+<span class="nc" id="L357">                                        WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(this, new URLLocalizerDefaultImpl(), properties);</span>
+<span class="nc" id="L358">                                        wsdl2UDDI.unRegisterBusinessServices(wsdlDefinition);</span>
+<span class="nc" id="L359">                                } catch (Exception e) {</span>
+<span class="nc" id="L360">                                        log.error(&quot;Unable to register wsdl &quot; + wsdl.getFileName() + &quot; .&quot; + e.getMessage(), e);</span>
+<span class="nc" id="L361">                                } catch (Throwable t) {</span>
+<span class="nc" id="L362">                                        log.error(&quot;Unable to register wsdl &quot; + wsdl.getFileName() + &quot; .&quot; + t.getMessage(), t);</span>
+<span class="nc" id="L363">                                }</span>
+                        }
+                }
+<span class="nc" id="L366">        }</span>
+
+        /**
+         * Registers the Subscription that is passed in to the UDDI node for
+         * this clerk.
+         *
+         * Note, if registration fails, no exception is thrown
+         *
+         * @param subscription
+         * @return a subscription object, or null if failed
+         */
+        public Subscription register(Subscription subscription) {
+<span class="nc" id="L378">                return register(subscription, this.getUDDINode().getApiNode());</span>
+        }
+
+        /**
+         * Register a Subscription to UDDI node passed in. Make sure you use a
+         * clerk that has credentials for this node. Note, if registration
+         * fails, no exception is thrown
+         *
+         * @param subscription a UDDI subscription, remember only one filter
+         * type is allowed by UDDI
+         * @param node the UDDI node referenced from the config file
+         * @return the potentially UDDI server modified subscription
+         */
+        public Subscription register(Subscription subscription, Node node) {
+
+<span class="nc" id="L393">                log.info(&quot;Registering subscription with key &quot; + subscription.getSubscriptionKey());</span>
+<span class="nc" id="L394">                Holder&lt;List&lt;Subscription&gt;&gt; holder = new Holder&lt;List&lt;Subscription&gt;&gt;();</span>
+                try {
+<span class="nc" id="L396">                        List&lt;Subscription&gt; subscriptions = new ArrayList&lt;Subscription&gt;();</span>
+<span class="nc" id="L397">                        subscriptions.add(subscription);</span>
+<span class="nc" id="L398">                        holder.value = subscriptions;</span>
+<span class="nc" id="L399">                        getUDDINode(node).getTransport().getUDDISubscriptionService(node.getSubscriptionUrl()).</span>
+<span class="nc" id="L400">                                saveSubscription(getAuthToken(node.getSecurityUrl()), holder);</span>
+<span class="nc bnc" id="L401" title="All 2 branches missed.">                        if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L402">                                log.debug(&quot;Registering subscription &quot; + subscription.getSubscriptionKey() + &quot; completed.&quot;);</span>
+                        }
+<span class="nc" id="L404">                } catch (Exception e) {</span>
+<span class="nc" id="L405">                        log.error(&quot;Unable to register subscription &quot; + subscription.getSubscriptionKey()</span>
+<span class="nc" id="L406">                                + &quot; .&quot; + e.getMessage(), e);</span>
+<span class="nc" id="L407">                } catch (Throwable t) {</span>
+<span class="nc" id="L408">                        log.error(&quot;Unable to register subscriptionl &quot; + subscription.getSubscriptionKey()</span>
+<span class="nc" id="L409">                                + &quot; .&quot; + t.getMessage(), t);</span>
+<span class="nc" id="L410">                }</span>
+<span class="nc" id="L411">                subscription = holder.value.get(0);</span>
+<span class="nc" id="L412">                return subscription;</span>
+        }
+
+        /**
+         * Register a tModel, using the node of current clerk ('this'). Note, if
+         * registration fails, no exception is thrown
+         *
+         * @param tModel
+         * @return the TModelDetail of the newly registered TModel
+         */
+        public TModelDetail register(TModel tModel) {
+<span class="nc" id="L423">                return register(tModel, this.getUDDINode().getApiNode());</span>
+        }
+
+        /**
+         * Register a tModel. Note, if registration fails, no exception is
+         * thrown
+         *
+         * @param tModel
+         * @param node
+         * @return a tModel object or null if registration failed
+         */
+        public TModelDetail register(TModel tModel, Node node) {
+<span class="nc" id="L435">                TModelDetail tModelDetail = null;</span>
+<span class="nc" id="L436">                log.info(&quot;Registering tModel with key &quot; + tModel.getTModelKey());</span>
+                try {
+<span class="nc" id="L438">                        SaveTModel saveTModel = new SaveTModel();</span>
+<span class="nc" id="L439">                        saveTModel.setAuthInfo(getAuthToken(node.getSecurityUrl()));</span>
+<span class="nc" id="L440">                        saveTModel.getTModel().add(tModel);</span>
+<span class="nc" id="L441">                        tModelDetail = getUDDINode(node).getTransport().getUDDIPublishService(node.getPublishUrl()).saveTModel(saveTModel);</span>
+<span class="nc bnc" id="L442" title="All 2 branches missed.">                        if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L443">                                log.debug(&quot;Registering tModel &quot; + tModel.getTModelKey() + &quot; completed.&quot;);</span>
+                        }
+<span class="nc" id="L445">                } catch (Exception e) {</span>
+<span class="nc" id="L446">                        log.error(&quot;Unable to register tModel &quot; + tModel.getTModelKey()</span>
+<span class="nc" id="L447">                                + &quot; .&quot; + e.getMessage(), e);</span>
+<span class="nc" id="L448">                } catch (Throwable t) {</span>
+<span class="nc" id="L449">                        log.error(&quot;Unable to register tModel &quot; + tModel.getTModelKey()</span>
+<span class="nc" id="L450">                                + &quot; .&quot; + t.getMessage(), t);</span>
+<span class="nc" id="L451">                }</span>
+<span class="nc" id="L452">                return tModelDetail;</span>
+        }
+
+        /**
+         * Register a BindingTemplate, using the node of current clerk ('this').
+         * Note, if registration fails, no exception is thrown
+         *
+         * @param binding
+         * @return a binding object or null
+         */
+        public BindingTemplate register(BindingTemplate binding) {
+<span class="nc" id="L463">                return register(binding, this.getUDDINode().getApiNode());</span>
+        }
+
+        /**
+         * Register a BindingTemplate. Note, if registration fails, no exception
+         * is thrown
+         *
+         * @param binding
+         * @param node
+         * @return a binding object or null
+         */
+        public BindingTemplate register(BindingTemplate binding, Node node) {
+
+<span class="nc" id="L476">                BindingTemplate bindingTemplate = null;</span>
+<span class="nc" id="L477">                log.info(&quot;Registering bindingTemplate with key &quot; + binding.getBindingKey());</span>
+                try {
+<span class="nc" id="L479">                        SaveBinding saveBinding = new SaveBinding();</span>
+<span class="nc" id="L480">                        saveBinding.setAuthInfo(getAuthToken(node.getSecurityUrl()));</span>
+<span class="nc" id="L481">                        saveBinding.getBindingTemplate().add(binding);</span>
+<span class="nc" id="L482">                        BindingDetail bindingDetail = getUDDINode(node).getTransport().getUDDIPublishService(node.getPublishUrl()).saveBinding(saveBinding);</span>
+<span class="nc" id="L483">                        bindingTemplate = bindingDetail.getBindingTemplate().get(0);</span>
+<span class="nc bnc" id="L484" title="All 2 branches missed.">                        if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L485">                                log.debug(&quot;Registering template binding &quot; + bindingTemplate.getBindingKey() + &quot; completed.&quot;);</span>
+                        }
+<span class="nc" id="L487">                } catch (Exception e) {</span>
+<span class="nc" id="L488">                        log.error(&quot;Unable to register template binding &quot; + binding.getBindingKey()</span>
+<span class="nc" id="L489">                                + &quot; .&quot; + e.getMessage(), e);</span>
+<span class="nc" id="L490">                } catch (Throwable t) {</span>
+<span class="nc" id="L491">                        log.error(&quot;Unable to register template binding &quot; + binding.getBindingKey()</span>
+<span class="nc" id="L492">                                + &quot; .&quot; + t.getMessage(), t);</span>
+<span class="nc" id="L493">                }</span>
+<span class="nc" id="L494">                return bindingTemplate;</span>
+        }
+
+        /**
+         * Register a service, using the node of current clerk ('this'). Note,
+         * if registration fails, no exception is thrown and null is returned
+         *
+         * @param service
+         * @return a service object or null
+         */
+        public BusinessService register(BusinessService service) {
+<span class="nc" id="L505">                return register(service, this.getUDDINode().getApiNode());</span>
+        }
+
+        /**
+         * Register a service.
+         *
+         * Note, if registration fails, no exception is thrown
+         *
+         * @param service the element returned by the server, it may be modified
+         * from the original
+         * @param node
+         * @return the potentially modified service by the UDDI server or NULL if save failed
+         */
+        public BusinessService register(BusinessService service, Node node) {
+
+<span class="nc" id="L520">                BusinessService businessService = null;</span>
+<span class="nc bnc" id="L521" title="All 2 branches missed.">                if (service.getName().isEmpty()){</span>
+<span class="nc" id="L522">                        log.error(&quot;Unable to register service, a 'name' element is required&quot;);</span>
+<span class="nc" id="L523">                        return null;</span>
+                }
+<span class="nc" id="L525">                log.info(&quot;Registering service &quot; + service.getName().get(0).getValue()</span>
+<span class="nc" id="L526">                        + &quot; with key &quot; + service.getServiceKey());</span>
+                try {
+<span class="nc" id="L528">                        SaveService saveService = new SaveService();</span>
+<span class="nc" id="L529">                        saveService.setAuthInfo(getAuthToken(node.getSecurityUrl()));</span>
+<span class="nc" id="L530">                        saveService.getBusinessService().add(service);</span>
+<span class="nc" id="L531">                        ServiceDetail serviceDetail = getUDDINode(node).getTransport().getUDDIPublishService(node.getPublishUrl()).saveService(saveService);</span>
+<span class="nc" id="L532">                        businessService = serviceDetail.getBusinessService().get(0);</span>
+<span class="nc bnc" id="L533" title="All 2 branches missed.">                        if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L534">                                log.debug(&quot;Registering service &quot; + service.getName().get(0).getValue() + &quot; completed.&quot;);</span>
+                        }
+<span class="nc" id="L536">                } catch (Exception e) {</span>
+<span class="nc" id="L537">                        log.error(&quot;Unable to register service &quot; + service.getName().get(0).getValue()</span>
+<span class="nc" id="L538">                                + &quot; .&quot; + e.getMessage(), e);</span>
+<span class="nc" id="L539">                } catch (Throwable t) {</span>
+<span class="nc" id="L540">                        log.error(&quot;Unable to register service &quot; + service.getName().get(0).getValue()</span>
+<span class="nc" id="L541">                                + &quot; .&quot; + t.getMessage(), t);</span>
+<span class="nc" id="L542">                }</span>
+<span class="nc" id="L543">                return businessService;</span>
+        }
+
+        /**
+         * registers a UDDI business. This is a convenience wrapper
+         *
+         * @param business
+         * @return a possibility modified business entity as registered or NULL if the save failed
+         */
+        public BusinessEntity register(BusinessEntity business) {
+<span class="nc" id="L553">                return register(business, this.getUDDINode().getApiNode());</span>
+        }
+
+        /**
+         * Registers a UDDI Business referencing the specified Node from the
+         * config file
+         *
+         * @param business
+         * @param node
+         * @return a possibility modified business entity as registered or NULL if the save failed
+         */
+        public BusinessEntity register(BusinessEntity business, Node node) {
+
+<span class="nc bnc" id="L566" title="All 2 branches missed.">                if (business.getName().get(0) == null) {</span>
+<span class="nc" id="L567">                        log.error(&quot;Unable to register business because no Name elements have been added.&quot;);</span>
+<span class="nc" id="L568">                        return null;</span>
+                }
+<span class="nc" id="L570">                BusinessEntity businessEntity = null;</span>
+<span class="nc" id="L571">                log.info(&quot;Registering business &quot; + business.getName().get(0).getValue()</span>
+<span class="nc" id="L572">                        + &quot; with key &quot; + business.getBusinessKey());</span>
+                try {
+<span class="nc" id="L574">                        SaveBusiness saveBusiness = new SaveBusiness();</span>
+<span class="nc" id="L575">                        saveBusiness.setAuthInfo(getAuthToken(node.getSecurityUrl()));</span>
+<span class="nc" id="L576">                        saveBusiness.getBusinessEntity().add(business);</span>
+<span class="nc" id="L577">                        BusinessDetail businessDetail = getUDDINode(node).getTransport().getUDDIPublishService(node.getPublishUrl()).saveBusiness(saveBusiness);</span>
+<span class="nc" id="L578">                        businessEntity = businessDetail.getBusinessEntity().get(0);</span>
+<span class="nc bnc" id="L579" title="All 2 branches missed.">                        if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L580">                                log.debug(&quot;Registering businessEntity &quot; + businessEntity.getName().get(0).getValue() + &quot; completed.&quot;);</span>
+                        }
+<span class="nc" id="L582">                } catch (Exception e) {</span>
+<span class="nc" id="L583">                        log.error(&quot;Unable to register business &quot; + business.getName().get(0).getValue()</span>
+<span class="nc" id="L584">                                + &quot; .&quot; + e.getMessage(), e);</span>
+<span class="nc" id="L585">                } catch (Throwable t) {</span>
+<span class="nc" id="L586">                        log.error(&quot;Unable to register business &quot; + business.getName().get(0).getValue()</span>
+<span class="nc" id="L587">                                + &quot; .&quot; + t.getMessage(), t);</span>
+<span class="nc" id="L588">                }</span>
+<span class="nc" id="L589">                return businessEntity;</span>
+        }
+
+        /**
+         * removes a business from UDDI. This is a convenience wrapper Note, if
+         * registration fails, no exception is thrown
+         *
+         * @param businessKey
+         */
+        public void unRegisterBusiness(String businessKey) {
+<span class="nc" id="L599">                unRegisterBusiness(businessKey, this.getUDDINode().getApiNode());</span>
+<span class="nc" id="L600">        }</span>
+
+        /**
+         * Unregisters the service with specified serviceKey using the specified
+         * Node, as defined in the config file Note, if registration fails, no
+         * exception is thrown
+         *
+         * @param businessKey
+         * @param node
+         */
+        public void unRegisterBusiness(String businessKey, Node node) {
+<span class="nc" id="L611">                log.info(&quot;UnRegistering the business &quot; + businessKey);</span>
+                try {
+<span class="nc" id="L613">                        DeleteBusiness deleteBusiness = new DeleteBusiness();</span>
+<span class="nc" id="L614">                        deleteBusiness.setAuthInfo(getAuthToken(node.getSecurityUrl()));</span>
+<span class="nc" id="L615">                        deleteBusiness.getBusinessKey().add(businessKey);</span>
+<span class="nc" id="L616">                        getUDDINode(node).getTransport().getUDDIPublishService(node.getPublishUrl()).deleteBusiness(deleteBusiness);</span>
+<span class="nc" id="L617">                } catch (Exception e) {</span>
+<span class="nc" id="L618">                        log.error(&quot;Unable to register service &quot; + businessKey</span>
+<span class="nc" id="L619">                                + &quot; .&quot; + e.getMessage(), e);</span>
+<span class="nc" id="L620">                }</span>
+<span class="nc" id="L621">        }</span>
+
+        /**
+         * removes a service by key. This is a convenience wrapper Note, if
+         * registration fails, no exception is thrown
+         *
+         * @param serviceKey
+         */
+        public void unRegisterService(String serviceKey) {
+<span class="nc" id="L630">                unRegisterService(serviceKey, this.getUDDINode().getApiNode());</span>
+<span class="nc" id="L631">        }</span>
+
+        /**
+         * Unregisters the service with specified serviceKey. Note, if
+         * registration fails, no exception is thrown
+         *
+         * @param serviceKey
+         * @param node
+         */
+        public void unRegisterService(String serviceKey, Node node) {
+<span class="nc" id="L641">                log.info(&quot;UnRegistering the service &quot; + serviceKey);</span>
+                try {
+<span class="nc" id="L643">                        DeleteService deleteService = new DeleteService();</span>
+<span class="nc" id="L644">                        deleteService.setAuthInfo(getAuthToken(node.getSecurityUrl()));</span>
+<span class="nc" id="L645">                        deleteService.getServiceKey().add(serviceKey);</span>
+<span class="nc" id="L646">                        getUDDINode(node).getTransport().getUDDIPublishService(node.getPublishUrl()).deleteService(deleteService);</span>
+<span class="nc" id="L647">                } catch (Exception e) {</span>
+<span class="nc" id="L648">                        log.error(&quot;Unable to register service &quot; + serviceKey</span>
+<span class="nc" id="L649">                                + &quot; .&quot; + e.getMessage(), e);</span>
+<span class="nc" id="L650">                }</span>
+<span class="nc" id="L651">        }</span>
+
+        /**
+         * removes a binding by key. This is a convenience wrapper Note, if
+         * registration fails, no exception is thrown
+         *
+         * @param bindingKey
+         */
+        public void unRegisterBinding(String bindingKey) {
+<span class="nc" id="L660">                unRegisterBinding(bindingKey, this.getUDDINode().getApiNode());</span>
+<span class="nc" id="L661">        }</span>
+
+        /**
+         * Unregisters the BindingTemplate with specified bindingKey and
+         * referenced node defined in the config file Note, if registration
+         * fails, no exception is thrown
+         *
+         * @param bindingKey
+         * @param node
+         */
+        public void unRegisterBinding(String bindingKey, Node node) {
+<span class="nc" id="L672">                log.info(&quot;UnRegistering binding key &quot; + bindingKey);</span>
+                try {
+<span class="nc" id="L674">                        DeleteBinding deleteBinding = new DeleteBinding();</span>
+<span class="nc" id="L675">                        deleteBinding.setAuthInfo(getAuthToken(node.getSecurityUrl()));</span>
+<span class="nc" id="L676">                        deleteBinding.getBindingKey().add(bindingKey);</span>
+<span class="nc" id="L677">                        getUDDINode(node).getTransport().getUDDIPublishService(node.getPublishUrl()).deleteBinding(deleteBinding);</span>
+<span class="nc" id="L678">                } catch (Exception e) {</span>
+<span class="nc" id="L679">                        log.error(&quot;Unable to unregister bindingkey &quot; + bindingKey</span>
+<span class="nc" id="L680">                                + &quot; .&quot; + e.getMessage(), e);</span>
+<span class="nc" id="L681">                }</span>
+<span class="nc" id="L682">        }</span>
+
+        /**
+         * removes a tModel. Note, UDDI just flags tModels as deleted, it will
+         * still be accessible but not returned in a search. This is a
+         * convenience wrapper Note, if registration fails, no exception is
+         * thrown
+         *
+         * @param tModelKey
+         */
+        public void unRegisterTModel(String tModelKey) {
+<span class="nc" id="L693">                unRegisterTModel(tModelKey, this.getUDDINode().getApiNode());</span>
+<span class="nc" id="L694">        }</span>
+
+        /**
+         * Unregisters the BindingTemplate with specified bindingKey. Note, if
+         * registration fails, no exception is thrown
+         *
+         * @param tModelKey
+         * @param node
+         */
+        public void unRegisterTModel(String tModelKey, Node node) {
+<span class="nc" id="L704">                log.info(&quot;UnRegistering tModel key &quot; + tModelKey);</span>
+                try {
+<span class="nc" id="L706">                        String authToken = getAuthToken(node.getSecurityUrl());</span>
+<span class="nc" id="L707">                        DeleteTModel deleteTModel = new DeleteTModel();</span>
+<span class="nc" id="L708">                        deleteTModel.setAuthInfo(authToken);</span>
+<span class="nc" id="L709">                        deleteTModel.getTModelKey().add(tModelKey);</span>
+<span class="nc" id="L710">                        getUDDINode(node).getTransport().getUDDIPublishService(node.getPublishUrl()).deleteTModel(deleteTModel);</span>
+<span class="nc" id="L711">                } catch (Exception e) {</span>
+<span class="nc" id="L712">                        log.error(&quot;Unable to unregister tModelkey &quot; + tModelKey</span>
+<span class="nc" id="L713">                                + &quot; .&quot; + e.getMessage(), e);</span>
+<span class="nc" id="L714">                }</span>
+<span class="nc" id="L715">        }</span>
+
+        /**
+         * removes a subscription by key. This is a convenience wrapper Note, if
+         * registration fails, no exception is thrown
+         *
+         * @param subscriptionKey
+         */
+        public void unRegisterSubscription(String subscriptionKey) {
+<span class="nc" id="L724">                unRegisterSubscription(subscriptionKey, this.getUDDINode().getApiNode());</span>
+<span class="nc" id="L725">        }</span>
+
+        /**
+         * removes a subscription by key, referencing the specified node in the
+         * config file Note, if registration fails, no exception is thrown
+         *
+         * @param subscriptionKey
+         * @param node
+         */
+        public void unRegisterSubscription(String subscriptionKey, Node node) {
+<span class="nc" id="L735">                log.info(&quot;UnRegistering subscription with key &quot; + subscriptionKey);</span>
+                try {
+<span class="nc" id="L737">                        String authToken = getAuthToken(node.getSecurityUrl());</span>
+<span class="nc" id="L738">                        DeleteSubscription deleteSubscription = new DeleteSubscription();</span>
+<span class="nc" id="L739">                        deleteSubscription.setAuthInfo(authToken);</span>
+<span class="nc" id="L740">                        deleteSubscription.getSubscriptionKey().add(subscriptionKey);</span>
+<span class="nc" id="L741">                        getUDDINode(node).getTransport().getUDDISubscriptionService(node.getSubscriptionUrl()).deleteSubscription(deleteSubscription);</span>
+<span class="nc" id="L742">                } catch (Exception e) {</span>
+<span class="nc" id="L743">                        log.error(&quot;Unable to unregister subscription key &quot; + subscriptionKey</span>
+<span class="nc" id="L744">                                + &quot; .&quot; + e.getMessage(), e);</span>
+<span class="nc" id="L745">                }</span>
+<span class="nc" id="L746">        }</span>
+
+        /**
+         * finds a tmodel. This is a convenience wrapper
+         *
+         * @param findTModel
+         * @return null if not found or error
+         * @throws RemoteException
+         * @throws ConfigurationException
+         * @throws TransportException
+         */
+        public TModelList findTModel(FindTModel findTModel) throws RemoteException, ConfigurationException, TransportException {
+<span class="nc" id="L758">                return findTModel(findTModel, this.getUDDINode().getApiNode());</span>
+        }
+
+        /**
+         * finds a tModel
+         *
+         * @param findTModel
+         * @param node
+         * @return null if not found or error
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
+        public TModelList findTModel(FindTModel findTModel, Node node) throws RemoteException,
+                TransportException, ConfigurationException {
+
+<span class="nc" id="L774">                findTModel.setAuthInfo(getAuthToken(node.getSecurityUrl()));</span>
+                try {
+<span class="nc" id="L776">                        TModelList tModelList = getUDDINode(node).getTransport().getUDDIInquiryService(node.getInquiryUrl()).findTModel(findTModel);</span>
+<span class="nc" id="L777">                        return tModelList;</span>
+<span class="nc" id="L778">                } catch (DispositionReportFaultMessage dr) {</span>
+<span class="nc" id="L779">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);</span>
+<span class="nc" id="L780">                        checkForErrorInDispositionReport(report, null, null);</span>
+<span class="nc" id="L781">                } catch (SOAPFaultException sfe) {</span>
+<span class="nc" id="L782">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);</span>
+<span class="nc" id="L783">                        checkForErrorInDispositionReport(report, null, null);</span>
+<span class="nc" id="L784">                } catch (UndeclaredThrowableException ute) {</span>
+<span class="nc" id="L785">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);</span>
+<span class="nc" id="L786">                        checkForErrorInDispositionReport(report, null, null);</span>
+<span class="nc" id="L787">                }catch (Throwable t){</span>
+<span class="nc" id="L788">                     throw new RemoteException(&quot;Unhandled exception&quot;, t);</span>
+<span class="nc" id="L789">                }</span>
+<span class="nc" id="L790">                return null;</span>
+        }
+
+        /**
+         * Gets the details of a tModel by the key. This is a convenience
+         * wrapper
+         *
+         * @param tModelKey
+         * @return null if not found or error, otherwise the details of the
+         * tModel(s)
+         * @throws RemoteException
+         * @throws ConfigurationException
+         * @throws TransportException
+         */
+        public TModelDetail getTModelDetail(String tModelKey) throws RemoteException, ConfigurationException, TransportException {
+<span class="nc" id="L805">                GetTModelDetail getTModelDetail = new GetTModelDetail();</span>
+<span class="nc" id="L806">                getTModelDetail.getTModelKey().add(tModelKey);</span>
+<span class="nc" id="L807">                return getTModelDetail(getTModelDetail);</span>
+        }
+
+        /**
+         * Gets the details of a tModel by the key. This is a convenience
+         * wrapper
+         *
+         * @param getTModelDetail
+         * @return null if not found or error
+         * @throws RemoteException
+         * @throws ConfigurationException
+         * @throws TransportException
+         */
+        public TModelDetail getTModelDetail(GetTModelDetail getTModelDetail) throws RemoteException, ConfigurationException, TransportException {
+<span class="nc" id="L821">                return getTModelDetail(getTModelDetail, this.getUDDINode().getApiNode());</span>
+        }
+
+        /**
+         * Gets the details of a tModel by the key using the referenced Node
+         * from the config file
+         *
+         * @param getTModelDetail
+         * @param node
+         * @return null if not found or error
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
+        public TModelDetail getTModelDetail(GetTModelDetail getTModelDetail, Node node) throws RemoteException,
+                TransportException, ConfigurationException {
+
+<span class="nc" id="L838">                getTModelDetail.setAuthInfo(getAuthToken(node.getSecurityUrl()));</span>
+                try {
+<span class="nc" id="L840">                        TModelDetail tModelDetail = getUDDINode(node).getTransport().getUDDIInquiryService(node.getInquiryUrl()).getTModelDetail(getTModelDetail);</span>
+<span class="nc" id="L841">                        return tModelDetail;</span>
+<span class="nc" id="L842">                } catch (DispositionReportFaultMessage dr) {</span>
+<span class="nc" id="L843">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);</span>
+<span class="nc" id="L844">                        checkForErrorInDispositionReport(report, null, null);</span>
+<span class="nc" id="L845">                } catch (SOAPFaultException sfe) {</span>
+<span class="nc" id="L846">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);</span>
+<span class="nc" id="L847">                        checkForErrorInDispositionReport(report, null, null);</span>
+<span class="nc" id="L848">                } catch (UndeclaredThrowableException ute) {</span>
+<span class="nc" id="L849">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);</span>
+<span class="nc" id="L850">                        checkForErrorInDispositionReport(report, null, null);</span>
+<span class="nc" id="L851">                }catch (Throwable t){</span>
+<span class="nc" id="L852">                     throw new RemoteException(&quot;Unhandled exception&quot;, t);</span>
+<span class="nc" id="L853">                }</span>
+<span class="nc" id="L854">                return null;</span>
+        }
+
+        /**
+         * Finds a service by the key, . This is a convenience wrapper
+         *
+         * @param serviceKey
+         * @return null if not found or error
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
+        public BusinessService getServiceDetail(String serviceKey) throws RemoteException,
+                TransportException, ConfigurationException {
+<span class="nc" id="L868">                return getServiceDetail(serviceKey, this.getUDDINode().getApiNode());</span>
+        }
+
+        /**
+         * Finds a service by the key, . This is a convenience wrapper
+         *
+         * @param serviceKey
+         * @return null if not found or error
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         * @deprecated see getServiceDetail
+         */
+        @Deprecated
+        public BusinessService findService(String serviceKey) throws RemoteException,
+                TransportException, ConfigurationException {
+<span class="nc" id="L884">                return getServiceDetail(serviceKey, this.getUDDINode().getApiNode());</span>
+        }
+
+        /**
+         * Finds a service by the key, referencing the specific Node from the
+         * configuration file
+         *
+         * @param serviceKey
+         * @param node
+         * @return null if not found or error
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         * @deprecated see getServiceDetail
+         */
+        @Deprecated
+        public BusinessService findService(String serviceKey, Node node) throws RemoteException,
+                TransportException, ConfigurationException {
+<span class="nc" id="L902">                return getServiceDetail(serviceKey, node);</span>
+        }
+
+        /**
+         * Finds a service by the key, referencing the specific Node from the
+         * configuration file
+         *
+         * @param serviceKey
+         * @param node
+         * @return null if not found or error
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
+        public BusinessService getServiceDetail(String serviceKey, Node node) throws RemoteException,
+                TransportException, ConfigurationException {
+<span class="nc" id="L918">                GetServiceDetail getServiceDetail = new GetServiceDetail();</span>
+<span class="nc" id="L919">                getServiceDetail.getServiceKey().add(serviceKey);</span>
+<span class="nc" id="L920">                getServiceDetail.setAuthInfo(getAuthToken(node.getSecurityUrl()));</span>
+                try {
+<span class="nc" id="L922">                        ServiceDetail sd = getUDDINode(node).getTransport().getUDDIInquiryService(node.getInquiryUrl()).getServiceDetail(getServiceDetail);</span>
+<span class="nc" id="L923">                        List&lt;BusinessService&gt; businessServiceList = sd.getBusinessService();</span>
+<span class="nc bnc" id="L924" title="All 2 branches missed.">                        if (businessServiceList.size() == 0) {</span>
+<span class="nc" id="L925">                                throw new ConfigurationException(&quot;Could not find Service with key=&quot; + serviceKey);</span>
+                        }
+<span class="nc" id="L927">                        return businessServiceList.get(0);</span>
+<span class="nc" id="L928">                } catch (DispositionReportFaultMessage dr) {</span>
+<span class="nc" id="L929">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);</span>
+<span class="nc" id="L930">                        checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, serviceKey);</span>
+<span class="nc" id="L931">                } catch (SOAPFaultException sfe) {</span>
+<span class="nc" id="L932">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);</span>
+<span class="nc" id="L933">                        checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, serviceKey);</span>
+<span class="nc" id="L934">                } catch (UndeclaredThrowableException ute) {</span>
+<span class="nc" id="L935">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);</span>
+<span class="nc" id="L936">                        checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, serviceKey);</span>
+<span class="nc" id="L937">                }catch (Throwable t){</span>
+<span class="nc" id="L938">                     throw new RemoteException(&quot;Unhandled exception&quot;, t);</span>
+<span class="nc" id="L939">                }</span>
+<span class="nc" id="L940">                return null;</span>
+        }
+
+        /**
+         *
+         * @param bindingKey
+         * @return returns a binding template or null if not found
+         * @throws DispositionReportFaultMessage
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         * @deprecated see getServiceBindingDetail
+         */
+        @Deprecated
+        public BindingTemplate findServiceBinding(String bindingKey) throws DispositionReportFaultMessage, RemoteException,
+                TransportException, ConfigurationException {
+<span class="nc" id="L956">                return getServiceBindingDetail(bindingKey, this.getUDDINode().getApiNode());</span>
+        }
+
+        /**
+         * gets a binding detail by key
+         *
+         * @param bindingKey
+         * @return null if not found or error, or the binding template
+         * @throws DispositionReportFaultMessage
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
+        public BindingTemplate getServiceBindingDetail(String bindingKey) throws DispositionReportFaultMessage, RemoteException,
+                TransportException, ConfigurationException {
+<span class="nc" id="L971">                return getServiceBindingDetail(bindingKey, this.getUDDINode().getApiNode());</span>
+        }
+
+        /**
+         * @deprecated use getServiceBindingDetail instead
+         * @param bindingKey
+         * @param node
+         * @return null if not found
+         * @throws DispositionReportFaultMessage
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         * @deprecated
+         */
+        @Deprecated
+        public BindingTemplate findServiceBinding(String bindingKey, Node node) throws DispositionReportFaultMessage, RemoteException,
+                TransportException, ConfigurationException {
+<span class="nc" id="L988">                return getServiceBindingDetail(bindingKey, node);</span>
+
+        }
+
+        /**
+         * Gets the details of a specific service binding key
+         *
+         * @param bindingKey
+         * @param node
+         * @return null if not found, or error, or the details of the binding
+         * @throws DispositionReportFaultMessage
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
+        public BindingTemplate getServiceBindingDetail(String bindingKey, Node node) throws DispositionReportFaultMessage, RemoteException,
+                TransportException, ConfigurationException {
+<span class="nc" id="L1005">                GetBindingDetail getBindingDetail = new GetBindingDetail();</span>
+<span class="nc" id="L1006">                getBindingDetail.getBindingKey().add(bindingKey);</span>
+<span class="nc" id="L1007">                getBindingDetail.setAuthInfo(getAuthToken(node.getSecurityUrl()));</span>
+                try {
+<span class="nc" id="L1009">                        BindingDetail bd = getUDDINode(node).getTransport().getUDDIInquiryService(node.getInquiryUrl()).getBindingDetail(getBindingDetail);</span>
+<span class="nc" id="L1010">                        List&lt;BindingTemplate&gt; bindingTemplateList = bd.getBindingTemplate();</span>
+<span class="nc bnc" id="L1011" title="All 2 branches missed.">                        if (bindingTemplateList.size() == 0) {</span>
+<span class="nc" id="L1012">                                throw new ConfigurationException(&quot;Could not find ServiceBinding with key=&quot; + bindingKey);</span>
+                        }
+<span class="nc" id="L1014">                        return bindingTemplateList.get(0);</span>
+<span class="nc" id="L1015">                } catch (DispositionReportFaultMessage dr) {</span>
+<span class="nc" id="L1016">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);</span>
+<span class="nc" id="L1017">                        checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, bindingKey);</span>
+<span class="nc" id="L1018">                } catch (SOAPFaultException sfe) {</span>
+<span class="nc" id="L1019">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);</span>
+<span class="nc" id="L1020">                        checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, bindingKey);</span>
+<span class="nc" id="L1021">                } catch (UndeclaredThrowableException ute) {</span>
+<span class="nc" id="L1022">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);</span>
+<span class="nc" id="L1023">                        checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, bindingKey);</span>
+<span class="nc" id="L1024">                }catch (Throwable t){</span>
+<span class="nc" id="L1025">                     throw new RemoteException(&quot;Unhandled exception&quot;, t);</span>
+<span class="nc" id="L1026">                }</span>
+<span class="nc" id="L1027">                return null;</span>
+        }
+
+        /**
+         * finds a business
+         *
+         * @deprecated Use getBusinessDetail instead
+         * @param businessKey
+         * @return BusinessEntity if found, or null if not found.
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
+        @Deprecated
+        public BusinessEntity findBusiness(String businessKey) throws RemoteException,
+                TransportException, ConfigurationException {
+<span class="nc" id="L1043">                return getBusinessDetail(businessKey, this.getUDDINode().getApiNode());</span>
+        }
+
+        /**
+         * Looks up the BusinessEntiry in the registry, will return null if is
+         * not found.
+         *
+         * @deprecated Use getBusinessDetail instead
+         * @param businessKey - the key we are looking for
+         * @param node - the node which is going to be queried
+         * @return BusinessEntity if found, or null if not found.
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
+        @Deprecated
+        public BusinessEntity findBusiness(String businessKey, Node node) throws RemoteException,
+                TransportException, ConfigurationException {
+<span class="nc" id="L1061">                return getBusinessDetail(businessKey, node);</span>
+        }
+
+        /**
+         * Looks up the BusinessEntiry in the registry, will return null if is
+         * not found.
+         *
+         * @param businessKey - the key we are looking for
+         * @return BusinessEntity is found, or null if not found.
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
+        public BusinessEntity getBusinessDetail(String businessKey) throws RemoteException,
+                TransportException, ConfigurationException {
+<span class="nc" id="L1076">                return getBusinessDetail(businessKey, this.getUDDINode().getApiNode());</span>
+        }
+
+        /**
+         * Looks up the BusinessEntiry in the registry, will return null if is
+         * not found.
+         *
+         * @param businessKey - the key we are looking for
+         * @param node - the node which is going to be queried
+         * @return BusinessEntity is found, or null if not found.
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
+        public BusinessEntity getBusinessDetail(String businessKey, Node node) throws RemoteException,
+                TransportException, ConfigurationException {
+<span class="nc" id="L1092">                GetBusinessDetail getBusinessDetail = new GetBusinessDetail();</span>
+<span class="nc" id="L1093">                getBusinessDetail.getBusinessKey().add(businessKey);</span>
+<span class="nc" id="L1094">                getBusinessDetail.setAuthInfo(node.getSecurityUrl());</span>
+                try {
+<span class="nc" id="L1096">                        BusinessDetail bd = getUDDINode(node).getTransport().getUDDIInquiryService(node.getInquiryUrl()).getBusinessDetail(getBusinessDetail);</span>
+<span class="nc" id="L1097">                        return bd.getBusinessEntity().get(0);</span>
+<span class="nc" id="L1098">                } catch (DispositionReportFaultMessage dr) {</span>
+<span class="nc" id="L1099">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);</span>
+<span class="nc" id="L1100">                        checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);</span>
+<span class="nc" id="L1101">                } catch (SOAPFaultException sfe) {</span>
+<span class="nc" id="L1102">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);</span>
+<span class="nc" id="L1103">                        checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);</span>
+<span class="nc" id="L1104">                } catch (UndeclaredThrowableException ute) {</span>
+<span class="nc" id="L1105">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);</span>
+<span class="nc" id="L1106">                        checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);</span>
+<span class="nc" id="L1107">                }catch (Throwable t){</span>
+<span class="nc" id="L1108">                     throw new RemoteException(&quot;Unhandled exception&quot;, t);</span>
+<span class="nc" id="L1109">                }</span>
+<span class="nc" id="L1110">                return null;</span>
+        }
+
+        /**
+         * Looks up the BusinessEntity in the registry for &quot;related&quot; businesses.
+         * This means that there is a business relationship defined. This is
+         * also referred to as a &quot;Publisher Assertion&quot;,
+         *
+         * @see PublisherAssertion
+         * @see PublisherAssertions
+         * @param businessKey - the key we are looking for
+         * @param node - the node which is going to be queried
+         * @return BusinessEntity is found, or null if not found.
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
+        public RelatedBusinessesList findRelatedBusinesses(String businessKey, Node node) throws RemoteException,
+                TransportException, ConfigurationException {
+<span class="nc" id="L1129">                FindRelatedBusinesses findRelatedBusinesses = new FindRelatedBusinesses();</span>
+<span class="nc" id="L1130">                findRelatedBusinesses.setBusinessKey(businessKey);</span>
+<span class="nc" id="L1131">                findRelatedBusinesses.setAuthInfo(node.getSecurityUrl());</span>
+                try {
+<span class="nc" id="L1133">                        RelatedBusinessesList rbl = getUDDINode(node).getTransport().getUDDIInquiryService(node.getInquiryUrl()).findRelatedBusinesses(findRelatedBusinesses);</span>
+<span class="nc" id="L1134">                        return rbl;</span>
+<span class="nc" id="L1135">                } catch (DispositionReportFaultMessage dr) {</span>
+<span class="nc" id="L1136">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);</span>
+<span class="nc" id="L1137">                        checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);</span>
+<span class="nc" id="L1138">                } catch (SOAPFaultException sfe) {</span>
+<span class="nc" id="L1139">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);</span>
+<span class="nc" id="L1140">                        checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);</span>
+<span class="nc" id="L1141">                } catch (UndeclaredThrowableException ute) {</span>
+<span class="nc" id="L1142">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);</span>
+<span class="nc" id="L1143">                        checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);</span>
+<span class="nc" id="L1144">                }catch (Throwable t){</span>
+<span class="nc" id="L1145">                     throw new RemoteException(&quot;Unhandled exception&quot;, t);</span>
+<span class="nc" id="L1146">                }</span>
+<span class="nc" id="L1147">                return null;</span>
+        }
+
+        private void checkForErrorInDispositionReport(DispositionReport report, String Error, String entityKey) {
+
+<span class="nc bnc" id="L1152" title="All 6 branches missed.">                if (entityKey != null &amp;&amp; report != null &amp;&amp; report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {</span>
+<span class="nc" id="L1153">                        log.info(&quot;entityKey &quot; + entityKey + &quot; was not found in the registry&quot;);</span>
+                } else {
+<span class="nc bnc" id="L1155" title="All 2 branches missed.">                        if (report == null) {</span>
+<span class="nc" id="L1156">                                log.info(&quot;Missing DispositionReport&quot;);</span>
+                        } else {
+<span class="nc bnc" id="L1158" title="All 2 branches missed.">                                for (Result result : report.getResult()) {</span>
+<span class="nc" id="L1159">                                        log.error(result.getErrInfo().getErrCode() + &quot; &quot; + result.getErrInfo().getValue());</span>
+<span class="nc" id="L1160">                                }</span>
+                        }
+                }
+<span class="nc" id="L1163">        }</span>
+
+        /**
+         * kills the current auth token, aka Logout current Node
+         */
+        public void discardAuthToken() {
+<span class="nc" id="L1169">                discardAuthToken(authToken);</span>
+<span class="nc" id="L1170">        }</span>
+
+        /**
+         * kills the provided auth token, aka Logout
+         *
+         * @param token
+         */
+        public void discardAuthToken(String token) {
+<span class="nc bnc" id="L1178" title="All 2 branches missed.">                if (token != null) {</span>
+                        try {
+<span class="nc" id="L1180">                                DiscardAuthToken discardAuthToken = new DiscardAuthToken();</span>
+<span class="nc" id="L1181">                                discardAuthToken.setAuthInfo(token);</span>
+<span class="nc" id="L1182">                                getUDDINode().getTransport().getUDDISecurityService(getUDDINode().getSecurityUrl()).discardAuthToken(discardAuthToken);</span>
+<span class="nc" id="L1183">                                token = null;</span>
+<span class="nc" id="L1184">                        } catch (Exception ex) {</span>
+<span class="nc" id="L1185">                                log.warn(&quot;Error discarding auth token: &quot; + ex.getMessage());</span>
+<span class="nc" id="L1186">                                log.debug(&quot;Error discarding auth token: &quot; + ex.getMessage(), ex);</span>
+<span class="nc" id="L1187">                        }</span>
+                }
+<span class="nc" id="L1189">        }</span>
+
+        /**
+         * kills the provided auth token, aka Logout
+         *
+         * @param token
+         * @param endpoint
+         */
+        public void discardAuthToken(String token, String endpoint) {
+<span class="nc bnc" id="L1198" title="All 2 branches missed.">                if (token != null) {</span>
+                        try {
+<span class="nc" id="L1200">                                DiscardAuthToken discardAuthToken = new DiscardAuthToken();</span>
+<span class="nc" id="L1201">                                discardAuthToken.setAuthInfo(token);</span>
+<span class="nc" id="L1202">                                getUDDINode().getTransport().getUDDISecurityService(endpoint).discardAuthToken(discardAuthToken);</span>
+<span class="nc" id="L1203">                                token = null;</span>
+<span class="nc" id="L1204">                        } catch (Exception ex) {</span>
+<span class="nc" id="L1205">                                log.warn(&quot;Error discarding auth token: &quot; + ex.getMessage());</span>
+<span class="nc" id="L1206">                                log.debug(&quot;Error discarding auth token: &quot; + ex.getMessage(), ex);</span>
+<span class="nc" id="L1207">                        }</span>
+                }
+<span class="nc" id="L1209">        }</span>
+
+        /**
+         * Gets an auth token from the uddi server using the uddi auth token
+         * &lt;br&gt;
+         * Notice: never log auth tokens! Treat it like a password
+         *
+         * Calls 
+         * @return  getAuthToken(getUDDINode().getSecurityUrl());
+         * @throws TransportException
+         * @throws DispositionReportFaultMessage
+         * @throws RemoteException
+         * @since 3.2
+         */
+        public String getAuthToken() throws TransportException, DispositionReportFaultMessage, RemoteException {
+<span class="nc" id="L1224">                return getAuthToken(getUDDINode().getSecurityUrl());</span>
+        }
+        /**
+         * Gets an auth token from the uddi server using the uddi auth token
+         * &lt;br&gt;
+         * Notice: never log auth tokens! Treat it like a password
+         *
+         * notes: changed to public to have access from the subscription
+         * callback API 8/20/2013 AO
+         *
+         * @param endpointURL
+         * @return an auth token
+         * @throws TransportException
+         * @throws DispositionReportFaultMessage
+         * @throws RemoteException
+         */
+        public String getAuthToken(String endpointURL) throws TransportException, DispositionReportFaultMessage, RemoteException {
+                //if the token is older then 10 minutes discard it, and create a new one.
+<span class="nc bnc" id="L1242" title="All 8 branches missed.">                if ((authToken != null &amp;&amp; !&quot;&quot;.equals(authToken)) &amp;&amp; (tokenBirthDate != null &amp;&amp; System.currentTimeMillis() &gt; tokenBirthDate.getTime() + 600000)) {</span>
+<span class="nc" id="L1243">                        DiscardAuthToken discardAuthToken = new DiscardAuthToken();</span>
+<span class="nc" id="L1244">                        discardAuthToken.setAuthInfo(authToken);</span>
+<span class="nc" id="L1245">                        getUDDINode().getTransport().getUDDISecurityService(endpointURL).discardAuthToken(discardAuthToken);</span>
+<span class="nc" id="L1246">                        authToken = null;</span>
+                }
+<span class="nc bnc" id="L1248" title="All 4 branches missed.">                if (authToken == null || &quot;&quot;.equals(authToken)) {</span>
+<span class="nc bnc" id="L1249" title="All 4 branches missed.">                        if (getPublisher()==null || getPassword()==null){</span>
+<span class="nc" id="L1250">                                log.warn(&quot;No credentials provided for login!&quot;);</span>
+<span class="nc" id="L1251">                                return null;</span>
+                        }
+<span class="nc" id="L1253">                        tokenBirthDate = new Date();</span>
+<span class="nc" id="L1254">                        GetAuthToken getAuthToken = new GetAuthToken();</span>
+<span class="nc" id="L1255">                        getAuthToken.setUserID(getPublisher());</span>
+<span class="nc bnc" id="L1256" title="All 2 branches missed.">                        if (isencrypted) {</span>
+<span class="nc bnc" id="L1257" title="All 2 branches missed.">                                if (cryptoProvider == null) {</span>
+<span class="nc" id="L1258">                                        log.fatal(&quot;Credentials are encrypted but no cryptoProvider was defined in the config file!&quot;);</span>
+                                } else {
+                                        try {
+<span class="nc" id="L1261">                                                getAuthToken.setCred(CryptorFactory.getCryptor(this.cryptoProvider).decrypt(getPassword()));</span>
+<span class="nc" id="L1262">                                        } catch (Exception ex) {</span>
+<span class="nc" id="L1263">                                                log.fatal(&quot;Unable to decrypt credentials! sending it as is&quot;, ex);</span>
+<span class="nc" id="L1264">                                                getAuthToken.setCred(getPassword());</span>
+<span class="nc" id="L1265">                                        }</span>
+                                }
+                        } else {
+<span class="nc" id="L1268">                                log.warn(&quot;Hey, I couldn't help but notice that your credentials aren't encrypted. Please consider doing so&quot;);</span>
+<span class="nc" id="L1269">                                getAuthToken.setCred(getPassword());</span>
+                        }
+<span class="nc" id="L1271">                        authToken = getUDDINode().getTransport().getUDDISecurityService(endpointURL).getAuthToken(getAuthToken).getAuthInfo();</span>
+                }
+<span class="nc" id="L1273">                return authToken;</span>
+        }
+
+        /**
+         * This calls a jUDDI implementation specific API call and is used to
+         * help configure internode communication between jUDDI servers. This is
+         * NOT part of the UDDI specification.&lt;br&gt;
+         * Note: this API call should only be used with secure ports (SSL/TLS)
+         *
+         * @param node
+         * @return a node or null if registration fails
+         */
+        public NodeDetail saveNode(Node node) {
+<span class="nc" id="L1286">                NodeDetail nodeDetail = null;</span>
+                try {
+<span class="nc" id="L1288">                        log.info(&quot;Sending Node &quot; + node.getName() + &quot; info to jUDDI &quot; + getUDDINode(node).getName());</span>
+<span class="nc" id="L1289">                        SaveNode saveNode = new SaveNode();</span>
+<span class="nc" id="L1290">                        saveNode.setAuthInfo(getAuthToken(node.getSecurityUrl()));</span>
+<span class="nc" id="L1291">                        saveNode.getNode().add(node);</span>
+<span class="nc" id="L1292">                        nodeDetail = getUDDINode(node).getTransport().getJUDDIApiService(node.getJuddiApiUrl()).saveNode(saveNode);</span>
+<span class="nc" id="L1293">                } catch (Exception e) {</span>
+<span class="nc" id="L1294">                        log.error(&quot;Unable to save node &quot; + node.getName()</span>
+<span class="nc" id="L1295">                                + &quot; .&quot; + e.getMessage(), e);</span>
+<span class="nc" id="L1296">                } catch (Throwable t) {</span>
+<span class="nc" id="L1297">                        log.error(&quot;Unable to save node &quot; + node.getName()</span>
+<span class="nc" id="L1298">                                + &quot; .&quot; + t.getMessage(), t);</span>
+<span class="nc" id="L1299">                }</span>
+<span class="nc" id="L1300">                return nodeDetail;</span>
+        }
+
+        /**
+         * This calls a jUDDI implementation specific API call and is used to
+         * help configure internode communication between jUDDI servers. This is
+         * NOT part of the UDDI specification.&lt;br&gt;
+         * Note: this API call should only be used with secure ports (SSL/TLS)
+         *
+         * @param senderClerk
+         * @return null if registration fails
+         */
+        public ClerkDetail saveClerk(UDDIClerk senderClerk) {
+<span class="nc" id="L1313">                ClerkDetail clerkDetail = null;</span>
+                try {
+<span class="nc" id="L1315">                        log.debug(&quot;Sending Clerk &quot; + senderClerk.getName() + &quot; info to jUDDI &quot; + getUDDINode().getName());</span>
+<span class="nc" id="L1316">                        SaveClerk saveClerk = new SaveClerk();</span>
+<span class="nc" id="L1317">                        saveClerk.setAuthInfo(getAuthToken(senderClerk.getUDDINode().getSecurityUrl()));</span>
+<span class="nc" id="L1318">                        saveClerk.getClerk().add(getApiClerk());</span>
+<span class="nc" id="L1319">                        clerkDetail = getUDDINode().getTransport().getJUDDIApiService(senderClerk.getUDDINode().getJuddiApiUrl()).saveClerk(saveClerk);</span>
+<span class="nc" id="L1320">                } catch (Exception e) {</span>
+<span class="nc" id="L1321">                        log.error(&quot;Unable to save clerk &quot; + getName()</span>
+<span class="nc" id="L1322">                                + &quot; .&quot; + e.getMessage(), e);</span>
+<span class="nc" id="L1323">                } catch (Throwable t) {</span>
+<span class="nc" id="L1324">                        log.error(&quot;Unable to save clerk &quot; + getName()</span>
+<span class="nc" id="L1325">                                + &quot; .&quot; + t.getMessage(), t);</span>
+<span class="nc" id="L1326">                }</span>
+<span class="nc" id="L1327">                return clerkDetail;</span>
+        }
+
+        /**
+         * The API Clerk is the JAXWS generated &quot;Clerk&quot; element that is used
+         * both on the jUDDI Client and on the jUDDI Web Service (not part of
+         * the UDDI spec).
+         *
+         * @return the config file defined clerk
+         */
+        public Clerk getApiClerk() {
+<span class="nc" id="L1338">                Clerk apiClerk = new Clerk();</span>
+<span class="nc" id="L1339">                apiClerk.setName(name);</span>
+<span class="nc" id="L1340">                apiClerk.setNode(uddiNode.getApiNode());</span>
+<span class="nc" id="L1341">                apiClerk.setPassword(password);</span>
+<span class="nc" id="L1342">                apiClerk.setPublisher(publisher);</span>
+<span class="nc" id="L1343">                return apiClerk;</span>
+        }
+
+        /**
+         * client.clerks.clerk(&quot; + i + &quot;)[@name]
+         *
+         * @return name
+         */
+        public String getName() {
+<span class="fc" id="L1352">                return name;</span>
+        }
+
+        /**
+         * client.clerks.clerk(&quot; + i + &quot;)[@name]
+         *
+         * @param name
+         */
+        public void setName(String name) {
+<span class="fc" id="L1361">                this.name = name;</span>
+<span class="fc" id="L1362">        }</span>
+
+        /**
+         * client.clerks.clerk(&quot; + i + &quot;)[@node] reference to UDDI Node
+         *
+         * @param uddiNode
+         */
+        public void setUDDINode(UDDINode uddiNode) {
+<span class="fc" id="L1370">                this.uddiNode = uddiNode;</span>
+<span class="fc" id="L1371">        }</span>
+
+        /**
+         * This is the username client.clerks.clerk(&quot; + i + &quot;)[@publisher]
+         *
+         * @return the username
+         */
+        public String getPublisher() {
+<span class="fc" id="L1379">                return publisher;</span>
+        }
+
+        /**
+         * This is the username client.clerks.clerk(&quot; + i + &quot;)[@publisher]
+         *
+         * @param publisher
+         */
+        public void setPublisher(String publisher) {
+<span class="fc" id="L1388">                this.publisher = publisher;</span>
+<span class="fc" id="L1389">        }</span>
+
+        /**
+         * If the password is encrypted, it will be decrypted if possible,
+         * otherwise the cipher text will be returned. client.clerks.clerk(&quot; + i
+         * + &quot;)[@password]
+         *
+         * @return unencrypted password
+         */
+        public String getPassword() {
+<span class="pc bpc" id="L1399" title="1 of 2 branches missed.">                if (isencrypted) {</span>
+                        try {
+<span class="fc" id="L1401">                                return CryptorFactory.getCryptor(cryptoProvider).decrypt(password);</span>
+<span class="nc" id="L1402">                        } catch (Exception ex) {</span>
+<span class="nc" id="L1403">                                log.fatal(&quot;Unable to decrypt the password&quot;, ex);</span>
+                        }
+                }
+<span class="nc" id="L1406">                return password;</span>
+        }
+
+        /**
+         * If the password is encrypted, it cipher text is returned, otherwise
+         * the clear text will be returned. client.clerks.clerk(&quot; + i +
+         * &quot;)[@password]
+         *
+         * @return password as is in the config file
+         */
+        public String getRawPassword() {
+<span class="fc" id="L1417">                return password;</span>
+        }
+
+        /**
+         * Use with caution, don't forget to set the IsEncrypted and Crypto
+         * provider client.clerks.clerk(&quot; + i + &quot;)[@password]
+         *
+         * @param password
+         */
+        public void setPassword(String password) {
+<span class="fc" id="L1427">                this.password = password;</span>
+<span class="fc" id="L1428">        }</span>
+
+        /**
+         * Used for the automated registration of services via WSDL2UDDI&lt;br&gt;
+         * config file: client.clerks.clerk(&quot; + i + &quot;).wsdl
+         *
+         * @return a WSDL array
+         * @see WSDL2UDDI
+         */
+        public WSDL[] getWsdls() {
+<span class="fc" id="L1438">                return wsdls;</span>
+        }
+
+        /**
+         * Used for the automated registration of services via WSDL2UDDI&lt;br&gt;
+         * config file: client.clerks.clerk(&quot; + i + &quot;).wsdl
+         *
+         * @param wsdls
+         * @see WSDL2UDDI
+         */
+        public void setWsdls(WSDL[] wsdls) {
+<span class="fc" id="L1449">                this.wsdls = wsdls;</span>
+<span class="fc" id="L1450">        }</span>
+
+        /**
+         * client.clerks.clerk(&quot; + i + &quot;)[@cryptoProvider]
+         *
+         * @param clazz
+         */
+        public void setCryptoProvider(String clazz) {
+<span class="fc" id="L1458">                this.cryptoProvider = clazz;</span>
+<span class="fc" id="L1459">        }</span>
+
+        /**
+         * client.clerks.clerk(&quot; + i + &quot;)[@isPasswordEncrypted] default is false
+         *
+         * @param option
+         */
+        public void setIsPasswordEncrypted(boolean option) {
+<span class="fc" id="L1467">                this.isencrypted = option;</span>
+<span class="fc" id="L1468">        }</span>
+
+        /**
+         * client.clerks.clerk(&quot; + i + &quot;)[@cryptoProvider]
+         *
+         * @return may be null if not defined
+         */
+        public String getCryptoProvider() {
+<span class="fc" id="L1476">                return this.cryptoProvider;</span>
+        }
+
+        /**
+         * client.clerks.clerk(&quot; + i + &quot;)[@isPasswordEncrypted]
+         *
+         * @return true/false
+         */
+        public boolean getIsPasswordEncrypted() {
+<span class="fc" id="L1485">                return this.isencrypted;</span>
+
+        }
+
+        /**
+         * Internal classed used for wsdl registration
+         */
+<span class="fc" id="L1492">        public static class WSDL {</span>
+
+                private String businessKey;
+                private String keyDomain;
+                private String fileName;
+
+                public String getBusinessKey() {
+<span class="fc" id="L1499">                        return businessKey;</span>
+                }
+
+                public void setBusinessKey(String businessKey) {
+<span class="fc" id="L1503">                        this.businessKey = businessKey;</span>
+<span class="fc" id="L1504">                }</span>
+
+                public String getFileName() {
+<span class="fc" id="L1507">                        return fileName;</span>
+                }
+
+                public void setFileName(String fileName) {
+<span class="fc" id="L1511">                        this.fileName = fileName;</span>
+<span class="fc" id="L1512">                }</span>
+
+                public String getKeyDomain() {
+<span class="fc" id="L1515">                        return keyDomain;</span>
+                }
+
+                public void setKeyDomain(String keyDomain) {
+<span class="fc" id="L1519">                        this.keyDomain = keyDomain;</span>
+<span class="fc" id="L1520">                }</span>
+        }
+
+        /**
+         * A helper function to create a tModel key generator.&lt;br&gt;
+         * Why would I want a key generator? In UDDIv3, you're suppose to
+         * specify what you want the keys (unique identifiers) to be, however
+         * there's a number of naming rules associated with the keys. Generally,
+         * use the FQDN of your business or organization. Optionally, when
+         * saving an UDDI entity, you can just leave the key name blank and the
+         * server should generate one for you. It's normally a UUID that's not
+         * easy to remember. In this case, there's no need to call this method.
+         * &lt;br&gt;&lt;br&gt;
+         * In addition, no changes are made to the UDDI server. You'll have to
+         * do that one using code similar to this:
+         * &lt;pre&gt;
+         * UDDIClerk clerk = ...
+         * TModel keygen = UDDIClerk.createKeyGenator(&quot;uddi:mydomain.com:keygenerator&quot;, &quot;my domain&quot;, &quot;en&quot;);
+         * clerk.register(keygen);
+         *
+         * @param partitionName think of this as the domain, i.e. juddi.apache.org, but it can really be anything you want. This will become part of the
+         * key associated with the tModel generator (uddi:juddi.apache.org:keygenerator). The colon &quot;:&quot; is the delimitor, so avoid using them unless you want to
+         * create nested key domains. If you're missing the &quot;uddi:&quot; prefix or the &quot;:keygenerator&quot; suffix, it will be added automatically.
+         * @param DescriptiveName required. max length is 255 char
+         * @param DescriptiveNameLanguage optional, max length is 26 char
+         * @return a populated tModel entity representing a tModel key
+         * generator. No changes are made to any connect UDDI service
+         * @since 3.2
+         */
+        public static TModel createKeyGenator(String partitionName, String DescriptiveName, String DescriptiveNameLanguage) {
+<span class="pc bpc" id="L1550" title="3 of 6 branches missed.">                if (partitionName == null || partitionName.length() == 0 || partitionName.length() &gt; 255) {</span>
+<span class="nc" id="L1551">                        throw new IllegalArgumentException();</span>
+                }
+
+<span class="pc bpc" id="L1554" title="3 of 6 branches missed.">                if (DescriptiveName == null || DescriptiveName.length() == 0 || DescriptiveName.length() &gt; 255) {</span>
+<span class="nc" id="L1555">                        throw new IllegalArgumentException();</span>
+                }
+<span class="pc bpc" id="L1557" title="1 of 2 branches missed.">                if (!partitionName.startsWith(&quot;uddi:&quot;)) {</span>
+                        //throw new IllegalArgumentException(&quot;partitionName must have a 'uddi:' prefix&quot;);
+<span class="nc" id="L1559">                        partitionName = &quot;uddi:&quot; + partitionName;</span>
+
+                }
+<span class="pc bpc" id="L1562" title="1 of 2 branches missed.">                if (!partitionName.endsWith(&quot;:keygenerator&quot;)) {</span>
+                        //throw new IllegalArgumentException(&quot;partitionName must have a ':keygenerator' postfix&quot;);
+<span class="nc" id="L1564">                        partitionName = partitionName + &quot;:keygenerator&quot;;</span>
+                }
+<span class="fc" id="L1566">                TModel tm = new TModel();</span>
+<span class="fc" id="L1567">                tm.setName(new Name());</span>
+<span class="fc" id="L1568">                tm.getName().setValue(DescriptiveName);</span>
+<span class="fc" id="L1569">                tm.getName().setLang(DescriptiveNameLanguage);</span>
+<span class="fc" id="L1570">                tm.setCategoryBag(new CategoryBag());</span>
+<span class="fc" id="L1571">                KeyedReference kr = new KeyedReference();</span>
+<span class="fc" id="L1572">                kr.setTModelKey(UDDIConstants.KEY_GENERATOR_TMODEL);</span>
+<span class="fc" id="L1573">                kr.setKeyName(UDDIConstants.KEY_GENERATOR);</span>
+<span class="fc" id="L1574">                kr.setKeyValue(UDDIConstants.KEY_GENERATOR_VALUE);</span>
+<span class="fc" id="L1575">                tm.getCategoryBag().getKeyedReference().add(kr);</span>
+<span class="fc" id="L1576">                OverviewDoc overviewDoc = new OverviewDoc();</span>
+<span class="fc" id="L1577">                OverviewURL overviewUrl = new OverviewURL();</span>
+<span class="fc" id="L1578">                overviewUrl.setUseType(&quot;text&quot;);</span>
+<span class="fc" id="L1579">                overviewUrl.setValue(&quot;http://uddi.org/pubs/uddi_v3.htm#keyGen&quot;);</span>
+<span class="fc" id="L1580">                overviewDoc.setOverviewURL(overviewUrl);</span>
+<span class="fc" id="L1581">                tm.getOverviewDoc().add(overviewDoc);</span>
+<span class="fc" id="L1582">                tm.setTModelKey(partitionName.toLowerCase());</span>
+<span class="fc" id="L1583">                return tm;</span>
+        }
+
+        /**
+         * This is a convenience function that will build and return a
+         * TModelInstanceInfo as described in the following link that will
+         * enable you to tag web services registered in UDDI with some kind of
+         * version information.&lt;Br&gt;&lt;Br&gt;
+         * Article source: &lt;a
+         * href=&quot;http://www.ibm.com/developerworks/webservices/library/ws-version/&quot;&gt;http://www.ibm.com/developerworks/webservices/library/ws-version/&lt;/a&gt;
+         * &lt;Br&gt;&lt;Br&gt;
+         *
+         * When using this tModel as a tModelInstance, it can be used to
+         * describe a version associated with either a service interface, a
+         * bindingTemplate service instance. Note: This is a jUDDI specific
+         * addon and may not be present in other registries
+         *
+         * @param version From the article, no specificity is provided on what
+         * to use as a value, but we recommend that you use the string
+         * representation of major.minor[.build[.revision]].&lt;br&gt;
+         * Example
+         * &lt;ul&gt;
+         * &lt;li&gt;6.1.2.3&lt;/li&gt;
+         * &lt;li&gt;1.0&lt;/li&gt;
+         * &lt;li&gt;0.1&lt;/li&gt;
+         * &lt;/ul&gt;
+         * @return TModelInstanceInfo populated as described in the article,
+         * plus some descriptive information
+         */
+        public static TModelInstanceInfo createServiceInterfaceVersion(String version, String lang) throws IllegalArgumentException {
+<span class="nc bnc" id="L1613" title="All 2 branches missed.">                if (version == null) {</span>
+<span class="nc" id="L1614">                        throw new IllegalArgumentException();</span>
+                }
+<span class="nc" id="L1616">                TModelInstanceInfo tt = new TModelInstanceInfo();</span>
+<span class="nc" id="L1617">                tt.setTModelKey(UDDIConstants.VERSION_TMODEL);</span>
+<span class="nc" id="L1618">                tt.setInstanceDetails(new InstanceDetails());</span>
+<span class="nc" id="L1619">                tt.getInstanceDetails().setInstanceParms(version);</span>
+
+<span class="nc" id="L1621">                OverviewDoc doc = new OverviewDoc();</span>
+<span class="nc" id="L1622">                doc.setOverviewURL(new OverviewURL(&quot;http://www.ibm.com/developerworks/webservices/library/ws-version/&quot;, &quot;text&quot;));</span>
+<span class="nc" id="L1623">                doc.getDescription().add(new Description(</span>
+                        &quot;Describes a version associated with either a service interface, a bindingTemplate service instance.&quot;, lang));
+<span class="nc" id="L1625">                tt.getDescription().add(new Description(&quot;Describes a version associated with either a service interface, a bindingTemplate service instance.&quot;, lang));</span>
+<span class="nc" id="L1626">                tt.getInstanceDetails().getOverviewDoc().add(doc);</span>
+<span class="nc" id="L1627">                return tt;</span>
+        }
+
+        /**
+         * This is a convenience function that will filter a list of binding
+         * templates and return a list of bindings matching the specified
+         * version number.
+         *
+         * This implements and expands upon service versioning described in the
+         * following link and will enable you to tag web services registered in
+         * UDDI with some kind of version information.&lt;Br&gt;&lt;Br&gt;
+         * Article source: &lt;a
+         * href=&quot;http://www.ibm.com/developerworks/webservices/library/ws-version/&quot;&gt;http://www.ibm.com/developerworks/webservices/library/ws-version/&lt;/a&gt;
+         * &lt;Br&gt;&lt;Br&gt;
+         * see {@link #createServiceInterfaceVersion createServiceInterfaceVersion} 
+         *  for more information&lt;Br&gt;&lt;br&gt;
+         *
+         * This function operates using tModelInstances that are used to
+         * describe a version associated with either a service interface, a
+         * bindingTemplate service instance. Note: This is a jUDDI specific
+         * addon and may not be present in other registries
+         *
+         * @param version From the article, no specificity is provided on what
+         * to use as a value, but we recommend that you use the string
+         * representation of major.minor[.build[.revision]].&lt;br&gt;
+         * Example
+         * &lt;ul&gt;
+         * &lt;li&gt;6.1.2.3&lt;/li&gt;
+         * &lt;li&gt;1.0&lt;/li&gt;
+         * &lt;li&gt;0.1&lt;/li&gt;
+         * &lt;/ul&gt;
+         * @param bindingTemplate the input binding template, must not be null
+         * @return a list if binding templates where the version equals ignoring
+         * case trimmed equals the version value
+         * @throws IllegalArgumentException if the version or bindingTemplate is null
+         */
+        public static Set&lt;BindingTemplate&gt; getBindingByVersion(String version, List&lt;BindingTemplate&gt; bindingTemplate) throws IllegalArgumentException {
+<span class="nc bnc" id="L1664" title="All 2 branches missed.">                if (version == null) {</span>
+<span class="nc" id="L1665">                        throw new IllegalArgumentException();</span>
+                }
+<span class="nc bnc" id="L1667" title="All 2 branches missed.">                if (bindingTemplate == null) {</span>
+<span class="nc" id="L1668">                        throw new IllegalArgumentException();</span>
+                }
+<span class="nc" id="L1670">                Set&lt;BindingTemplate&gt; ret = new HashSet&lt;BindingTemplate&gt;();</span>
+<span class="nc bnc" id="L1671" title="All 2 branches missed.">                for (int i = 0; i &lt; bindingTemplate.size(); i++) {</span>
+<span class="nc bnc" id="L1672" title="All 2 branches missed.">                        if (bindingTemplate.get(i).getTModelInstanceDetails() != null) {</span>
+<span class="nc bnc" id="L1673" title="All 2 branches missed.">                                for (int k = 0; k &lt; bindingTemplate.get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {</span>
+<span class="nc bnc" id="L1674" title="All 2 branches missed.">                                        if (bindingTemplate.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey().equalsIgnoreCase(UDDIConstants.VERSION_TMODEL)) {</span>
+<span class="nc bnc" id="L1675" title="All 2 branches missed.">                                                if (bindingTemplate.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null) {</span>
+<span class="nc bnc" id="L1676" title="All 2 branches missed.">                                                        if (bindingTemplate.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms() != null) {</span>
+<span class="nc bnc" id="L1677" title="All 2 branches missed.">                                                                if (bindingTemplate.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms().trim().equalsIgnoreCase(version.trim())) {</span>
+<span class="nc" id="L1678">                                                                        ret.add(bindingTemplate.get(i));</span>
+<span class="nc" id="L1679">                                                                        break;</span>
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+                }
+<span class="nc" id="L1687">                return ret;</span>
+        }
+
+        /**
+         * JUDDI-700 This implements the &quot;find_endpoints&quot; pattern as described
+         * in Alex O'Ree's Master's Thesis on UDDI. Basically, UDDI never
+         * provided a 'simple' way to get a list of execution URLs for a web
+         * service. This function will resolve all AccessPoint and
+         * HostingRedictor indirections and provide to you a list of URLs that
+         * &lt;i&gt;should&lt;/i&gt; be accessible for the given service.
+         *
+         * @param serviceKey
+         * @return a list of URI endpoints
+         */
+        public List&lt;String&gt; getEndpoints(String serviceKey) {
+<span class="nc" id="L1702">                List&lt;String&gt; items = new ArrayList&lt;String&gt;();</span>
+<span class="nc" id="L1703">                BusinessService serviceDetail = null;</span>
+                try {
+<span class="nc" id="L1705">                        serviceDetail = this.getServiceDetail(serviceKey);</span>
+<span class="nc" id="L1706">                } catch (Exception ex) {</span>
+<span class="nc" id="L1707">                        log.error(&quot;Unable to fetch the specified service's details&quot;, ex);</span>
+<span class="nc" id="L1708">                }</span>
+<span class="nc bnc" id="L1709" title="All 2 branches missed.">                if (serviceDetail == null) {</span>
+<span class="nc" id="L1710">                        return items;</span>
+                }
+
+<span class="nc bnc" id="L1713" title="All 2 branches missed.">                if (serviceDetail.getBindingTemplates() != null) {</span>
+<span class="nc bnc" id="L1714" title="All 2 branches missed.">                        for (int k = 0; k &lt; serviceDetail.getBindingTemplates().getBindingTemplate().size(); k++) {</span>
+                                try {
+<span class="nc" id="L1716">                                        items.addAll(ParseBinding(serviceDetail.getBindingTemplates().getBindingTemplate().get(k)));</span>
+<span class="nc" id="L1717">                                } catch (Exception ex) {</span>
+<span class="nc" id="L1718">                                        log.warn(ex);</span>
+<span class="nc" id="L1719">                                }</span>
+                        }
+                }
+
+<span class="nc" id="L1723">                return items;</span>
+        }
+
+        private List&lt;String&gt; GetBindingInfo(String value) throws Exception {
+<span class="nc" id="L1727">                List&lt;String&gt; items = new ArrayList&lt;String&gt;();</span>
+<span class="nc bnc" id="L1728" title="All 2 branches missed.">                if (value == null) {</span>
+<span class="nc" id="L1729">                        return items;</span>
+                }
+
+<span class="nc" id="L1732">                GetBindingDetail b = new GetBindingDetail();</span>
+<span class="nc" id="L1733">                b.setAuthInfo(getAuthToken(this.getApiClerk().getNode().getSecurityUrl()));</span>
+<span class="nc" id="L1734">                b.getBindingKey().add(value);</span>
+<span class="nc" id="L1735">                BindingDetail bindingDetail = getUDDINode().getTransport().getUDDIInquiryService(this.getApiClerk().getNode().getInquiryUrl()).getBindingDetail(b);</span>
+<span class="nc bnc" id="L1736" title="All 2 branches missed.">                for (int i = 0; i &lt; bindingDetail.getBindingTemplate().size(); i++) {</span>
+<span class="nc" id="L1737">                        items.addAll(ParseBinding(bindingDetail.getBindingTemplate().get(i)));</span>
+                }
+<span class="nc" id="L1739">                return items;</span>
+        }
+
+        private List&lt;String&gt; ParseBinding(BindingTemplate get) throws Exception {
+<span class="nc" id="L1743">                List&lt;String&gt; items = new ArrayList&lt;String&gt;();</span>
+<span class="nc bnc" id="L1744" title="All 4 branches missed.">                if (get == null || get.getAccessPoint() == null) {</span>
+<span class="nc" id="L1745">                        return items;</span>
+                }
+<span class="nc bnc" id="L1747" title="All 2 branches missed.">                if (get.getHostingRedirector() != null) {</span>
+                        //hosting Redirector is the same as &quot;reference this other binding template&quot;. It's actually deprecated so 
+                        //don't expect to see this too often
+<span class="nc" id="L1750">                        items.addAll(GetBindingInfo(get.getHostingRedirector().getBindingKey()));</span>
+                }
+<span class="nc bnc" id="L1752" title="All 2 branches missed.">                if (get.getAccessPoint() != null) {</span>
+<span class="nc" id="L1753">                        String usetype = get.getAccessPoint().getUseType();</span>
+<span class="nc bnc" id="L1754" title="All 2 branches missed.">                        if (usetype == null) {</span>
+                                //this is unexpected, usetype is a required field
+<span class="nc" id="L1756">                                items.add(get.getAccessPoint().getValue());</span>
+<span class="nc bnc" id="L1757" title="All 2 branches missed.">                        } else if (usetype.equalsIgnoreCase(AccessPointType.BINDING_TEMPLATE.toString())) {</span>
+                                //referencing another binding template
+<span class="nc" id="L1759">                                items.addAll(GetBindingInfo(get.getAccessPoint().getValue()));</span>
+<span class="nc bnc" id="L1760" title="All 2 branches missed.">                        } else if (usetype.equalsIgnoreCase(AccessPointType.HOSTING_REDIRECTOR.toString())) {</span>
+                                //this one is a bit strange. the value should be a binding template
+
+<span class="nc" id="L1763">                                items.addAll(GetBindingInfo(get.getAccessPoint().getValue()));</span>
+
+<span class="nc bnc" id="L1765" title="All 2 branches missed.">                        } else if (usetype.equalsIgnoreCase(AccessPointType.WSDL_DEPLOYMENT.toString())) {</span>
+                                //fetch wsdl and parse
+<span class="nc" id="L1767">                                items.addAll(FetchWSDL(get.getAccessPoint().getValue()));</span>
+<span class="nc bnc" id="L1768" title="All 2 branches missed.">                        } else if (usetype.equalsIgnoreCase(AccessPointType.END_POINT.toString())) {</span>
+<span class="nc" id="L1769">                                items.add(get.getAccessPoint().getValue());</span>
+                        } else {
+                                //treat it has an extension or whatever
+<span class="nc" id="L1772">                                log.info(&quot;Unable to figure out the useType for &quot; + get.getAccessPoint().getValue());</span>
+<span class="nc" id="L1773">                                items.add(get.getAccessPoint().getValue());</span>
+                        }
+
+                }
+<span class="nc" id="L1777">                return items;</span>
+        }
+
+        /**
+         * fetches a wsdl endpoint and parses for execution urls
+         *
+         * @param value
+         * @return a list of endpoints from a WSDL provided it is reachable and parsable 
+         */
+        private List&lt;String&gt; FetchWSDL(String value) {
+<span class="nc" id="L1787">                List&lt;String&gt; items = new ArrayList&lt;String&gt;();</span>
+
+<span class="nc bnc" id="L1789" title="All 4 branches missed.">                if (value.startsWith(&quot;http://&quot;) || value.startsWith(&quot;https://&quot;)) {</span>
+                        //here, we need an HTTP Get for WSDLs
+<span class="nc" id="L1791">                        org.apache.juddi.v3.client.mapping.wsdl.ReadWSDL r = new ReadWSDL();</span>
+<span class="nc" id="L1792">                        r.setIgnoreSSLErrors(true);</span>
+                        try {
+<span class="nc" id="L1794">                                Definition wsdlDefinition = r.readWSDL(new URL(value));</span>
+<span class="nc" id="L1795">                                Properties properties = new Properties();</span>
+
+<span class="nc" id="L1797">                                properties.put(&quot;keyDomain&quot;, &quot;domain&quot;);</span>
+<span class="nc" id="L1798">                                properties.put(&quot;businessName&quot;, &quot;biz&quot;);</span>
+<span class="nc" id="L1799">                                properties.put(&quot;serverName&quot;, &quot;localhost&quot;);</span>
+<span class="nc" id="L1800">                                properties.put(&quot;serverPort&quot;, &quot;80&quot;);</span>
+
+<span class="nc" id="L1802">                                WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);</span>
+<span class="nc" id="L1803">                                BusinessServices businessServices = wsdl2UDDI.createBusinessServices(wsdlDefinition);</span>
+<span class="nc bnc" id="L1804" title="All 2 branches missed.">                                for (int i = 0; i &lt; businessServices.getBusinessService().size(); i++) {</span>
+<span class="nc bnc" id="L1805" title="All 2 branches missed.">                                        if (businessServices.getBusinessService().get(i).getBindingTemplates() != null) {</span>
+<span class="nc bnc" id="L1806" title="All 2 branches missed.">                                                for (int k = 0; k &lt; businessServices.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {</span>
+<span class="nc" id="L1807">                                                        items.addAll(ParseBinding(businessServices.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k)));</span>
+                                                }
+                                        }
+                                }
+<span class="nc" id="L1811">                        } catch (Exception ex) {</span>
+<span class="nc" id="L1812">                                log.error(ex);</span>
+<span class="nc" id="L1813">                        }</span>
+
+                }
+<span class="nc" id="L1816">                return items;</span>
+        }
+
+        /**
+         * Gets service details or NULL if it doesn't exist or an error occurred
+         *
+         * @param getDetail
+         * @return null if not found
+         * @throws RemoteException
+         * @throws ConfigurationException
+         * @throws TransportException
+         */
+        public ServiceDetail getServiceDetail(GetServiceDetail getDetail) throws RemoteException, ConfigurationException, TransportException {
+<span class="nc" id="L1829">                return getServiceDetail(getDetail, this.getUDDINode().getApiNode());</span>
+        }
+
+        /**
+         * Gets service details or NULL if it doesn't exist or an error occurred
+         *
+         * @param getDetail
+         * @param node
+         * @return null if not found
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException
+         */
+        public ServiceDetail getServiceDetail(GetServiceDetail getDetail, Node node) throws RemoteException,
+                TransportException, ConfigurationException {
+
+<span class="nc" id="L1845">                getDetail.setAuthInfo(getAuthToken(node.getSecurityUrl()));</span>
+                try {
+<span class="nc" id="L1847">                        ServiceDetail tModelDetail = getUDDINode(node).getTransport().getUDDIInquiryService(node.getInquiryUrl()).getServiceDetail(getDetail);</span>
+<span class="nc" id="L1848">                        return tModelDetail;</span>
+<span class="nc" id="L1849">                } catch (DispositionReportFaultMessage dr) {</span>
+<span class="nc" id="L1850">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);</span>
+<span class="nc" id="L1851">                        checkForErrorInDispositionReport(report, null, null);</span>
+<span class="nc" id="L1852">                } catch (SOAPFaultException sfe) {</span>
+<span class="nc" id="L1853">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);</span>
+<span class="nc" id="L1854">                        checkForErrorInDispositionReport(report, null, null);</span>
+<span class="nc" id="L1855">                } catch (UndeclaredThrowableException ute) {</span>
+<span class="nc" id="L1856">                        DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);</span>
+<span class="nc" id="L1857">                        checkForErrorInDispositionReport(report, null, null);</span>
+<span class="nc" id="L1858">                } catch (Throwable t){</span>
+<span class="nc" id="L1859">                     throw new RemoteException(&quot;Unhandled exception&quot;, t);</span>
+<span class="nc" id="L1860">                }</span>
+<span class="nc" id="L1861">                return null;</span>
+
+        }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

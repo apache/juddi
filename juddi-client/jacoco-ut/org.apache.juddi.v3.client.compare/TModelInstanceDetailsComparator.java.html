@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TModelInstanceDetailsComparator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.compare</a> &gt; <span class="el_source">TModelInstanceDetailsComparator.java</span></div><h1>TModelInstanceDetailsComparator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2013 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.client.compare;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeConstants;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
+import javax.xml.datatype.XMLGregorianCalendar;
+import org.uddi.api_v3.InstanceDetails;
+import org.uddi.api_v3.TModelInstanceDetails;
+
+/**
+ * Compares two UDDI TModelInstanceDetails, searching for a specific tModel key,
+ * then parsing to the selected data type, then comparing.
+ *
+ * @author Alex O'Ree
+ */
+public class TModelInstanceDetailsComparator {
+
+    /**
+     *
+     * @param TModelKey for TModelInstanceInfo to use for comparison
+     * @param number if true, the InstanceDetails.InstanceParms will be treated
+     * like a number
+     * @param XMLdate if true, the InstanceDetails.InstanceParms will be treated
+     * like a XML Date
+     * @param XMLduration if true, the InstanceDetails.InstanceParms will be
+     * treated like a XML Gregorian Calendar
+     * @see Duration
+     * @see XMLGregorianCalendar
+     * @throws DatatypeConfigurationException
+     */
+<span class="fc" id="L47">    public TModelInstanceDetailsComparator(String TModelKey, boolean number, boolean XMLdate, boolean XMLduration) throws DatatypeConfigurationException, IllegalArgumentException {</span>
+<span class="pc bpc" id="L48" title="1 of 4 branches missed.">        if (TModelKey == null || TModelKey.length() == 0) {</span>
+<span class="fc" id="L49">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L51">        compareField = TModelKey;</span>
+<span class="pc bpc" id="L52" title="1 of 6 branches missed.">        if (!number &amp;&amp; !XMLdate &amp;&amp; !XMLduration) {</span>
+<span class="nc" id="L53">            throw new IllegalArgumentException(&quot;only one data type can be selected&quot;);</span>
+        }
+<span class="pc bpc" id="L55" title="1 of 6 branches missed.">        if (number &amp;&amp; XMLdate &amp;&amp; !XMLduration) {</span>
+<span class="fc" id="L56">            throw new IllegalArgumentException(&quot;only one data type can be selected&quot;);</span>
+        }
+<span class="pc bpc" id="L58" title="1 of 6 branches missed.">        if (number &amp;&amp; !XMLdate &amp;&amp; XMLduration) {</span>
+<span class="fc" id="L59">            throw new IllegalArgumentException(&quot;only one data type can be selected&quot;);</span>
+        }
+<span class="fc bfc" id="L61" title="All 6 branches covered.">        if (!number &amp;&amp; XMLdate &amp;&amp; XMLduration) {</span>
+<span class="fc" id="L62">            throw new IllegalArgumentException(&quot;only one data type can be selected&quot;);</span>
+        }
+<span class="pc bpc" id="L64" title="3 of 6 branches missed.">        if (number &amp;&amp; XMLdate &amp;&amp; XMLduration) {</span>
+<span class="nc" id="L65">            throw new IllegalArgumentException(&quot;only one data type can be selected&quot;);</span>
+        }
+<span class="fc" id="L67">        fac = DatatypeFactory.newInstance();</span>
+<span class="fc" id="L68">        isNumber = number;</span>
+<span class="fc" id="L69">        isDate = XMLdate;</span>
+<span class="fc" id="L70">        isDuration = XMLduration;</span>
+<span class="fc" id="L71">    }</span>
+<span class="fc" id="L72">    DatatypeFactory fac = null;</span>
+<span class="fc" id="L73">    String compareField = null;</span>
+<span class="fc" id="L74">    boolean isNumber = false;</span>
+<span class="fc" id="L75">    boolean isDate = false;</span>
+<span class="fc" id="L76">    boolean isDuration = false;</span>
+
+    /**
+     * Compares two non-null instances of TModelInstanceDetails by only
+     * comparing the field designated from the constructor. It will also cast or
+     * parse TModelInstanceDetails[i].InstanceDetails[k].InstanceParms to the
+     * selected data type double, XMLGregorgian or Duration, using that as a
+     * basis for comparison. If a parsing error occurs, an exception will be
+     * thrown.
+     *
+     * @param lhs
+     * @param rhs
+     * @return less than 0 if lhs &amp;lt; rhs, greater than 0 if lhs &amp;gt; rhs.
+     * @throws IllegalArgumentException if the tModel key to search for is
+     * missing, if either sides are null
+     * @throws ArrayIndexOutOfBoundsException if the values were found but could
+     * not be compared
+     */
+    public int compare(TModelInstanceDetails lhs, TModelInstanceDetails rhs) throws IllegalArgumentException, NumberFormatException, NullPointerException, ArrayIndexOutOfBoundsException {
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (lhs == null) {</span>
+<span class="fc" id="L96">            throw new IllegalArgumentException(&quot;lhs&quot;);</span>
+        }
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">        if (rhs == null) {</span>
+<span class="nc" id="L99">            throw new IllegalArgumentException(&quot;rhs&quot;);</span>
+        }
+<span class="fc bfc" id="L101" title="All 4 branches covered.">        if (lhs.getTModelInstanceInfo().isEmpty() || rhs.getTModelInstanceInfo().isEmpty()) {</span>
+<span class="fc" id="L102">            throw new IllegalArgumentException(&quot;no data to compare&quot;);</span>
+        }
+<span class="fc" id="L104">        InstanceDetails lhsc = null;</span>
+<span class="fc" id="L105">        InstanceDetails rhsc = null;</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        for (int i = 0; i &lt; lhs.getTModelInstanceInfo().size(); i++) {</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">            if (lhs.getTModelInstanceInfo().get(i).getTModelKey().equalsIgnoreCase(compareField)) {</span>
+<span class="fc" id="L108">                lhsc = lhs.getTModelInstanceInfo().get(i).getInstanceDetails();</span>
+            }
+        }
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        for (int i = 0; i &lt; rhs.getTModelInstanceInfo().size(); i++) {</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">            if (rhs.getTModelInstanceInfo().get(i).getTModelKey().equalsIgnoreCase(compareField)) {</span>
+<span class="fc" id="L113">                rhsc = rhs.getTModelInstanceInfo().get(i).getInstanceDetails();</span>
+            }
+        }
+
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (lhsc == null) {</span>
+<span class="fc" id="L118">            throw new IllegalArgumentException(compareField + &quot; not found for lhs&quot;);</span>
+        }
+<span class="pc bpc" id="L120" title="1 of 2 branches missed.">        if (rhsc == null) {</span>
+<span class="nc" id="L121">            throw new IllegalArgumentException(compareField + &quot; not found for rhs&quot;);</span>
+        }
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (lhsc.getInstanceParms() == null) {</span>
+<span class="fc" id="L124">            throw new IllegalArgumentException(compareField + &quot; found lhs, but no data&quot;);</span>
+        }
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        if (rhsc.getInstanceParms() == null) {</span>
+<span class="fc" id="L127">            throw new IllegalArgumentException(compareField + &quot; found rhs, but no data&quot;);</span>
+        }
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (isNumber) {</span>
+<span class="fc" id="L130">            Double l = Double.parseDouble(lhsc.getInstanceParms());</span>
+<span class="fc" id="L131">            Double r = Double.parseDouble(rhsc.getInstanceParms());</span>
+<span class="fc" id="L132">            return l.compareTo(r);</span>
+        }
+
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        if (isDate) {</span>
+<span class="fc" id="L136">            XMLGregorianCalendar l = fac.newXMLGregorianCalendar(lhsc.getInstanceParms());</span>
+<span class="fc" id="L137">            XMLGregorianCalendar r = fac.newXMLGregorianCalendar(rhsc.getInstanceParms());</span>
+            //System.out.println(l.toXMLFormat() + &quot; &quot; + r.toXMLFormat());
+<span class="fc" id="L139">            int x = l.compare(r);</span>
+
+<span class="fc bfc" id="L141" title="All 2 branches covered.">            if (x == DatatypeConstants.LESSER) {</span>
+<span class="fc" id="L142">                return -1;</span>
+            }
+
+<span class="fc bfc" id="L145" title="All 2 branches covered.">            if (x == DatatypeConstants.GREATER) {</span>
+<span class="fc" id="L146">                return 1;</span>
+            }
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">            if (x == DatatypeConstants.EQUAL) {</span>
+<span class="fc" id="L149">                return 0;</span>
+            }
+<span class="nc" id="L151">            throw new ArrayIndexOutOfBoundsException(&quot;cannot compare, result was &quot; + x);</span>
+        }
+
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">        if (isDuration) {</span>
+<span class="fc" id="L155">            Duration l = fac.newDuration(lhsc.getInstanceParms());</span>
+<span class="fc" id="L156">            Duration r = fac.newDuration(rhsc.getInstanceParms());</span>
+          //  System.out.println(l.toString() + &quot; &quot; + r.toString());
+<span class="fc" id="L158">            int x = l.compare(r);</span>
+
+<span class="fc bfc" id="L160" title="All 2 branches covered.">            if (x == DatatypeConstants.LESSER) {</span>
+<span class="fc" id="L161">                return -1;</span>
+            }
+
+<span class="fc bfc" id="L164" title="All 2 branches covered.">            if (x == DatatypeConstants.GREATER) {</span>
+<span class="fc" id="L165">                return 1;</span>
+            }
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">            if (x == DatatypeConstants.EQUAL) {</span>
+<span class="fc" id="L168">                return 0;</span>
+            }
+<span class="nc" id="L170">            throw new ArrayIndexOutOfBoundsException(&quot;cannot compare, result was &quot; + x);</span>
+        }
+
+<span class="nc" id="L173">        return 0;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

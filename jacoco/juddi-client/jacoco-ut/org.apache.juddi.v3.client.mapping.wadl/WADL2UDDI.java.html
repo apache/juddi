@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WADL2UDDI.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.mapping.wadl</a> &gt; <span class="el_source">WADL2UDDI.java</span></div><h1>WADL2UDDI.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2013 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.client.mapping.wadl;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.xml.bind.JAXB;
+import javax.xml.namespace.QName;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.BasicClientConnectionManager;
+import org.apache.juddi.api_v3.AccessPointType;
+import org.apache.juddi.v3.client.UDDIConstants;
+import org.apache.juddi.v3.client.config.Property;
+import org.apache.juddi.v3.client.config.UDDIClerk;
+import org.apache.juddi.v3.client.config.UDDIKeyConvention;
+import org.apache.juddi.v3.client.cryptor.XmlUtils;
+import org.apache.juddi.v3.client.mapping.Common2UDDI;
+import org.apache.juddi.v3.client.mapping.MockSSLSocketFactory;
+import org.apache.juddi.v3.client.mapping.URLLocalizer;
+import org.uddi.api_v3.AccessPoint;
+import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BindingTemplates;
+import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.CategoryBag;
+import org.uddi.api_v3.Description;
+import org.uddi.api_v3.InstanceDetails;
+import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.Name;
+import org.uddi.api_v3.TModel;
+import org.uddi.api_v3.TModelInstanceDetails;
+import org.uddi.api_v3.TModelInstanceInfo;
+
+/**
+ * This class converts a WADL document, web application description language into a
+ * structure that more or less works within the UDDI data structures.&lt;br&gt;&lt;br&gt;
+ * &lt;h1&gt;Example Usage Scenario&lt;/h1&gt;
+ * &lt;pre&gt;
+        Application app = WADL2UDDI.parseWadl(new File(&quot;A path to your file.wadl&quot;));
+        List&lt;URL&gt; urls = WADL2UDDI.getBaseAddresses(app);
+        URL url = urls.get(0);
+        String domain = url.getHost();
+        TModel keygen = UDDIClerk.createKeyGenator(&quot;uddi:&quot; + domain + &quot;:keygenerator&quot;, domain, &quot;en&quot;);
+        //save the keygen
+        SaveTModel stm = new SaveTModel();
+        stm.setAuthInfo(rootAuthToken.getAuthInfo());
+        stm.getTModel().add(keygen);
+        
+        properties.put(&quot;keyDomain&quot;, domain);
+        properties.put(&quot;businessName&quot;, domain);
+        properties.put(&quot;serverName&quot;, url.getHost());
+        properties.put(&quot;serverPort&quot;, url.getPort());
+        WADL2UDDI wadl2UDDI = new WADL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
+       
+        BusinessService businessServices = wadl2UDDI.createBusinessService(new QName(&quot;MyWasdl.namespace&quot;, &quot;Servicename&quot;), app);
+        Set&lt;TModel&gt; portTypeTModels = wadl2UDDI.createWADLPortTypeTModels(wsdlURL, app);
+        
+        //Since the service depends on the tModel, we have to save the tModels first
+        SaveTModel tms = new SaveTModel();
+
+        TModel[] tmodels = portTypeTModels.toArray(new TModel[0]);
+        for (int i = 0; i &lt; tmodels.length; i++) {
+            System.out.println(tmodelPrinter.print(tmodels[i]));
+            tms.getTModel().add(tmodels[i]);
+        }
+
+
+        //important, you'll need to save your new tModels, or else saving the business/service may fail
+        publish.saveTModel(stm);
+
+        //finaly, we're ready to save all of the services defined in the WSDL
+        //again, we're creating a new business, if you have one already, look it up using the Inquiry getBusinessDetails
+
+        PrintUDDI&lt;BusinessService&gt; servicePrinter = new PrintUDDI&lt;BusinessService&gt;();
+        System.out.println(servicePrinter.print(businessServices));
+        
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(rootAuthToken.getAuthInfo());
+        BusinessEntity be = new BusinessEntity();
+        be.setBusinessKey(businessServices.getBusinessKey());
+        be.getName().add(new Name());
+        //TODO, use some relevant here
+        be.getName().get(0).setValue(domain);
+        be.getName().get(0).setLang(&quot;en&quot;);
+        be.setBusinessServices(new BusinessServices());
+        be.getBusinessServices().getBusinessService().add(businessServices);
+        sb.getBusinessEntity().add(be);
+        PrintUDDI&lt;SaveBusiness&gt; sbp = new PrintUDDI&lt;SaveBusiness&gt;();
+        System.out.println(&quot;Request &quot; + sbp.print(sb));
+        publish.saveBusiness(sb);
+
+        //and we're done
+        //Be sure to report any problems to the jUDDI JIRA bug tracker at 
+        //https://issues.apache.org/jira/browse/JUDDI
+&lt;/pre&gt;
+ *
+ * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ */
+public class WADL2UDDI {
+
+<span class="fc" id="L137">    private static Log log = LogFactory.getLog(WADL2UDDI.class);</span>
+    private String keyDomainURI;
+    private String businessKey;
+    private String lang;
+<span class="fc" id="L141">    private UDDIClerk clerk = null;</span>
+<span class="fc" id="L142">    private Properties properties = null;</span>
+    private URLLocalizer urlLocalizer;
+
+    public WADL2UDDI(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) throws ConfigurationException {
+<span class="fc" id="L146">        super();</span>
+<span class="fc" id="L147">        this.clerk = clerk;</span>
+<span class="fc" id="L148">        this.urlLocalizer = urlLocalizer;</span>
+<span class="fc" id="L149">        this.properties = properties;</span>
+
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">        if (clerk != null) {</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">            if (!properties.containsKey(&quot;keyDomain&quot;)) {</span>
+<span class="nc" id="L153">                throw new ConfigurationException(&quot;Property keyDomain is a required property when using WADL2UDDI.&quot;);</span>
+            }
+<span class="nc bnc" id="L155" title="All 4 branches missed.">            if (!properties.containsKey(&quot;businessKey&quot;) &amp;&amp; !properties.containsKey(&quot;businessName&quot;)) {</span>
+<span class="nc" id="L156">                throw new ConfigurationException(&quot;Either property businessKey, or businessName, is a required property when using WADL2UDDI.&quot;);</span>
+            }
+<span class="nc bnc" id="L158" title="All 2 branches missed.">            if (!properties.containsKey(&quot;nodeName&quot;)) {</span>
+<span class="nc bnc" id="L159" title="All 4 branches missed.">                if (properties.containsKey(&quot;serverName&quot;) &amp;&amp; properties.containsKey(&quot;serverPort&quot;)) {</span>
+<span class="nc" id="L160">                    String nodeName = properties.getProperty(&quot;serverName&quot;) + &quot;_&quot; + properties.getProperty(&quot;serverPort&quot;);</span>
+<span class="nc" id="L161">                    properties.setProperty(&quot;nodeName&quot;, nodeName);</span>
+<span class="nc" id="L162">                } else {</span>
+<span class="nc" id="L163">                    throw new ConfigurationException(&quot;Property nodeName is not defined and is a required property when using WADL2UDDI.&quot;);</span>
+                }
+            }
+        }
+
+        //Obtaining values from the properties
+<span class="fc" id="L169">        this.keyDomainURI = &quot;uddi:&quot; + properties.getProperty(&quot;keyDomain&quot;) + &quot;:&quot;;</span>
+<span class="pc bpc" id="L170" title="1 of 2 branches missed.">        if (properties.contains(Property.BUSINESS_KEY)) {</span>
+<span class="nc" id="L171">            this.businessKey = properties.getProperty(Property.BUSINESS_KEY);</span>
+        } else {
+            //using the BusinessKey Template, and the businessName to construct the key 
+<span class="fc" id="L174">            this.businessKey = UDDIKeyConvention.getBusinessKey(properties);</span>
+        }
+<span class="fc" id="L176">        this.lang = properties.getProperty(Property.LANG, Property.DEFAULT_LANG);</span>
+<span class="fc" id="L177">    }</span>
+
+    public Set&lt;TModel&gt; createWADLTModels(String wadlURL, Application app) throws Exception {
+<span class="nc" id="L180">        Set&lt;TModel&gt; tModels = new HashSet&lt;TModel&gt;();</span>
+<span class="nc" id="L181">        TModel binding = new TModel();</span>
+<span class="nc" id="L182">        binding.setTModelKey(keyDomainURI + &quot;binding&quot;);</span>
+        
+<span class="nc" id="L184">        Name sName = new Name();</span>
+<span class="nc" id="L185">        sName.setLang(lang);</span>
+<span class="nc bnc" id="L186" title="All 2 branches missed.">        if (!app.getDoc().isEmpty()) {</span>
+<span class="nc" id="L187">            sName.setValue(app.getDoc().get(0).getTitle());</span>
+        }
+<span class="nc bnc" id="L189" title="All 2 branches missed.">        if (sName.getValue() == null) {</span>
+<span class="nc" id="L190">            sName.setValue(keyDomainURI + &quot; Binding tModel&quot;);</span>
+        }
+<span class="nc" id="L192">        binding.setName(sName);</span>
+<span class="nc" id="L193">        tModels.add(binding);</span>
+        
+        
+<span class="nc" id="L196">         binding = new TModel();</span>
+<span class="nc" id="L197">        binding.setTModelKey(keyDomainURI + &quot;rest&quot;);</span>
+        
+<span class="nc" id="L199">        sName = new Name();</span>
+<span class="nc" id="L200">        sName.setLang(lang);</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">        if (!app.getDoc().isEmpty()) {</span>
+<span class="nc" id="L202">            sName.setValue(app.getDoc().get(0).getTitle());</span>
+        }
+<span class="nc bnc" id="L204" title="All 2 branches missed.">        if (sName.getValue() == null) {</span>
+<span class="nc" id="L205">            sName.setValue(keyDomainURI + &quot; Rest tModel&quot;);</span>
+        }
+<span class="nc" id="L207">        binding.setName(sName);</span>
+<span class="nc" id="L208">        tModels.add(binding);</span>
+        
+
+        //keyDomainURI + &quot;binding&quot;
+<span class="nc" id="L212">        return tModels;</span>
+    }
+
+    public Set&lt;TModel&gt; createWADLPortTypeTModels(String wadlURL, Application app) throws Exception {
+<span class="nc" id="L216">        Set&lt;TModel&gt; tModels = new HashSet&lt;TModel&gt;();</span>
+        // Create a tModel for each portType
+
+<span class="nc" id="L219">        return tModels;</span>
+    }
+
+    public String getKeyDomainURI() {
+<span class="nc" id="L223">        return keyDomainURI;</span>
+    }
+
+    public void setKeyDomain(String keyDomainURI) {
+<span class="nc" id="L227">        this.keyDomainURI = keyDomainURI;</span>
+<span class="nc" id="L228">    }</span>
+
+    public String getLang() {
+<span class="nc" id="L231">        return lang;</span>
+    }
+
+    public void setLang(String lang) {
+<span class="nc" id="L235">        this.lang = lang;</span>
+<span class="nc" id="L236">    }</span>
+
+    private static String ContentToString(List&lt;Object&gt; content) {
+<span class="nc" id="L239">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">        for (int i = 0; i &lt; content.size(); i++) {</span>
+<span class="nc" id="L241">            sb.append(content.get(i).toString()).append(&quot; &quot;);</span>
+        }
+<span class="nc" id="L243">        return sb.toString().trim();</span>
+    }
+
+    /**
+     * Creates a UDDI Business Service.
+     *
+     * @param serviceQName This must be specified to identify the namespace of
+     * the service, which is used to set the service uddi key
+     * @param wadlDefinition
+     * @return BusinessService
+     * @throws MalformedURLException
+     */
+    public BusinessService createBusinessService(QName serviceQName, Application wadlDefinition) throws MalformedURLException {
+
+<span class="fc" id="L257">        log.debug(&quot;Constructing Service UDDI Information for &quot; + serviceQName);</span>
+<span class="fc" id="L258">        BusinessService service = new BusinessService();</span>
+        // BusinessKey
+<span class="fc" id="L260">        service.setBusinessKey(businessKey);</span>
+        // ServiceKey
+<span class="fc" id="L262">        service.setServiceKey(UDDIKeyConvention.getServiceKey(properties, serviceQName.getLocalPart()));</span>
+        // Description
+<span class="fc" id="L264">        String serviceDescription = properties.getProperty(Property.SERVICE_DESCRIPTION, Property.DEFAULT_SERVICE_DESCRIPTION);</span>
+        // Override with the service description from the WADL if present
+<span class="fc" id="L266">        boolean lengthwarn = false;</span>
+<span class="pc bpc" id="L267" title="1 of 2 branches missed.">        if (!wadlDefinition.getDoc().isEmpty()) {</span>
+
+<span class="nc bnc" id="L269" title="All 2 branches missed.">            for (int i = 0; i &lt; wadlDefinition.getDoc().size(); i++) {</span>
+<span class="nc" id="L270">                String locallang=lang;</span>
+<span class="nc bnc" id="L271" title="All 2 branches missed.">                if (wadlDefinition.getDoc().get(i).getLang() != null) {</span>
+<span class="nc" id="L272">                   locallang=(wadlDefinition.getDoc().get(i).getLang());</span>
+                } 
+<span class="nc bnc" id="L274" title="All 2 branches missed.">                if (locallang.length() &gt; UDDIConstants.MAX_xml_lang_length) {</span>
+<span class="nc" id="L275">                    lengthwarn = true;</span>
+<span class="nc" id="L276">                    locallang=(locallang.substring(0, UDDIConstants.MAX_xml_lang_length - 1));</span>
+                }
+
+<span class="nc" id="L279">                StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L280">                sb.append(wadlDefinition.getDoc().get(i).getTitle()).append(&quot; &quot;);</span>
+<span class="nc" id="L281">                sb.append(ContentToString(wadlDefinition.getDoc().get(i).getContent()));</span>
+
+<span class="nc" id="L283">                service.getDescription().addAll(Common2UDDI.mapDescription(sb.toString(), locallang));</span>
+
+            }
+        } else {
+<span class="fc" id="L287">                service.getDescription().addAll(Common2UDDI.mapDescription(serviceDescription, lang));</span>
+        }
+
+
+
+        // Service name
+<span class="fc" id="L293">        Name sName = new Name();</span>
+<span class="fc" id="L294">        sName.setLang(lang);</span>
+<span class="pc bpc" id="L295" title="1 of 2 branches missed.">        if (!wadlDefinition.getDoc().isEmpty()) {</span>
+<span class="nc" id="L296">            sName.setValue(wadlDefinition.getDoc().get(0).getTitle());</span>
+        }
+<span class="pc bpc" id="L298" title="1 of 2 branches missed.">        if (sName.getValue() == null) {</span>
+<span class="fc" id="L299">            sName.setValue(serviceQName.getLocalPart());</span>
+        }
+<span class="fc" id="L301">        service.getName().add(sName);</span>
+
+<span class="fc" id="L303">        CategoryBag categoryBag = new CategoryBag();</span>
+
+<span class="fc" id="L305">        String namespace = serviceQName.getNamespaceURI();</span>
+<span class="pc bpc" id="L306" title="2 of 4 branches missed.">        if (namespace != null &amp;&amp; namespace.length()!=0) {</span>
+<span class="fc" id="L307">            KeyedReference namespaceReference = newKeyedReference(</span>
+                    &quot;uddi:uddi.org:xml:namespace&quot;, &quot;uddi-org:xml:namespace&quot;, namespace);
+<span class="fc" id="L309">            categoryBag.getKeyedReference().add(namespaceReference);</span>
+        }
+
+<span class="fc" id="L312">        KeyedReference serviceReference = newKeyedReference(</span>
+                &quot;uddi:uddi.org:wadl:types&quot;, &quot;uddi-org:wadl:types&quot;, &quot;service&quot;);
+<span class="fc" id="L314">        categoryBag.getKeyedReference().add(serviceReference);</span>
+
+<span class="fc" id="L316">        KeyedReference localNameReference = newKeyedReference(</span>
+<span class="fc" id="L317">                &quot;uddi:uddi.org:xml:localname&quot;, &quot;uddi-org:xml:localName&quot;, serviceQName.getLocalPart());</span>
+<span class="fc" id="L318">        categoryBag.getKeyedReference().add(localNameReference);</span>
+
+<span class="fc" id="L320">        service.setCategoryBag(categoryBag);</span>
+
+<span class="fc bfc" id="L322" title="All 2 branches covered.">        for (int i = 0; i &lt; wadlDefinition.getResources().size(); i++) {</span>
+<span class="fc" id="L323">            BindingTemplate bindingTemplate = createWADLBinding(serviceQName, getDocTitle(wadlDefinition.getResources().get(i).getDoc()), new URL(wadlDefinition.getResources().get(i).getBase()), wadlDefinition.getResources().get(i));</span>
+<span class="fc" id="L324">            service.setBindingTemplates(new BindingTemplates());</span>
+<span class="fc" id="L325">            service.getBindingTemplates().getBindingTemplate().add(bindingTemplate);</span>
+        }
+
+
+<span class="pc bpc" id="L329" title="1 of 2 branches missed.">        if (lengthwarn) {</span>
+<span class="nc" id="L330">            log.warn(&quot;Some object descriptions are longer than the maximum allowed by UDDI and have been truncated.&quot;);</span>
+        }
+<span class="fc" id="L332">        return service;</span>
+    }
+    
+    public static List&lt;URL&gt; getBaseAddresses(Application app)
+    {
+<span class="fc" id="L337">        List&lt;URL&gt; urls = new ArrayList&lt;URL&gt;();</span>
+<span class="pc bpc" id="L338" title="1 of 2 branches missed.">        if (app==null) return urls;</span>
+<span class="fc bfc" id="L339" title="All 2 branches covered.">        for (int i=0; i &lt; app.getResources().size(); i++){</span>
+            try {
+<span class="fc" id="L341">                urls.add(new URL(app.getResources().get(i).getBase()));</span>
+<span class="nc" id="L342">            } catch (MalformedURLException ex) {</span>
+<span class="nc" id="L343">                log.warn(&quot;The base URL &quot; + app.getResources().get(i).getBase() + &quot; is invalid or could not be parsed&quot;, ex);</span>
+<span class="fc" id="L344">            }</span>
+        }
+<span class="fc" id="L346">        return urls;</span>
+    }
+
+    protected static KeyedReference newKeyedReference(String tModelKey, String keyName, String value) {
+<span class="fc" id="L350">        KeyedReference typesReference = new KeyedReference();</span>
+<span class="fc" id="L351">        typesReference.setTModelKey(tModelKey);</span>
+<span class="fc" id="L352">        typesReference.setKeyName(keyName);</span>
+<span class="fc" id="L353">        typesReference.setKeyValue(value);</span>
+<span class="fc" id="L354">        return typesReference;</span>
+    }
+
+    protected BindingTemplate createWADLBinding(QName serviceQName, String portName, URL serviceUrl, Resources res) {
+
+<span class="fc" id="L359">        BindingTemplate bindingTemplate = new BindingTemplate();</span>
+        // Set BusinessService Key
+<span class="fc" id="L361">        bindingTemplate.setServiceKey(UDDIKeyConvention.getServiceKey(properties, serviceQName.getLocalPart()));</span>
+
+<span class="pc bpc" id="L363" title="1 of 2 branches missed.">        if (serviceUrl != null) {</span>
+            // Set AccessPoint
+<span class="fc" id="L365">            AccessPoint accessPoint = new AccessPoint();</span>
+<span class="fc" id="L366">            accessPoint.setUseType(AccessPointType.END_POINT.toString());</span>
+<span class="fc" id="L367">            accessPoint.setValue(urlLocalizer.rewrite(serviceUrl));</span>
+<span class="fc" id="L368">            bindingTemplate.setAccessPoint(accessPoint);</span>
+            // Set Binding Key
+<span class="fc" id="L370">            String bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceQName, portName, serviceUrl);</span>
+<span class="fc" id="L371">            bindingTemplate.setBindingKey(bindingKey);</span>
+
+            
+<span class="fc" id="L374">            bindingTemplate.getDescription().addAll(Common2UDDI.mapDescription(getDescription(res.getDoc()), lang));</span>
+
+            // reference wsdl:binding tModel
+<span class="fc" id="L377">            TModelInstanceInfo tModelInstanceInfoBinding = new TModelInstanceInfo();</span>
+<span class="fc" id="L378">            tModelInstanceInfoBinding.setTModelKey(keyDomainURI + &quot;binding&quot;);</span>
+<span class="fc" id="L379">            InstanceDetails instanceDetails = new InstanceDetails();</span>
+<span class="fc" id="L380">            instanceDetails.setInstanceParms(portName);</span>
+<span class="fc" id="L381">            tModelInstanceInfoBinding.setInstanceDetails(instanceDetails);</span>
+           
+<span class="fc" id="L383">            tModelInstanceInfoBinding.getDescription().addAll(Common2UDDI.mapDescription(&quot;The binding that this endpoint implements. &quot; + bindingTemplate.getDescription().get(0).getValue()</span>
+                    + &quot; The instanceParms specifies the \&quot; port local name.&quot;, lang));
+<span class="fc" id="L385">            TModelInstanceDetails tModelInstanceDetails = new TModelInstanceDetails();</span>
+<span class="fc" id="L386">            tModelInstanceDetails.getTModelInstanceInfo().add(tModelInstanceInfoBinding);</span>
+
+            // reference wsdl:portType tModel
+
+<span class="fc" id="L390">            TModelInstanceInfo tModelInstanceInfoPortType = new TModelInstanceInfo();</span>
+<span class="fc" id="L391">            tModelInstanceInfoPortType.setTModelKey(keyDomainURI + &quot;rest&quot;);</span>
+            //String portTypeDescription = &quot;&quot;;
+           
+<span class="fc" id="L394">            Description descriptionPT = new Description();</span>
+<span class="fc" id="L395">            descriptionPT.setLang(lang);</span>
+<span class="fc" id="L396">            descriptionPT.setValue(&quot;The wadl:Resource:base implements.&quot; );</span>
+<span class="fc" id="L397">            tModelInstanceInfoPortType.getDescription().add(descriptionPT);</span>
+<span class="fc" id="L398">            tModelInstanceDetails.getTModelInstanceInfo().add(tModelInstanceInfoPortType);</span>
+
+<span class="fc" id="L400">            bindingTemplate.setTModelInstanceDetails(tModelInstanceDetails);</span>
+
+        }
+<span class="fc" id="L403">        return bindingTemplate;</span>
+    }
+
+    /**
+     * parses a wadl from stream
+     * @param stream
+     * @return Application instance (WADL FILE)
+     */
+    public static Application parseWadl(InputStream stream) {
+<span class="nc" id="L412">        Application unmarshal = (Application) XmlUtils.unmarshal(stream, Application.class);</span>
+<span class="nc" id="L413">        return unmarshal;</span>
+    }
+    public static final String PACKAGE = &quot;org.apache.juddi.v3.client.mapping.wadl&quot;;
+
+    /**
+     * parses a wadl from a URL or file
+     * @param file
+     * @return  Application instance (WADL FILE)
+     */
+    public static Application parseWadl(URL file) {
+<span class="fc" id="L423">        Application unmarshal = JAXB.unmarshal(file, Application.class);</span>
+<span class="fc" id="L424">        return unmarshal;</span>
+    }
+    
+    /**
+     * Parses a web accessible WADL file
+     * @param weburl
+     * @param username
+     * @param password
+     * @param ignoreSSLErrors if true, SSL errors are ignored
+     * @return a non-null &quot;Application&quot; object, represeting a WADL's application root XML 
+     * Sample code:&lt;br&gt;
+     * &lt;pre&gt;
+     * Application app = WADL2UDDI.parseWadl(new URL(&quot;http://server/wsdl.wsdl&quot;), &quot;username&quot;, &quot;password&quot;, 
+     *      clerkManager.getClientConfig().isX_To_Wsdl_Ignore_SSL_Errors() );
+     * &lt;/pre&gt;
+     */
+    public static Application parseWadl(URL weburl, String username, String password, boolean ignoreSSLErrors){
+<span class="nc" id="L441">            DefaultHttpClient httpclient = null;</span>
+<span class="nc" id="L442">            Application unmarshal=null;</span>
+        try {
+<span class="nc" id="L444">            String url = weburl.toString();</span>
+<span class="nc bnc" id="L445" title="All 2 branches missed.">            if (!url.toLowerCase().startsWith(&quot;http&quot;)) {</span>
+<span class="nc" id="L446">                return parseWadl(weburl);</span>
+            }
+            
+<span class="nc" id="L449">            boolean usessl = false;</span>
+<span class="nc" id="L450">            int port = 80;</span>
+<span class="nc bnc" id="L451" title="All 2 branches missed.">            if (url.toLowerCase().startsWith(&quot;https://&quot;)) {</span>
+<span class="nc" id="L452">                port = 443;</span>
+<span class="nc" id="L453">                usessl = true;</span>
+            }
+
+<span class="nc bnc" id="L456" title="All 2 branches missed.">            if (weburl.getPort() &gt; 0) {</span>
+<span class="nc" id="L457">                port = weburl.getPort();</span>
+            }
+
+<span class="nc bnc" id="L460" title="All 4 branches missed.">            if (ignoreSSLErrors &amp;&amp; usessl) {</span>
+<span class="nc" id="L461">                SchemeRegistry schemeRegistry = new SchemeRegistry();</span>
+<span class="nc" id="L462">                schemeRegistry.register(new Scheme(&quot;https&quot;, port, new MockSSLSocketFactory()));</span>
+<span class="nc" id="L463">                ClientConnectionManager cm = new BasicClientConnectionManager(schemeRegistry);</span>
+<span class="nc" id="L464">                httpclient = new DefaultHttpClient(cm);</span>
+<span class="nc" id="L465">            } else {</span>
+<span class="nc" id="L466">                httpclient = new DefaultHttpClient();</span>
+            }
+
+<span class="nc bnc" id="L469" title="All 6 branches missed.">            if (username != null &amp;&amp; username.length() &gt; 0</span>
+<span class="nc bnc" id="L470" title="All 2 branches missed.">                    &amp;&amp; password != null &amp;&amp; password.length() &gt; 0) {</span>
+
+
+<span class="nc" id="L473">                httpclient.getCredentialsProvider().setCredentials(</span>
+<span class="nc" id="L474">                        new AuthScope(weburl.getHost(), port),</span>
+                        new UsernamePasswordCredentials(username, password));
+            }
+<span class="nc" id="L477">            HttpGet httpGet = new HttpGet(url);</span>
+            try {
+
+<span class="nc" id="L480">                HttpResponse response1 = httpclient.execute(httpGet);</span>
+                //System.out.println(response1.getStatusLine());
+                // HttpEntity entity1 = response1.getEntity();
+                // do something useful with the response body
+                // and ensure it is fully consumed
+<span class="nc" id="L485">                ResponseHandler&lt;String&gt; responseHandler = new BasicResponseHandler();</span>
+<span class="nc" id="L486">                String handleResponse = responseHandler.handleResponse(response1);</span>
+<span class="nc" id="L487">                StringReader sr = new StringReader(handleResponse);</span>
+<span class="nc" id="L488">                unmarshal = (Application) XmlUtils.unmarshal(sr, Application.class);</span>
+<span class="nc" id="L489">                sr.close();</span>
+
+            } finally {
+<span class="nc" id="L492">                httpGet.releaseConnection();</span>
+
+<span class="nc" id="L494">            }</span>
+
+<span class="nc" id="L496">        } catch (Exception e) {</span>
+<span class="nc" id="L497">            log.error(e.getMessage(), e);</span>
+        } finally {
+<span class="nc bnc" id="L499" title="All 8 branches missed.">            if (httpclient != null) {</span>
+<span class="nc" id="L500">                httpclient.getConnectionManager().shutdown();</span>
+            }
+        }
+<span class="nc" id="L503">        return unmarshal;</span>
+    }
+
+    public static Application parseWadl(File file) throws FileNotFoundException, IOException {
+<span class="fc" id="L507">        Application unmarshal = (Application) XmlUtils.unmarshal(file, Application.class);</span>
+<span class="fc" id="L508">        return unmarshal;</span>
+    }
+
+    
+    private String getDocTitle(List&lt;Doc&gt; doc) {
+<span class="pc bpc" id="L513" title="5 of 6 branches missed.">        if (doc.isEmpty() || doc.get(0) == null || doc.get(0).getTitle() == null) {</span>
+<span class="fc" id="L514">            return &quot;A resource base URL without a description&quot;;</span>
+        }
+<span class="nc" id="L516">        return (doc.get(0).getTitle());</span>
+    }
+
+    private String getDescription(List&lt;Doc&gt; doc) {
+<span class="fc" id="L520">        StringBuilder sb = new StringBuilder();</span>
+<span class="pc bpc" id="L521" title="1 of 2 branches missed.">        for (int i = 0; i &lt; doc.size(); i++) {</span>
+<span class="nc" id="L522">            sb.append(doc.get(i).getTitle()).append(&quot; &quot;);</span>
+<span class="nc" id="L523">            sb.append(ContentToString(doc.get(i).getContent()));</span>
+        }
+<span class="fc" id="L525">        String ret= sb.toString().trim();</span>
+        
+<span class="pc bpc" id="L527" title="1 of 2 branches missed.">        if (ret.length()==0)</span>
+<span class="fc" id="L528">                return &quot;No Description&quot;;</span>
+<span class="nc" id="L529">        return ret;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

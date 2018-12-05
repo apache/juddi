@@ -134,8 +134,8 @@
 <a class="jxr_linenumber" name="L126" href="#L126">126</a> 		<strong class="jxr_keyword">return</strong> entityAliasChild3;
 <a class="jxr_linenumber" name="L127" href="#L127">127</a> 	}
 <a class="jxr_linenumber" name="L128" href="#L128">128</a> 		
-<a class="jxr_linenumber" name="L129" href="#L129">129</a> 	<strong class="jxr_keyword">public</strong> List&lt;?&gt; select(EntityManager em, <a href="../../../../org/apache/juddi/query/util/FindQualifiers.html">FindQualifiers</a> fq, <a href="../../../../org/uddi/api_v3/CategoryBag.html">CategoryBag</a> categoryBag, 
-<a class="jxr_linenumber" name="L130" href="#L130">130</a> 			List&lt;?&gt; keysIn, DynamicQuery.Parameter... restrictions) {
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> 	<strong class="jxr_keyword">public</strong> List&lt;Object&gt; select(EntityManager em, <a href="../../../../org/apache/juddi/query/util/FindQualifiers.html">FindQualifiers</a> fq, <a href="../../../../org/uddi/api_v3/CategoryBag.html">CategoryBag</a> categoryBag, 
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> 			List&lt;Object&gt; keysIn, DynamicQuery.Parameter... restrictions) {
 <a class="jxr_linenumber" name="L131" href="#L131">131</a> 	        
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>         <em class="jxr_comment">// If keysIn is not null and empty, then search is over.</em>
 <a class="jxr_linenumber" name="L133" href="#L133">133</a> 		<strong class="jxr_keyword">if</strong> ((keysIn != <strong class="jxr_keyword">null</strong>) &amp;&amp; (keysIn.size() == 0))
@@ -203,7 +203,7 @@
 <a class="jxr_linenumber" name="L195" href="#L195">195</a> 				}
 <a class="jxr_linenumber" name="L196" href="#L196">196</a> 			}
 <a class="jxr_linenumber" name="L197" href="#L197">197</a> 		}
-<a class="jxr_linenumber" name="L198" href="#L198">198</a> 		<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;(resultingEntityKeys);
+<a class="jxr_linenumber" name="L198" href="#L198">198</a> 		<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> ArrayList&lt;Object&gt;(resultingEntityKeys);
 <a class="jxr_linenumber" name="L199" href="#L199">199</a> 	}
 <a class="jxr_linenumber" name="L200" href="#L200">200</a> 	<em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">	 * Finding the entities (businesses or services) that have a matching keyedReference in their</em>
@@ -220,7 +220,7 @@
 <a class="jxr_linenumber" name="L212" href="#L212">212</a> <em class="jxr_javadoccomment">	 */</em>
 <a class="jxr_linenumber" name="L213" href="#L213">213</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> findEntityByCategoryQuery(Map&lt;KeyedReference,Set&lt;String&gt;&gt; map, EntityManager em, 
 <a class="jxr_linenumber" name="L214" href="#L214">214</a> 			FindQualifiers fq, <a href="../../../../org/uddi/api_v3/CategoryBag.html">CategoryBag</a> categoryBag, String entityField, String entityNameChild, 
-<a class="jxr_linenumber" name="L215" href="#L215">215</a> 			List&lt;?&gt; keysIn, DynamicQuery.Parameter... restrictions) 
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> 			List&lt;Object&gt; keysIn, DynamicQuery.Parameter... restrictions) 
 <a class="jxr_linenumber" name="L216" href="#L216">216</a> 	{
 <a class="jxr_linenumber" name="L217" href="#L217">217</a> 		FindEntityByCategoryQuery findEntityByCategoryQuery = <strong class="jxr_keyword">new</strong> <a href="../../../../org/apache/juddi/query/FindEntityByCategoryQuery.html">FindEntityByCategoryQuery</a>(
 <a class="jxr_linenumber" name="L218" href="#L218">218</a> 				entityName, entityAlias, keyName, entityField, entityNameChild, signaturePresent);

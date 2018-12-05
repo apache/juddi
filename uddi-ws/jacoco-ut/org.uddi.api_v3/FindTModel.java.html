@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FindTModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.api_v3</a> &gt; <span class="el_source">FindTModel.java</span></div><h1>FindTModel.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+package org.uddi.api_v3;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+
+
+/**
+ * The find_tModel API is used to find UDDI tModel elements. The find_tModel API
+ * call returns a list of tModel entries that match a set of specific criteria.
+ * The response consists of summary information about registered tModel data
+ * returned in a tModelList structure.
+ *&lt;Br&gt;&lt;Br&gt;
+ * · authInfo: This optional argument is an element that contains an
+ * authentication token. Registries that wish to restrict who can perform an
+ * inquiry in them typically require authInfo for this call.
+ *&lt;Br&gt;&lt;Br&gt;
+ * · categoryBag: This is a list of category references. The returned tModelList
+ * contains tModelInfo elements whose associated tModels match all of the
+ * categories passed (logical AND by default). Specifying the appropriate
+ * findQualifiers can override this behavior. Matching rules for the use of
+ * keyedReferences and keyedReferenceGroups are described in Section 5.1.7
+ * Matching Rules for keyedReferences and keyedReferenceGroups.
+ *&lt;Br&gt;&lt;Br&gt;
+ * · findQualifiers: This collection of findQualifier elements is used to alter
+ * the default behavior of search functionality. See Section 5.1.4 Find
+ * Qualifiers for more information.
+ *&lt;Br&gt;&lt;Br&gt;
+ * · identifierBag This is a list of identifier references in the form of
+ * keyedReference elements. The returned tModelList contains tModelInfo elements
+ * whose associated tModels match any of the identifiers passed (logical OR by
+ * default). Specifying the appropriate findQualifiers can override this
+ * behavior. Matching rules are described in Section 5.1.7 Matching Rules for
+ * keyedReferences and keyedReferenceGroups.
+ *&lt;Br&gt;&lt;Br&gt;
+ * · listHead: This optional integer value is used to indicate which item SHOULD
+ * be returned as the head of the list. The client may request a subset of the
+ * matching data by indicating which item in the resultant set constitutes the
+ * beginning of the returned data. The use of the listDescription element is
+ * mutually exclusive to the use of the truncated attribute that simply
+ * indicates a truncated result list in the Inquiry APIs. See Section 5.1.5 Use
+ * of listDescription, for a detailed description of the listHead argument.
+ *&lt;Br&gt;&lt;Br&gt;
+ * · maxRows: This optional integer value allows the requesting program to limit
+ * the number of results returned. This argument can be used in conjunction with
+ * the listHead argument.
+ *&lt;Br&gt;&lt;Br&gt;
+ * · name: This string value represents the name of the tModel elements to be
+ * found. Since tModel data only has a single name, only a single name may be
+ * passed. The argument must match exactly since &quot;exactMatch&quot; is the default
+ * behavior, but if the &quot;approximateMatch&quot; findQualifier is used together with
+ * the appropriate wildcard character, then matching is done according to
+ * wildcard rules. See Section 5.1.6 About Wildcards for additional information.
+ * The name MAY be marked with an xml:lang adornment. If a language markup is
+ * specified, the search results report a match only on those entries that match
+ * both the name value and language criteria. The match on language is a
+ * leftmost case-insensitive comparison of the characters supplied. This allows
+ * one to find all tModels whose name begins with an &quot;A&quot; and are expressed in
+ * any dialect of French, for example. Values which can be passed in the
+ * language criteria adornment MUST obey the rules governing the xml:lang data
+ * type as defined in Section 3.3.2.3 name.&lt;Br&gt;&lt;Br&gt;
+ * &lt;p&gt;Java class for find_tModel complex type.
+ * 
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ * 
+ * &lt;pre&gt;
+ * &amp;lt;complexType name=&quot;find_tModel&quot;&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;sequence&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}authInfo&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}findQualifiers&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}name&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}identifierBag&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}categoryBag&quot; minOccurs=&quot;0&quot;/&gt;
+ *       &amp;lt;/sequence&gt;
+ *       &amp;lt;attribute name=&quot;maxRows&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}int&quot; /&gt;
+ *       &amp;lt;attribute name=&quot;listHead&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}int&quot; /&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;find_tModel&quot;, propOrder = {
+    &quot;authInfo&quot;,
+    &quot;findQualifiers&quot;,
+    &quot;name&quot;,
+    &quot;identifierBag&quot;,
+    &quot;categoryBag&quot;
+})
+<span class="nc" id="L116">public class FindTModel implements Serializable{</span>
+	@XmlTransient
+	private static final long serialVersionUID = -8389225501417978080L;
+	protected String authInfo;
+    protected FindQualifiers findQualifiers;
+    protected Name name;
+    protected IdentifierBag identifierBag;
+    protected CategoryBag categoryBag;
+    @XmlAttribute
+    protected Integer maxRows;
+    @XmlAttribute
+    protected Integer listHead;
+
+    /**
+     * Gets the value of the authInfo property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getAuthInfo() {
+<span class="nc" id="L138">        return authInfo;</span>
+    }
+
+    /**
+     * Sets the value of the authInfo property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setAuthInfo(String value) {
+<span class="nc" id="L150">        this.authInfo = value;</span>
+<span class="nc" id="L151">    }</span>
+
+    /**
+     * Gets the value of the findQualifiers property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link FindQualifiers }
+     *     
+     */
+    public FindQualifiers getFindQualifiers() {
+<span class="nc" id="L162">        return findQualifiers;</span>
+    }
+
+    /**
+     * Sets the value of the findQualifiers property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link FindQualifiers }
+     *     
+     */
+    public void setFindQualifiers(FindQualifiers value) {
+<span class="nc" id="L174">        this.findQualifiers = value;</span>
+<span class="nc" id="L175">    }</span>
+
+    /**
+     * Gets the value of the name property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Name }
+     *     
+     */
+    public Name getName() {
+<span class="nc" id="L186">        return name;</span>
+    }
+
+    /**
+     * Sets the value of the name property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Name }
+     *     
+     */
+    public void setName(Name value) {
+<span class="nc" id="L198">        this.name = value;</span>
+<span class="nc" id="L199">    }</span>
+
+    /**
+     * Gets the value of the identifierBag property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link IdentifierBag }
+     *     
+     */
+    public IdentifierBag getIdentifierBag() {
+<span class="nc" id="L210">        return identifierBag;</span>
+    }
+
+    /**
+     * Sets the value of the identifierBag property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link IdentifierBag }
+     *     
+     */
+    public void setIdentifierBag(IdentifierBag value) {
+<span class="nc" id="L222">        this.identifierBag = value;</span>
+<span class="nc" id="L223">    }</span>
+
+    /**
+     * Gets the value of the categoryBag property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CategoryBag }
+     *     
+     */
+    public CategoryBag getCategoryBag() {
+<span class="nc" id="L234">        return categoryBag;</span>
+    }
+
+    /**
+     * Sets the value of the categoryBag property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CategoryBag }
+     *     
+     */
+    public void setCategoryBag(CategoryBag value) {
+<span class="nc" id="L246">        this.categoryBag = value;</span>
+<span class="nc" id="L247">    }</span>
+
+    /**
+     * Gets the value of the maxRows property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getMaxRows() {
+<span class="nc" id="L258">        return maxRows;</span>
+    }
+
+    /**
+     * Sets the value of the maxRows property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setMaxRows(Integer value) {
+<span class="nc" id="L270">        this.maxRows = value;</span>
+<span class="nc" id="L271">    }</span>
+
+    /**
+     * Gets the value of the listHead property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getListHead() {
+<span class="nc" id="L282">        return listHead;</span>
+    }
+
+    /**
+     * Sets the value of the listHead property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setListHead(Integer value) {
+<span class="nc" id="L294">        this.listHead = value;</span>
+<span class="nc" id="L295">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

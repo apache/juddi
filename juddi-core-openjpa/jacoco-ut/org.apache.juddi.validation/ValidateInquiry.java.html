@@ -1,0 +1,803 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValidateInquiry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.validation</a> &gt; <span class="el_source">ValidateInquiry.java</span></div><h1>ValidateInquiry.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.validation;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Hashtable;
+import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import org.apache.juddi.api.impl.InquiryHelper;
+import org.apache.juddi.api.util.InquiryQuery;
+import org.apache.juddi.api.util.QueryStatus;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.mapping.MappingModelToApi;
+
+import org.uddi.api_v3.GetBusinessDetail;
+import org.uddi.api_v3.GetOperationalInfo;
+import org.uddi.api_v3.GetServiceDetail;
+import org.uddi.api_v3.GetBindingDetail;
+import org.uddi.api_v3.GetTModelDetail;
+import org.uddi.api_v3.FindBusiness;
+import org.uddi.api_v3.FindService;
+import org.uddi.api_v3.FindBinding;
+import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.FindRelatedBusinesses;
+import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.KeyedReferenceGroup;
+import org.uddi.api_v3.Name;
+import org.uddi.api_v3.TModelBag;
+
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.query.BusinessServiceQuery;
+import org.apache.juddi.query.util.DynamicQuery;
+import org.apache.juddi.query.util.FindQualifiers;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.InvalidCombinationException;
+import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.UnsupportedException;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
+import org.uddi.api_v3.BindingDetail;
+import org.uddi.api_v3.ServiceDetail;
+
+/**
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:tcunning@apache.org&quot;&gt;Tom Cunningham&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ */
+public class ValidateInquiry extends ValidateUDDIApi {
+
+        public ValidateInquiry(UddiEntityPublisher publisher) {
+<span class="fc" id="L70">                super(publisher);</span>
+<span class="fc" id="L71">        }</span>
+
+        public void validateGetBusinessDetail(GetBusinessDetail body) throws DispositionReportFaultMessage {
+
+                // No null input
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L77">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+                }
+
+                // No null or empty list
+<span class="fc" id="L81">                List&lt;String&gt; entityKeyList = body.getBusinessKey();</span>
+<span class="pc bpc" id="L82" title="2 of 4 branches missed.">                if (entityKeyList == null || entityKeyList.size() == 0) {</span>
+<span class="nc" id="L83">                        throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.NoKeys&quot;));</span>
+                }
+
+<span class="fc" id="L86">                HashSet&lt;String&gt; dupCheck = new HashSet&lt;String&gt;();</span>
+<span class="fc" id="L87">                int i = 0;</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">                for (String entityKey : entityKeyList) {</span>
+
+                        // Per section 4.4: keys must be case-folded
+<span class="fc" id="L91">                        entityKey = entityKey.toLowerCase();</span>
+<span class="fc" id="L92">                        entityKeyList.set(i, entityKey);</span>
+
+<span class="fc" id="L94">                        boolean inserted = dupCheck.add(entityKey);</span>
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">                        if (!inserted) {</span>
+<span class="nc" id="L96">                                throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.DuplicateKey&quot;, entityKey));</span>
+                        }
+
+<span class="fc" id="L99">                        i++;</span>
+<span class="fc" id="L100">                }</span>
+<span class="fc" id="L101">        }</span>
+
+        public void validateGetServiceDetail(GetServiceDetail body) throws DispositionReportFaultMessage {
+
+                // No null input
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L107">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+                }
+
+                // No null or empty list
+<span class="fc" id="L111">                List&lt;String&gt; entityKeyList = body.getServiceKey();</span>
+<span class="pc bpc" id="L112" title="2 of 4 branches missed.">                if (entityKeyList == null || entityKeyList.size() == 0) {</span>
+<span class="nc" id="L113">                        throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.NoKeys&quot;));</span>
+                }
+
+<span class="fc" id="L116">                HashSet&lt;String&gt; dupCheck = new HashSet&lt;String&gt;();</span>
+<span class="fc" id="L117">                int i = 0;</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">                for (String entityKey : entityKeyList) {</span>
+
+                        // Per section 4.4: keys must be case-folded
+<span class="fc" id="L121">                        entityKey = entityKey.toLowerCase();</span>
+<span class="fc" id="L122">                        entityKeyList.set(i, entityKey);</span>
+
+<span class="fc" id="L124">                        boolean inserted = dupCheck.add(entityKey);</span>
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">                        if (!inserted) {</span>
+<span class="nc" id="L126">                                throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.DuplicateKey&quot;, entityKey));</span>
+                        }
+
+<span class="fc" id="L129">                        i++;</span>
+<span class="fc" id="L130">                }</span>
+<span class="fc" id="L131">        }</span>
+
+        public void validateGetBindingDetail(GetBindingDetail body) throws DispositionReportFaultMessage {
+
+                // No null input
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L137">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+                }
+
+                // No null or empty list
+<span class="fc" id="L141">                List&lt;String&gt; entityKeyList = body.getBindingKey();</span>
+<span class="pc bpc" id="L142" title="2 of 4 branches missed.">                if (entityKeyList == null || entityKeyList.size() == 0) {</span>
+<span class="nc" id="L143">                        throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.NoKeys&quot;));</span>
+                }
+
+<span class="fc" id="L146">                HashSet&lt;String&gt; dupCheck = new HashSet&lt;String&gt;();</span>
+<span class="fc" id="L147">                int i = 0;</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">                for (String entityKey : entityKeyList) {</span>
+
+                        // Per section 4.4: keys must be case-folded
+<span class="fc" id="L151">                        entityKey = entityKey.toLowerCase();</span>
+<span class="fc" id="L152">                        entityKeyList.set(i, entityKey);</span>
+
+<span class="fc" id="L154">                        boolean inserted = dupCheck.add(entityKey);</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">                        if (!inserted) {</span>
+<span class="nc" id="L156">                                throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.DuplicateKey&quot;, entityKey));</span>
+                        }
+
+<span class="fc" id="L159">                        i++;</span>
+<span class="fc" id="L160">                }</span>
+<span class="fc" id="L161">        }</span>
+
+        public void validateGetTModelDetail(GetTModelDetail body) throws DispositionReportFaultMessage {
+
+                // No null input
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L167">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+                }
+
+                // No null or empty list
+<span class="fc" id="L171">                List&lt;String&gt; entityKeyList = body.getTModelKey();</span>
+<span class="pc bpc" id="L172" title="2 of 4 branches missed.">                if (entityKeyList == null || entityKeyList.size() == 0) {</span>
+<span class="nc" id="L173">                        throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.NoKeys&quot;));</span>
+                }
+
+<span class="fc" id="L176">                HashSet&lt;String&gt; dupCheck = new HashSet&lt;String&gt;();</span>
+<span class="fc" id="L177">                int i = 0;</span>
+<span class="fc bfc" id="L178" title="All 2 branches covered.">                for (String entityKey : entityKeyList) {</span>
+
+                        // Per section 4.4: keys must be case-folded
+<span class="fc" id="L181">                        entityKey = entityKey.toLowerCase();</span>
+<span class="fc" id="L182">                        entityKeyList.set(i, entityKey);</span>
+
+<span class="fc" id="L184">                        boolean inserted = dupCheck.add(entityKey);</span>
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">                        if (!inserted) {</span>
+<span class="nc" id="L186">                                throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.DuplicateKey&quot;, entityKey));</span>
+                        }
+
+<span class="fc" id="L189">                        i++;</span>
+<span class="fc" id="L190">                }</span>
+<span class="fc" id="L191">        }</span>
+
+        public void validateGetOperationalInfo(GetOperationalInfo body) throws DispositionReportFaultMessage {
+
+                // No null input
+<span class="pc bpc" id="L196" title="1 of 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L197">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+                }
+
+                // No null or empty list
+<span class="fc" id="L201">                List&lt;String&gt; entityKeyList = body.getEntityKey();</span>
+<span class="pc bpc" id="L202" title="2 of 4 branches missed.">                if (entityKeyList == null || entityKeyList.size() == 0) {</span>
+<span class="nc" id="L203">                        throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.NoKeys&quot;));</span>
+                }
+
+<span class="fc" id="L206">                HashSet&lt;String&gt; dupCheck = new HashSet&lt;String&gt;();</span>
+<span class="fc" id="L207">                int i = 0;</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">                for (String entityKey : entityKeyList) {</span>
+
+                        // Per section 4.4: keys must be case-folded
+<span class="fc" id="L211">                        entityKey = entityKey.toLowerCase();</span>
+<span class="fc" id="L212">                        entityKeyList.set(i, entityKey);</span>
+
+<span class="fc" id="L214">                        boolean inserted = dupCheck.add(entityKey);</span>
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">                        if (!inserted) {</span>
+<span class="nc" id="L216">                                throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.DuplicateKey&quot;, entityKey));</span>
+                        }
+
+<span class="fc" id="L219">                        i++;</span>
+<span class="fc" id="L220">                }</span>
+<span class="fc" id="L221">        }</span>
+
+        public void validateFindBusiness(FindBusiness body) throws DispositionReportFaultMessage {
+                // No null input
+<span class="pc bpc" id="L225" title="1 of 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L226">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+                }
+
+<span class="pc bpc" id="L229" title="2 of 8 branches missed.">                if (body.getCategoryBag() == null &amp;&amp; body.getFindTModel() == null &amp;&amp; body.getTModelBag() == null &amp;&amp; body.getName().size() == 0</span>
+<span class="nc bnc" id="L230" title="All 6 branches missed.">                     &amp;&amp; body.getIdentifierBag() == null &amp;&amp; body.getDiscoveryURLs() == null &amp;&amp; body.getFindRelatedBusinesses() == null) {</span>
+<span class="nc" id="L231">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.findbusiness.NoInput&quot;));</span>
+                }
+
+<span class="fc" id="L234">                validateNames(body.getName());</span>
+<span class="fc" id="L235">                validateFindQualifiers(body.getFindQualifiers());</span>
+<span class="fc" id="L236">                validateTModelBag(body.getTModelBag());</span>
+<span class="fc" id="L237">                validateFindTModel(body.getFindTModel(), true);</span>
+<span class="fc" id="L238">                validateFindRelatedBusinesses(body.getFindRelatedBusinesses(), true);</span>
+<span class="fc" id="L239">                validateDiscoveryUrls(body.getDiscoveryURLs());</span>
+<span class="fc" id="L240">                validateIdentifierBag(body.getIdentifierBag());</span>
+<span class="fc" id="L241">                validateCategoryBag(body.getCategoryBag());</span>
+
+<span class="fc" id="L243">        }</span>
+
+        public void validateFindService(FindService body) throws DispositionReportFaultMessage {
+                // No null input
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L248">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+                }
+
+<span class="pc bpc" id="L251" title="1 of 4 branches missed.">                if (body.getCategoryBag() == null &amp;&amp; body.getFindTModel() == null</span>
+<span class="pc bpc" id="L252" title="3 of 4 branches missed.">                     &amp;&amp; (body.getTModelBag() == null || body.getTModelBag().getTModelKey().size() == 0)</span>
+<span class="pc bpc" id="L253" title="3 of 4 branches missed.">                     &amp;&amp; body.getName().size() == 0 &amp;&amp; body.getBusinessKey() == null) {</span>
+<span class="nc" id="L254">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.findservice.NoInput&quot;));</span>
+                }
+
+<span class="fc" id="L257">                validateNames(body.getName());</span>
+<span class="fc" id="L258">                validateFindQualifiers(body.getFindQualifiers());</span>
+<span class="fc" id="L259">                validateTModelBag(body.getTModelBag());</span>
+<span class="fc" id="L260">                validateFindTModel(body.getFindTModel(), true);</span>
+<span class="fc" id="L261">                validateCategoryBag(body.getCategoryBag());</span>
+
+<span class="fc" id="L263">        }</span>
+
+        public void validateFindBinding(FindBinding body) throws DispositionReportFaultMessage {
+                // No null input
+<span class="pc bpc" id="L267" title="1 of 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L268">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+                }
+<span class="pc bpc" id="L270" title="1 of 4 branches missed.">                if (body.getServiceKey()!=null &amp;&amp; body.getServiceKey().length() &gt; 0) {</span>
+<span class="fc" id="L271">                    validateServiceExists(body.getServiceKey());</span>
+                }
+<span class="pc bpc" id="L273" title="2 of 10 branches missed.">                if ((body.getServiceKey()==null || body.getServiceKey().length()==0) &amp;&amp; body.getCategoryBag() == null &amp;&amp; body.getFindTModel() == null &amp;&amp; body.getTModelBag() == null) {</span>
+<span class="nc" id="L274">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.findbinding.NoInput&quot;));</span>
+                }
+
+<span class="fc" id="L277">                validateFindQualifiers(body.getFindQualifiers());</span>
+<span class="fc" id="L278">                validateTModelBag(body.getTModelBag());</span>
+<span class="fc" id="L279">                validateFindTModel(body.getFindTModel(), true);</span>
+<span class="fc" id="L280">                validateCategoryBag(body.getCategoryBag());</span>
+<span class="fc" id="L281">                validateFindingBindingFQ(body.getFindQualifiers());</span>
+<span class="fc" id="L282">                validateFindQualifiers_AppoximateMatchAndCombinedCatbag(body.getFindQualifiers());</span>
+
+<span class="fc" id="L284">        }</span>
+
+        public void validateFindTModel(FindTModel body, boolean nullAllowed) throws DispositionReportFaultMessage {
+<span class="fc bfc" id="L287" title="All 2 branches covered.">                if (body == null) {</span>
+                        // When FindTModel objects are embedded in other find calls, null is allowed.
+<span class="pc bpc" id="L289" title="1 of 2 branches missed.">                        if (nullAllowed) {</span>
+<span class="fc" id="L290">                                return;</span>
+                        } else {
+<span class="nc" id="L292">                                throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+                        }
+                }
+
+<span class="pc bpc" id="L296" title="1 of 6 branches missed.">                if (body.getCategoryBag() == null &amp;&amp; body.getIdentifierBag() == null &amp;&amp; body.getName() == null) {</span>
+<span class="nc" id="L297">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.findtmodel.NoInput&quot;));</span>
+                }
+
+<span class="fc" id="L300">                validateFindQualifiers(body.getFindQualifiers());</span>
+<span class="fc" id="L301">                validateIdentifierBag(body.getIdentifierBag());</span>
+<span class="fc" id="L302">                validateCategoryBag(body.getCategoryBag());</span>
+<span class="fc" id="L303">                validateFindQualifiers_AppoximateMatchAndCombinedCatbag(body.getFindQualifiers());</span>
+<span class="fc" id="L304">        }</span>
+
+        public void validateFindRelatedBusinesses(FindRelatedBusinesses body, boolean nullAllowed) throws DispositionReportFaultMessage {
+<span class="fc bfc" id="L307" title="All 2 branches covered.">                if (body == null) {</span>
+                        // When FindRelatedBusinesses objects are embedded in other find calls, null is allowed.
+<span class="pc bpc" id="L309" title="1 of 2 branches missed.">                        if (nullAllowed) {</span>
+<span class="fc" id="L310">                                return;</span>
+                        } else {
+<span class="nc" id="L312">                                throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+                        }
+                }
+
+<span class="pc bpc" id="L316" title="1 of 4 branches missed.">                if ((body.getBusinessKey() == null || body.getBusinessKey().length() == 0)</span>
+<span class="pc bpc" id="L317" title="1 of 4 branches missed.">                     &amp;&amp; (body.getFromKey() == null || body.getFromKey().length() == 0)</span>
+<span class="pc bpc" id="L318" title="2 of 4 branches missed.">                     &amp;&amp; (body.getToKey() == null || body.getToKey().length() == 0)) {</span>
+<span class="nc" id="L319">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.findrelatedbusiness.NoInput&quot;));</span>
+                }
+
+<span class="fc" id="L322">                boolean businessKeyExists = false;</span>
+<span class="fc" id="L323">                boolean fromKeyExists = false;</span>
+<span class="pc bpc" id="L324" title="1 of 4 branches missed.">                if (body.getBusinessKey() != null &amp;&amp; body.getBusinessKey().length() &gt; 0) {</span>
+<span class="fc" id="L325">                        businessKeyExists = true;</span>
+
+                        // Per section 4.4: keys must be case-folded
+<span class="fc" id="L328">                        body.setBusinessKey(body.getBusinessKey().toLowerCase());</span>
+                }
+<span class="pc bpc" id="L330" title="1 of 4 branches missed.">                if (body.getFromKey() != null &amp;&amp; body.getFromKey().length() &gt; 0) {</span>
+<span class="fc" id="L331">                        fromKeyExists = true;</span>
+<span class="pc bpc" id="L332" title="1 of 2 branches missed.">                        if (businessKeyExists) {</span>
+<span class="nc" id="L333">                                throw new FatalErrorException(new ErrorMessage(&quot;errors.findrelatedbusiness.MultipleInput&quot;));</span>
+                        }
+
+                        // Per section 4.4: keys must be case-folded
+<span class="fc" id="L337">                        body.setFromKey(body.getFromKey().toLowerCase());</span>
+                }
+<span class="pc bpc" id="L339" title="1 of 4 branches missed.">                if (body.getToKey() != null &amp;&amp; body.getToKey().length() &gt; 0) {</span>
+<span class="pc bpc" id="L340" title="2 of 4 branches missed.">                        if (businessKeyExists || fromKeyExists) {</span>
+<span class="nc" id="L341">                                throw new FatalErrorException(new ErrorMessage(&quot;errors.findrelatedbusiness.MultipleInput&quot;));</span>
+                        }
+
+                        // Per section 4.4: keys must be case-folded
+<span class="fc" id="L345">                        body.setToKey(body.getToKey().toLowerCase());</span>
+                }
+
+<span class="fc" id="L348">                KeyedReference keyedRef = body.getKeyedReference();</span>
+<span class="pc bpc" id="L349" title="1 of 2 branches missed.">                if (keyedRef != null) {</span>
+<span class="nc bnc" id="L350" title="All 4 branches missed.">                        if (keyedRef.getTModelKey() == null || keyedRef.getTModelKey().length() == 0</span>
+<span class="nc bnc" id="L351" title="All 4 branches missed.">                             || keyedRef.getKeyName() == null || keyedRef.getKeyName().length() == 0</span>
+<span class="nc bnc" id="L352" title="All 4 branches missed.">                             || keyedRef.getKeyValue() == null || keyedRef.getKeyValue().length() == 0) {</span>
+<span class="nc" id="L353">                                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.findrelatedbusiness.BlankKeyedRef&quot;));</span>
+                        }
+
+<span class="nc" id="L356">                        validateKeyedReference(keyedRef);</span>
+                }
+<span class="fc" id="L358">                validateFindQualifiers(body.getFindQualifiers());</span>
+<span class="fc" id="L359">                validateFindRelatedBusinessesFindQualifiers(body.getFindQualifiers());</span>
+<span class="fc" id="L360">                validateFindQualifiers_AppoximateMatchAndCombinedCatbag(body.getFindQualifiers());</span>
+<span class="fc" id="L361">        }</span>
+
+        public void validateNames(List&lt;org.uddi.api_v3.Name&gt; names) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L364" title="1 of 2 branches missed.">                if (names != null) {</span>
+<span class="fc bfc" id="L365" title="All 2 branches covered.">                        for (Name n : names) {</span>
+<span class="pc bpc" id="L366" title="2 of 4 branches missed.">                                if (n.getValue() == null || n.getValue().length() == 0) {</span>
+<span class="nc" id="L367">                                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.names.NoValue&quot;));</span>
+                                }
+<span class="fc" id="L369">                                ValidatePublish.validateLang(n.getLang());</span>
+<span class="fc" id="L370">                        }</span>
+                }
+<span class="fc" id="L372">        }</span>
+
+        public void validateTModelBag(TModelBag tmodelBag) throws DispositionReportFaultMessage {
+                // tmodelBag is optional
+<span class="fc bfc" id="L376" title="All 2 branches covered.">                if (tmodelBag == null) {</span>
+<span class="fc" id="L377">                        return;</span>
+                }
+
+<span class="pc bpc" id="L380" title="2 of 4 branches missed.">                if (tmodelBag.getTModelKey() == null || tmodelBag.getTModelKey().size() == 0) {</span>
+<span class="nc" id="L381">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.tmodelbag.NoInput&quot;));</span>
+                }
+
+<span class="fc" id="L384">                List&lt;String&gt; keyList = tmodelBag.getTModelKey();</span>
+<span class="fc" id="L385">                int i = 0;</span>
+<span class="fc bfc" id="L386" title="All 2 branches covered.">                for (String key : keyList) {</span>
+                        // Per section 4.4: keys must be case-folded
+<span class="fc" id="L388">                        key = key.toLowerCase();</span>
+<span class="fc" id="L389">                        keyList.set(i, key);</span>
+<span class="fc" id="L390">                        i++;</span>
+<span class="fc" id="L391">                }</span>
+
+<span class="fc" id="L393">        }</span>
+
+        public void validateDiscoveryUrls(org.uddi.api_v3.DiscoveryURLs discUrls) throws DispositionReportFaultMessage {
+                // Discovery Urls is optional
+<span class="fc bfc" id="L397" title="All 2 branches covered.">                if (discUrls == null) {</span>
+<span class="fc" id="L398">                        return;</span>
+                }
+
+                // If discUrls does exist, it must have at least one element
+<span class="fc" id="L402">                List&lt;org.uddi.api_v3.DiscoveryURL&gt; discUrlList = discUrls.getDiscoveryURL();</span>
+<span class="pc bpc" id="L403" title="2 of 4 branches missed.">                if (discUrlList == null || discUrlList.size() == 0) {</span>
+<span class="nc" id="L404">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.discurls.NoInput&quot;));</span>
+                }
+<span class="fc" id="L406">        }</span>
+
+        public void validateCategoryBag(org.uddi.api_v3.CategoryBag categories) throws DispositionReportFaultMessage {
+
+                // Category bag is optional
+<span class="fc bfc" id="L411" title="All 2 branches covered.">                if (categories == null) {</span>
+<span class="fc" id="L412">                        return;</span>
+                }
+
+                // If category bag does exist, it must have at least one element
+<span class="fc" id="L416">                List&lt;KeyedReference&gt; elems = categories.getKeyedReference();</span>
+<span class="fc" id="L417">                List&lt;KeyedReferenceGroup&gt; krgs = categories.getKeyedReferenceGroup();</span>
+<span class="pc bpc" id="L418" title="6 of 8 branches missed.">                if ((elems == null || elems.size() == 0) &amp;&amp; (krgs == null || krgs.size() == 0)) {</span>
+<span class="nc" id="L419">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.categorybag.NoInput&quot;));</span>
+                }
+
+<span class="fc bfc" id="L422" title="All 2 branches covered.">                for (KeyedReference elem : elems) {</span>
+<span class="fc" id="L423">                        validateKeyedReference(elem);</span>
+<span class="fc" id="L424">                }</span>
+<span class="fc bfc" id="L425" title="All 2 branches covered.">                for (KeyedReferenceGroup elem : krgs) {</span>
+<span class="fc" id="L426">                        validateKeyedReferenceGroup(elem);</span>
+<span class="fc" id="L427">                }</span>
+<span class="fc" id="L428">        }</span>
+
+        public void validateIdentifierBag(org.uddi.api_v3.IdentifierBag identifiers) throws DispositionReportFaultMessage {
+
+                // Identifier bag is optional
+<span class="fc bfc" id="L433" title="All 2 branches covered.">                if (identifiers == null) {</span>
+<span class="fc" id="L434">                        return;</span>
+                }
+
+                // If category bag does exist, it must have at least one element
+<span class="fc" id="L438">                List&lt;org.uddi.api_v3.KeyedReference&gt; keyedRefList = identifiers.getKeyedReference();</span>
+<span class="pc bpc" id="L439" title="2 of 4 branches missed.">                if (keyedRefList == null || keyedRefList.size() == 0) {</span>
+<span class="nc" id="L440">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.identifierbag.NoInput&quot;));</span>
+                }
+
+<span class="fc bfc" id="L443" title="All 2 branches covered.">                for (org.uddi.api_v3.KeyedReference keyedRef : keyedRefList) {</span>
+<span class="fc" id="L444">                        validateKeyedReference(keyedRef);</span>
+<span class="fc" id="L445">                }</span>
+<span class="fc" id="L446">        }</span>
+
+        public void validateKeyedReferenceGroup(KeyedReferenceGroup krg) throws DispositionReportFaultMessage {
+                // Keyed reference groups must contain a tModelKey
+<span class="pc bpc" id="L450" title="2 of 4 branches missed.">                if (krg.getTModelKey() == null || krg.getTModelKey().length() == 0) {</span>
+<span class="nc" id="L451">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.keyedreference.NoTModelKey&quot;));</span>
+                }
+
+                // Per section 4.4: keys must be case-folded
+<span class="fc" id="L455">                krg.setTModelKey(krg.getTModelKey().toLowerCase());</span>
+
+<span class="fc" id="L457">                List&lt;KeyedReference&gt; keyedRefs = krg.getKeyedReference();</span>
+                // Should being empty raise an error?
+<span class="pc bpc" id="L459" title="2 of 4 branches missed.">                if (keyedRefs != null &amp;&amp; keyedRefs.size() &gt; 0) {</span>
+<span class="fc bfc" id="L460" title="All 2 branches covered.">                        for (KeyedReference keyedRef : keyedRefs) {</span>
+<span class="fc" id="L461">                                validateKeyedReference(keyedRef);</span>
+<span class="fc" id="L462">                        }</span>
+                }
+<span class="fc" id="L464">        }</span>
+
+        public void validateKeyedReference(KeyedReference kr) throws DispositionReportFaultMessage {
+<span class="pc bpc" id="L467" title="1 of 2 branches missed.">                if (kr == null) {</span>
+<span class="nc" id="L468">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.keyedreference.NullInput&quot;));</span>
+                }
+
+                // Keyed references must contain a tModelKey and keyValue
+<span class="pc bpc" id="L472" title="2 of 4 branches missed.">                if (kr.getTModelKey() == null || kr.getTModelKey().length() == 0) {</span>
+<span class="nc" id="L473">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.keyedreference.NoTModelKey&quot;));</span>
+                }
+
+                // Per section 4.4: keys must be case-folded
+<span class="fc" id="L477">                kr.setTModelKey(kr.getTModelKey().toLowerCase());</span>
+
+<span class="pc bpc" id="L479" title="2 of 4 branches missed.">                if (kr.getKeyValue() == null || kr.getKeyValue().length() == 0) {</span>
+<span class="nc" id="L480">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.keyedreference.NoKeyValue&quot;));</span>
+                }
+<span class="fc" id="L482">        }</span>
+
+        private void validateFindQualifiers(org.uddi.api_v3.FindQualifiers findQualifiers) throws DispositionReportFaultMessage {
+<span class="fc bfc" id="L485" title="All 2 branches covered.">                if (findQualifiers == null) {</span>
+<span class="fc" id="L486">                        return;</span>
+                }
+
+<span class="fc" id="L489">                List&lt;String&gt; fqList = findQualifiers.getFindQualifier();</span>
+<span class="pc bpc" id="L490" title="2 of 4 branches missed.">                if (fqList == null || fqList.size() == 0) {</span>
+<span class="nc" id="L491">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.findqualifiers.NoInput&quot;));</span>
+                }
+
+<span class="fc" id="L494">                Hashtable&lt;String, String&gt; fqTable = new Hashtable&lt;String, String&gt;();</span>
+<span class="fc bfc" id="L495" title="All 2 branches covered.">                for (String fq : fqList) {</span>
+<span class="fc" id="L496">                        String result = fqTable.put(fq.toUpperCase(), fq.toUpperCase());</span>
+<span class="pc bpc" id="L497" title="1 of 2 branches missed.">                        if (result != null) {</span>
+<span class="nc" id="L498">                                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.findqualifiers.DuplicateValue&quot;, result));</span>
+                        }
+
+<span class="fc" id="L501">                        ValidateSupportedFindQualifier(fq);</span>
+
+                        // Invalid combo: andAllKeys, orAllKeys, and orLikeKeys
+<span class="pc bpc" id="L504" title="1 of 4 branches missed.">                        if (fq.equalsIgnoreCase(FindQualifiers.AND_ALL_KEYS) || fq.equalsIgnoreCase(FindQualifiers.AND_ALL_KEYS_TMODEL)) {</span>
+<span class="pc bpc" id="L505" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.OR_ALL_KEYS.toUpperCase()) != null || fqTable.get(FindQualifiers.OR_ALL_KEYS_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L506">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.OR_ALL_KEYS));</span>
+                                }
+
+<span class="pc bpc" id="L509" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.OR_LIKE_KEYS.toUpperCase()) != null || fqTable.get(FindQualifiers.OR_LIKE_KEYS_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L510">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.OR_LIKE_KEYS));</span>
+                                }
+<span class="pc bpc" id="L512" title="1 of 4 branches missed.">                        } else if (fq.equalsIgnoreCase(FindQualifiers.OR_ALL_KEYS) || fq.equalsIgnoreCase(FindQualifiers.OR_ALL_KEYS_TMODEL)) {</span>
+<span class="pc bpc" id="L513" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.AND_ALL_KEYS.toUpperCase()) != null || fqTable.get(FindQualifiers.AND_ALL_KEYS_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L514">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.AND_ALL_KEYS));</span>
+                                }
+
+<span class="pc bpc" id="L517" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.OR_LIKE_KEYS.toUpperCase()) != null || fqTable.get(FindQualifiers.OR_LIKE_KEYS_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L518">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.OR_LIKE_KEYS));</span>
+                                }
+<span class="pc bpc" id="L520" title="1 of 4 branches missed.">                        } else if (fq.equalsIgnoreCase(FindQualifiers.OR_LIKE_KEYS) || fq.equalsIgnoreCase(FindQualifiers.OR_LIKE_KEYS_TMODEL)) {</span>
+<span class="pc bpc" id="L521" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.AND_ALL_KEYS.toUpperCase()) != null || fqTable.get(FindQualifiers.AND_ALL_KEYS_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L522">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.AND_ALL_KEYS));</span>
+                                }
+
+<span class="pc bpc" id="L525" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.OR_ALL_KEYS.toUpperCase()) != null || fqTable.get(FindQualifiers.OR_ALL_KEYS_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L526">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.OR_ALL_KEYS));</span>
+                                }
+                        }
+
+                        // Invalid combo: sortByNameAsc and sortByNameDesc
+<span class="pc bpc" id="L531" title="1 of 4 branches missed.">                        if (fq.equalsIgnoreCase(FindQualifiers.SORT_BY_NAME_ASC) || fq.equalsIgnoreCase(FindQualifiers.SORT_BY_NAME_ASC_TMODEL)) {</span>
+<span class="pc bpc" id="L532" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.SORT_BY_NAME_DESC.toUpperCase()) != null || fqTable.get(FindQualifiers.SORT_BY_NAME_DESC_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L533">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.SORT_BY_NAME_DESC));</span>
+                                }
+<span class="pc bpc" id="L535" title="1 of 4 branches missed.">                        } else if (fq.equalsIgnoreCase(FindQualifiers.SORT_BY_NAME_DESC) || fq.equalsIgnoreCase(FindQualifiers.SORT_BY_NAME_DESC_TMODEL)) {</span>
+<span class="pc bpc" id="L536" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.SORT_BY_NAME_ASC.toUpperCase()) != null || fqTable.get(FindQualifiers.SORT_BY_NAME_ASC_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L537">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.SORT_BY_NAME_ASC));</span>
+                                }
+                        }
+
+                        // Invalid combo: sortByDateAsc and sortByDateDesc
+<span class="pc bpc" id="L542" title="1 of 4 branches missed.">                        if (fq.equalsIgnoreCase(FindQualifiers.SORT_BY_DATE_ASC) || fq.equalsIgnoreCase(FindQualifiers.SORT_BY_DATE_ASC_TMODEL)) {</span>
+<span class="pc bpc" id="L543" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.SORT_BY_DATE_DESC.toUpperCase()) != null || fqTable.get(FindQualifiers.SORT_BY_DATE_DESC_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L544">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.SORT_BY_DATE_DESC));</span>
+                                }
+<span class="pc bpc" id="L546" title="2 of 4 branches missed.">                        } else if (fq.equalsIgnoreCase(FindQualifiers.SORT_BY_DATE_DESC) || fq.equalsIgnoreCase(FindQualifiers.SORT_BY_DATE_DESC_TMODEL)) {</span>
+<span class="nc bnc" id="L547" title="All 4 branches missed.">                                if (fqTable.get(FindQualifiers.SORT_BY_DATE_ASC.toUpperCase()) != null || fqTable.get(FindQualifiers.SORT_BY_DATE_ASC_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L548">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.SORT_BY_DATE_ASC));</span>
+                                }
+                        }
+
+                        // Invalid combo: combineCategoryBags, serviceSubset and bindingSubset 
+<span class="pc bpc" id="L553" title="1 of 4 branches missed.">                        if (fq.equalsIgnoreCase(FindQualifiers.COMBINE_CATEGORY_BAGS) || fq.equalsIgnoreCase(FindQualifiers.COMBINE_CATEGORY_BAGS_TMODEL)) {</span>
+<span class="pc bpc" id="L554" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.SERVICE_SUBSET.toUpperCase()) != null || fqTable.get(FindQualifiers.SERVICE_SUBSET_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L555">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.SERVICE_SUBSET));</span>
+                                }
+
+<span class="pc bpc" id="L558" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.BINDING_SUBSET.toUpperCase()) != null || fqTable.get(FindQualifiers.BINDING_SUBSET_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L559">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.BINDING_SUBSET));</span>
+                                }
+<span class="pc bpc" id="L561" title="2 of 4 branches missed.">                        } else if (fq.equalsIgnoreCase(FindQualifiers.SERVICE_SUBSET) || fq.equalsIgnoreCase(FindQualifiers.SERVICE_SUBSET_TMODEL)) {</span>
+<span class="nc bnc" id="L562" title="All 4 branches missed.">                                if (fqTable.get(FindQualifiers.COMBINE_CATEGORY_BAGS.toUpperCase()) != null || fqTable.get(FindQualifiers.COMBINE_CATEGORY_BAGS_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L563">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.COMBINE_CATEGORY_BAGS));</span>
+                                }
+
+<span class="nc bnc" id="L566" title="All 4 branches missed.">                                if (fqTable.get(FindQualifiers.BINDING_SUBSET.toUpperCase()) != null || fqTable.get(FindQualifiers.BINDING_SUBSET_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L567">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.BINDING_SUBSET));</span>
+                                }
+<span class="pc bpc" id="L569" title="2 of 4 branches missed.">                        } else if (fq.equalsIgnoreCase(FindQualifiers.BINDING_SUBSET) || fq.equalsIgnoreCase(FindQualifiers.BINDING_SUBSET_TMODEL)) {</span>
+<span class="nc bnc" id="L570" title="All 4 branches missed.">                                if (fqTable.get(FindQualifiers.SERVICE_SUBSET.toUpperCase()) != null || fqTable.get(FindQualifiers.SERVICE_SUBSET_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L571">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.SERVICE_SUBSET));</span>
+                                }
+
+<span class="nc bnc" id="L574" title="All 4 branches missed.">                                if (fqTable.get(FindQualifiers.COMBINE_CATEGORY_BAGS.toUpperCase()) != null || fqTable.get(FindQualifiers.COMBINE_CATEGORY_BAGS_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L575">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.COMBINE_CATEGORY_BAGS));</span>
+                                }
+                        }
+
+                        // Invalid combo: exactMatch and approximateMatch
+<span class="pc bpc" id="L580" title="1 of 4 branches missed.">                        if (fq.equalsIgnoreCase(FindQualifiers.EXACT_MATCH) || fq.equalsIgnoreCase(FindQualifiers.EXACT_MATCH_TMODEL)) {</span>
+<span class="pc bpc" id="L581" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.APPROXIMATE_MATCH.toUpperCase()) != null || fqTable.get(FindQualifiers.APPROXIMATE_MATCH_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L582">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.APPROXIMATE_MATCH));</span>
+                                }
+<span class="pc bpc" id="L584" title="1 of 4 branches missed.">                        } else if (fq.equalsIgnoreCase(FindQualifiers.APPROXIMATE_MATCH) || fq.equalsIgnoreCase(FindQualifiers.APPROXIMATE_MATCH_TMODEL)) {</span>
+<span class="pc bpc" id="L585" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.EXACT_MATCH.toUpperCase()) != null || fqTable.get(FindQualifiers.EXACT_MATCH_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L586">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.EXACT_MATCH));</span>
+                                }
+                        }
+
+                        // Invalid combo: exactMatch and caseInsensitiveMatch
+<span class="pc bpc" id="L591" title="1 of 4 branches missed.">                        if (fq.equalsIgnoreCase(FindQualifiers.EXACT_MATCH) || fq.equalsIgnoreCase(FindQualifiers.EXACT_MATCH_TMODEL)) {</span>
+<span class="pc bpc" id="L592" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.CASE_INSENSITIVE_MATCH.toUpperCase()) != null || fqTable.get(FindQualifiers.CASE_INSENSITIVE_MATCH_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L593">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.CASE_INSENSITIVE_MATCH));</span>
+                                }
+<span class="pc bpc" id="L595" title="1 of 4 branches missed.">                        } else if (fq.equalsIgnoreCase(FindQualifiers.CASE_INSENSITIVE_MATCH) || fq.equalsIgnoreCase(FindQualifiers.CASE_INSENSITIVE_MATCH_TMODEL)) {</span>
+<span class="pc bpc" id="L596" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.EXACT_MATCH.toUpperCase()) != null || fqTable.get(FindQualifiers.EXACT_MATCH_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L597">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.EXACT_MATCH));</span>
+                                }
+                        }
+
+                        // Invalid combo: binarySort and UTS-10 
+<span class="pc bpc" id="L602" title="2 of 4 branches missed.">                        if (fq.equalsIgnoreCase(FindQualifiers.BINARY_SORT) || fq.equalsIgnoreCase(FindQualifiers.BINARY_SORT_TMODEL)) {</span>
+<span class="nc bnc" id="L603" title="All 4 branches missed.">                                if (fqTable.get(FindQualifiers.UTS_10.toUpperCase()) != null || fqTable.get(FindQualifiers.UTS_10_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L604">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.UTS_10));</span>
+                                }
+<span class="pc bpc" id="L606" title="2 of 4 branches missed.">                        } else if (fq.equalsIgnoreCase(FindQualifiers.UTS_10) || fq.equalsIgnoreCase(FindQualifiers.UTS_10_TMODEL)) {</span>
+<span class="nc bnc" id="L607" title="All 4 branches missed.">                                if (fqTable.get(FindQualifiers.BINARY_SORT.toUpperCase()) != null || fqTable.get(FindQualifiers.BINARY_SORT_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L608">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.BINARY_SORT));</span>
+                                }
+                        }
+
+                        // Invalid combo: diacriticSensitiveMatch and diacriticInsensitiveMatch
+<span class="pc bpc" id="L613" title="2 of 4 branches missed.">                        if (fq.equalsIgnoreCase(FindQualifiers.DIACRITIC_SENSITIVE_MATCH) || fq.equalsIgnoreCase(FindQualifiers.DIACRITIC_SENSITIVE_MATCH_TMODEL)) {</span>
+<span class="nc bnc" id="L614" title="All 4 branches missed.">                                if (fqTable.get(FindQualifiers.DIACRITIC_INSENSITIVE_MATCH.toUpperCase()) != null || fqTable.get(FindQualifiers.DIACRITIC_INSENSITIVE_MATCH_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L615">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.DIACRITIC_INSENSITIVE_MATCH));</span>
+                                }
+<span class="pc bpc" id="L617" title="2 of 4 branches missed.">                        } else if (fq.equalsIgnoreCase(FindQualifiers.DIACRITIC_INSENSITIVE_MATCH) || fq.equalsIgnoreCase(FindQualifiers.DIACRITIC_INSENSITIVE_MATCH_TMODEL)) {</span>
+<span class="nc bnc" id="L618" title="All 4 branches missed.">                                if (fqTable.get(FindQualifiers.DIACRITIC_SENSITIVE_MATCH.toUpperCase()) != null || fqTable.get(FindQualifiers.DIACRITIC_SENSITIVE_MATCH_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L619">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.DIACRITIC_SENSITIVE_MATCH));</span>
+                                }
+                        }
+
+                        // Invalid combo: exactMatch and diacriticInsensitiveMatch
+<span class="pc bpc" id="L624" title="1 of 4 branches missed.">                        if (fq.equalsIgnoreCase(FindQualifiers.EXACT_MATCH) || fq.equalsIgnoreCase(FindQualifiers.EXACT_MATCH_TMODEL)) {</span>
+<span class="pc bpc" id="L625" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.DIACRITIC_INSENSITIVE_MATCH.toUpperCase()) != null || fqTable.get(FindQualifiers.DIACRITIC_INSENSITIVE_MATCH_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L626">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.DIACRITIC_INSENSITIVE_MATCH));</span>
+                                }
+<span class="pc bpc" id="L628" title="2 of 4 branches missed.">                        } else if (fq.equalsIgnoreCase(FindQualifiers.DIACRITIC_INSENSITIVE_MATCH) || fq.equalsIgnoreCase(FindQualifiers.DIACRITIC_INSENSITIVE_MATCH_TMODEL)) {</span>
+<span class="nc bnc" id="L629" title="All 4 branches missed.">                                if (fqTable.get(FindQualifiers.EXACT_MATCH.toUpperCase()) != null || fqTable.get(FindQualifiers.EXACT_MATCH_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L630">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.EXACT_MATCH));</span>
+                                }
+                        }
+
+                        // Invalid combo: caseSensitiveSort and caseInsensitiveSort
+<span class="pc bpc" id="L635" title="2 of 4 branches missed.">                        if (fq.equalsIgnoreCase(FindQualifiers.CASE_SENSITIVE_SORT) || fq.equalsIgnoreCase(FindQualifiers.CASE_SENSITIVE_SORT_TMODEL)) {</span>
+<span class="nc bnc" id="L636" title="All 4 branches missed.">                                if (fqTable.get(FindQualifiers.CASE_INSENSITIVE_SORT.toUpperCase()) != null || fqTable.get(FindQualifiers.CASE_INSENSITIVE_SORT_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L637">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.CASE_INSENSITIVE_SORT));</span>
+                                }
+<span class="pc bpc" id="L639" title="2 of 4 branches missed.">                        } else if (fq.equalsIgnoreCase(FindQualifiers.CASE_INSENSITIVE_SORT) || fq.equalsIgnoreCase(FindQualifiers.CASE_INSENSITIVE_SORT_TMODEL)) {</span>
+<span class="nc bnc" id="L640" title="All 4 branches missed.">                                if (fqTable.get(FindQualifiers.CASE_SENSITIVE_SORT.toUpperCase()) != null || fqTable.get(FindQualifiers.CASE_SENSITIVE_SORT_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L641">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.CASE_SENSITIVE_SORT));</span>
+                                }
+                        }
+
+                        // Invalid combo: caseSensitiveMatch and caseInsensitiveMatch
+<span class="pc bpc" id="L646" title="2 of 4 branches missed.">                        if (fq.equalsIgnoreCase(FindQualifiers.CASE_SENSITIVE_MATCH) || fq.equalsIgnoreCase(FindQualifiers.CASE_SENSITIVE_MATCH_TMODEL)) {</span>
+<span class="nc bnc" id="L647" title="All 4 branches missed.">                                if (fqTable.get(FindQualifiers.CASE_INSENSITIVE_MATCH.toUpperCase()) != null || fqTable.get(FindQualifiers.CASE_INSENSITIVE_MATCH_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L648">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.CASE_INSENSITIVE_MATCH));</span>
+                                }
+<span class="pc bpc" id="L650" title="1 of 4 branches missed.">                        } else if (fq.equalsIgnoreCase(FindQualifiers.CASE_INSENSITIVE_MATCH) || fq.equalsIgnoreCase(FindQualifiers.CASE_INSENSITIVE_MATCH_TMODEL)) {</span>
+<span class="pc bpc" id="L651" title="2 of 4 branches missed.">                                if (fqTable.get(FindQualifiers.CASE_SENSITIVE_MATCH.toUpperCase()) != null || fqTable.get(FindQualifiers.CASE_SENSITIVE_MATCH_TMODEL.toUpperCase()) != null) {</span>
+<span class="nc" id="L652">                                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, fq + &quot; &amp; &quot; + FindQualifiers.CASE_SENSITIVE_MATCH));</span>
+                                }
+                        }
+
+<span class="fc" id="L656">                }</span>
+<span class="fc" id="L657">        }</span>
+
+        private void validateFindingBindingFQ(org.uddi.api_v3.FindQualifiers findQualifiers) throws InvalidCombinationException {
+<span class="fc bfc" id="L660" title="All 2 branches covered.">                if (findQualifiers == null) {</span>
+<span class="fc" id="L661">                        return;</span>
+                }
+<span class="fc bfc" id="L663" title="All 2 branches covered.">                for (int i = 0; i &lt; findQualifiers.getFindQualifier().size(); i++) {</span>
+<span class="pc bpc" id="L664" title="2 of 4 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equals(FindQualifiers.BINARY_SORT) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.BINARY_SORT_TMODEL)) {</span>
+<span class="nc" id="L665">                                throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, FindQualifiers.BINARY_SORT));</span>
+                        }
+<span class="pc bpc" id="L667" title="2 of 4 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.CASE_INSENSITIVE_MATCH) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.CASE_INSENSITIVE_MATCH_TMODEL)) {</span>
+<span class="nc" id="L668">                                throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, FindQualifiers.CASE_INSENSITIVE_MATCH));</span>
+                        }
+<span class="pc bpc" id="L670" title="2 of 4 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.CASE_SENSITIVE_MATCH) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.CASE_SENSITIVE_MATCH_TMODEL)) {</span>
+<span class="nc" id="L671">                                throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, FindQualifiers.CASE_SENSITIVE_MATCH));</span>
+                        }
+<span class="pc bpc" id="L673" title="2 of 4 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.CASE_INSENSITIVE_SORT) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.CASE_INSENSITIVE_SORT_TMODEL)) {</span>
+<span class="nc" id="L674">                                throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, FindQualifiers.CASE_INSENSITIVE_SORT));</span>
+                        }
+<span class="pc bpc" id="L676" title="2 of 4 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.CASE_SENSITIVE_SORT) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.CASE_SENSITIVE_SORT_TMODEL)) {</span>
+<span class="nc" id="L677">                                throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, FindQualifiers.CASE_SENSITIVE_SORT_TMODEL));</span>
+                        }
+<span class="pc bpc" id="L679" title="2 of 4 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.SORT_BY_NAME_ASC) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.SORT_BY_NAME_ASC_TMODEL)) {</span>
+<span class="nc" id="L680">                                throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, FindQualifiers.SORT_BY_NAME_ASC));</span>
+                        }
+<span class="pc bpc" id="L682" title="2 of 4 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.SORT_BY_NAME_DESC) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.SORT_BY_NAME_DESC_TMODEL)) {</span>
+<span class="nc" id="L683">                                throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, FindQualifiers.SORT_BY_NAME_DESC));</span>
+                        }
+                }
+<span class="fc" id="L686">        }</span>
+
+        private void validateFindRelatedBusinessesFindQualifiers(org.uddi.api_v3.FindQualifiers findQualifiers) throws InvalidCombinationException {
+<span class="fc bfc" id="L689" title="All 2 branches covered.">                if (findQualifiers == null) {</span>
+<span class="fc" id="L690">                        return;</span>
+                }
+<span class="fc bfc" id="L692" title="All 2 branches covered.">                for (int i = 0; i &lt; findQualifiers.getFindQualifier().size(); i++) {</span>
+<span class="pc bpc" id="L693" title="2 of 4 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.AND_ALL_KEYS) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.AND_ALL_KEYS_TMODEL)) {</span>
+<span class="nc" id="L694">                                throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, FindQualifiers.AND_ALL_KEYS));</span>
+                        }
+                }
+<span class="fc" id="L697">        }</span>
+
+        private void validateFindQualifiers_AppoximateMatchAndCombinedCatbag(org.uddi.api_v3.FindQualifiers findQualifiers) throws InvalidCombinationException {
+<span class="fc bfc" id="L700" title="All 2 branches covered.">                if (findQualifiers == null) {</span>
+<span class="fc" id="L701">                        return;</span>
+                }
+<span class="fc" id="L703">                boolean containsAPPROXIMATE_MATCH = false;</span>
+<span class="fc" id="L704">                boolean containsCOMBINE_CATEGORY_BAGS = false;</span>
+<span class="fc bfc" id="L705" title="All 2 branches covered.">                for (int i = 0; i &lt; findQualifiers.getFindQualifier().size(); i++) {</span>
+<span class="pc bpc" id="L706" title="1 of 4 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.APPROXIMATE_MATCH) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.APPROXIMATE_MATCH_TMODEL)) {</span>
+<span class="fc" id="L707">                                containsAPPROXIMATE_MATCH = true;</span>
+                        }
+<span class="pc bpc" id="L709" title="2 of 4 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.COMBINE_CATEGORY_BAGS) || findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(FindQualifiers.COMBINE_CATEGORY_BAGS_TMODEL)) {</span>
+<span class="nc" id="L710">                                containsCOMBINE_CATEGORY_BAGS = true;</span>
+                        }
+                }
+<span class="pc bpc" id="L713" title="1 of 4 branches missed.">                if (containsAPPROXIMATE_MATCH &amp;&amp; containsCOMBINE_CATEGORY_BAGS) {</span>
+<span class="nc" id="L714">                        throw new InvalidCombinationException(new ErrorMessage(&quot;errors.findqualifiers.InvalidCombo&quot;, FindQualifiers.COMBINE_CATEGORY_BAGS + &quot; &amp; &quot; + FindQualifiers.APPROXIMATE_MATCH_TMODEL));</span>
+                }
+
+<span class="fc" id="L717">        }</span>
+
+<span class="fc" id="L719">        static Map&lt;String,Boolean&gt; supportedFindqualifiers = null;</span>
+        private void ValidateSupportedFindQualifier(String fq) throws UnsupportedException {
+<span class="pc bpc" id="L721" title="1 of 4 branches missed.">                if (supportedFindqualifiers==null || supportedFindqualifiers.isEmpty())</span>
+<span class="fc" id="L722">                        InitFindQualifierMap();</span>
+<span class="pc bpc" id="L723" title="1 of 2 branches missed.">                if (supportedFindqualifiers.get(fq.toLowerCase())==null)</span>
+<span class="nc" id="L724">                        throw new UnsupportedException(new ErrorMessage(&quot;errors.Unsupported.findQualifier&quot;, fq));</span>
+<span class="fc" id="L725">        }</span>
+
+        private void InitFindQualifierMap() {
+<span class="fc" id="L728">                supportedFindqualifiers = new HashMap&lt;String, Boolean&gt;();</span>
+<span class="fc" id="L729">                supportedFindqualifiers.put(FindQualifiers.AND_ALL_KEYS.toLowerCase(), true);</span>
+<span class="fc" id="L730">                supportedFindqualifiers.put(FindQualifiers.AND_ALL_KEYS_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L731">                supportedFindqualifiers.put(FindQualifiers.APPROXIMATE_MATCH.toLowerCase(), true);</span>
+<span class="fc" id="L732">                supportedFindqualifiers.put(FindQualifiers.APPROXIMATE_MATCH_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L733">                supportedFindqualifiers.put(FindQualifiers.BINARY_SORT.toLowerCase(), true);</span>
+<span class="fc" id="L734">                supportedFindqualifiers.put(FindQualifiers.BINARY_SORT_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L735">                supportedFindqualifiers.put(FindQualifiers.BINDING_SUBSET.toLowerCase(), true);</span>
+<span class="fc" id="L736">                supportedFindqualifiers.put(FindQualifiers.BINDING_SUBSET_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L737">                supportedFindqualifiers.put(FindQualifiers.CASE_INSENSITIVE_MATCH.toLowerCase(), true);</span>
+<span class="fc" id="L738">                supportedFindqualifiers.put(FindQualifiers.CASE_INSENSITIVE_MATCH_TMODEL.toLowerCase(), true);</span>
+                //these are NOT supported, see JUDDI-785
+                //supportedFindqualifiers.put(FindQualifiers.CASE_INSENSITIVE_SORT.toLowerCase(), true);
+                //supportedFindqualifiers.put(FindQualifiers.CASE_INSENSITIVE_SORT_TMODEL.toLowerCase(), true);
+<span class="fc" id="L742">                supportedFindqualifiers.put(FindQualifiers.CASE_SENSITIVE_MATCH.toLowerCase(), true);</span>
+<span class="fc" id="L743">                supportedFindqualifiers.put(FindQualifiers.CASE_SENSITIVE_MATCH_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L744">                supportedFindqualifiers.put(FindQualifiers.CASE_SENSITIVE_SORT.toLowerCase(), true);</span>
+<span class="fc" id="L745">                supportedFindqualifiers.put(FindQualifiers.CASE_SENSITIVE_SORT_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L746">                supportedFindqualifiers.put(FindQualifiers.COMBINE_CATEGORY_BAGS.toLowerCase(), true);</span>
+<span class="fc" id="L747">                supportedFindqualifiers.put(FindQualifiers.COMBINE_CATEGORY_BAGS_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L748">                supportedFindqualifiers.put(FindQualifiers.DIACRITIC_INSENSITIVE_MATCH.toLowerCase(), true);</span>
+<span class="fc" id="L749">                supportedFindqualifiers.put(FindQualifiers.DIACRITIC_INSENSITIVE_MATCH_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L750">                supportedFindqualifiers.put(FindQualifiers.DIACRITIC_SENSITIVE_MATCH.toLowerCase(), true);</span>
+<span class="fc" id="L751">                supportedFindqualifiers.put(FindQualifiers.DIACRITIC_SENSITIVE_MATCH_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L752">                supportedFindqualifiers.put(FindQualifiers.EXACT_MATCH.toLowerCase(), true);</span>
+<span class="fc" id="L753">                supportedFindqualifiers.put(FindQualifiers.EXACT_MATCH_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L754">                supportedFindqualifiers.put(FindQualifiers.OR_ALL_KEYS.toLowerCase(), true);</span>
+<span class="fc" id="L755">                supportedFindqualifiers.put(FindQualifiers.OR_ALL_KEYS_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L756">                supportedFindqualifiers.put(FindQualifiers.OR_LIKE_KEYS.toLowerCase(), true);</span>
+<span class="fc" id="L757">                supportedFindqualifiers.put(FindQualifiers.OR_LIKE_KEYS_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L758">                supportedFindqualifiers.put(FindQualifiers.SERVICE_SUBSET.toLowerCase(), true);</span>
+<span class="fc" id="L759">                supportedFindqualifiers.put(FindQualifiers.SERVICE_SUBSET_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L760">                supportedFindqualifiers.put(FindQualifiers.SIGNATURE_PRESENT.toLowerCase(), true);</span>
+<span class="fc" id="L761">                supportedFindqualifiers.put(FindQualifiers.SIGNATURE_PRESENT_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L762">                supportedFindqualifiers.put(FindQualifiers.SORT_BY_DATE_ASC.toLowerCase(), true);</span>
+<span class="fc" id="L763">                supportedFindqualifiers.put(FindQualifiers.SORT_BY_DATE_ASC_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L764">                supportedFindqualifiers.put(FindQualifiers.SORT_BY_DATE_DESC.toLowerCase(), true);</span>
+<span class="fc" id="L765">                supportedFindqualifiers.put(FindQualifiers.SORT_BY_DATE_DESC_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L766">                supportedFindqualifiers.put(FindQualifiers.SORT_BY_NAME_ASC.toLowerCase(), true);</span>
+<span class="fc" id="L767">                supportedFindqualifiers.put(FindQualifiers.SORT_BY_NAME_ASC_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L768">                supportedFindqualifiers.put(FindQualifiers.SORT_BY_NAME_DESC.toLowerCase(), true);</span>
+<span class="fc" id="L769">                supportedFindqualifiers.put(FindQualifiers.SORT_BY_NAME_DESC_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L770">                supportedFindqualifiers.put(FindQualifiers.SUPPRESS_PROJECTED_SERVICES.toLowerCase(), true);</span>
+<span class="fc" id="L771">                supportedFindqualifiers.put(FindQualifiers.SUPPRESS_PROJECTED_SERVICES_TMODEL.toLowerCase(), true);</span>
+<span class="fc" id="L772">                supportedFindqualifiers.put(FindQualifiers.UTS_10.toLowerCase(), true);</span>
+<span class="fc" id="L773">                supportedFindqualifiers.put(FindQualifiers.UTS_10_TMODEL.toLowerCase(), true);</span>
+                
+<span class="fc" id="L775">        }</span>
+
+    private void validateServiceExists(String serviceKey) throws InvalidKeyPassedException {
+        
+<span class="fc" id="L779">        EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L780">        EntityTransaction tx = em.getTransaction();</span>
+        try {
+<span class="fc" id="L782">            tx.begin();</span>
+
+<span class="fc" id="L784">            org.apache.juddi.model.BusinessService modelBusinessService = null;</span>
+            try {
+<span class="fc" id="L786">                modelBusinessService = em.find(org.apache.juddi.model.BusinessService.class, serviceKey);</span>
+<span class="nc" id="L787">            } catch (ClassCastException e) {</span>
+<span class="fc" id="L788">            }</span>
+<span class="pc bpc" id="L789" title="1 of 2 branches missed.">            if (modelBusinessService == null) {</span>
+<span class="nc" id="L790">                throw new InvalidKeyPassedException(new ErrorMessage(&quot;errors.invalidkey.ServiceNotFound&quot;, serviceKey));</span>
+            }
+
+<span class="fc" id="L793">            tx.commit();</span>
+
+        } finally {
+<span class="pc bpc" id="L796" title="3 of 4 branches missed.">            if (tx.isActive()) {</span>
+<span class="nc" id="L797">                tx.rollback();</span>
+            }
+<span class="pc" id="L799">            em.close();</span>
+<span class="fc" id="L800">        }</span>
+<span class="fc" id="L801">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

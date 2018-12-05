@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EntityCreator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.jaxb</a> &gt; <span class="el_source">EntityCreator.java</span></div><h1>EntityCreator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.jaxb;
+
+/**
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:kstam@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ */
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.net.URL;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * This class is the logical opposite of PrintUDDI. It will create
+ * UDDI objects from a string or file.
+ * @see PrintUDDI
+ * @author unknown, but probably Kurt Stam
+ */
+<span class="nc" id="L42">public class EntityCreator {</span>
+
+    public static final String UDDIv3_Package=&quot;org.uddi.api_v3&quot;;
+    public static final String JUDDIv3_Package=&quot;org.apache.juddi.api_v3&quot;;
+    
+<span class="nc" id="L47">	private static Log logger = LogFactory.getLog(EntityCreator.class);</span>
+	
+        /**
+         * Builds UDDI data from a document, URL, file, etc
+         * @param fileName
+         * @param thePackage
+         * @return UDDI entity from the file or null
+         * @throws JAXBException
+         * @throws IOException 
+         */
+	@SuppressWarnings(&quot;rawtypes&quot;)
+	public static Object buildFromDoc(String fileName, String thePackage) throws JAXBException, IOException {
+<span class="nc" id="L59">		Object obj = null;</span>
+<span class="nc" id="L60">                File f = new File(fileName);</span>
+<span class="nc" id="L61">                URL url=null;</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">                if (f.exists()){</span>
+<span class="nc" id="L63">                    url = f.toURI().toURL();</span>
+                }
+<span class="nc bnc" id="L65" title="All 2 branches missed.">                if (url==null) {</span>
+<span class="nc" id="L66">		    url = Thread.currentThread().getContextClassLoader().getResource(fileName);</span>
+                }
+<span class="nc bnc" id="L68" title="All 2 branches missed.">		if (url==null) {</span>
+<span class="nc" id="L69">			logger.error(&quot;Could not find resource: &quot; + fileName);</span>
+		} else {
+<span class="nc" id="L71">			InputStream resourceStream =url.openStream();</span>
+	
+<span class="nc" id="L73">			JAXBContext jc = JAXBContext.newInstance(thePackage);</span>
+<span class="nc" id="L74">			Unmarshaller unmarshaller = jc.createUnmarshaller();</span>
+<span class="nc" id="L75">			obj = ((JAXBElement)unmarshaller.unmarshal(resourceStream)).getValue();</span>
+		}
+<span class="nc" id="L77">		return obj;</span>
+	}
+
+        /**
+         * converts a XML in a String to a UDDI entity
+         * @param source
+         * @param thePackage
+         * @return UDDI entity from the file
+         * @throws JAXBException
+         * @throws IOException 
+         */
+	@SuppressWarnings(&quot;rawtypes&quot;)
+	public static Object buildFromString(String source, String thePackage) throws JAXBException, IOException {
+<span class="nc" id="L90">		Object obj = null;</span>
+<span class="nc" id="L91">		JAXBContext jc = JAXBContext.newInstance(thePackage);</span>
+<span class="nc" id="L92">		Unmarshaller unmarshaller = jc.createUnmarshaller();</span>
+<span class="nc" id="L93">		obj = ((JAXBElement)unmarshaller.unmarshal(new StringReader(source)));</span>
+<span class="nc" id="L94">		return obj;</span>
+	}
+		
+        /**
+         * Only use this class for debugging purposes. Output may not be valid XML
+         * @param obj
+         * @param thePackage
+         * @throws JAXBException
+         * @deprecated
+         */
+        @Deprecated
+	public static void outputEntity(Object obj, String thePackage) throws JAXBException {
+<span class="nc" id="L106">		JAXBContext jc = JAXBContext.newInstance(thePackage);</span>
+<span class="nc" id="L107">		Marshaller marshaller = jc.createMarshaller();</span>
+<span class="nc" id="L108">		marshaller.marshal( new JAXBElement&lt;Object&gt;(new javax.xml.namespace.QName(&quot;uri&quot;,&quot;local&quot;), Object.class, obj), System.out);</span>
+		
+<span class="nc" id="L110">	}</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

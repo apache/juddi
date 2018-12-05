@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JUDDIQuery.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.api.util</a> &gt; <span class="el_source">JUDDIQuery.java</span></div><h1>JUDDIQuery.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2014 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.api.util;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+
+/**
+ * enumerated data type to help with MBean lookups
+ */
+<span class="pc" id="L25">public enum JUDDIQuery implements UDDIQuery {</span>
+
+<span class="fc" id="L27">        SAVE_PUBLISHER(&quot;save_publisher&quot;),</span>
+<span class="fc" id="L28">        DELETE_PUBLISHER(&quot;delete_publisher&quot;),</span>
+<span class="fc" id="L29">        GET_PUBLISHER_DETAIL(&quot;get_publisherDetail&quot;),</span>
+<span class="fc" id="L30">        GET_ALL_PUBLISHER_DETAIL(&quot;get_allPublisherDetail&quot;),</span>
+<span class="fc" id="L31">        ADMIN_DELETE_TMODEL(&quot;admin_deleteTmodel&quot;),</span>
+<span class="fc" id="L32">        DELETE_CLIENT_SUB(&quot;delete_clientSubscriptionInfo&quot;),</span>
+<span class="fc" id="L33">        SAVE_CLIENT_SUB(&quot;save_clientSubscriptionInfo&quot;),</span>
+<span class="fc" id="L34">        GET_ALL_CLIENT_SUB(&quot;get_allClientSubscriptionInfo&quot;),</span>
+<span class="fc" id="L35">        GET_CLIENT_SUB(&quot;get_clientSubscriptionInfo&quot;),</span>
+<span class="fc" id="L36">        SAVE_CLERK(&quot;save_clerk&quot;),</span>
+<span class="fc" id="L37">        SAVE_NODE(&quot;save_node&quot;),</span>
+<span class="fc" id="L38">        GET_ALL_NODES(&quot;get_allNodes&quot;),</span>
+<span class="fc" id="L39">        DELETE_NODE(&quot;delete_node&quot;),</span>
+<span class="fc" id="L40">        GET_ALL_CLERKS(&quot;get_allClerks&quot;),</span>
+<span class="fc" id="L41">        DELETE_CLERK(&quot;delete_clerk&quot;),</span>
+<span class="fc" id="L42">        ADMIN_DELETE_SUB(&quot;admin_deleteSubcriptionInfo&quot;),</span>
+<span class="fc" id="L43">        ADMIN_SAVE_TMODEL(&quot;admin_saveTmodel&quot;),</span>
+<span class="fc" id="L44">        ADMIN_SAVE_BUSINESS(&quot;admin_saveBusiness&quot;),</span>
+<span class="fc" id="L45">        SET_REPLICATION_NODES(&quot;set_replicationNodes&quot;),</span>
+<span class="fc" id="L46">        GET_REPLICATION_NODES(&quot;get_replicationNodes&quot;),</span>
+<span class="fc" id="L47">        ADMIN_SAVE_SUB(&quot;admin_saveClientSubscription&quot;),</span>
+<span class="fc" id="L48">        ADMIN_GET_HISTORY(&quot;admin_getEntityHistory&quot;),</span>
+<span class="fc" id="L49">        INVOKE_SYNCSUB(&quot;invoke_synchSubscription&quot;),</span>
+<span class="fc" id="L50">        ADMIN_GET_FAILED_CRS(&quot;getFailedReplicationChangeRecords&quot;);</span>
+        private String _query;
+<span class="fc" id="L52">        private static Hashtable&lt;String, JUDDIQuery&gt; _inquiryQueries = null;</span>
+
+<span class="fc" id="L54">        JUDDIQuery(final String query) {</span>
+<span class="fc" id="L55">                _query = query;</span>
+<span class="fc" id="L56">        }</span>
+
+        public String getQuery() {
+<span class="fc" id="L59">                return _query;</span>
+        }
+
+        public synchronized static void initInquiryQueries() {
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">                if (_inquiryQueries == null) {</span>
+<span class="fc" id="L64">                        _inquiryQueries = new Hashtable();</span>
+<span class="fc" id="L65">                        _inquiryQueries.put(&quot;save_publisher&quot;, JUDDIQuery.SAVE_PUBLISHER);</span>
+<span class="fc" id="L66">                        _inquiryQueries.put(&quot;delete_publisher&quot;, JUDDIQuery.DELETE_PUBLISHER);</span>
+<span class="fc" id="L67">                        _inquiryQueries.put(&quot;get_publisherDetail&quot;, JUDDIQuery.GET_PUBLISHER_DETAIL);</span>
+<span class="fc" id="L68">                        _inquiryQueries.put(&quot;get_allPublisherDetail&quot;, JUDDIQuery.GET_ALL_PUBLISHER_DETAIL);</span>
+<span class="fc" id="L69">                        _inquiryQueries.put(&quot;admin_deleteTmodel&quot;, JUDDIQuery.ADMIN_DELETE_TMODEL);</span>
+<span class="fc" id="L70">                        _inquiryQueries.put(&quot;delete_clientSubscriptionInfo&quot;, JUDDIQuery.DELETE_CLIENT_SUB);</span>
+<span class="fc" id="L71">                        _inquiryQueries.put(&quot;save_clientSubscriptionInfo&quot;, JUDDIQuery.SAVE_CLIENT_SUB);</span>
+<span class="fc" id="L72">                        _inquiryQueries.put(&quot;get_allClientSubscriptionInfo&quot;, JUDDIQuery.GET_ALL_CLIENT_SUB);</span>
+<span class="fc" id="L73">                        _inquiryQueries.put(&quot;get_clientSubscriptionInfo&quot;, JUDDIQuery.GET_CLIENT_SUB);</span>
+<span class="fc" id="L74">                        _inquiryQueries.put(&quot;save_clerk&quot;, JUDDIQuery.SAVE_CLERK);</span>
+<span class="fc" id="L75">                        _inquiryQueries.put(&quot;save_node&quot;, JUDDIQuery.SAVE_NODE);</span>
+<span class="fc" id="L76">                        _inquiryQueries.put(&quot;get_allNodes&quot;, JUDDIQuery.GET_ALL_NODES);</span>
+
+<span class="fc" id="L78">                        _inquiryQueries.put(&quot;delete_node&quot;, JUDDIQuery.DELETE_NODE);</span>
+
+<span class="fc" id="L80">                        _inquiryQueries.put(&quot;get_allClerks&quot;, JUDDIQuery.GET_ALL_CLERKS);</span>
+<span class="fc" id="L81">                        _inquiryQueries.put(&quot;delete_clerk&quot;, JUDDIQuery.DELETE_CLERK);</span>
+<span class="fc" id="L82">                        _inquiryQueries.put(&quot;admin_deleteSubcriptionInfo&quot;, JUDDIQuery.ADMIN_DELETE_SUB);</span>
+<span class="fc" id="L83">                        _inquiryQueries.put(&quot;admin_saveTmodel&quot;, JUDDIQuery.ADMIN_SAVE_TMODEL);</span>
+<span class="fc" id="L84">                        _inquiryQueries.put(&quot;admin_saveBusiness&quot;, JUDDIQuery.ADMIN_SAVE_BUSINESS);</span>
+<span class="fc" id="L85">                        _inquiryQueries.put(&quot;set_replicationNodes&quot;, JUDDIQuery.SET_REPLICATION_NODES);</span>
+<span class="fc" id="L86">                        _inquiryQueries.put(&quot;get_replicationNodes&quot;, JUDDIQuery.GET_REPLICATION_NODES);</span>
+<span class="fc" id="L87">                        _inquiryQueries.put(&quot;admin_saveClientSubscription&quot;, JUDDIQuery.ADMIN_SAVE_SUB);</span>
+<span class="fc" id="L88">                        _inquiryQueries.put(&quot;admin_getEntityHistory&quot;, JUDDIQuery.ADMIN_GET_HISTORY);</span>
+<span class="fc" id="L89">                        _inquiryQueries.put(&quot;invoke_synchSubscription&quot;, JUDDIQuery.INVOKE_SYNCSUB);</span>
+<span class="fc" id="L90">                        _inquiryQueries.put(&quot;getFailedReplicationChangeRecords&quot;, JUDDIQuery.ADMIN_GET_FAILED_CRS);</span>
+
+                        
+                }
+<span class="fc" id="L94">        }</span>
+
+        public static List&lt;String&gt; getQueries() {
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">                if (_inquiryQueries == null) {</span>
+<span class="fc" id="L98">                        initInquiryQueries();</span>
+                }
+
+<span class="fc" id="L101">                List list = new ArrayList&lt;String&gt;(_inquiryQueries.keySet());</span>
+<span class="fc" id="L102">                return list;</span>
+        }
+
+        /**
+        * this doesn't appear to be used anywhere and will be removed in a future version
+        * @param query
+        * @return
+        * @deprecated
+        */
+        public static JUDDIQuery fromQuery(final String query) {
+<span class="nc bnc" id="L112" title="All 2 branches missed.">                if (_inquiryQueries == null) {</span>
+<span class="nc" id="L113">                        initInquiryQueries();</span>
+                }
+
+<span class="nc bnc" id="L116" title="All 2 branches missed.">                if (_inquiryQueries.contains(query)) {</span>
+<span class="nc" id="L117">                        return _inquiryQueries.get(query);</span>
+                } else {
+<span class="nc" id="L119">                        throw new IllegalArgumentException(&quot;Unrecognized query &quot; + query);</span>
+                }
+        }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

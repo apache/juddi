@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UDDIKeyConvention.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.config</a> &gt; <span class="el_source">UDDIKeyConvention.java</span></div><h1>UDDIKeyConvention.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.v3.client.config;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Properties;
+
+import javax.xml.namespace.QName;
+
+<span class="nc" id="L26">public class UDDIKeyConvention </span>
+{
+	
+	//Default Values
+	public static final String DEFAULT_BUSINESS_KEY_FORMAT      = &quot;uddi:${keyDomain}:business_${businessName}&quot;;
+	public static final String DEFAULT_SERVICE_KEY_FORMAT       = &quot;uddi:${keyDomain}:service_${serviceName}&quot;;
+	public static final String DEFAULT_SUBSCRIPTION_KEY_FORMAT  = &quot;uddi:${keyDomain}:service_cache_${serverName}&quot;;
+	public static final String DEFAULT_BINDING_KEY_FORMAT       = &quot;uddi:${keyDomain}:binding_${serverName}_${serviceName}_${portName}_${serverPort}&quot;;
+	
+	/**
+	 * Constructs the serviceKey based on the bindingKeyFormat specified in the properties. When no
+	 * businessKeyFormat is specific the default format of uddi:${keyDomain}:${businessName} is used. The businessName
+	 * property needs to be set properties.
+	 * 
+	 * @param properties
+	 * @return the businessKey
+	 */
+	public static String getBusinessKey(Properties properties) {
+<span class="fc" id="L44">		String businessKey = properties.getProperty(Property.BUSINESS_KEY);</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">		if (businessKey==null) {</span>
+<span class="fc" id="L46">			String keyFormat = properties.getProperty(Property.BUSINESS_KEY_FORMAT, DEFAULT_BUSINESS_KEY_FORMAT);</span>
+<span class="fc" id="L47">			businessKey = TokenResolver.replaceTokens(keyFormat, properties).toLowerCase();</span>
+		}
+<span class="fc" id="L49">		return businessKey;</span>
+	}
+	
+	public static String getSubscriptionKey(Properties properties) {
+<span class="nc" id="L53">		String keyFormat = properties.getProperty(Property.SUBSCRIPTION_KEY_FORMAT, DEFAULT_SUBSCRIPTION_KEY_FORMAT);</span>
+<span class="nc" id="L54">		String subscriptionKey = TokenResolver.replaceTokens(keyFormat, properties).toLowerCase();</span>
+<span class="nc" id="L55">		return subscriptionKey;</span>
+	}
+	/**
+	 * Constructs the serviceKey based on the serviceKeyFormat specified in the properties. When no
+	 * serviceKeyFormat is specific the default format of uddi:${keyDomain}:${serviceName} is used.
+	 * 
+	 * @param properties
+	 * @param serviceName
+	 * @return the serviceKey
+	 */
+	public static String getServiceKey(Properties properties, String serviceName) {
+<span class="fc" id="L66">		Properties tempProperties = new Properties();</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">		if (properties!=null) tempProperties.putAll(properties);</span>
+<span class="fc" id="L68">		tempProperties.put(&quot;serviceName&quot;, serviceName);</span>
+		//Constructing the serviceKey
+<span class="fc" id="L70">		String keyFormat = tempProperties.getProperty(Property.SERVICE_KEY_FORMAT, DEFAULT_SERVICE_KEY_FORMAT);</span>
+<span class="fc" id="L71">		String serviceKey = TokenResolver.replaceTokens(keyFormat, tempProperties).toLowerCase();</span>
+<span class="fc" id="L72">		return serviceKey;</span>
+	}
+	
+	public static String getBindingKey(Properties properties, QName serviceName, String portName, URL bindingUrl) {
+		
+<span class="fc" id="L77">		String bindingKey = null;</span>
+		try {
+<span class="fc" id="L79">			URI bindingURI = bindingUrl.toURI();</span>
+<span class="fc" id="L80">			bindingKey =  getBindingKey(properties, serviceName, portName, bindingURI);</span>
+<span class="nc" id="L81">		} catch (URISyntaxException e) {</span>
+			
+<span class="fc" id="L83">		}</span>
+<span class="fc" id="L84">		return bindingKey;</span>
+		
+	}
+	/**
+	 * Constructs the bindingKey based on the bindingKeyFormat specified in the properties. When no
+	 * bindingKeyFormat is specific the default format of uddi:${keyDomain}:${nodeName}-${serviceName}-{portName} is used.
+	 * 
+	 * @param properties
+	 * @param serviceName
+	 * @param portName
+         * @param bindingUrl
+	 * @return the bindingKey
+	 */
+	public static String getBindingKey(Properties properties, QName serviceName, String portName, URI bindingUrl) {
+<span class="fc" id="L98">		Properties tempProperties = new Properties();</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">		if (properties!=null) tempProperties.putAll(properties);</span>
+<span class="fc" id="L100">		tempProperties.put(&quot;serviceName&quot;, serviceName.getLocalPart());</span>
+<span class="fc" id="L101">		tempProperties.put(&quot;portName&quot;, portName);</span>
+<span class="fc" id="L102">		int port = bindingUrl.getPort();</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">		if (port==-1) {</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">			if (&quot;http&quot;.equals(bindingUrl.getScheme())) {</span>
+<span class="fc" id="L105">				port = 80;</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">			} else if (&quot;https&quot;.equals(bindingUrl.getScheme())) {</span>
+<span class="nc" id="L107">				port = 443;</span>
+			}
+		}
+<span class="fc" id="L110">		tempProperties.put(&quot;serverPort&quot;, String.valueOf(port));</span>
+		//Constructing the binding Key
+<span class="fc" id="L112">		String keyFormat = tempProperties.getProperty(Property.BINDING_KEY_FORMAT, DEFAULT_BINDING_KEY_FORMAT);</span>
+<span class="fc" id="L113">		String bindingKey = TokenResolver.replaceTokens(keyFormat, tempProperties).toLowerCase();</span>
+<span class="fc" id="L114">		return bindingKey;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

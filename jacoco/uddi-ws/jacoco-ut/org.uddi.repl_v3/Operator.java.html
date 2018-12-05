@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Operator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.repl_v3</a> &gt; <span class="el_source">Operator.java</span></div><h1>Operator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.uddi.repl_v3;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import org.uddi.api_v3.Contact;
+import org.w3._2000._09.xmldsig_.KeyInfoType;
+
+/**
+ * The operator elements in a Replication Configuration Structure are a list of
+ * the nodes and established paths of communication between the nodes within a
+ * registry. The communication paths and general replication topology
+ * considerations are discussed later in this specification.
+ * &lt;br&gt;&lt;br&gt;
+ * The operatorNodeID contains a unique key that is used to uniquely identify
+ * this node throughout the UDDI registry. The value used MUST match the
+ * businessKey of the Node Business Entity as referenced in Section 6.2.2
+ * Self-Registration of Node Business Entity. The contact or contacts listed
+ * provide information about humans who should be contacted in the face of
+ * administrative and technical situations of various sorts. . The dsig:KeyInfo
+ * elements are intended to contain the certificate details if the
+ * soapReplicationURL makes use of Secure Sockets Layer 3.0 with mutual
+ * authentication as described in Section 7.5.5 Security Configuration.
+ *
+ *
+ * &lt;p&gt;
+ * Java class for anonymous complex type.
+ *
+ * &lt;p&gt;
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ *
+ * &lt;pre&gt;
+ * &amp;lt;complexType&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;sequence&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:repl_v3}operatorNodeID&quot;/&gt;
+ *         &amp;lt;element name=&quot;operatorStatus&quot; type=&quot;{urn:uddi-org:repl_v3}operatorStatus_type&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{urn:uddi-org:api_v3}contact&quot; maxOccurs=&quot;unbounded&quot;/&gt;
+ *         &amp;lt;element name=&quot;soapReplicationURL&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}anyURI&quot;/&gt;
+ *         &amp;lt;element ref=&quot;{http://www.w3.org/2000/09/xmldsig#}KeyInfo&quot; maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot;/&gt;
+ *       &amp;lt;/sequence&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ *
+ *
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;&quot;, propOrder = {
+        &quot;operatorNodeID&quot;,
+        &quot;operatorStatus&quot;,
+        &quot;contact&quot;,
+        &quot;soapReplicationURL&quot;,
+        &quot;keyInfo&quot;
+})
+@XmlRootElement(name = &quot;operator&quot;)
+<span class="fc" id="L83">public class Operator implements Serializable {</span>
+
+        @XmlTransient
+        private static final long serialVersionUID = 3012475870316361941L;
+        @XmlElement(required = true)
+        protected String operatorNodeID;
+        @XmlElement(required = true)
+        protected OperatorStatusType operatorStatus;
+        @XmlElement(namespace = &quot;urn:uddi-org:api_v3&quot;, required = true)
+        protected List&lt;Contact&gt; contact;
+        @XmlElement(required = true)
+        @XmlSchemaType(name = &quot;anyURI&quot;)
+        protected String soapReplicationURL;
+        @XmlElement(name = &quot;KeyInfo&quot;, namespace = &quot;http://www.w3.org/2000/09/xmldsig#&quot;)
+        protected List&lt;KeyInfoType&gt; keyInfo;
+
+        /**
+         * Gets the value of the operatorNodeID property.
+         *
+         * @return possible object is {@link String }
+         *
+         */
+        public String getOperatorNodeID() {
+<span class="nc" id="L106">                return operatorNodeID;</span>
+        }
+
+        /**
+         * Sets the value of the operatorNodeID property.
+         *
+         * @param value allowed object is {@link String }
+         *
+         */
+        public void setOperatorNodeID(String value) {
+<span class="fc" id="L116">                this.operatorNodeID = value;</span>
+<span class="fc" id="L117">        }</span>
+
+        /**
+         * Gets the value of the operatorStatus property.
+         *
+         * @return possible object is {@link OperatorStatusType }
+         *
+         */
+        public OperatorStatusType getOperatorStatus() {
+<span class="nc" id="L126">                return operatorStatus;</span>
+        }
+
+        /**
+         * Sets the value of the operatorStatus property.
+         *
+         * @param value allowed object is {@link OperatorStatusType }
+         *
+         */
+        public void setOperatorStatus(OperatorStatusType value) {
+<span class="fc" id="L136">                this.operatorStatus = value;</span>
+<span class="fc" id="L137">        }</span>
+
+        /**
+         * Gets the value of the contact property.
+         *
+         * &lt;p&gt;
+         * This accessor method returns a reference to the live list, not a
+         * snapshot. Therefore any modification you make to the returned list
+         * will be present inside the JAXB object. This is why there is not a
+         * &lt;CODE&gt;set&lt;/CODE&gt; method for the contact property.
+         *
+         * &lt;p&gt;
+         * For example, to add a new item, do as follows:
+         * &lt;pre&gt;
+         *    getContact().add(newItem);
+         * &lt;/pre&gt;
+         *
+         *
+         * &lt;p&gt;
+         * Objects of the following type(s) are allowed in the list
+     * {@link Contact }
+         *
+         *
+         */
+        public List&lt;Contact&gt; getContact() {
+<span class="fc bfc" id="L162" title="All 2 branches covered.">                if (contact == null) {</span>
+<span class="fc" id="L163">                        contact = new ArrayList&lt;Contact&gt;();</span>
+                }
+<span class="fc" id="L165">                return this.contact;</span>
+        }
+
+        /**
+         * Gets the value of the soapReplicationURL property.
+         *
+         * @return possible object is {@link String }
+         *
+         */
+        public String getSoapReplicationURL() {
+<span class="nc" id="L175">                return soapReplicationURL;</span>
+        }
+
+        /**
+         * Sets the value of the soapReplicationURL property.
+         *
+         * @param value allowed object is {@link String }
+         *
+         */
+        public void setSoapReplicationURL(String value) {
+<span class="fc" id="L185">                this.soapReplicationURL = value;</span>
+<span class="fc" id="L186">        }</span>
+
+        /**
+         * Gets the value of the keyInfo property.
+         *
+         * &lt;p&gt;
+         * This accessor method returns a reference to the live list, not a
+         * snapshot. Therefore any modification you make to the returned list
+         * will be present inside the JAXB object. This is why there is not a
+         * &lt;CODE&gt;set&lt;/CODE&gt; method for the keyInfo property.
+         *
+         * &lt;p&gt;
+         * For example, to add a new item, do as follows:
+         * &lt;pre&gt;
+         *    getKeyInfo().add(newItem);
+         * &lt;/pre&gt;
+         *
+         *
+         * &lt;p&gt;
+         * Objects of the following type(s) are allowed in the list
+     * {@link KeyInfoType }
+         *
+         *
+         */
+        public List&lt;KeyInfoType&gt; getKeyInfo() {
+<span class="nc bnc" id="L211" title="All 2 branches missed.">                if (keyInfo == null) {</span>
+<span class="nc" id="L212">                        keyInfo = new ArrayList&lt;KeyInfoType&gt;();</span>
+                }
+<span class="nc" id="L214">                return this.keyInfo;</span>
+        }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

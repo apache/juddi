@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DeletePublisherAssertionByBusinessQuery.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.query</a> &gt; <span class="el_source">DeletePublisherAssertionByBusinessQuery.java</span></div><h1>DeletePublisherAssertionByBusinessQuery.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.query;
+
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.query.util.DynamicQuery;
+
+/**
+ * 
+ * Returns the list of PublisherAssertions that contain the input businessKeys as their from or to key
+ *  * 
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+<span class="nc" id="L34">public class DeletePublisherAssertionByBusinessQuery extends PublisherAssertionQuery {</span>
+
+<span class="nc" id="L36">	private static final Log log = LogFactory.getLog(DeletePublisherAssertionByBusinessQuery.class);</span>
+
+	public static int delete(EntityManager em, List&lt;?&gt; businessKeys) {
+<span class="nc bnc" id="L39" title="All 4 branches missed.">		if ((businessKeys == null) || (businessKeys.size() == 0))</span>
+<span class="nc" id="L40">			return 0;</span>
+		
+<span class="nc" id="L42">		DynamicQuery dynamicQry = new DynamicQuery(deleteSQL);</span>
+<span class="nc" id="L43">		appendConditions(dynamicQry, businessKeys);</span>
+		
+<span class="nc" id="L45">		log.debug(dynamicQry);</span>
+		
+<span class="nc" id="L47">		Query qry = dynamicQry.buildJPAQuery(em);</span>
+<span class="nc" id="L48">		int result = qry.executeUpdate();</span>
+		
+<span class="nc" id="L50">		return result;</span>
+	}
+	
+	/*
+	 * Appends the conditions to the query based on the businessKey list.  The keys can either be in the fromKey or toKey of the publisher assertion.
+	 */
+	public static void appendConditions(DynamicQuery qry, List&lt;?&gt; businessKeys) {
+		
+<span class="nc" id="L58">		qry.WHERE().pad().openParen().pad();</span>
+		
+<span class="nc" id="L60">		qry.appendInList(ENTITY_ALIAS + &quot;.&quot; + FROM_KEY_NAME, businessKeys);</span>
+<span class="nc" id="L61">		qry.pad().OR().pad();</span>
+<span class="nc" id="L62">		qry.appendInList(ENTITY_ALIAS + &quot;.&quot; + TO_KEY_NAME, businessKeys);</span>
+<span class="nc" id="L63">		qry.closeParen().pad();</span>
+		
+		
+<span class="nc" id="L66">	}</span>
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

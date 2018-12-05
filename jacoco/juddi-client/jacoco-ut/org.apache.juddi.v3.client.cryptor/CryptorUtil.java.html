@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CryptorUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Client side Code</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.client.cryptor</a> &gt; <span class="el_source">CryptorUtil.java</span></div><h1>CryptorUtil.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2013 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.juddi.v3.client.cryptor;
+
+/**
+ * A static entry point for encrypting text via CLI
+ *
+ * @since 3.1.5
+ * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ * @see CryptorFactory
+ */
+<span class="nc" id="L25">public class CryptorUtil {</span>
+
+        public static void main(String[] args) throws Exception {
+<span class="nc bnc" id="L28" title="All 2 branches missed.">                if (args.length == 0) {</span>
+<span class="nc" id="L29">                        PrintUsage();</span>
+<span class="nc" id="L30">                        return;</span>
+                }
+<span class="nc" id="L32">                Cryptor cryptor = CryptorFactory.getCryptor(args[0]);</span>
+<span class="nc bnc" id="L33" title="All 2 branches missed.">                if (System.getProperty(&quot;generate&quot;, &quot;false&quot;).equalsIgnoreCase(&quot;true&quot;)) {</span>
+<span class="nc" id="L34">                        System.out.println(&quot;Generating new key...&quot;);</span>
+<span class="nc" id="L35">                        System.out.println(cryptor.newKey());</span>
+                } else {
+<span class="nc" id="L37">                        System.out.print(&quot;Password: &quot;);</span>
+<span class="nc" id="L38">                        char[] readPassword = System.console().readPassword();</span>
+<span class="nc" id="L39">                        System.out.println(&quot;Cipher: &quot; + cryptor.encrypt(new String(readPassword)));</span>
+                }
+<span class="nc" id="L41">        }</span>
+
+        private static void PrintUsage() {
+<span class="nc" id="L44">                System.out.println(&quot;Encrypts a password using the specified crypto provider&quot;);</span>
+<span class="nc" id="L45">                System.out.println(&quot;Usage: java (options) -cp (classpath) &quot; + CryptorUtil.class.getCanonicalName() + &quot; (CryptoProvider)&quot;);</span>
+
+<span class="nc" id="L47">                System.out.println(&quot;Provided crypto providers:&quot;);</span>
+<span class="nc" id="L48">                System.out.println(&quot;\t&quot; + DefaultCryptor.class.getCanonicalName() + &quot; - uses PBEWithMD5AndDES&quot;);</span>
+<span class="nc" id="L49">                System.out.println(&quot;\t&quot; + TripleDESCrytor.class.getCanonicalName() + &quot; - uses TripleDES&quot;);</span>
+<span class="nc" id="L50">                System.out.println(&quot;\t&quot; + AES128Cryptor.class.getCanonicalName() + &quot; - uses AES128&quot;);</span>
+<span class="nc" id="L51">                System.out.println(&quot;\t&quot; + AES256Cryptor.class.getCanonicalName() + &quot; - uses AES256*&quot;);</span>
+<span class="nc" id="L52">                System.out.println();</span>
+<span class="nc" id="L53">                System.out.println(&quot;* Requires Unlimited Strength JCE *&quot;);</span>
+<span class="nc" id="L54">                System.out.println();</span>
+<span class="nc" id="L55">                System.out.println(&quot;Available options:&quot;);</span>
+<span class="nc" id="L56">                System.out.println(&quot;\t-Dgenerate=true - generates a new encryption key and writes to std out&quot;);</span>
+<span class="nc" id="L57">                System.out.println(&quot;\t-Djuddi.encryptionKeyFile.(providerClassName)=path - encrypts a password using the specified key&quot;);</span>
+<span class="nc" id="L58">                System.out.println(&quot;(e.g. -Djuddi.encryptionKeyFile.TripleDESCrytor,-Djuddi.encryptionKeyFile.AES128Cryptor, etc &quot;);</span>
+<span class="nc" id="L59">        }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

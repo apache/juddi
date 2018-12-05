@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FindEntityByCategoryGroupQuery.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.query</a> &gt; <span class="el_source">FindEntityByCategoryGroupQuery.java</span></div><h1>FindEntityByCategoryGroupQuery.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.query;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.EntityManager;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.config.Constants;
+import org.apache.juddi.query.util.DynamicQuery;
+import org.apache.juddi.query.util.FindQualifiers;
+import org.apache.juddi.query.util.KeyedRefGroupTModelComparator;
+import org.uddi.api_v3.CategoryBag;
+import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.KeyedReferenceGroup;
+
+/**
+ * Returns the list of &quot;entity&quot; keys possessing the keyedReferenceGroups in the passed category bag.
+ * Output is restricted by list of &quot;entity&quot; keys passed in.  If null, all entities are searched.
+ * Output is produced by building the appropriate JPA query based on input and find qualifiers.
+ * 
+ * NOTES:
+ * 1) Category groups are grouped with a logical AND by default.
+ * 2) Concerning when the categories are AND'd together - the only way this can be done with a single query was to create a self-join for 
+ *    each category.  If there are a lot of categories, the performance could suffer.
+ *    TODO:  Test performance with multiple AND'd categories.  If too slow, look to process this query in multiple steps.
+ * 3) The &quot;orLikeKeys&quot; qualifier complicates matters.  The &quot;like&quot; keys are OR'd together and these groups of &quot;like&quot; keys are AND'd together.
+ *    As with &quot;andAllKeys&quot;, self-joins are created but only one for each group of &quot;like&quot; keys.  If none of the keyedReferences passed are alike then this
+ *    will reduce to an &quot;andAllKeys&quot; query.  If all are alike, then this will query will exhibit the behavior of OR'ing all keys.
+ * 
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+public class FindEntityByCategoryGroupQuery extends EntityQuery {
+	
+	@SuppressWarnings(&quot;unused&quot;)
+<span class="fc" id="L57">	private final static Log log = LogFactory.getLog(FindEntityByCategoryGroupQuery.class);</span>
+
+	private static final String ENTITY_KEYEDREFERENCEGROUP = &quot;KeyedReferenceGroup&quot;;
+	private static final String ALIAS_KEYEDREFERENCEGROUP = &quot;krg&quot;;
+	private static final String FIELD_CATEGORYBAG = &quot;categoryBag&quot;;
+
+	private static final String ENTITY_KEYEDREFERENCE = &quot;KeyedReference&quot;;
+<span class="fc" id="L64">	private static final String ALIAS_KEYEDREFERENCE = buildAlias(ENTITY_KEYEDREFERENCE);</span>
+	private static final String FIELD_KEYEDREFERENCEGROUP = &quot;keyedReferenceGroup&quot;;
+	
+	private final String entityName;
+	private final String entityAlias;
+	private final String keyName;
+	private final String entityField;
+	private final String entityNameChild;
+	private final String entityAliasChild;
+	private final String selectSQL;
+	private String signaturePresent;
+
+	public FindEntityByCategoryGroupQuery(String entityName, String entityAlias, String keyName, 
+<span class="fc" id="L77">			String entityField, String entityNameChild, String signaturePresent) {</span>
+<span class="fc" id="L78">		this.entityName = entityName;</span>
+<span class="fc" id="L79">		this.entityAlias = entityAlias;</span>
+<span class="fc" id="L80">		this.keyName = keyName;</span>
+<span class="fc" id="L81">		this.entityField = entityField;</span>
+<span class="fc" id="L82">		this.entityNameChild = entityNameChild;</span>
+<span class="fc" id="L83">		this.entityAliasChild = buildAlias(entityNameChild);</span>
+<span class="fc" id="L84">		this.signaturePresent = signaturePresent;</span>
+		
+<span class="fc" id="L86">		StringBuffer sql = new StringBuffer(200);</span>
+<span class="fc" id="L87">		sql.append(&quot;select distinct &quot; + entityAlias + &quot;.&quot; + keyName + &quot; from &quot; </span>
+				   + entityName + &quot; &quot; + entityAlias + &quot; , &quot; 
+				   + entityNameChild + &quot; &quot; + entityAliasChild + &quot; , &quot;
+				   + ENTITY_KEYEDREFERENCEGROUP + &quot; &quot; + ALIAS_KEYEDREFERENCEGROUP + &quot; &quot;);
+<span class="fc" id="L91">		selectSQL = sql.toString();</span>
+<span class="fc" id="L92">	}</span>
+	
+	public String getEntityName() {
+<span class="nc" id="L95">		return entityName;</span>
+	}
+
+	public String getEntityAlias() {
+<span class="nc" id="L99">		return entityAlias;</span>
+	}
+
+	public String getKeyName() {
+<span class="nc" id="L103">		return keyName;</span>
+	}
+
+	public String getEntityField() {
+<span class="nc" id="L107">		return entityField;</span>
+	}
+
+	public String getEntityNameChild() {
+<span class="nc" id="L111">		return entityNameChild;</span>
+	}
+	
+	public String getEntityAliasChild() {
+<span class="nc" id="L115">		return entityAliasChild;</span>
+	}
+	
+	public String getSelectSQL() {
+<span class="nc" id="L119">		return selectSQL;</span>
+	}
+	
+	public String getSignaturePresent() {
+<span class="fc" id="L123">		return signaturePresent;</span>
+	}
+
+	public void setSignaturePresent(String signaturePresent) {
+<span class="nc" id="L127">		this.signaturePresent = signaturePresent;</span>
+<span class="nc" id="L128">	}</span>
+	
+	@SuppressWarnings(&quot;unchecked&quot;)
+	public List&lt;Object&gt; select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, List&lt;Object&gt; keysIn, DynamicQuery.Parameter... restrictions) {
+		// If keysIn is not null and empty, then search is over.
+<span class="fc bfc" id="L133" title="All 4 branches covered.">		if ((keysIn != null) &amp;&amp; (keysIn.size() == 0))</span>
+<span class="fc" id="L134">			return keysIn;</span>
+		
+<span class="fc bfc" id="L136" title="All 2 branches covered.">		if (categoryBag == null)</span>
+<span class="fc" id="L137">			return keysIn;</span>
+		
+<span class="fc" id="L139">		List&lt;KeyedReferenceGroup&gt; categories = categoryBag.getKeyedReferenceGroup();</span>
+<span class="pc bpc" id="L140" title="1 of 4 branches missed.">		if (categories == null || categories.size() == 0)</span>
+<span class="fc" id="L141">			return keysIn;</span>
+		
+<span class="fc" id="L143">		List&lt;KeyedReferenceGroup&gt; keyedRefGroups = new ArrayList&lt;KeyedReferenceGroup&gt;(0);</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">		for (KeyedReferenceGroup elem : categories) {</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">			if (elem instanceof KeyedReferenceGroup)</span>
+<span class="fc" id="L146">				keyedRefGroups.add((KeyedReferenceGroup)elem);</span>
+<span class="fc" id="L147">		}</span>
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">		if (keyedRefGroups.size() == 0)</span>
+<span class="nc" id="L149">			return keysIn;		</span>
+		
+		
+<span class="fc" id="L152">		Collections.sort(keyedRefGroups, new KeyedRefGroupTModelComparator());</span>
+<span class="fc" id="L153">		int count = 0;</span>
+<span class="fc" id="L154">		String prevTModelKey = null;</span>
+<span class="fc" id="L155">		Set&lt;Object&gt; orResults = new HashSet&lt;Object&gt;(0);</span>
+<span class="fc" id="L156">		List&lt;Object&gt; restrictionList = keysIn;</span>
+<span class="fc" id="L157">		List&lt;Object&gt; curResult = null;</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">		for (KeyedReferenceGroup keyedRefGroup : keyedRefGroups) {</span>
+<span class="fc" id="L159">			String curTModelKey = keyedRefGroup.getTModelKey();</span>
+			
+<span class="fc" id="L161">			DynamicQuery dynamicQry = new DynamicQuery(selectSQL);</span>
+<span class="fc" id="L162">			appendConditions(dynamicQry, fq, keyedRefGroup);</span>
+<span class="pc bpc" id="L163" title="2 of 4 branches missed.">			if (restrictions != null &amp;&amp; restrictions.length &gt; 0)</span>
+<span class="nc" id="L164">				dynamicQry.AND().pad().appendGroupedAnd(restrictions);</span>
+			
+
+<span class="fc bfc" id="L167" title="All 2 branches covered.">			if (fq.isOrLikeKeys()) {</span>
+<span class="pc bpc" id="L168" title="1 of 2 branches missed.">				if (!curTModelKey.equals(prevTModelKey)) {</span>
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">					if (count != 0) {</span>
+<span class="nc" id="L170">						restrictionList = new ArrayList&lt;Object&gt;(orResults);</span>
+<span class="nc" id="L171">						orResults.clear();</span>
+					}
+				}
+			}
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">			else if (!fq.isOrAllKeys()) {</span>
+<span class="pc bpc" id="L176" title="1 of 2 branches missed.">				if (count != 0)</span>
+<span class="nc" id="L177">					restrictionList = curResult;</span>
+			}
+
+<span class="pc bpc" id="L180" title="2 of 4 branches missed.">			if (restrictionList != null &amp;&amp; restrictionList.size() == 0)</span>
+<span class="nc" id="L181">				break;</span>
+			
+<span class="fc" id="L183">			curResult = getQueryResult(em, dynamicQry, restrictionList, entityAlias + &quot;.&quot; + keyName);</span>
+
+<span class="pc bpc" id="L185" title="1 of 4 branches missed.">			if (fq.isOrAllKeys() || fq.isOrLikeKeys()) {</span>
+<span class="fc" id="L186">				orResults.addAll((List&lt;Object&gt;)curResult);</span>
+			}
+			
+<span class="fc" id="L189">			prevTModelKey = curTModelKey;</span>
+<span class="fc" id="L190">			count++;</span>
+<span class="fc" id="L191">		}</span>
+		
+<span class="fc" id="L193">		List&lt;Object&gt; result = null;</span>
+<span class="pc bpc" id="L194" title="1 of 4 branches missed.">		if (fq.isOrAllKeys() || fq.isOrLikeKeys()) {</span>
+<span class="fc" id="L195">			result = new ArrayList&lt;Object&gt;(0);</span>
+<span class="fc" id="L196">			result.addAll(orResults);</span>
+		}
+		else
+<span class="fc" id="L199">			result = (List&lt;Object&gt;)curResult;</span>
+		
+<span class="fc" id="L201">		return result;</span>
+		
+	}
+
+	/*
+	 * Appends the conditions to the query based on the keyedReferenceGroup.  According to the specification, a keyedReference group matches if all
+	 * keyedReferences within the group are a subset of the target entity's group.  Thus, 
+	 */
+	public void appendConditions(DynamicQuery qry, FindQualifiers fq, KeyedReferenceGroup keyedRefGroup) {
+		
+		// Append the necessary tables (two will always be added connecting the entity to its category bag table and then the category table to the keyed reference group).
+<span class="fc" id="L212">		appendJoinTables(qry, fq, keyedRefGroup);</span>
+
+		// First, appending the group's tmodel key as a condition
+<span class="fc" id="L215">		qry.AND().pad().appendGroupedAnd(new DynamicQuery.Parameter(ALIAS_KEYEDREFERENCEGROUP + &quot;.tmodelKey&quot;, keyedRefGroup.getTModelKey(), DynamicQuery.PREDICATE_EQUALS));</span>
+		
+<span class="fc" id="L217">		List&lt;KeyedReference&gt; keyedRefs = keyedRefGroup.getKeyedReference();</span>
+<span class="pc bpc" id="L218" title="2 of 4 branches missed.">		if (keyedRefs != null &amp;&amp; keyedRefs.size() &gt; 0) {</span>
+		
+<span class="fc" id="L220">			qry.AND().pad().openParen().pad();</span>
+	
+<span class="fc" id="L222">			String predicate = DynamicQuery.PREDICATE_EQUALS;</span>
+<span class="fc bfc" id="L223" title="All 2 branches covered.">			if (fq.isApproximateMatch()) {</span>
+<span class="fc" id="L224">				predicate = DynamicQuery.PREDICATE_LIKE;</span>
+			}
+			
+<span class="fc" id="L227">			int count = 0;</span>
+<span class="fc" id="L228">			int tblCount = -1;</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">			for(KeyedReference keyedRef : keyedRefs) {</span>
+<span class="fc" id="L230">				String tmodelKey = keyedRef.getTModelKey();</span>
+<span class="fc" id="L231">				String keyValue = keyedRef.getKeyValue();</span>
+<span class="fc" id="L232">				String keyName = keyedRef.getKeyName();</span>
+
+<span class="fc bfc" id="L234" title="All 2 branches covered.">				if (fq.isApproximateMatch()) {</span>
+					// JUDDI-235: wildcards are provided by user (only commenting in case a new interpretation arises)
+					//keyValue = keyValue.endsWith(DynamicQuery.WILDCARD)?keyValue:keyValue + DynamicQuery.WILDCARD;
+					//keyName = keyName.endsWith(DynamicQuery.WILDCARD)?keyName:keyName + DynamicQuery.WILDCARD;
+				}
+
+<span class="fc" id="L240">				tblCount++;</span>
+<span class="fc" id="L241">				String keyValueTerm = ALIAS_KEYEDREFERENCE + tblCount + &quot;.keyValue&quot;;</span>
+<span class="fc" id="L242">				String keyNameTerm = ALIAS_KEYEDREFERENCE + tblCount + &quot;.keyName&quot;;</span>
+<span class="fc" id="L243">				String tmodelKeyTerm = ALIAS_KEYEDREFERENCE + tblCount + &quot;.tmodelKeyRef&quot;;</span>
+<span class="fc bfc" id="L244" title="All 2 branches covered.">				if (fq.isCaseInsensitiveMatch()) {</span>
+<span class="fc" id="L245">					keyValueTerm = &quot;upper(&quot; + keyValueTerm + &quot;)&quot;;</span>
+<span class="fc" id="L246">					keyValue = keyValue.toUpperCase();</span>
+					
+<span class="fc" id="L248">					keyNameTerm = &quot;upper(&quot; + keyNameTerm + &quot;)&quot;;</span>
+<span class="fc" id="L249">					keyName = keyName.toUpperCase();</span>
+				}
+				
+				// According to specification, if the &quot;general keyword&quot; tmodel is used, then the keyName must be part of the query.
+<span class="pc bpc" id="L253" title="1 of 2 branches missed.">				if (Constants.GENERAL_KEYWORD_TMODEL.equalsIgnoreCase(tmodelKey)) {</span>
+<span class="nc" id="L254">					qry.appendGroupedAnd(new DynamicQuery.Parameter(tmodelKeyTerm, tmodelKey, DynamicQuery.PREDICATE_EQUALS),</span>
+										 new DynamicQuery.Parameter(keyValueTerm, keyValue, predicate),
+										 new DynamicQuery.Parameter(keyNameTerm, keyName, predicate));
+				}
+				else {
+<span class="fc" id="L259">					qry.appendGroupedAnd(new DynamicQuery.Parameter(tmodelKeyTerm, tmodelKey, DynamicQuery.PREDICATE_EQUALS),</span>
+										 new DynamicQuery.Parameter(keyValueTerm, keyValue, predicate));
+					
+				}
+				
+<span class="pc bpc" id="L264" title="1 of 2 branches missed.">				if (count + 1 &lt; keyedRefs.size())</span>
+<span class="nc" id="L265">					qry.AND().pad();</span>
+				
+<span class="fc" id="L267">				count++;</span>
+<span class="fc" id="L268">			}</span>
+<span class="fc" id="L269">			qry.closeParen().pad();</span>
+		}
+		
+<span class="fc" id="L272">	}</span>
+
+	
+	
+	/*
+	 * Appends the necessary join table for the child entity and additional tables for when keys are AND'd.  When &quot;orLikeKeys&quot; is used, 
+	 * we only need an extra table for each distinct tmodelKey.
+	 */
+	public void appendJoinTables(DynamicQuery qry, FindQualifiers fq, KeyedReferenceGroup keyedRefGroup) {
+		
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">		if (keyedRefGroup != null) {</span>
+			
+<span class="fc" id="L284">			List&lt;KeyedReference&gt; keyedRefs = keyedRefGroup.getKeyedReference();</span>
+<span class="fc" id="L285">			StringBuffer thetaJoins = new StringBuffer(200);</span>
+<span class="pc bpc" id="L286" title="2 of 4 branches missed.">			if (keyedRefs != null &amp;&amp; keyedRefs.size() &gt; 0) {</span>
+<span class="fc" id="L287">				int tblCount = 0;</span>
+<span class="fc bfc" id="L288" title="All 2 branches covered.">				for(int count = 0; count&lt;keyedRefs.size(); count++) {</span>
+<span class="pc bpc" id="L289" title="1 of 2 branches missed.">					if (count != 0) {</span>
+<span class="nc" id="L290">						tblCount++;</span>
+<span class="nc" id="L291">						qry.comma().pad().append(ENTITY_KEYEDREFERENCE + &quot; &quot; + ALIAS_KEYEDREFERENCE + tblCount).pad();</span>
+<span class="nc" id="L292">						thetaJoins.append(ALIAS_KEYEDREFERENCE + (tblCount - 1) + &quot;.&quot; + FIELD_KEYEDREFERENCEGROUP + &quot;.id = &quot; + ALIAS_KEYEDREFERENCE + tblCount + &quot;.&quot; + FIELD_KEYEDREFERENCEGROUP + &quot;.id &quot;);</span>
+<span class="nc" id="L293">						thetaJoins.append(DynamicQuery.OPERATOR_AND + &quot; &quot;);</span>
+					} else {
+<span class="fc" id="L295">						qry.comma().pad().append(ENTITY_KEYEDREFERENCE + &quot; &quot; + ALIAS_KEYEDREFERENCE + tblCount).pad();</span>
+<span class="fc" id="L296">						thetaJoins.append(ALIAS_KEYEDREFERENCEGROUP + &quot;.id = &quot; + ALIAS_KEYEDREFERENCE + tblCount + &quot;.&quot; + FIELD_KEYEDREFERENCEGROUP + &quot;.id &quot;);</span>
+<span class="fc" id="L297">						thetaJoins.append(DynamicQuery.OPERATOR_AND + &quot; &quot;);</span>
+					}
+				}
+			}
+<span class="fc" id="L301">			qry.WHERE().pad().openParen().pad();</span>
+			
+			// Appending the middling entity-specific category table condition
+<span class="fc" id="L304">			qry.append(entityAlias + &quot;.&quot; + keyName + &quot; = &quot; + entityAliasChild + &quot;.&quot; + entityField + &quot;.&quot; + KEY_NAME).pad();</span>
+<span class="fc" id="L305">			qry.AND().pad();</span>
+
+			// Now, appending the condition that attaches the keyed reference group table
+<span class="fc" id="L308">			qry.append(entityAliasChild + &quot;.id = &quot; + ALIAS_KEYEDREFERENCEGROUP + &quot;.&quot; + FIELD_CATEGORYBAG + &quot;.id&quot;).pad();</span>
+
+<span class="fc" id="L310">			String thetaJoinsStr = thetaJoins.toString();</span>
+<span class="pc bpc" id="L311" title="2 of 4 branches missed.">			if (thetaJoinsStr != null &amp;&amp; thetaJoinsStr.length() &gt; 0)</span>
+<span class="fc" id="L312">				qry.AND().pad();</span>
+			
+<span class="pc bpc" id="L314" title="1 of 2 branches missed.">			if (thetaJoinsStr.endsWith(DynamicQuery.OPERATOR_AND + &quot; &quot;))</span>
+<span class="fc" id="L315">				thetaJoinsStr = thetaJoinsStr.substring(0, thetaJoinsStr.length() - (DynamicQuery.OPERATOR_AND + &quot; &quot;).length());</span>
+<span class="fc" id="L316">			qry.append(thetaJoinsStr);</span>
+
+<span class="fc" id="L318">			qry.closeParen().pad();</span>
+<span class="pc bpc" id="L319" title="1 of 4 branches missed.">			if (fq!=null &amp;&amp; fq.isSignaturePresent()) {</span>
+<span class="fc" id="L320">				qry.AND().pad().openParen().pad().append(getSignaturePresent()).pad().closeParen().pad();</span>
+			}
+		}
+<span class="fc" id="L323">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

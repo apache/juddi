@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Publisher.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.model</a> &gt; <span class="el_source">Publisher.java</span></div><h1>Publisher.java</h1><pre class="source lang-java linenums">package org.apache.juddi.model;
+/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+/**
+ * @author &lt;a href=&quot;mailto:kurt@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+@Entity
+@Table(name = &quot;j3_publisher&quot;)
+//@PrimaryKeyJoinColumn(name = &quot;authorized_name&quot;)
+public class Publisher extends UddiEntityPublisher implements java.io.Serializable {
+
+	private static final long serialVersionUID = 1960575191518050887L;
+	private String publisherName;
+	private String emailAddress;
+	private Boolean isAdmin;
+	private Boolean isEnabled;
+	private Integer maxBusinesses;
+	private Integer maxServicesPerBusiness;
+	private Integer maxBindingsPerService;
+	private Integer maxTmodels;
+<span class="pc" id="L47">    private List&lt;Signature&gt; signatures = new ArrayList&lt;Signature&gt;(0);</span>
+
+	public Publisher() {
+<span class="fc" id="L50">		super(null);</span>
+<span class="fc" id="L51">	}</span>
+
+	public Publisher(String publisherId, String publisherName) {
+<span class="nc" id="L54">		super(publisherId);</span>
+<span class="nc" id="L55">		this.authorizedName = publisherId;</span>
+<span class="nc" id="L56">		this.publisherName = publisherName;</span>
+<span class="nc" id="L57">	}</span>
+	public Publisher(String publisherId, String publisherName,
+			String emailAddress, Boolean isAdmin, Boolean isEnabled,
+			Integer maxBusinesses, Integer maxServicesPerBusiness,
+			Integer maxBindingsPerService, Integer maxTmodels) {
+
+<span class="nc" id="L63">		super(publisherId);</span>
+<span class="nc" id="L64">		this.authorizedName = publisherId;</span>
+<span class="nc" id="L65">		this.publisherName = publisherName;</span>
+<span class="nc" id="L66">		this.emailAddress = emailAddress;</span>
+<span class="nc" id="L67">		this.isAdmin = isAdmin;</span>
+<span class="nc" id="L68">		this.isEnabled = isEnabled;</span>
+<span class="nc" id="L69">		this.maxBusinesses = maxBusinesses;</span>
+<span class="nc" id="L70">		this.maxServicesPerBusiness = maxServicesPerBusiness;</span>
+<span class="nc" id="L71">		this.maxBindingsPerService = maxBindingsPerService;</span>
+<span class="nc" id="L72">		this.maxTmodels = maxTmodels;</span>
+<span class="nc" id="L73">	}</span>
+
+
+	@Column(name = &quot;publisher_name&quot;, nullable = false)
+	public String getPublisherName() {
+<span class="fc" id="L78">		return this.publisherName;</span>
+	}
+	public void setPublisherName(String publisherName) {
+<span class="fc" id="L81">		this.publisherName = publisherName;</span>
+<span class="fc" id="L82">	}</span>
+
+	@Column(name = &quot;email_address&quot;)
+	public String getEmailAddress() {
+<span class="fc" id="L86">		return this.emailAddress;</span>
+	}
+	public void setEmailAddress(String emailAddress) {
+<span class="fc" id="L89">		this.emailAddress = emailAddress;</span>
+<span class="fc" id="L90">	}</span>
+
+	@Column(name = &quot;is_admin&quot;, length = 5)
+	public Boolean getIsAdmin() {
+<span class="fc" id="L94">		return this.isAdmin;</span>
+	}
+	public void setIsAdmin(Boolean isAdmin) {
+<span class="fc" id="L97">		this.isAdmin = isAdmin;</span>
+<span class="fc" id="L98">	}</span>
+        
+        @Deprecated
+        public void setIsAdmin(String isAdmin) {
+<span class="fc" id="L102">		this.isAdmin = Boolean.parseBoolean(isAdmin);</span>
+<span class="fc" id="L103">	}</span>
+
+	@Transient
+	public boolean isAdmin() {
+		
+<span class="fc" id="L108">		return isAdmin;</span>
+	}
+	
+	@Column(name = &quot;is_enabled&quot;, length = 5)
+	public Boolean getIsEnabled() {
+<span class="fc" id="L113">		return this.isEnabled;</span>
+	}
+	public void setIsEnabled(Boolean isEnabled) {
+<span class="fc" id="L116">		this.isEnabled = isEnabled;</span>
+<span class="fc" id="L117">	}</span>
+        
+        @Deprecated
+        public void setIsEnabled(String isEnabled) {
+<span class="fc" id="L121">		this.isEnabled = Boolean.parseBoolean(isEnabled);</span>
+<span class="fc" id="L122">	}</span>
+        
+	@Transient
+	public boolean isEnabled() {
+<span class="nc" id="L126">		return getIsEnabled();</span>
+	}
+	
+	@Column(name = &quot;max_businesses&quot;)
+	public Integer getMaxBusinesses() {
+<span class="fc" id="L131">		return this.maxBusinesses;</span>
+	}
+	public void setMaxBusinesses(Integer maxBusinesses) {
+<span class="fc" id="L134">		this.maxBusinesses = maxBusinesses;</span>
+<span class="fc" id="L135">	}</span>
+
+	@Column(name = &quot;max_services_per_business&quot;)
+	public Integer getMaxServicesPerBusiness() {
+<span class="fc" id="L139">		return this.maxServicesPerBusiness;</span>
+	}
+	public void setMaxServicesPerBusiness(Integer maxServicesPerBusiness) {
+<span class="fc" id="L142">		this.maxServicesPerBusiness = maxServicesPerBusiness;</span>
+<span class="fc" id="L143">	}</span>
+
+	@Column(name = &quot;max_bindings_per_service&quot;)
+	public Integer getMaxBindingsPerService() {
+<span class="fc" id="L147">		return this.maxBindingsPerService;</span>
+	}
+	public void setMaxBindingsPerService(Integer maxBindingsPerService) {
+<span class="fc" id="L150">		this.maxBindingsPerService = maxBindingsPerService;</span>
+<span class="fc" id="L151">	}</span>
+
+	@Column(name = &quot;max_tmodels&quot;)
+	public Integer getMaxTmodels() {
+<span class="fc" id="L155">		return this.maxTmodels;</span>
+	}
+	public void setMaxTmodels(Integer maxTmodels) {
+<span class="fc" id="L158">		this.maxTmodels = maxTmodels;</span>
+<span class="fc" id="L159">	}</span>
+
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;publisher&quot;)
+	@OrderBy
+        public List&lt;Signature&gt; getSignatures() {
+<span class="fc" id="L164">                return signatures;</span>
+        }
+
+        public void setSignatures(List&lt;Signature&gt; signatures) {
+<span class="fc" id="L168">                this.signatures = signatures;</span>
+<span class="fc" id="L169">        }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

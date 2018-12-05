@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BusinessEntity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.model</a> &gt; <span class="el_source">BusinessEntity.java</span></div><h1>BusinessEntity.java</h1><pre class="source lang-java linenums">package org.apache.juddi.model;
+/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+
+/**
+ * @author &lt;a href=&quot;mailto:kurt@apache.org&quot;&gt;Kurt T Stam&lt;/a&gt;
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt;
+ */
+@Entity
+@Table(name = &quot;j3_business_entity&quot;)
+public class BusinessEntity extends UddiEntity implements java.io.Serializable {
+
+	private static final long serialVersionUID = -7353389848796421619L;
+<span class="pc" id="L39">	private List&lt;Contact&gt; contacts = new ArrayList&lt;Contact&gt;(0);</span>
+<span class="pc" id="L40">	private List&lt;BusinessIdentifier&gt; businessIdentifiers = new ArrayList&lt;BusinessIdentifier&gt;(0);</span>
+<span class="pc" id="L41">	private List&lt;PublisherAssertion&gt; publisherAssertionsForFromKey = new ArrayList&lt;PublisherAssertion&gt;(0);</span>
+<span class="pc" id="L42">	private List&lt;DiscoveryUrl&gt; discoveryUrls = new ArrayList&lt;DiscoveryUrl&gt;(0);</span>
+<span class="pc" id="L43">	private List&lt;BusinessName&gt; businessNames = new ArrayList&lt;BusinessName&gt;(0);</span>
+<span class="pc" id="L44">	private List&lt;PublisherAssertion&gt; publisherAssertionsForToKey = new ArrayList&lt;PublisherAssertion&gt;(0);</span>
+	private BusinessCategoryBag categoryBag;
+<span class="pc" id="L46">	private List&lt;BusinessService&gt; businessServices = new ArrayList&lt;BusinessService&gt;(0);</span>
+<span class="pc" id="L47">	private List&lt;BusinessDescr&gt; businessDescrs = new ArrayList&lt;BusinessDescr&gt;(0);</span>
+<span class="pc" id="L48">	private List&lt;ServiceProjection&gt; serviceProjections = new ArrayList&lt;ServiceProjection&gt;(0);</span>
+<span class="pc" id="L49">        private List&lt;Signature&gt; signatures = new ArrayList&lt;Signature&gt;(0);</span>
+
+<span class="fc" id="L51">	public BusinessEntity() {</span>
+<span class="fc" id="L52">	}</span>
+
+<span class="nc" id="L54">	public BusinessEntity(String entityKey, Date modified) {</span>
+<span class="nc" id="L55">		this.entityKey = entityKey;</span>
+<span class="nc" id="L56">		this.modified = modified;</span>
+<span class="nc" id="L57">	}</span>
+	public BusinessEntity(String entityKey, String authorizedName, 
+			String operator,
+			Date modified, List&lt;Contact&gt; contacts,
+			List&lt;BusinessIdentifier&gt; businessIdentifiers,
+			List&lt;PublisherAssertion&gt; publisherAssertionsForFromKey,
+			List&lt;DiscoveryUrl&gt; discoveryUrls, List&lt;BusinessName&gt; businessNames,
+			List&lt;PublisherAssertion&gt; publisherAssertionsForToKey,
+			BusinessCategoryBag categoryBag,
+			List&lt;BusinessService&gt; businessServices,
+<span class="nc" id="L67">			List&lt;BusinessDescr&gt; businessDescrs) {</span>
+<span class="nc" id="L68">		this.entityKey = entityKey;</span>
+<span class="nc" id="L69">		this.authorizedName = authorizedName;</span>
+<span class="nc" id="L70">		this.modified = modified;</span>
+<span class="nc" id="L71">		this.contacts = contacts;</span>
+<span class="nc" id="L72">		this.businessIdentifiers = businessIdentifiers;</span>
+<span class="nc" id="L73">		this.publisherAssertionsForFromKey = publisherAssertionsForFromKey;</span>
+<span class="nc" id="L74">		this.discoveryUrls = discoveryUrls;</span>
+<span class="nc" id="L75">		this.businessNames = businessNames;</span>
+<span class="nc" id="L76">		this.publisherAssertionsForToKey = publisherAssertionsForToKey;</span>
+<span class="nc" id="L77">		this.categoryBag = categoryBag;</span>
+<span class="nc" id="L78">		this.businessServices = businessServices;</span>
+<span class="nc" id="L79">		this.businessDescrs = businessDescrs;</span>
+<span class="nc" id="L80">	}</span>
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;businessEntity&quot;)
+	@OrderBy
+	public List&lt;Contact&gt; getContacts() {
+<span class="fc bfc" id="L85" title="All 2 branches covered.">                if (this.contacts==null)</span>
+<span class="fc" id="L86">                        this.contacts = new ArrayList&lt;Contact&gt;();</span>
+<span class="fc" id="L87">		return this.contacts;</span>
+	}
+	public void setContacts(List&lt;Contact&gt; contacts) {
+<span class="fc" id="L90">		this.contacts = contacts;</span>
+<span class="fc" id="L91">	}</span>
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;businessEntity&quot;)
+	@OrderBy
+	public List&lt;BusinessIdentifier&gt; getBusinessIdentifiers() {
+<span class="fc" id="L96">		return this.businessIdentifiers;</span>
+	}
+	public void setBusinessIdentifiers(
+			List&lt;BusinessIdentifier&gt; businessIdentifiers) {
+<span class="fc" id="L100">		this.businessIdentifiers = businessIdentifiers;</span>
+<span class="fc" id="L101">	}</span>
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;businessEntityByFromKey&quot;)
+	@OrderBy
+	public List&lt;PublisherAssertion&gt; getPublisherAssertionsForFromKey() {
+<span class="fc" id="L106">		return this.publisherAssertionsForFromKey;</span>
+	}
+	public void setPublisherAssertionsForFromKey(
+			List&lt;PublisherAssertion&gt; publisherAssertionsForFromKey) {
+<span class="fc" id="L110">		this.publisherAssertionsForFromKey = publisherAssertionsForFromKey;</span>
+<span class="fc" id="L111">	}</span>
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;businessEntity&quot;)
+	@OrderBy
+	public List&lt;DiscoveryUrl&gt; getDiscoveryUrls() {
+<span class="fc" id="L116">		return this.discoveryUrls;</span>
+	}
+	public void setDiscoveryUrls(List&lt;DiscoveryUrl&gt; discoveryUrls) {
+<span class="fc" id="L119">		this.discoveryUrls = discoveryUrls;</span>
+<span class="fc" id="L120">	}</span>
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;businessEntity&quot;)
+	@OrderBy
+	public List&lt;BusinessName&gt; getBusinessNames() {
+<span class="fc" id="L125">		return this.businessNames;</span>
+	}
+	public void setBusinessNames(List&lt;BusinessName&gt; businessNames) {
+<span class="fc" id="L128">		this.businessNames = businessNames;</span>
+<span class="fc" id="L129">	}</span>
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;businessEntityByToKey&quot;)
+	@OrderBy
+	public List&lt;PublisherAssertion&gt; getPublisherAssertionsForToKey() {
+<span class="fc" id="L134">		return this.publisherAssertionsForToKey;</span>
+	}
+	public void setPublisherAssertionsForToKey(
+			List&lt;PublisherAssertion&gt; publisherAssertionsForToKey) {
+<span class="fc" id="L138">		this.publisherAssertionsForToKey = publisherAssertionsForToKey;</span>
+<span class="fc" id="L139">	}</span>
+
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;businessEntity&quot;)
+	public BusinessCategoryBag getCategoryBag() {
+<span class="fc" id="L143">		return this.categoryBag;</span>
+	}
+	public void setCategoryBag(BusinessCategoryBag categoryBag) {
+<span class="fc" id="L146">		this.categoryBag = categoryBag;</span>
+<span class="fc" id="L147">	}</span>
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;businessEntity&quot;)
+	@OrderBy
+	public List&lt;BusinessService&gt; getBusinessServices() {
+<span class="fc" id="L152">		return this.businessServices;</span>
+	}
+	public void setBusinessServices(List&lt;BusinessService&gt; businessServices) {
+<span class="fc" id="L155">		this.businessServices = businessServices;</span>
+<span class="fc" id="L156">	}</span>
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;businessEntity&quot;)
+	@OrderBy
+	public List&lt;BusinessDescr&gt; getBusinessDescrs() {
+<span class="fc" id="L161">		return this.businessDescrs;</span>
+	}
+	public void setBusinessDescrs(List&lt;BusinessDescr&gt; businessDescrs) {
+<span class="fc" id="L164">		this.businessDescrs = businessDescrs;</span>
+<span class="fc" id="L165">	}</span>
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;businessEntity&quot;)
+	public List&lt;ServiceProjection&gt; getServiceProjections() {
+<span class="fc" id="L169">		return serviceProjections;</span>
+	}
+	public void setServiceProjections(List&lt;ServiceProjection&gt; serviceProjections) {
+<span class="fc" id="L172">		this.serviceProjections = serviceProjections;</span>
+<span class="fc" id="L173">	}</span>
+
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;businessEntity&quot;)
+	@OrderBy
+        public List&lt;Signature&gt; getSignatures() {
+<span class="fc" id="L178">                return signatures;</span>
+        }
+
+        public void setSignatures(List&lt;Signature&gt; signatures) {
+<span class="fc" id="L182">                this.signatures = signatures;</span>
+<span class="fc" id="L183">        }</span>
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

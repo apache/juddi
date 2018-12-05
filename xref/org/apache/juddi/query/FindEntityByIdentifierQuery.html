@@ -121,7 +121,7 @@
 <a class="jxr_linenumber" name="L113" href="#L113">113</a> 	}
 <a class="jxr_linenumber" name="L114" href="#L114">114</a> 
 <a class="jxr_linenumber" name="L115" href="#L115">115</a> 	
-<a class="jxr_linenumber" name="L116" href="#L116">116</a> 	<strong class="jxr_keyword">public</strong> List&lt;?&gt; select(EntityManager em, <a href="../../../../org/apache/juddi/query/util/FindQualifiers.html">FindQualifiers</a> fq, <a href="../../../../org/uddi/api_v3/IdentifierBag.html">IdentifierBag</a> identifiers, List&lt;?&gt; keysIn, DynamicQuery.Parameter... restrictions) {
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> 	<strong class="jxr_keyword">public</strong> List&lt;Object&gt; select(EntityManager em, <a href="../../../../org/apache/juddi/query/util/FindQualifiers.html">FindQualifiers</a> fq, <a href="../../../../org/uddi/api_v3/IdentifierBag.html">IdentifierBag</a> identifiers, List&lt;Object&gt; keysIn, DynamicQuery.Parameter... restrictions) {
 <a class="jxr_linenumber" name="L117" href="#L117">117</a> 		<em class="jxr_comment">// If keysIn is not null and empty, then search is over.</em>
 <a class="jxr_linenumber" name="L118" href="#L118">118</a> 		<strong class="jxr_keyword">if</strong> ((keysIn != <strong class="jxr_keyword">null</strong>) &amp;&amp; (keysIn.size() == 0))
 <a class="jxr_linenumber" name="L119" href="#L119">119</a> 			<strong class="jxr_keyword">return</strong> keysIn;

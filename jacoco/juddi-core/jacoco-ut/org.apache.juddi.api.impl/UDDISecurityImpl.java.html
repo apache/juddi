@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UDDISecurityImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core Services</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.api.impl</a> &gt; <span class="el_source">UDDISecurityImpl.java</span></div><h1>UDDISecurityImpl.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.api.impl;
+
+import java.util.Date;
+import java.util.UUID;
+
+import javax.jws.WebService;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.xml.ws.WebServiceContext;
+
+import org.uddi.api_v3.AuthToken;
+import org.uddi.api_v3.DiscardAuthToken;
+import org.uddi.api_v3.GetAuthToken;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.uddi.v3_service.UDDISecurityPortType;
+
+import org.apache.juddi.api.util.QueryStatus;
+import org.apache.juddi.api.util.SecurityQuery;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.model.Publisher;
+import org.apache.juddi.v3.auth.Authenticator;
+import org.apache.juddi.v3.auth.AuthenticatorFactory;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.UnknownUserException;
+
+/**
+ * This class implements the UDDI Security Service and basically handles all authentication requests
+ * for jUDDI. These authentication requests are routed to the appropriately configured
+ * authenticator for validation, then persisted in the database until they either
+ * expire or are discarded.
+ * @author &lt;a href=&quot;mailto:jfaath@apache.org&quot;&gt;Jeff Faath&lt;/a&gt; (and many others)
+ */
+@WebService(serviceName=&quot;UDDISecurityService&quot;, 
+			endpointInterface=&quot;org.uddi.v3_service.UDDISecurityPortType&quot;,
+			targetNamespace = &quot;urn:uddi-org:api_v3_portType&quot;)
+public class UDDISecurityImpl extends AuthenticatedService implements UDDISecurityPortType {
+
+	public static final String AUTH_TOKEN_PREFIX = &quot;authtoken:&quot;;
+        private UDDIServiceCounter serviceCounter;
+
+        public UDDISecurityImpl() {
+<span class="fc" id="L60">            super();</span>
+<span class="fc" id="L61">            serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDISecurityImpl.class);</span>
+<span class="fc" id="L62">        }</span>
+        
+        /**
+         * used for unit tests only
+         * @param ctx 
+         */
+        protected UDDISecurityImpl(WebServiceContext ctx) {
+<span class="fc" id="L69">            super();</span>
+<span class="fc" id="L70">            this.ctx = ctx;</span>
+<span class="fc" id="L71">            serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDISecurityImpl.class);</span>
+<span class="fc" id="L72">        }</span>
+	
+	public void discardAuthToken(DiscardAuthToken body)
+			throws DispositionReportFaultMessage {
+<span class="nc" id="L76">	        long startTime = System.currentTimeMillis();</span>
+	    
+<span class="nc" id="L78">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="nc" id="L79">		EntityTransaction tx = em.getTransaction();</span>
+		try {
+<span class="nc" id="L81">			tx.begin();</span>
+			
+<span class="nc" id="L83">			this.getEntityPublisher(em, body.getAuthInfo());</span>
+			
+<span class="nc" id="L85">			org.apache.juddi.model.AuthToken modelAuthToken = em.find(org.apache.juddi.model.AuthToken.class, body.getAuthInfo());</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">			if (modelAuthToken != null) {</span>
+<span class="nc" id="L87">				modelAuthToken.setLastUsed(new Date());</span>
+<span class="nc" id="L88">				modelAuthToken.setNumberOfUses(modelAuthToken.getNumberOfUses() + 1);</span>
+<span class="nc" id="L89">				modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);</span>
+<span class="nc" id="L90">                                logger.info(&quot;AUDIT: AuthToken discarded for &quot; + modelAuthToken.getAuthorizedName() + &quot; from &quot; + getRequestorsIPAddress());</span>
+			}
+	
+<span class="nc" id="L93">			tx.commit();</span>
+                        
+<span class="nc" id="L95">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L96">                        serviceCounter.update(SecurityQuery.DISCARD_AUTHTOKEN, </span>
+                                QueryStatus.SUCCESS, procTime);
+<span class="nc" id="L98">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L99">                    logger.info(&quot;AUDIT: AuthToken discard request aborted, issued from &quot; + getRequestorsIPAddress());</span>
+<span class="nc" id="L100">                    long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L101">                    serviceCounter.update(SecurityQuery.DISCARD_AUTHTOKEN, </span>
+                            QueryStatus.FAILED, procTime);                      
+<span class="nc" id="L103">                    throw drfm;                                                                                                 </span>
+		} finally {
+<span class="nc bnc" id="L105" title="All 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="nc" id="L106">				tx.rollback();</span>
+			}
+<span class="nc" id="L108">			em.close();</span>
+<span class="nc" id="L109">		}</span>
+<span class="nc" id="L110">	}</span>
+
+
+	public AuthToken getAuthToken(GetAuthToken body)
+			throws DispositionReportFaultMessage {
+            
+<span class="fc" id="L116">                logger.info(&quot;AUDIT: AuthToken request for &quot; + body.getUserID() + &quot; from &quot; + getRequestorsIPAddress());</span>
+<span class="fc" id="L117">		Authenticator authenticator = AuthenticatorFactory.getAuthenticator();</span>
+		
+<span class="fc" id="L119">		String publisherId = authenticator.authenticate(body.getUserID(), body.getCred());</span>
+		
+<span class="fc" id="L121">		return getAuthToken(publisherId);</span>
+	}
+	
+	public AuthToken getAuthToken(String publisherId)
+	throws DispositionReportFaultMessage {
+<span class="fc" id="L126">	        long startTime = System.currentTimeMillis();</span>
+
+<span class="pc bpc" id="L128" title="2 of 4 branches missed.">		if (publisherId == null || publisherId.length() == 0)</span>
+<span class="nc" id="L129">			throw new UnknownUserException(new ErrorMessage(&quot;errors.auth.InvalidCredentials&quot;, publisherId));</span>
+
+<span class="fc" id="L131">		EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L132">		EntityTransaction tx = em.getTransaction();</span>
+		try {
+<span class="fc" id="L134">			tx.begin();</span>
+			//Check if this publisher exists 
+<span class="fc" id="L136">			Publisher publisher = em.find(Publisher.class, publisherId);</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">			if (publisher == null)</span>
+<span class="nc" id="L138">				throw new UnknownUserException(new ErrorMessage(&quot;errors.auth.InvalidCredentials&quot;, publisherId));</span>
+
+			// Generate auth token and store it!
+<span class="fc" id="L141">			String authInfo = AUTH_TOKEN_PREFIX + UUID.randomUUID();</span>
+<span class="fc" id="L142">			org.apache.juddi.model.AuthToken modelAuthToken = new org.apache.juddi.model.AuthToken();</span>
+<span class="fc" id="L143">                        modelAuthToken.setAuthToken(authInfo);</span>
+<span class="fc" id="L144">                        modelAuthToken.setCreated(new Date());</span>
+<span class="fc" id="L145">                        modelAuthToken.setLastUsed(new Date());</span>
+<span class="fc" id="L146">                        modelAuthToken.setAuthorizedName(publisherId);</span>
+<span class="fc" id="L147">                        modelAuthToken.setNumberOfUses(0);</span>
+<span class="fc" id="L148">                        modelAuthToken.setTokenState(AUTHTOKEN_ACTIVE);</span>
+<span class="fc" id="L149">                        modelAuthToken.setIPAddress(this.getRequestorsIPAddress());</span>
+<span class="fc" id="L150">                        em.persist(modelAuthToken);</span>
+
+<span class="fc" id="L152">			org.uddi.api_v3.AuthToken apiAuthToken = new org.uddi.api_v3.AuthToken();</span>
+
+<span class="fc" id="L154">			MappingModelToApi.mapAuthToken(modelAuthToken, apiAuthToken);</span>
+
+<span class="fc" id="L156">			tx.commit();</span>
+<span class="fc" id="L157">                        logger.info(&quot;AUDIT: AuthToken issued for &quot; + modelAuthToken.getAuthorizedName() + &quot; from &quot; + getRequestorsIPAddress());</span>
+<span class="fc" id="L158">	                long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L159">	                serviceCounter.update(SecurityQuery.GET_AUTHTOKEN, </span>
+	                        QueryStatus.SUCCESS, procTime);
+
+<span class="fc" id="L162">			return apiAuthToken;</span>
+<span class="nc" id="L163">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L164">                    long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L165">                    serviceCounter.update(SecurityQuery.GET_AUTHTOKEN, </span>
+                            QueryStatus.FAILED, procTime);                      
+<span class="nc" id="L167">                    logger.info(&quot;AUDIT: AuthToken issue FAILED &quot; + publisherId + &quot; from &quot; + getRequestorsIPAddress());</span>
+<span class="nc" id="L168">                    throw drfm;                                                                                                 </span>
+		} finally {
+<span class="pc bpc" id="L170" title="3 of 4 branches missed.">			if (tx.isActive()) {</span>
+<span class="nc" id="L171">				tx.rollback();</span>
+			}
+<span class="pc" id="L173">			em.close();</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

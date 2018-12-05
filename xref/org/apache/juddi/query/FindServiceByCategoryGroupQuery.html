@@ -65,7 +65,7 @@
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  													   BusinessServiceQuery.SIGNATURE_PRESENT);
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  	}
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  	
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> List&lt;?&gt; select(EntityManager em, <a href="../../../../org/apache/juddi/query/util/FindQualifiers.html">FindQualifiers</a> fq, <a href="../../../../org/uddi/api_v3/CategoryBag.html">CategoryBag</a> categoryBag, String parentKey, List&lt;?&gt; keysIn) {
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> List&lt;Object&gt; select(EntityManager em, <a href="../../../../org/apache/juddi/query/util/FindQualifiers.html">FindQualifiers</a> fq, <a href="../../../../org/uddi/api_v3/CategoryBag.html">CategoryBag</a> categoryBag, String parentKey, List&lt;Object&gt; keysIn) {
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  		<strong class="jxr_keyword">if</strong> (parentKey != <strong class="jxr_keyword">null</strong> &amp;&amp; parentKey.length() &gt; 0) {
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  			DynamicQuery.Parameter param = <strong class="jxr_keyword">new</strong> DynamicQuery.Parameter(BusinessServiceQuery.ENTITY_ALIAS + <span class="jxr_string">"."</span> + BusinessServiceQuery.KEY_NAME_PARENT, parentKey, DynamicQuery.PREDICATE_EQUALS); 
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  			<strong class="jxr_keyword">return</strong> findQuery.select(em, fq, categoryBag, keysIn, param);

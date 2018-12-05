@@ -237,7 +237,7 @@
 <a class="jxr_linenumber" name="L229" href="#L229">229</a> 		String serviceKey = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L230" href="#L230">230</a> 		<strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L231" href="#L231">231</a> 			FindService body = (FindService)EntityCreator.buildFromDoc(FIND_SERVICE_XML, <span class="jxr_string">"org.uddi.api_v2"</span>);
-<a class="jxr_linenumber" name="L232" href="#L232">232</a>                body.setGeneric(<span class="jxr_string">"2.0"</span>);
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>                         body.setGeneric(<span class="jxr_string">"2.0"</span>);
 <a class="jxr_linenumber" name="L233" href="#L233">233</a> 			<strong class="jxr_keyword">if</strong> (findQualifier!=<strong class="jxr_keyword">null</strong>) body.getFindQualifiers().getFindQualifier().add(findQualifier);
 <a class="jxr_linenumber" name="L234" href="#L234">234</a> 			ServiceList result = inquiry.findService(body);
 <a class="jxr_linenumber" name="L235" href="#L235">235</a> 			<strong class="jxr_keyword">if</strong> (result == <strong class="jxr_keyword">null</strong>)
@@ -292,7 +292,7 @@
 <a class="jxr_linenumber" name="L284" href="#L284">284</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> findServiceDetail(String serviceKey) {
 <a class="jxr_linenumber" name="L285" href="#L285">285</a> 		<strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L286" href="#L286">286</a> 			GetServiceDetail getServiceDetail = <strong class="jxr_keyword">new</strong> GetServiceDetail();
-<a class="jxr_linenumber" name="L287" href="#L287">287</a>                getServiceDetail.setGeneric(<span class="jxr_string">"2.0"</span>);
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>                         getServiceDetail.setGeneric(<span class="jxr_string">"2.0"</span>);
 <a class="jxr_linenumber" name="L288" href="#L288">288</a> 			getServiceDetail.getServiceKey().add(serviceKey);
 <a class="jxr_linenumber" name="L289" href="#L289">289</a> 			
 <a class="jxr_linenumber" name="L290" href="#L290">290</a> 			
@@ -329,7 +329,7 @@
 <a class="jxr_linenumber" name="L321" href="#L321">321</a> 		<strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L322" href="#L322">322</a> 			FindBinding body = (FindBinding)EntityCreator.buildFromDoc(FIND_BINDING_XML, <span class="jxr_string">"org.uddi.api_v2"</span>);
 <a class="jxr_linenumber" name="L323" href="#L323">323</a> 			<strong class="jxr_keyword">if</strong> (findQualifier!=<strong class="jxr_keyword">null</strong>) body.getFindQualifiers().getFindQualifier().add(findQualifier);
-<a class="jxr_linenumber" name="L324" href="#L324">324</a>                body.setGeneric(<span class="jxr_string">"2.0"</span>);
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>                         body.setGeneric(<span class="jxr_string">"2.0"</span>);
 <a class="jxr_linenumber" name="L325" href="#L325">325</a> 			BindingDetail result = inquiry.findBinding(body);
 <a class="jxr_linenumber" name="L326" href="#L326">326</a> 			<strong class="jxr_keyword">if</strong> (result == <strong class="jxr_keyword">null</strong>)
 <a class="jxr_linenumber" name="L327" href="#L327">327</a> 				Assert.fail(<span class="jxr_string">"Null result from find binding operation"</span>);

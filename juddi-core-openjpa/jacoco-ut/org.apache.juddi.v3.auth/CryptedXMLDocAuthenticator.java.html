@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CryptedXMLDocAuthenticator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jUDDI Core - OpenJPA</a> &gt; <a href="index.source.html" class="el_package">org.apache.juddi.v3.auth</a> &gt; <span class="el_source">CryptedXMLDocAuthenticator.java</span></div><h1>CryptedXMLDocAuthenticator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.juddi.v3.auth;
+
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.xml.bind.JAXBException;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.config.Property;
+import org.apache.juddi.v3.client.cryptor.Cryptor;
+import org.apache.juddi.cryptor.CryptorFactory;
+import org.apache.juddi.model.Publisher;
+import static org.apache.juddi.v3.auth.XMLDocAuthenticator.log;
+import org.apache.juddi.v3.error.AuthenticationException;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.RegistryException;
+import org.apache.juddi.v3.error.UnknownUserException;
+
+/**
+ * @author Anou Manavalan
+ */
+public class CryptedXMLDocAuthenticator extends XMLDocAuthenticator {
+	
+<span class="pc" id="L53">	private Log logger = LogFactory.getLog(this.getClass());</span>
+	/**
+	 * @throws IOException
+	 * @throws JAXBException
+	 * @throws ConfigurationException 
+	 * 
+	 */
+	public CryptedXMLDocAuthenticator() throws JAXBException, IOException, ConfigurationException {
+<span class="fc" id="L61">		super();</span>
+<span class="fc" id="L62">	}</span>
+        
+        private CryptedXMLDocAuthenticator(boolean b) {
+<span class="nc" id="L65">		super(b);</span>
+<span class="nc" id="L66">	}</span>
+	@Override
+	protected String getFilename() throws ConfigurationException {
+<span class="fc" id="L69">		return AppConfig.getConfiguration().getString(Property.JUDDI_USERSFILE, Property.DEFAULT_ENCRYPTED_XML_USERSFILE);</span>
+	}
+	/**
+	 *
+         * @return user id
+         * @throws org.apache.juddi.v3.error.AuthenticationException 
+         * @throws org.apache.juddi.v3.error.FatalErrorException 
+	 */
+	public String authenticate(String userID, String credential)
+	throws AuthenticationException, FatalErrorException {
+<span class="fc" id="L79">		preProcess(userID, credential);</span>
+<span class="fc" id="L80">		String encryptedCredential = encrypt(credential);</span>
+<span class="fc" id="L81">		return postProcess(userID, encryptedCredential);</span>
+	}
+	/**
+	 *
+	 */
+	private String encrypt(String str) throws FatalErrorException {
+		try {
+<span class="fc" id="L88">			Cryptor cryptor = (Cryptor) CryptorFactory.getCryptor();</span>
+<span class="fc" id="L89">			return cryptor.encrypt(str);</span>
+<span class="nc" id="L90">		} catch (InvalidKeyException e) {</span>
+<span class="nc" id="L91">			logger.error(&quot;Invalid Key Exception in crypting the password&quot;, e);</span>
+<span class="nc" id="L92">			throw new FatalErrorException(new ErrorMessage(</span>
+<span class="nc" id="L93">					&quot;errors.auth.cryptor.InvalidKey&quot;, e.getMessage()));</span>
+<span class="nc" id="L94">		} catch (NoSuchPaddingException e) {</span>
+<span class="nc" id="L95">			logger.error(&quot;Padding Exception in crypting the password&quot;, e);</span>
+<span class="nc" id="L96">			throw new FatalErrorException(new ErrorMessage(</span>
+<span class="nc" id="L97">					&quot;errors.auth.cryptor.Padding&quot;, e.getMessage()));</span>
+<span class="nc" id="L98">		} catch (NoSuchAlgorithmException e) {</span>
+<span class="nc" id="L99">			logger.error(&quot;Algorithm Exception in crypting the password&quot;, e);</span>
+<span class="nc" id="L100">			throw new FatalErrorException(new ErrorMessage(</span>
+<span class="nc" id="L101">					&quot;errors.auth.cryptor.Algorithm&quot;, e.getMessage()));</span>
+<span class="nc" id="L102">		} catch (InvalidAlgorithmParameterException e) {</span>
+<span class="nc" id="L103">			logger.error(&quot;Algorithm parameter Exception in crypting the password&quot;,</span>
+					e);
+<span class="nc" id="L105">			throw new FatalErrorException(new ErrorMessage(</span>
+<span class="nc" id="L106">					&quot;errors.auth.cryptor.AlgorithmParam&quot;, e.getMessage()));</span>
+<span class="nc" id="L107">		} catch (IllegalBlockSizeException e) {</span>
+<span class="nc" id="L108">			logger.error(&quot;Block size Exception in crypting the password&quot;, e);</span>
+<span class="nc" id="L109">			throw new FatalErrorException(new ErrorMessage(</span>
+<span class="nc" id="L110">					&quot;errors.auth.cryptor.BlockSize&quot;, e.getMessage()));</span>
+<span class="nc" id="L111">		} catch (BadPaddingException e) {</span>
+<span class="nc" id="L112">			logger.error(&quot;Bad Padding Exception in crypting the password&quot;, e);</span>
+<span class="nc" id="L113">			throw new FatalErrorException(new ErrorMessage(</span>
+<span class="nc" id="L114">					&quot;errors.auth.cryptor.BadPadding&quot;, e.getMessage()));</span>
+<span class="nc" id="L115">		} catch (Exception e) {</span>
+<span class="nc" id="L116">			logger.error(e.getMessage(), e);</span>
+<span class="nc" id="L117">			throw new FatalErrorException(new ErrorMessage(</span>
+<span class="nc" id="L118">					&quot;errors.auth.cryptor.BlockSize&quot;, e.getMessage()));</span>
+		}
+	}
+	/**
+	 * @param userID
+	 * @param credential
+	 * @throws RegistryException
+	 */
+	private void preProcess(String userID, String credential)
+	throws AuthenticationException {
+		// a userID must be specified.
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">		if (userID == null) {</span>
+<span class="nc" id="L130">			throw new UnknownUserException(new ErrorMessage(</span>
+					&quot;errors.auth.InvalidUserId&quot;));
+		}
+		// credential (password) must be specified.
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">		if (credential == null) {</span>
+<span class="nc" id="L135">			throw new UnknownUserException(new ErrorMessage(</span>
+			&quot;errors.auth.InvalidCredentials&quot;));
+		}
+<span class="fc" id="L138">	}</span>
+	/**
+	 * @param userID
+	 * @param encryptedCredential
+	 * @return user id
+	 * @throws AuthenticationException
+	 */
+	private String postProcess(String userID, String encryptedCredential)
+	throws AuthenticationException {
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">		if (userTable.containsKey(userID)) {</span>
+<span class="fc" id="L148">			User user = (User) userTable.get(userID);</span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">			if ((user.getPassword() == null)</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">					|| (!encryptedCredential.equals(user.getPassword()))) {</span>
+<span class="fc" id="L151">				throw new UnknownUserException(new ErrorMessage(</span>
+						&quot;errors.auth.InvalidCredentials&quot;, userID));
+			}
+<span class="fc" id="L154">		} else {</span>
+<span class="nc" id="L155">			throw new UnknownUserException(new ErrorMessage(</span>
+					&quot;errors.auth.InvalidUserId&quot;, userID));
+		}
+<span class="fc" id="L158">		int MaxBindingsPerService = -1;</span>
+<span class="fc" id="L159">                int MaxServicesPerBusiness = -1;</span>
+<span class="fc" id="L160">                int MaxTmodels = -1;</span>
+<span class="fc" id="L161">                int MaxBusinesses = -1;</span>
+                try {
+<span class="fc" id="L163">                        MaxBindingsPerService = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_BINDINGS_PER_SERVICE, -1);</span>
+<span class="fc" id="L164">                        MaxServicesPerBusiness = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_SERVICES_PER_BUSINESS, -1);</span>
+<span class="fc" id="L165">                        MaxTmodels = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_TMODELS_PER_PUBLISHER, -1);</span>
+<span class="fc" id="L166">                        MaxBusinesses = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_BUSINESSES_PER_PUBLISHER, -1);</span>
+<span class="nc" id="L167">                } catch (Exception ex) {</span>
+<span class="nc" id="L168">                        MaxBindingsPerService = -1;</span>
+<span class="nc" id="L169">                        MaxServicesPerBusiness = -1;</span>
+<span class="nc" id="L170">                        MaxTmodels = -1;</span>
+<span class="nc" id="L171">                        MaxBusinesses = -1;</span>
+<span class="nc" id="L172">                        log.error(&quot;config exception! &quot; + userID, ex);</span>
+<span class="fc" id="L173">                }</span>
+<span class="fc" id="L174">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L175">                EntityTransaction tx = em.getTransaction();</span>
+                try {
+<span class="fc" id="L177">                        tx.begin();</span>
+<span class="fc" id="L178">                        Publisher publisher = em.find(Publisher.class, userID);</span>
+<span class="pc bpc" id="L179" title="1 of 2 branches missed.">                        if (publisher == null) {</span>
+<span class="fc" id="L180">                                log.warn(&quot;Publisher \&quot;&quot; + userID + &quot;\&quot; was not found in the database, adding the publisher in on the fly.&quot;);</span>
+<span class="fc" id="L181">                                publisher = new Publisher();</span>
+<span class="fc" id="L182">                                publisher.setAuthorizedName(userID);</span>
+<span class="fc" id="L183">                                publisher.setIsAdmin(&quot;false&quot;);</span>
+<span class="fc" id="L184">                                publisher.setIsEnabled(&quot;true&quot;);</span>
+<span class="fc" id="L185">                                publisher.setMaxBindingsPerService(MaxBindingsPerService);</span>
+<span class="fc" id="L186">                                publisher.setMaxBusinesses(MaxBusinesses);</span>
+<span class="fc" id="L187">                                publisher.setMaxServicesPerBusiness(MaxServicesPerBusiness);</span>
+<span class="fc" id="L188">                                publisher.setMaxTmodels(MaxTmodels);</span>
+<span class="fc" id="L189">                                publisher.setPublisherName(&quot;Unknown&quot;);</span>
+<span class="fc" id="L190">                                em.persist(publisher);</span>
+<span class="fc" id="L191">                                tx.commit();</span>
+                        }
+                } finally {
+<span class="pc bpc" id="L194" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L195">                                tx.rollback();</span>
+                        }
+<span class="pc" id="L197">                        em.close();</span>
+<span class="fc" id="L198">                }</span>
+<span class="fc" id="L199">		return userID;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

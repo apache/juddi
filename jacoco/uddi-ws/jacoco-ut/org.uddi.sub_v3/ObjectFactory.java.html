@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ObjectFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">UDDIv2 and v3 WS Stubs and Schema Bindings Generated from WSDL</a> &gt; <a href="index.source.html" class="el_package">org.uddi.sub_v3</a> &gt; <span class="el_source">ObjectFactory.java</span></div><h1>ObjectFactory.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+
+package org.uddi.sub_v3;
+
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.annotation.XmlElementDecl;
+import javax.xml.bind.annotation.XmlRegistry;
+import javax.xml.datatype.Duration;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
+
+
+/**
+ * This object contains factory methods for each 
+ * Java content interface and Java element interface 
+ * generated in the org.uddi.sub_v3 package. 
+ * &lt;p&gt;An ObjectFactory allows you to programatically 
+ * construct new instances of the Java representation 
+ * for XML content. The Java representation of XML 
+ * content can consist of schema derived interfaces 
+ * and classes representing the binding of schema 
+ * type definitions, element declarations and model 
+ * groups.  Factory methods for each of these are 
+ * provided in this class.
+ * 
+ */
+@XmlRegistry
+public class ObjectFactory {
+
+<span class="nc" id="L46">    private final static QName _DeleteSubscription_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;delete_subscription&quot;);</span>
+<span class="nc" id="L47">    private final static QName _MaxEntities_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;maxEntities&quot;);</span>
+<span class="nc" id="L48">    private final static QName _EndPoint_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;endPoint&quot;);</span>
+<span class="nc" id="L49">    private final static QName _ExpiresAfter_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;expiresAfter&quot;);</span>
+<span class="nc" id="L50">    private final static QName _NotificationInterval_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;notificationInterval&quot;);</span>
+<span class="nc" id="L51">    private final static QName _GetSubscriptions_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;get_subscriptions&quot;);</span>
+<span class="nc" id="L52">    private final static QName _StartPoint_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;startPoint&quot;);</span>
+<span class="nc" id="L53">    private final static QName _SubscriptionKey_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;subscriptionKey&quot;);</span>
+<span class="nc" id="L54">    private final static QName _CoveragePeriod_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;coveragePeriod&quot;);</span>
+<span class="nc" id="L55">    private final static QName _Subscriptions_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;subscriptions&quot;);</span>
+<span class="nc" id="L56">    private final static QName _Subscription_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;subscription&quot;);</span>
+<span class="nc" id="L57">    private final static QName _SubscriptionResultsList_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;subscriptionResultsList&quot;);</span>
+<span class="nc" id="L58">    private final static QName _SubscriptionFilter_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;subscriptionFilter&quot;);</span>
+<span class="nc" id="L59">    private final static QName _GetSubscriptionResults_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;get_subscriptionResults&quot;);</span>
+<span class="nc" id="L60">    private final static QName _SaveSubscription_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;save_subscription&quot;);</span>
+<span class="nc" id="L61">    private final static QName _KeyBag_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;keyBag&quot;);</span>
+<span class="nc" id="L62">    private final static QName _Deleted_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;deleted&quot;);</span>
+<span class="nc" id="L63">    private final static QName _ChunkToken_QNAME = new QName(&quot;urn:uddi-org:sub_v3&quot;, &quot;chunkToken&quot;);</span>
+
+    /**
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.uddi.sub_v3
+     * 
+     */
+<span class="nc" id="L69">    public ObjectFactory() {</span>
+<span class="nc" id="L70">    }</span>
+
+    /**
+     * Create an instance of {@link GetSubscriptionResults }
+     * 
+     */
+    public GetSubscriptionResults createGetSubscriptionResults() {
+<span class="nc" id="L77">        return new GetSubscriptionResults();</span>
+    }
+
+    /**
+     * Create an instance of {@link SaveSubscription }
+     * 
+     */
+    public SaveSubscription createSaveSubscription() {
+<span class="nc" id="L85">        return new SaveSubscription();</span>
+    }
+
+    /**
+     * Create an instance of {@link Subscription }
+     * 
+     */
+    public Subscription createSubscription() {
+<span class="nc" id="L93">        return new Subscription();</span>
+    }
+
+    /**
+     * Create an instance of {@link CoveragePeriod }
+     * 
+     */
+    public CoveragePeriod createCoveragePeriod() {
+<span class="nc" id="L101">        return new CoveragePeriod();</span>
+    }
+
+    /**
+     * Create an instance of {@link SubscriptionFilter }
+     * 
+     */
+    public SubscriptionFilter createSubscriptionFilter() {
+<span class="nc" id="L109">        return new SubscriptionFilter();</span>
+    }
+
+    /**
+     * Create an instance of {@link Subscriptions }
+     * 
+     */
+    public Subscriptions createSubscriptions() {
+<span class="nc" id="L117">        return new Subscriptions();</span>
+    }
+
+    /**
+     * Create an instance of {@link SubscriptionResultsList }
+     * 
+     */
+    public SubscriptionResultsList createSubscriptionResultsList() {
+<span class="nc" id="L125">        return new SubscriptionResultsList();</span>
+    }
+
+    /**
+     * Create an instance of {@link GetSubscriptions }
+     * 
+     */
+    public GetSubscriptions createGetSubscriptions() {
+<span class="nc" id="L133">        return new GetSubscriptions();</span>
+    }
+
+    /**
+     * Create an instance of {@link DeleteSubscription }
+     * 
+     */
+    public DeleteSubscription createDeleteSubscription() {
+<span class="nc" id="L141">        return new DeleteSubscription();</span>
+    }
+
+    /**
+     * Create an instance of {@link KeyBag }
+     * 
+     */
+    public KeyBag createKeyBag() {
+<span class="nc" id="L149">        return new KeyBag();</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link DeleteSubscription }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;delete_subscription&quot;)
+    public JAXBElement&lt;DeleteSubscription&gt; createDeleteSubscription(DeleteSubscription value) {
+<span class="nc" id="L158">        return new JAXBElement&lt;DeleteSubscription&gt;(_DeleteSubscription_QNAME, DeleteSubscription.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Integer }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;maxEntities&quot;)
+    public JAXBElement&lt;Integer&gt; createMaxEntities(Integer value) {
+<span class="nc" id="L167">        return new JAXBElement&lt;Integer&gt;(_MaxEntities_QNAME, Integer.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link XMLGregorianCalendar }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;endPoint&quot;)
+    public JAXBElement&lt;XMLGregorianCalendar&gt; createEndPoint(XMLGregorianCalendar value) {
+<span class="nc" id="L176">        return new JAXBElement&lt;XMLGregorianCalendar&gt;(_EndPoint_QNAME, XMLGregorianCalendar.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link XMLGregorianCalendar }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;expiresAfter&quot;)
+    public JAXBElement&lt;XMLGregorianCalendar&gt; createExpiresAfter(XMLGregorianCalendar value) {
+<span class="nc" id="L185">        return new JAXBElement&lt;XMLGregorianCalendar&gt;(_ExpiresAfter_QNAME, XMLGregorianCalendar.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Duration }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;notificationInterval&quot;)
+    public JAXBElement&lt;Duration&gt; createNotificationInterval(Duration value) {
+<span class="nc" id="L194">        return new JAXBElement&lt;Duration&gt;(_NotificationInterval_QNAME, Duration.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetSubscriptions }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;get_subscriptions&quot;)
+    public JAXBElement&lt;GetSubscriptions&gt; createGetSubscriptions(GetSubscriptions value) {
+<span class="nc" id="L203">        return new JAXBElement&lt;GetSubscriptions&gt;(_GetSubscriptions_QNAME, GetSubscriptions.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link XMLGregorianCalendar }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;startPoint&quot;)
+    public JAXBElement&lt;XMLGregorianCalendar&gt; createStartPoint(XMLGregorianCalendar value) {
+<span class="nc" id="L212">        return new JAXBElement&lt;XMLGregorianCalendar&gt;(_StartPoint_QNAME, XMLGregorianCalendar.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link String }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;subscriptionKey&quot;)
+    public JAXBElement&lt;String&gt; createSubscriptionKey(String value) {
+<span class="nc" id="L221">        return new JAXBElement&lt;String&gt;(_SubscriptionKey_QNAME, String.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link CoveragePeriod }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;coveragePeriod&quot;)
+    public JAXBElement&lt;CoveragePeriod&gt; createCoveragePeriod(CoveragePeriod value) {
+<span class="nc" id="L230">        return new JAXBElement&lt;CoveragePeriod&gt;(_CoveragePeriod_QNAME, CoveragePeriod.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Subscriptions }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;subscriptions&quot;)
+    public JAXBElement&lt;Subscriptions&gt; createSubscriptions(Subscriptions value) {
+<span class="nc" id="L239">        return new JAXBElement&lt;Subscriptions&gt;(_Subscriptions_QNAME, Subscriptions.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Subscription }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;subscription&quot;)
+    public JAXBElement&lt;Subscription&gt; createSubscription(Subscription value) {
+<span class="nc" id="L248">        return new JAXBElement&lt;Subscription&gt;(_Subscription_QNAME, Subscription.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SubscriptionResultsList }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;subscriptionResultsList&quot;)
+    public JAXBElement&lt;SubscriptionResultsList&gt; createSubscriptionResultsList(SubscriptionResultsList value) {
+<span class="nc" id="L257">        return new JAXBElement&lt;SubscriptionResultsList&gt;(_SubscriptionResultsList_QNAME, SubscriptionResultsList.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SubscriptionFilter }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;subscriptionFilter&quot;)
+    public JAXBElement&lt;SubscriptionFilter&gt; createSubscriptionFilter(SubscriptionFilter value) {
+<span class="nc" id="L266">        return new JAXBElement&lt;SubscriptionFilter&gt;(_SubscriptionFilter_QNAME, SubscriptionFilter.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link GetSubscriptionResults }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;get_subscriptionResults&quot;)
+    public JAXBElement&lt;GetSubscriptionResults&gt; createGetSubscriptionResults(GetSubscriptionResults value) {
+<span class="nc" id="L275">        return new JAXBElement&lt;GetSubscriptionResults&gt;(_GetSubscriptionResults_QNAME, GetSubscriptionResults.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link SaveSubscription }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;save_subscription&quot;)
+    public JAXBElement&lt;SaveSubscription&gt; createSaveSubscription(SaveSubscription value) {
+<span class="nc" id="L284">        return new JAXBElement&lt;SaveSubscription&gt;(_SaveSubscription_QNAME, SaveSubscription.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link KeyBag }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;keyBag&quot;)
+    public JAXBElement&lt;KeyBag&gt; createKeyBag(KeyBag value) {
+<span class="nc" id="L293">        return new JAXBElement&lt;KeyBag&gt;(_KeyBag_QNAME, KeyBag.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link Boolean }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;deleted&quot;)
+    public JAXBElement&lt;Boolean&gt; createDeleted(Boolean value) {
+<span class="nc" id="L302">        return new JAXBElement&lt;Boolean&gt;(_Deleted_QNAME, Boolean.class, null, value);</span>
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code &lt;}{@link String }{@code &gt;}}
+     * 
+     */
+    @XmlElementDecl(namespace = &quot;urn:uddi-org:sub_v3&quot;, name = &quot;chunkToken&quot;)
+    public JAXBElement&lt;String&gt; createChunkToken(String value) {
+<span class="nc" id="L311">        return new JAXBElement&lt;String&gt;(_ChunkToken_QNAME, String.class, null, value);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
