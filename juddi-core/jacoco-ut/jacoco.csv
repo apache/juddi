@@ -58,7 +58,7 @@ jUDDI Core Services,org.apache.juddi.v3.auth,HTTPContainerAuthenticator,201,0,22
 jUDDI Core Services,org.apache.juddi.v3.auth,JUDDIAuthenticator,59,149,8,8,8,43,6,5,0,3
 jUDDI Core Services,org.apache.juddi.v3.auth,CryptedXMLDocAuthenticator,179,167,8,8,40,48,8,7,1,6
 jUDDI Core Services,org.apache.juddi.v3.auth,JuddiUsers,4,12,0,0,2,3,1,2,1,2
-jUDDI Core Services,org.apache.juddi.replication,ReplicationNotifier,364,404,57,27,75,96,37,17,2,10
+jUDDI Core Services,org.apache.juddi.replication,ReplicationNotifier,456,312,60,24,92,79,39,15,3,9
 jUDDI Core Services,org.apache.juddi.replication,ReplicationNotifier.PrimaryAlternate,11,0,0,0,3,0,1,0,1,0
 jUDDI Core Services,org.apache.juddi.model,BusinessCategoryBag,0,16,0,0,0,8,0,4,0,4
 jUDDI Core Services,org.apache.juddi.model,UddiEntity,23,76,9,3,6,26,7,15,1,15
@@ -217,7 +217,7 @@ jUDDI Core Services,org.apache.juddi.validation,ValidateUDDIApi,24,46,2,2,7,16,4
 jUDDI Core Services,org.apache.juddi.validation,ValidateSecurity,4,0,0,0,2,0,1,0,1,0
 jUDDI Core Services,org.apache.juddi.subscription,NotificationList,24,0,2,0,9,0,5,0,4,0
 jUDDI Core Services,org.apache.juddi.subscription,TypeConvertor,21,36,1,3,5,14,2,3,1,2
-jUDDI Core Services,org.apache.juddi.subscription,SubscriptionNotifier,518,636,72,46,83,139,55,18,3,11
+jUDDI Core Services,org.apache.juddi.subscription,SubscriptionNotifier,473,681,63,55,79,143,50,23,3,11
 jUDDI Core Services,org.apache.juddi.mapping,MappingApiToModel,602,3049,119,209,116,717,88,138,4,57
 jUDDI Core Services,org.apache.juddi.mapping,MappingModelToApi.new Object() {...},3,23,0,0,0,1,0,1,0,1
 jUDDI Core Services,org.apache.juddi.mapping,MappingModelToApi,383,2943,75,215,80,721,68,133,1,54

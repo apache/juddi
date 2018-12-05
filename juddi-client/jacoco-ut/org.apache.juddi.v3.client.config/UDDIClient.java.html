@@ -510,77 +510,77 @@ public class UDDIClient {
 <span class="nc" id="L510">                        bt.setTModelInstanceDetails(new TModelInstanceDetails());</span>
                 }
                 TModelInstanceInfo tModelInstanceInfo;
-<span class="pc bpc" id="L513" title="1 of 2 branches missed.">                if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SOAP)) {</span>
+<span class="pc bpc" id="L513" title="1 of 2 branches missed.">                if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SOAP)) {</span>
 <span class="fc" id="L514">                        tModelInstanceInfo = new TModelInstanceInfo();</span>
 <span class="fc" id="L515">                        tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_SOAP);</span>
 <span class="fc" id="L516">                        bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                 }
 
 <span class="pc bpc" id="L519" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;http:&quot;)) {</span>
-<span class="pc bpc" id="L520" title="1 of 2 branches missed.">                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_HTTP)) {</span>
+<span class="pc bpc" id="L520" title="1 of 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_HTTP)) {</span>
 <span class="fc" id="L521">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
 <span class="fc" id="L522">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_HTTP);</span>
 <span class="fc" id="L523">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
 <span class="pc bpc" id="L526" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;jms:&quot;)) {</span>
-<span class="nc bnc" id="L527" title="All 2 branches missed.">                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_JMS)) {</span>
+<span class="nc bnc" id="L527" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_JMS)) {</span>
 <span class="nc" id="L528">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
 <span class="nc" id="L529">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_JMS);</span>
 <span class="nc" id="L530">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
 <span class="pc bpc" id="L533" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;rmi:&quot;)) {</span>
-<span class="nc bnc" id="L534" title="All 2 branches missed.">                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_RMI)) {</span>
+<span class="nc bnc" id="L534" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_RMI)) {</span>
 <span class="nc" id="L535">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
 <span class="nc" id="L536">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_RMI);</span>
 <span class="nc" id="L537">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
 <span class="pc bpc" id="L540" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;udp:&quot;)) {</span>
-<span class="nc bnc" id="L541" title="All 2 branches missed.">                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_UDP)) {</span>
+<span class="nc bnc" id="L541" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_UDP)) {</span>
 <span class="nc" id="L542">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
 <span class="nc" id="L543">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_UDP);</span>
 <span class="nc" id="L544">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
 <span class="pc bpc" id="L547" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;amqp:&quot;)) {</span>
-<span class="nc bnc" id="L548" title="All 2 branches missed.">                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_AMQP)) {</span>
+<span class="nc bnc" id="L548" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_AMQP)) {</span>
 <span class="nc" id="L549">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
 <span class="nc" id="L550">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_AMQP);</span>
 <span class="nc" id="L551">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
 <span class="pc bpc" id="L554" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;mailto:&quot;)) {</span>
-<span class="nc bnc" id="L555" title="All 2 branches missed.">                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_EMAIL)) {</span>
+<span class="nc bnc" id="L555" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_EMAIL)) {</span>
 <span class="nc" id="L556">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
 <span class="nc" id="L557">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_EMAIL);</span>
 <span class="nc" id="L558">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
 <span class="pc bpc" id="L561" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;ftp:&quot;)) {</span>
-<span class="nc bnc" id="L562" title="All 2 branches missed.">                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_FTP)) {</span>
+<span class="nc bnc" id="L562" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_FTP)) {</span>
 <span class="nc" id="L563">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
 <span class="nc" id="L564">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_FTP);</span>
 <span class="nc" id="L565">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
 <span class="pc bpc" id="L568" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;https:&quot;)) {</span>
-<span class="nc bnc" id="L569" title="All 2 branches missed.">                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {</span>
+<span class="nc bnc" id="L569" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {</span>
 <span class="nc" id="L570">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
 <span class="nc" id="L571">                                tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_SSLv3);</span>
 <span class="nc" id="L572">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
 <span class="pc bpc" id="L575" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;ftps:&quot;)) {</span>
-<span class="nc bnc" id="L576" title="All 2 branches missed.">                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {</span>
+<span class="nc bnc" id="L576" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {</span>
 <span class="nc" id="L577">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
 <span class="nc" id="L578">                                tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_SSLv3);</span>
 <span class="nc" id="L579">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
 <span class="pc bpc" id="L582" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;jndi:&quot;)) {</span>
-<span class="nc bnc" id="L583" title="All 2 branches missed.">                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_JNDI_RMI)) {</span>
+<span class="nc bnc" id="L583" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_JNDI_RMI)) {</span>
 <span class="nc" id="L584">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
 <span class="nc" id="L585">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_JNDI_RMI);</span>
 <span class="nc" id="L586">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
@@ -601,21 +601,21 @@ public class UDDIClient {
 <span class="nc" id="L601">                        bt.setTModelInstanceDetails(new TModelInstanceDetails());</span>
                 }
                 TModelInstanceInfo tModelInstanceInfo;
-<span class="nc bnc" id="L604" title="All 2 branches missed.">                if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_REST)) {</span>
+<span class="nc bnc" id="L604" title="All 2 branches missed.">                if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_REST)) {</span>
 <span class="nc" id="L605">                        tModelInstanceInfo = new TModelInstanceInfo();</span>
 <span class="nc" id="L606">                        tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_REST);</span>
 <span class="nc" id="L607">                        bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                 }
 
 <span class="nc bnc" id="L610" title="All 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;http:&quot;)) {</span>
-<span class="nc bnc" id="L611" title="All 2 branches missed.">                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_HTTP)) {</span>
+<span class="nc bnc" id="L611" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_HTTP)) {</span>
 <span class="nc" id="L612">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
 <span class="nc" id="L613">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_HTTP);</span>
 <span class="nc" id="L614">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
 <span class="nc bnc" id="L617" title="All 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;https:&quot;)) {</span>
-<span class="nc bnc" id="L618" title="All 2 branches missed.">                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {</span>
+<span class="nc bnc" id="L618" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {</span>
 <span class="nc" id="L619">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
 <span class="nc" id="L620">                                tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_SSLv3);</span>
 <span class="nc" id="L621">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
@@ -624,7 +624,7 @@ public class UDDIClient {
 <span class="nc" id="L624">                return bt;</span>
         }
 
-        private static boolean Exists(List&lt;TModelInstanceInfo&gt; items, String key) {
+        private static boolean exists(List&lt;TModelInstanceInfo&gt; items, String key) {
 <span class="fc bfc" id="L628" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
 <span class="pc bpc" id="L629" title="1 of 2 branches missed.">                        if (items.get(i).getTModelKey() != null</span>
 <span class="pc bpc" id="L630" title="1 of 2 branches missed.">                                &amp;&amp; items.get(i).getTModelKey().equalsIgnoreCase(key)) {</span>

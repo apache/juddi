@@ -58,7 +58,7 @@ jUDDI Core - OpenJPA,org.apache.juddi.v3.auth,HTTPContainerAuthenticator,201,0,2
 jUDDI Core - OpenJPA,org.apache.juddi.v3.auth,JUDDIAuthenticator,59,149,8,8,8,43,6,5,0,3
 jUDDI Core - OpenJPA,org.apache.juddi.v3.auth,CryptedXMLDocAuthenticator,179,167,8,8,40,48,8,7,1,6
 jUDDI Core - OpenJPA,org.apache.juddi.v3.auth,JuddiUsers,4,12,0,0,2,3,1,2,1,2
-jUDDI Core - OpenJPA,org.apache.juddi.replication,ReplicationNotifier,456,312,60,24,92,79,39,15,3,9
+jUDDI Core - OpenJPA,org.apache.juddi.replication,ReplicationNotifier,466,302,62,22,93,78,40,14,3,9
 jUDDI Core - OpenJPA,org.apache.juddi.replication,ReplicationNotifier.PrimaryAlternate,11,0,0,0,3,0,1,0,1,0
 jUDDI Core - OpenJPA,org.apache.juddi.model,BusinessCategoryBag,160,151,27,11,0,8,26,13,9,11
 jUDDI Core - OpenJPA,org.apache.juddi.model,UddiEntity,378,651,74,56,6,26,75,63,21,43

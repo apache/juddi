@@ -185,8 +185,8 @@ public class ReplicationNotifier extends TimerTask {
                         //retransmission only applies to non-directed-edge replication, thus the extra check
 <span class="fc bfc" id="L186" title="All 2 branches covered.">                        for (Operator o : repcfg.getOperator()) {</span>
                                 //no need to tell myself about a change at myself or the origin
-<span class="pc bpc" id="L188" title="1 of 4 branches missed.">                                if (!o.getOperatorNodeID().equalsIgnoreCase(node) &amp;&amp; !o.getOperatorNodeID().equalsIgnoreCase(origin_node)) {</span>
-<span class="fc" id="L189">                                        destinationUrls.add(o.getSoapReplicationURL());</span>
+<span class="pc bpc" id="L188" title="3 of 4 branches missed.">                                if (!o.getOperatorNodeID().equalsIgnoreCase(node) &amp;&amp; !o.getOperatorNodeID().equalsIgnoreCase(origin_node)) {</span>
+<span class="nc" id="L189">                                        destinationUrls.add(o.getSoapReplicationURL());</span>
                                 }
 <span class="fc" id="L191">                        }</span>
                 } else {

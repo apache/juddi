@@ -81,7 +81,7 @@ public class JAXWSTransport extends Transport {
 <span class="fc" id="L81">                        Map&lt;String, Object&gt; requestContext = ((BindingProvider) inquiryService).getRequestContext();</span>
 <span class="pc bpc" id="L82" title="1 of 2 branches missed.">                        if (endpointURL != null) {</span>
                         
-<span class="fc" id="L84">                        requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);</span>
+<span class="fc" id="L84">                                requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);</span>
                         }
 <span class="fc" id="L86">                        setCredentials(requestContext);</span>
 <span class="nc" id="L87">                } catch (Exception e) {</span>
@@ -127,7 +127,7 @@ public class JAXWSTransport extends Transport {
                         }
 <span class="fc" id="L128">                        Map&lt;String, Object&gt; requestContext = ((BindingProvider) publishService).getRequestContext();</span>
 <span class="pc bpc" id="L129" title="1 of 2 branches missed.">                        if (endpointURL != null)</span>
-<span class="fc" id="L130">                        requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);</span>
+<span class="fc" id="L130">                                requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);</span>
 <span class="fc" id="L131">                        setCredentials(requestContext);</span>
 <span class="nc" id="L132">                } catch (Exception e) {</span>
 <span class="nc" id="L133">                        throw new TransportException(e.getMessage(), e);</span>

@@ -117,8 +117,8 @@ public class SubscriptionNotifier extends TimerTask {
 		//if the desiredDate is set it means that we've declined sending out a notification before
                 //because the a client did not want a notification yet. However if this desired
                 //notification time has come we should try sending out the notification now.
-<span class="pc bpc" id="L120" title="3 of 4 branches missed.">                if (desiredDate != null &amp;&amp; new Date().getTime() &gt; desiredDate.getTime()) {</span>
-<span class="nc" id="L121">                        return true;</span>
+<span class="pc bpc" id="L120" title="1 of 4 branches missed.">                if (desiredDate != null &amp;&amp; new Date().getTime() &gt; desiredDate.getTime()) {</span>
+<span class="fc" id="L121">                        return true;</span>
                 }
                 try {
 <span class="fc bfc" id="L124" title="All 2 branches covered.">                        for (String attribute : attributes) {</span>
@@ -160,7 +160,7 @@ public class SubscriptionNotifier extends TimerTask {
 <span class="fc" id="L160">                                                Date notificationDate = new Date(scheduledExecutionTime());</span>
 <span class="fc" id="L161">                                                GetSubscriptionResults getSubscriptionResults</span>
 <span class="fc" id="L162">                                                        = buildGetSubscriptionResults(subscription, notificationDate);</span>
-<span class="pc bpc" id="L163" title="1 of 2 branches missed.">                                                if (getSubscriptionResults != null) {</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">                                                if (getSubscriptionResults != null) {</span>
 <span class="fc" id="L164">                                                        getSubscriptionResults.setSubscriptionKey(subscription.getSubscriptionKey());</span>
 <span class="fc" id="L165">                                                        UddiEntityPublisher publisher = new UddiEntityPublisher();</span>
 <span class="fc" id="L166">                                                        publisher.setAuthorizedName(subscription.getAuthorizedName());</span>
@@ -243,7 +243,7 @@ public class SubscriptionNotifier extends TimerTask {
 <span class="fc" id="L243">                Duration duration = TypeConvertor.convertStringToDuration(subscription.getNotificationInterval());</span>
 <span class="fc" id="L244">                Date startPoint = subscription.getLastNotified();</span>
 <span class="fc" id="L245">                Date nextDesiredNotificationDate = null;</span>
-<span class="pc bpc" id="L246" title="1 of 2 branches missed.">                if (startPoint == null) {</span>
+<span class="fc bfc" id="L246" title="All 2 branches covered.">                if (startPoint == null) {</span>
 <span class="fc" id="L247">                        startPoint = subscription.getCreateDate();</span>
                 }
 <span class="fc" id="L249">                nextDesiredNotificationDate = new Date(startPoint.getTime());</span>
@@ -251,7 +251,7 @@ public class SubscriptionNotifier extends TimerTask {
 		//nextDesiredNotificationDate = lastTime + the Interval Duration, which should be:
                 //AFTER the lastNotified time and BEFORE the endTime (current time). If it is
                 //after the endTime, then the user does not want a notification yet, so we accumulate.
-<span class="pc bpc" id="L254" title="5 of 6 branches missed.">                if (subscription.getLastNotified() == null || nextDesiredNotificationDate.after(startPoint) &amp;&amp; nextDesiredNotificationDate.before(endPoint)) {</span>
+<span class="pc bpc" id="L254" title="1 of 6 branches missed.">                if (subscription.getLastNotified() == null || nextDesiredNotificationDate.after(startPoint) &amp;&amp; nextDesiredNotificationDate.before(endPoint)) {</span>
 <span class="fc" id="L255">                        getSubscriptionResults = new GetSubscriptionResults();</span>
 <span class="fc" id="L256">                        CoveragePeriod period = new CoveragePeriod();</span>
 <span class="fc" id="L257">                        GregorianCalendar calendar = new GregorianCalendar();</span>
@@ -264,10 +264,10 @@ public class SubscriptionNotifier extends TimerTask {
                         }
 <span class="fc" id="L265">                        getSubscriptionResults.setCoveragePeriod(period);</span>
 <span class="fc" id="L266">                } else {</span>
-<span class="nc" id="L267">                        log.info(&quot;Client does not yet want a notification. The next desidered notification Date &quot; + nextDesiredNotificationDate + &quot;. The current interval [&quot;</span>
+<span class="fc" id="L267">                        log.info(&quot;Client does not yet want a notification. The next desidered notification Date &quot; + nextDesiredNotificationDate + &quot;. The current interval [&quot;</span>
                                 + startPoint + &quot; , &quot; + endPoint + &quot;] therefore skipping this notification cycle.&quot;);
-<span class="nc bnc" id="L269" title="All 4 branches missed.">                        if (desiredDate == null || nextDesiredNotificationDate.getTime() &lt; desiredDate.getTime()) {</span>
-<span class="nc" id="L270">                                desiredDate = nextDesiredNotificationDate;</span>
+<span class="pc bpc" id="L269" title="3 of 4 branches missed.">                        if (desiredDate == null || nextDesiredNotificationDate.getTime() &lt; desiredDate.getTime()) {</span>
+<span class="fc" id="L270">                                desiredDate = nextDesiredNotificationDate;</span>
                         }
                 }
 <span class="fc" id="L273">                return getSubscriptionResults;</span>
