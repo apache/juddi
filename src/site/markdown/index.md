@@ -43,6 +43,8 @@ jUDDI (pronounced "Judy") is an open source Java implementation of [OASIS](https
 
 ## News
 
+Dec 5, 2018, jUDDI Release 3.3.6
+
 Nov 23, 2017, jUDDI Release 3.3.5
 
 Feb 11, 2017, jUDDI Release 3.3.4
