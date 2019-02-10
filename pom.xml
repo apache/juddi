@@ -299,6 +299,24 @@ under the License.
 		</pluginManagement>
 		<plugins>
 			<plugin>
+			<groupId>net.nicoulaj.maven.plugins</groupId>
+			<artifactId>checksum-maven-plugin</artifactId>
+			<version>1.8</version>
+			<executions>
+			  <execution>
+				<goals>
+				  <goal>artifacts</goal>
+				</goals>
+			  </execution>
+			</executions>
+			<configuration>
+			<algorithms>
+				<algorithm>SHA-512</algorithm>
+			</algorithms>
+			  <!-- put your configurations here -->
+			</configuration>
+		  </plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
 				<version>3.0.0-M1</version>
