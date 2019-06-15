@@ -17,8 +17,6 @@
 package org.apache.juddi.api.impl;
 
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Resource;
 
 import javax.persistence.EntityManager;
@@ -61,7 +59,7 @@ public abstract class AuthenticatedService {
         public static final String UTF8 = "UTF-8";
         public static final int AUTHTOKEN_ACTIVE = 1;
         public static final int AUTHTOKEN_RETIRED = 0;
-        static final Log logger = LogFactory.getLog(AuthenticatedService.class);
+        protected static final Log logger = LogFactory.getLog(AuthenticatedService.class);
         /**
          * the node id of this server instance, as loaded from the config file
          */

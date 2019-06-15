@@ -131,10 +131,15 @@ public class UddiEntityPublisher {
 		return false;
 	}
 	
-	/*
-	 * This method will check if the given key generator key is available for this publisher.  The idea is to make sure that the key generator
+	
+        /**
+         * This method will check if the given key generator key is available for this publisher.  The idea is to make sure that the key generator
 	 * and all its sub-partitions are not already taken by another publisher.
-	 */
+         * @param em
+         * @param keygenKey
+         * @return
+         * @throws DispositionReportFaultMessage 
+         */
 	public boolean isKeyGeneratorAvailable(EntityManager em, String keygenKey) throws DispositionReportFaultMessage {
 
 		// First make sure the key is a valid UDDIv3 key per the specification's rules
