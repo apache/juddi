@@ -30,7 +30,7 @@ import org.apache.juddi.config.Property;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public class AuthenticatorFactory {
-	private static Log log = LogFactory.getLog(AuthenticatorFactory.class);
+	private static final Log log = LogFactory.getLog(AuthenticatorFactory.class);
 
 	// Default authenticator implementation
 	private static final String DEFAULT_IMPL = "org.apache.juddi.v3.auth.JUDDIAuthenticator";
