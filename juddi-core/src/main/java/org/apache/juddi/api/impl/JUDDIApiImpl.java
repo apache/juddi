@@ -1324,8 +1324,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         StringBuilder sql = new StringBuilder();
-                        sql.append("select distinct c from ReplicationConfiguration c ");
-                        sql.toString();
+                        sql.append("select distinct c from Subscription c ");
                         Query qry = em.createQuery(sql.toString());
                         List<org.apache.juddi.model.Subscription> resultList = qry.getResultList();
                         for (int i = 0; i < resultList.size(); i++) {
