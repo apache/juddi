@@ -20,6 +20,7 @@
  */
 --%>
 
+<%@page import="org.apache.juddi.adminconsole.resources.ResourceLoader"%>
 <%@page import="java.io.FileInputStream"%>
 <%@page import="java.io.File"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
@@ -40,7 +41,7 @@
                 p.load(fis);
                 fis.close();
         } catch (Exception ex) {
-                ex.printStackTrace();
+                this.getServletContext().log("umable to load config", ex);
                 out.write("Internal configuration error");
                 response.setStatus(406);
                 ok = false;
@@ -55,13 +56,14 @@
         session.setAttribute("username", request.getParameter("username"));
         if (request.getParameter("password") == null || request.getParameter("password").length() == 0) {
                 response.setStatus(406);
-                out.write("Please enter a password");
+                out.write(ResourceLoader.GetResource(session, "items.enterpassword"));
                 ok = false;
                 //TODO i18n
         }
         if (request.getParameter("username") == null || request.getParameter("username").length() == 0) {
                 response.setStatus(406);
-                out.write("Please enter a username");
+                out.write(ResourceLoader.GetResource(session, "items.enteruser"));
+                //out.write("Please enter a username");
                 ok = false;
                 //TODO i18n
         }
@@ -79,7 +81,7 @@
                         String msg = x.verifyLogin();
                         if (msg != null) {
                                 response.setStatus(406);
-                                out.write(msg);
+                                out.write(StringEscapeUtils.escapeHtml(msg));
                         }
                 }
         }

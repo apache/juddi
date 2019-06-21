@@ -1562,6 +1562,11 @@ public class UddiAdminHub {
                 return clientConfig.getConfiguration().getBoolean(PROP_ADMIN_LOCALHOST_ONLY, true);
         }
 
+        /**
+         * returns null on successful login, otherwise an error message
+         * 
+         * @return 
+         */
         public String verifyLogin() {
                 ensureConfig();
                 if (style != AuthStyle.UDDI_AUTH) {
@@ -1588,11 +1593,7 @@ public class UddiAdminHub {
                         } catch (Exception ex) {
                                 return handleException(ex);
                         }
-                        /*
-                         bp = (BindingProvider) juddi;
-                         context = bp.getRequestContext();
-                         context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
-                         context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));*/
+                      
                         return null;
                 } else {
                         if (token != null) {
