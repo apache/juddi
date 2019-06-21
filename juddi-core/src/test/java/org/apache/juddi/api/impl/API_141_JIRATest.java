@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
 import org.apache.juddi.api_v3.GetEntityHistoryMessageRequest;
 import org.apache.juddi.api_v3.GetEntityHistoryMessageResponse;
+import org.apache.juddi.api_v3.SubscriptionWrapper;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
@@ -1409,4 +1410,10 @@ public class API_141_JIRATest {
             
     }
     
+    
+    @Test
+    public void testJira996SubscriotionTest() throws Exception {
+        JUDDIApiImpl j = new JUDDIApiImpl();
+        List<SubscriptionWrapper> allClientSubscriptionInfo = j.getAllClientSubscriptionInfo(authInfoJoe);
+    }
 }
