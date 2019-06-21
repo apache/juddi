@@ -207,7 +207,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                         //if you're are the owner, access granted
                         //if you are an admin && this item belongs to this node, access granted
                         //else denied
-                        AccessCheck(obj, entityKey);
+                        accessCheck(obj, entityKey);
                         i++;
                 }
         }
@@ -244,7 +244,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BindingTemplateNotFound", entityKey));
                         }
 
-                        AccessCheck(obj, entityKey);
+                        accessCheck(obj, entityKey);
 
                         i++;
                 }
@@ -281,13 +281,13 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNotFound", entityKey));
                         }
 
-                        AccessCheck(obj, entityKey);
+                        accessCheck(obj, entityKey);
 
                         i++;
                 }
         }
 
-        private void AccessCheck(Object obj, String entityKey) throws UserMismatchException {
+        private void accessCheck(Object obj, String entityKey) throws UserMismatchException {
                 boolean accessCheck = false; //assume access denied
                 if (!((UddiEntity) obj).getNodeId().equals(nodeID)) {
                         //prevent changes to data owned by another node in a replicated environment
@@ -706,7 +706,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 entityExists = true;
 
                                 // Make sure publisher owns this entity.
-                                AccessCheck(obj, entityKey);
+                                accessCheck(obj, entityKey);
 
                         } else {
                                 // Inside this block, we have a key proposed by the publisher on a new entity
@@ -842,7 +842,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                         }
 
                                         // Make sure publisher owns this entity.
-                                        AccessCheck(obj, entityKey);
+                                        accessCheck(obj, entityKey);
 
                                         // If existing service trying to be saved has a different parent key, then we have a problem
                                         if (!parentKey.equalsIgnoreCase(bs.getBusinessEntity().getEntityKey())) {
@@ -887,7 +887,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                         }
 
                                         // Make sure publisher owns this parent entity.
-                                        AccessCheck(parentTemp, parentKey);
+                                        accessCheck(parentTemp, parentKey);
                                         // if (!publisher.isOwner((UddiEntity) parentTemp)) {
                                         //        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwnerParent", parentKey));
                                         //}
@@ -997,7 +997,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 }
 
                                 // Make sure publisher owns this entity.
-                                AccessCheck(obj, entityKey);
+                                accessCheck(obj, entityKey);
                                 //if (!publisher.isOwner((UddiEntity) obj)&& !((Publisher) publisher).isAdmin()) {
 //                                        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
                                 //                              }
@@ -1035,7 +1035,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 }
 
                                 // Make sure publisher owns this parent entity.
-                                AccessCheck(parentTemp, parentKey);
+                                accessCheck(parentTemp, parentKey);
 //                                if (!publisher.isOwner((UddiEntity) parentTemp)) {
 //                                        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwnerParent", parentKey));
 //                                }
@@ -1092,7 +1092,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 entityExists = true;
 
                                 // Make sure publisher owns this entity.
-                                AccessCheck(obj, entityKey);
+                                accessCheck(obj, entityKey);
                                 //if (!publisher.isOwner((UddiEntity) obj)&& !((Publisher) publisher).isAdmin()) {
                                 //        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
                                 // }

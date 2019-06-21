@@ -65,7 +65,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class API_010_PublisherTest {
 
-        private static Log logger = LogFactory.getLog(API_010_PublisherTest.class);
+        private static final Log logger = LogFactory.getLog(API_010_PublisherTest.class);
         private JUDDIApiImpl publisher = new JUDDIApiImpl();
         private UDDISecurityPortType security = new UDDISecurityImpl();
         private static TckSubscription tckSubscription = new TckSubscription(new UDDISubscriptionImpl(), new UDDISecurityImpl(), new UDDIInquiryImpl());

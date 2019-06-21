@@ -39,423 +39,17 @@ xmlns:uddi="urn:uddi-org:api_v3">
   
   <xsd:schema targetNamespace="urn:uddi-org:api_v3" elementFormDefault="qualified" >
   <xsd:import  schemaLocation="uddi_v3.xsd" namespace="urn:uddi-org:api_v3" />
+  <xsd:import  schemaLocation="juddi_api_v1.xsd" namespace="urn:juddi-apache-org:api_v3" />
   </xsd:schema>
 
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:juddi-apache-org:api_v3" xmlns:ns3="urn:uddi-org:sub_v3" xmlns:ns2="urn:uddi-org:api_v3" xmlns:ns1="http://www.w3.org/2000/09/xmldsig#" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:juddi-apache-org:api_v3" xmlns:uddi="urn:uddi-org:api_v3" xmlns:subr="urn:uddi-org:sub_v3" xmlns:repl="urn:uddi-org:repl_v3">
-
-  <xs:import schemaLocation="www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd" namespace="http://www.w3.org/2000/09/xmldsig#"/>
-  <xs:import  schemaLocation="uddi_v3.xsd" namespace="urn:uddi-org:api_v3" />
-  <xs:import  schemaLocation="uddi_v3subscription.xsd" namespace="urn:uddi-org:sub_v3"/>
-  <xs:import  schemaLocation="uddi_v3replication.xsd" namespace="urn:uddi-org:repl_v3" />
-  
-  <xs:element name="delete_publisher" type="tns:delete_publisher"/>
-  <xs:element name="get_allPublisherDetail" type="tns:get_allPublisherDetail"/>
-  <xs:element name="get_publisherDetail" type="tns:get_publisher_detail"/>
-  <xs:element name="publisher" type="tns:publisher"/>
-  <xs:element name="publisherDetail" type="tns:publisherDetail"/>
-  <xs:element name="publisherDetailResponse" type="tns:publisherDetail"/>  
-  <xs:element name="save_publisher" type="tns:save_publisher"/>
-  <xs:element name="sync_subscription" type="tns:syncSubscription"/>
-  <xs:element name="sync_subscriptionDetail" type="tns:syncSubscriptionDetail"/>
-  <xs:complexType name="get_publisher_detail">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" name="publisherId" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="publisherDetail">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="publisher" nillable="true" type="tns:publisher"/>
-    </xs:sequence>
-    <xs:attribute name="truncated" type="xs:boolean"/>
-  </xs:complexType>
-  <xs:complexType name="publisher">
-    <xs:sequence>
-      <xs:element name="publisherName" type="xs:string"/>
-      <xs:element minOccurs="0" name="emailAddress" type="xs:string"/>
-      <xs:element minOccurs="0" name="isAdmin" type="xs:boolean"/>
-      <xs:element minOccurs="0" name="isEnabled" type="xs:boolean"/>
-      <xs:element minOccurs="0" name="maxBindingsPerService" type="xs:int"/>
-      <xs:element minOccurs="0" name="maxBusinesses" type="xs:int"/>
-      <xs:element minOccurs="0" name="maxServicePerBusiness" type="xs:int"/>
-      <xs:element minOccurs="0" name="maxTModels" type="xs:int"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" ref="ns1:Signature"/>
-    </xs:sequence>
-    <xs:attribute name="authorizedName" type="xs:string" use="required"/>
-  </xs:complexType>
-  <xs:complexType name="delete_clientSubscriptionInfo">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" name="subscriptionKey" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="save_clerk">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" name="clerk" type="tns:clerk"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="clerk">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="name" type="xs:string"/>
-      <xs:element minOccurs="0" name="node" type="tns:node"/>
-      <xs:element minOccurs="0" name="publisher" type="xs:string"/>
-      <xs:element minOccurs="0" name="password" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="node">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="name" type="xs:string"/>
-      <xs:element minOccurs="0" name="clientName" type="xs:string"/>
-      <xs:element minOccurs="0" name="description" type="xs:string"/>
-      <xs:element minOccurs="0" name="custodyTransferUrl" type="xs:string"/>
-      <xs:element minOccurs="0" name="inquiryUrl" type="xs:string"/>
-      <xs:element minOccurs="0" name="publishUrl" type="xs:string"/>
-      <xs:element minOccurs="0" name="securityUrl" type="xs:string"/>
-      <xs:element minOccurs="0" name="subscriptionUrl" type="xs:string"/>
-      <xs:element minOccurs="0" name="subscriptionListenerUrl" type="xs:string"/>
-	  <xs:element minOccurs="0" name="replicationUrl" type="xs:string"/>
-      <xs:element minOccurs="0" name="juddiApiUrl" type="xs:string"/>
-      <xs:element minOccurs="0" name="proxyTransport" type="xs:string"/>
-      <xs:element minOccurs="0" name="factoryInitial" type="xs:string"/>
-      <xs:element minOccurs="0" name="factoryURLPkgs" type="xs:string"/>
-      <xs:element minOccurs="0" name="factoryNamingProvider" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="clerkDetail">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="clerk" nillable="true" type="tns:clerk"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="get_allPublisherDetail">
-    <xs:sequence>
-      <xs:element minOccurs="0" ref="ns2:authInfo"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="delete_publisher">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" name="publisherId" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="save_publisher">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" name="publisher" type="tns:publisher"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-  
-  
-  <xs:complexType name="get_AllNodes">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-    <xs:complexType name="get_AllNodesResponse">
-    <xs:sequence>
-      <xs:element  name="nodeList" nillable="true" type="tns:nodeList"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="nodeList">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="node" type="tns:node"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-  
-  <xs:complexType name="get_AllClerks">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-    <xs:complexType name="get_AllClerksResponse">
-    <xs:sequence>
-      <xs:element  name="clerkList" nillable="true" type="tns:clerkList"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-  <xs:complexType name="clerkList">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="clerk" nillable="true" type="tns:clerk"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-  
-  <xs:complexType name="delete_Node">
-    <xs:sequence>
-      <xs:element name="authInfo" type="xs:string"/>
-	  <xs:element name="nodeID" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-  
-  <xs:complexType name="delete_Clerk">
-    <xs:sequence>
-      <xs:element name="authInfo" type="xs:string"/>
-	  <xs:element name="clerkID" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-
-  
-  
-  <xs:complexType name="get_ReplicationNodes">
-    <xs:sequence>
-      <xs:element name="authInfo" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-  <xs:complexType name="get_ReplicationNodesResponse">
-    <xs:sequence>
-		<xs:element ref="repl:replicationConfiguration" />
-    </xs:sequence>
-  </xs:complexType>
-  
-  
-  
-  <xs:complexType name="set_ReplicationNodes">
-    <xs:sequence>
-      <xs:element name="authInfo" type="xs:string"/>
-	  <xs:element ref="repl:replicationConfiguration" />
-    </xs:sequence>
-  </xs:complexType>
-  
-    <xs:complexType name="set_ReplicationNodesResponse">
-    <xs:sequence>
-		<xs:element name="dispositionReport" type="uddi:dispositionReport"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-  
-  <xs:complexType name="subscriptionWrapper">
-    <xs:sequence>
-      <xs:element name="publisherIdOrUsername" type="xs:string"/>
-	  <xs:element ref="subr:subscription" maxOccurs="unbounded" />
-    </xs:sequence>
-  </xs:complexType>
-  
-  <xs:complexType name="get_allClientSubscriptionInfo">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-    <xs:complexType name="get_allClientSubscriptionInfoResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="subscriptions" type="tns:subscriptionWrapper"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-  
-  <xs:complexType name="adminSave_Business">
-	<xs:sequence>
-		<xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-		<xs:element minOccurs="0" maxOccurs="unbounded" name="values" type="tns:adminSave_BusinessWrapper"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-  <xs:complexType name="adminSave_BusinessResponse">
-	<xs:sequence>
-		<xs:element name="dispositionReport" type="uddi:dispositionReport"/>    </xs:sequence>
-  </xs:complexType>
-  
-  <xs:complexType name="adminSave_BusinessWrapper">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="publisherID" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" ref="uddi:businessEntity"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-  
 
 
-<xs:complexType name="adminSave_tModel">
-	<xs:sequence>
-		<xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-		<xs:element minOccurs="0" maxOccurs="unbounded" name="values" type="tns:adminSave_tModelWrapper"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-  <xs:complexType name="adminSave_tModelResponse">
-	<xs:sequence>
-		<xs:element name="dispositionReport" type="uddi:dispositionReport"/>    </xs:sequence>
-  </xs:complexType>
-  
-  <xs:complexType name="adminSave_tModelWrapper">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="publisherID" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="tModel" nillable="true" type="uddi:tModel"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-
-
-
-
-  
-  <xs:complexType name="save_node">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" name="node" type="tns:node"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="nodeDetail">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="node" nillable="true" type="tns:node"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="save_clientSubscriptionInfo">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" name="clientSubscriptionInfo" type="tns:clientSubscriptionInfo"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="clientSubscriptionInfo">
-    <xs:sequence>
-      <xs:element name="subscriptionKey" type="xs:string"/>
-      <xs:element name="fromClerk" type="tns:clerk"/>
-      <xs:element name="toClerk" type="tns:clerk"/>
-      <xs:element minOccurs="0" name="lastModified" type="xs:dateTime"/>
-	  <xs:element minOccurs="0" name="lastNotified" type="xs:dateTime"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="clientSubscriptionInfoDetail">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="clientSubscriptionInfo" nillable="true" type="tns:clientSubscriptionInfo"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="syncSubscriptionRequest">
-    <xs:sequence>
-	<xs:element minOccurs="0" name="syncSubscription" type="tns:syncSubscription"/>
-	  </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="syncSubscription">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="get_subscriptionResultsList" nillable="true" type="ns3:get_subscriptionResults"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="syncSubscriptionDetail">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="subscriptionResultsList" nillable="true" type="ns3:subscriptionResultsList"/>
-    </xs:sequence>
-  </xs:complexType>
-  
-  <xs:complexType name="syncSubscriptionDetailResponse">
-    <xs:sequence>
-      <xs:element name="syncSubscriptionDetail" nillable="true" type="tns:syncSubscriptionDetail"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="delete_ClientSubscriptionInfo" nillable="true" type="tns:delete_clientSubscriptionInfo"/>
-  <xs:element name="save_ClerkRequest"  type="tns:save_clerk"/>
-  <xs:element name="save_NodeRequest"  type="tns:save_node"/>
-  
-  
-  
-  <xs:element name="delete_Clerk" nillable="true" type="tns:delete_Clerk"/>
-  <!--<xs:element name="delete_ClerkResponse" nillable="true" type="tns:delete_ClerkResponse"/>-->
-  
-  <xs:element name="get_AllNodes" nillable="true" type="tns:get_AllNodes"/>
-  <xs:element name="get_AllNodesResponse" nillable="true" type="tns:get_AllNodesResponse"/>
-  <xs:element name="get_AllClerks" nillable="true" type="tns:get_AllClerks"/>
-  <xs:element name="get_AllClerksResponse" nillable="true" type="tns:get_AllClerksResponse"/>
-  
-    <xs:element name="delete_Node" nillable="true" type="tns:delete_Node"/>
-  <!--<xs:element name="delete_NodeResponse" nillable="true" type="tns:delete_NodeResponse"/>-->
- 
-    <xs:element name="get_ReplicationNodes" nillable="true" type="tns:get_ReplicationNodes"/>
-  <xs:element name="get_ReplicationNodesResponse" nillable="true" type="tns:get_ReplicationNodesResponse"/>
- 
-   <xs:element name="set_ReplicationNodes" nillable="true" type="tns:set_ReplicationNodes"/>
-  <xs:element name="set_ReplicationNodesResponse" nillable="true" type="tns:set_ReplicationNodesResponse"/>
-  
-  <xs:element name="get_allClientSubscriptionInfo" nillable="true" type="tns:get_allClientSubscriptionInfo"/>
-  <xs:element name="get_allClientSubscriptionInfoResponse" nillable="true" type="tns:get_allClientSubscriptionInfoResponse"/>
-  
-  
-  <xs:element name="adminSave_Business" nillable="true" type="tns:adminSave_Business"/>
-  <xs:element name="adminSave_BusinessResponse" nillable="true" type="tns:adminSave_BusinessResponse"/>
-  
-  <xs:element name="adminSave_tModel" nillable="true" type="tns:adminSave_tModel"/>
-  <xs:element name="adminSave_tModelResponse" nillable="true" type="tns:adminSave_tModelResponse"/>
-
-  <xs:element name="adminDelete_tmodel" nillable="true" type="ns2:delete_tModel"/>
-  <xs:element name="save_ClientSubscriptionInfoRequest" nillable="true" type="tns:save_clientSubscriptionInfo"/>
-  
-  <xs:element name="invoke_SyncSubscription" nillable="true" type="tns:syncSubscriptionRequest"/>
-  <xs:element name="adminDelete_Subscription" nillable="true" type="tns:adminDelete_SubscriptionRequest"/>
-  <xs:element name="adminDelete_SubscriptionResponse" nillable="true" type="tns:adminDelete_SubscriptionResponse"/>
-  <xs:complexType name="adminDelete_SubscriptionRequest">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" name="subscriptionKey" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="adminDelete_SubscriptionResponse">
-    <xs:sequence />
-  </xs:complexType>
-  
-  <xs:element name="adminSave_Subscription" nillable="true" type="tns:adminSave_SubscriptionRequest"/>
-  <xs:element name="adminSave_SubscriptionResponse" nillable="true" type="tns:adminSave_SubscriptionResponse"/>
-  <xs:complexType name="adminSave_SubscriptionRequest">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-	  <xs:element minOccurs="0" name="publisherOrUsername" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" name="subscriptions" type="subr:subscription"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="adminSave_SubscriptionResponse">
-    <xs:sequence >
-		<xs:element maxOccurs="unbounded" name="subscriptions" type="subr:subscription"/>
-	</xs:sequence>	
-  </xs:complexType>
-  
-  
-  <xs:element name="getEntityHistoryMessage" nillable="true" type="tns:getEntityHistoryMessageRequest"/>
-  <xs:element name="getEntityHistoryMessageResponse" nillable="true" type="tns:getEntityHistoryMessageResponse"/>
-  <xs:complexType name="getEntityHistoryMessageRequest">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-      <xs:element minOccurs="0" name="entityKey" type="xs:string"/>
-      <xs:element name="maxRecords" type="xs:long"/>
-      <xs:element name="offset" type="xs:long"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="getEntityHistoryMessageResponse">
-    <xs:sequence >
-    <xs:element  ref="repl:changeRecords"/>
-  </xs:sequence>  
-  </xs:complexType>
-
-
-
- <xs:element name="getFailedReplicationChangeRecordsMessage" nillable="true" type="tns:getFailedReplicationChangeRecordsMessageRequest"/>
-  <xs:element name="getFailedReplicationChangeRecordsMessageResponse" nillable="true" type="tns:getFailedReplicationChangeRecordsMessageResponse"/>
-  <xs:complexType name="getFailedReplicationChangeRecordsMessageRequest">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
-      <xs:element name="maxRecords" type="xs:long"/>
-      <xs:element name="offset" type="xs:long"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="getFailedReplicationChangeRecordsMessageResponse">
-    <xs:sequence >
-    <xs:element  ref="repl:changeRecords"/>
-  </xs:sequence>  
-  </xs:complexType>
-
-
-
-  
-  
-</xs:schema>
-
-
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:juddi-apache-org:v3_service" xmlns:ns0="urn:juddi-apache-org:api_v3" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:juddi-apache-org:v3_service">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+            xmlns:tns="urn:juddi-apache-org:v3_service" 
+            xmlns:ns0="urn:juddi-apache-org:api_v3" 
+            attributeFormDefault="unqualified" 
+            elementFormDefault="qualified" 
+            targetNamespace="urn:juddi-apache-org:v3_service">
 
   
   <xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="www.w3.org/2001/xml.xsd"/>
@@ -465,7 +59,7 @@ xmlns:uddi="urn:uddi-org:api_v3">
   <xsd:import  schemaLocation="uddi_v3subscription.xsd" namespace="urn:uddi-org:sub_v3"/>
   <xsd:import  schemaLocation="uddi_v3replication.xsd" namespace="urn:uddi-org:repl_v3" />
   
-  <xsd:import namespace="urn:juddi-apache-org:api_v3"/>
+  <xsd:import schemaLocation="juddi_api_v1.xsd"  namespace="urn:juddi-apache-org:api_v3"/>
   <xsd:element name="save_ClerkResponse" nillable="true" type="ns0:clerkDetail"/>
   <xsd:element name="save_publisherResponse" nillable="true" type="ns0:publisherDetail"/>
   <xsd:element name="save_NodeResponse" nillable="true" type="ns0:nodeDetail"/>
@@ -473,6 +67,9 @@ xmlns:uddi="urn:uddi-org:api_v3">
   <xsd:element name="invoke_SyncSubscriptionResponse" nillable="true" type="ns0:syncSubscriptionDetailResponse"/>
 </xsd:schema>
  </wsdl:types>
+ 
+ 
+ 
   <wsdl:message name="get_allPublisherDetail">
     <wsdl:part element="ns1:get_allPublisherDetail" name="body">
     </wsdl:part>
@@ -645,8 +242,18 @@ xmlns:uddi="urn:uddi-org:api_v3">
     <wsdl:part element="ns1:getFailedReplicationChangeRecordsMessageResponse" name="response"></wsdl:part>
   </wsdl:message>
 
-  
-
+  <wsdl:message name="getPermissionsMessage">
+      <wsdl:part element="ns1:getPermissionsMessage" name="body"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPermissionsMessageResponse">
+      <wsdl:part element="ns1:getPermissionsMessageResponse" name="response"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setPermissionsMessage">
+      <wsdl:part element="ns1:setPermissionsMessage" name="body"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setPermissionsMessageResponse">
+      <wsdl:part element="ns1:setPermissionsMessageResponse" name="response"></wsdl:part>
+  </wsdl:message>
 
 
   
@@ -861,6 +468,30 @@ xmlns:uddi="urn:uddi-org:api_v3">
       <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
     </wsdl:operation>
 	
+    
+    <!-- new with 3.4 -->
+     
+    <wsdl:operation name="getPermissions">
+        <wsdl:documentation>
+            gets a permission set for a UDDI entity by ID.
+            This does not include inherited permissions from a parent object.
+            @since 3.4
+        </wsdl:documentation>
+        <wsdl:input message="tns:getPermissionsMessage" name="getPermissions"></wsdl:input>
+        <wsdl:output message="tns:getPermissionsMessageResponse" name="getPermissionsResponse"></wsdl:output>
+        <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="setPermissions">
+        <wsdl:documentation>
+            sets a the permissions for a UDDI entity. If no permissions are set, all 
+            previously set permissions are removed.
+            @since 3.4
+        </wsdl:documentation>
+        <wsdl:input message="tns:setPermissionsMessage" name="setPermissions"></wsdl:input>
+        <wsdl:output message="tns:setPermissionsMessageResponse" name="setPermissionsResponse"></wsdl:output>
+        <wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
+    </wsdl:operation>
+    
 	
   </wsdl:portType>
 
@@ -1115,6 +746,30 @@ xmlns:uddi="urn:uddi-org:api_v3">
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getFailedReplicationChangeRecordsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+    
+    <!-- new with 3.4 -->
+     <wsdl:operation name="getPermissions">
+   
+      <soap:operation soapAction="getPermissions" style="document"/>
+      <wsdl:input name="getPermissions">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPermissionsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="setPermissions">
+   
+      <soap:operation soapAction="setPermissions" style="document"/>
+      <wsdl:input name="setPermissions">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setPermissionsResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     <wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>

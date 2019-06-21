@@ -44,14 +44,29 @@
                 <version>1.4.0</version>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.apache.juddi, org.apache.juddi.api, org.apache.juddi.api.impl,
-                            org.apache.juddi.api.impl.rest,org.apache.juddi.api.util, org.apache.juddi.config,
-                            org.apache.juddi.config, org.apache.juddi.cryptor, org.apache.juddi.keygen,
-                            org.apache.juddi.mapping, org.apache.juddi.model, org.apache.juddi.query,
-                            org.apache.juddi.query.util, org.apache.juddi.rmi, org.apache.juddi.subscription,
-                            org.apache.juddi.replication, org.apache.juddi.subscription.notify,
-                            org.apache.juddi.validation,org.apache.juddi.validation.vsv, org.apache.juddi.v3.auth,
-                            org.apache.juddi.v3.error
+                        <Export-Package>org.apache.juddi, 
+                            org.apache.juddi.api, 
+                            org.apache.juddi.api.impl,
+                            org.apache.juddi.api.impl.rest,
+                            org.apache.juddi.api.util, 
+                            org.apache.juddi.config,
+                            org.apache.juddi.config, 
+                            org.apache.juddi.cryptor, 
+                            org.apache.juddi.keygen,
+                            org.apache.juddi.mapping, 
+                            org.apache.juddi.model, 
+                            org.apache.juddi.query,
+                            org.apache.juddi.query.util, 
+                            org.apache.juddi.rmi, 
+                            org.apache.juddi.subscription,
+                            org.apache.juddi.replication, 
+                            org.apache.juddi.subscription.notify,
+                            org.apache.juddi.validation,
+                            org.apache.juddi.validation.vsv, 
+                            org.apache.juddi.v3.auth,
+                            org.apache.juddi.v3.error, 
+                            org.apache.juddi.security.rbac,
+                            org.apache.juddi.security
                         </Export-Package>
                         <Include-Resource>juddi_install_data=target/classes/juddi_install_data,
                             target/classes/messages.properties
@@ -64,7 +79,7 @@
                 <artifactId>openjpa-maven-plugin</artifactId>
                 <version>2.3.0</version>
                 <configuration>
-                    <includes>**/org/apache/juddi/model/*.class</includes>
+                    <includes>**/org/apache/juddi/model/*.class,**/org/apache/juddi/security/rbac/RbacRulesModel.class</includes>
                     <addDefaultConstructor>true</addDefaultConstructor>
                     <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
                     <persistenceXmlFile>${basedir}/src/test/resources/META-INF/persistence.xml</persistenceXmlFile>

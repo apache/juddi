@@ -41,6 +41,8 @@ import org.apache.juddi.api_v3.GetEntityHistoryMessageRequest;
 import org.apache.juddi.api_v3.GetEntityHistoryMessageResponse;
 import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageRequest;
 import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageResponse;
+import org.apache.juddi.api_v3.GetPermissionsMessageRequest;
+import org.apache.juddi.api_v3.GetPermissionsMessageResponse;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.NodeList;
@@ -49,14 +51,16 @@ import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.api_v3.SavePublisher;
+import org.apache.juddi.api_v3.SetPermissionsMessageRequest;
+import org.apache.juddi.api_v3.SetPermissionsMessageResponse;
 import org.apache.juddi.api_v3.SubscriptionWrapper;
 import org.apache.juddi.api_v3.SyncSubscription;
 import org.apache.juddi.api_v3.SyncSubscriptionDetail;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.api_v3.DispositionReport;
-import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.repl_v3.ReplicationConfiguration;
 import org.uddi.sub_v3.Subscription;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 
 
 /**
@@ -452,7 +456,7 @@ public interface JUDDIApiPortType {
         throws DispositionReportFaultMessage, RemoteException
     ;
 
- /**
+    /**
      * 
      * 		saves a client subscription, useful for restore functions
      * 		@since 3.3
@@ -513,7 +517,46 @@ public interface JUDDIApiPortType {
     public GetFailedReplicationChangeRecordsMessageResponse getFailedReplicationChangeRecords(
         @WebParam(name = "getFailedReplicationChangeRecordsMessage", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
         GetFailedReplicationChangeRecordsMessageRequest body)
-        throws DispositionReportFaultMessage, RemoteException
-    ;
-    
+        throws DispositionReportFaultMessage,RemoteException;
+
+    /**
+     * 
+     *             gets a permission set for a UDDI entity by ID.
+     *             This does not include inherited permissions from a parent object.
+     *             @since 3.4
+     *         
+     * 
+     * @param body
+     * @return
+     *     returns org.apache.juddi.api_v3.GetPermissionsMessageResponse
+     * @throws DispositionReportFaultMessage
+     */
+    @WebMethod(action = "getPermissions")
+    @WebResult(name = "getPermissionsMessageResponse", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "response")
+    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    public GetPermissionsMessageResponse getPermissions(
+        @WebParam(name = "getPermissionsMessage", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
+        GetPermissionsMessageRequest body)
+        throws DispositionReportFaultMessage,RemoteException;
+
+    /**
+     * 
+     *             sets a the permissions for a UDDI entity. If no permissions are set, all 
+     *             previously set permissions are removed.
+     *             @since 3.4
+     *         
+     * 
+     * @param body
+     * @return
+     *     returns org.apache.juddi.api_v3.SetPermissionsMessageResponse
+     * @throws DispositionReportFaultMessage
+     */
+    @WebMethod(action = "setPermissions")
+    @WebResult(name = "setPermissionsMessageResponse", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "response")
+    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    public SetPermissionsMessageResponse setPermissions(
+        @WebParam(name = "setPermissionsMessage", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
+        SetPermissionsMessageRequest body)
+        throws DispositionReportFaultMessage,RemoteException;
+
 }

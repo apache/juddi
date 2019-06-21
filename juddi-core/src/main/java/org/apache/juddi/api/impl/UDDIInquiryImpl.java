@@ -33,10 +33,8 @@ import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.mapping.MappingModelToApi;
-import org.apache.juddi.model.BindingTemplate;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.security.AccessControlFactory;
-import org.apache.juddi.security.AccessLevel;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.juddi.validation.ValidateInquiry;
@@ -175,7 +173,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
                             List<org.uddi.api_v3.BindingTemplate> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterBindingTemplates(
                                                this.ctx,
-                                            entityPublisher.getAuthorizedName(), result.getBindingTemplate());
+                                            entityPublisher, result.getBindingTemplate());
                             result.getBindingTemplate().clear();
                             result.getBindingTemplate().addAll(FilterBindingTemplates);
                         }
@@ -210,7 +208,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
                                         AppConfig.getConfiguration().getBoolean(Property.JUDDI_ENABLE_FIND_BUSINESS_TMODEL_BAG_FILTERING,true)
                                 + " loaded from " + AppConfig.getConfigFileURL());
                         } catch (ConfigurationException ex) {
-                                ex.printStackTrace();
+                                logger.warn("unhandled configuration error", ex);
                         }
 			tx.begin();
                         UddiEntityPublisher entityPublisher=null;
@@ -230,11 +228,10 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
                         serviceCounter.update(InquiryQuery.FIND_BUSINESS, QueryStatus.SUCCESS, procTime);                      
                         if (isAuthenticated() && entityPublisher!=null)
                         {
-                            //TODO may need some NPE checks
                             List<org.uddi.api_v3.BusinessInfo> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterBusinessInfo(
                                                this.ctx,
-                                            entityPublisher.getAuthorizedName(), 
+                                            entityPublisher, 
                                             result.getBusinessInfos().getBusinessInfo());
                             result.getBusinessInfos().getBusinessInfo().clear();
                             result.getBusinessInfos().getBusinessInfo().addAll(FilterBindingTemplates);
@@ -264,7 +261,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		EntityTransaction tx = em.getTransaction();
 		try {
 			tx.begin();
-UddiEntityPublisher entityPublisher=null;
+                        UddiEntityPublisher entityPublisher=null;
 			if (isAuthenticated())
 				 entityPublisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
@@ -285,7 +282,7 @@ UddiEntityPublisher entityPublisher=null;
                             List<org.uddi.api_v3.RelatedBusinessInfo> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filtedRelatedBusinessInfos(
                                                this.ctx,
-                                            entityPublisher.getAuthorizedName(),
+                                            entityPublisher,
                                             result.getRelatedBusinessInfos().getRelatedBusinessInfo());
                             result.getRelatedBusinessInfos().getRelatedBusinessInfo().clear();
                             result.getRelatedBusinessInfos().getRelatedBusinessInfo().addAll(FilterBindingTemplates);
@@ -350,7 +347,7 @@ UddiEntityPublisher entityPublisher=null;
                             List<org.uddi.api_v3.ServiceInfo> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterServiceInfo(
                                                this.ctx,
-                                            entityPublisher.getAuthorizedName(), result.getServiceInfos().getServiceInfo());
+                                            entityPublisher, result.getServiceInfos().getServiceInfo());
                             result.getServiceInfos().getServiceInfo().clear();
                             result.getServiceInfos().getServiceInfo().addAll(FilterBindingTemplates);
                         }
@@ -395,11 +392,11 @@ UddiEntityPublisher entityPublisher=null;
 			tx.rollback();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_TMODEL, QueryStatus.SUCCESS, procTime);                      
-if (isAuthenticated() && entityPublisher!=null)
+                        if (isAuthenticated() && entityPublisher!=null)
                         {
                             List<org.uddi.api_v3.TModelInfo> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterTModelInfo(
-                                               this.ctx,entityPublisher.getAuthorizedName(), 
+                                               this.ctx,entityPublisher, 
                                             result.getTModelInfos().getTModelInfo());
                             result.getTModelInfos().getTModelInfo().clear();
                             result.getTModelInfos().getTModelInfo().addAll(FilterBindingTemplates);
@@ -460,7 +457,7 @@ if (isAuthenticated() && entityPublisher!=null)
                             List<org.uddi.api_v3.BindingTemplate> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterBindingTemplates(
                                                this.ctx,
-                                            entityPublisher.getAuthorizedName(), result.getBindingTemplate());
+                                            entityPublisher, result.getBindingTemplate());
                             result.getBindingTemplate().clear();
                             result.getBindingTemplate().addAll(FilterBindingTemplates);
                         }
@@ -520,7 +517,7 @@ if (isAuthenticated() && entityPublisher!=null)
                         {
                             List<org.uddi.api_v3.BusinessEntity> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterBusinesses(
-                                               this.ctx,entityPublisher.getAuthorizedName(), result.getBusinessEntity());
+                                               this.ctx,entityPublisher, result.getBusinessEntity());
                             result.getBusinessEntity().clear();
                             result.getBusinessEntity().addAll(FilterBindingTemplates);
                         }
@@ -580,7 +577,7 @@ if (isAuthenticated() && entityPublisher!=null)
                         {
                             List<org.uddi.api_v3.OperationalInfo> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterOperationalInfo(
-                                               this.ctx,entityPublisher.getAuthorizedName(), result.getOperationalInfo());
+                                               this.ctx,entityPublisher, result.getOperationalInfo());
                             result.getOperationalInfo().clear();
                             result.getOperationalInfo().addAll(FilterBindingTemplates);
                         }
@@ -640,7 +637,7 @@ if (isAuthenticated() && entityPublisher!=null)
                             List<org.uddi.api_v3.BusinessService> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterServices(
                                                this.ctx,
-                                            entityPublisher.getAuthorizedName(), result.getBusinessService());
+                                            entityPublisher, result.getBusinessService());
                             result.getBusinessService().clear();
                             result.getBusinessService().addAll(FilterBindingTemplates);
                         }
@@ -702,7 +699,7 @@ if (isAuthenticated() && entityPublisher!=null)
                             List<org.uddi.api_v3.TModel> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterTModels(
                                             this.ctx,
-                                            entityPublisher.getAuthorizedName(), result.getTModel());
+                                            entityPublisher, result.getTModel());
                             result.getTModel().clear();
                             result.getTModel().addAll(FilterBindingTemplates);
                         }

@@ -21,6 +21,7 @@
 --%>
 
 
+<%@page import="org.apache.juddi.api_v3.AccessLevel"%>
 <%@page import="org.apache.juddi.config.Property"%>
 <%@page import="org.apache.juddi.config.AppConfig"%>
 <%@page import="org.apache.juddi.api_v3.Publisher"%>
@@ -94,7 +95,12 @@
                                 <option>admin_SaveTModel</option>
                                 <option>adminDelete_tmodel</option>                                 
                                 <option>send_EmailTest</option>
-                               
+                                
+                                
+                                <option>------ Fine Grain Permissions -----</option>
+                                <option>get_permissions</option>
+                                <option>set_permissions</option>
+                                
                                 
                         </select>
 
@@ -182,8 +188,39 @@
                                         
                                         
                                 <div id="send_EmailTest" style="display:none">
-                                <%=ResourceLoader.GetResource(session, "items.email")%>  <input type="text" id="send_EmailTestEMAIL"  class="forminput" placeholder="Enter email"><br>    
+                                <%=ResourceLoader.GetResource(session, "items.email")%>  <input type="text" id="send_EmailTestEMAIL"  
+                                       class="forminput" placeholder="Enter email"><br>    
                                 </div>
+
+                                <div id="get_permissions" style="display:none">
+                                <%=ResourceLoader.GetResource(session, "items.entity")%>  <input type="text" id="get_permissionsID"  
+                                       class="forminput" placeholder="<%=ResourceLoader.GetResource(session, "items.entity")%>"><br>    
+                                </div>
+                                
+                                <div id="set_permissions" style="display:none">
+                                <%=ResourceLoader.GetResource(session, "items.entity")%>  <input type="text" id="set_permissionsID"  
+                                       class="forminput" placeholder="<%=ResourceLoader.GetResource(session, "items.entity")%>"><br>    
+                               <%=ResourceLoader.GetResource(session, "items.urg")%>  <input type="text" id="set_permissionsURG"  
+                                      class="forminput" placeholder="<%=ResourceLoader.GetResource(session, "items.urg")%>"><br>    
+                                <%=ResourceLoader.GetResource(session, "items.level")%>  
+                                <select id="set_permissionsAL"  class="forminput" >
+                                    <%
+                                    for(AccessLevel al:AccessLevel.values()){
+                                    %>
+                                    
+                                    <option value="<%=al.name()%>" ><%=al.name()%></option>
+                                    <%
+                                    
+                                    }%>
+                                   
+                                </select><br>    
+                                
+                                </div>
+                                
+                                
+                                
+                                
+                                
                                 <div id="get_AllNodes" style="display:none">
                                     No input required.
                                 </div>
@@ -282,6 +319,8 @@
                                         $("#get_EntityHistory").hide();
                                         $("#change_NodeID").hide();
                                         $("#getFailedReplicationChangeRecords").hide();
+                                         $("#set_permissions").hide();
+                                          $("#get_permissions").hide();
                                        
                         
                                         $("#" + x).show();

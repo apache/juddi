@@ -58,6 +58,8 @@ import org.apache.juddi.api_v3.GetEntityHistoryMessageRequest;
 import org.apache.juddi.api_v3.GetEntityHistoryMessageResponse;
 import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageRequest;
 import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageResponse;
+import org.apache.juddi.api_v3.GetPermissionsMessageRequest;
+import org.apache.juddi.api_v3.GetPermissionsMessageResponse;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.NodeList;
@@ -66,6 +68,8 @@ import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.api_v3.SavePublisher;
+import org.apache.juddi.api_v3.SetPermissionsMessageRequest;
+import org.apache.juddi.api_v3.SetPermissionsMessageResponse;
 import org.apache.juddi.api_v3.SubscriptionWrapper;
 import org.apache.juddi.api_v3.SyncSubscription;
 import org.apache.juddi.api_v3.SyncSubscriptionDetail;
@@ -83,6 +87,8 @@ import org.apache.juddi.model.ReplicationConfiguration;
 import org.apache.juddi.model.Tmodel;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.replication.ReplicationNotifier;
+import org.apache.juddi.security.AccessControlFactory;
+import org.apache.juddi.security.rbac.RbacRulesModel;
 import org.apache.juddi.subscription.NotificationList;
 import org.apache.juddi.subscription.notify.TemporaryMailContainer;
 import org.apache.juddi.subscription.notify.USERFRIENDLYSMTPNotifier;
@@ -1679,4 +1685,19 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         em.close();
                 }
         }
+
+    @Override
+    public GetPermissionsMessageResponse getPermissions(GetPermissionsMessageRequest arg0) throws DispositionReportFaultMessage, RemoteException {
+        //TODO assert read access? or is owner
+        //TODO audit log
+        
+        return AccessControlFactory.getAccessControlInstance().getPermissions(arg0);
+    }
+
+    @Override
+    public SetPermissionsMessageResponse setPermissions(SetPermissionsMessageRequest arg0) throws DispositionReportFaultMessage, RemoteException {
+        //TODO assert own/write access? or is owner
+        //TODO audit log
+        return AccessControlFactory.getAccessControlInstance().setPermissions(arg0);
+    }
 }

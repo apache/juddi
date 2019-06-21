@@ -15,8 +15,20 @@
  */
 package org.apache.juddi.security;
 
+import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import javax.xml.ws.WebServiceContext;
+import org.apache.juddi.api_v3.GetPermissionsMessageRequest;
+import org.apache.juddi.api_v3.GetPermissionsMessageResponse;
+import org.apache.juddi.api_v3.SetPermissionsMessageRequest;
+import org.apache.juddi.api_v3.SetPermissionsMessageResponse;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.security.rbac.RbacRulesModel;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessInfo;
@@ -26,6 +38,7 @@ import org.uddi.api_v3.RelatedBusinessInfo;
 import org.uddi.api_v3.ServiceInfo;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelInfo;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * Provides an interface for a pluggable Fine Grained Access Control mechanism
@@ -37,21 +50,26 @@ import org.uddi.api_v3.TModelInfo;
  */
 public interface IAccessControl {
 
-    public List<BusinessService> filterServices(WebServiceContext ctx, String username, List<BusinessService> services);
+    public List<BusinessService> filterServices(WebServiceContext ctx, UddiEntityPublisher username, List<BusinessService> services);
 
-    public List<BusinessEntity> filterBusinesses(WebServiceContext ctx, String username, List<BusinessEntity> business);
+    public List<BusinessEntity> filterBusinesses(WebServiceContext ctx, UddiEntityPublisher username, List<BusinessEntity> business);
 
-    public List<BusinessInfo> filterBusinessInfo(WebServiceContext ctx, String username, List<BusinessInfo> business);
+    public List<BusinessInfo> filterBusinessInfo(WebServiceContext ctx, UddiEntityPublisher username, List<BusinessInfo> business);
 
-    public List<TModel> filterTModels(WebServiceContext ctx, String username, List<TModel> tmodels);
+    public List<TModel> filterTModels(WebServiceContext ctx, UddiEntityPublisher username, List<TModel> tmodels);
 
-    public List<BindingTemplate> filterBindingTemplates(WebServiceContext ctx, String username, List<BindingTemplate> bindings);
+    public List<BindingTemplate> filterBindingTemplates(WebServiceContext ctx, UddiEntityPublisher username, List<BindingTemplate> bindings);
 
-    public List<RelatedBusinessInfo> filtedRelatedBusinessInfos(WebServiceContext ctx, String username, List<RelatedBusinessInfo> bindings);
+    public List<RelatedBusinessInfo> filtedRelatedBusinessInfos(WebServiceContext ctx, UddiEntityPublisher username, List<RelatedBusinessInfo> bindings);
 
-    public List<ServiceInfo> filterServiceInfo(WebServiceContext ctx, String authorizedName, List<ServiceInfo> serviceInfo);
+    public List<ServiceInfo> filterServiceInfo(WebServiceContext ctx, UddiEntityPublisher authorizedName, List<ServiceInfo> serviceInfo);
 
-    public List<TModelInfo> filterTModelInfo(WebServiceContext ctx, String authorizedName, List<TModelInfo> tModelInfo);
+    public List<TModelInfo> filterTModelInfo(WebServiceContext ctx, UddiEntityPublisher authorizedName, List<TModelInfo> tModelInfo);
 
-    public List<OperationalInfo> filterOperationalInfo(WebServiceContext ctx, String authorizedName, List<OperationalInfo> operationalInfo);
+    public List<OperationalInfo> filterOperationalInfo(WebServiceContext ctx, UddiEntityPublisher authorizedName, List<OperationalInfo> operationalInfo);
+
+    public GetPermissionsMessageResponse getPermissions(GetPermissionsMessageRequest arg0) throws DispositionReportFaultMessage, RemoteException;
+
+    public SetPermissionsMessageResponse setPermissions(SetPermissionsMessageRequest arg0) throws DispositionReportFaultMessage, RemoteException;
+
 }

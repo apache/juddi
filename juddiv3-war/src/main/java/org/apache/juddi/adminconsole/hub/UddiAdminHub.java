@@ -77,6 +77,8 @@ import org.apache.juddi.api.impl.JUDDIApiImpl;
 import org.apache.juddi.api.impl.UDDIInquiryImpl;
 import org.apache.juddi.api.impl.UDDIPublicationImpl;
 import org.apache.juddi.api.impl.UDDIReplicationImpl;
+import org.apache.juddi.api_v3.AccessLevel;
+import org.apache.juddi.api_v3.Action;
 import org.apache.juddi.api_v3.AdminSaveBusiness;
 import org.apache.juddi.api_v3.AdminSaveSubscriptionRequest;
 import org.apache.juddi.api_v3.AdminSaveSubscriptionResponse;
@@ -85,11 +87,17 @@ import org.apache.juddi.api_v3.ClerkList;
 import org.apache.juddi.api_v3.ClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeleteClerk;
 import org.apache.juddi.api_v3.DeleteNode;
+import org.apache.juddi.api_v3.EntityType;
 import org.apache.juddi.api_v3.GetEntityHistoryMessageRequest;
 import org.apache.juddi.api_v3.GetEntityHistoryMessageResponse;
 import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageRequest;
 import org.apache.juddi.api_v3.GetFailedReplicationChangeRecordsMessageResponse;
+import org.apache.juddi.api_v3.GetPermissionsMessageRequest;
+import org.apache.juddi.api_v3.GetPermissionsMessageResponse;
 import org.apache.juddi.api_v3.NodeList;
+import org.apache.juddi.api_v3.Permission;
+import org.apache.juddi.api_v3.SetPermissionsMessageRequest;
+import org.apache.juddi.api_v3.SetPermissionsMessageResponse;
 import org.apache.juddi.api_v3.SubscriptionWrapper;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
@@ -171,7 +179,7 @@ public class UddiAdminHub {
                         try {
                                 security.discardAuthToken(da);
                         } catch (Exception ex) {
-                                HandleException(ex);
+                                handleException(ex);
                         }
                 }
                 token = null;
@@ -253,10 +261,10 @@ public class UddiAdminHub {
                 in.close();
                 session = _session;
                 properties = p;
-                EnsureConfig();
+                ensureConfig();
         }
 
-        private void EnsureConfig() {
+        private void ensureConfig() {
                 if (clientConfig == null) {
                         try {
                                 UDDIClient client = new UDDIClient();
@@ -292,7 +300,7 @@ public class UddiAdminHub {
                                 }
 
                         } catch (Exception ex) {
-                                HandleException(ex);
+                                handleException(ex);
                         }
                 }
 
@@ -306,7 +314,7 @@ public class UddiAdminHub {
          * @param ex
          * @return
          */
-        private String HandleException(Exception ex) {
+        private String handleException(Exception ex) {
                 if (ex instanceof DispositionReportFaultMessage) {
                         DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                         log.error(ex.getMessage() + (f.detail != null && f.detail.getMessage() != null ? StringEscapeUtils.escapeHtml(f.detail.getMessage()) : ""));
@@ -336,7 +344,7 @@ public class UddiAdminHub {
          */
         public boolean isSecure() {
 
-                EnsureConfig();
+                ensureConfig();
                 return WS_securePorts;
         }
 
@@ -348,7 +356,7 @@ public class UddiAdminHub {
          * @throws ConfigurationException g
          */
         public ClientConfig GetJuddiClientConfig() throws ConfigurationException {
-                EnsureConfig();
+                ensureConfig();
                 return clientConfig;
         }
 
@@ -413,17 +421,21 @@ public class UddiAdminHub {
                                 return getChangeRecord(parameters);
                         } else if (action.equalsIgnoreCase("getFailedReplicationChangeRecords")) {
                                 return getFailedReplicationChangeRecords(parameters);
+                        } else if (action.equalsIgnoreCase("get_permissions")) {
+                                return getPermissions(parameters);
+                        } else if (action.equalsIgnoreCase("set_permissions")) {
+                                return setPermissions(parameters);
                         }
 
                 } catch (Exception ex) {
-                        return "Error!" + HandleException(ex);
+                        return "Error!" + handleException(ex);
                 }
                 return "not yet implemented!";
         }
 
         private String save_Clerk(HttpServletRequest parameters) {
                 SaveClerk sc = new SaveClerk();
-                sc.setAuthInfo(GetToken());
+                sc.setAuthInfo(getToken());
                 Clerk c = new Clerk();
                 c.setName(parameters.getParameter("CLERKsetName"));
                 Node node = new Node();
@@ -452,15 +464,15 @@ public class UddiAdminHub {
                 } catch (Exception ex) {
                         if (isExceptionExpiration(ex)) {
                                 token = null;
-                                sc.setAuthInfo(GetToken());
+                                sc.setAuthInfo(getToken());
                                 try {
                                         juddi.saveClerk(sc);
                                 } catch (Exception ex1) {
-                                        return "Error!" + HandleException(ex1);
+                                        return "Error!" + handleException(ex1);
                                 }
 
                         } else {
-                                return "Error!" + HandleException(ex);
+                                return "Error!" + handleException(ex);
                         }
                 }
                 return "Success";
@@ -468,7 +480,7 @@ public class UddiAdminHub {
 
         private String save_Node(HttpServletRequest parameters) {
                 SaveNode sn = new SaveNode();
-                sn.setAuthInfo(GetToken());
+                sn.setAuthInfo(getToken());
                 Node node = new Node();
                 node.setClientName(parameters.getParameter("NODEsetClientName"));
                 node.setCustodyTransferUrl(parameters.getParameter("NODEsetCustodyTransferUrl"));
@@ -492,15 +504,15 @@ public class UddiAdminHub {
                 } catch (Exception ex) {
                         if (isExceptionExpiration(ex)) {
                                 token = null;
-                                sn.setAuthInfo(GetToken());
+                                sn.setAuthInfo(getToken());
                                 try {
                                         juddi.saveNode(sn);
                                 } catch (Exception ex1) {
-                                        return "Error!" + HandleException(ex1);
+                                        return "Error!" + handleException(ex1);
                                 }
 
                         } else {
-                                return "Error!" + HandleException(ex);
+                                return "Error!" + handleException(ex);
                         }
                 }
                 return "Success";
@@ -523,7 +535,7 @@ public class UddiAdminHub {
                         smtp.notifySubscriptionListener(body);
                         return "Success";
                 } catch (Exception ex) {
-                        return "Failure!" + HandleException(ex);
+                        return "Failure!" + handleException(ex);
                 }
         }
 
@@ -531,24 +543,24 @@ public class UddiAdminHub {
                 NodeList allNodes = null;
                 try {
 
-                        allNodes = juddi.getAllNodes(GetToken());
+                        allNodes = juddi.getAllNodes(getToken());
                 } catch (Exception ex) {
 
                         if (isExceptionExpiration(ex)) {
                                 token = null;
                                 try {
-                                        allNodes = juddi.getAllNodes(GetToken());
+                                        allNodes = juddi.getAllNodes(getToken());
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                 try {
-                        return PrettyPrintJaxbObject(allNodes);
+                        return prettyPrintJaxbObject(allNodes);
                 } catch (Exception ex) {
-                        return HandleException(ex);
+                        return handleException(ex);
                 }
                 
         }
@@ -557,24 +569,24 @@ public class UddiAdminHub {
                 ClerkList allNodes = null;
                 try {
 
-                        allNodes = juddi.getAllClerks(GetToken());
+                        allNodes = juddi.getAllClerks(getToken());
                 } catch (Exception ex) {
 
                         if (isExceptionExpiration(ex)) {
                                 token = null;
                                 try {
-                                        allNodes = juddi.getAllClerks(GetToken());
+                                        allNodes = juddi.getAllClerks(getToken());
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                  try {
-                        return PrettyPrintJaxbObject(allNodes);
+                        return prettyPrintJaxbObject(allNodes);
                 } catch (Exception ex) {
-                        return HandleException(ex);
+                        return handleException(ex);
                 }
         }
 
@@ -582,24 +594,24 @@ public class UddiAdminHub {
                 List<SubscriptionWrapper> allClientSubscriptionInfo = null;
                 try {
 
-                        allClientSubscriptionInfo = juddi.getAllClientSubscriptionInfo(GetToken());
+                        allClientSubscriptionInfo = juddi.getAllClientSubscriptionInfo(getToken());
                 } catch (Exception ex) {
 
                         if (isExceptionExpiration(ex)) {
                                 token = null;
                                 try {
-                                        allClientSubscriptionInfo = juddi.getAllClientSubscriptionInfo(GetToken());
+                                        allClientSubscriptionInfo = juddi.getAllClientSubscriptionInfo(getToken());
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                  try {
-                        return PrettyPrintJaxbObject(allClientSubscriptionInfo);
+                        return prettyPrintJaxbObject(allClientSubscriptionInfo);
                 } catch (Exception ex) {
-                        return HandleException(ex);
+                        return handleException(ex);
                 }
         }
 
@@ -607,30 +619,30 @@ public class UddiAdminHub {
                 ReplicationConfiguration cfg = null;
                 try {
 
-                        cfg = juddi.getReplicationNodes(GetToken());
+                        cfg = juddi.getReplicationNodes(getToken());
                 } catch (Exception ex) {
 
                         if (isExceptionExpiration(ex)) {
                                 token = null;
                                 try {
-                                        cfg = juddi.getReplicationNodes(GetToken());
+                                        cfg = juddi.getReplicationNodes(getToken());
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                  try {
-                        return PrettyPrintJaxbObject(cfg);
+                        return prettyPrintJaxbObject(cfg);
                 } catch (Exception ex) {
-                        return HandleException(ex);
+                        return handleException(ex);
                 }
         }
 
         private String deleteNode(HttpServletRequest parameters) {
                 DeleteNode cfg = new DeleteNode();
-                cfg.setAuthInfo(GetToken());
+                cfg.setAuthInfo(getToken());
                 cfg.setNodeID(parameters.getParameter("delete_NodeName"));
                 try {
 
@@ -640,13 +652,13 @@ public class UddiAdminHub {
                         if (isExceptionExpiration(ex)) {
                                 token = null;
                                 try {
-                                        cfg.setAuthInfo(GetToken());
+                                        cfg.setAuthInfo(getToken());
                                         juddi.deleteNode(cfg);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
 
@@ -658,18 +670,18 @@ public class UddiAdminHub {
                 keys.add(parameters.getParameter("admin_DeleteSubscriptionKey"));
                 try {
 
-                        juddi.adminDeleteSubscription(GetToken(), keys);
+                        juddi.adminDeleteSubscription(getToken(), keys);
                 } catch (Exception ex) {
 
                         if (isExceptionExpiration(ex)) {
                                 token = null;
                                 try {
-                                        juddi.adminDeleteSubscription(GetToken(), keys);
+                                        juddi.adminDeleteSubscription(getToken(), keys);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
 
@@ -678,7 +690,7 @@ public class UddiAdminHub {
 
         private String deleteClerk(HttpServletRequest parameters) {
                 DeleteClerk cfg = new DeleteClerk();
-                cfg.setAuthInfo(GetToken());
+                cfg.setAuthInfo(getToken());
                 cfg.setClerkID(parameters.getParameter("delete_ClerkName"));
                 try {
 
@@ -688,13 +700,13 @@ public class UddiAdminHub {
                         if (isExceptionExpiration(ex)) {
                                 token = null;
                                 try {
-                                        cfg.setAuthInfo(GetToken());
+                                        cfg.setAuthInfo(getToken());
                                         juddi.deleteClerk(cfg);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
 
@@ -706,24 +718,24 @@ public class UddiAdminHub {
                 DispositionReport setReplicationNodes = null;
                 try {
 
-                        setReplicationNodes = juddi.setReplicationNodes(GetToken(), cfg);
+                        setReplicationNodes = juddi.setReplicationNodes(getToken(), cfg);
                 } catch (Exception ex) {
 
                         if (isExceptionExpiration(ex)) {
                                 token = null;
                                 try {
-                                        setReplicationNodes = juddi.setReplicationNodes(GetToken(), cfg);
+                                        setReplicationNodes = juddi.setReplicationNodes(getToken(), cfg);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                  try {
-                        return PrettyPrintJaxbObject(setReplicationNodes);
+                        return prettyPrintJaxbObject(setReplicationNodes);
                 } catch (Exception ex) {
-                        return HandleException(ex);
+                        return handleException(ex);
                 }
         }
 
@@ -733,24 +745,24 @@ public class UddiAdminHub {
                 DispositionReport setReplicationNodes = null;
                 try {
 
-                        setReplicationNodes = juddi.adminSaveBusiness(GetToken(), cfg.getValues());
+                        setReplicationNodes = juddi.adminSaveBusiness(getToken(), cfg.getValues());
                 } catch (Exception ex) {
 
                         if (isExceptionExpiration(ex)) {
                                 token = null;
                                 try {
-                                        setReplicationNodes = juddi.adminSaveBusiness(GetToken(), cfg.getValues());
+                                        setReplicationNodes = juddi.adminSaveBusiness(getToken(), cfg.getValues());
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                  try {
-                        return PrettyPrintJaxbObject(setReplicationNodes);
+                        return prettyPrintJaxbObject(setReplicationNodes);
                 } catch (Exception ex) {
-                        return HandleException(ex);
+                        return handleException(ex);
                 }
         }
 
@@ -761,24 +773,24 @@ public class UddiAdminHub {
                 DispositionReport setReplicationNodes = null;
                 try {
 
-                        setReplicationNodes = juddi.adminSaveTModel(GetToken(), cfg.getValues());
+                        setReplicationNodes = juddi.adminSaveTModel(getToken(), cfg.getValues());
                 } catch (Exception ex) {
 
                         if (isExceptionExpiration(ex)) {
                                 token = null;
                                 try {
-                                        setReplicationNodes = juddi.adminSaveTModel(GetToken(), cfg.getValues());
+                                        setReplicationNodes = juddi.adminSaveTModel(getToken(), cfg.getValues());
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                  try {
-                        return PrettyPrintJaxbObject(setReplicationNodes);
+                        return prettyPrintJaxbObject(setReplicationNodes);
                 } catch (Exception ex) {
-                        return HandleException(ex);
+                        return handleException(ex);
                 }
         }
 
@@ -789,32 +801,32 @@ public class UddiAdminHub {
                 Holder<List<Subscription>> holder = new Holder<List<Subscription>>(cfg.getSubscriptions());
                 try {
 
-                        juddi.adminSaveSubscription(GetToken(), cfg.getPublisherOrUsername(), holder);
+                        juddi.adminSaveSubscription(getToken(), cfg.getPublisherOrUsername(), holder);
                 } catch (Exception ex) {
 
                         if (isExceptionExpiration(ex)) {
                                 token = null;
                                 try {
-                                        juddi.adminSaveSubscription(GetToken(), cfg.getPublisherOrUsername(), holder);
+                                        juddi.adminSaveSubscription(getToken(), cfg.getPublisherOrUsername(), holder);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                 AdminSaveSubscriptionResponse res = new AdminSaveSubscriptionResponse();
                 res.getSubscriptions().addAll(holder.value);
                  try {
-                        return PrettyPrintJaxbObject(res);
+                        return prettyPrintJaxbObject(res);
                 } catch (Exception ex) {
-                        return HandleException(ex);
+                        return handleException(ex);
                 }
         }
 
         private String getEntityHistory(HttpServletRequest parameters) {
                 GetEntityHistoryMessageRequest sn = new GetEntityHistoryMessageRequest();
-                sn.setAuthInfo(GetToken());
+                sn.setAuthInfo(getToken());
                 sn.setEntityKey(parameters.getParameter("get_EntityHistoryKey"));
                 GetEntityHistoryMessageResponse entityHistory = null;
                 try {
@@ -824,24 +836,24 @@ public class UddiAdminHub {
                 } catch (Exception ex) {
                         if (isExceptionExpiration(ex)) {
                                 token = null;
-                                sn.setAuthInfo(GetToken());
+                                sn.setAuthInfo(getToken());
                                 try {
                                         entityHistory = juddi.getEntityHistory(sn);
                                 } catch (Exception ex1) {
-                                        return "Error!" + HandleException(ex1);
+                                        return "Error!" + handleException(ex1);
                                 }
 
                         } else {
-                                return "Error!" + HandleException(ex);
+                                return "Error!" + handleException(ex);
                         }
                 }
                 if (entityHistory == null) {
                         return "Something went wrong!";
                 }
                 try {
-                        return PrettyPrintJaxbObject(entityHistory);
+                        return prettyPrintJaxbObject(entityHistory);
                 } catch (Exception ex) {
-                        return HandleException(ex);
+                        return handleException(ex);
                 }
 
         }
@@ -854,7 +866,7 @@ public class UddiAdminHub {
 
                 try {
 
-                        ReplicationConfiguration replicationNodes = new JUDDIApiImpl().getReplicationNodes(GetToken());
+                        ReplicationConfiguration replicationNodes = new JUDDIApiImpl().getReplicationNodes(getToken());
                         if (replicationNodes.getOperator().size() > 1) {
                                 throw new Exception("Replication is configured with " + replicationNodes.getOperator() + " nodes. Node rename aborted");
                         }
@@ -873,7 +885,7 @@ public class UddiAdminHub {
                         UDDIInquiryImpl inquire = new UDDIInquiryImpl();
 
                         GetBusinessDetail gbd = new GetBusinessDetail();
-                        gbd.setAuthInfo(GetToken());
+                        gbd.setAuthInfo(getToken());
                         gbd.getBusinessKey().add(newnode);
                         BusinessDetail businessDetail = null;
                         try {
@@ -899,7 +911,7 @@ public class UddiAdminHub {
                                         }
                                 }
                                 SaveBusiness sb = new SaveBusiness();
-                                sb.setAuthInfo(GetToken());
+                                sb.setAuthInfo(getToken());
                                 sb.getBusinessEntity().add(get);
                                 //if there's something wrong with the new key, this will throw
                                 BusinessDetail saveBusiness = pub.saveBusiness(sb);
@@ -922,7 +934,7 @@ public class UddiAdminHub {
                         tx.commit();
                         try {
                                 DeleteBusiness db = new DeleteBusiness();
-                                db.setAuthInfo(GetToken());
+                                db.setAuthInfo(getToken());
                                 db.getBusinessKey().add(currentnode);
                                 pub.deleteBusiness(db);
                         } catch (Exception ex) {
@@ -935,7 +947,7 @@ public class UddiAdminHub {
 
                         return "Sucess, Records update: " + records + " current node id is now " + AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);
                 } catch (Exception ex) {
-                        return HandleException(ex);
+                        return handleException(ex);
                 } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
@@ -956,10 +968,10 @@ public class UddiAdminHub {
                                 new ChangeRecordIDType(parameters.getParameter("nodeid"),
                                         Long.parseLong(parameters.getParameter("recordid"))));
                         ChangeRecords changeRecords = new UDDIReplicationImpl().getChangeRecords(req);
-                        return PrettyPrintJaxbObject(changeRecords);
+                        return prettyPrintJaxbObject(changeRecords);
 
                 } catch (Exception ex) {
-                        return HandleException(ex);
+                        return handleException(ex);
                 }
         }
 
@@ -970,7 +982,7 @@ public class UddiAdminHub {
          * @return
          * @throws Exception
          */
-        private String PrettyPrintJaxbObject(Object jaxb) throws Exception {
+        private String prettyPrintJaxbObject(Object jaxb) throws Exception {
                 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                 dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
                 DocumentBuilder db = dbf.newDocumentBuilder();
@@ -991,13 +1003,71 @@ public class UddiAdminHub {
                 String xmlString = result.getWriter().toString();
                
                 return "<pre>" + StringEscapeUtils.escapeXml(xmlString) + "</pre>";
+            }
+
+        private String setPermissions(HttpServletRequest parameters) {
+            SetPermissionsMessageRequest sb = new SetPermissionsMessageRequest();
+            try {
+
+                sb.setAuthInfo(getToken());
+                sb.getLevel().add(new Permission());
+                sb.getLevel().get(0).setAction(Action.ADD);
+                 sb.getLevel().get(0).setEntityId(parameters.getParameter("set_permissionsID"));
+                  sb.getLevel().get(0).setLevel(AccessLevel.fromValue(parameters.getParameter("set_permissionsAL")));
+                   sb.getLevel().get(0).setTarget(parameters.getParameter("set_permissionsURG"));
+                   // sb.getLevel().get(0).setType(EntityType.TMODEL);
+                SetPermissionsMessageResponse permissions = juddi.setPermissions(sb);
+                return prettyPrintJaxbObject(permissions);
+
+            } catch (Exception ex) {
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    sb.setAuthInfo(getToken());
+                    try {
+                        SetPermissionsMessageResponse permissions = juddi.setPermissions(sb);
+                        return prettyPrintJaxbObject(permissions);
+                    } catch (Exception e) {
+                        return handleException(e);
+                    }
+
+                } else {
+                    return handleException(ex);
+                }
+            }
+        }
+        private String getPermissions(HttpServletRequest parameters) {
+                GetPermissionsMessageRequest sb = new GetPermissionsMessageRequest();
+                try {
+                    sb.setLimit(BigInteger.valueOf(200));
+                    sb.setOffset(BigInteger.ZERO);
+                    sb.setAuthInfo(getToken());
+                    if (parameters.getParameter("get_permissionsID")!=null)
+                        sb.setEntityId(parameters.getParameter("get_permissionsID"));
+                    GetPermissionsMessageResponse permissions = juddi.getPermissions(sb);
+                    return prettyPrintJaxbObject(permissions);
+                    
+                } catch (Exception ex) {
+                    if (isExceptionExpiration(ex)) {
+                                token = null;
+                                sb.setAuthInfo(getToken());
+                                try {
+                                       GetPermissionsMessageResponse permissions = juddi.getPermissions(sb);
+                                        return prettyPrintJaxbObject(permissions);
+                                } catch (Exception e) {
+                                        return handleException(e);
+                                }
+
+                        } else {
+                                return handleException(ex);
+                        }
+                }
         }
 
         private String getFailedReplicationChangeRecords(HttpServletRequest parameters) {
                 try {
 
                         GetFailedReplicationChangeRecordsMessageRequest req = new GetFailedReplicationChangeRecordsMessageRequest();
-                        req.setAuthInfo(GetToken());
+                        req.setAuthInfo(getToken());
                         req.setMaxRecords(Integer.parseInt(parameters.getParameter("getFailedReplicationChangeRecordsMaxCount")));
                         req.setOffset(0);
                         req.setOffset(Integer.parseInt(parameters.getParameter("getFailedReplicationChangeRecordsOffset")));
@@ -1007,21 +1077,21 @@ public class UddiAdminHub {
                         } catch (Exception ex) {
                                 if (isExceptionExpiration(ex)) {
                                         token = null;
-                                        req.setAuthInfo(GetToken());
+                                        req.setAuthInfo(getToken());
                                         try {
                                                 failedReplicationChangeRecords = juddi.getFailedReplicationChangeRecords(req);
                                         } catch (Exception ex1) {
-                                                return "Error!" + HandleException(ex1);
+                                                return "Error!" + handleException(ex1);
                                         }
 
                                 } else {
-                                        return "Error!" + HandleException(ex);
+                                        return "Error!" + handleException(ex);
                                 }
                         }
 
-                        return PrettyPrintJaxbObject(failedReplicationChangeRecords);
+                        return prettyPrintJaxbObject(failedReplicationChangeRecords);
                 } catch (Exception ex) {
-                        return HandleException(ex);
+                        return handleException(ex);
                 }
         }
 
@@ -1037,8 +1107,8 @@ public class UddiAdminHub {
                 UDDI_AUTH
         }
 
-        private String GetToken() {
-                EnsureConfig();
+        private String getToken() {
+                ensureConfig();
                 if (style != AuthStyle.UDDI_AUTH) {
                         BindingProvider bp = null;
                         if (WS_Transport) {
@@ -1062,7 +1132,7 @@ public class UddiAdminHub {
                                         AuthToken authToken = security.getAuthToken(req);
                                         token = authToken.getAuthInfo();
                                 } catch (Exception ex) {
-                                        return HandleException(ex);
+                                        return handleException(ex);
                                 }
                         }
                 }
@@ -1071,22 +1141,22 @@ public class UddiAdminHub {
 
         private String delete_publisher(HttpServletRequest parameters) {
                 DeletePublisher sb = new DeletePublisher();
-                sb.setAuthInfo(GetToken());
+                sb.setAuthInfo(getToken());
                 sb.getPublisherId().add(parameters.getParameter("delete_publisherKEY"));
                 try {
                         juddi.deletePublisher(sb);
                 } catch (Exception ex) {
                         if (isExceptionExpiration(ex)) {
                                 token = null;
-                                sb.setAuthInfo(GetToken());
+                                sb.setAuthInfo(getToken());
                                 try {
                                         juddi.deletePublisher(sb);
                                 } catch (Exception e) {
-                                        return HandleException(e);
+                                        return handleException(e);
                                 }
 
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                 return "Success";
@@ -1095,22 +1165,22 @@ public class UddiAdminHub {
         private String getAllPublisherDetail(HttpServletRequest parameters) {
                 StringBuilder ret = new StringBuilder();
                 GetAllPublisherDetail sb = new GetAllPublisherDetail();
-                sb.setAuthInfo(GetToken());
+                sb.setAuthInfo(getToken());
                 PublisherDetail d = null;
                 try {
                         d = juddi.getAllPublisherDetail(sb);
                 } catch (Exception ex) {
                         if (isExceptionExpiration(ex)) {
                                 token = null;
-                                sb.setAuthInfo(GetToken());
+                                sb.setAuthInfo(getToken());
                                 try {
                                         d = juddi.getAllPublisherDetail(sb);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
 
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                 if (d != null) {
@@ -1118,7 +1188,7 @@ public class UddiAdminHub {
                         for (int i = 0; i < d.getPublisher().size(); i++) {
                                 ret.append("<tr><td>").append(StringEscapeUtils.escapeHtml(d.getPublisher().get(i).getPublisherName()))
                                         .append("</td><td>");
-                                ret.append(PrintPublisherDetail(d.getPublisher().get(i)))
+                                ret.append(printPublisherDetail(d.getPublisher().get(i)))
                                         .append("</td></tr>");
                         }
                         ret.append("</table>");
@@ -1128,7 +1198,7 @@ public class UddiAdminHub {
                 return ret.toString();
         }
 
-        private String PrintPublisherDetail(Publisher p) {
+        private String printPublisherDetail(Publisher p) {
                 StringBuilder ret = new StringBuilder();
 
                 ret.append("Authorized Name = ").append(StringEscapeUtils.escapeHtml(p.getAuthorizedName()))
@@ -1163,22 +1233,22 @@ public class UddiAdminHub {
                 StringBuilder ret = new StringBuilder();
                 GetPublisherDetail sb = new GetPublisherDetail();
                 sb.getPublisherId().add(parameters.getParameter("get_publisherDetailKEY"));
-                sb.setAuthInfo(GetToken());
+                sb.setAuthInfo(getToken());
                 PublisherDetail d = null;
                 try {
                         d = juddi.getPublisherDetail(sb);
                 } catch (Exception ex) {
                         if (isExceptionExpiration(ex)) {
                                 token = null;
-                                sb.setAuthInfo(GetToken());
+                                sb.setAuthInfo(getToken());
                                 try {
                                         d = juddi.getPublisherDetail(sb);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
 
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                 if (d != null) {
@@ -1186,7 +1256,7 @@ public class UddiAdminHub {
                         for (int i = 0; i < d.getPublisher().size(); i++) {
                                 ret.append("<tr><td>").append(StringEscapeUtils.escapeHtml(d.getPublisher().get(i).getPublisherName()))
                                         .append("</td><td>");
-                                ret.append(PrintPublisherDetail(d.getPublisher().get(i)))
+                                ret.append(printPublisherDetail(d.getPublisher().get(i)))
                                         .append("</td></tr>");
                         }
                         ret.append("</table>");
@@ -1204,27 +1274,27 @@ public class UddiAdminHub {
                 try {
                         StringReader sr = new StringReader(parameters.getParameter("invoke_SyncSubscriptionXML").trim());
                         sb = (JAXB.unmarshal(sr, SyncSubscription.class));
-                        sb.setAuthInfo(GetToken());
+                        sb.setAuthInfo(getToken());
                         d = juddi.invokeSyncSubscription(sb);
                 } catch (Exception ex) {
                         if (isExceptionExpiration(ex)) {
                                 token = null;
-                                sb.setAuthInfo(GetToken());
+                                sb.setAuthInfo(getToken());
                                 try {
                                         d = juddi.invokeSyncSubscription(sb);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
 
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                 if (d != null) {
                         try {
-                                ret.append(PrettyPrintJaxbObject(d));
+                                ret.append(prettyPrintJaxbObject(d));
                         } catch (Exception ex) {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
 
                 } else {
@@ -1233,7 +1303,7 @@ public class UddiAdminHub {
                 return ret.toString();
         }
 
-        private static String PrettyPrintXML(String input) {
+        private static String prettyPrintXML(String input) {
                 try {
                         TransformerFactory transFactory = TransformerFactory.newInstance();
                         transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
@@ -1305,29 +1375,29 @@ public class UddiAdminHub {
                 try {
                         StringReader sr = new StringReader(parameters.getParameter("ClientSubscriptionInfoDetailXML").trim());
                         sb = (JAXB.unmarshal(sr, SaveClientSubscriptionInfo.class));
-                        sb.setAuthInfo(GetToken());
+                        sb.setAuthInfo(getToken());
                         d = juddi.saveClientSubscriptionInfo(sb);
                 } catch (Exception ex) {
                         if (ex instanceof DispositionReportFaultMessage) {
                                 DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                                 if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
                                         token = null;
-                                        sb.setAuthInfo(GetToken());
+                                        sb.setAuthInfo(getToken());
                                         try {
                                                 d = juddi.saveClientSubscriptionInfo(sb);
                                         } catch (Exception ex1) {
-                                                return HandleException(ex1);
+                                                return handleException(ex1);
                                         }
                                 }
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                 if (d != null) {
                         try {
-                                ret.append(PrettyPrintJaxbObject(d));
+                                ret.append(prettyPrintJaxbObject(d));
                         } catch (Exception ex) {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
 
                 } else {
@@ -1390,7 +1460,7 @@ public class UddiAdminHub {
                 }
 
                 PublisherDetail d = null;
-                sb.setAuthInfo(GetToken());
+                sb.setAuthInfo(getToken());
                 try {
                         if (parameters.getParameter("savePublisherMaxBindings") != null) {
                                 p.setMaxBindingsPerService(Integer.parseInt(parameters.getParameter("savePublisherMaxBindings")));
@@ -1423,14 +1493,14 @@ public class UddiAdminHub {
 
                         if (isExceptionExpiration(ex)) {
                                 token = null;
-                                sb.setAuthInfo(GetToken());
+                                sb.setAuthInfo(getToken());
                                 try {
                                         d = juddi.savePublisher(sb);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                 return "Success";
@@ -1439,20 +1509,20 @@ public class UddiAdminHub {
         private String adminDelete_tmodel(HttpServletRequest parameters) {
                 DeleteTModel sb = new DeleteTModel();
                 sb.getTModelKey().add(parameters.getParameter("adminDelete_tmodelKEY"));
-                sb.setAuthInfo(GetToken());
+                sb.setAuthInfo(getToken());
                 try {
                         juddi.adminDeleteTModel(sb);
                 } catch (Exception ex) {
                         if (isExceptionExpiration(ex)) {
                                 token = null;
-                                sb.setAuthInfo(GetToken());
+                                sb.setAuthInfo(getToken());
                                 try {
                                         juddi.adminDeleteTModel(sb);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                 return "Success";
@@ -1461,21 +1531,21 @@ public class UddiAdminHub {
         private String delete_ClientSubscriptionInfo(HttpServletRequest parameters) {
                 DeleteClientSubscriptionInfo sb = new DeleteClientSubscriptionInfo();
                 sb.getSubscriptionKey().add(parameters.getParameter("delete_ClientSubscriptionInfoKEY"));
-                sb.setAuthInfo(GetToken());
+                sb.setAuthInfo(getToken());
                 try {
                         juddi.deleteClientSubscriptionInfo(sb);
                 } catch (Exception ex) {
                         if (isExceptionExpiration(ex)) {
                                 token = null;
-                                sb.setAuthInfo(GetToken());
+                                sb.setAuthInfo(getToken());
                                 try {
                                         juddi.deleteClientSubscriptionInfo(sb);
                                 } catch (Exception ex1) {
-                                        return HandleException(ex1);
+                                        return handleException(ex1);
                                 }
 
                         } else {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                 return "Success";
@@ -1493,7 +1563,7 @@ public class UddiAdminHub {
         }
 
         public String verifyLogin() {
-                EnsureConfig();
+                ensureConfig();
                 if (style != AuthStyle.UDDI_AUTH) {
                         if (WS_Transport) {
                                 BindingProvider bp = null;
@@ -1516,7 +1586,7 @@ public class UddiAdminHub {
                                 juddi.getPublisherDetail(publisherDetail);
 
                         } catch (Exception ex) {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                         /*
                          bp = (BindingProvider) juddi;
@@ -1543,7 +1613,7 @@ public class UddiAdminHub {
                                         security = transport.getUDDISecurityService();
                                 }
                         } catch (Exception ex) {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                         if (session.getAttribute("username") != null
                                 && session.getAttribute("password") != null) {
@@ -1555,7 +1625,7 @@ public class UddiAdminHub {
                                         token = authToken.getAuthInfo();
                                         return null;
                                 } catch (Exception ex) {
-                                        return HandleException(ex);
+                                        return handleException(ex);
                                 }
                         }
                 }
@@ -1568,7 +1638,7 @@ public class UddiAdminHub {
                 try {
                         if (method.equalsIgnoreCase("save_ClientSubscriptionInfo")) {
                                 SaveClientSubscriptionInfo x = (SaveClientSubscriptionInfo) request;
-                                x.setAuthInfo(GetToken());
+                                x.setAuthInfo(getToken());
                                 ClientSubscriptionInfoDetail saveClientSubscriptionInfo = null;
                                 try {
                                         result = juddi.saveClientSubscriptionInfo(x);
@@ -1577,7 +1647,7 @@ public class UddiAdminHub {
                                 } catch (Exception ex) {
                                         if (isExceptionExpiration(ex)) {
                                                 token = null;
-                                                x.setAuthInfo(GetToken());
+                                                x.setAuthInfo(getToken());
                                                 result = juddi.saveClientSubscriptionInfo(x);
                                                 sw.append("Success:<br>");
                                                 //JAXB.marshal(saveClientSubscriptionInfo, sw);
@@ -1590,7 +1660,7 @@ public class UddiAdminHub {
                         }
                         if (method.equalsIgnoreCase("invoke_SyncSubscription")) {
                                 SyncSubscription x = (SyncSubscription) request;
-                                x.setAuthInfo(GetToken());
+                                x.setAuthInfo(getToken());
                                 SyncSubscriptionDetail invokeSyncSubscription = null;
                                 try {
                                         result = juddi.invokeSyncSubscription(x);
@@ -1599,7 +1669,7 @@ public class UddiAdminHub {
                                 } catch (Exception ex) {
                                         if (isExceptionExpiration(ex)) {
                                                 token = null;
-                                                x.setAuthInfo(GetToken());
+                                                x.setAuthInfo(getToken());
                                                 result = juddi.invokeSyncSubscription(x);
                                                 sw.append("Success:<br>");
                                                 //JAXB.marshal(invokeSyncSubscription, sw);
@@ -1616,15 +1686,15 @@ public class UddiAdminHub {
                                 DispositionReport adminSaveBusiness = null;
 
                                 try {
-                                        result = juddi.adminSaveBusiness(GetToken(), x.getValues());
+                                        result = juddi.adminSaveBusiness(getToken(), x.getValues());
                                         sw.append("Success:<br>");
                                         //JAXB.marshal(adminSaveBusiness, sw);
 
                                 } catch (Exception ex) {
                                         if (isExceptionExpiration(ex)) {
                                                 token = null;
-                                                x.setAuthInfo(GetToken());
-                                                result = juddi.adminSaveBusiness(GetToken(), x.getValues());
+                                                x.setAuthInfo(getToken());
+                                                result = juddi.adminSaveBusiness(getToken(), x.getValues());
                                                 sw.append("Success:<br>");
                                                // JAXB.marshal(adminSaveBusiness, sw);
 
@@ -1638,15 +1708,15 @@ public class UddiAdminHub {
 
                                 DispositionReport adminSaveTModel = null;
                                 try {
-                                        result = juddi.adminSaveTModel(GetToken(), x.getValues());
+                                        result = juddi.adminSaveTModel(getToken(), x.getValues());
                                         sw.append("Success:<br>");
                                         //JAXB.marshal(adminSaveTModel, sw);
 
                                 } catch (Exception ex) {
                                         if (isExceptionExpiration(ex)) {
                                                 token = null;
-                                                x.setAuthInfo(GetToken());
-                                                result = juddi.adminSaveTModel(GetToken(), x.getValues());
+                                                x.setAuthInfo(getToken());
+                                                result = juddi.adminSaveTModel(getToken(), x.getValues());
                                                 sw.append("Success:<br>");
                                                 //JAXB.marshal(adminSaveTModel, sw);
 
@@ -1661,14 +1731,14 @@ public class UddiAdminHub {
                                 AdminSaveSubscriptionRequest x = (AdminSaveSubscriptionRequest) request;
                                 Holder<List<Subscription>> holder = new Holder<List<Subscription>>(x.getSubscriptions());
                                 try {
-                                        juddi.adminSaveSubscription(GetToken(), x.getPublisherOrUsername(), holder);
+                                        juddi.adminSaveSubscription(getToken(), x.getPublisherOrUsername(), holder);
                                         sw.append("Success:<br>");
                                         result=holder;
                                 } catch (Exception ex) {
                                         if (isExceptionExpiration(ex)) {
                                                 token = null;
 
-                                                juddi.adminSaveSubscription(GetToken(), x.getPublisherOrUsername(), holder);
+                                                juddi.adminSaveSubscription(getToken(), x.getPublisherOrUsername(), holder);
                                                 sw.append("Success:<br>");
                                                 result=holder;
 
@@ -1681,14 +1751,14 @@ public class UddiAdminHub {
                                 ReplicationConfiguration x = (ReplicationConfiguration) request;
                                 //    Holder<List<Subscription>> holder = new Holder<List<Subscription>>(x.getSubscriptions());
                                 try {
-                                        result = juddi.setReplicationNodes(GetToken(), x);
+                                        result = juddi.setReplicationNodes(getToken(), x);
                                         sw.append("Success:<br>");
                                        // JAXB.marshal(setReplicationNodes, sw);
                                 } catch (Exception ex) {
                                         if (isExceptionExpiration(ex)) {
                                                 token = null;
 
-                                                result = juddi.setReplicationNodes(GetToken(), x);
+                                                result = juddi.setReplicationNodes(getToken(), x);
                                                 sw.append("Success:<br>");
                                                 //JAXB.marshal(setReplicationNodes, sw);
 
@@ -1699,13 +1769,13 @@ public class UddiAdminHub {
                         }
 
                 } catch (Exception ex) {
-                        return HandleException(ex);
+                        return handleException(ex);
                 }
                 if (result!=null){
                         try {
-                                return sw.toString() + "<br>" + PrettyPrintJaxbObject(result);
+                                return sw.toString() + "<br>" + prettyPrintJaxbObject(result);
                         } catch (Exception ex) {
-                                return HandleException(ex);
+                                return handleException(ex);
                         }
                 }
                 return "Error! no work was done?";

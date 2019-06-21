@@ -42,7 +42,7 @@ public class AccessControlFactory {
      * @see DefaultCorseAccessControlImpl
      * @see Property
      */
-    public static IAccessControl getAccessControlInstance() {
+    public static synchronized IAccessControl getAccessControlInstance() {
         if (instance != null) {
             return instance;
         }
