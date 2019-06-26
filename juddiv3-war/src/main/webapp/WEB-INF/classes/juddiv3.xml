@@ -226,5 +226,12 @@
 		<logging>
 			<logInquirySearchPayloads>false</logInquirySearchPayloads>
 		</logging>
+		
+		<!-- additional access control module
+		provides item level access permissions.
+		default is everyone can read everything, only owners can change stuff
+		-->
+		<accessControlProvider>org.apache.juddi.security.rbac.RoleBasedAccessControlImpl</accessControlProvider>
+
 	</juddi>
 </config>

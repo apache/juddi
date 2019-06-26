@@ -20,7 +20,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.apache.juddi.security.AccessLevel;
+import org.apache.juddi.api_v3.AccessLevel;
 
 /**
  *
@@ -39,7 +39,7 @@ public class RbacRulesModel implements Serializable {
      */
     private String uddiEntityId;
 
-    @Column(name = "entity_id", nullable = false, length = 51)
+    @Column(name = "entity_id", nullable = false, length = 255)
     public String getUddiEntityId() {
         return uddiEntityId;
     }
@@ -48,7 +48,7 @@ public class RbacRulesModel implements Serializable {
         this.uddiEntityId = uddiEntityId;
     }
 
-    @Column(name = "container_role", nullable = false, length = 51)
+    @Column(name = "container_role", nullable = false, length = 128)
     public String getContainerRole() {
         return containerRole;
     }
@@ -58,12 +58,18 @@ public class RbacRulesModel implements Serializable {
     }
 
     @Column(name = "access_level", nullable = false, length = 51)
-    public AccessLevel getAccessLevel() {
-        return AccessLevel.valueOf(level);
+    public String getAccessLevel() {
+        return (level);
     }
+    
+    public AccessLevel getAccessLevelAsEnum() {
+        return AccessLevel.valueOf(getAccessLevel());
+    }
+    
+    
 
-    public void setAccessLevel(AccessLevel level) {
-        this.level = level.name();
+    public void setAccessLevel(String level) {
+        this.level = level;
     }
 
     @Id

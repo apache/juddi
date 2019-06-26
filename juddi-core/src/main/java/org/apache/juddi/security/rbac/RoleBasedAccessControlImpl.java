@@ -18,12 +18,14 @@ package org.apache.juddi.security.rbac;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import javax.xml.ws.WebServiceContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api_v3.AccessLevel;
 import org.apache.juddi.api_v3.Action;
 import org.apache.juddi.api_v3.GetPermissionsMessageRequest;
 import org.apache.juddi.api_v3.GetPermissionsMessageResponse;
@@ -34,7 +36,6 @@ import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.ResourceConfig;
 import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.security.AccessLevel;
 import org.apache.juddi.security.IAccessControl;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
@@ -84,7 +85,7 @@ public class RoleBasedAccessControlImpl implements IAccessControl {
     private boolean hasReadAccess(WebServiceContext ctx, List<RbacRulesModel> rules) {
         for (RbacRulesModel r : rules) {
             if (ctx.isUserInRole(r.getContainerRole())) {
-                if (r.getAccessLevel() == AccessLevel.NONE) //explicit deny
+                if (r.getAccessLevelAsEnum() == AccessLevel.NONE) //explicit deny
                 {
                     return false;
                 }
@@ -157,6 +158,11 @@ public class RoleBasedAccessControlImpl implements IAccessControl {
                 redact(bs);
                 continue;   //access denied
             }
+            if (username == null) {
+                redact(bs);
+                continue;   //access denied
+
+            }
             if (username.isOwner(ue)) {
                 //keep it
                 continue;
@@ -193,6 +199,11 @@ public class RoleBasedAccessControlImpl implements IAccessControl {
                 redact(bs);
                 continue;   //access denied
             }
+            if (username == null) {
+                redact(bs);
+                continue;   //access denied
+
+            }
             if (username.isOwner(ue)) {
                 //keep it
                 continue;
@@ -216,12 +227,75 @@ public class RoleBasedAccessControlImpl implements IAccessControl {
 
     @Override
     public List<BusinessInfo> filterBusinessInfo(WebServiceContext ctx, UddiEntityPublisher username, List<BusinessInfo> items) {
+        //load access rules from database
+        for (BusinessInfo bs : items) {
+            //get the permission for this entity.
+            UddiEntity ue = loadEntity(bs.getBusinessKey(), org.apache.juddi.model.BusinessService.class);
+            if (ue == null) {
+                redact(bs);
+                continue;   //access denied
+            }
+            if (username == null) {
+                redact(bs);
+                continue;   //access denied
+
+            }
+            if (username.isOwner(ue)) {
+                //keep it
+                continue;
+            }
+
+            List<RbacRulesModel> rules = getPermissionSet(bs.getBusinessKey());
+            if (rules.isEmpty()) {
+                redact(bs);
+                continue;   //access denied
+            }
+            if (!hasReadAccess(ctx, rules)) {
+                redact(bs); //also access denied, either no matching role or an explicit deny
+                continue;
+            }
+            if (bs.getServiceInfos() != null) {
+                filterServiceInfo(ctx, username, bs.getServiceInfos().getServiceInfo());
+            }
+
+        }
         return new ArrayList(items);
+
     }
 
     @Override
     public List<TModel> filterTModels(WebServiceContext ctx, UddiEntityPublisher username, List<TModel> items) {
+        //load access rules from database
+        for (TModel bs : items) {
+            //get the permission for this entity.
+            UddiEntity ue = loadEntity(bs.getTModelKey(), org.apache.juddi.model.Tmodel.class);
+            if (ue == null) {
+                redact(bs);
+                continue;   //access denied
+            }
+            if (username == null) {
+                redact(bs);
+                continue;   //access denied
+
+            }
+            if (username.isOwner(ue)) {
+                //keep it
+                continue;
+            }
+
+            List<RbacRulesModel> rules = getPermissionSet(bs.getTModelKey());
+            if (rules.isEmpty()) {
+                redact(bs);
+                continue;   //access denied
+            }
+            if (!hasReadAccess(ctx, rules)) {
+                redact(bs); //also access denied, either no matching role or an explicit deny
+                continue;
+            }
+
+        }
         return new ArrayList(items);
+
     }
 
     @Override
@@ -234,6 +308,11 @@ public class RoleBasedAccessControlImpl implements IAccessControl {
             if (ue == null) {
                 redact(bs);
                 continue;   //access denied
+            }
+            if (username == null) {
+                redact(bs);
+                continue;   //access denied
+
             }
             if (username.isOwner(ue)) {
                 //keep it
@@ -272,6 +351,11 @@ public class RoleBasedAccessControlImpl implements IAccessControl {
             if (ue == null) {
                 si.setServiceKey(REDACTED);
                 continue;   //access denied
+            }
+            if (username == null) {
+                si.setServiceKey(REDACTED);
+                continue;   //access denied
+
             }
             if (username.isOwner(ue)) {
                 //keep it
@@ -333,12 +417,12 @@ public class RoleBasedAccessControlImpl implements IAccessControl {
             tx.begin();
             Query createQuery = null;
             if (arg0.getEntityId() != null && arg0.getEntityId().length() > 0) {
-                createQuery = em.createQuery("select c from RbacRulesModel c where c.uddiEntityId=:id");
+                createQuery = em.createQuery("select c from RbacRulesModel c where c.uddiEntityId=:id", RbacRulesModel.class);
                 createQuery.setParameter("id", arg0.getEntityId());
             } else {
-                createQuery = em.createQuery("select c from RbacRulesModel c");
+                createQuery = em.createQuery("select c from RbacRulesModel c", RbacRulesModel.class);
             }
-            
+
             set = createQuery.getResultList();
 
         } finally {
@@ -351,7 +435,7 @@ public class RoleBasedAccessControlImpl implements IAccessControl {
         for (RbacRulesModel item : set) {
             Permission permission = new Permission();
             permission.setEntityId(item.getUddiEntityId());
-            permission.setLevel(org.apache.juddi.api_v3.AccessLevel.fromValue(item.getAccessLevel().name()));
+            permission.setLevel((item.getAccessLevelAsEnum()));
             permission.setAction(Action.NOOP);
             permission.setTarget(item.getContainerRole());
             //TODO permission.setType(item.);
@@ -363,7 +447,63 @@ public class RoleBasedAccessControlImpl implements IAccessControl {
 
     @Override
     public SetPermissionsMessageResponse setPermissions(SetPermissionsMessageRequest arg0) throws DispositionReportFaultMessage, RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManager em = PersistenceManager.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+
+            for (Permission perm : arg0.getLevel()) {
+                if (perm.getAction() != Action.NOOP) {
+                    Query createQuery = null;
+
+                    createQuery = em.createQuery("delete from RbacRulesModel c where c.uddiEntityId=:id and c.containerRole=:user");
+                    createQuery.setParameter("id", perm.getEntityId());
+                    createQuery.setParameter("user", perm.getTarget());
+                    createQuery.executeUpdate();
+                }
+
+                if (perm.getAction() == Action.ADD) {
+                    RbacRulesModel r = new RbacRulesModel();
+                    r.setAccessLevel(perm.getLevel().name());
+
+                    r.setContainerRole(perm.getTarget());
+                    r.setUddiEntityId(perm.getEntityId());
+                    r.setId(UUID.randomUUID().toString());
+                    em.persist(r);
+                }
+            }
+            tx.commit();
+
+        } finally {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            em.close();
+        }
+        SetPermissionsMessageResponse response = new SetPermissionsMessageResponse();
+        return response;
+    }
+
+    private void redact(BusinessInfo bs) {
+
+        bs.setBusinessKey(REDACTED);
+        bs.getDescription().clear();
+        bs.setServiceInfos(null);
+        bs.getName().clear();
+        bs.getName().add(new Name(REDACTED, "en"));
+    }
+
+    private void redact(TModel bs) {
+
+        bs.setTModelKey(REDACTED);
+        bs.getDescription().clear();
+        bs.setCategoryBag(null);
+
+        bs.setName(new Name(REDACTED, "en"));
+        bs.getDescription().clear();
+        bs.getOverviewDoc().clear();
+        bs.getSignature().clear();
+        bs.setIdentifierBag(null);
     }
 
 }

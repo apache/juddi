@@ -141,7 +141,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		try {
 			tx.begin();
                         UddiEntityPublisher entityPublisher=null;
-			if (isAuthenticated())
+			if (isAuthenticatedRequired() || (body.getAuthInfo()!=null&& body.getAuthInfo().length()>0))
 				 entityPublisher = this.getEntityPublisher(em, body.getAuthInfo());
 
                         LogFindBindingRequest(body);
@@ -168,15 +168,14 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			tx.rollback();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_BINDING, QueryStatus.SUCCESS, procTime);                      
-                        if (isAuthenticated() && entityPublisher!=null)
-                        {
+                     
                             List<org.uddi.api_v3.BindingTemplate> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterBindingTemplates(
                                                this.ctx,
                                             entityPublisher, result.getBindingTemplate());
                             result.getBindingTemplate().clear();
                             result.getBindingTemplate().addAll(FilterBindingTemplates);
-                        }
+                        
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -212,7 +211,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
                         }
 			tx.begin();
                         UddiEntityPublisher entityPublisher=null;
-			if (isAuthenticated())
+			if (isAuthenticatedRequired() || (body.getAuthInfo()!=null&& body.getAuthInfo().length()>0))
 				 entityPublisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
                         LogFindBusinessRequest(body);
@@ -226,8 +225,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			tx.rollback();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_BUSINESS, QueryStatus.SUCCESS, procTime);                      
-                        if (isAuthenticated() && entityPublisher!=null)
-                        {
+                      
                             List<org.uddi.api_v3.BusinessInfo> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterBusinessInfo(
                                                this.ctx,
@@ -235,7 +233,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
                                             result.getBusinessInfos().getBusinessInfo());
                             result.getBusinessInfos().getBusinessInfo().clear();
                             result.getBusinessInfos().getBusinessInfo().addAll(FilterBindingTemplates);
-                        }
+                        
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -246,6 +244,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	}
 
 	
+    @Override
     public RelatedBusinessesList findRelatedBusinesses(FindRelatedBusinesses body)
 			throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -262,7 +261,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		try {
 			tx.begin();
                         UddiEntityPublisher entityPublisher=null;
-			if (isAuthenticated())
+			if (isAuthenticatedRequired() || (body.getAuthInfo()!=null&& body.getAuthInfo().length()>0))
 				 entityPublisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
                         LogFindRelatedBusinessRequest(body);
@@ -277,8 +276,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			tx.rollback();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_RELATEDBUSINESSES, QueryStatus.SUCCESS, procTime);                      
-                        if (isAuthenticated() && entityPublisher!=null)
-                        {
+                        
                             List<org.uddi.api_v3.RelatedBusinessInfo> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filtedRelatedBusinessInfos(
                                                this.ctx,
@@ -286,7 +284,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
                                             result.getRelatedBusinessInfos().getRelatedBusinessInfo());
                             result.getRelatedBusinessInfos().getRelatedBusinessInfo().clear();
                             result.getRelatedBusinessInfos().getRelatedBusinessInfo().addAll(FilterBindingTemplates);
-                        }
+                        
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -313,7 +311,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		try {
 			tx.begin();
                         UddiEntityPublisher entityPublisher=null;
-			if (isAuthenticated())
+			if (isAuthenticatedRequired() || (body.getAuthInfo()!=null&& body.getAuthInfo().length()>0))
 				 entityPublisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
                         LogFindServiceRequest(body);
@@ -342,15 +340,14 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			tx.rollback();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_SERVICE, QueryStatus.SUCCESS, procTime);                      
-                        if (isAuthenticated() && entityPublisher!=null)
-                        {
+                       
                             List<org.uddi.api_v3.ServiceInfo> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterServiceInfo(
                                                this.ctx,
                                             entityPublisher, result.getServiceInfos().getServiceInfo());
                             result.getServiceInfos().getServiceInfo().clear();
                             result.getServiceInfos().getServiceInfo().addAll(FilterBindingTemplates);
-                        }
+                        
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -378,7 +375,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		try {
 			tx.begin();
                         UddiEntityPublisher entityPublisher=null;
-			if (isAuthenticated())
+			if (isAuthenticatedRequired() || (body.getAuthInfo()!=null&& body.getAuthInfo().length()>0))
 				 entityPublisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
                         LogFindTModelRequest(body);
@@ -392,15 +389,14 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			tx.rollback();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_TMODEL, QueryStatus.SUCCESS, procTime);                      
-                        if (isAuthenticated() && entityPublisher!=null)
-                        {
+                       
                             List<org.uddi.api_v3.TModelInfo> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterTModelInfo(
                                                this.ctx,entityPublisher, 
                                             result.getTModelInfos().getTModelInfo());
                             result.getTModelInfos().getTModelInfo().clear();
                             result.getTModelInfos().getTModelInfo().addAll(FilterBindingTemplates);
-                        }
+                        
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -427,7 +423,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		try {
 			tx.begin();
                         UddiEntityPublisher entityPublisher=null;
-			if (isAuthenticated())
+			if (isAuthenticatedRequired() || (body.getAuthInfo()!=null&& body.getAuthInfo().length()>0))
 				 entityPublisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
 
@@ -452,15 +448,14 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.GET_BINDINGDETAIL, QueryStatus.SUCCESS, procTime);                      
-                            if (isAuthenticated() && entityPublisher!=null)
-                        {
+                         
                             List<org.uddi.api_v3.BindingTemplate> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterBindingTemplates(
                                                this.ctx,
                                             entityPublisher, result.getBindingTemplate());
                             result.getBindingTemplate().clear();
                             result.getBindingTemplate().addAll(FilterBindingTemplates);
-                        }
+                        
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -488,7 +483,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		try {
 			tx.begin();
                         UddiEntityPublisher entityPublisher=null;
-			if (isAuthenticated())
+			if (isAuthenticatedRequired() || (body.getAuthInfo()!=null&& body.getAuthInfo().length()>0))
 				 entityPublisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
 
@@ -513,14 +508,13 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.GET_BUSINESSDETAIL, QueryStatus.SUCCESS, procTime);                      
-                        if (isAuthenticated() && entityPublisher!=null)
-                        {
+                       
                             List<org.uddi.api_v3.BusinessEntity> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterBusinesses(
-                                               this.ctx,entityPublisher, result.getBusinessEntity());
+                                               this.ctx, entityPublisher, result.getBusinessEntity());
                             result.getBusinessEntity().clear();
                             result.getBusinessEntity().addAll(FilterBindingTemplates);
-                        }
+                      
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -548,7 +542,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		try {
 			tx.begin();
                         UddiEntityPublisher entityPublisher=null;
-			if (isAuthenticated())
+			if (isAuthenticatedRequired() || (body.getAuthInfo()!=null&& body.getAuthInfo().length()>0))
 				 entityPublisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
 
@@ -573,14 +567,13 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.GET_OPERATIONALINFO, QueryStatus.SUCCESS, procTime);                      
-                        if (isAuthenticated() && entityPublisher!=null)
-                        {
+                      
                             List<org.uddi.api_v3.OperationalInfo> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterOperationalInfo(
                                                this.ctx,entityPublisher, result.getOperationalInfo());
                             result.getOperationalInfo().clear();
                             result.getOperationalInfo().addAll(FilterBindingTemplates);
-                        }
+                        
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -609,7 +602,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			tx.begin();
 
                         UddiEntityPublisher entityPublisher=null;
-			if (isAuthenticated())
+			if (isAuthenticatedRequired() || (body.getAuthInfo()!=null&& body.getAuthInfo().length()>0))
 				 entityPublisher = this.getEntityPublisher(em, body.getAuthInfo());
 			ServiceDetail result = new ServiceDetail();
 
@@ -632,15 +625,14 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.GET_SERVICEDETAIL, QueryStatus.SUCCESS, procTime);                      
-                        if (isAuthenticated() && entityPublisher!=null)
-                        {
+                       
                             List<org.uddi.api_v3.BusinessService> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterServices(
                                                this.ctx,
                                             entityPublisher, result.getBusinessService());
                             result.getBusinessService().clear();
                             result.getBusinessService().addAll(FilterBindingTemplates);
-                        }
+                        
 			return result;
 
 		} finally {
@@ -671,7 +663,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 			
                         UddiEntityPublisher entityPublisher=null;
-			if (isAuthenticated())
+			if (isAuthenticatedRequired() || (body.getAuthInfo()!=null&& body.getAuthInfo().length()>0))
 				 entityPublisher = this.getEntityPublisher(em, body.getAuthInfo());
 			TModelDetail result = new TModelDetail();
 
@@ -694,15 +686,14 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			tx.commit();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.GET_TMODELDETAIL, QueryStatus.SUCCESS, procTime);                      
-                        if (isAuthenticated() && entityPublisher!=null)
-                        {
+                       
                             List<org.uddi.api_v3.TModel> FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterTModels(
                                             this.ctx,
                                             entityPublisher, result.getTModel());
                             result.getTModel().clear();
                             result.getTModel().addAll(FilterBindingTemplates);
-                        }
+                        
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -712,7 +703,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		}
 	}
 
-	private boolean isAuthenticated() {
+	private boolean isAuthenticatedRequired() {
 		boolean result = false;
 		try {
 			result = AppConfig.getConfiguration().getBoolean(Property.JUDDI_AUTHENTICATE_INQUIRY);

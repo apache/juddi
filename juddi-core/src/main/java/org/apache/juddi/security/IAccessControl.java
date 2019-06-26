@@ -16,19 +16,14 @@
 package org.apache.juddi.security;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
 import javax.xml.ws.WebServiceContext;
+import org.apache.juddi.api_v3.AccessLevel;
 import org.apache.juddi.api_v3.GetPermissionsMessageRequest;
 import org.apache.juddi.api_v3.GetPermissionsMessageResponse;
 import org.apache.juddi.api_v3.SetPermissionsMessageRequest;
 import org.apache.juddi.api_v3.SetPermissionsMessageResponse;
-import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.security.rbac.RbacRulesModel;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessInfo;
