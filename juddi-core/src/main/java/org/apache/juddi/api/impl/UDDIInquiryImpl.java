@@ -52,6 +52,7 @@ import org.uddi.api_v3.GetOperationalInfo;
 import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.GetTModelDetail;
 import org.uddi.api_v3.OperationalInfos;
+import org.uddi.api_v3.RelatedBusinessInfos;
 import org.uddi.api_v3.RelatedBusinessesList;
 import org.uddi.api_v3.ServiceDetail;
 import org.uddi.api_v3.ServiceList;
@@ -277,13 +278,13 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_RELATEDBUSINESSES, QueryStatus.SUCCESS, procTime);                      
                         
-                            List<org.uddi.api_v3.RelatedBusinessInfo> FilterBindingTemplates = 
+                           RelatedBusinessInfos FilterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filtedRelatedBusinessInfos(
                                                this.ctx,
                                             entityPublisher,
-                                            result.getRelatedBusinessInfos().getRelatedBusinessInfo());
-                            result.getRelatedBusinessInfos().getRelatedBusinessInfo().clear();
-                            result.getRelatedBusinessInfos().getRelatedBusinessInfo().addAll(FilterBindingTemplates);
+                                            result.getRelatedBusinessInfos());
+                            result.setRelatedBusinessInfos(FilterBindingTemplates);
+                           
                         
 			return result;
 		} finally {

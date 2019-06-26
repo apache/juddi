@@ -30,6 +30,7 @@ import org.uddi.api_v3.BusinessInfo;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.OperationalInfo;
 import org.uddi.api_v3.RelatedBusinessInfo;
+import org.uddi.api_v3.RelatedBusinessInfos;
 import org.uddi.api_v3.ServiceInfo;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelInfo;
@@ -55,7 +56,7 @@ public interface IAccessControl {
 
     public List<BindingTemplate> filterBindingTemplates(WebServiceContext ctx, UddiEntityPublisher username, List<BindingTemplate> bindings);
 
-    public List<RelatedBusinessInfo> filtedRelatedBusinessInfos(WebServiceContext ctx, UddiEntityPublisher username, List<RelatedBusinessInfo> bindings);
+    public RelatedBusinessInfos filtedRelatedBusinessInfos(WebServiceContext ctx, UddiEntityPublisher username,  RelatedBusinessInfos bindings);
 
     public List<ServiceInfo> filterServiceInfo(WebServiceContext ctx, UddiEntityPublisher authorizedName, List<ServiceInfo> serviceInfo);
 

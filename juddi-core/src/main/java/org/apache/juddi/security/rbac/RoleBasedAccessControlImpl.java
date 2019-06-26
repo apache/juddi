@@ -43,8 +43,11 @@ import org.uddi.api_v3.BusinessInfo;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.OperationalInfo;
+import org.uddi.api_v3.PublisherAssertion;
 import org.uddi.api_v3.RelatedBusinessInfo;
+import org.uddi.api_v3.RelatedBusinessInfos;
 import org.uddi.api_v3.ServiceInfo;
+import org.uddi.api_v3.SharedRelationships;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelInfo;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -338,9 +341,100 @@ public class RoleBasedAccessControlImpl implements IAccessControl {
     }
 
     @Override
-    public List<RelatedBusinessInfo> filtedRelatedBusinessInfos(WebServiceContext ctx, UddiEntityPublisher username, List<RelatedBusinessInfo> items) {
+    public RelatedBusinessInfos filtedRelatedBusinessInfos(WebServiceContext ctx, UddiEntityPublisher username, RelatedBusinessInfos items) {
         //TODO
-        return new ArrayList(items);
+        if (items == null) {
+            return null;
+        }
+        for (RelatedBusinessInfo bs : items.getRelatedBusinessInfo()) {
+            UddiEntity ue = loadEntity(bs.getBusinessKey(), org.apache.juddi.model.BusinessService.class);
+            if (ue == null) {
+                redact(bs);
+                continue;   //access denied
+            }
+            if (username == null) {
+                redact(bs);
+                continue;   //access denied
+
+            }
+            if (username.isOwner(ue)) {
+                //keep it
+                continue;
+            }
+
+            List<RbacRulesModel> rules = getPermissionSet(bs.getBusinessKey());
+            if (rules.isEmpty()) {
+                redact(bs);
+                continue;   //access denied
+            }
+            if (!hasReadAccess(ctx, rules)) {
+                redact(bs); //also access denied, either no matching role or an explicit deny
+                continue;
+            }
+            if (bs.getSharedRelationships() != null) {
+
+                for (SharedRelationships si : bs.getSharedRelationships()) {
+                    boolean redact = false;
+                    for (PublisherAssertion pa : si.getPublisherAssertion()) {
+                        UddiEntity ue2 = loadEntity(pa.getFromKey(), org.apache.juddi.model.BusinessEntity.class);
+                        if (ue2 == null) {
+                            redact = true;
+                            break;
+                        }
+                        if (username == null) {
+                            redact = true;
+                            break;   //access denied
+
+                        }
+                        if (username.isOwner(ue)) {
+                            //keep it
+                            continue;
+                        }
+
+                        List<RbacRulesModel> rules2 = getPermissionSet(pa.getFromKey());
+
+                        if (rules2.isEmpty()) {
+                            redact = true;
+                            break;  //access denied
+                        }
+                        if (!hasReadAccess(ctx, rules)) {
+                            redact = true; //also access denied, either no matching role or an explicit deny
+                            break;
+                        }
+
+                        ue2 = loadEntity(pa.getToKey(), org.apache.juddi.model.BusinessEntity.class);
+                        if (ue2 == null) {
+                            redact = true;
+                            break;
+                        }
+                        
+                        if (username.isOwner(ue2)) {
+                            //keep it
+                            continue;
+                        }
+
+                        rules2 = getPermissionSet(pa.getToKey());
+
+                        if (rules2.isEmpty()) {
+                            redact = true;
+                            break; //access denied
+                        }
+                        if (!hasReadAccess(ctx, rules)) {
+                            redact = true; //also access denied, either no matching role or an explicit deny
+                            break;
+                        }
+                    }
+
+                    if (redact){
+                        
+                    }
+
+                }
+               
+            }
+        }
+
+        return items;
     }
 
     @Override
@@ -504,6 +598,14 @@ public class RoleBasedAccessControlImpl implements IAccessControl {
         bs.getOverviewDoc().clear();
         bs.getSignature().clear();
         bs.setIdentifierBag(null);
+    }
+
+    private void redact(RelatedBusinessInfo bs) {
+        bs.setBusinessKey(REDACTED);
+        bs.getDescription().clear();
+        bs.getName().clear();
+        bs.getName().add(new Name(REDACTED, "en"));
+        bs.getSharedRelationships().clear();
     }
 
 }

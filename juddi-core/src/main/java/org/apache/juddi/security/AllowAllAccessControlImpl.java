@@ -32,6 +32,7 @@ import org.uddi.api_v3.BusinessInfo;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.OperationalInfo;
 import org.uddi.api_v3.RelatedBusinessInfo;
+import org.uddi.api_v3.RelatedBusinessInfos;
 import org.uddi.api_v3.ServiceInfo;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelInfo;
@@ -71,8 +72,8 @@ public class AllowAllAccessControlImpl implements IAccessControl {
     }
 
     @Override
-    public List<RelatedBusinessInfo> filtedRelatedBusinessInfos(WebServiceContext arg0, UddiEntityPublisher user, List<RelatedBusinessInfo> arg2) {
-        return new ArrayList<>(arg2);
+    public RelatedBusinessInfos filtedRelatedBusinessInfos(WebServiceContext arg0, UddiEntityPublisher user, RelatedBusinessInfos arg1) {
+        return (arg1);
     }
 
     @Override
