@@ -30,15 +30,18 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.xml.ws.Holder;
+import javax.xml.ws.WebServiceContext;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api_v3.AccessLevel;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.api_v3.DeleteClerk;
 import org.apache.juddi.api_v3.DeleteNode;
 import org.apache.juddi.api_v3.DeletePublisher;
+import org.apache.juddi.api_v3.EntityType;
 import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Constants;
@@ -54,6 +57,7 @@ import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.FindBusinessByPublisherQuery;
 import org.apache.juddi.query.FindTModelByPublisherQuery;
+import org.apache.juddi.security.AccessControlFactory;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.UDDIConstantsV2;
 import org.apache.juddi.v3.client.config.TokenResolver;
@@ -117,7 +121,7 @@ public class ValidatePublish extends ValidateUDDIApi {
          * This flag will add additional output to stdout for debugging
          * purposes, set this to true if
          */
-        private Log log = LogFactory.getLog(this.getClass());
+        private static final Log log = LogFactory.getLog(ValidatePublish.class);
 
         /**
          * used from Install class
@@ -132,6 +136,10 @@ public class ValidatePublish extends ValidateUDDIApi {
 
         public ValidatePublish(UddiEntityPublisher publisher) {
                 super(publisher);
+        }
+        
+         public ValidatePublish(UddiEntityPublisher publisher, WebServiceContext ctx) {
+                super(publisher,ctx);
         }
 
         public void validateDeleteBusiness(EntityManager em, DeleteBusiness body) throws DispositionReportFaultMessage {
@@ -207,7 +215,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                         //if you're are the owner, access granted
                         //if you are an admin && this item belongs to this node, access granted
                         //else denied
-                        accessCheck(obj, entityKey);
+                        accessCheck(obj, entityKey,EntityType.SERVICE);
                         i++;
                 }
         }
@@ -244,7 +252,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BindingTemplateNotFound", entityKey));
                         }
 
-                        accessCheck(obj, entityKey);
+                        accessCheck(obj, entityKey,EntityType.BINDING);
 
                         i++;
                 }
@@ -281,13 +289,13 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNotFound", entityKey));
                         }
 
-                        accessCheck(obj, entityKey);
+                        accessCheck(obj, entityKey,EntityType.TMODEL);
 
                         i++;
                 }
         }
 
-        private void accessCheck(Object obj, String entityKey) throws UserMismatchException {
+        private void accessCheck(Object obj, String entityKey, EntityType type) throws UserMismatchException {
                 boolean accessCheck = false; //assume access denied
                 if (!((UddiEntity) obj).getNodeId().equals(nodeID)) {
                         //prevent changes to data owned by another node in a replicated environment
@@ -304,6 +312,10 @@ public class ValidatePublish extends ValidateUDDIApi {
                 if (((Publisher) publisher).isAdmin()
                         && nodeID.equals(((UddiEntity) obj).getNodeId())) {
                         accessCheck = true;
+                }
+                
+                if ( nodeID.equals(((UddiEntity) obj).getNodeId()) &&
+                        AccessControlFactory.getAccessControlInstance().hasPermission(AccessLevel.WRITE, ctx, publisher, entityKey,type)){
                 }
 
                 if (!accessCheck) {
@@ -706,7 +718,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 entityExists = true;
 
                                 // Make sure publisher owns this entity.
-                                accessCheck(obj, entityKey);
+                                accessCheck(obj, entityKey,EntityType.BUSINESS);
 
                         } else {
                                 // Inside this block, we have a key proposed by the publisher on a new entity
@@ -842,7 +854,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                         }
 
                                         // Make sure publisher owns this entity.
-                                        accessCheck(obj, entityKey);
+                                        accessCheck(obj, entityKey,EntityType.SERVICE);
 
                                         // If existing service trying to be saved has a different parent key, then we have a problem
                                         if (!parentKey.equalsIgnoreCase(bs.getBusinessEntity().getEntityKey())) {
@@ -887,7 +899,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                         }
 
                                         // Make sure publisher owns this parent entity.
-                                        accessCheck(parentTemp, parentKey);
+                                        accessCheck(parentTemp, parentKey,EntityType.BUSINESS);
                                         // if (!publisher.isOwner((UddiEntity) parentTemp)) {
                                         //        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwnerParent", parentKey));
                                         //}
@@ -997,7 +1009,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 }
 
                                 // Make sure publisher owns this entity.
-                                accessCheck(obj, entityKey);
+                                accessCheck(obj, entityKey,EntityType.BINDING);
                                 //if (!publisher.isOwner((UddiEntity) obj)&& !((Publisher) publisher).isAdmin()) {
 //                                        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
                                 //                              }
@@ -1035,7 +1047,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 }
 
                                 // Make sure publisher owns this parent entity.
-                                accessCheck(parentTemp, parentKey);
+                                accessCheck(parentTemp, parentKey,EntityType.SERVICE);
 //                                if (!publisher.isOwner((UddiEntity) parentTemp)) {
 //                                        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwnerParent", parentKey));
 //                                }
@@ -1092,7 +1104,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                                 entityExists = true;
 
                                 // Make sure publisher owns this entity.
-                                accessCheck(obj, entityKey);
+                                accessCheck(obj, entityKey,EntityType.TMODEL);
                                 //if (!publisher.isOwner((UddiEntity) obj)&& !((Publisher) publisher).isAdmin()) {
                                 //        throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
                                 // }

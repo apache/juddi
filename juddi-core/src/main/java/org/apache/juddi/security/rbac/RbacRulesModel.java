@@ -20,6 +20,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import org.apache.juddi.api_v3.AccessLevel;
 
 /**
@@ -62,6 +63,7 @@ public class RbacRulesModel implements Serializable {
         return (level);
     }
     
+    @Transient 
     public AccessLevel getAccessLevelAsEnum() {
         return AccessLevel.valueOf(getAccessLevel());
     }

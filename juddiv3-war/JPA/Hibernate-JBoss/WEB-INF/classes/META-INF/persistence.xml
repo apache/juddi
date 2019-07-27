@@ -97,6 +97,7 @@
 	<class>org.apache.juddi.model.ControlMessage</class>
     <class>org.apache.juddi.model.ReplicationConfigurationNode</class>
     <class>org.apache.juddi.model.EdgeReceiverAlternate</class>
+    <class>org.apache.juddi.security.rbac.RbacRulesModel</class>
 
     <properties>
       <property name="hibernate.archive.autodetection" value="class"/>

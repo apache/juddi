@@ -127,7 +127,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 
-                        new ValidatePublish(publisher).validateAddPublisherAssertions(em, body);
+                        new ValidatePublish(publisher,ctx).validateAddPublisherAssertions(em, body);
 
                         List<org.uddi.api_v3.PublisherAssertion> apiPubAssertionList = body.getPublisherAssertion();
                         List<ChangeRecord> changes = new ArrayList<ChangeRecord>();
@@ -213,6 +213,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 }
         }
 
+        @Override
         public void deleteBinding(DeleteBinding body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -224,7 +225,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 
-                        new ValidatePublish(publisher).validateDeleteBinding(em, body);
+                        new ValidatePublish(publisher,ctx).validateDeleteBinding(em, body);
 
                         List<String> entityKeyList = body.getBindingKey();
                         List<ChangeRecord> changes = new ArrayList<ChangeRecord>();
@@ -272,6 +273,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
         }
 
+        @Override
         public void deleteBusiness(DeleteBusiness body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -283,7 +285,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 
-                        new ValidatePublish(publisher).validateDeleteBusiness(em, body);
+                        new ValidatePublish(publisher,ctx).validateDeleteBusiness(em, body);
 
                         List<String> entityKeyList = body.getBusinessKey();
                         List<ChangeRecord> changes = new ArrayList<ChangeRecord>();
@@ -323,6 +325,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
                 em.remove(obj);
         }
 
+        @Override
         public void deletePublisherAssertions(DeletePublisherAssertions body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -334,7 +337,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 
-                        new ValidatePublish(publisher).validateDeletePublisherAssertions(em, body);
+                        new ValidatePublish(publisher,ctx).validateDeletePublisherAssertions(em, body);
 
                         List<org.uddi.api_v3.PublisherAssertion> entityList = body.getPublisherAssertion();
                         List<ChangeRecord> changes = new ArrayList<ChangeRecord>();
@@ -439,6 +442,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
         }
 
+        @Override
         public void deleteService(DeleteService body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -450,7 +454,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 
-                        new ValidatePublish(publisher).validateDeleteService(em, body);
+                        new ValidatePublish(publisher,ctx).validateDeleteService(em, body);
 
                         List<String> entityKeyList = body.getServiceKey();
                         List<ChangeRecord> changes = new ArrayList<ChangeRecord>();
@@ -511,7 +515,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 
-                        new ValidatePublish(publisher).validateDeleteTModel(em, body);
+                        new ValidatePublish(publisher,ctx).validateDeleteTModel(em, body);
 
                         // tModels are only lazily deleted!
                         List<String> entityKeyList = body.getTModelKey();
@@ -637,7 +641,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         /**
          * {@inheritdoc}
          *
+     * @throws org.uddi.v3_service.DispositionReportFaultMessage
          */
+        @Override
         public RegisteredInfo getRegisteredInfo(GetRegisteredInfo body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -649,7 +655,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 
-                        new ValidatePublish(publisher).validateRegisteredInfo(body);
+                        new ValidatePublish(publisher,ctx).validateRegisteredInfo(body);
 
                         List<?> businessKeysFound = null;
                         businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);
@@ -718,7 +724,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         /**
          * {@inheritdoc}
          *
+     * @throws org.uddi.v3_service.DispositionReportFaultMessage
          */
+        @Override
         public BindingDetail saveBinding(SaveBinding body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -730,7 +738,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
                         publisher.populateKeyGeneratorKeys(em);
-                        ValidatePublish validator = new ValidatePublish(publisher);
+                        ValidatePublish validator = new ValidatePublish(publisher,ctx);
                         validator.validateSaveBinding(em, body, null, publisher);
 
                         BindingDetail result = new BindingDetail();
@@ -783,7 +791,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
         /**
          * {@inheritdoc}
          *
+         * @throws org.uddi.v3_service.DispositionReportFaultMessage
          */
+        @Override
         public BusinessDetail saveBusiness(SaveBusiness body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
@@ -795,7 +805,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
                         publisher.populateKeyGeneratorKeys(em);
-                        ValidatePublish validator = new ValidatePublish(publisher);
+                        ValidatePublish validator = new ValidatePublish(publisher,ctx);
                         validator.validateSaveBusiness(em, body, null, publisher);
 
                         BusinessDetail result = new BusinessDetail();
@@ -864,7 +874,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
                         publisher.populateKeyGeneratorKeys(em);
-                        ValidatePublish validator = new ValidatePublish(publisher);
+                        ValidatePublish validator = new ValidatePublish(publisher,ctx);
                         validator.validateSaveService(em, body, null, publisher);
 
                         ServiceDetail result = new ServiceDetail();
@@ -927,7 +937,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
                         publisher.populateKeyGeneratorKeys(em);
-                        new ValidatePublish(publisher).validateSaveTModel(em, body, null, publisher);
+                        new ValidatePublish(publisher,ctx).validateSaveTModel(em, body, null, publisher);
 
                         TModelDetail result = new TModelDetail();
 
@@ -999,7 +1009,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
                         UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
 
-                        new ValidatePublish(publisher).validateSetPublisherAssertions(em, publisherAssertion);
+                        new ValidatePublish(publisher,ctx).validateSetPublisherAssertions(em, publisherAssertion);
 
                         List<?> businessKeysFound = null;
                         businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);

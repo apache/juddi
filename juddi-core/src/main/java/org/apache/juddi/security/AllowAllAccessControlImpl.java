@@ -19,6 +19,8 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.ws.WebServiceContext;
+import org.apache.juddi.api_v3.AccessLevel;
+import org.apache.juddi.api_v3.EntityType;
 import org.apache.juddi.api_v3.GetPermissionsMessageRequest;
 import org.apache.juddi.api_v3.GetPermissionsMessageResponse;
 import org.apache.juddi.api_v3.SetPermissionsMessageRequest;
@@ -34,8 +36,10 @@ import org.uddi.api_v3.OperationalInfo;
 import org.uddi.api_v3.RelatedBusinessInfo;
 import org.uddi.api_v3.RelatedBusinessInfos;
 import org.uddi.api_v3.ServiceInfo;
+import org.uddi.api_v3.ServiceInfos;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelInfo;
+import org.uddi.api_v3.TModelInfos;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
@@ -77,13 +81,13 @@ public class AllowAllAccessControlImpl implements IAccessControl {
     }
 
     @Override
-    public List<ServiceInfo> filterServiceInfo(WebServiceContext arg0, UddiEntityPublisher user, List<ServiceInfo> arg2) {
-        return new ArrayList<>(arg2);
+    public ServiceInfos filterServiceInfo(WebServiceContext arg0, UddiEntityPublisher user, ServiceInfos arg2) {
+        return (arg2);
     }
 
     @Override
-    public List<TModelInfo> filterTModelInfo(WebServiceContext arg0, UddiEntityPublisher user, List<TModelInfo> arg2) {
-        return new ArrayList<>(arg2);
+    public TModelInfos filterTModelInfo(WebServiceContext arg0, UddiEntityPublisher user, TModelInfos arg2) {
+        return (arg2);
     }
 
     @Override
@@ -102,5 +106,12 @@ public class AllowAllAccessControlImpl implements IAccessControl {
     public SetPermissionsMessageResponse setPermissions(SetPermissionsMessageRequest arg0) throws DispositionReportFaultMessage, RemoteException {
           throw new FatalErrorException(new ErrorMessage("errors.Unsupported"));
     }
+
+    @Override
+    public boolean hasPermission(AccessLevel arg0, WebServiceContext arg1, UddiEntityPublisher arg2, String arg3, EntityType arg4) {
+        return false;
+    }
+
+ 
 
 }

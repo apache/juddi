@@ -19,6 +19,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 import javax.xml.ws.WebServiceContext;
 import org.apache.juddi.api_v3.AccessLevel;
+import org.apache.juddi.api_v3.EntityType;
 import org.apache.juddi.api_v3.GetPermissionsMessageRequest;
 import org.apache.juddi.api_v3.GetPermissionsMessageResponse;
 import org.apache.juddi.api_v3.SetPermissionsMessageRequest;
@@ -29,11 +30,10 @@ import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessInfo;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.OperationalInfo;
-import org.uddi.api_v3.RelatedBusinessInfo;
 import org.uddi.api_v3.RelatedBusinessInfos;
-import org.uddi.api_v3.ServiceInfo;
+import org.uddi.api_v3.ServiceInfos;
 import org.uddi.api_v3.TModel;
-import org.uddi.api_v3.TModelInfo;
+import org.uddi.api_v3.TModelInfos;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
@@ -58,9 +58,9 @@ public interface IAccessControl {
 
     public RelatedBusinessInfos filtedRelatedBusinessInfos(WebServiceContext ctx, UddiEntityPublisher username,  RelatedBusinessInfos bindings);
 
-    public List<ServiceInfo> filterServiceInfo(WebServiceContext ctx, UddiEntityPublisher authorizedName, List<ServiceInfo> serviceInfo);
+    public ServiceInfos filterServiceInfo(WebServiceContext ctx, UddiEntityPublisher authorizedName, ServiceInfos serviceInfo);
 
-    public List<TModelInfo> filterTModelInfo(WebServiceContext ctx, UddiEntityPublisher authorizedName, List<TModelInfo> tModelInfo);
+    public TModelInfos filterTModelInfo(WebServiceContext ctx, UddiEntityPublisher authorizedName, TModelInfos tModelInfo);
 
     public List<OperationalInfo> filterOperationalInfo(WebServiceContext ctx, UddiEntityPublisher authorizedName, List<OperationalInfo> operationalInfo);
 
@@ -68,4 +68,5 @@ public interface IAccessControl {
 
     public SetPermissionsMessageResponse setPermissions(SetPermissionsMessageRequest arg0) throws DispositionReportFaultMessage, RemoteException;
 
+    public boolean hasPermission(AccessLevel level, WebServiceContext ctx, UddiEntityPublisher username, String entityId, EntityType type);
 }

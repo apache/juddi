@@ -31,7 +31,7 @@ import org.apache.juddi.subscription.SubscriptionNotifier;
 public class Registry {
 
         private static Registry registry = null;
-        private static Log log = LogFactory.getLog(Registry.class);
+        private static final Log log = LogFactory.getLog(Registry.class);
         private static SubscriptionNotifier subscriptionNotifier = null;
         private static ReplicationNotifier replicationNotifier = null;
 

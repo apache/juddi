@@ -117,7 +117,7 @@ public class UddiEntityPublisher {
 		if (key == null)
 			return false;
 		
-		if (keyGeneratorKeys == null)
+		if (keyGeneratorKeys == null)//||keyGeneratorKeys.isEmpty()
 			populateKeyGeneratorKeys(em);
 		
 		if (! key.contains(KeyGenerator.PARTITION_SEPARATOR)) return true; //v2 style key

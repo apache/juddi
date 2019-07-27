@@ -342,13 +342,11 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_SERVICE, QueryStatus.SUCCESS, procTime);                      
                        
-                            List<org.uddi.api_v3.ServiceInfo> FilterBindingTemplates = 
+                           result.setServiceInfos(
                                     AccessControlFactory.getAccessControlInstance().filterServiceInfo(
                                                this.ctx,
-                                            entityPublisher, result.getServiceInfos().getServiceInfo());
-                            result.getServiceInfos().getServiceInfo().clear();
-                            result.getServiceInfos().getServiceInfo().addAll(FilterBindingTemplates);
-                        
+                                            entityPublisher, result.getServiceInfos()));
+                           
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -391,12 +389,11 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_TMODEL, QueryStatus.SUCCESS, procTime);                      
                        
-                            List<org.uddi.api_v3.TModelInfo> FilterBindingTemplates = 
+                            result.setTModelInfos(
                                     AccessControlFactory.getAccessControlInstance().filterTModelInfo(
                                                this.ctx,entityPublisher, 
-                                            result.getTModelInfos().getTModelInfo());
-                            result.getTModelInfos().getTModelInfo().clear();
-                            result.getTModelInfos().getTModelInfo().addAll(FilterBindingTemplates);
+                                            result.getTModelInfos()));
+                         
                         
 			return result;
 		} finally {

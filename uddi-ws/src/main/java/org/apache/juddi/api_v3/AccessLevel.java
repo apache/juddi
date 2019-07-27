@@ -27,11 +27,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum AccessLevel {
 
-    NONE,
-    READ,
-    WRITE,
-    OWN,
-    CREATE;
+    NONE((short)0),
+    READ((short)1),
+    WRITE((short)2),
+    OWN((short)3),
+    CREATE((short)4);
 
     public String value() {
         return name();
@@ -40,5 +40,14 @@ public enum AccessLevel {
     public static AccessLevel fromValue(String v) {
         return valueOf(v);
     }
-
+    
+    private final short value;
+    
+    private AccessLevel(short val){
+        value=val;
+    }
+    
+    public short getLevel(){
+        return value;
+    }
 }

@@ -318,6 +318,7 @@ public class TckBusiness {
                         // Now get the entity and check the values
                         GetBusinessDetail gb = new GetBusinessDetail();
                         gb.getBusinessKey().add(businessKey);
+                        gb.setAuthInfo(authInfo);
                         BusinessDetail bd = inquiry.getBusinessDetail(gb);
                         List<BusinessEntity> beOutList = bd.getBusinessEntity();
                         BusinessEntity beOut = beOutList.get(0);

@@ -15,7 +15,6 @@
  */
 package org.apache.juddi.security;
 
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.configuration.ConfigurationException;
@@ -24,6 +23,7 @@ import org.apache.juddi.config.Property;
 
 /**
  * Provides an accessor to the access control mechanism
+ *
  * @since 3.4
  * @author Alex O'Ree
  */
@@ -33,11 +33,15 @@ public class AccessControlFactory {
     private static IAccessControl instance = null;
 
     /**
-     * Gets an instance of IAccessControl using the following procedure, in order<br>
+     * Gets an instance of IAccessControl using the following procedure, in
+     * order<br>
      * <ol>
-     * <li>Using the judiv3.properties configuration file setting Property.JUDDI_FINE_GRAIN_ACCESS_CONTROL_PROVIDER</li>
-     * <li>If the previous fails to load or is not defined, DefaultCorseAccessControlImpl</li>
+     * <li>Using the judiv3.properties configuration file setting
+     * Property.JUDDI_FINE_GRAIN_ACCESS_CONTROL_PROVIDER</li>
+     * <li>If the previous fails to load or is not defined,
+     * DefaultCorseAccessControlImpl</li>
      * </ol>
+     *
      * @return should never return null or throw exceptions
      * @see DefaultCorseAccessControlImpl
      * @see Property
@@ -70,5 +74,9 @@ public class AccessControlFactory {
             log.log(Level.WARNING, "error loading control provider " + clazz, x);
         }
         return new AllowAllAccessControlImpl();
+    }
+
+    public static synchronized void reset() {
+        instance = null;
     }
 }

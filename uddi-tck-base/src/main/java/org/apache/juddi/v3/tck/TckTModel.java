@@ -14,6 +14,7 @@
  */
 package org.apache.juddi.v3.tck;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import static junit.framework.Assert.assertEquals;
@@ -92,15 +93,17 @@ public class TckTModel {
          *
          * @param authInfo
          * @param tModelXml this is a relative file path
+         * @return all created tmodel keys
          */
-        public void saveTModels(String authInfo, String tModelXml) {
-
+        public List<String> saveTModels(String authInfo, String tModelXml) {
+                List<String> keys = new ArrayList<>();
                 // Add tModels
                 try {
                         SaveTModel st = (org.uddi.api_v3.SaveTModel) EntityCreator.buildFromDoc(tModelXml, "org.uddi.api_v3");
 
                         for (int i = 0; i < st.getTModel().size(); i++) {
                                  saveTModel(authInfo, st.getTModel().get(i), false);
+                                 keys.add(st.getTModel().get(i).getTModelKey());
                         }
                         //st.setAuthInfo(authInfo);
                         //publication.saveTModel(st);
@@ -109,6 +112,7 @@ public class TckTModel {
                         logger.error(e.getMessage(), e);
                         Assert.fail("No exception should be thrown");
                 }
+                return keys;
         }
 
         public TModel saveTModel(String authInfo, TModel tmIn, boolean force) {
@@ -139,6 +143,7 @@ public class TckTModel {
                                 keyscreated.add(tmIn.getTModelKey());
                                 // Now get the entity and check the values
                                 GetTModelDetail gt = new GetTModelDetail();
+                                gt.setAuthInfo(authInfo);
                                 gt.getTModelKey().add(tmIn.getTModelKey());
                                 TModelDetail td = inquiry.getTModelDetail(gt);
                                 List<org.uddi.api_v3.TModel> tmOutList = td.getTModel();
@@ -276,8 +281,8 @@ public class TckTModel {
          * creates key generator
          * @param authInfoTM 
          */
-        public void saveUDDIPublisherTmodel(String authInfoTM) {
-                saveTModel(authInfoTM, TMODEL_PUBLISHER_TMODEL_XML, TMODEL_PUBLISHER_TMODEL_KEY, false);
+        public TModel saveUDDIPublisherTmodel(String authInfoTM) {
+               return saveTModel(authInfoTM, TMODEL_PUBLISHER_TMODEL_XML, TMODEL_PUBLISHER_TMODEL_KEY, false);
         }
 
         public void saveTmodels(String authInfoJoe) {

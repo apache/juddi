@@ -71,6 +71,7 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
             serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDISecurityImpl.class);
         }
 	
+        @Override
 	public void discardAuthToken(DiscardAuthToken body)
 			throws DispositionReportFaultMessage {
 	        long startTime = System.currentTimeMillis();
@@ -110,6 +111,7 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 	}
 
 
+        @Override
 	public AuthToken getAuthToken(GetAuthToken body)
 			throws DispositionReportFaultMessage {
             
@@ -122,7 +124,7 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 	}
 	
 	public AuthToken getAuthToken(String publisherId)
-	throws DispositionReportFaultMessage {
+            throws DispositionReportFaultMessage {
 	        long startTime = System.currentTimeMillis();
 
 		if (publisherId == null || publisherId.length() == 0)

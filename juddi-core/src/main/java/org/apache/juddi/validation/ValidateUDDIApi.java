@@ -14,13 +14,12 @@
  * limitations under the License.
  *
  */
-
 package org.apache.juddi.validation;
-
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
+import javax.xml.ws.WebServiceContext;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
@@ -37,50 +36,68 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public abstract class ValidateUDDIApi {
 
-	protected UddiEntityPublisher publisher;
-   protected String nodeID=null;
-		
-   /**
-    * This is used only during the install process to prevent infinite loops
-    * @param publisher
-    * @param nodeid 
-    */
-	public ValidateUDDIApi(UddiEntityPublisher publisher, String nodeid) {
-		this.publisher = publisher;
-      this.nodeID = nodeid;
-	}
-   
-   public ValidateUDDIApi(UddiEntityPublisher publisher) {
-		this.publisher = publisher;
-      try {
-         this.nodeID = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);
-      } catch (ConfigurationException ex) {
-         Logger.getLogger(ValidateUDDIApi.class.getName()).log(Level.SEVERE, "unable to get the current node id, this may cause access control problems"
-                 + " and must be fixed. set " + Property.JUDDI_NODE_ID + " in juddiv3.xml", ex);
-      }
-	}
+    protected UddiEntityPublisher publisher;
+    protected String nodeID = null;
+    protected WebServiceContext ctx=null;
 
-	public UddiEntityPublisher getPublisher() {
-		return publisher;
-	}
+    /**
+     * This is used only during the install process to prevent infinite loops
+     *
+     * @param publisher
+     * @param nodeid
+     */
+    public ValidateUDDIApi(UddiEntityPublisher publisher, String nodeid,WebServiceContext ctx ) {
+        this.publisher = publisher;
+        this.nodeID = nodeid;
+        this.ctx=ctx;
+    }
+    
+    public ValidateUDDIApi(UddiEntityPublisher publisher, String nodeid) {
+        this.publisher = publisher;
+        this.nodeID = nodeid;
+        
+    }
+    
+    
 
-	public void setPublisher(UddiEntityPublisher publisher) {
-		this.publisher = publisher;
-	}
-	
-	public static void unsupportedAPICall() throws DispositionReportFaultMessage {
-		throw new UnsupportedException(new ErrorMessage("errors.Unsupported"));
-	}
-	
-	public static boolean isUniqueKey(EntityManager em, String entityKey) {
-		Object obj = em.find(UddiEntity.class, entityKey);
-		if (obj != null)
-			return false;
-		
-		obj = em.find(Subscription.class, entityKey);
-		if (obj != null)
-			return false;
-		
-		return true;
-	}
+    public ValidateUDDIApi(UddiEntityPublisher publisher){
+        this(publisher,(WebServiceContext)null);
+    }
+    
+    public ValidateUDDIApi(UddiEntityPublisher publisher,WebServiceContext ctx) {
+        this.publisher = publisher;
+        this.ctx=ctx;
+        try {
+            this.nodeID = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);
+        } catch (ConfigurationException ex) {
+            Logger.getLogger(ValidateUDDIApi.class.getName()).log(Level.SEVERE, "unable to get the current node id, this may cause access control problems"
+                    + " and must be fixed. set " + Property.JUDDI_NODE_ID + " in juddiv3.xml", ex);
+        }
+    }
+
+    public UddiEntityPublisher getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(UddiEntityPublisher publisher) {
+        this.publisher = publisher;
+    }
+
+    public static void unsupportedAPICall() throws DispositionReportFaultMessage {
+        throw new UnsupportedException(new ErrorMessage("errors.Unsupported"));
+    }
+
+    public static boolean isUniqueKey(EntityManager em, String entityKey) {
+        Object obj = em.find(UddiEntity.class, entityKey);
+        if (obj != null) {
+            return false;
+        }
+
+        obj = em.find(Subscription.class, entityKey);
+        if (obj != null) {
+            return false;
+        }
+
+        return true;
+    }
 }

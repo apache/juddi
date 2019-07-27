@@ -257,7 +257,7 @@ public class AppConfig
 	 * @return the APplicationConfuration Singleton Instance.
 	 * @throws ConfigurationException
 	 */
-	public static AppConfig getInstance() throws ConfigurationException 
+	public static synchronized AppConfig getInstance() throws ConfigurationException 
 	{
 		if (instance==null) {
 			instance = new AppConfig();
