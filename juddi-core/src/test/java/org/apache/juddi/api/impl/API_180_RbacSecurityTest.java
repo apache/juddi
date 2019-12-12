@@ -105,10 +105,10 @@ public class API_180_RbacSecurityTest {
             TModel m = tckTModel.saveUDDIPublisherTmodel(authInfoUDDI);
             List<String> keys = new ArrayList<>();
             keys.add(m.getTModelKey());
-            keys.clear();
+            // keys.clear();
             grant(AccessLevel.READ, keys, RoleBasedAccessControlImpl.EVERYONE);
             keys = tckTModel.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
-
+            keys.clear();
             grant(AccessLevel.READ, keys, RoleBasedAccessControlImpl.EVERYONE);
             tckTModel.saveJoePublisherTmodel(authInfoJoe);
             tckBusiness.saveJoePublisherBusiness(authInfoJoe);
@@ -123,7 +123,9 @@ public class API_180_RbacSecurityTest {
         tckTModel.deleteCreatedTModels(authInfoJoe);
         Registry.stop();
         System.clearProperty(AppConfig.JUDDI_CONFIGURATION_FILE_SYSTEM_PROPERTY);
+       
         AppConfig.triggerReload();
+          AccessControlFactory.reset();
     }
 
     @Test
@@ -150,20 +152,18 @@ public class API_180_RbacSecurityTest {
         Assert.assertNotNull(response);
         permissions = publisher.getPermissions(request);
         //Assert.assertEquals(permissions.getLevel().size(), 1);
-        boolean ok =false;
-        Permission p1=null;
-        for (Permission p:permissions.getLevel()){
+        boolean ok = false;
+        Permission p1 = null;
+        for (Permission p : permissions.getLevel()) {
             if (p.getTarget().equals(TckPublisher.getSamPublisherId())
                     && p.getEntityId().equals(TckBusiness.JOE_BUSINESS_KEY)
-                    && p.getLevel()==AccessLevel.READ){
-                ok=true;
-                p1=p;
+                    && p.getLevel() == AccessLevel.READ) {
+                ok = true;
+                p1 = p;
             }
-                
-            
+
         }
         Assert.assertTrue(ok);
-        
 
         p1.setAction(Action.REMOVE);
         req.getLevel().clear();

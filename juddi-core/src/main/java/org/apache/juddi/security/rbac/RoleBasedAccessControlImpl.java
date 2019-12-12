@@ -230,7 +230,7 @@ public class RoleBasedAccessControlImpl implements IAccessControl {
         //load access rules from database
         for (BusinessEntity bs : items) {
             //get the permission for this entity.
-            UddiEntity ue = loadEntity(bs.getBusinessKey(), org.apache.juddi.model.BusinessService.class);
+            UddiEntity ue = loadEntity(bs.getBusinessKey(), org.apache.juddi.model.BusinessEntity.class);
             if (ue == null) {
                 redact(bs);
                 continue;   //access denied

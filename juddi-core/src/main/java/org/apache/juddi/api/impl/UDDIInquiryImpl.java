@@ -507,11 +507,11 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.GET_BUSINESSDETAIL, QueryStatus.SUCCESS, procTime);                      
                        
-                            List<org.uddi.api_v3.BusinessEntity> FilterBindingTemplates = 
+                            List<org.uddi.api_v3.BusinessEntity> filterBindingTemplates = 
                                     AccessControlFactory.getAccessControlInstance().filterBusinesses(
                                                this.ctx, entityPublisher, result.getBusinessEntity());
                             result.getBusinessEntity().clear();
-                            result.getBusinessEntity().addAll(FilterBindingTemplates);
+                            result.getBusinessEntity().addAll(filterBindingTemplates);
                       
 			return result;
 		} finally {
