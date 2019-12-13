@@ -35,6 +35,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
@@ -97,6 +98,7 @@ public class JUDDI_101_ClientSubscriptionCallbackAPIIntegrationTest implements I
         }
 
         @Test
+        @Ignore
         public void SubscriptionCallbackTest1() throws Exception {
                 //first some setup
                 if (!TckPublisher.isEnabled()) return;

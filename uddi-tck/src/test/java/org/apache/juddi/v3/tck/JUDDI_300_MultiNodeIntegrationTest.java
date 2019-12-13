@@ -343,7 +343,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
          * @throws Exception
          */
         @Test
-        //@Ignore
+        @Ignore
         public void testMultiNodeBusinessCustodyTransfer() throws Exception {
                 logger.info("testMultiNodeBusinessCustodyTransfer");
                 try {
@@ -799,7 +799,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
          * @throws Exception
          */
         @Test
-        //@Ignore
+        @Ignore
         public void testReplicationServiceBindingAddRemove() throws Exception {
                 Assume.assumeTrue(TckPublisher.isReplicationEnabled());
                 Assume.assumeTrue(TckPublisher.isJUDDI());
