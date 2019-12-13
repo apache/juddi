@@ -12,7 +12,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.3.6-SNAPSHOT</version>
+		<version>3.3.7-SNAPSHOT</version>
 	</parent>
 	<groupId>org.apache.juddi.juddi-docs</groupId>
 	<artifactId>juddi-docs</artifactId>

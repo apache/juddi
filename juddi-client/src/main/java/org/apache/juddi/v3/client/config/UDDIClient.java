@@ -510,77 +510,77 @@ public class UDDIClient {
                         bt.setTModelInstanceDetails(new TModelInstanceDetails());
                 }
                 TModelInstanceInfo tModelInstanceInfo;
-                if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SOAP)) {
+                if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SOAP)) {
                         tModelInstanceInfo = new TModelInstanceInfo();
                         tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_SOAP);
                         bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);
                 }
 
                 if (bt.getAccessPoint() != null && bt.getAccessPoint().getValue().startsWith("http:")) {
-                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_HTTP)) {
+                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_HTTP)) {
                                 tModelInstanceInfo = new TModelInstanceInfo();
                                 tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_HTTP);
                                 bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);
                         }
                 }
                 if (bt.getAccessPoint() != null && bt.getAccessPoint().getValue().startsWith("jms:")) {
-                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_JMS)) {
+                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_JMS)) {
                                 tModelInstanceInfo = new TModelInstanceInfo();
                                 tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_JMS);
                                 bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);
                         }
                 }
                 if (bt.getAccessPoint() != null && bt.getAccessPoint().getValue().startsWith("rmi:")) {
-                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_RMI)) {
+                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_RMI)) {
                                 tModelInstanceInfo = new TModelInstanceInfo();
                                 tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_RMI);
                                 bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);
                         }
                 }
                 if (bt.getAccessPoint() != null && bt.getAccessPoint().getValue().startsWith("udp:")) {
-                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_UDP)) {
+                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_UDP)) {
                                 tModelInstanceInfo = new TModelInstanceInfo();
                                 tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_UDP);
                                 bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);
                         }
                 }
                 if (bt.getAccessPoint() != null && bt.getAccessPoint().getValue().startsWith("amqp:")) {
-                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_AMQP)) {
+                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_AMQP)) {
                                 tModelInstanceInfo = new TModelInstanceInfo();
                                 tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_AMQP);
                                 bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);
                         }
                 }
                 if (bt.getAccessPoint() != null && bt.getAccessPoint().getValue().startsWith("mailto:")) {
-                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_EMAIL)) {
+                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_EMAIL)) {
                                 tModelInstanceInfo = new TModelInstanceInfo();
                                 tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_EMAIL);
                                 bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);
                         }
                 }
                 if (bt.getAccessPoint() != null && bt.getAccessPoint().getValue().startsWith("ftp:")) {
-                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_FTP)) {
+                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_FTP)) {
                                 tModelInstanceInfo = new TModelInstanceInfo();
                                 tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_FTP);
                                 bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);
                         }
                 }
                 if (bt.getAccessPoint() != null && bt.getAccessPoint().getValue().startsWith("https:")) {
-                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {
+                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {
                                 tModelInstanceInfo = new TModelInstanceInfo();
                                 tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_SSLv3);
                                 bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);
                         }
                 }
                 if (bt.getAccessPoint() != null && bt.getAccessPoint().getValue().startsWith("ftps:")) {
-                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {
+                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {
                                 tModelInstanceInfo = new TModelInstanceInfo();
                                 tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_SSLv3);
                                 bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);
                         }
                 }
                 if (bt.getAccessPoint() != null && bt.getAccessPoint().getValue().startsWith("jndi:")) {
-                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_JNDI_RMI)) {
+                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_JNDI_RMI)) {
                                 tModelInstanceInfo = new TModelInstanceInfo();
                                 tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_JNDI_RMI);
                                 bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);
@@ -601,21 +601,21 @@ public class UDDIClient {
                         bt.setTModelInstanceDetails(new TModelInstanceDetails());
                 }
                 TModelInstanceInfo tModelInstanceInfo;
-                if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_REST)) {
+                if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_REST)) {
                         tModelInstanceInfo = new TModelInstanceInfo();
                         tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_REST);
                         bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);
                 }
 
                 if (bt.getAccessPoint() != null && bt.getAccessPoint().getValue().startsWith("http:")) {
-                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_HTTP)) {
+                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_HTTP)) {
                                 tModelInstanceInfo = new TModelInstanceInfo();
                                 tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_HTTP);
                                 bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);
                         }
                 }
                 if (bt.getAccessPoint() != null && bt.getAccessPoint().getValue().startsWith("https:")) {
-                        if (!Exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {
+                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {
                                 tModelInstanceInfo = new TModelInstanceInfo();
                                 tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_SSLv3);
                                 bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);
@@ -624,7 +624,7 @@ public class UDDIClient {
                 return bt;
         }
 
-        private static boolean Exists(List<TModelInstanceInfo> items, String key) {
+        private static boolean exists(List<TModelInstanceInfo> items, String key) {
                 for (int i = 0; i < items.size(); i++) {
                         if (items.get(i).getTModelKey() != null
                                 && items.get(i).getTModelKey().equalsIgnoreCase(key)) {

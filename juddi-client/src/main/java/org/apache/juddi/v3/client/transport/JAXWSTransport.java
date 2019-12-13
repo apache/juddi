@@ -81,7 +81,7 @@ public class JAXWSTransport extends Transport {
                         Map<String, Object> requestContext = ((BindingProvider) inquiryService).getRequestContext();
                         if (endpointURL != null) {
                         
-                        requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+                                requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
                         }
                         setCredentials(requestContext);
                 } catch (Exception e) {
@@ -127,7 +127,7 @@ public class JAXWSTransport extends Transport {
                         }
                         Map<String, Object> requestContext = ((BindingProvider) publishService).getRequestContext();
                         if (endpointURL != null)
-                        requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+                                requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
                         setCredentials(requestContext);
                 } catch (Exception e) {
                         throw new TransportException(e.getMessage(), e);
