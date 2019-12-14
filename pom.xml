@@ -27,7 +27,7 @@ under the License.
 	<packaging>pom</packaging>
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>juddi-parent</artifactId>
-	<version>3.3.7-SNAPSHOT</version>
+	<version>3.3.7</version>
 	<name>jUDDI_v3 Parent</name>
 	<description>jUDDI (pronounced "Judy") is an open source Java
         implementation of the Universal Description, Discovery, and
@@ -167,7 +167,7 @@ under the License.
 		<connection>scm:git:https://gitbox.apache.org/repos/asf/juddi.git</connection>
 		<developerConnection>scm:git:https://gitbox.apache.org/repos/asf/juddi.git</developerConnection>
 		<url>https://gitbox.apache.org/repos/asf/juddi.git/?p=juddi.git;a=summary</url>
-		<tag>HEAD</tag>
+		<tag>juddi-3.3.7</tag>
 	</scm>
 	<build>
 		<pluginManagement>
