@@ -12,7 +12,7 @@ language governing permissions and * limitations under the License. * */ -->
     <parent>
         <groupId>org.apache.juddi</groupId>
         <artifactId>juddi-parent</artifactId>
-        <version>3.3.7-SNAPSHOT</version>
+        <version>3.3.7</version>
     </parent>
     <artifactId>juddi-gui-dsig</artifactId>
     <name>jUDDI Web Client Digital Signature Applet</name>
