@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-parent</artifactId>
-    <version>3.3.7</version>
+    <version>3.3.8-SNAPSHOT</version>
   </parent>
   <artifactId>uddi-tck-runner</artifactId>
   <name>UDDI TCK Test Runner</name>
