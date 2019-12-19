@@ -143,7 +143,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void findSignedEntities() {
+        public void findSignedEntities() throws Exception {
              Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModel.saveJoePublisherTmodel(authInfoJoe);

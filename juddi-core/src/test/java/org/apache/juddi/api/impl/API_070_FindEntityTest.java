@@ -86,7 +86,7 @@ public class API_070_FindEntityTest {
         }
 
         @Test
-        public void findEntities() {
+        public void findEntities() throws Exception {
                 try {
                         tckTModel.saveJoePublisherTmodel(authInfoJoe, true);
                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
@@ -109,7 +109,7 @@ public class API_070_FindEntityTest {
         }
 
         @Test
-        public void findSignedEntities() {
+        public void findSignedEntities() throws Exception {
                 try {
                         tckTModel.saveJoePublisherTmodel(authInfoJoe, true);
                         tckBusiness.saveJoePublisherBusinessX509Signature(authInfoJoe);

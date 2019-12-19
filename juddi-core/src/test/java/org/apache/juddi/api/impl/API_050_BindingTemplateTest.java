@@ -22,7 +22,10 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.ext.wsdm.WSDMQosConstants;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.apache.juddi.v3.tck.TckBindingTemplate;
+import static org.apache.juddi.v3.tck.TckBindingTemplate.JOE_BINDING_KEY;
+import static org.apache.juddi.v3.tck.TckBindingTemplate.JOE_BINDING_XML;
 import org.apache.juddi.v3.tck.TckBusiness;
 import org.apache.juddi.v3.tck.TckBusinessService;
 import org.apache.juddi.v3.tck.TckFindEntity;
@@ -82,7 +85,7 @@ public class API_050_BindingTemplateTest {
         }
 
         @Test
-        public void joepublisher() {
+        public void joepublisher() throws Exception {
                 try {
                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
@@ -97,7 +100,7 @@ public class API_050_BindingTemplateTest {
         }
 
         @Test
-        public void testSearchBinding() {
+        public void testSearchBinding() throws Exception {
                 try {
                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
@@ -200,5 +203,45 @@ public class API_050_BindingTemplateTest {
                  }
 
                  Assert.fail("The expected service wasn't returned");*/
+        }
+        
+        /**
+         * https://issues.apache.org/jira/browse/JUDDI-999
+         * max length test for tmodel instance info
+         */
+         @Test 
+        public void testJUDDI_999() throws Exception {
+            try {
+                        tckTModel.saveJoePublisherTmodel(authInfoJoe);
+                        tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessService.saveJoePublisherService(authInfoJoe);
+                       tckBindingTemplate. saveBinding(authInfoJoe, "uddi_data/joepublisher/bindingTemplateMaxLength.xml", JOE_BINDING_KEY);
+                                
+                } finally {
+                        tckBusinessService.deleteJoePublisherService(authInfoJoe);
+                        tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+                }
+        }
+        
+        
+        /**
+         * https://issues.apache.org/jira/browse/JUDDI-999
+         * too long length test for tmodel instance info
+         */
+        
+        @Test(expected=org.apache.juddi.v3.error.ValueNotAllowedException.class)
+        public void testJUDDI_999_2() throws Exception {
+            try {
+                        tckTModel.saveJoePublisherTmodel(authInfoJoe);
+                        tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessService.saveJoePublisherService(authInfoJoe);
+                        tckBindingTemplate.saveBinding(authInfoJoe, "uddi_data/joepublisher/bindingTemplateInvalid.xml", JOE_BINDING_KEY,false);
+                                
+                } finally {
+                        tckBusinessService.deleteJoePublisherService(authInfoJoe);
+                        tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+                }
         }
 }

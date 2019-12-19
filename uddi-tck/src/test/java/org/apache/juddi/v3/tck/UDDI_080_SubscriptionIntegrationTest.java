@@ -180,7 +180,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         }
 
         @Test
-        public void joePublisher() {
+        public void joePublisher() throws Exception {
              Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
                 try {

@@ -113,11 +113,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public class ValidatePublish extends ValidateUDDIApi {
 
-        /**
-         * This flag will add additional output to stdout for debugging
-         * purposes, set this to true if
-         */
-        private Log log = LogFactory.getLog(this.getClass());
+        private static final Log log = LogFactory.getLog(ValidatePublish.class);
 
         /**
          * used from Install class
@@ -1521,6 +1517,11 @@ public class ValidatePublish extends ValidateUDDIApi {
                 for (int i = 0; i < elems.size(); i++) {
                         validateDescriptions(elems.get(i).getDescription());
                         validateOverviewURL(elems.get(i).getOverviewURL());
+                }
+                if (instDetails.getInstanceParms()!=null){
+                    if (instDetails.getInstanceParms().length()>8192){
+                         throw new ValueNotAllowedException(new ErrorMessage("errors.instdetails.MaxLength",instDetails.getInstanceParms().length()+""));
+                    }
                 }
         }
 
