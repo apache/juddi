@@ -73,7 +73,7 @@
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>                          <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>                                  count++;
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>                                  randomPort = 19800 + <strong class="jxr_keyword">new</strong> Random().nextInt(99);
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>                                  System.out.println(<span class="jxr_string">"RMI Random port="</span> + randomPort);
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>                                  logger.info(<span class="jxr_string">"RMI Random port="</span> + randomPort);
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>                                  <em class="jxr_comment">//bring up the RMISubscriptionListener</em>
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>                                  URI rmiEndPoint = <strong class="jxr_keyword">new</strong> URI(<span class="jxr_string">"rmi://localhost:"</span> + randomPort + <span class="jxr_string">"/tck/rmisubscriptionlistener"</span>);
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>                                  registry = LocateRegistry.createRegistry(rmiEndPoint.getPort());
@@ -104,7 +104,7 @@
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>                                  Thread.sleep(1000);
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>                          } <strong class="jxr_keyword">catch</strong> (InterruptedException ex) {
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>                          }
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>                          System.out.println(<span class="jxr_string">"."</span>);
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>                          logger.info(<span class="jxr_string">"."</span>);
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>                         <em class="jxr_comment">//if (UDDISubscriptionListenerImpl.notificationCount &gt; 0) {                        }</em>
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>                 }
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>                 logger.info(<span class="jxr_string">"RX "</span> + UDDISubscriptionListenerImpl.notificationCount + <span class="jxr_string">" notifications"</span>);
@@ -196,6 +196,6 @@
 <a class="jxr_linenumber" name="L188" href="#L188">188</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2004&#x2013;2018 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2004&#x2013;2020 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
 </body>
 </html>

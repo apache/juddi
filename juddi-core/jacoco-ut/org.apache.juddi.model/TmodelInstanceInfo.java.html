@@ -26,6 +26,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -43,95 +44,96 @@ public class TmodelInstanceInfo implements java.io.Serializable {
 	private Long id;
 	private BindingTemplate bindingTemplate;
 	private String tmodelKey;
-<span class="pc" id="L46">	private List&lt;TmodelInstanceInfoDescr&gt; tmodelInstanceInfoDescrs = new ArrayList&lt;TmodelInstanceInfoDescr&gt;(0);</span>
+<span class="pc" id="L47">	private List&lt;TmodelInstanceInfoDescr&gt; tmodelInstanceInfoDescrs = new ArrayList&lt;TmodelInstanceInfoDescr&gt;(0);</span>
 
 	private String instanceParms;
-<span class="pc" id="L49">	private List&lt;OverviewDoc&gt; overviewDocs = new ArrayList&lt;OverviewDoc&gt;(0);</span>
-<span class="pc" id="L50">	private List&lt;InstanceDetailsDescr&gt; instanceDetailsDescrs = new ArrayList&lt;InstanceDetailsDescr&gt;(0);</span>
+<span class="pc" id="L50">	private List&lt;OverviewDoc&gt; overviewDocs = new ArrayList&lt;OverviewDoc&gt;(0);</span>
+<span class="pc" id="L51">	private List&lt;InstanceDetailsDescr&gt; instanceDetailsDescrs = new ArrayList&lt;InstanceDetailsDescr&gt;(0);</span>
 	
-<span class="fc" id="L52">	public TmodelInstanceInfo() {</span>
-<span class="fc" id="L53">	}</span>
+<span class="fc" id="L53">	public TmodelInstanceInfo() {</span>
+<span class="fc" id="L54">	}</span>
 
-<span class="fc" id="L55">	public TmodelInstanceInfo(BindingTemplate bindingTemplate, String tmodelKey) {</span>
-<span class="fc" id="L56">		this.bindingTemplate = bindingTemplate;</span>
-<span class="fc" id="L57">		this.tmodelKey = tmodelKey;</span>
-<span class="fc" id="L58">	}</span>
+<span class="fc" id="L56">	public TmodelInstanceInfo(BindingTemplate bindingTemplate, String tmodelKey) {</span>
+<span class="fc" id="L57">		this.bindingTemplate = bindingTemplate;</span>
+<span class="fc" id="L58">		this.tmodelKey = tmodelKey;</span>
+<span class="fc" id="L59">	}</span>
 	public TmodelInstanceInfo(BindingTemplate bindingTemplate, String tmodelKey,
 			String instanceParms,
 			List&lt;OverviewDoc&gt; overviewDocs,
 			List&lt;InstanceDetailsDescr&gt; instanceDetailsDescrs,
-<span class="nc" id="L63">			List&lt;TmodelInstanceInfoDescr&gt; tmodelInstanceInfoDescrs) {</span>
-<span class="nc" id="L64">		this.bindingTemplate = bindingTemplate;</span>
-<span class="nc" id="L65">		this.tmodelKey = tmodelKey;</span>
-<span class="nc" id="L66">		this.instanceParms = instanceParms;</span>
-<span class="nc" id="L67">		this.overviewDocs = overviewDocs;</span>
-<span class="nc" id="L68">		this.instanceDetailsDescrs = instanceDetailsDescrs;</span>
-<span class="nc" id="L69">		this.tmodelInstanceInfoDescrs = tmodelInstanceInfoDescrs;</span>
-<span class="nc" id="L70">	}</span>
+<span class="nc" id="L64">			List&lt;TmodelInstanceInfoDescr&gt; tmodelInstanceInfoDescrs) {</span>
+<span class="nc" id="L65">		this.bindingTemplate = bindingTemplate;</span>
+<span class="nc" id="L66">		this.tmodelKey = tmodelKey;</span>
+<span class="nc" id="L67">		this.instanceParms = instanceParms;</span>
+<span class="nc" id="L68">		this.overviewDocs = overviewDocs;</span>
+<span class="nc" id="L69">		this.instanceDetailsDescrs = instanceDetailsDescrs;</span>
+<span class="nc" id="L70">		this.tmodelInstanceInfoDescrs = tmodelInstanceInfoDescrs;</span>
+<span class="nc" id="L71">	}</span>
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
-<span class="fc" id="L75">		return this.id;</span>
+<span class="fc" id="L76">		return this.id;</span>
 	}
 	public void setId(Long id) {
-<span class="fc" id="L78">		this.id = id;</span>
-<span class="fc" id="L79">	}</span>
+<span class="fc" id="L79">		this.id = id;</span>
+<span class="fc" id="L80">	}</span>
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = &quot;entity_key&quot;, nullable = false)
 	public BindingTemplate getBindingTemplate() {
-<span class="fc" id="L84">		return this.bindingTemplate;</span>
+<span class="fc" id="L85">		return this.bindingTemplate;</span>
 	}
 	public void setBindingTemplate(BindingTemplate bindingTemplate) {
-<span class="fc" id="L87">		this.bindingTemplate = bindingTemplate;</span>
-<span class="fc" id="L88">	}</span>
+<span class="fc" id="L88">		this.bindingTemplate = bindingTemplate;</span>
+<span class="fc" id="L89">	}</span>
 
 	@Column(name = &quot;tmodel_key&quot;, nullable = false, length = 255)
 	public String getTmodelKey() {
-<span class="fc" id="L92">		return this.tmodelKey;</span>
+<span class="fc" id="L93">		return this.tmodelKey;</span>
 	}
 	public void setTmodelKey(String tmodelKey) {
-<span class="fc" id="L95">		this.tmodelKey = tmodelKey;</span>
-<span class="fc" id="L96">	}</span>
+<span class="fc" id="L96">		this.tmodelKey = tmodelKey;</span>
+<span class="fc" id="L97">	}</span>
 
+        @Lob
 	@Column(name = &quot;instance_parms&quot;, length = 8192)
 	public String getInstanceParms() {
-<span class="fc" id="L100">		return this.instanceParms;</span>
+<span class="fc" id="L102">		return this.instanceParms;</span>
 	}
 	public void setInstanceParms(String instanceParms) {
-<span class="fc" id="L103">		this.instanceParms = instanceParms;</span>
-<span class="fc" id="L104">	}</span>
+<span class="fc" id="L105">		this.instanceParms = instanceParms;</span>
+<span class="fc" id="L106">	}</span>
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;tmodelInstanceInfo&quot;)
 	@OrderBy
 	public List&lt;OverviewDoc&gt; getOverviewDocs() {
-<span class="fc" id="L109">		return this.overviewDocs;</span>
+<span class="fc" id="L111">		return this.overviewDocs;</span>
 	}
 	public void setOverviewDocs(
 			List&lt;OverviewDoc&gt; overviewDocs) {
-<span class="fc" id="L113">		this.overviewDocs = overviewDocs;</span>
-<span class="fc" id="L114">	}</span>
+<span class="fc" id="L115">		this.overviewDocs = overviewDocs;</span>
+<span class="fc" id="L116">	}</span>
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;tmodelInstanceInfo&quot;)
 	@OrderBy
 	public List&lt;InstanceDetailsDescr&gt; getInstanceDetailsDescrs() {
-<span class="fc" id="L119">		return this.instanceDetailsDescrs;</span>
+<span class="fc" id="L121">		return this.instanceDetailsDescrs;</span>
 	}
 	public void setInstanceDetailsDescrs(
 			List&lt;InstanceDetailsDescr&gt; instanceDetailsDescrs) {
-<span class="fc" id="L123">		this.instanceDetailsDescrs = instanceDetailsDescrs;</span>
-<span class="fc" id="L124">	}</span>
+<span class="fc" id="L125">		this.instanceDetailsDescrs = instanceDetailsDescrs;</span>
+<span class="fc" id="L126">	}</span>
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;tmodelInstanceInfo&quot;)
 	@OrderBy
 	public List&lt;TmodelInstanceInfoDescr&gt; getTmodelInstanceInfoDescrs() {
-<span class="fc" id="L129">		return this.tmodelInstanceInfoDescrs;</span>
+<span class="fc" id="L131">		return this.tmodelInstanceInfoDescrs;</span>
 	}
 	public void setTmodelInstanceInfoDescrs(
 			List&lt;TmodelInstanceInfoDescr&gt; tmodelInstanceInfoDescrs) {
-<span class="fc" id="L133">		this.tmodelInstanceInfoDescrs = tmodelInstanceInfoDescrs;</span>
-<span class="fc" id="L134">	}</span>
+<span class="fc" id="L135">		this.tmodelInstanceInfoDescrs = tmodelInstanceInfoDescrs;</span>
+<span class="fc" id="L136">	}</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

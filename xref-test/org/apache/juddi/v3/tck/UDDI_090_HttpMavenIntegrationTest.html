@@ -63,13 +63,13 @@
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>                  <em class="jxr_comment">//bring up the TCK SubscriptionListener</em>
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>                  port = 9600;
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>                  String httpEndpoint = <span class="jxr_string">"http://"</span> + hostname + <span class="jxr_string">":"</span> + port + <span class="jxr_string">"/tcksubscriptionlistener"</span>;
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>                  System.out.println(<span class="jxr_string">"Bringing up SubscriptionListener endpoint at "</span> + httpEndpoint);
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>                  logger.info(<span class="jxr_string">"Bringing up SubscriptionListener endpoint at "</span> + httpEndpoint);
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>                  endPoint = Endpoint.publish(httpEndpoint, <strong class="jxr_keyword">new</strong> UDDISubscriptionListenerImpl());
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>                  <strong class="jxr_keyword">int</strong> count = 0;
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>                  <strong class="jxr_keyword">while</strong> (!endPoint.isPublished()) {
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>                          port = 9600 + <strong class="jxr_keyword">new</strong> Random().nextInt(99);
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>                          httpEndpoint = <span class="jxr_string">"http://"</span> + hostname + <span class="jxr_string">":"</span> + port + <span class="jxr_string">"/tcksubscriptionlistener"</span>;
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>                          System.out.println(<span class="jxr_string">"Bringing up SubscriptionListener endpoint at "</span> + httpEndpoint);
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>                          logger.info(<span class="jxr_string">"Bringing up SubscriptionListener endpoint at "</span> + httpEndpoint);
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>                          endPoint = Endpoint.publish(httpEndpoint, <strong class="jxr_keyword">new</strong> UDDISubscriptionListenerImpl());
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>                          count++;
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>                          <strong class="jxr_keyword">if</strong> (count &gt; 10) {
@@ -85,7 +85,7 @@
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>                                  Thread.sleep(1000);
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>                          } <strong class="jxr_keyword">catch</strong> (InterruptedException ex) {
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>                          }
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>                          System.out.println(<span class="jxr_string">"."</span>);
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>                          logger.info(<span class="jxr_string">"."</span>);
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>                          <em class="jxr_comment">//if (UDDISubscriptionListenerImpl.notificationCount &gt; 0) {                        }</em>
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>                  }
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>                  logger.info(<span class="jxr_string">"RX "</span> + UDDISubscriptionListenerImpl.notificationCount + <span class="jxr_string">" notifications"</span>);
@@ -176,6 +176,6 @@
 <a class="jxr_linenumber" name="L168" href="#L168">168</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2004&#x2013;2018 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2004&#x2013;2020 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
 </body>
 </html>

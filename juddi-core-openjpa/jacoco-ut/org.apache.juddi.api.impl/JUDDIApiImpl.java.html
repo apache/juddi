@@ -1303,83 +1303,82 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
 
         @Override
         public List&lt;SubscriptionWrapper&gt; getAllClientSubscriptionInfo(String authInfo) throws DispositionReportFaultMessage, RemoteException {
-<span class="nc" id="L1306">                long startTime = System.currentTimeMillis();</span>
+<span class="fc" id="L1306">                long startTime = System.currentTimeMillis();</span>
 
-<span class="nc" id="L1308">                List&lt;SubscriptionWrapper&gt; r = new ArrayList&lt;SubscriptionWrapper&gt;();</span>
+<span class="fc" id="L1308">                List&lt;SubscriptionWrapper&gt; r = new ArrayList&lt;SubscriptionWrapper&gt;();</span>
 
-<span class="nc" id="L1310">                EntityManager em = PersistenceManager.getEntityManager();</span>
-<span class="nc" id="L1311">                EntityTransaction tx = em.getTransaction();</span>
+<span class="fc" id="L1310">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L1311">                EntityTransaction tx = em.getTransaction();</span>
                 try {
-<span class="nc" id="L1313">                        tx.begin();</span>
+<span class="fc" id="L1313">                        tx.begin();</span>
 
-<span class="nc" id="L1315">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);</span>
-<span class="nc bnc" id="L1316" title="All 2 branches missed.">                        if (!((Publisher) publisher).isAdmin()) {</span>
+<span class="fc" id="L1315">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);</span>
+<span class="pc bpc" id="L1316" title="1 of 2 branches missed.">                        if (!((Publisher) publisher).isAdmin()) {</span>
 <span class="nc" id="L1317">                                throw new UserMismatchException(new ErrorMessage(&quot;errors.AdminReqd&quot;));</span>
                         }
 
-<span class="nc" id="L1320">                        StringBuilder sql = new StringBuilder();</span>
-<span class="nc" id="L1321">                        sql.append(&quot;select distinct c from ReplicationConfiguration c &quot;);</span>
-<span class="nc" id="L1322">                        sql.toString();</span>
-<span class="nc" id="L1323">                        Query qry = em.createQuery(sql.toString());</span>
-<span class="nc" id="L1324">                        List&lt;org.apache.juddi.model.Subscription&gt; resultList = qry.getResultList();</span>
-<span class="nc bnc" id="L1325" title="All 2 branches missed.">                        for (int i = 0; i &lt; resultList.size(); i++) {</span>
-<span class="nc" id="L1326">                                Subscription sub = new Subscription();</span>
-<span class="nc" id="L1327">                                MappingModelToApi.mapSubscription(resultList.get(i), sub);</span>
-<span class="nc" id="L1328">                                SubscriptionWrapper x = new SubscriptionWrapper();</span>
-<span class="nc" id="L1329">                                x.getSubscription().add(sub);</span>
-<span class="nc" id="L1330">                                x.setPublisherIdOrUsername(resultList.get(i).getAuthorizedName());</span>
-<span class="nc" id="L1331">                                r.add(x);</span>
+<span class="fc" id="L1320">                        StringBuilder sql = new StringBuilder();</span>
+<span class="fc" id="L1321">                        sql.append(&quot;select distinct c from Subscription c &quot;);</span>
+<span class="fc" id="L1322">                        Query qry = em.createQuery(sql.toString());</span>
+<span class="fc" id="L1323">                        List&lt;org.apache.juddi.model.Subscription&gt; resultList = qry.getResultList();</span>
+<span class="pc bpc" id="L1324" title="1 of 2 branches missed.">                        for (int i = 0; i &lt; resultList.size(); i++) {</span>
+<span class="nc" id="L1325">                                Subscription sub = new Subscription();</span>
+<span class="nc" id="L1326">                                MappingModelToApi.mapSubscription(resultList.get(i), sub);</span>
+<span class="nc" id="L1327">                                SubscriptionWrapper x = new SubscriptionWrapper();</span>
+<span class="nc" id="L1328">                                x.getSubscription().add(sub);</span>
+<span class="nc" id="L1329">                                x.setPublisherIdOrUsername(resultList.get(i).getAuthorizedName());</span>
+<span class="nc" id="L1330">                                r.add(x);</span>
                         }
 
-<span class="nc" id="L1334">                        tx.commit();</span>
-<span class="nc" id="L1335">                        long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="nc" id="L1336">                        serviceCounter.update(JUDDIQuery.GET_ALL_CLIENT_SUB,</span>
+<span class="fc" id="L1333">                        tx.commit();</span>
+<span class="fc" id="L1334">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L1335">                        serviceCounter.update(JUDDIQuery.GET_ALL_CLIENT_SUB,</span>
                                 QueryStatus.SUCCESS, procTime);
-<span class="nc" id="L1338">                } catch (DispositionReportFaultMessage drfm) {</span>
-<span class="nc" id="L1339">                        long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="nc" id="L1340">                        serviceCounter.update(JUDDIQuery.GET_ALL_CLIENT_SUB,</span>
+<span class="nc" id="L1337">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L1338">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L1339">                        serviceCounter.update(JUDDIQuery.GET_ALL_CLIENT_SUB,</span>
                                 QueryStatus.FAILED, procTime);
-<span class="nc" id="L1342">                        throw drfm;</span>
+<span class="nc" id="L1341">                        throw drfm;</span>
                 } finally {
-<span class="nc bnc" id="L1344" title="All 4 branches missed.">                        if (tx.isActive()) {</span>
-<span class="nc" id="L1345">                                tx.rollback();</span>
+<span class="pc bpc" id="L1343" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L1344">                                tx.rollback();</span>
                         }
-<span class="nc" id="L1347">                        em.close();</span>
-<span class="nc" id="L1348">                }</span>
+<span class="pc" id="L1346">                        em.close();</span>
+<span class="fc" id="L1347">                }</span>
 
-<span class="nc" id="L1350">                return r;</span>
+<span class="fc" id="L1349">                return r;</span>
         }
 
         @Override
         public synchronized DispositionReport setReplicationNodes(String authInfo, org.uddi.repl_v3.ReplicationConfiguration replicationConfiguration) throws DispositionReportFaultMessage, RemoteException {
-<span class="fc" id="L1355">                long startTime = System.currentTimeMillis();</span>
+<span class="fc" id="L1354">                long startTime = System.currentTimeMillis();</span>
 
-<span class="fc" id="L1357">                EntityManager em = PersistenceManager.getEntityManager();</span>
-<span class="fc" id="L1358">                EntityTransaction tx = em.getTransaction();</span>
+<span class="fc" id="L1356">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L1357">                EntityTransaction tx = em.getTransaction();</span>
                 try {
-<span class="fc" id="L1360">                        tx.begin();</span>
+<span class="fc" id="L1359">                        tx.begin();</span>
 
-<span class="fc" id="L1362">                        org.uddi.repl_v3.ReplicationConfiguration oldConfig = null;</span>
-<span class="fc" id="L1363">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);</span>
-<span class="pc bpc" id="L1364" title="1 of 2 branches missed.">                        if (!((Publisher) publisher).isAdmin()) {</span>
-<span class="nc" id="L1365">                                throw new UserMismatchException(new ErrorMessage(&quot;errors.AdminReqd&quot;));</span>
+<span class="fc" id="L1361">                        org.uddi.repl_v3.ReplicationConfiguration oldConfig = null;</span>
+<span class="fc" id="L1362">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);</span>
+<span class="pc bpc" id="L1363" title="1 of 2 branches missed.">                        if (!((Publisher) publisher).isAdmin()) {</span>
+<span class="nc" id="L1364">                                throw new UserMismatchException(new ErrorMessage(&quot;errors.AdminReqd&quot;));</span>
                         }
-<span class="fc" id="L1367">                        new ValidateReplication(publisher).validateSetReplicationNodes(replicationConfiguration, em, getNode(), AppConfig.getConfiguration());</span>
+<span class="fc" id="L1366">                        new ValidateReplication(publisher).validateSetReplicationNodes(replicationConfiguration, em, getNode(), AppConfig.getConfiguration());</span>
 
-<span class="fc" id="L1369">                        org.apache.juddi.model.ReplicationConfiguration model = null;</span>
-<span class="fc" id="L1370">                        logger.info(publisher.getAuthorizedName() + &quot; is setting the replication config from &quot; + getRequestorsIPAddress());// + &quot; &quot; + sw.toString());</span>
+<span class="fc" id="L1368">                        org.apache.juddi.model.ReplicationConfiguration model = null;</span>
+<span class="fc" id="L1369">                        logger.info(publisher.getAuthorizedName() + &quot; is setting the replication config from &quot; + getRequestorsIPAddress());// + &quot; &quot; + sw.toString());</span>
                         try {
-<span class="fc" id="L1372">                                model = (ReplicationConfiguration) em.createQuery(&quot;select c FROM ReplicationConfiguration c order by c.serialNumber desc&quot;).getSingleResult();</span>
-<span class="fc" id="L1373">                        } catch (Exception ex) {</span>
-<span class="fc" id="L1374">                        }</span>
-<span class="fc" id="L1375">                        SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyyMMddkkmmZ&quot;);</span>
-<span class="fc bfc" id="L1376" title="All 2 branches covered.">                        if (model == null) {</span>
+<span class="fc" id="L1371">                                model = (ReplicationConfiguration) em.createQuery(&quot;select c FROM ReplicationConfiguration c order by c.serialNumber desc&quot;).getSingleResult();</span>
+<span class="fc" id="L1372">                        } catch (Exception ex) {</span>
+<span class="fc" id="L1373">                        }</span>
+<span class="fc" id="L1374">                        SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyyMMddkkmmZ&quot;);</span>
+<span class="fc bfc" id="L1375" title="All 2 branches covered.">                        if (model == null) {</span>
                                 //this is a brand new configuration and we didn't have one before
-<span class="fc" id="L1378">                                model = new ReplicationConfiguration();</span>
-<span class="fc" id="L1379">                                MappingApiToModel.mapReplicationConfiguration(replicationConfiguration, model, em);</span>
-<span class="fc" id="L1380">                                model.setSerialNumber(System.currentTimeMillis());</span>
-<span class="fc" id="L1381">                                model.setTimeOfConfigurationUpdate(sdf.format(new Date()));</span>
-<span class="fc" id="L1382">                                em.persist(model);</span>
+<span class="fc" id="L1377">                                model = new ReplicationConfiguration();</span>
+<span class="fc" id="L1378">                                MappingApiToModel.mapReplicationConfiguration(replicationConfiguration, model, em);</span>
+<span class="fc" id="L1379">                                model.setSerialNumber(System.currentTimeMillis());</span>
+<span class="fc" id="L1380">                                model.setTimeOfConfigurationUpdate(sdf.format(new Date()));</span>
+<span class="fc" id="L1381">                                em.persist(model);</span>
                                 //if (newReplicationNode(model)){
                                 //tell the replication notifier to start transfering with
                                 //the first change record
@@ -1390,177 +1389,177 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
                                 //spec doesn't appear to mention if recording a change history on the config is required
                                 //assuming we'll keep it for now, might be useful later.
                                 //em.remove(model);
-<span class="fc" id="L1393">                                oldConfig = new org.uddi.repl_v3.ReplicationConfiguration();</span>
-<span class="fc" id="L1394">                                MappingModelToApi.mapReplicationConfiguration(model, oldConfig);</span>
+<span class="fc" id="L1392">                                oldConfig = new org.uddi.repl_v3.ReplicationConfiguration();</span>
+<span class="fc" id="L1393">                                MappingModelToApi.mapReplicationConfiguration(model, oldConfig);</span>
 
-<span class="fc" id="L1396">                                ReplicationConfiguration model2 = new ReplicationConfiguration();</span>
-<span class="fc" id="L1397">                                MappingApiToModel.mapReplicationConfiguration(replicationConfiguration, model2, em);</span>
-<span class="fc" id="L1398">                                model2.setSerialNumber(System.currentTimeMillis());</span>
+<span class="fc" id="L1395">                                ReplicationConfiguration model2 = new ReplicationConfiguration();</span>
+<span class="fc" id="L1396">                                MappingApiToModel.mapReplicationConfiguration(replicationConfiguration, model2, em);</span>
+<span class="fc" id="L1397">                                model2.setSerialNumber(System.currentTimeMillis());</span>
 
-<span class="fc" id="L1400">                                model2.setTimeOfConfigurationUpdate(sdf.format(new Date()));</span>
-<span class="fc" id="L1401">                                em.persist(model2);</span>
+<span class="fc" id="L1399">                                model2.setTimeOfConfigurationUpdate(sdf.format(new Date()));</span>
+<span class="fc" id="L1400">                                em.persist(model2);</span>
 
                         }
 
-<span class="fc" id="L1405">                        tx.commit();</span>
-<span class="fc" id="L1406">                        UDDIReplicationImpl.notifyConfigurationChange(oldConfig, replicationConfiguration, this);</span>
-<span class="fc" id="L1407">                        long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="fc" id="L1408">                        serviceCounter.update(JUDDIQuery.SET_REPLICATION_NODES,</span>
+<span class="fc" id="L1404">                        tx.commit();</span>
+<span class="fc" id="L1405">                        UDDIReplicationImpl.notifyConfigurationChange(oldConfig, replicationConfiguration, this);</span>
+<span class="fc" id="L1406">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L1407">                        serviceCounter.update(JUDDIQuery.SET_REPLICATION_NODES,</span>
                                 QueryStatus.SUCCESS, procTime);
-<span class="nc" id="L1410">                } catch (DispositionReportFaultMessage drfm) {</span>
-<span class="nc" id="L1411">                        long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="nc" id="L1412">                        serviceCounter.update(JUDDIQuery.SET_REPLICATION_NODES,</span>
+<span class="nc" id="L1409">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L1410">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L1411">                        serviceCounter.update(JUDDIQuery.SET_REPLICATION_NODES,</span>
                                 QueryStatus.FAILED, procTime);
-<span class="nc" id="L1414">                        throw drfm;</span>
-<span class="nc" id="L1415">                } catch (Exception ex) {</span>
-<span class="nc" id="L1416">                        logger.error(ex, ex);</span>
-<span class="nc" id="L1417">                        throw new FatalErrorException(new ErrorMessage(&quot;E_fatalError&quot;, ex.getMessage()));</span>
+<span class="nc" id="L1413">                        throw drfm;</span>
+<span class="nc" id="L1414">                } catch (Exception ex) {</span>
+<span class="nc" id="L1415">                        logger.error(ex, ex);</span>
+<span class="nc" id="L1416">                        throw new FatalErrorException(new ErrorMessage(&quot;E_fatalError&quot;, ex.getMessage()));</span>
                 } finally {
-<span class="pc bpc" id="L1419" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
-<span class="nc" id="L1420">                                tx.rollback();</span>
+<span class="pc bpc" id="L1418" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L1419">                                tx.rollback();</span>
                         }
-<span class="pc" id="L1422">                        em.close();</span>
-<span class="fc" id="L1423">                }</span>
-<span class="fc" id="L1424">                DispositionReport d = new DispositionReport();</span>
-<span class="fc" id="L1425">                Result res = new Result();</span>
+<span class="pc" id="L1421">                        em.close();</span>
+<span class="fc" id="L1422">                }</span>
+<span class="fc" id="L1423">                DispositionReport d = new DispositionReport();</span>
+<span class="fc" id="L1424">                Result res = new Result();</span>
 
-<span class="fc" id="L1427">                d.getResult().add(res);</span>
-<span class="fc" id="L1428">                return d;</span>
+<span class="fc" id="L1426">                d.getResult().add(res);</span>
+<span class="fc" id="L1427">                return d;</span>
         }
 
         @Override
         public synchronized org.uddi.repl_v3.ReplicationConfiguration getReplicationNodes(String authInfo) throws DispositionReportFaultMessage, RemoteException {
-<span class="fc" id="L1433">                long startTime = System.currentTimeMillis();</span>
-<span class="fc" id="L1434">                org.uddi.repl_v3.ReplicationConfiguration r = new org.uddi.repl_v3.ReplicationConfiguration();</span>
+<span class="fc" id="L1432">                long startTime = System.currentTimeMillis();</span>
+<span class="fc" id="L1433">                org.uddi.repl_v3.ReplicationConfiguration r = new org.uddi.repl_v3.ReplicationConfiguration();</span>
 
-<span class="fc" id="L1436">                EntityManager em = PersistenceManager.getEntityManager();</span>
-<span class="fc" id="L1437">                EntityTransaction tx = em.getTransaction();</span>
+<span class="fc" id="L1435">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L1436">                EntityTransaction tx = em.getTransaction();</span>
                 try {
-<span class="fc" id="L1439">                        tx.begin();</span>
+<span class="fc" id="L1438">                        tx.begin();</span>
 
-<span class="fc" id="L1441">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);</span>
-<span class="pc bpc" id="L1442" title="1 of 2 branches missed.">                        if (!((Publisher) publisher).isAdmin()) {</span>
-<span class="nc" id="L1443">                                throw new UserMismatchException(new ErrorMessage(&quot;errors.AdminReqd&quot;));</span>
+<span class="fc" id="L1440">                        UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);</span>
+<span class="pc bpc" id="L1441" title="1 of 2 branches missed.">                        if (!((Publisher) publisher).isAdmin()) {</span>
+<span class="nc" id="L1442">                                throw new UserMismatchException(new ErrorMessage(&quot;errors.AdminReqd&quot;));</span>
                         }
 
-<span class="fc" id="L1446">                        StringBuilder sql = new StringBuilder();</span>
-<span class="fc" id="L1447">                        sql.append(&quot;select c from ReplicationConfiguration c order by c.serialNumber desc&quot;);</span>
+<span class="fc" id="L1445">                        StringBuilder sql = new StringBuilder();</span>
+<span class="fc" id="L1446">                        sql.append(&quot;select c from ReplicationConfiguration c order by c.serialNumber desc&quot;);</span>
                         //sql.toString();
-<span class="fc" id="L1449">                        Query qry = em.createQuery(sql.toString());</span>
-<span class="fc" id="L1450">                        qry.setMaxResults(1);</span>
+<span class="fc" id="L1448">                        Query qry = em.createQuery(sql.toString());</span>
+<span class="fc" id="L1449">                        qry.setMaxResults(1);</span>
 
-<span class="fc" id="L1452">                        org.apache.juddi.model.ReplicationConfiguration resultList = (org.apache.juddi.model.ReplicationConfiguration) qry.getSingleResult();</span>
-<span class="fc" id="L1453">                        MappingModelToApi.mapReplicationConfiguration(resultList, r);</span>
-<span class="fc" id="L1454">                        tx.commit();</span>
-<span class="fc" id="L1455">                        long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="fc" id="L1456">                        serviceCounter.update(JUDDIQuery.GET_ALL_NODES,</span>
+<span class="fc" id="L1451">                        org.apache.juddi.model.ReplicationConfiguration resultList = (org.apache.juddi.model.ReplicationConfiguration) qry.getSingleResult();</span>
+<span class="fc" id="L1452">                        MappingModelToApi.mapReplicationConfiguration(resultList, r);</span>
+<span class="fc" id="L1453">                        tx.commit();</span>
+<span class="fc" id="L1454">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L1455">                        serviceCounter.update(JUDDIQuery.GET_ALL_NODES,</span>
                                 QueryStatus.SUCCESS, procTime);
-<span class="nc" id="L1458">                } catch (DispositionReportFaultMessage drfm) {</span>
-<span class="nc" id="L1459">                        long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="nc" id="L1460">                        serviceCounter.update(JUDDIQuery.GET_ALL_NODES,</span>
+<span class="nc" id="L1457">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L1458">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L1459">                        serviceCounter.update(JUDDIQuery.GET_ALL_NODES,</span>
                                 QueryStatus.FAILED, procTime);
-<span class="nc" id="L1462">                        throw drfm;</span>
-<span class="nc" id="L1463">                } catch (Exception ex) {</span>
+<span class="nc" id="L1461">                        throw drfm;</span>
+<span class="nc" id="L1462">                } catch (Exception ex) {</span>
                         //possible that there is no config to return
-<span class="nc" id="L1465">                        logger.debug(&quot;Error caught, is there a replication config is avaiable? Returning a default config (no replication): &quot;, ex);</span>
+<span class="nc" id="L1464">                        logger.debug(&quot;Error caught, is there a replication config is avaiable? Returning a default config (no replication): &quot;, ex);</span>
 
-<span class="nc" id="L1467">                        r.setCommunicationGraph(new CommunicationGraph());</span>
-<span class="nc" id="L1468">                        Operator op = new Operator();</span>
-<span class="nc" id="L1469">                        op.setOperatorNodeID(getNode());</span>
-<span class="nc" id="L1470">                        op.setSoapReplicationURL(baseUrlSSL + &quot;replication/services/replication&quot;);</span>
+<span class="nc" id="L1466">                        r.setCommunicationGraph(new CommunicationGraph());</span>
+<span class="nc" id="L1467">                        Operator op = new Operator();</span>
+<span class="nc" id="L1468">                        op.setOperatorNodeID(getNode());</span>
+<span class="nc" id="L1469">                        op.setSoapReplicationURL(baseUrlSSL + &quot;replication/services/replication&quot;);</span>
 
-<span class="nc" id="L1472">                        op.getContact().add(new Contact());</span>
-<span class="nc" id="L1473">                        op.getContact().get(0).getPersonName().add(new PersonName(&quot;Unknown&quot;, null));</span>
-<span class="nc" id="L1474">                        op.setOperatorStatus(OperatorStatusType.NORMAL);</span>
+<span class="nc" id="L1471">                        op.getContact().add(new Contact());</span>
+<span class="nc" id="L1472">                        op.getContact().get(0).getPersonName().add(new PersonName(&quot;Unknown&quot;, null));</span>
+<span class="nc" id="L1473">                        op.setOperatorStatus(OperatorStatusType.NORMAL);</span>
 
-<span class="nc" id="L1476">                        r.getOperator().add(op);</span>
-<span class="nc" id="L1477">                        r.getCommunicationGraph().getNode().add(getNode());</span>
-<span class="nc" id="L1478">                        r.getCommunicationGraph().getControlledMessage().add(&quot;*&quot;);</span>
-<span class="nc" id="L1479">                        long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="nc" id="L1480">                        r.setSerialNumber(0);</span>
-<span class="nc" id="L1481">                        SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyyMMddkkmmZ&quot;);</span>
-<span class="nc" id="L1482">                        r.setTimeOfConfigurationUpdate(sdf.format(new Date()));</span>
-<span class="nc" id="L1483">                        r.setRegistryContact(new org.uddi.repl_v3.ReplicationConfiguration.RegistryContact());</span>
+<span class="nc" id="L1475">                        r.getOperator().add(op);</span>
+<span class="nc" id="L1476">                        r.getCommunicationGraph().getNode().add(getNode());</span>
+<span class="nc" id="L1477">                        r.getCommunicationGraph().getControlledMessage().add(&quot;*&quot;);</span>
+<span class="nc" id="L1478">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L1479">                        r.setSerialNumber(0);</span>
+<span class="nc" id="L1480">                        SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyyMMddkkmmZ&quot;);</span>
+<span class="nc" id="L1481">                        r.setTimeOfConfigurationUpdate(sdf.format(new Date()));</span>
+<span class="nc" id="L1482">                        r.setRegistryContact(new org.uddi.repl_v3.ReplicationConfiguration.RegistryContact());</span>
                         try {
                                 // pull from root business
-<span class="nc bnc" id="L1486" title="All 2 branches missed.">                                if (!tx.isActive()) {</span>
-<span class="nc" id="L1487">                                        tx = em.getTransaction();</span>
+<span class="nc bnc" id="L1485" title="All 2 branches missed.">                                if (!tx.isActive()) {</span>
+<span class="nc" id="L1486">                                        tx = em.getTransaction();</span>
                                 }
 
-<span class="nc" id="L1490">                                BusinessEntity rootbiz = em.find(BusinessEntity.class, AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ROOT_BUSINESS));</span>
-<span class="nc bnc" id="L1491" title="All 2 branches missed.">                                if (rootbiz != null) {</span>
+<span class="nc" id="L1489">                                BusinessEntity rootbiz = em.find(BusinessEntity.class, AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ROOT_BUSINESS));</span>
+<span class="nc bnc" id="L1490" title="All 2 branches missed.">                                if (rootbiz != null) {</span>
 
-<span class="nc bnc" id="L1493" title="All 2 branches missed.">                                        for (int i = 0; i &lt; rootbiz.getContacts().size(); i++) {</span>
-<span class="nc" id="L1494">                                                Contact c = new Contact();</span>
-<span class="nc" id="L1495">                                                MappingModelToApi.mapContact(rootbiz.getContacts().get(i), c);</span>
-<span class="nc" id="L1496">                                                r.getRegistryContact().setContact(c);</span>
-<span class="nc" id="L1497">                                                break;</span>
+<span class="nc bnc" id="L1492" title="All 2 branches missed.">                                        for (int i = 0; i &lt; rootbiz.getContacts().size(); i++) {</span>
+<span class="nc" id="L1493">                                                Contact c = new Contact();</span>
+<span class="nc" id="L1494">                                                MappingModelToApi.mapContact(rootbiz.getContacts().get(i), c);</span>
+<span class="nc" id="L1495">                                                r.getRegistryContact().setContact(c);</span>
+<span class="nc" id="L1496">                                                break;</span>
                                         }
 
                                 }
-<span class="nc" id="L1501">                                tx.rollback();</span>
+<span class="nc" id="L1500">                                tx.rollback();</span>
 
-<span class="nc" id="L1503">                        } catch (Exception ex1) {</span>
-<span class="nc" id="L1504">                                logger.warn(&quot;unexpected error&quot;, ex1);</span>
-<span class="nc" id="L1505">                        }</span>
-<span class="nc bnc" id="L1506" title="All 2 branches missed.">                        if (r.getRegistryContact().getContact() == null) {</span>
-<span class="nc" id="L1507">                                r.getRegistryContact().setContact(new Contact());</span>
-<span class="nc" id="L1508">                                r.getRegistryContact().getContact().getPersonName().add(new PersonName(&quot;Unknown&quot;, null));</span>
+<span class="nc" id="L1502">                        } catch (Exception ex1) {</span>
+<span class="nc" id="L1503">                                logger.warn(&quot;unexpected error&quot;, ex1);</span>
+<span class="nc" id="L1504">                        }</span>
+<span class="nc bnc" id="L1505" title="All 2 branches missed.">                        if (r.getRegistryContact().getContact() == null) {</span>
+<span class="nc" id="L1506">                                r.getRegistryContact().setContact(new Contact());</span>
+<span class="nc" id="L1507">                                r.getRegistryContact().getContact().getPersonName().add(new PersonName(&quot;Unknown&quot;, null));</span>
                         }
-<span class="nc" id="L1510">                        serviceCounter.update(JUDDIQuery.GET_REPLICATION_NODES,</span>
+<span class="nc" id="L1509">                        serviceCounter.update(JUDDIQuery.GET_REPLICATION_NODES,</span>
                                 QueryStatus.SUCCESS, procTime);
 
                 } finally {
-<span class="pc bpc" id="L1514" title="5 of 6 branches missed.">                        if (tx.isActive()) {</span>
-<span class="nc" id="L1515">                                tx.rollback();</span>
+<span class="pc bpc" id="L1513" title="5 of 6 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L1514">                                tx.rollback();</span>
                         }
-<span class="pc" id="L1517">                        em.close();</span>
-<span class="pc" id="L1518">                }</span>
+<span class="pc" id="L1516">                        em.close();</span>
+<span class="pc" id="L1517">                }</span>
 
-<span class="fc" id="L1520">                r.setMaximumTimeToGetChanges(BigInteger.ONE);</span>
-<span class="fc" id="L1521">                r.setMaximumTimeToSyncRegistry(BigInteger.ONE);</span>
+<span class="fc" id="L1519">                r.setMaximumTimeToGetChanges(BigInteger.ONE);</span>
+<span class="fc" id="L1520">                r.setMaximumTimeToSyncRegistry(BigInteger.ONE);</span>
                 //StringWriter sw = new StringWriter();
                 //JAXB.marshal(r, sw);
                 //logger.info(&quot;dumping returned replication config &quot; + sw.toString());
-<span class="fc" id="L1525">                return r;</span>
+<span class="fc" id="L1524">                return r;</span>
         }
 
-<span class="fc" id="L1528">        static UDDISubscriptionImpl sub = new UDDISubscriptionImpl();</span>
-<span class="fc" id="L1529">        static UDDISecurityImpl sec = new UDDISecurityImpl();</span>
-<span class="fc" id="L1530">        static UDDIPublicationImpl pub = new UDDIPublicationImpl();</span>
+<span class="fc" id="L1527">        static UDDISubscriptionImpl sub = new UDDISubscriptionImpl();</span>
+<span class="fc" id="L1528">        static UDDISecurityImpl sec = new UDDISecurityImpl();</span>
+<span class="fc" id="L1529">        static UDDIPublicationImpl pub = new UDDIPublicationImpl();</span>
 
         @Override
         public void adminSaveSubscription(String authInfo, String publisherOrUsername, Holder&lt;List&lt;Subscription&gt;&gt; subscriptions) throws DispositionReportFaultMessage {
-<span class="fc" id="L1534">                long startTime = System.currentTimeMillis();</span>
-<span class="fc" id="L1535">                EntityManager em = PersistenceManager.getEntityManager();</span>
-<span class="fc" id="L1536">                EntityTransaction tx = em.getTransaction();</span>
+<span class="fc" id="L1533">                long startTime = System.currentTimeMillis();</span>
+<span class="fc" id="L1534">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L1535">                EntityTransaction tx = em.getTransaction();</span>
                 try {
-<span class="fc" id="L1538">                        tx.begin();</span>
-<span class="fc" id="L1539">                        UddiEntityPublisher requestor = this.getEntityPublisher(em, authInfo);</span>
-<span class="fc bfc" id="L1540" title="All 2 branches covered.">                        if (!((Publisher) requestor).isAdmin()) {</span>
-<span class="fc" id="L1541">                                throw new UserMismatchException(new ErrorMessage(&quot;errors.AdminReqd&quot;));</span>
+<span class="fc" id="L1537">                        tx.begin();</span>
+<span class="fc" id="L1538">                        UddiEntityPublisher requestor = this.getEntityPublisher(em, authInfo);</span>
+<span class="fc bfc" id="L1539" title="All 2 branches covered.">                        if (!((Publisher) requestor).isAdmin()) {</span>
+<span class="fc" id="L1540">                                throw new UserMismatchException(new ErrorMessage(&quot;errors.AdminReqd&quot;));</span>
                         }
                         //impersonate the user
-<span class="fc" id="L1544">                        AuthToken authToken = sec.getAuthToken(publisherOrUsername);</span>
-<span class="fc" id="L1545">                        sub.saveSubscription(authToken.getAuthInfo(), subscriptions);</span>
-<span class="fc" id="L1546">                        tx.commit();</span>
-<span class="fc" id="L1547">                        long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="fc" id="L1548">                        serviceCounter.update(JUDDIQuery.ADMIN_SAVE_SUB,</span>
+<span class="fc" id="L1543">                        AuthToken authToken = sec.getAuthToken(publisherOrUsername);</span>
+<span class="fc" id="L1544">                        sub.saveSubscription(authToken.getAuthInfo(), subscriptions);</span>
+<span class="fc" id="L1545">                        tx.commit();</span>
+<span class="fc" id="L1546">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L1547">                        serviceCounter.update(JUDDIQuery.ADMIN_SAVE_SUB,</span>
                                 QueryStatus.SUCCESS, procTime);
-<span class="fc" id="L1550">                } catch (DispositionReportFaultMessage drfm) {</span>
-<span class="fc" id="L1551">                        long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="fc" id="L1552">                        serviceCounter.update(JUDDIQuery.ADMIN_SAVE_SUB,</span>
+<span class="fc" id="L1549">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="fc" id="L1550">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L1551">                        serviceCounter.update(JUDDIQuery.ADMIN_SAVE_SUB,</span>
                                 QueryStatus.FAILED, procTime);
-<span class="fc" id="L1554">                        throw drfm;</span>
+<span class="fc" id="L1553">                        throw drfm;</span>
 
                 } finally {
-<span class="pc bpc" id="L1557" title="2 of 4 branches missed.">                        if (tx.isActive()) {</span>
-<span class="pc" id="L1558">                                tx.rollback();</span>
+<span class="pc bpc" id="L1556" title="2 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="pc" id="L1557">                                tx.rollback();</span>
                         }
-<span class="fc" id="L1560">                        em.close();</span>
-<span class="fc" id="L1561">                }</span>
+<span class="fc" id="L1559">                        em.close();</span>
+<span class="fc" id="L1560">                }</span>
 
-<span class="fc" id="L1563">        }</span>
+<span class="fc" id="L1562">        }</span>
 
         /**
          * {@inheritDoc }
@@ -1572,51 +1571,51 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
          */
         @Override
         public GetEntityHistoryMessageResponse getEntityHistory(GetEntityHistoryMessageRequest body) throws DispositionReportFaultMessage, RemoteException {
-<span class="fc" id="L1575">                long startTime = System.currentTimeMillis();</span>
-<span class="fc bfc" id="L1576" title="All 2 branches covered.">                if (body == null) {</span>
-<span class="fc" id="L1577">                        throw new InvalidValueException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+<span class="fc" id="L1574">                long startTime = System.currentTimeMillis();</span>
+<span class="fc bfc" id="L1575" title="All 2 branches covered.">                if (body == null) {</span>
+<span class="fc" id="L1576">                        throw new InvalidValueException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
                 }
-<span class="fc" id="L1579">                EntityManager em = PersistenceManager.getEntityManager();</span>
-<span class="fc" id="L1580">                EntityTransaction tx = em.getTransaction();</span>
+<span class="fc" id="L1578">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L1579">                EntityTransaction tx = em.getTransaction();</span>
                 try {
-<span class="fc" id="L1582">                        tx.begin();</span>
-<span class="fc" id="L1583">                        UddiEntityPublisher requestor = this.getEntityPublisher(em, body.getAuthInfo());</span>
-<span class="pc bpc" id="L1584" title="1 of 2 branches missed.">                        if (!((Publisher) requestor).isAdmin()) {</span>
-<span class="nc" id="L1585">                                throw new UserMismatchException(new ErrorMessage(&quot;errors.AdminReqd&quot;));</span>
+<span class="fc" id="L1581">                        tx.begin();</span>
+<span class="fc" id="L1582">                        UddiEntityPublisher requestor = this.getEntityPublisher(em, body.getAuthInfo());</span>
+<span class="pc bpc" id="L1583" title="1 of 2 branches missed.">                        if (!((Publisher) requestor).isAdmin()) {</span>
+<span class="nc" id="L1584">                                throw new UserMismatchException(new ErrorMessage(&quot;errors.AdminReqd&quot;));</span>
                         }
-<span class="pc bpc" id="L1587" title="1 of 2 branches missed.">                        if (body.getMaxRecords() &lt;= 0) {</span>
-<span class="fc" id="L1588">                                body.setMaxRecords(20);</span>
+<span class="pc bpc" id="L1586" title="1 of 2 branches missed.">                        if (body.getMaxRecords() &lt;= 0) {</span>
+<span class="fc" id="L1587">                                body.setMaxRecords(20);</span>
                         }
-<span class="pc bpc" id="L1590" title="1 of 2 branches missed.">                        if (body.getOffset() &lt; 0) {</span>
-<span class="nc" id="L1591">                                body.setOffset(0);</span>
+<span class="pc bpc" id="L1589" title="1 of 2 branches missed.">                        if (body.getOffset() &lt; 0) {</span>
+<span class="nc" id="L1590">                                body.setOffset(0);</span>
                         }
-<span class="fc" id="L1593">                        Query createQuery = em.createQuery(&quot;select m from ChangeRecord m where m.entityKey = :key order by m.id DESC&quot;);</span>
-<span class="fc" id="L1594">                        createQuery.setMaxResults((int) body.getMaxRecords());</span>
-<span class="fc" id="L1595">                        createQuery.setParameter(&quot;key&quot;, body.getEntityKey());</span>
-<span class="fc" id="L1596">                        createQuery.setFirstResult((int) body.getOffset());</span>
-<span class="fc" id="L1597">                        List&lt;ChangeRecord&gt; resultList = createQuery.getResultList();</span>
-<span class="fc" id="L1598">                        GetEntityHistoryMessageResponse res = new GetEntityHistoryMessageResponse();</span>
-<span class="fc" id="L1599">                        res.setChangeRecords(new ChangeRecords());</span>
-<span class="fc bfc" id="L1600" title="All 2 branches covered.">                        for (ChangeRecord cr : resultList) {</span>
-<span class="fc" id="L1601">                                res.getChangeRecords().getChangeRecord().add(MappingModelToApi.mapChangeRecord(cr));</span>
-<span class="fc" id="L1602">                        }</span>
+<span class="fc" id="L1592">                        Query createQuery = em.createQuery(&quot;select m from ChangeRecord m where m.entityKey = :key order by m.id DESC&quot;);</span>
+<span class="fc" id="L1593">                        createQuery.setMaxResults((int) body.getMaxRecords());</span>
+<span class="fc" id="L1594">                        createQuery.setParameter(&quot;key&quot;, body.getEntityKey());</span>
+<span class="fc" id="L1595">                        createQuery.setFirstResult((int) body.getOffset());</span>
+<span class="fc" id="L1596">                        List&lt;ChangeRecord&gt; resultList = createQuery.getResultList();</span>
+<span class="fc" id="L1597">                        GetEntityHistoryMessageResponse res = new GetEntityHistoryMessageResponse();</span>
+<span class="fc" id="L1598">                        res.setChangeRecords(new ChangeRecords());</span>
+<span class="fc bfc" id="L1599" title="All 2 branches covered.">                        for (ChangeRecord cr : resultList) {</span>
+<span class="fc" id="L1600">                                res.getChangeRecords().getChangeRecord().add(MappingModelToApi.mapChangeRecord(cr));</span>
+<span class="fc" id="L1601">                        }</span>
 
-<span class="fc" id="L1604">                        tx.rollback();</span>
-<span class="fc" id="L1605">                        long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="fc" id="L1606">                        serviceCounter.update(JUDDIQuery.ADMIN_GET_HISTORY,</span>
+<span class="fc" id="L1603">                        tx.rollback();</span>
+<span class="fc" id="L1604">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L1605">                        serviceCounter.update(JUDDIQuery.ADMIN_GET_HISTORY,</span>
                                 QueryStatus.SUCCESS, procTime);
-<span class="fc" id="L1608">                        return res;</span>
-<span class="fc" id="L1609">                } catch (DispositionReportFaultMessage drfm) {</span>
-<span class="fc" id="L1610">                        long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="fc" id="L1611">                        serviceCounter.update(JUDDIQuery.ADMIN_GET_HISTORY,</span>
+<span class="fc" id="L1607">                        return res;</span>
+<span class="fc" id="L1608">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="fc" id="L1609">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L1610">                        serviceCounter.update(JUDDIQuery.ADMIN_GET_HISTORY,</span>
                                 QueryStatus.FAILED, procTime);
-<span class="fc" id="L1613">                        throw drfm;</span>
+<span class="fc" id="L1612">                        throw drfm;</span>
 
                 } finally {
-<span class="pc bpc" id="L1616" title="2 of 4 branches missed.">                        if (tx.isActive()) {</span>
-<span class="pc" id="L1617">                                tx.rollback();</span>
+<span class="pc bpc" id="L1615" title="2 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="pc" id="L1616">                                tx.rollback();</span>
                         }
-<span class="fc" id="L1619">                        em.close();</span>
+<span class="fc" id="L1618">                        em.close();</span>
                 }
         }
 
@@ -1633,50 +1632,50 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
                 GetFailedReplicationChangeRecordsMessageRequest body)
                 throws DispositionReportFaultMessage, RemoteException {
                 //public GetFailedReplicationChangeRecordsMessageResponse getFailedReplicationChangeRecords(GetFailedReplicationChangeRecordsMessageRequest body) throws DispositionReportFaultMessage, RemoteException {
-<span class="nc" id="L1636">                long startTime = System.currentTimeMillis();</span>
-<span class="nc bnc" id="L1637" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L1638">                        throw new InvalidValueException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
+<span class="nc" id="L1635">                long startTime = System.currentTimeMillis();</span>
+<span class="nc bnc" id="L1636" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L1637">                        throw new InvalidValueException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
                 }
-<span class="nc" id="L1640">                EntityManager em = PersistenceManager.getEntityManager();</span>
-<span class="nc" id="L1641">                EntityTransaction tx = em.getTransaction();</span>
+<span class="nc" id="L1639">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="nc" id="L1640">                EntityTransaction tx = em.getTransaction();</span>
                 try {
-<span class="nc" id="L1643">                        tx.begin();</span>
-<span class="nc" id="L1644">                        UddiEntityPublisher requestor = this.getEntityPublisher(em, body.getAuthInfo());</span>
-<span class="nc bnc" id="L1645" title="All 2 branches missed.">                        if (!((Publisher) requestor).isAdmin()) {</span>
-<span class="nc" id="L1646">                                throw new UserMismatchException(new ErrorMessage(&quot;errors.AdminReqd&quot;));</span>
+<span class="nc" id="L1642">                        tx.begin();</span>
+<span class="nc" id="L1643">                        UddiEntityPublisher requestor = this.getEntityPublisher(em, body.getAuthInfo());</span>
+<span class="nc bnc" id="L1644" title="All 2 branches missed.">                        if (!((Publisher) requestor).isAdmin()) {</span>
+<span class="nc" id="L1645">                                throw new UserMismatchException(new ErrorMessage(&quot;errors.AdminReqd&quot;));</span>
                         }
-<span class="nc bnc" id="L1648" title="All 2 branches missed.">                        if (body.getMaxRecords() &lt;= 0) {</span>
-<span class="nc" id="L1649">                                body.setMaxRecords(20);</span>
+<span class="nc bnc" id="L1647" title="All 2 branches missed.">                        if (body.getMaxRecords() &lt;= 0) {</span>
+<span class="nc" id="L1648">                                body.setMaxRecords(20);</span>
                         }
-<span class="nc bnc" id="L1651" title="All 2 branches missed.">                        if (body.getOffset() &lt; 0) {</span>
-<span class="nc" id="L1652">                                body.setOffset(0);</span>
+<span class="nc bnc" id="L1650" title="All 2 branches missed.">                        if (body.getOffset() &lt; 0) {</span>
+<span class="nc" id="L1651">                                body.setOffset(0);</span>
                         }
-<span class="nc" id="L1654">                        Query createQuery = em.createQuery(&quot;select m from ChangeRecord m where m.isAppliedLocally=false order by m.id DESC &quot;);</span>
-<span class="nc" id="L1655">                        createQuery.setMaxResults((int) body.getMaxRecords());</span>
-<span class="nc" id="L1656">                        createQuery.setFirstResult((int) body.getOffset());</span>
-<span class="nc" id="L1657">                        List&lt;ChangeRecord&gt; resultList = createQuery.getResultList();</span>
-<span class="nc" id="L1658">                        GetFailedReplicationChangeRecordsMessageResponse res = new GetFailedReplicationChangeRecordsMessageResponse();</span>
-<span class="nc" id="L1659">                        res.setChangeRecords(new ChangeRecords());</span>
-<span class="nc bnc" id="L1660" title="All 2 branches missed.">                        for (ChangeRecord cr : resultList) {</span>
-<span class="nc" id="L1661">                                res.getChangeRecords().getChangeRecord().add(MappingModelToApi.mapChangeRecord(cr));</span>
-<span class="nc" id="L1662">                        }</span>
+<span class="nc" id="L1653">                        Query createQuery = em.createQuery(&quot;select m from ChangeRecord m where m.isAppliedLocally=false order by m.id DESC &quot;);</span>
+<span class="nc" id="L1654">                        createQuery.setMaxResults((int) body.getMaxRecords());</span>
+<span class="nc" id="L1655">                        createQuery.setFirstResult((int) body.getOffset());</span>
+<span class="nc" id="L1656">                        List&lt;ChangeRecord&gt; resultList = createQuery.getResultList();</span>
+<span class="nc" id="L1657">                        GetFailedReplicationChangeRecordsMessageResponse res = new GetFailedReplicationChangeRecordsMessageResponse();</span>
+<span class="nc" id="L1658">                        res.setChangeRecords(new ChangeRecords());</span>
+<span class="nc bnc" id="L1659" title="All 2 branches missed.">                        for (ChangeRecord cr : resultList) {</span>
+<span class="nc" id="L1660">                                res.getChangeRecords().getChangeRecord().add(MappingModelToApi.mapChangeRecord(cr));</span>
+<span class="nc" id="L1661">                        }</span>
 
-<span class="nc" id="L1664">                        tx.rollback();</span>
-<span class="nc" id="L1665">                        long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="nc" id="L1666">                        serviceCounter.update(JUDDIQuery.ADMIN_GET_FAILED_CRS,</span>
+<span class="nc" id="L1663">                        tx.rollback();</span>
+<span class="nc" id="L1664">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L1665">                        serviceCounter.update(JUDDIQuery.ADMIN_GET_FAILED_CRS,</span>
                                 QueryStatus.SUCCESS, procTime);
-<span class="nc" id="L1668">                        return res;</span>
-<span class="nc" id="L1669">                } catch (DispositionReportFaultMessage drfm) {</span>
-<span class="nc" id="L1670">                        long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="nc" id="L1671">                        serviceCounter.update(JUDDIQuery.ADMIN_GET_FAILED_CRS,</span>
+<span class="nc" id="L1667">                        return res;</span>
+<span class="nc" id="L1668">                } catch (DispositionReportFaultMessage drfm) {</span>
+<span class="nc" id="L1669">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L1670">                        serviceCounter.update(JUDDIQuery.ADMIN_GET_FAILED_CRS,</span>
                                 QueryStatus.FAILED, procTime);
-<span class="nc" id="L1673">                        throw drfm;</span>
+<span class="nc" id="L1672">                        throw drfm;</span>
 
                 } finally {
-<span class="nc bnc" id="L1676" title="All 4 branches missed.">                        if (tx.isActive()) {</span>
-<span class="nc" id="L1677">                                tx.rollback();</span>
+<span class="nc bnc" id="L1675" title="All 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L1676">                                tx.rollback();</span>
                         }
-<span class="nc" id="L1679">                        em.close();</span>
+<span class="nc" id="L1678">                        em.close();</span>
                 }
         }
 }

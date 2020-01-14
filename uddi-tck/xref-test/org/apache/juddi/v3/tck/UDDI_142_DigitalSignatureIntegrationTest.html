@@ -822,7 +822,7 @@
 <a class="jxr_linenumber" name="L814" href="#L814">814</a>                         BusinessDetail businessDetail = inquiryJoe.getBusinessDetail(gsb);
 <a class="jxr_linenumber" name="L815" href="#L815">815</a>                         PrintUDDI&lt;BusinessEntity&gt; printer = <strong class="jxr_keyword">new</strong> PrintUDDI&lt;BusinessEntity&gt;();
 <a class="jxr_linenumber" name="L816" href="#L816">816</a>                         <strong class="jxr_keyword">if</strong> (TckCommon.isDebug()) {
-<a class="jxr_linenumber" name="L817" href="#L817">817</a>                                 System.out.println(printer.print(businessDetail.getBusinessEntity().get(0)));
+<a class="jxr_linenumber" name="L817" href="#L817">817</a>                                 logger.info(printer.print(businessDetail.getBusinessEntity().get(0)));
 <a class="jxr_linenumber" name="L818" href="#L818">818</a>                         }
 <a class="jxr_linenumber" name="L819" href="#L819">819</a>                         AtomicReference&lt;String&gt; msg = <strong class="jxr_keyword">new</strong> AtomicReference&lt;String&gt;();
 <a class="jxr_linenumber" name="L820" href="#L820">820</a>                         <strong class="jxr_keyword">boolean</strong> b = ds.verifySignedUddiEntity(businessDetail.getBusinessEntity().get(0), msg);
@@ -863,7 +863,7 @@
 <a class="jxr_linenumber" name="L855" href="#L855">855</a>                         BusinessDetail businessDetail = inquiryJoe.getBusinessDetail(gsb);
 <a class="jxr_linenumber" name="L856" href="#L856">856</a>                         PrintUDDI&lt;BusinessEntity&gt; printer = <strong class="jxr_keyword">new</strong> PrintUDDI&lt;BusinessEntity&gt;();
 <a class="jxr_linenumber" name="L857" href="#L857">857</a>                         <strong class="jxr_keyword">if</strong> (TckCommon.isDebug()) {
-<a class="jxr_linenumber" name="L858" href="#L858">858</a>                                 System.out.println(printer.print(businessDetail.getBusinessEntity().get(0)));
+<a class="jxr_linenumber" name="L858" href="#L858">858</a>                                 logger.info(printer.print(businessDetail.getBusinessEntity().get(0)));
 <a class="jxr_linenumber" name="L859" href="#L859">859</a>                         }
 <a class="jxr_linenumber" name="L860" href="#L860">860</a>                         AtomicReference&lt;String&gt; msg = <strong class="jxr_keyword">new</strong> AtomicReference&lt;String&gt;();
 <a class="jxr_linenumber" name="L861" href="#L861">861</a>                         <strong class="jxr_keyword">boolean</strong> b = ds.verifySignedUddiEntity(businessDetail.getBusinessEntity().get(0), msg);
@@ -894,6 +894,6 @@
 <a class="jxr_linenumber" name="L886" href="#L886">886</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2004&#x2013;2018 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2004&#x2013;2020 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
 </body>
 </html>

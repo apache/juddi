@@ -58,7 +58,7 @@
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>                  <strong class="jxr_keyword">long</strong> startSave = System.currentTimeMillis();
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>                  tckBusinessJoe.saveJoePublisherBusinesses(authInfoJoe, numberOfBusinesses);
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>                  <strong class="jxr_keyword">long</strong> saveDuration = System.currentTimeMillis() - startSave;
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>                  System.out.println(<span class="jxr_string">"****************** Save "</span> + numberOfBusinesses + <span class="jxr_string">" Joes Duration="</span> + saveDuration);
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>                  logger.info(<span class="jxr_string">"****************** Save "</span> + numberOfBusinesses + <span class="jxr_string">" Joes Duration="</span> + saveDuration);
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>                  <strong class="jxr_keyword">long</strong> startFind = System.currentTimeMillis();
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>                  FindBusiness fs = <strong class="jxr_keyword">new</strong> FindBusiness();
@@ -114,6 +114,6 @@
 <a class="jxr_linenumber" name="L106" href="#L106">106</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2004&#x2013;2018 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2004&#x2013;2020 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
 </body>
 </html>

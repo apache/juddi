@@ -230,25 +230,25 @@ public class ReplicationNotifier extends TimerTask {
 
                 }
 
-<span class="pc bpc" id="L233" title="1 of 2 branches missed.">                if (destinationUrls.isEmpty()) {</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">                if (destinationUrls.isEmpty()) {</span>
 <span class="fc" id="L234">                        log.debug(&quot;Something is bizarre with the replication config. I should have had at least one node to notify, but I have none!&quot;);</span>
 <span class="fc" id="L235">                        return;</span>
                 }
-<span class="nc" id="L237">                UDDIReplicationPortType x = uddiService.getUDDIReplicationPort();</span>
-<span class="nc" id="L238">                TransportSecurityHelper.applyTransportSecurity((BindingProvider) x);</span>
+<span class="fc" id="L237">                UDDIReplicationPortType x = uddiService.getUDDIReplicationPort();</span>
+<span class="fc" id="L238">                TransportSecurityHelper.applyTransportSecurity((BindingProvider) x);</span>
 
-<span class="nc bnc" id="L240" title="All 2 branches missed.">                for (Object s : destinationUrls) {</span>
+<span class="fc bfc" id="L240" title="All 2 branches covered.">                for (Object s : destinationUrls) {</span>
 
-<span class="nc" id="L242">                        NotifyChangeRecordsAvailable req = new NotifyChangeRecordsAvailable();</span>
+<span class="fc" id="L242">                        NotifyChangeRecordsAvailable req = new NotifyChangeRecordsAvailable();</span>
 
-<span class="nc" id="L244">                        req.setNotifyingNode(node);</span>
-<span class="nc" id="L245">                        HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();</span>
+<span class="fc" id="L244">                        req.setNotifyingNode(node);</span>
+<span class="fc" id="L245">                        HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();</span>
 
-<span class="nc" id="L247">                        highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(origin_node, id));</span>
-<span class="nc" id="L248">                        req.setChangesAvailable(highWaterMarkVectorType);</span>
+<span class="fc" id="L247">                        highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(origin_node, id));</span>
+<span class="fc" id="L248">                        req.setChangesAvailable(highWaterMarkVectorType);</span>
 
-<span class="nc bnc" id="L250" title="All 2 branches missed.">                        if (s instanceof String) {</span>
-<span class="nc" id="L251">                                SendNotification(x, (String) s, req);</span>
+<span class="pc bpc" id="L250" title="1 of 2 branches missed.">                        if (s instanceof String) {</span>
+<span class="fc" id="L251">                                SendNotification(x, (String) s, req);</span>
 <span class="nc bnc" id="L252" title="All 2 branches missed.">                        } else if (s instanceof PrimaryAlternate) {</span>
                                 //more complex directed graph stuff
 <span class="nc" id="L254">                                PrimaryAlternate pa = (PrimaryAlternate) s;</span>
@@ -266,9 +266,9 @@ public class ReplicationNotifier extends TimerTask {
                         }
 
                         //TODO the spec talks about control messages, should we even support it? seems pointless
-<span class="nc" id="L269">                }</span>
+<span class="fc" id="L269">                }</span>
 
-<span class="nc" id="L271">        }</span>
+<span class="fc" id="L271">        }</span>
 
         /**
          * return true if successful
@@ -279,16 +279,16 @@ public class ReplicationNotifier extends TimerTask {
          * @return
          */
         private boolean SendNotification(UDDIReplicationPortType x, String s, NotifyChangeRecordsAvailable req) {
-<span class="nc" id="L282">                ((BindingProvider) x).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, s);</span>
+<span class="fc" id="L282">                ((BindingProvider) x).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, s);</span>
                 try {
 <span class="nc" id="L284">                        x.notifyChangeRecordsAvailable(req);</span>
 <span class="nc" id="L285">                        log.info(&quot;Successfully sent change record available message to &quot; + s + &quot; this node: &quot; + node);</span>
 <span class="nc" id="L286">                        return true;</span>
-<span class="nc" id="L287">                } catch (Exception ex) {</span>
-<span class="nc" id="L288">                        log.warn(&quot;Unable to send change notification to &quot; + s + &quot; this node: &quot; + node + &quot; reason: &quot; + ex.getMessage());</span>
-<span class="nc" id="L289">                        log.debug(&quot;Unable to send change notification to &quot; + s, ex);</span>
+<span class="fc" id="L287">                } catch (Exception ex) {</span>
+<span class="fc" id="L288">                        log.warn(&quot;Unable to send change notification to &quot; + s + &quot; this node: &quot; + node + &quot; reason: &quot; + ex.getMessage());</span>
+<span class="fc" id="L289">                        log.debug(&quot;Unable to send change notification to &quot; + s, ex);</span>
                 }
-<span class="nc" id="L291">                return false;</span>
+<span class="fc" id="L291">                return false;</span>
         }
 
 <span class="nc" id="L294">        private static class PrimaryAlternate {</span>
@@ -306,7 +306,7 @@ public class ReplicationNotifier extends TimerTask {
 <span class="fc" id="L306">                        queue2 = new ConcurrentLinkedQueue();</span>
                 }
                 //TODO revisie this
-<span class="fc bfc" id="L309" title="All 2 branches covered.">                if (!queue.isEmpty()) {</span>
+<span class="pc bpc" id="L309" title="1 of 2 branches missed.">                if (!queue.isEmpty()) {</span>
 <span class="fc" id="L310">                        log.info(&quot;Replication, Notifying nodes of new change records. &quot; + queue.size() + &quot; queued&quot;);</span>
                 }
 

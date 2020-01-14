@@ -1326,370 +1326,369 @@
 <a class="jxr_linenumber" name="L1318" href="#L1318">1318</a>                         }
 <a class="jxr_linenumber" name="L1319" href="#L1319">1319</a> 
 <a class="jxr_linenumber" name="L1320" href="#L1320">1320</a>                         StringBuilder sql = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L1321" href="#L1321">1321</a>                         sql.append(<span class="jxr_string">"select distinct c from ReplicationConfiguration c "</span>);
-<a class="jxr_linenumber" name="L1322" href="#L1322">1322</a>                         sql.toString();
-<a class="jxr_linenumber" name="L1323" href="#L1323">1323</a>                         Query qry = em.createQuery(sql.toString());
-<a class="jxr_linenumber" name="L1324" href="#L1324">1324</a>                         List&lt;org.apache.juddi.model.Subscription&gt; resultList = qry.getResultList();
-<a class="jxr_linenumber" name="L1325" href="#L1325">1325</a>                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; resultList.size(); i++) {
-<a class="jxr_linenumber" name="L1326" href="#L1326">1326</a>                                 <a href="../../../../../org/apache/juddi/model/Subscription.html">Subscription</a> sub = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/model/Subscription.html">Subscription</a>();
-<a class="jxr_linenumber" name="L1327" href="#L1327">1327</a>                                 MappingModelToApi.mapSubscription(resultList.get(i), sub);
-<a class="jxr_linenumber" name="L1328" href="#L1328">1328</a>                                 <a href="../../../../../org/apache/juddi/api_v3/SubscriptionWrapper.html">SubscriptionWrapper</a> x = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/api_v3/SubscriptionWrapper.html">SubscriptionWrapper</a>();
-<a class="jxr_linenumber" name="L1329" href="#L1329">1329</a>                                 x.getSubscription().add(sub);
-<a class="jxr_linenumber" name="L1330" href="#L1330">1330</a>                                 x.setPublisherIdOrUsername(resultList.get(i).getAuthorizedName());
-<a class="jxr_linenumber" name="L1331" href="#L1331">1331</a>                                 r.add(x);
-<a class="jxr_linenumber" name="L1332" href="#L1332">1332</a>                         }
-<a class="jxr_linenumber" name="L1333" href="#L1333">1333</a> 
-<a class="jxr_linenumber" name="L1334" href="#L1334">1334</a>                         tx.commit();
-<a class="jxr_linenumber" name="L1335" href="#L1335">1335</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
-<a class="jxr_linenumber" name="L1336" href="#L1336">1336</a>                         serviceCounter.update(JUDDIQuery.GET_ALL_CLIENT_SUB,
-<a class="jxr_linenumber" name="L1337" href="#L1337">1337</a>                                 QueryStatus.SUCCESS, procTime);
-<a class="jxr_linenumber" name="L1338" href="#L1338">1338</a>                 } <strong class="jxr_keyword">catch</strong> (DispositionReportFaultMessage drfm) {
-<a class="jxr_linenumber" name="L1339" href="#L1339">1339</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
-<a class="jxr_linenumber" name="L1340" href="#L1340">1340</a>                         serviceCounter.update(JUDDIQuery.GET_ALL_CLIENT_SUB,
-<a class="jxr_linenumber" name="L1341" href="#L1341">1341</a>                                 QueryStatus.FAILED, procTime);
-<a class="jxr_linenumber" name="L1342" href="#L1342">1342</a>                         <strong class="jxr_keyword">throw</strong> drfm;
-<a class="jxr_linenumber" name="L1343" href="#L1343">1343</a>                 } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L1344" href="#L1344">1344</a>                         <strong class="jxr_keyword">if</strong> (tx.isActive()) {
-<a class="jxr_linenumber" name="L1345" href="#L1345">1345</a>                                 tx.rollback();
-<a class="jxr_linenumber" name="L1346" href="#L1346">1346</a>                         }
-<a class="jxr_linenumber" name="L1347" href="#L1347">1347</a>                         em.close();
-<a class="jxr_linenumber" name="L1348" href="#L1348">1348</a>                 }
-<a class="jxr_linenumber" name="L1349" href="#L1349">1349</a> 
-<a class="jxr_linenumber" name="L1350" href="#L1350">1350</a>                 <strong class="jxr_keyword">return</strong> r;
-<a class="jxr_linenumber" name="L1351" href="#L1351">1351</a>         }
-<a class="jxr_linenumber" name="L1352" href="#L1352">1352</a> 
-<a class="jxr_linenumber" name="L1353" href="#L1353">1353</a>         @Override
-<a class="jxr_linenumber" name="L1354" href="#L1354">1354</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> <a href="../../../../../org/uddi/api_v3/DispositionReport.html">DispositionReport</a> setReplicationNodes(String authInfo, org.uddi.repl_v3.ReplicationConfiguration replicationConfiguration) <strong class="jxr_keyword">throws</strong> DispositionReportFaultMessage, RemoteException {
-<a class="jxr_linenumber" name="L1355" href="#L1355">1355</a>                 <strong class="jxr_keyword">long</strong> startTime = System.currentTimeMillis();
-<a class="jxr_linenumber" name="L1356" href="#L1356">1356</a> 
-<a class="jxr_linenumber" name="L1357" href="#L1357">1357</a>                 EntityManager em = PersistenceManager.getEntityManager();
-<a class="jxr_linenumber" name="L1358" href="#L1358">1358</a>                 EntityTransaction tx = em.getTransaction();
-<a class="jxr_linenumber" name="L1359" href="#L1359">1359</a>                 <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L1360" href="#L1360">1360</a>                         tx.begin();
-<a class="jxr_linenumber" name="L1361" href="#L1361">1361</a> 
-<a class="jxr_linenumber" name="L1362" href="#L1362">1362</a>                         org.uddi.repl_v3.ReplicationConfiguration oldConfig = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L1363" href="#L1363">1363</a>                         <a href="../../../../../org/apache/juddi/model/UddiEntityPublisher.html">UddiEntityPublisher</a> publisher = <strong class="jxr_keyword">this</strong>.getEntityPublisher(em, authInfo);
-<a class="jxr_linenumber" name="L1364" href="#L1364">1364</a>                         <strong class="jxr_keyword">if</strong> (!((Publisher) publisher).isAdmin()) {
-<a class="jxr_linenumber" name="L1365" href="#L1365">1365</a>                                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/UserMismatchException.html">UserMismatchException</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/ErrorMessage.html">ErrorMessage</a>(<span class="jxr_string">"errors.AdminReqd"</span>));
-<a class="jxr_linenumber" name="L1366" href="#L1366">1366</a>                         }
-<a class="jxr_linenumber" name="L1367" href="#L1367">1367</a>                         <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/validation/ValidateReplication.html">ValidateReplication</a>(publisher).validateSetReplicationNodes(replicationConfiguration, em, getNode(), AppConfig.getConfiguration());
-<a class="jxr_linenumber" name="L1368" href="#L1368">1368</a> 
-<a class="jxr_linenumber" name="L1369" href="#L1369">1369</a>                         org.apache.juddi.model.ReplicationConfiguration model = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L1370" href="#L1370">1370</a>                         logger.info(publisher.getAuthorizedName() + <span class="jxr_string">" is setting the replication config from "</span> + getRequestorsIPAddress());<em class="jxr_comment">// + " " + sw.toString());</em>
-<a class="jxr_linenumber" name="L1371" href="#L1371">1371</a>                         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L1372" href="#L1372">1372</a>                                 model = (ReplicationConfiguration) em.createQuery(<span class="jxr_string">"select c FROM ReplicationConfiguration c order by c.serialNumber desc"</span>).getSingleResult();
-<a class="jxr_linenumber" name="L1373" href="#L1373">1373</a>                         } <strong class="jxr_keyword">catch</strong> (Exception ex) {
-<a class="jxr_linenumber" name="L1374" href="#L1374">1374</a>                         }
-<a class="jxr_linenumber" name="L1375" href="#L1375">1375</a>                         SimpleDateFormat sdf = <strong class="jxr_keyword">new</strong> SimpleDateFormat(<span class="jxr_string">"yyyyMMddkkmmZ"</span>);
-<a class="jxr_linenumber" name="L1376" href="#L1376">1376</a>                         <strong class="jxr_keyword">if</strong> (model == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1377" href="#L1377">1377</a>                                 <em class="jxr_comment">//this is a brand new configuration and we didn't have one before</em>
-<a class="jxr_linenumber" name="L1378" href="#L1378">1378</a>                                 model = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/model/ReplicationConfiguration.html">ReplicationConfiguration</a>();
-<a class="jxr_linenumber" name="L1379" href="#L1379">1379</a>                                 MappingApiToModel.mapReplicationConfiguration(replicationConfiguration, model, em);
-<a class="jxr_linenumber" name="L1380" href="#L1380">1380</a>                                 model.setSerialNumber(System.currentTimeMillis());
-<a class="jxr_linenumber" name="L1381" href="#L1381">1381</a>                                 model.setTimeOfConfigurationUpdate(sdf.format(<strong class="jxr_keyword">new</strong> Date()));
-<a class="jxr_linenumber" name="L1382" href="#L1382">1382</a>                                 em.persist(model);
-<a class="jxr_linenumber" name="L1383" href="#L1383">1383</a>                                 <em class="jxr_comment">//if (newReplicationNode(model)){</em>
-<a class="jxr_linenumber" name="L1384" href="#L1384">1384</a>                                 <em class="jxr_comment">//tell the replication notifier to start transfering with</em>
-<a class="jxr_linenumber" name="L1385" href="#L1385">1385</a>                                 <em class="jxr_comment">//the first change record</em>
-<a class="jxr_linenumber" name="L1386" href="#L1386">1386</a>                                 <em class="jxr_comment">//}</em>
-<a class="jxr_linenumber" name="L1387" href="#L1387">1387</a> 
-<a class="jxr_linenumber" name="L1388" href="#L1388">1388</a>                         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L1389" href="#L1389">1389</a>                                 <em class="jxr_comment">//a config exists, remove it, add the new one</em>
-<a class="jxr_linenumber" name="L1390" href="#L1390">1390</a>                                 <em class="jxr_comment">//spec doesn't appear to mention if recording a change history on the config is required</em>
-<a class="jxr_linenumber" name="L1391" href="#L1391">1391</a>                                 <em class="jxr_comment">//assuming we'll keep it for now, might be useful later.</em>
-<a class="jxr_linenumber" name="L1392" href="#L1392">1392</a>                                 <em class="jxr_comment">//em.remove(model);</em>
-<a class="jxr_linenumber" name="L1393" href="#L1393">1393</a>                                 oldConfig = <strong class="jxr_keyword">new</strong> org.uddi.repl_v3.ReplicationConfiguration();
-<a class="jxr_linenumber" name="L1394" href="#L1394">1394</a>                                 MappingModelToApi.mapReplicationConfiguration(model, oldConfig);
-<a class="jxr_linenumber" name="L1395" href="#L1395">1395</a> 
-<a class="jxr_linenumber" name="L1396" href="#L1396">1396</a>                                 <a href="../../../../../org/apache/juddi/model/ReplicationConfiguration.html">ReplicationConfiguration</a> model2 = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/model/ReplicationConfiguration.html">ReplicationConfiguration</a>();
-<a class="jxr_linenumber" name="L1397" href="#L1397">1397</a>                                 MappingApiToModel.mapReplicationConfiguration(replicationConfiguration, model2, em);
-<a class="jxr_linenumber" name="L1398" href="#L1398">1398</a>                                 model2.setSerialNumber(System.currentTimeMillis());
-<a class="jxr_linenumber" name="L1399" href="#L1399">1399</a> 
-<a class="jxr_linenumber" name="L1400" href="#L1400">1400</a>                                 model2.setTimeOfConfigurationUpdate(sdf.format(<strong class="jxr_keyword">new</strong> Date()));
-<a class="jxr_linenumber" name="L1401" href="#L1401">1401</a>                                 em.persist(model2);
-<a class="jxr_linenumber" name="L1402" href="#L1402">1402</a> 
-<a class="jxr_linenumber" name="L1403" href="#L1403">1403</a>                         }
-<a class="jxr_linenumber" name="L1404" href="#L1404">1404</a> 
-<a class="jxr_linenumber" name="L1405" href="#L1405">1405</a>                         tx.commit();
-<a class="jxr_linenumber" name="L1406" href="#L1406">1406</a>                         UDDIReplicationImpl.notifyConfigurationChange(oldConfig, replicationConfiguration, <strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="L1407" href="#L1407">1407</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
-<a class="jxr_linenumber" name="L1408" href="#L1408">1408</a>                         serviceCounter.update(JUDDIQuery.SET_REPLICATION_NODES,
-<a class="jxr_linenumber" name="L1409" href="#L1409">1409</a>                                 QueryStatus.SUCCESS, procTime);
-<a class="jxr_linenumber" name="L1410" href="#L1410">1410</a>                 } <strong class="jxr_keyword">catch</strong> (DispositionReportFaultMessage drfm) {
-<a class="jxr_linenumber" name="L1411" href="#L1411">1411</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
-<a class="jxr_linenumber" name="L1412" href="#L1412">1412</a>                         serviceCounter.update(JUDDIQuery.SET_REPLICATION_NODES,
-<a class="jxr_linenumber" name="L1413" href="#L1413">1413</a>                                 QueryStatus.FAILED, procTime);
-<a class="jxr_linenumber" name="L1414" href="#L1414">1414</a>                         <strong class="jxr_keyword">throw</strong> drfm;
-<a class="jxr_linenumber" name="L1415" href="#L1415">1415</a>                 } <strong class="jxr_keyword">catch</strong> (Exception ex) {
-<a class="jxr_linenumber" name="L1416" href="#L1416">1416</a>                         logger.error(ex, ex);
-<a class="jxr_linenumber" name="L1417" href="#L1417">1417</a>                         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/FatalErrorException.html">FatalErrorException</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/ErrorMessage.html">ErrorMessage</a>(<span class="jxr_string">"E_fatalError"</span>, ex.getMessage()));
-<a class="jxr_linenumber" name="L1418" href="#L1418">1418</a>                 } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L1419" href="#L1419">1419</a>                         <strong class="jxr_keyword">if</strong> (tx.isActive()) {
-<a class="jxr_linenumber" name="L1420" href="#L1420">1420</a>                                 tx.rollback();
-<a class="jxr_linenumber" name="L1421" href="#L1421">1421</a>                         }
-<a class="jxr_linenumber" name="L1422" href="#L1422">1422</a>                         em.close();
-<a class="jxr_linenumber" name="L1423" href="#L1423">1423</a>                 }
-<a class="jxr_linenumber" name="L1424" href="#L1424">1424</a>                 <a href="../../../../../org/uddi/api_v3/DispositionReport.html">DispositionReport</a> d = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/uddi/api_v3/DispositionReport.html">DispositionReport</a>();
-<a class="jxr_linenumber" name="L1425" href="#L1425">1425</a>                 <a href="../../../../../org/uddi/api_v3/Result.html">Result</a> res = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/uddi/api_v3/Result.html">Result</a>();
-<a class="jxr_linenumber" name="L1426" href="#L1426">1426</a> 
-<a class="jxr_linenumber" name="L1427" href="#L1427">1427</a>                 d.getResult().add(res);
-<a class="jxr_linenumber" name="L1428" href="#L1428">1428</a>                 <strong class="jxr_keyword">return</strong> d;
-<a class="jxr_linenumber" name="L1429" href="#L1429">1429</a>         }
-<a class="jxr_linenumber" name="L1430" href="#L1430">1430</a> 
-<a class="jxr_linenumber" name="L1431" href="#L1431">1431</a>         @Override
-<a class="jxr_linenumber" name="L1432" href="#L1432">1432</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> org.uddi.repl_v3.ReplicationConfiguration getReplicationNodes(String authInfo) <strong class="jxr_keyword">throws</strong> DispositionReportFaultMessage, RemoteException {
-<a class="jxr_linenumber" name="L1433" href="#L1433">1433</a>                 <strong class="jxr_keyword">long</strong> startTime = System.currentTimeMillis();
-<a class="jxr_linenumber" name="L1434" href="#L1434">1434</a>                 org.uddi.repl_v3.ReplicationConfiguration r = <strong class="jxr_keyword">new</strong> org.uddi.repl_v3.ReplicationConfiguration();
-<a class="jxr_linenumber" name="L1435" href="#L1435">1435</a> 
-<a class="jxr_linenumber" name="L1436" href="#L1436">1436</a>                 EntityManager em = PersistenceManager.getEntityManager();
-<a class="jxr_linenumber" name="L1437" href="#L1437">1437</a>                 EntityTransaction tx = em.getTransaction();
-<a class="jxr_linenumber" name="L1438" href="#L1438">1438</a>                 <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L1439" href="#L1439">1439</a>                         tx.begin();
-<a class="jxr_linenumber" name="L1440" href="#L1440">1440</a> 
-<a class="jxr_linenumber" name="L1441" href="#L1441">1441</a>                         <a href="../../../../../org/apache/juddi/model/UddiEntityPublisher.html">UddiEntityPublisher</a> publisher = <strong class="jxr_keyword">this</strong>.getEntityPublisher(em, authInfo);
-<a class="jxr_linenumber" name="L1442" href="#L1442">1442</a>                         <strong class="jxr_keyword">if</strong> (!((Publisher) publisher).isAdmin()) {
-<a class="jxr_linenumber" name="L1443" href="#L1443">1443</a>                                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/UserMismatchException.html">UserMismatchException</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/ErrorMessage.html">ErrorMessage</a>(<span class="jxr_string">"errors.AdminReqd"</span>));
-<a class="jxr_linenumber" name="L1444" href="#L1444">1444</a>                         }
-<a class="jxr_linenumber" name="L1445" href="#L1445">1445</a> 
-<a class="jxr_linenumber" name="L1446" href="#L1446">1446</a>                         StringBuilder sql = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L1447" href="#L1447">1447</a>                         sql.append(<span class="jxr_string">"select c from ReplicationConfiguration c order by c.serialNumber desc"</span>);
-<a class="jxr_linenumber" name="L1448" href="#L1448">1448</a>                         <em class="jxr_comment">//sql.toString();</em>
-<a class="jxr_linenumber" name="L1449" href="#L1449">1449</a>                         Query qry = em.createQuery(sql.toString());
-<a class="jxr_linenumber" name="L1450" href="#L1450">1450</a>                         qry.setMaxResults(1);
-<a class="jxr_linenumber" name="L1451" href="#L1451">1451</a> 
-<a class="jxr_linenumber" name="L1452" href="#L1452">1452</a>                         org.apache.juddi.model.ReplicationConfiguration resultList = (org.apache.juddi.model.ReplicationConfiguration) qry.getSingleResult();
-<a class="jxr_linenumber" name="L1453" href="#L1453">1453</a>                         MappingModelToApi.mapReplicationConfiguration(resultList, r);
-<a class="jxr_linenumber" name="L1454" href="#L1454">1454</a>                         tx.commit();
-<a class="jxr_linenumber" name="L1455" href="#L1455">1455</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
-<a class="jxr_linenumber" name="L1456" href="#L1456">1456</a>                         serviceCounter.update(JUDDIQuery.GET_ALL_NODES,
-<a class="jxr_linenumber" name="L1457" href="#L1457">1457</a>                                 QueryStatus.SUCCESS, procTime);
-<a class="jxr_linenumber" name="L1458" href="#L1458">1458</a>                 } <strong class="jxr_keyword">catch</strong> (DispositionReportFaultMessage drfm) {
-<a class="jxr_linenumber" name="L1459" href="#L1459">1459</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
-<a class="jxr_linenumber" name="L1460" href="#L1460">1460</a>                         serviceCounter.update(JUDDIQuery.GET_ALL_NODES,
-<a class="jxr_linenumber" name="L1461" href="#L1461">1461</a>                                 QueryStatus.FAILED, procTime);
-<a class="jxr_linenumber" name="L1462" href="#L1462">1462</a>                         <strong class="jxr_keyword">throw</strong> drfm;
-<a class="jxr_linenumber" name="L1463" href="#L1463">1463</a>                 } <strong class="jxr_keyword">catch</strong> (Exception ex) {
-<a class="jxr_linenumber" name="L1464" href="#L1464">1464</a>                         <em class="jxr_comment">//possible that there is no config to return</em>
-<a class="jxr_linenumber" name="L1465" href="#L1465">1465</a>                         logger.debug(<span class="jxr_string">"Error caught, is there a replication config is avaiable? Returning a default config (no replication): "</span>, ex);
-<a class="jxr_linenumber" name="L1466" href="#L1466">1466</a> 
-<a class="jxr_linenumber" name="L1467" href="#L1467">1467</a>                         r.setCommunicationGraph(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/uddi/repl_v3/CommunicationGraph.html">CommunicationGraph</a>());
-<a class="jxr_linenumber" name="L1468" href="#L1468">1468</a>                         <a href="../../../../../org/apache/juddi/model/Operator.html">Operator</a> op = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/model/Operator.html">Operator</a>();
-<a class="jxr_linenumber" name="L1469" href="#L1469">1469</a>                         op.setOperatorNodeID(getNode());
-<a class="jxr_linenumber" name="L1470" href="#L1470">1470</a>                         op.setSoapReplicationURL(baseUrlSSL + <span class="jxr_string">"replication/services/replication"</span>);
-<a class="jxr_linenumber" name="L1471" href="#L1471">1471</a> 
-<a class="jxr_linenumber" name="L1472" href="#L1472">1472</a>                         op.getContact().add(<strong class="jxr_keyword">new</strong> Contact());
-<a class="jxr_linenumber" name="L1473" href="#L1473">1473</a>                         op.getContact().get(0).getPersonName().add(<strong class="jxr_keyword">new</strong> PersonName(<span class="jxr_string">"Unknown"</span>, <strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L1474" href="#L1474">1474</a>                         op.setOperatorStatus(OperatorStatusType.NORMAL);
-<a class="jxr_linenumber" name="L1475" href="#L1475">1475</a> 
-<a class="jxr_linenumber" name="L1476" href="#L1476">1476</a>                         r.getOperator().add(op);
-<a class="jxr_linenumber" name="L1477" href="#L1477">1477</a>                         r.getCommunicationGraph().getNode().add(getNode());
-<a class="jxr_linenumber" name="L1478" href="#L1478">1478</a>                         r.getCommunicationGraph().getControlledMessage().add(<span class="jxr_string">"*"</span>);
-<a class="jxr_linenumber" name="L1479" href="#L1479">1479</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
-<a class="jxr_linenumber" name="L1480" href="#L1480">1480</a>                         r.setSerialNumber(0);
-<a class="jxr_linenumber" name="L1481" href="#L1481">1481</a>                         SimpleDateFormat sdf = <strong class="jxr_keyword">new</strong> SimpleDateFormat(<span class="jxr_string">"yyyyMMddkkmmZ"</span>);
-<a class="jxr_linenumber" name="L1482" href="#L1482">1482</a>                         r.setTimeOfConfigurationUpdate(sdf.format(<strong class="jxr_keyword">new</strong> Date()));
-<a class="jxr_linenumber" name="L1483" href="#L1483">1483</a>                         r.setRegistryContact(<strong class="jxr_keyword">new</strong> org.uddi.repl_v3.ReplicationConfiguration.RegistryContact());
-<a class="jxr_linenumber" name="L1484" href="#L1484">1484</a>                         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L1485" href="#L1485">1485</a>                                 <em class="jxr_comment">// pull from root business</em>
-<a class="jxr_linenumber" name="L1486" href="#L1486">1486</a>                                 <strong class="jxr_keyword">if</strong> (!tx.isActive()) {
-<a class="jxr_linenumber" name="L1487" href="#L1487">1487</a>                                         tx = em.getTransaction();
-<a class="jxr_linenumber" name="L1488" href="#L1488">1488</a>                                 }
-<a class="jxr_linenumber" name="L1489" href="#L1489">1489</a> 
-<a class="jxr_linenumber" name="L1490" href="#L1490">1490</a>                                 <a href="../../../../../org/apache/juddi/model/BusinessEntity.html">BusinessEntity</a> rootbiz = em.find(BusinessEntity.<strong class="jxr_keyword">class</strong>, AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ROOT_BUSINESS));
-<a class="jxr_linenumber" name="L1491" href="#L1491">1491</a>                                 <strong class="jxr_keyword">if</strong> (rootbiz != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1492" href="#L1492">1492</a> 
-<a class="jxr_linenumber" name="L1493" href="#L1493">1493</a>                                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; rootbiz.getContacts().size(); i++) {
-<a class="jxr_linenumber" name="L1494" href="#L1494">1494</a>                                                 <a href="../../../../../org/apache/juddi/model/Contact.html">Contact</a> c = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/model/Contact.html">Contact</a>();
-<a class="jxr_linenumber" name="L1495" href="#L1495">1495</a>                                                 MappingModelToApi.mapContact(rootbiz.getContacts().get(i), c);
-<a class="jxr_linenumber" name="L1496" href="#L1496">1496</a>                                                 r.getRegistryContact().setContact(c);
-<a class="jxr_linenumber" name="L1497" href="#L1497">1497</a>                                                 <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L1498" href="#L1498">1498</a>                                         }
-<a class="jxr_linenumber" name="L1499" href="#L1499">1499</a> 
-<a class="jxr_linenumber" name="L1500" href="#L1500">1500</a>                                 }
-<a class="jxr_linenumber" name="L1501" href="#L1501">1501</a>                                 tx.rollback();
-<a class="jxr_linenumber" name="L1502" href="#L1502">1502</a> 
-<a class="jxr_linenumber" name="L1503" href="#L1503">1503</a>                         } <strong class="jxr_keyword">catch</strong> (Exception ex1) {
-<a class="jxr_linenumber" name="L1504" href="#L1504">1504</a>                                 logger.warn(<span class="jxr_string">"unexpected error"</span>, ex1);
-<a class="jxr_linenumber" name="L1505" href="#L1505">1505</a>                         }
-<a class="jxr_linenumber" name="L1506" href="#L1506">1506</a>                         <strong class="jxr_keyword">if</strong> (r.getRegistryContact().getContact() == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1507" href="#L1507">1507</a>                                 r.getRegistryContact().setContact(<strong class="jxr_keyword">new</strong> Contact());
-<a class="jxr_linenumber" name="L1508" href="#L1508">1508</a>                                 r.getRegistryContact().getContact().getPersonName().add(<strong class="jxr_keyword">new</strong> PersonName(<span class="jxr_string">"Unknown"</span>, <strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L1509" href="#L1509">1509</a>                         }
-<a class="jxr_linenumber" name="L1510" href="#L1510">1510</a>                         serviceCounter.update(JUDDIQuery.GET_REPLICATION_NODES,
-<a class="jxr_linenumber" name="L1511" href="#L1511">1511</a>                                 QueryStatus.SUCCESS, procTime);
-<a class="jxr_linenumber" name="L1512" href="#L1512">1512</a> 
-<a class="jxr_linenumber" name="L1513" href="#L1513">1513</a>                 } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L1514" href="#L1514">1514</a>                         <strong class="jxr_keyword">if</strong> (tx.isActive()) {
-<a class="jxr_linenumber" name="L1515" href="#L1515">1515</a>                                 tx.rollback();
-<a class="jxr_linenumber" name="L1516" href="#L1516">1516</a>                         }
-<a class="jxr_linenumber" name="L1517" href="#L1517">1517</a>                         em.close();
-<a class="jxr_linenumber" name="L1518" href="#L1518">1518</a>                 }
-<a class="jxr_linenumber" name="L1519" href="#L1519">1519</a> 
-<a class="jxr_linenumber" name="L1520" href="#L1520">1520</a>                 r.setMaximumTimeToGetChanges(BigInteger.ONE);
-<a class="jxr_linenumber" name="L1521" href="#L1521">1521</a>                 r.setMaximumTimeToSyncRegistry(BigInteger.ONE);
-<a class="jxr_linenumber" name="L1522" href="#L1522">1522</a>                 <em class="jxr_comment">//StringWriter sw = new StringWriter();</em>
-<a class="jxr_linenumber" name="L1523" href="#L1523">1523</a>                 <em class="jxr_comment">//JAXB.marshal(r, sw);</em>
-<a class="jxr_linenumber" name="L1524" href="#L1524">1524</a>                 <em class="jxr_comment">//logger.info("dumping returned replication config " + sw.toString());</em>
-<a class="jxr_linenumber" name="L1525" href="#L1525">1525</a>                 <strong class="jxr_keyword">return</strong> r;
-<a class="jxr_linenumber" name="L1526" href="#L1526">1526</a>         }
-<a class="jxr_linenumber" name="L1527" href="#L1527">1527</a> 
-<a class="jxr_linenumber" name="L1528" href="#L1528">1528</a>         <strong class="jxr_keyword">static</strong> <a href="../../../../../org/apache/juddi/api/impl/UDDISubscriptionImpl.html">UDDISubscriptionImpl</a> sub = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/api/impl/UDDISubscriptionImpl.html">UDDISubscriptionImpl</a>();
-<a class="jxr_linenumber" name="L1529" href="#L1529">1529</a>         <strong class="jxr_keyword">static</strong> <a href="../../../../../org/apache/juddi/api/impl/UDDISecurityImpl.html">UDDISecurityImpl</a> sec = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/api/impl/UDDISecurityImpl.html">UDDISecurityImpl</a>();
-<a class="jxr_linenumber" name="L1530" href="#L1530">1530</a>         <strong class="jxr_keyword">static</strong> <a href="../../../../../org/apache/juddi/api/impl/UDDIPublicationImpl.html">UDDIPublicationImpl</a> pub = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/api/impl/UDDIPublicationImpl.html">UDDIPublicationImpl</a>();
-<a class="jxr_linenumber" name="L1531" href="#L1531">1531</a> 
-<a class="jxr_linenumber" name="L1532" href="#L1532">1532</a>         @Override
-<a class="jxr_linenumber" name="L1533" href="#L1533">1533</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> adminSaveSubscription(String authInfo, String publisherOrUsername, Holder&lt;List&lt;Subscription&gt;&gt; subscriptions) <strong class="jxr_keyword">throws</strong> DispositionReportFaultMessage {
-<a class="jxr_linenumber" name="L1534" href="#L1534">1534</a>                 <strong class="jxr_keyword">long</strong> startTime = System.currentTimeMillis();
-<a class="jxr_linenumber" name="L1535" href="#L1535">1535</a>                 EntityManager em = PersistenceManager.getEntityManager();
-<a class="jxr_linenumber" name="L1536" href="#L1536">1536</a>                 EntityTransaction tx = em.getTransaction();
-<a class="jxr_linenumber" name="L1537" href="#L1537">1537</a>                 <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L1538" href="#L1538">1538</a>                         tx.begin();
-<a class="jxr_linenumber" name="L1539" href="#L1539">1539</a>                         <a href="../../../../../org/apache/juddi/model/UddiEntityPublisher.html">UddiEntityPublisher</a> requestor = <strong class="jxr_keyword">this</strong>.getEntityPublisher(em, authInfo);
-<a class="jxr_linenumber" name="L1540" href="#L1540">1540</a>                         <strong class="jxr_keyword">if</strong> (!((Publisher) requestor).isAdmin()) {
-<a class="jxr_linenumber" name="L1541" href="#L1541">1541</a>                                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/UserMismatchException.html">UserMismatchException</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/ErrorMessage.html">ErrorMessage</a>(<span class="jxr_string">"errors.AdminReqd"</span>));
-<a class="jxr_linenumber" name="L1542" href="#L1542">1542</a>                         }
-<a class="jxr_linenumber" name="L1543" href="#L1543">1543</a>                         <em class="jxr_comment">//impersonate the user</em>
-<a class="jxr_linenumber" name="L1544" href="#L1544">1544</a>                         <a href="../../../../../org/apache/juddi/model/AuthToken.html">AuthToken</a> authToken = sec.getAuthToken(publisherOrUsername);
-<a class="jxr_linenumber" name="L1545" href="#L1545">1545</a>                         sub.saveSubscription(authToken.getAuthInfo(), subscriptions);
-<a class="jxr_linenumber" name="L1546" href="#L1546">1546</a>                         tx.commit();
-<a class="jxr_linenumber" name="L1547" href="#L1547">1547</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
-<a class="jxr_linenumber" name="L1548" href="#L1548">1548</a>                         serviceCounter.update(JUDDIQuery.ADMIN_SAVE_SUB,
-<a class="jxr_linenumber" name="L1549" href="#L1549">1549</a>                                 QueryStatus.SUCCESS, procTime);
-<a class="jxr_linenumber" name="L1550" href="#L1550">1550</a>                 } <strong class="jxr_keyword">catch</strong> (DispositionReportFaultMessage drfm) {
-<a class="jxr_linenumber" name="L1551" href="#L1551">1551</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
-<a class="jxr_linenumber" name="L1552" href="#L1552">1552</a>                         serviceCounter.update(JUDDIQuery.ADMIN_SAVE_SUB,
-<a class="jxr_linenumber" name="L1553" href="#L1553">1553</a>                                 QueryStatus.FAILED, procTime);
-<a class="jxr_linenumber" name="L1554" href="#L1554">1554</a>                         <strong class="jxr_keyword">throw</strong> drfm;
-<a class="jxr_linenumber" name="L1555" href="#L1555">1555</a> 
-<a class="jxr_linenumber" name="L1556" href="#L1556">1556</a>                 } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L1557" href="#L1557">1557</a>                         <strong class="jxr_keyword">if</strong> (tx.isActive()) {
-<a class="jxr_linenumber" name="L1558" href="#L1558">1558</a>                                 tx.rollback();
-<a class="jxr_linenumber" name="L1559" href="#L1559">1559</a>                         }
-<a class="jxr_linenumber" name="L1560" href="#L1560">1560</a>                         em.close();
-<a class="jxr_linenumber" name="L1561" href="#L1561">1561</a>                 }
-<a class="jxr_linenumber" name="L1562" href="#L1562">1562</a> 
-<a class="jxr_linenumber" name="L1563" href="#L1563">1563</a>         }
-<a class="jxr_linenumber" name="L1564" href="#L1564">1564</a> 
-<a class="jxr_linenumber" name="L1565" href="#L1565">1565</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L1566" href="#L1566">1566</a> <em class="jxr_javadoccomment">         * {@inheritDoc }</em>
-<a class="jxr_linenumber" name="L1567" href="#L1567">1567</a> <em class="jxr_javadoccomment">         *</em>
-<a class="jxr_linenumber" name="L1568" href="#L1568">1568</a> <em class="jxr_javadoccomment">         * @param body</em>
-<a class="jxr_linenumber" name="L1569" href="#L1569">1569</a> <em class="jxr_javadoccomment">         * @return item history or null if not found</em>
-<a class="jxr_linenumber" name="L1570" href="#L1570">1570</a> <em class="jxr_javadoccomment">         * @throws DispositionReportFaultMessage</em>
-<a class="jxr_linenumber" name="L1571" href="#L1571">1571</a> <em class="jxr_javadoccomment">         * @throws RemoteException</em>
-<a class="jxr_linenumber" name="L1572" href="#L1572">1572</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L1573" href="#L1573">1573</a>         @Override
-<a class="jxr_linenumber" name="L1574" href="#L1574">1574</a>         <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/juddi/api_v3/GetEntityHistoryMessageResponse.html">GetEntityHistoryMessageResponse</a> getEntityHistory(<a href="../../../../../org/apache/juddi/api_v3/GetEntityHistoryMessageRequest.html">GetEntityHistoryMessageRequest</a> body) <strong class="jxr_keyword">throws</strong> DispositionReportFaultMessage, RemoteException {
-<a class="jxr_linenumber" name="L1575" href="#L1575">1575</a>                 <strong class="jxr_keyword">long</strong> startTime = System.currentTimeMillis();
-<a class="jxr_linenumber" name="L1576" href="#L1576">1576</a>                 <strong class="jxr_keyword">if</strong> (body == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1577" href="#L1577">1577</a>                         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/InvalidValueException.html">InvalidValueException</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/ErrorMessage.html">ErrorMessage</a>(<span class="jxr_string">"errors.NullInput"</span>));
-<a class="jxr_linenumber" name="L1578" href="#L1578">1578</a>                 }
-<a class="jxr_linenumber" name="L1579" href="#L1579">1579</a>                 EntityManager em = PersistenceManager.getEntityManager();
-<a class="jxr_linenumber" name="L1580" href="#L1580">1580</a>                 EntityTransaction tx = em.getTransaction();
-<a class="jxr_linenumber" name="L1581" href="#L1581">1581</a>                 <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L1582" href="#L1582">1582</a>                         tx.begin();
-<a class="jxr_linenumber" name="L1583" href="#L1583">1583</a>                         <a href="../../../../../org/apache/juddi/model/UddiEntityPublisher.html">UddiEntityPublisher</a> requestor = <strong class="jxr_keyword">this</strong>.getEntityPublisher(em, body.getAuthInfo());
-<a class="jxr_linenumber" name="L1584" href="#L1584">1584</a>                         <strong class="jxr_keyword">if</strong> (!((Publisher) requestor).isAdmin()) {
-<a class="jxr_linenumber" name="L1585" href="#L1585">1585</a>                                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/UserMismatchException.html">UserMismatchException</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/ErrorMessage.html">ErrorMessage</a>(<span class="jxr_string">"errors.AdminReqd"</span>));
-<a class="jxr_linenumber" name="L1586" href="#L1586">1586</a>                         }
-<a class="jxr_linenumber" name="L1587" href="#L1587">1587</a>                         <strong class="jxr_keyword">if</strong> (body.getMaxRecords() &lt;= 0) {
-<a class="jxr_linenumber" name="L1588" href="#L1588">1588</a>                                 body.setMaxRecords(20);
-<a class="jxr_linenumber" name="L1589" href="#L1589">1589</a>                         }
-<a class="jxr_linenumber" name="L1590" href="#L1590">1590</a>                         <strong class="jxr_keyword">if</strong> (body.getOffset() &lt; 0) {
-<a class="jxr_linenumber" name="L1591" href="#L1591">1591</a>                                 body.setOffset(0);
-<a class="jxr_linenumber" name="L1592" href="#L1592">1592</a>                         }
-<a class="jxr_linenumber" name="L1593" href="#L1593">1593</a>                         Query createQuery = em.createQuery(<span class="jxr_string">"select m from ChangeRecord m where m.entityKey = :key order by m.id DESC"</span>);
-<a class="jxr_linenumber" name="L1594" href="#L1594">1594</a>                         createQuery.setMaxResults((<strong class="jxr_keyword">int</strong>) body.getMaxRecords());
-<a class="jxr_linenumber" name="L1595" href="#L1595">1595</a>                         createQuery.setParameter(<span class="jxr_string">"key"</span>, body.getEntityKey());
-<a class="jxr_linenumber" name="L1596" href="#L1596">1596</a>                         createQuery.setFirstResult((<strong class="jxr_keyword">int</strong>) body.getOffset());
-<a class="jxr_linenumber" name="L1597" href="#L1597">1597</a>                         List&lt;ChangeRecord&gt; resultList = createQuery.getResultList();
-<a class="jxr_linenumber" name="L1598" href="#L1598">1598</a>                         <a href="../../../../../org/apache/juddi/api_v3/GetEntityHistoryMessageResponse.html">GetEntityHistoryMessageResponse</a> res = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/api_v3/GetEntityHistoryMessageResponse.html">GetEntityHistoryMessageResponse</a>();
-<a class="jxr_linenumber" name="L1599" href="#L1599">1599</a>                         res.setChangeRecords(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/uddi/repl_v3/ChangeRecords.html">ChangeRecords</a>());
-<a class="jxr_linenumber" name="L1600" href="#L1600">1600</a>                         <strong class="jxr_keyword">for</strong> (ChangeRecord cr : resultList) {
-<a class="jxr_linenumber" name="L1601" href="#L1601">1601</a>                                 res.getChangeRecords().getChangeRecord().add(MappingModelToApi.mapChangeRecord(cr));
-<a class="jxr_linenumber" name="L1602" href="#L1602">1602</a>                         }
-<a class="jxr_linenumber" name="L1603" href="#L1603">1603</a> 
-<a class="jxr_linenumber" name="L1604" href="#L1604">1604</a>                         tx.rollback();
-<a class="jxr_linenumber" name="L1605" href="#L1605">1605</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
-<a class="jxr_linenumber" name="L1606" href="#L1606">1606</a>                         serviceCounter.update(JUDDIQuery.ADMIN_GET_HISTORY,
-<a class="jxr_linenumber" name="L1607" href="#L1607">1607</a>                                 QueryStatus.SUCCESS, procTime);
-<a class="jxr_linenumber" name="L1608" href="#L1608">1608</a>                         <strong class="jxr_keyword">return</strong> res;
-<a class="jxr_linenumber" name="L1609" href="#L1609">1609</a>                 } <strong class="jxr_keyword">catch</strong> (DispositionReportFaultMessage drfm) {
-<a class="jxr_linenumber" name="L1610" href="#L1610">1610</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
-<a class="jxr_linenumber" name="L1611" href="#L1611">1611</a>                         serviceCounter.update(JUDDIQuery.ADMIN_GET_HISTORY,
-<a class="jxr_linenumber" name="L1612" href="#L1612">1612</a>                                 QueryStatus.FAILED, procTime);
-<a class="jxr_linenumber" name="L1613" href="#L1613">1613</a>                         <strong class="jxr_keyword">throw</strong> drfm;
-<a class="jxr_linenumber" name="L1614" href="#L1614">1614</a> 
-<a class="jxr_linenumber" name="L1615" href="#L1615">1615</a>                 } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L1616" href="#L1616">1616</a>                         <strong class="jxr_keyword">if</strong> (tx.isActive()) {
-<a class="jxr_linenumber" name="L1617" href="#L1617">1617</a>                                 tx.rollback();
-<a class="jxr_linenumber" name="L1618" href="#L1618">1618</a>                         }
-<a class="jxr_linenumber" name="L1619" href="#L1619">1619</a>                         em.close();
-<a class="jxr_linenumber" name="L1620" href="#L1620">1620</a>                 }
-<a class="jxr_linenumber" name="L1621" href="#L1621">1621</a>         }
-<a class="jxr_linenumber" name="L1622" href="#L1622">1622</a> 
-<a class="jxr_linenumber" name="L1623" href="#L1623">1623</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L1624" href="#L1624">1624</a> <em class="jxr_javadoccomment">         * {@inheritDoc }</em>
-<a class="jxr_linenumber" name="L1625" href="#L1625">1625</a> <em class="jxr_javadoccomment">         *</em>
-<a class="jxr_linenumber" name="L1626" href="#L1626">1626</a> <em class="jxr_javadoccomment">         * @param body</em>
-<a class="jxr_linenumber" name="L1627" href="#L1627">1627</a> <em class="jxr_javadoccomment">         * @return</em>
-<a class="jxr_linenumber" name="L1628" href="#L1628">1628</a> <em class="jxr_javadoccomment">         * @throws DispositionReportFaultMessage</em>
-<a class="jxr_linenumber" name="L1629" href="#L1629">1629</a> <em class="jxr_javadoccomment">         * @throws RemoteException</em>
-<a class="jxr_linenumber" name="L1630" href="#L1630">1630</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L1631" href="#L1631">1631</a>         @Override
-<a class="jxr_linenumber" name="L1632" href="#L1632">1632</a>         <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/juddi/api_v3/GetFailedReplicationChangeRecordsMessageResponse.html">GetFailedReplicationChangeRecordsMessageResponse</a> getFailedReplicationChangeRecords(
-<a class="jxr_linenumber" name="L1633" href="#L1633">1633</a>                 <a href="../../../../../org/apache/juddi/api_v3/GetFailedReplicationChangeRecordsMessageRequest.html">GetFailedReplicationChangeRecordsMessageRequest</a> body)
-<a class="jxr_linenumber" name="L1634" href="#L1634">1634</a>                 <strong class="jxr_keyword">throws</strong> DispositionReportFaultMessage, RemoteException {
-<a class="jxr_linenumber" name="L1635" href="#L1635">1635</a>                 <em class="jxr_comment">//public GetFailedReplicationChangeRecordsMessageResponse getFailedReplicationChangeRecords(GetFailedReplicationChangeRecordsMessageRequest body) throws DispositionReportFaultMessage, RemoteException {</em>
-<a class="jxr_linenumber" name="L1636" href="#L1636">1636</a>                 <strong class="jxr_keyword">long</strong> startTime = System.currentTimeMillis();
-<a class="jxr_linenumber" name="L1637" href="#L1637">1637</a>                 <strong class="jxr_keyword">if</strong> (body == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L1638" href="#L1638">1638</a>                         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/InvalidValueException.html">InvalidValueException</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/ErrorMessage.html">ErrorMessage</a>(<span class="jxr_string">"errors.NullInput"</span>));
-<a class="jxr_linenumber" name="L1639" href="#L1639">1639</a>                 }
-<a class="jxr_linenumber" name="L1640" href="#L1640">1640</a>                 EntityManager em = PersistenceManager.getEntityManager();
-<a class="jxr_linenumber" name="L1641" href="#L1641">1641</a>                 EntityTransaction tx = em.getTransaction();
-<a class="jxr_linenumber" name="L1642" href="#L1642">1642</a>                 <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L1643" href="#L1643">1643</a>                         tx.begin();
-<a class="jxr_linenumber" name="L1644" href="#L1644">1644</a>                         <a href="../../../../../org/apache/juddi/model/UddiEntityPublisher.html">UddiEntityPublisher</a> requestor = <strong class="jxr_keyword">this</strong>.getEntityPublisher(em, body.getAuthInfo());
-<a class="jxr_linenumber" name="L1645" href="#L1645">1645</a>                         <strong class="jxr_keyword">if</strong> (!((Publisher) requestor).isAdmin()) {
-<a class="jxr_linenumber" name="L1646" href="#L1646">1646</a>                                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/UserMismatchException.html">UserMismatchException</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/ErrorMessage.html">ErrorMessage</a>(<span class="jxr_string">"errors.AdminReqd"</span>));
-<a class="jxr_linenumber" name="L1647" href="#L1647">1647</a>                         }
-<a class="jxr_linenumber" name="L1648" href="#L1648">1648</a>                         <strong class="jxr_keyword">if</strong> (body.getMaxRecords() &lt;= 0) {
-<a class="jxr_linenumber" name="L1649" href="#L1649">1649</a>                                 body.setMaxRecords(20);
-<a class="jxr_linenumber" name="L1650" href="#L1650">1650</a>                         }
-<a class="jxr_linenumber" name="L1651" href="#L1651">1651</a>                         <strong class="jxr_keyword">if</strong> (body.getOffset() &lt; 0) {
-<a class="jxr_linenumber" name="L1652" href="#L1652">1652</a>                                 body.setOffset(0);
-<a class="jxr_linenumber" name="L1653" href="#L1653">1653</a>                         }
-<a class="jxr_linenumber" name="L1654" href="#L1654">1654</a>                         Query createQuery = em.createQuery(<span class="jxr_string">"select m from ChangeRecord m where m.isAppliedLocally=false order by m.id DESC "</span>);
-<a class="jxr_linenumber" name="L1655" href="#L1655">1655</a>                         createQuery.setMaxResults((<strong class="jxr_keyword">int</strong>) body.getMaxRecords());
-<a class="jxr_linenumber" name="L1656" href="#L1656">1656</a>                         createQuery.setFirstResult((<strong class="jxr_keyword">int</strong>) body.getOffset());
-<a class="jxr_linenumber" name="L1657" href="#L1657">1657</a>                         List&lt;ChangeRecord&gt; resultList = createQuery.getResultList();
-<a class="jxr_linenumber" name="L1658" href="#L1658">1658</a>                         <a href="../../../../../org/apache/juddi/api_v3/GetFailedReplicationChangeRecordsMessageResponse.html">GetFailedReplicationChangeRecordsMessageResponse</a> res = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/api_v3/GetFailedReplicationChangeRecordsMessageResponse.html">GetFailedReplicationChangeRecordsMessageResponse</a>();
-<a class="jxr_linenumber" name="L1659" href="#L1659">1659</a>                         res.setChangeRecords(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/uddi/repl_v3/ChangeRecords.html">ChangeRecords</a>());
-<a class="jxr_linenumber" name="L1660" href="#L1660">1660</a>                         <strong class="jxr_keyword">for</strong> (ChangeRecord cr : resultList) {
-<a class="jxr_linenumber" name="L1661" href="#L1661">1661</a>                                 res.getChangeRecords().getChangeRecord().add(MappingModelToApi.mapChangeRecord(cr));
-<a class="jxr_linenumber" name="L1662" href="#L1662">1662</a>                         }
-<a class="jxr_linenumber" name="L1663" href="#L1663">1663</a> 
-<a class="jxr_linenumber" name="L1664" href="#L1664">1664</a>                         tx.rollback();
-<a class="jxr_linenumber" name="L1665" href="#L1665">1665</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
-<a class="jxr_linenumber" name="L1666" href="#L1666">1666</a>                         serviceCounter.update(JUDDIQuery.ADMIN_GET_FAILED_CRS,
-<a class="jxr_linenumber" name="L1667" href="#L1667">1667</a>                                 QueryStatus.SUCCESS, procTime);
-<a class="jxr_linenumber" name="L1668" href="#L1668">1668</a>                         <strong class="jxr_keyword">return</strong> res;
-<a class="jxr_linenumber" name="L1669" href="#L1669">1669</a>                 } <strong class="jxr_keyword">catch</strong> (DispositionReportFaultMessage drfm) {
-<a class="jxr_linenumber" name="L1670" href="#L1670">1670</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
-<a class="jxr_linenumber" name="L1671" href="#L1671">1671</a>                         serviceCounter.update(JUDDIQuery.ADMIN_GET_FAILED_CRS,
-<a class="jxr_linenumber" name="L1672" href="#L1672">1672</a>                                 QueryStatus.FAILED, procTime);
-<a class="jxr_linenumber" name="L1673" href="#L1673">1673</a>                         <strong class="jxr_keyword">throw</strong> drfm;
-<a class="jxr_linenumber" name="L1674" href="#L1674">1674</a> 
-<a class="jxr_linenumber" name="L1675" href="#L1675">1675</a>                 } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L1676" href="#L1676">1676</a>                         <strong class="jxr_keyword">if</strong> (tx.isActive()) {
-<a class="jxr_linenumber" name="L1677" href="#L1677">1677</a>                                 tx.rollback();
-<a class="jxr_linenumber" name="L1678" href="#L1678">1678</a>                         }
-<a class="jxr_linenumber" name="L1679" href="#L1679">1679</a>                         em.close();
-<a class="jxr_linenumber" name="L1680" href="#L1680">1680</a>                 }
-<a class="jxr_linenumber" name="L1681" href="#L1681">1681</a>         }
-<a class="jxr_linenumber" name="L1682" href="#L1682">1682</a> }
+<a class="jxr_linenumber" name="L1321" href="#L1321">1321</a>                         sql.append(<span class="jxr_string">"select distinct c from Subscription c "</span>);
+<a class="jxr_linenumber" name="L1322" href="#L1322">1322</a>                         Query qry = em.createQuery(sql.toString());
+<a class="jxr_linenumber" name="L1323" href="#L1323">1323</a>                         List&lt;org.apache.juddi.model.Subscription&gt; resultList = qry.getResultList();
+<a class="jxr_linenumber" name="L1324" href="#L1324">1324</a>                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; resultList.size(); i++) {
+<a class="jxr_linenumber" name="L1325" href="#L1325">1325</a>                                 <a href="../../../../../org/apache/juddi/model/Subscription.html">Subscription</a> sub = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/model/Subscription.html">Subscription</a>();
+<a class="jxr_linenumber" name="L1326" href="#L1326">1326</a>                                 MappingModelToApi.mapSubscription(resultList.get(i), sub);
+<a class="jxr_linenumber" name="L1327" href="#L1327">1327</a>                                 <a href="../../../../../org/apache/juddi/api_v3/SubscriptionWrapper.html">SubscriptionWrapper</a> x = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/api_v3/SubscriptionWrapper.html">SubscriptionWrapper</a>();
+<a class="jxr_linenumber" name="L1328" href="#L1328">1328</a>                                 x.getSubscription().add(sub);
+<a class="jxr_linenumber" name="L1329" href="#L1329">1329</a>                                 x.setPublisherIdOrUsername(resultList.get(i).getAuthorizedName());
+<a class="jxr_linenumber" name="L1330" href="#L1330">1330</a>                                 r.add(x);
+<a class="jxr_linenumber" name="L1331" href="#L1331">1331</a>                         }
+<a class="jxr_linenumber" name="L1332" href="#L1332">1332</a> 
+<a class="jxr_linenumber" name="L1333" href="#L1333">1333</a>                         tx.commit();
+<a class="jxr_linenumber" name="L1334" href="#L1334">1334</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
+<a class="jxr_linenumber" name="L1335" href="#L1335">1335</a>                         serviceCounter.update(JUDDIQuery.GET_ALL_CLIENT_SUB,
+<a class="jxr_linenumber" name="L1336" href="#L1336">1336</a>                                 QueryStatus.SUCCESS, procTime);
+<a class="jxr_linenumber" name="L1337" href="#L1337">1337</a>                 } <strong class="jxr_keyword">catch</strong> (DispositionReportFaultMessage drfm) {
+<a class="jxr_linenumber" name="L1338" href="#L1338">1338</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
+<a class="jxr_linenumber" name="L1339" href="#L1339">1339</a>                         serviceCounter.update(JUDDIQuery.GET_ALL_CLIENT_SUB,
+<a class="jxr_linenumber" name="L1340" href="#L1340">1340</a>                                 QueryStatus.FAILED, procTime);
+<a class="jxr_linenumber" name="L1341" href="#L1341">1341</a>                         <strong class="jxr_keyword">throw</strong> drfm;
+<a class="jxr_linenumber" name="L1342" href="#L1342">1342</a>                 } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L1343" href="#L1343">1343</a>                         <strong class="jxr_keyword">if</strong> (tx.isActive()) {
+<a class="jxr_linenumber" name="L1344" href="#L1344">1344</a>                                 tx.rollback();
+<a class="jxr_linenumber" name="L1345" href="#L1345">1345</a>                         }
+<a class="jxr_linenumber" name="L1346" href="#L1346">1346</a>                         em.close();
+<a class="jxr_linenumber" name="L1347" href="#L1347">1347</a>                 }
+<a class="jxr_linenumber" name="L1348" href="#L1348">1348</a> 
+<a class="jxr_linenumber" name="L1349" href="#L1349">1349</a>                 <strong class="jxr_keyword">return</strong> r;
+<a class="jxr_linenumber" name="L1350" href="#L1350">1350</a>         }
+<a class="jxr_linenumber" name="L1351" href="#L1351">1351</a> 
+<a class="jxr_linenumber" name="L1352" href="#L1352">1352</a>         @Override
+<a class="jxr_linenumber" name="L1353" href="#L1353">1353</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> <a href="../../../../../org/uddi/api_v3/DispositionReport.html">DispositionReport</a> setReplicationNodes(String authInfo, org.uddi.repl_v3.ReplicationConfiguration replicationConfiguration) <strong class="jxr_keyword">throws</strong> DispositionReportFaultMessage, RemoteException {
+<a class="jxr_linenumber" name="L1354" href="#L1354">1354</a>                 <strong class="jxr_keyword">long</strong> startTime = System.currentTimeMillis();
+<a class="jxr_linenumber" name="L1355" href="#L1355">1355</a> 
+<a class="jxr_linenumber" name="L1356" href="#L1356">1356</a>                 EntityManager em = PersistenceManager.getEntityManager();
+<a class="jxr_linenumber" name="L1357" href="#L1357">1357</a>                 EntityTransaction tx = em.getTransaction();
+<a class="jxr_linenumber" name="L1358" href="#L1358">1358</a>                 <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L1359" href="#L1359">1359</a>                         tx.begin();
+<a class="jxr_linenumber" name="L1360" href="#L1360">1360</a> 
+<a class="jxr_linenumber" name="L1361" href="#L1361">1361</a>                         org.uddi.repl_v3.ReplicationConfiguration oldConfig = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1362" href="#L1362">1362</a>                         <a href="../../../../../org/apache/juddi/model/UddiEntityPublisher.html">UddiEntityPublisher</a> publisher = <strong class="jxr_keyword">this</strong>.getEntityPublisher(em, authInfo);
+<a class="jxr_linenumber" name="L1363" href="#L1363">1363</a>                         <strong class="jxr_keyword">if</strong> (!((Publisher) publisher).isAdmin()) {
+<a class="jxr_linenumber" name="L1364" href="#L1364">1364</a>                                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/UserMismatchException.html">UserMismatchException</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/ErrorMessage.html">ErrorMessage</a>(<span class="jxr_string">"errors.AdminReqd"</span>));
+<a class="jxr_linenumber" name="L1365" href="#L1365">1365</a>                         }
+<a class="jxr_linenumber" name="L1366" href="#L1366">1366</a>                         <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/validation/ValidateReplication.html">ValidateReplication</a>(publisher).validateSetReplicationNodes(replicationConfiguration, em, getNode(), AppConfig.getConfiguration());
+<a class="jxr_linenumber" name="L1367" href="#L1367">1367</a> 
+<a class="jxr_linenumber" name="L1368" href="#L1368">1368</a>                         org.apache.juddi.model.ReplicationConfiguration model = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1369" href="#L1369">1369</a>                         logger.info(publisher.getAuthorizedName() + <span class="jxr_string">" is setting the replication config from "</span> + getRequestorsIPAddress());<em class="jxr_comment">// + " " + sw.toString());</em>
+<a class="jxr_linenumber" name="L1370" href="#L1370">1370</a>                         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L1371" href="#L1371">1371</a>                                 model = (ReplicationConfiguration) em.createQuery(<span class="jxr_string">"select c FROM ReplicationConfiguration c order by c.serialNumber desc"</span>).getSingleResult();
+<a class="jxr_linenumber" name="L1372" href="#L1372">1372</a>                         } <strong class="jxr_keyword">catch</strong> (Exception ex) {
+<a class="jxr_linenumber" name="L1373" href="#L1373">1373</a>                         }
+<a class="jxr_linenumber" name="L1374" href="#L1374">1374</a>                         SimpleDateFormat sdf = <strong class="jxr_keyword">new</strong> SimpleDateFormat(<span class="jxr_string">"yyyyMMddkkmmZ"</span>);
+<a class="jxr_linenumber" name="L1375" href="#L1375">1375</a>                         <strong class="jxr_keyword">if</strong> (model == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1376" href="#L1376">1376</a>                                 <em class="jxr_comment">//this is a brand new configuration and we didn't have one before</em>
+<a class="jxr_linenumber" name="L1377" href="#L1377">1377</a>                                 model = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/model/ReplicationConfiguration.html">ReplicationConfiguration</a>();
+<a class="jxr_linenumber" name="L1378" href="#L1378">1378</a>                                 MappingApiToModel.mapReplicationConfiguration(replicationConfiguration, model, em);
+<a class="jxr_linenumber" name="L1379" href="#L1379">1379</a>                                 model.setSerialNumber(System.currentTimeMillis());
+<a class="jxr_linenumber" name="L1380" href="#L1380">1380</a>                                 model.setTimeOfConfigurationUpdate(sdf.format(<strong class="jxr_keyword">new</strong> Date()));
+<a class="jxr_linenumber" name="L1381" href="#L1381">1381</a>                                 em.persist(model);
+<a class="jxr_linenumber" name="L1382" href="#L1382">1382</a>                                 <em class="jxr_comment">//if (newReplicationNode(model)){</em>
+<a class="jxr_linenumber" name="L1383" href="#L1383">1383</a>                                 <em class="jxr_comment">//tell the replication notifier to start transfering with</em>
+<a class="jxr_linenumber" name="L1384" href="#L1384">1384</a>                                 <em class="jxr_comment">//the first change record</em>
+<a class="jxr_linenumber" name="L1385" href="#L1385">1385</a>                                 <em class="jxr_comment">//}</em>
+<a class="jxr_linenumber" name="L1386" href="#L1386">1386</a> 
+<a class="jxr_linenumber" name="L1387" href="#L1387">1387</a>                         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L1388" href="#L1388">1388</a>                                 <em class="jxr_comment">//a config exists, remove it, add the new one</em>
+<a class="jxr_linenumber" name="L1389" href="#L1389">1389</a>                                 <em class="jxr_comment">//spec doesn't appear to mention if recording a change history on the config is required</em>
+<a class="jxr_linenumber" name="L1390" href="#L1390">1390</a>                                 <em class="jxr_comment">//assuming we'll keep it for now, might be useful later.</em>
+<a class="jxr_linenumber" name="L1391" href="#L1391">1391</a>                                 <em class="jxr_comment">//em.remove(model);</em>
+<a class="jxr_linenumber" name="L1392" href="#L1392">1392</a>                                 oldConfig = <strong class="jxr_keyword">new</strong> org.uddi.repl_v3.ReplicationConfiguration();
+<a class="jxr_linenumber" name="L1393" href="#L1393">1393</a>                                 MappingModelToApi.mapReplicationConfiguration(model, oldConfig);
+<a class="jxr_linenumber" name="L1394" href="#L1394">1394</a> 
+<a class="jxr_linenumber" name="L1395" href="#L1395">1395</a>                                 <a href="../../../../../org/apache/juddi/model/ReplicationConfiguration.html">ReplicationConfiguration</a> model2 = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/model/ReplicationConfiguration.html">ReplicationConfiguration</a>();
+<a class="jxr_linenumber" name="L1396" href="#L1396">1396</a>                                 MappingApiToModel.mapReplicationConfiguration(replicationConfiguration, model2, em);
+<a class="jxr_linenumber" name="L1397" href="#L1397">1397</a>                                 model2.setSerialNumber(System.currentTimeMillis());
+<a class="jxr_linenumber" name="L1398" href="#L1398">1398</a> 
+<a class="jxr_linenumber" name="L1399" href="#L1399">1399</a>                                 model2.setTimeOfConfigurationUpdate(sdf.format(<strong class="jxr_keyword">new</strong> Date()));
+<a class="jxr_linenumber" name="L1400" href="#L1400">1400</a>                                 em.persist(model2);
+<a class="jxr_linenumber" name="L1401" href="#L1401">1401</a> 
+<a class="jxr_linenumber" name="L1402" href="#L1402">1402</a>                         }
+<a class="jxr_linenumber" name="L1403" href="#L1403">1403</a> 
+<a class="jxr_linenumber" name="L1404" href="#L1404">1404</a>                         tx.commit();
+<a class="jxr_linenumber" name="L1405" href="#L1405">1405</a>                         UDDIReplicationImpl.notifyConfigurationChange(oldConfig, replicationConfiguration, <strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L1406" href="#L1406">1406</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
+<a class="jxr_linenumber" name="L1407" href="#L1407">1407</a>                         serviceCounter.update(JUDDIQuery.SET_REPLICATION_NODES,
+<a class="jxr_linenumber" name="L1408" href="#L1408">1408</a>                                 QueryStatus.SUCCESS, procTime);
+<a class="jxr_linenumber" name="L1409" href="#L1409">1409</a>                 } <strong class="jxr_keyword">catch</strong> (DispositionReportFaultMessage drfm) {
+<a class="jxr_linenumber" name="L1410" href="#L1410">1410</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
+<a class="jxr_linenumber" name="L1411" href="#L1411">1411</a>                         serviceCounter.update(JUDDIQuery.SET_REPLICATION_NODES,
+<a class="jxr_linenumber" name="L1412" href="#L1412">1412</a>                                 QueryStatus.FAILED, procTime);
+<a class="jxr_linenumber" name="L1413" href="#L1413">1413</a>                         <strong class="jxr_keyword">throw</strong> drfm;
+<a class="jxr_linenumber" name="L1414" href="#L1414">1414</a>                 } <strong class="jxr_keyword">catch</strong> (Exception ex) {
+<a class="jxr_linenumber" name="L1415" href="#L1415">1415</a>                         logger.error(ex, ex);
+<a class="jxr_linenumber" name="L1416" href="#L1416">1416</a>                         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/FatalErrorException.html">FatalErrorException</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/ErrorMessage.html">ErrorMessage</a>(<span class="jxr_string">"E_fatalError"</span>, ex.getMessage()));
+<a class="jxr_linenumber" name="L1417" href="#L1417">1417</a>                 } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L1418" href="#L1418">1418</a>                         <strong class="jxr_keyword">if</strong> (tx.isActive()) {
+<a class="jxr_linenumber" name="L1419" href="#L1419">1419</a>                                 tx.rollback();
+<a class="jxr_linenumber" name="L1420" href="#L1420">1420</a>                         }
+<a class="jxr_linenumber" name="L1421" href="#L1421">1421</a>                         em.close();
+<a class="jxr_linenumber" name="L1422" href="#L1422">1422</a>                 }
+<a class="jxr_linenumber" name="L1423" href="#L1423">1423</a>                 <a href="../../../../../org/uddi/api_v3/DispositionReport.html">DispositionReport</a> d = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/uddi/api_v3/DispositionReport.html">DispositionReport</a>();
+<a class="jxr_linenumber" name="L1424" href="#L1424">1424</a>                 <a href="../../../../../org/uddi/api_v3/Result.html">Result</a> res = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/uddi/api_v3/Result.html">Result</a>();
+<a class="jxr_linenumber" name="L1425" href="#L1425">1425</a> 
+<a class="jxr_linenumber" name="L1426" href="#L1426">1426</a>                 d.getResult().add(res);
+<a class="jxr_linenumber" name="L1427" href="#L1427">1427</a>                 <strong class="jxr_keyword">return</strong> d;
+<a class="jxr_linenumber" name="L1428" href="#L1428">1428</a>         }
+<a class="jxr_linenumber" name="L1429" href="#L1429">1429</a> 
+<a class="jxr_linenumber" name="L1430" href="#L1430">1430</a>         @Override
+<a class="jxr_linenumber" name="L1431" href="#L1431">1431</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> org.uddi.repl_v3.ReplicationConfiguration getReplicationNodes(String authInfo) <strong class="jxr_keyword">throws</strong> DispositionReportFaultMessage, RemoteException {
+<a class="jxr_linenumber" name="L1432" href="#L1432">1432</a>                 <strong class="jxr_keyword">long</strong> startTime = System.currentTimeMillis();
+<a class="jxr_linenumber" name="L1433" href="#L1433">1433</a>                 org.uddi.repl_v3.ReplicationConfiguration r = <strong class="jxr_keyword">new</strong> org.uddi.repl_v3.ReplicationConfiguration();
+<a class="jxr_linenumber" name="L1434" href="#L1434">1434</a> 
+<a class="jxr_linenumber" name="L1435" href="#L1435">1435</a>                 EntityManager em = PersistenceManager.getEntityManager();
+<a class="jxr_linenumber" name="L1436" href="#L1436">1436</a>                 EntityTransaction tx = em.getTransaction();
+<a class="jxr_linenumber" name="L1437" href="#L1437">1437</a>                 <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L1438" href="#L1438">1438</a>                         tx.begin();
+<a class="jxr_linenumber" name="L1439" href="#L1439">1439</a> 
+<a class="jxr_linenumber" name="L1440" href="#L1440">1440</a>                         <a href="../../../../../org/apache/juddi/model/UddiEntityPublisher.html">UddiEntityPublisher</a> publisher = <strong class="jxr_keyword">this</strong>.getEntityPublisher(em, authInfo);
+<a class="jxr_linenumber" name="L1441" href="#L1441">1441</a>                         <strong class="jxr_keyword">if</strong> (!((Publisher) publisher).isAdmin()) {
+<a class="jxr_linenumber" name="L1442" href="#L1442">1442</a>                                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/UserMismatchException.html">UserMismatchException</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/ErrorMessage.html">ErrorMessage</a>(<span class="jxr_string">"errors.AdminReqd"</span>));
+<a class="jxr_linenumber" name="L1443" href="#L1443">1443</a>                         }
+<a class="jxr_linenumber" name="L1444" href="#L1444">1444</a> 
+<a class="jxr_linenumber" name="L1445" href="#L1445">1445</a>                         StringBuilder sql = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="L1446" href="#L1446">1446</a>                         sql.append(<span class="jxr_string">"select c from ReplicationConfiguration c order by c.serialNumber desc"</span>);
+<a class="jxr_linenumber" name="L1447" href="#L1447">1447</a>                         <em class="jxr_comment">//sql.toString();</em>
+<a class="jxr_linenumber" name="L1448" href="#L1448">1448</a>                         Query qry = em.createQuery(sql.toString());
+<a class="jxr_linenumber" name="L1449" href="#L1449">1449</a>                         qry.setMaxResults(1);
+<a class="jxr_linenumber" name="L1450" href="#L1450">1450</a> 
+<a class="jxr_linenumber" name="L1451" href="#L1451">1451</a>                         org.apache.juddi.model.ReplicationConfiguration resultList = (org.apache.juddi.model.ReplicationConfiguration) qry.getSingleResult();
+<a class="jxr_linenumber" name="L1452" href="#L1452">1452</a>                         MappingModelToApi.mapReplicationConfiguration(resultList, r);
+<a class="jxr_linenumber" name="L1453" href="#L1453">1453</a>                         tx.commit();
+<a class="jxr_linenumber" name="L1454" href="#L1454">1454</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
+<a class="jxr_linenumber" name="L1455" href="#L1455">1455</a>                         serviceCounter.update(JUDDIQuery.GET_ALL_NODES,
+<a class="jxr_linenumber" name="L1456" href="#L1456">1456</a>                                 QueryStatus.SUCCESS, procTime);
+<a class="jxr_linenumber" name="L1457" href="#L1457">1457</a>                 } <strong class="jxr_keyword">catch</strong> (DispositionReportFaultMessage drfm) {
+<a class="jxr_linenumber" name="L1458" href="#L1458">1458</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
+<a class="jxr_linenumber" name="L1459" href="#L1459">1459</a>                         serviceCounter.update(JUDDIQuery.GET_ALL_NODES,
+<a class="jxr_linenumber" name="L1460" href="#L1460">1460</a>                                 QueryStatus.FAILED, procTime);
+<a class="jxr_linenumber" name="L1461" href="#L1461">1461</a>                         <strong class="jxr_keyword">throw</strong> drfm;
+<a class="jxr_linenumber" name="L1462" href="#L1462">1462</a>                 } <strong class="jxr_keyword">catch</strong> (Exception ex) {
+<a class="jxr_linenumber" name="L1463" href="#L1463">1463</a>                         <em class="jxr_comment">//possible that there is no config to return</em>
+<a class="jxr_linenumber" name="L1464" href="#L1464">1464</a>                         logger.debug(<span class="jxr_string">"Error caught, is there a replication config is avaiable? Returning a default config (no replication): "</span>, ex);
+<a class="jxr_linenumber" name="L1465" href="#L1465">1465</a> 
+<a class="jxr_linenumber" name="L1466" href="#L1466">1466</a>                         r.setCommunicationGraph(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/uddi/repl_v3/CommunicationGraph.html">CommunicationGraph</a>());
+<a class="jxr_linenumber" name="L1467" href="#L1467">1467</a>                         <a href="../../../../../org/apache/juddi/model/Operator.html">Operator</a> op = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/model/Operator.html">Operator</a>();
+<a class="jxr_linenumber" name="L1468" href="#L1468">1468</a>                         op.setOperatorNodeID(getNode());
+<a class="jxr_linenumber" name="L1469" href="#L1469">1469</a>                         op.setSoapReplicationURL(baseUrlSSL + <span class="jxr_string">"replication/services/replication"</span>);
+<a class="jxr_linenumber" name="L1470" href="#L1470">1470</a> 
+<a class="jxr_linenumber" name="L1471" href="#L1471">1471</a>                         op.getContact().add(<strong class="jxr_keyword">new</strong> Contact());
+<a class="jxr_linenumber" name="L1472" href="#L1472">1472</a>                         op.getContact().get(0).getPersonName().add(<strong class="jxr_keyword">new</strong> PersonName(<span class="jxr_string">"Unknown"</span>, <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L1473" href="#L1473">1473</a>                         op.setOperatorStatus(OperatorStatusType.NORMAL);
+<a class="jxr_linenumber" name="L1474" href="#L1474">1474</a> 
+<a class="jxr_linenumber" name="L1475" href="#L1475">1475</a>                         r.getOperator().add(op);
+<a class="jxr_linenumber" name="L1476" href="#L1476">1476</a>                         r.getCommunicationGraph().getNode().add(getNode());
+<a class="jxr_linenumber" name="L1477" href="#L1477">1477</a>                         r.getCommunicationGraph().getControlledMessage().add(<span class="jxr_string">"*"</span>);
+<a class="jxr_linenumber" name="L1478" href="#L1478">1478</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
+<a class="jxr_linenumber" name="L1479" href="#L1479">1479</a>                         r.setSerialNumber(0);
+<a class="jxr_linenumber" name="L1480" href="#L1480">1480</a>                         SimpleDateFormat sdf = <strong class="jxr_keyword">new</strong> SimpleDateFormat(<span class="jxr_string">"yyyyMMddkkmmZ"</span>);
+<a class="jxr_linenumber" name="L1481" href="#L1481">1481</a>                         r.setTimeOfConfigurationUpdate(sdf.format(<strong class="jxr_keyword">new</strong> Date()));
+<a class="jxr_linenumber" name="L1482" href="#L1482">1482</a>                         r.setRegistryContact(<strong class="jxr_keyword">new</strong> org.uddi.repl_v3.ReplicationConfiguration.RegistryContact());
+<a class="jxr_linenumber" name="L1483" href="#L1483">1483</a>                         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L1484" href="#L1484">1484</a>                                 <em class="jxr_comment">// pull from root business</em>
+<a class="jxr_linenumber" name="L1485" href="#L1485">1485</a>                                 <strong class="jxr_keyword">if</strong> (!tx.isActive()) {
+<a class="jxr_linenumber" name="L1486" href="#L1486">1486</a>                                         tx = em.getTransaction();
+<a class="jxr_linenumber" name="L1487" href="#L1487">1487</a>                                 }
+<a class="jxr_linenumber" name="L1488" href="#L1488">1488</a> 
+<a class="jxr_linenumber" name="L1489" href="#L1489">1489</a>                                 <a href="../../../../../org/apache/juddi/model/BusinessEntity.html">BusinessEntity</a> rootbiz = em.find(BusinessEntity.<strong class="jxr_keyword">class</strong>, AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ROOT_BUSINESS));
+<a class="jxr_linenumber" name="L1490" href="#L1490">1490</a>                                 <strong class="jxr_keyword">if</strong> (rootbiz != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1491" href="#L1491">1491</a> 
+<a class="jxr_linenumber" name="L1492" href="#L1492">1492</a>                                         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; rootbiz.getContacts().size(); i++) {
+<a class="jxr_linenumber" name="L1493" href="#L1493">1493</a>                                                 <a href="../../../../../org/apache/juddi/model/Contact.html">Contact</a> c = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/model/Contact.html">Contact</a>();
+<a class="jxr_linenumber" name="L1494" href="#L1494">1494</a>                                                 MappingModelToApi.mapContact(rootbiz.getContacts().get(i), c);
+<a class="jxr_linenumber" name="L1495" href="#L1495">1495</a>                                                 r.getRegistryContact().setContact(c);
+<a class="jxr_linenumber" name="L1496" href="#L1496">1496</a>                                                 <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L1497" href="#L1497">1497</a>                                         }
+<a class="jxr_linenumber" name="L1498" href="#L1498">1498</a> 
+<a class="jxr_linenumber" name="L1499" href="#L1499">1499</a>                                 }
+<a class="jxr_linenumber" name="L1500" href="#L1500">1500</a>                                 tx.rollback();
+<a class="jxr_linenumber" name="L1501" href="#L1501">1501</a> 
+<a class="jxr_linenumber" name="L1502" href="#L1502">1502</a>                         } <strong class="jxr_keyword">catch</strong> (Exception ex1) {
+<a class="jxr_linenumber" name="L1503" href="#L1503">1503</a>                                 logger.warn(<span class="jxr_string">"unexpected error"</span>, ex1);
+<a class="jxr_linenumber" name="L1504" href="#L1504">1504</a>                         }
+<a class="jxr_linenumber" name="L1505" href="#L1505">1505</a>                         <strong class="jxr_keyword">if</strong> (r.getRegistryContact().getContact() == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1506" href="#L1506">1506</a>                                 r.getRegistryContact().setContact(<strong class="jxr_keyword">new</strong> Contact());
+<a class="jxr_linenumber" name="L1507" href="#L1507">1507</a>                                 r.getRegistryContact().getContact().getPersonName().add(<strong class="jxr_keyword">new</strong> PersonName(<span class="jxr_string">"Unknown"</span>, <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L1508" href="#L1508">1508</a>                         }
+<a class="jxr_linenumber" name="L1509" href="#L1509">1509</a>                         serviceCounter.update(JUDDIQuery.GET_REPLICATION_NODES,
+<a class="jxr_linenumber" name="L1510" href="#L1510">1510</a>                                 QueryStatus.SUCCESS, procTime);
+<a class="jxr_linenumber" name="L1511" href="#L1511">1511</a> 
+<a class="jxr_linenumber" name="L1512" href="#L1512">1512</a>                 } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L1513" href="#L1513">1513</a>                         <strong class="jxr_keyword">if</strong> (tx.isActive()) {
+<a class="jxr_linenumber" name="L1514" href="#L1514">1514</a>                                 tx.rollback();
+<a class="jxr_linenumber" name="L1515" href="#L1515">1515</a>                         }
+<a class="jxr_linenumber" name="L1516" href="#L1516">1516</a>                         em.close();
+<a class="jxr_linenumber" name="L1517" href="#L1517">1517</a>                 }
+<a class="jxr_linenumber" name="L1518" href="#L1518">1518</a> 
+<a class="jxr_linenumber" name="L1519" href="#L1519">1519</a>                 r.setMaximumTimeToGetChanges(BigInteger.ONE);
+<a class="jxr_linenumber" name="L1520" href="#L1520">1520</a>                 r.setMaximumTimeToSyncRegistry(BigInteger.ONE);
+<a class="jxr_linenumber" name="L1521" href="#L1521">1521</a>                 <em class="jxr_comment">//StringWriter sw = new StringWriter();</em>
+<a class="jxr_linenumber" name="L1522" href="#L1522">1522</a>                 <em class="jxr_comment">//JAXB.marshal(r, sw);</em>
+<a class="jxr_linenumber" name="L1523" href="#L1523">1523</a>                 <em class="jxr_comment">//logger.info("dumping returned replication config " + sw.toString());</em>
+<a class="jxr_linenumber" name="L1524" href="#L1524">1524</a>                 <strong class="jxr_keyword">return</strong> r;
+<a class="jxr_linenumber" name="L1525" href="#L1525">1525</a>         }
+<a class="jxr_linenumber" name="L1526" href="#L1526">1526</a> 
+<a class="jxr_linenumber" name="L1527" href="#L1527">1527</a>         <strong class="jxr_keyword">static</strong> <a href="../../../../../org/apache/juddi/api/impl/UDDISubscriptionImpl.html">UDDISubscriptionImpl</a> sub = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/api/impl/UDDISubscriptionImpl.html">UDDISubscriptionImpl</a>();
+<a class="jxr_linenumber" name="L1528" href="#L1528">1528</a>         <strong class="jxr_keyword">static</strong> <a href="../../../../../org/apache/juddi/api/impl/UDDISecurityImpl.html">UDDISecurityImpl</a> sec = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/api/impl/UDDISecurityImpl.html">UDDISecurityImpl</a>();
+<a class="jxr_linenumber" name="L1529" href="#L1529">1529</a>         <strong class="jxr_keyword">static</strong> <a href="../../../../../org/apache/juddi/api/impl/UDDIPublicationImpl.html">UDDIPublicationImpl</a> pub = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/api/impl/UDDIPublicationImpl.html">UDDIPublicationImpl</a>();
+<a class="jxr_linenumber" name="L1530" href="#L1530">1530</a> 
+<a class="jxr_linenumber" name="L1531" href="#L1531">1531</a>         @Override
+<a class="jxr_linenumber" name="L1532" href="#L1532">1532</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> adminSaveSubscription(String authInfo, String publisherOrUsername, Holder&lt;List&lt;Subscription&gt;&gt; subscriptions) <strong class="jxr_keyword">throws</strong> DispositionReportFaultMessage {
+<a class="jxr_linenumber" name="L1533" href="#L1533">1533</a>                 <strong class="jxr_keyword">long</strong> startTime = System.currentTimeMillis();
+<a class="jxr_linenumber" name="L1534" href="#L1534">1534</a>                 EntityManager em = PersistenceManager.getEntityManager();
+<a class="jxr_linenumber" name="L1535" href="#L1535">1535</a>                 EntityTransaction tx = em.getTransaction();
+<a class="jxr_linenumber" name="L1536" href="#L1536">1536</a>                 <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L1537" href="#L1537">1537</a>                         tx.begin();
+<a class="jxr_linenumber" name="L1538" href="#L1538">1538</a>                         <a href="../../../../../org/apache/juddi/model/UddiEntityPublisher.html">UddiEntityPublisher</a> requestor = <strong class="jxr_keyword">this</strong>.getEntityPublisher(em, authInfo);
+<a class="jxr_linenumber" name="L1539" href="#L1539">1539</a>                         <strong class="jxr_keyword">if</strong> (!((Publisher) requestor).isAdmin()) {
+<a class="jxr_linenumber" name="L1540" href="#L1540">1540</a>                                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/UserMismatchException.html">UserMismatchException</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/ErrorMessage.html">ErrorMessage</a>(<span class="jxr_string">"errors.AdminReqd"</span>));
+<a class="jxr_linenumber" name="L1541" href="#L1541">1541</a>                         }
+<a class="jxr_linenumber" name="L1542" href="#L1542">1542</a>                         <em class="jxr_comment">//impersonate the user</em>
+<a class="jxr_linenumber" name="L1543" href="#L1543">1543</a>                         <a href="../../../../../org/apache/juddi/model/AuthToken.html">AuthToken</a> authToken = sec.getAuthToken(publisherOrUsername);
+<a class="jxr_linenumber" name="L1544" href="#L1544">1544</a>                         sub.saveSubscription(authToken.getAuthInfo(), subscriptions);
+<a class="jxr_linenumber" name="L1545" href="#L1545">1545</a>                         tx.commit();
+<a class="jxr_linenumber" name="L1546" href="#L1546">1546</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
+<a class="jxr_linenumber" name="L1547" href="#L1547">1547</a>                         serviceCounter.update(JUDDIQuery.ADMIN_SAVE_SUB,
+<a class="jxr_linenumber" name="L1548" href="#L1548">1548</a>                                 QueryStatus.SUCCESS, procTime);
+<a class="jxr_linenumber" name="L1549" href="#L1549">1549</a>                 } <strong class="jxr_keyword">catch</strong> (DispositionReportFaultMessage drfm) {
+<a class="jxr_linenumber" name="L1550" href="#L1550">1550</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
+<a class="jxr_linenumber" name="L1551" href="#L1551">1551</a>                         serviceCounter.update(JUDDIQuery.ADMIN_SAVE_SUB,
+<a class="jxr_linenumber" name="L1552" href="#L1552">1552</a>                                 QueryStatus.FAILED, procTime);
+<a class="jxr_linenumber" name="L1553" href="#L1553">1553</a>                         <strong class="jxr_keyword">throw</strong> drfm;
+<a class="jxr_linenumber" name="L1554" href="#L1554">1554</a> 
+<a class="jxr_linenumber" name="L1555" href="#L1555">1555</a>                 } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L1556" href="#L1556">1556</a>                         <strong class="jxr_keyword">if</strong> (tx.isActive()) {
+<a class="jxr_linenumber" name="L1557" href="#L1557">1557</a>                                 tx.rollback();
+<a class="jxr_linenumber" name="L1558" href="#L1558">1558</a>                         }
+<a class="jxr_linenumber" name="L1559" href="#L1559">1559</a>                         em.close();
+<a class="jxr_linenumber" name="L1560" href="#L1560">1560</a>                 }
+<a class="jxr_linenumber" name="L1561" href="#L1561">1561</a> 
+<a class="jxr_linenumber" name="L1562" href="#L1562">1562</a>         }
+<a class="jxr_linenumber" name="L1563" href="#L1563">1563</a> 
+<a class="jxr_linenumber" name="L1564" href="#L1564">1564</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1565" href="#L1565">1565</a> <em class="jxr_javadoccomment">         * {@inheritDoc }</em>
+<a class="jxr_linenumber" name="L1566" href="#L1566">1566</a> <em class="jxr_javadoccomment">         *</em>
+<a class="jxr_linenumber" name="L1567" href="#L1567">1567</a> <em class="jxr_javadoccomment">         * @param body</em>
+<a class="jxr_linenumber" name="L1568" href="#L1568">1568</a> <em class="jxr_javadoccomment">         * @return item history or null if not found</em>
+<a class="jxr_linenumber" name="L1569" href="#L1569">1569</a> <em class="jxr_javadoccomment">         * @throws DispositionReportFaultMessage</em>
+<a class="jxr_linenumber" name="L1570" href="#L1570">1570</a> <em class="jxr_javadoccomment">         * @throws RemoteException</em>
+<a class="jxr_linenumber" name="L1571" href="#L1571">1571</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L1572" href="#L1572">1572</a>         @Override
+<a class="jxr_linenumber" name="L1573" href="#L1573">1573</a>         <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/juddi/api_v3/GetEntityHistoryMessageResponse.html">GetEntityHistoryMessageResponse</a> getEntityHistory(<a href="../../../../../org/apache/juddi/api_v3/GetEntityHistoryMessageRequest.html">GetEntityHistoryMessageRequest</a> body) <strong class="jxr_keyword">throws</strong> DispositionReportFaultMessage, RemoteException {
+<a class="jxr_linenumber" name="L1574" href="#L1574">1574</a>                 <strong class="jxr_keyword">long</strong> startTime = System.currentTimeMillis();
+<a class="jxr_linenumber" name="L1575" href="#L1575">1575</a>                 <strong class="jxr_keyword">if</strong> (body == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1576" href="#L1576">1576</a>                         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/InvalidValueException.html">InvalidValueException</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/ErrorMessage.html">ErrorMessage</a>(<span class="jxr_string">"errors.NullInput"</span>));
+<a class="jxr_linenumber" name="L1577" href="#L1577">1577</a>                 }
+<a class="jxr_linenumber" name="L1578" href="#L1578">1578</a>                 EntityManager em = PersistenceManager.getEntityManager();
+<a class="jxr_linenumber" name="L1579" href="#L1579">1579</a>                 EntityTransaction tx = em.getTransaction();
+<a class="jxr_linenumber" name="L1580" href="#L1580">1580</a>                 <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L1581" href="#L1581">1581</a>                         tx.begin();
+<a class="jxr_linenumber" name="L1582" href="#L1582">1582</a>                         <a href="../../../../../org/apache/juddi/model/UddiEntityPublisher.html">UddiEntityPublisher</a> requestor = <strong class="jxr_keyword">this</strong>.getEntityPublisher(em, body.getAuthInfo());
+<a class="jxr_linenumber" name="L1583" href="#L1583">1583</a>                         <strong class="jxr_keyword">if</strong> (!((Publisher) requestor).isAdmin()) {
+<a class="jxr_linenumber" name="L1584" href="#L1584">1584</a>                                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/UserMismatchException.html">UserMismatchException</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/ErrorMessage.html">ErrorMessage</a>(<span class="jxr_string">"errors.AdminReqd"</span>));
+<a class="jxr_linenumber" name="L1585" href="#L1585">1585</a>                         }
+<a class="jxr_linenumber" name="L1586" href="#L1586">1586</a>                         <strong class="jxr_keyword">if</strong> (body.getMaxRecords() &lt;= 0) {
+<a class="jxr_linenumber" name="L1587" href="#L1587">1587</a>                                 body.setMaxRecords(20);
+<a class="jxr_linenumber" name="L1588" href="#L1588">1588</a>                         }
+<a class="jxr_linenumber" name="L1589" href="#L1589">1589</a>                         <strong class="jxr_keyword">if</strong> (body.getOffset() &lt; 0) {
+<a class="jxr_linenumber" name="L1590" href="#L1590">1590</a>                                 body.setOffset(0);
+<a class="jxr_linenumber" name="L1591" href="#L1591">1591</a>                         }
+<a class="jxr_linenumber" name="L1592" href="#L1592">1592</a>                         Query createQuery = em.createQuery(<span class="jxr_string">"select m from ChangeRecord m where m.entityKey = :key order by m.id DESC"</span>);
+<a class="jxr_linenumber" name="L1593" href="#L1593">1593</a>                         createQuery.setMaxResults((<strong class="jxr_keyword">int</strong>) body.getMaxRecords());
+<a class="jxr_linenumber" name="L1594" href="#L1594">1594</a>                         createQuery.setParameter(<span class="jxr_string">"key"</span>, body.getEntityKey());
+<a class="jxr_linenumber" name="L1595" href="#L1595">1595</a>                         createQuery.setFirstResult((<strong class="jxr_keyword">int</strong>) body.getOffset());
+<a class="jxr_linenumber" name="L1596" href="#L1596">1596</a>                         List&lt;ChangeRecord&gt; resultList = createQuery.getResultList();
+<a class="jxr_linenumber" name="L1597" href="#L1597">1597</a>                         <a href="../../../../../org/apache/juddi/api_v3/GetEntityHistoryMessageResponse.html">GetEntityHistoryMessageResponse</a> res = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/api_v3/GetEntityHistoryMessageResponse.html">GetEntityHistoryMessageResponse</a>();
+<a class="jxr_linenumber" name="L1598" href="#L1598">1598</a>                         res.setChangeRecords(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/uddi/repl_v3/ChangeRecords.html">ChangeRecords</a>());
+<a class="jxr_linenumber" name="L1599" href="#L1599">1599</a>                         <strong class="jxr_keyword">for</strong> (ChangeRecord cr : resultList) {
+<a class="jxr_linenumber" name="L1600" href="#L1600">1600</a>                                 res.getChangeRecords().getChangeRecord().add(MappingModelToApi.mapChangeRecord(cr));
+<a class="jxr_linenumber" name="L1601" href="#L1601">1601</a>                         }
+<a class="jxr_linenumber" name="L1602" href="#L1602">1602</a> 
+<a class="jxr_linenumber" name="L1603" href="#L1603">1603</a>                         tx.rollback();
+<a class="jxr_linenumber" name="L1604" href="#L1604">1604</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
+<a class="jxr_linenumber" name="L1605" href="#L1605">1605</a>                         serviceCounter.update(JUDDIQuery.ADMIN_GET_HISTORY,
+<a class="jxr_linenumber" name="L1606" href="#L1606">1606</a>                                 QueryStatus.SUCCESS, procTime);
+<a class="jxr_linenumber" name="L1607" href="#L1607">1607</a>                         <strong class="jxr_keyword">return</strong> res;
+<a class="jxr_linenumber" name="L1608" href="#L1608">1608</a>                 } <strong class="jxr_keyword">catch</strong> (DispositionReportFaultMessage drfm) {
+<a class="jxr_linenumber" name="L1609" href="#L1609">1609</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
+<a class="jxr_linenumber" name="L1610" href="#L1610">1610</a>                         serviceCounter.update(JUDDIQuery.ADMIN_GET_HISTORY,
+<a class="jxr_linenumber" name="L1611" href="#L1611">1611</a>                                 QueryStatus.FAILED, procTime);
+<a class="jxr_linenumber" name="L1612" href="#L1612">1612</a>                         <strong class="jxr_keyword">throw</strong> drfm;
+<a class="jxr_linenumber" name="L1613" href="#L1613">1613</a> 
+<a class="jxr_linenumber" name="L1614" href="#L1614">1614</a>                 } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L1615" href="#L1615">1615</a>                         <strong class="jxr_keyword">if</strong> (tx.isActive()) {
+<a class="jxr_linenumber" name="L1616" href="#L1616">1616</a>                                 tx.rollback();
+<a class="jxr_linenumber" name="L1617" href="#L1617">1617</a>                         }
+<a class="jxr_linenumber" name="L1618" href="#L1618">1618</a>                         em.close();
+<a class="jxr_linenumber" name="L1619" href="#L1619">1619</a>                 }
+<a class="jxr_linenumber" name="L1620" href="#L1620">1620</a>         }
+<a class="jxr_linenumber" name="L1621" href="#L1621">1621</a> 
+<a class="jxr_linenumber" name="L1622" href="#L1622">1622</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1623" href="#L1623">1623</a> <em class="jxr_javadoccomment">         * {@inheritDoc }</em>
+<a class="jxr_linenumber" name="L1624" href="#L1624">1624</a> <em class="jxr_javadoccomment">         *</em>
+<a class="jxr_linenumber" name="L1625" href="#L1625">1625</a> <em class="jxr_javadoccomment">         * @param body</em>
+<a class="jxr_linenumber" name="L1626" href="#L1626">1626</a> <em class="jxr_javadoccomment">         * @return</em>
+<a class="jxr_linenumber" name="L1627" href="#L1627">1627</a> <em class="jxr_javadoccomment">         * @throws DispositionReportFaultMessage</em>
+<a class="jxr_linenumber" name="L1628" href="#L1628">1628</a> <em class="jxr_javadoccomment">         * @throws RemoteException</em>
+<a class="jxr_linenumber" name="L1629" href="#L1629">1629</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L1630" href="#L1630">1630</a>         @Override
+<a class="jxr_linenumber" name="L1631" href="#L1631">1631</a>         <strong class="jxr_keyword">public</strong> <a href="../../../../../org/apache/juddi/api_v3/GetFailedReplicationChangeRecordsMessageResponse.html">GetFailedReplicationChangeRecordsMessageResponse</a> getFailedReplicationChangeRecords(
+<a class="jxr_linenumber" name="L1632" href="#L1632">1632</a>                 <a href="../../../../../org/apache/juddi/api_v3/GetFailedReplicationChangeRecordsMessageRequest.html">GetFailedReplicationChangeRecordsMessageRequest</a> body)
+<a class="jxr_linenumber" name="L1633" href="#L1633">1633</a>                 <strong class="jxr_keyword">throws</strong> DispositionReportFaultMessage, RemoteException {
+<a class="jxr_linenumber" name="L1634" href="#L1634">1634</a>                 <em class="jxr_comment">//public GetFailedReplicationChangeRecordsMessageResponse getFailedReplicationChangeRecords(GetFailedReplicationChangeRecordsMessageRequest body) throws DispositionReportFaultMessage, RemoteException {</em>
+<a class="jxr_linenumber" name="L1635" href="#L1635">1635</a>                 <strong class="jxr_keyword">long</strong> startTime = System.currentTimeMillis();
+<a class="jxr_linenumber" name="L1636" href="#L1636">1636</a>                 <strong class="jxr_keyword">if</strong> (body == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L1637" href="#L1637">1637</a>                         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/InvalidValueException.html">InvalidValueException</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/ErrorMessage.html">ErrorMessage</a>(<span class="jxr_string">"errors.NullInput"</span>));
+<a class="jxr_linenumber" name="L1638" href="#L1638">1638</a>                 }
+<a class="jxr_linenumber" name="L1639" href="#L1639">1639</a>                 EntityManager em = PersistenceManager.getEntityManager();
+<a class="jxr_linenumber" name="L1640" href="#L1640">1640</a>                 EntityTransaction tx = em.getTransaction();
+<a class="jxr_linenumber" name="L1641" href="#L1641">1641</a>                 <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L1642" href="#L1642">1642</a>                         tx.begin();
+<a class="jxr_linenumber" name="L1643" href="#L1643">1643</a>                         <a href="../../../../../org/apache/juddi/model/UddiEntityPublisher.html">UddiEntityPublisher</a> requestor = <strong class="jxr_keyword">this</strong>.getEntityPublisher(em, body.getAuthInfo());
+<a class="jxr_linenumber" name="L1644" href="#L1644">1644</a>                         <strong class="jxr_keyword">if</strong> (!((Publisher) requestor).isAdmin()) {
+<a class="jxr_linenumber" name="L1645" href="#L1645">1645</a>                                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/UserMismatchException.html">UserMismatchException</a>(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/v3/error/ErrorMessage.html">ErrorMessage</a>(<span class="jxr_string">"errors.AdminReqd"</span>));
+<a class="jxr_linenumber" name="L1646" href="#L1646">1646</a>                         }
+<a class="jxr_linenumber" name="L1647" href="#L1647">1647</a>                         <strong class="jxr_keyword">if</strong> (body.getMaxRecords() &lt;= 0) {
+<a class="jxr_linenumber" name="L1648" href="#L1648">1648</a>                                 body.setMaxRecords(20);
+<a class="jxr_linenumber" name="L1649" href="#L1649">1649</a>                         }
+<a class="jxr_linenumber" name="L1650" href="#L1650">1650</a>                         <strong class="jxr_keyword">if</strong> (body.getOffset() &lt; 0) {
+<a class="jxr_linenumber" name="L1651" href="#L1651">1651</a>                                 body.setOffset(0);
+<a class="jxr_linenumber" name="L1652" href="#L1652">1652</a>                         }
+<a class="jxr_linenumber" name="L1653" href="#L1653">1653</a>                         Query createQuery = em.createQuery(<span class="jxr_string">"select m from ChangeRecord m where m.isAppliedLocally=false order by m.id DESC "</span>);
+<a class="jxr_linenumber" name="L1654" href="#L1654">1654</a>                         createQuery.setMaxResults((<strong class="jxr_keyword">int</strong>) body.getMaxRecords());
+<a class="jxr_linenumber" name="L1655" href="#L1655">1655</a>                         createQuery.setFirstResult((<strong class="jxr_keyword">int</strong>) body.getOffset());
+<a class="jxr_linenumber" name="L1656" href="#L1656">1656</a>                         List&lt;ChangeRecord&gt; resultList = createQuery.getResultList();
+<a class="jxr_linenumber" name="L1657" href="#L1657">1657</a>                         <a href="../../../../../org/apache/juddi/api_v3/GetFailedReplicationChangeRecordsMessageResponse.html">GetFailedReplicationChangeRecordsMessageResponse</a> res = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/api_v3/GetFailedReplicationChangeRecordsMessageResponse.html">GetFailedReplicationChangeRecordsMessageResponse</a>();
+<a class="jxr_linenumber" name="L1658" href="#L1658">1658</a>                         res.setChangeRecords(<strong class="jxr_keyword">new</strong> <a href="../../../../../org/uddi/repl_v3/ChangeRecords.html">ChangeRecords</a>());
+<a class="jxr_linenumber" name="L1659" href="#L1659">1659</a>                         <strong class="jxr_keyword">for</strong> (ChangeRecord cr : resultList) {
+<a class="jxr_linenumber" name="L1660" href="#L1660">1660</a>                                 res.getChangeRecords().getChangeRecord().add(MappingModelToApi.mapChangeRecord(cr));
+<a class="jxr_linenumber" name="L1661" href="#L1661">1661</a>                         }
+<a class="jxr_linenumber" name="L1662" href="#L1662">1662</a> 
+<a class="jxr_linenumber" name="L1663" href="#L1663">1663</a>                         tx.rollback();
+<a class="jxr_linenumber" name="L1664" href="#L1664">1664</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
+<a class="jxr_linenumber" name="L1665" href="#L1665">1665</a>                         serviceCounter.update(JUDDIQuery.ADMIN_GET_FAILED_CRS,
+<a class="jxr_linenumber" name="L1666" href="#L1666">1666</a>                                 QueryStatus.SUCCESS, procTime);
+<a class="jxr_linenumber" name="L1667" href="#L1667">1667</a>                         <strong class="jxr_keyword">return</strong> res;
+<a class="jxr_linenumber" name="L1668" href="#L1668">1668</a>                 } <strong class="jxr_keyword">catch</strong> (DispositionReportFaultMessage drfm) {
+<a class="jxr_linenumber" name="L1669" href="#L1669">1669</a>                         <strong class="jxr_keyword">long</strong> procTime = System.currentTimeMillis() - startTime;
+<a class="jxr_linenumber" name="L1670" href="#L1670">1670</a>                         serviceCounter.update(JUDDIQuery.ADMIN_GET_FAILED_CRS,
+<a class="jxr_linenumber" name="L1671" href="#L1671">1671</a>                                 QueryStatus.FAILED, procTime);
+<a class="jxr_linenumber" name="L1672" href="#L1672">1672</a>                         <strong class="jxr_keyword">throw</strong> drfm;
+<a class="jxr_linenumber" name="L1673" href="#L1673">1673</a> 
+<a class="jxr_linenumber" name="L1674" href="#L1674">1674</a>                 } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L1675" href="#L1675">1675</a>                         <strong class="jxr_keyword">if</strong> (tx.isActive()) {
+<a class="jxr_linenumber" name="L1676" href="#L1676">1676</a>                                 tx.rollback();
+<a class="jxr_linenumber" name="L1677" href="#L1677">1677</a>                         }
+<a class="jxr_linenumber" name="L1678" href="#L1678">1678</a>                         em.close();
+<a class="jxr_linenumber" name="L1679" href="#L1679">1679</a>                 }
+<a class="jxr_linenumber" name="L1680" href="#L1680">1680</a>         }
+<a class="jxr_linenumber" name="L1681" href="#L1681">1681</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2004&#x2013;2018 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2004&#x2013;2020 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
 </body>
 </html>

@@ -1071,7 +1071,7 @@
 <a class="jxr_linenumber" name="L1063" href="#L1063">1063</a>                                                         + <span class="jxr_string">"order by e.originatingUSN ASC"</span>);
 <a class="jxr_linenumber" name="L1064" href="#L1064">1064</a>                                         }
 <a class="jxr_linenumber" name="L1065" href="#L1065">1065</a>                                         logger.info(<span class="jxr_string">"Query db for replication changes, lower index is "</span> + (firstrecord) + <span class="jxr_string">" last index "</span> + lastrecord + <span class="jxr_string">" record limit "</span> + maxrecords);
-<a class="jxr_linenumber" name="L1066" href="#L1066">1066</a>                                         logger.info(<span class="jxr_string">"This node is"</span> + getNode() + <span class="jxr_string">", request is for data originated from "</span> + changesAlreadySeen.getHighWaterMark().get(i).getNodeID() + <span class="jxr_string">" and it's being sent back to "</span> + requestingNode);
+<a class="jxr_linenumber" name="L1066" href="#L1066">1066</a>                                         logger.info(<span class="jxr_string">"This node is "</span> + getNode() + <span class="jxr_string">", request is for data originated from "</span> + changesAlreadySeen.getHighWaterMark().get(i).getNodeID() + <span class="jxr_string">" and it's being sent back to "</span> + requestingNode);
 <a class="jxr_linenumber" name="L1067" href="#L1067">1067</a> 
 <a class="jxr_linenumber" name="L1068" href="#L1068">1068</a>                                         createQuery.setMaxResults(maxrecords);
 <a class="jxr_linenumber" name="L1069" href="#L1069">1069</a>                                         createQuery.setParameter(<span class="jxr_string">"inbound"</span>, firstrecord);
@@ -1100,7 +1100,7 @@
 <a class="jxr_linenumber" name="L1092" href="#L1092">1092</a>                                 }
 <a class="jxr_linenumber" name="L1093" href="#L1093">1093</a>                                 <em class="jxr_comment">//assume that they just want records that originated from here?</em>
 <a class="jxr_linenumber" name="L1094" href="#L1094">1094</a>                                 logger.info(<span class="jxr_string">"Query db for replication changes, lower index is "</span> + (firstrecord) + <span class="jxr_string">" last index "</span> + lastrecord + <span class="jxr_string">" record limit "</span> + maxrecords);
-<a class="jxr_linenumber" name="L1095" href="#L1095">1095</a>                                 logger.info(<span class="jxr_string">"This node is"</span> + getNode() + <span class="jxr_string">" requesting node "</span> + requestingNode);
+<a class="jxr_linenumber" name="L1095" href="#L1095">1095</a>                                 logger.info(<span class="jxr_string">"This node is "</span> + getNode() + <span class="jxr_string">" requesting node "</span> + requestingNode);
 <a class="jxr_linenumber" name="L1096" href="#L1096">1096</a> 
 <a class="jxr_linenumber" name="L1097" href="#L1097">1097</a>                                 <strong class="jxr_keyword">if</strong> (lastrecord != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L1098" href="#L1098">1098</a>                                         createQuery = em.createQuery(<span class="jxr_string">"select e from ChangeRecord e where "</span>
@@ -1378,6 +1378,6 @@
 <a class="jxr_linenumber" name="L1370" href="#L1370">1370</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2004&#x2013;2018 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2004&#x2013;2020 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
 </body>
 </html>

@@ -67,13 +67,13 @@
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>                  port = 9600;
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>                  <em class="jxr_comment">//bring up the TCK SubscriptionListener</em>
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>                  String httpEndpoint = <span class="jxr_string">"http://"</span> + hostname + <span class="jxr_string">":"</span> + port + <span class="jxr_string">"/tcksubscriptionlistener"</span>;
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>                  System.out.println(<span class="jxr_string">"Bringing up SubscriptionListener endpoint at "</span> + httpEndpoint);
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>                  logger.info(<span class="jxr_string">"Bringing up SubscriptionListener endpoint at "</span> + httpEndpoint);
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>                  endPoint = Endpoint.publish(httpEndpoint, <strong class="jxr_keyword">new</strong> UDDISubscriptionListenerImpl());
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>                  <strong class="jxr_keyword">int</strong> count = 0;
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>                  <strong class="jxr_keyword">while</strong> (!endPoint.isPublished()) {
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>                          port = 9600 + <strong class="jxr_keyword">new</strong> Random().nextInt(99);
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>                          httpEndpoint = <span class="jxr_string">"http://"</span> + hostname + <span class="jxr_string">":"</span> + port + <span class="jxr_string">"/tcksubscriptionlistener"</span>;
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>                          System.out.println(<span class="jxr_string">"Bringing up SubscriptionListener endpoint at "</span> + httpEndpoint);
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>                          logger.info(<span class="jxr_string">"Bringing up SubscriptionListener endpoint at "</span> + httpEndpoint);
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>                          endPoint = Endpoint.publish(httpEndpoint, <strong class="jxr_keyword">new</strong> UDDISubscriptionListenerImpl());
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>                          count++;
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>                          <strong class="jxr_keyword">if</strong> (count &gt; 10) {
@@ -184,6 +184,6 @@
 <a class="jxr_linenumber" name="L176" href="#L176">176</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2004&#x2013;2018 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2004&#x2013;2020 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
 </body>
 </html>

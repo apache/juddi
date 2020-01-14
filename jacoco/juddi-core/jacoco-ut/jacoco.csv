@@ -58,7 +58,7 @@ jUDDI Core Services,org.apache.juddi.v3.auth,HTTPContainerAuthenticator,201,0,22
 jUDDI Core Services,org.apache.juddi.v3.auth,JUDDIAuthenticator,59,149,8,8,8,43,6,5,0,3
 jUDDI Core Services,org.apache.juddi.v3.auth,CryptedXMLDocAuthenticator,179,167,8,8,40,48,8,7,1,6
 jUDDI Core Services,org.apache.juddi.v3.auth,JuddiUsers,4,12,0,0,2,3,1,2,1,2
-jUDDI Core Services,org.apache.juddi.replication,ReplicationNotifier,456,312,60,24,92,79,39,15,3,9
+jUDDI Core Services,org.apache.juddi.replication,ReplicationNotifier,364,404,57,27,75,96,37,17,2,10
 jUDDI Core Services,org.apache.juddi.replication,ReplicationNotifier.PrimaryAlternate,11,0,0,0,3,0,1,0,1,0
 jUDDI Core Services,org.apache.juddi.model,BusinessCategoryBag,0,16,0,0,0,8,0,4,0,4
 jUDDI Core Services,org.apache.juddi.model,UddiEntity,23,76,9,3,6,26,7,15,1,15
@@ -137,7 +137,7 @@ jUDDI Core Services,org.apache.juddi.api.impl,UDDIValueSetCachingImpl,66,0,4,0,1
 jUDDI Core Services,org.apache.juddi.api.impl,XRegisterHelper,584,0,46,0,84,0,26,0,3,0
 jUDDI Core Services,org.apache.juddi.api.impl,UDDIPublicationImpl,783,2984,84,148,166,708,68,88,3,37
 jUDDI Core Services,org.apache.juddi.api.impl,UDDICustodyTransferImpl,608,409,51,15,125,108,31,10,2,6
-jUDDI Core Services,org.apache.juddi.api.impl,JUDDIApiImpl,1814,1720,162,76,398,443,108,38,8,19
+jUDDI Core Services,org.apache.juddi.api.impl,JUDDIApiImpl,1747,1784,159,79,378,462,107,39,7,20
 jUDDI Core Services,org.apache.juddi.api.impl,UDDIv2InquiryImpl,196,0,0,0,56,0,13,0,13,0
 jUDDI Core Services,org.apache.juddi.api.impl,UDDIReplicationImpl,740,441,75,37,137,119,49,21,5,9
 jUDDI Core Services,org.apache.juddi.api.impl,UDDIServiceCounter,428,546,38,24,71,84,30,14,5,8
@@ -197,7 +197,7 @@ jUDDI Core Services,org.apache.juddi.query.util,DynamicQuery.Parameter,12,21,0,0
 jUDDI Core Services,org.apache.juddi.query.util,DynamicQuery,20,379,8,22,7,82,10,28,2,21
 jUDDI Core Services,org.apache.juddi.query.util,KeyedRefTModelComparator,17,24,10,6,6,8,8,2,0,2
 jUDDI Core Services,org.apache.juddi.query.util,FindQualifiers,244,480,79,71,50,124,81,40,18,28
-jUDDI Core Services,org.apache.juddi.validation,ValidatePublish,2236,3986,410,632,319,957,365,243,4,83
+jUDDI Core Services,org.apache.juddi.validation,ValidatePublish,2198,3990,411,635,319,960,366,245,4,84
 jUDDI Core Services,org.apache.juddi.validation,ValidateReplication,452,277,76,34,76,54,54,11,4,6
 jUDDI Core Services,org.apache.juddi.validation,ValidateValueSetValidation,195,0,28,0,51,0,19,0,5,0
 jUDDI Core Services,org.apache.juddi.validation,ValidateClientSubscriptionInfo,119,126,19,23,16,36,19,8,1,5
@@ -217,7 +217,7 @@ jUDDI Core Services,org.apache.juddi.validation,ValidateUDDIApi,24,46,2,2,7,16,4
 jUDDI Core Services,org.apache.juddi.validation,ValidateSecurity,4,0,0,0,2,0,1,0,1,0
 jUDDI Core Services,org.apache.juddi.subscription,NotificationList,24,0,2,0,9,0,5,0,4,0
 jUDDI Core Services,org.apache.juddi.subscription,TypeConvertor,21,36,1,3,5,14,2,3,1,2
-jUDDI Core Services,org.apache.juddi.subscription,SubscriptionNotifier,473,681,63,55,79,143,50,23,3,11
+jUDDI Core Services,org.apache.juddi.subscription,SubscriptionNotifier,530,624,76,42,86,136,57,16,3,11
 jUDDI Core Services,org.apache.juddi.mapping,MappingApiToModel,602,3049,119,209,116,717,88,138,4,57
 jUDDI Core Services,org.apache.juddi.mapping,MappingModelToApi.new Object() {...},3,23,0,0,0,1,0,1,0,1
 jUDDI Core Services,org.apache.juddi.mapping,MappingModelToApi,383,2943,75,215,80,721,68,133,1,54

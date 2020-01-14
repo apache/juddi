@@ -1063,7 +1063,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                         + &quot;order by e.originatingUSN ASC&quot;);
                                         }
 <span class="nc" id="L1065">                                        logger.info(&quot;Query db for replication changes, lower index is &quot; + (firstrecord) + &quot; last index &quot; + lastrecord + &quot; record limit &quot; + maxrecords);</span>
-<span class="nc" id="L1066">                                        logger.info(&quot;This node is&quot; + getNode() + &quot;, request is for data originated from &quot; + changesAlreadySeen.getHighWaterMark().get(i).getNodeID() + &quot; and it's being sent back to &quot; + requestingNode);</span>
+<span class="nc" id="L1066">                                        logger.info(&quot;This node is &quot; + getNode() + &quot;, request is for data originated from &quot; + changesAlreadySeen.getHighWaterMark().get(i).getNodeID() + &quot; and it's being sent back to &quot; + requestingNode);</span>
 
 <span class="nc" id="L1068">                                        createQuery.setMaxResults(maxrecords);</span>
 <span class="nc" id="L1069">                                        createQuery.setParameter(&quot;inbound&quot;, firstrecord);</span>
@@ -1092,7 +1092,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 }
                                 //assume that they just want records that originated from here?
 <span class="nc" id="L1094">                                logger.info(&quot;Query db for replication changes, lower index is &quot; + (firstrecord) + &quot; last index &quot; + lastrecord + &quot; record limit &quot; + maxrecords);</span>
-<span class="nc" id="L1095">                                logger.info(&quot;This node is&quot; + getNode() + &quot; requesting node &quot; + requestingNode);</span>
+<span class="nc" id="L1095">                                logger.info(&quot;This node is &quot; + getNode() + &quot; requesting node &quot; + requestingNode);</span>
 
 <span class="nc bnc" id="L1097" title="All 2 branches missed.">                                if (lastrecord != null) {</span>
 <span class="nc" id="L1098">                                        createQuery = em.createQuery(&quot;select e from ChangeRecord e where &quot;</span>
