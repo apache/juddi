@@ -22,7 +22,6 @@
 	
 	
 	<modules>
-	   <module>asciidoc</module>
 	   <module>dist</module>
 	</modules>
 </project>

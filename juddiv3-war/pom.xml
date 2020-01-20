@@ -328,11 +328,7 @@ language governing permissions and * limitations under the License. * */ -->
                     <artifactId>jettison</artifactId>
                 </dependency>
                 <!--END added AO 6/8/2013 support for JSON encoding on REST endpoints -->
-                <dependency>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-                    <version>${cxf.version}</version>
-                </dependency>
+               
                 <dependency>
                     <groupId>org.apache.cxf</groupId>
                     <artifactId>cxf-rt-transports-http</artifactId>
