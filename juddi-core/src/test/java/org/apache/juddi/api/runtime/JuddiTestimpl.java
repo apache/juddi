@@ -62,7 +62,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 @WebService(serviceName = "JUDDIApiService",
         endpointInterface = "org.apache.juddi.v3_service.JUDDIApiPortType",
         targetNamespace = "urn:juddi-apache-org:v3_service")
-public class juddiTestimpl implements JUDDIApiPortType {
+public class JuddiTestimpl implements JUDDIApiPortType {
       
 
         @Override
