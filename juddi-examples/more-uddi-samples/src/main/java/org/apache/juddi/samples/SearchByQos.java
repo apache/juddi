@@ -90,12 +90,12 @@ public class SearchByQos {
                 security = transport.getUDDISecurityService();
                 publish = transport.getUDDIPublishService();
                 inquiry = transport.getUDDIInquiryService();
-        //step one, get a token
+                //step one, get a token
                 //GetAuthToken getAuthTokenRoot = new GetAuthToken();
                 //getAuthTokenRoot.setUserID("uddi");
                 //getAuthTokenRoot.setCred("uddi");
 
-        // Making API call that retrieves the authentication token for the 'root' user.
+                // Making API call that retrieves the authentication token for the 'root' user.
                 //String rootAuthToken = clerk.getAuthToken(clerk.getUDDINode().getSecurityUrl());
                 String uddi = token;// security.getAuthToken(getAuthTokenRoot).getAuthInfo();
 
@@ -145,7 +145,7 @@ public class SearchByQos {
         }
 
         public static void doFindBinding(String token) throws Exception {
-        // create a manager and read the config in the archive; 
+                // create a manager and read the config in the archive; 
                 // you can use your config file name
                 UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
                 Transport transport = clerkManager.getTransport();
@@ -153,12 +153,12 @@ public class SearchByQos {
                 security = transport.getUDDISecurityService();
                 publish = transport.getUDDIPublishService();
                 inquiry = transport.getUDDIInquiryService();
-        //step one, get a token
+                //step one, get a token
                 // GetAuthToken getAuthTokenRoot = new GetAuthToken();
                 //getAuthTokenRoot.setUserID("uddi");
                 //getAuthTokenRoot.setCred("uddi");
 
-        // Making API call that retrieves the authentication token for the 'root' user.
+                // Making API call that retrieves the authentication token for the 'root' user.
                 //String rootAuthToken = clerk.getAuthToken(clerk.getUDDINode().getSecurityUrl());
                 String uddi = token;//security.getAuthToken(getAuthTokenRoot).getAuthInfo();
 
@@ -181,7 +181,6 @@ public class SearchByQos {
                 } else {
                         System.out.println(before.getBindingTemplate().size() + " service returned before");
                 }
-             
 
                 System.out.println("saving mary");
                 SaveMary(uddi);
@@ -205,16 +204,11 @@ public class SearchByQos {
                         System.out.println(p.print(before));
                         System.out.println(p.print(after));
                 }
-                
-                
-                
 
         }
 
-        
-        
         public static void doFindBusiness(String token) throws Exception {
-        // create a manager and read the config in the archive; 
+                // create a manager and read the config in the archive; 
                 // you can use your config file name
                 UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
                 Transport transport = clerkManager.getTransport();
@@ -222,12 +216,12 @@ public class SearchByQos {
                 security = transport.getUDDISecurityService();
                 publish = transport.getUDDIPublishService();
                 inquiry = transport.getUDDIInquiryService();
-        //step one, get a token
+                //step one, get a token
                 // GetAuthToken getAuthTokenRoot = new GetAuthToken();
                 //getAuthTokenRoot.setUserID("uddi");
                 //getAuthTokenRoot.setCred("uddi");
 
-        // Making API call that retrieves the authentication token for the 'root' user.
+                // Making API call that retrieves the authentication token for the 'root' user.
                 //String rootAuthToken = clerk.getAuthToken(clerk.getUDDINode().getSecurityUrl());
                 String uddi = token;//security.getAuthToken(getAuthTokenRoot).getAuthInfo();
 
@@ -242,10 +236,9 @@ public class SearchByQos {
                 System.out.println("saving...");
                 SaveTM(createKeyGenator, uddi);
 
-              
-                 System.out.println("fetching business list");
-                 BusinessList before2 = getBusinessList(uddi);
-                  if (before2.getBusinessInfos()== null) {
+                System.out.println("fetching business list");
+                BusinessList before2 = getBusinessList(uddi);
+                if (before2.getBusinessInfos() == null) {
                         System.out.println("before no service returned!");
                         // before.setServiceInfos(new ServiceInfos());
                 } else {
@@ -255,14 +248,12 @@ public class SearchByQos {
                 System.out.println("saving mary");
                 SaveMary(uddi);
 
-                
-                
-                
-                    BusinessList after2 = getBusinessList(uddi);
-               
+                BusinessList after2 = getBusinessList(uddi);
+
                 PrintUDDI<BusinessList> p2 = new PrintUDDI<BusinessList>();
-                if (before2.getBusinessInfos()==null )
+                if (before2.getBusinessInfos() == null) {
                         before2.setBusinessInfos(new BusinessInfos());
+                }
                 if ((before2.getBusinessInfos().getBusinessInfo().size()
                         < after2.getBusinessInfos().getBusinessInfo().size())) {
                         System.out.println("hey it worked as advertised. Here's all the business with QOS parameters");
@@ -302,7 +293,7 @@ public class SearchByQos {
                         }
                 }
         }
-        
+
         private static BusinessList getBusinessList(String token) throws Exception {
                 FindBusiness fb = new FindBusiness();
                 fb.setAuthInfo(token);

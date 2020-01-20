@@ -159,7 +159,7 @@ public class UDDI_090_Smtp_ExternalTest extends UDDI_090_SubscriptionListenerInt
                                         }
                                         int c;
                                         StringBuilder sb = new StringBuilder();
-                                        System.out.println("Message : ");
+                                        logger.info("Message : ");
                                         while ((c = is.read()) != -1) {
                                                 sb.append(c);
                                                 System.out.write(c);

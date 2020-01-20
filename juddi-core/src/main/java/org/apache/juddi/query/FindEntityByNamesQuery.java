@@ -39,13 +39,13 @@ public class FindEntityByNamesQuery extends EntityQuery {
 	@SuppressWarnings("unused")
 	private static Log log = LogFactory.getLog(FindEntityByNamesQuery.class);
 
-	private String entityName;
-	private String entityAlias;
-	private String keyName;
-	private String entityField;
-	private String entityNameChild;
-	private String entityAliasChild;
-	private String selectSQL;
+	private final String entityName;
+	private final String entityAlias;
+	private final String keyName;
+	private final String entityField;
+	private final String entityNameChild;
+	private final String entityAliasChild;
+	private final String selectSQL;
 	private String signaturePresent;
 	
 	public FindEntityByNamesQuery(String entityName, String entityAlias, String keyName, String entityField, 
@@ -99,7 +99,7 @@ public class FindEntityByNamesQuery extends EntityQuery {
 		this.signaturePresent = signaturePresent;
 	}
 	
-	public List<?> select(EntityManager em, FindQualifiers fq, List<Name> names, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
+	public List<Object> select(EntityManager em, FindQualifiers fq, List<Name> names, List<Object> keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.
 		if ((keysIn != null) && (keysIn.size() == 0))
 			return keysIn;

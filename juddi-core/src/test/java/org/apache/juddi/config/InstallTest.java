@@ -24,6 +24,7 @@ import javax.xml.bind.JAXB;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.Properties;
+import org.apache.juddi.v3.client.cryptor.XmlUtils;
 
 /**
  *
@@ -58,7 +59,7 @@ public class InstallTest {
                 System.out.println("applyReplicationTokenChanges");
                 InputStream fis = getClass().getClassLoader().getResourceAsStream("juddi_install_data/root_replicationConfiguration.xml");
                 
-                ReplicationConfiguration replicationCfg = JAXB.unmarshal(fis, ReplicationConfiguration.class);
+                ReplicationConfiguration replicationCfg = (ReplicationConfiguration) XmlUtils.unmarshal(fis, ReplicationConfiguration.class);
                 Properties props = new Properties();
                 props.put(Property.JUDDI_NODE_ID, "uddi:a_custom_node");
                 props.put(Property.JUDDI_BASE_URL, "http://juddi.apache.org");

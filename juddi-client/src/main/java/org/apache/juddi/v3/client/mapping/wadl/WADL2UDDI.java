@@ -50,6 +50,7 @@ import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIKeyConvention;
+import org.apache.juddi.v3.client.cryptor.XmlUtils;
 import org.apache.juddi.v3.client.mapping.Common2UDDI;
 import org.apache.juddi.v3.client.mapping.MockSSLSocketFactory;
 import org.apache.juddi.v3.client.mapping.URLLocalizer;
@@ -408,7 +409,7 @@ public class WADL2UDDI {
      * @return Application instance (WADL FILE)
      */
     public static Application parseWadl(InputStream stream) {
-        Application unmarshal = JAXB.unmarshal(stream, Application.class);
+        Application unmarshal = (Application) XmlUtils.unmarshal(stream, Application.class);
         return unmarshal;
     }
     public static final String PACKAGE = "org.apache.juddi.v3.client.mapping.wadl";
@@ -484,8 +485,8 @@ public class WADL2UDDI {
                 ResponseHandler<String> responseHandler = new BasicResponseHandler();
                 String handleResponse = responseHandler.handleResponse(response1);
                 StringReader sr = new StringReader(handleResponse);
-                unmarshal = JAXB.unmarshal(sr, Application.class);
-                
+                unmarshal = (Application) XmlUtils.unmarshal(sr, Application.class);
+                sr.close();
 
             } finally {
                 httpGet.releaseConnection();
@@ -503,7 +504,7 @@ public class WADL2UDDI {
     }
 
     public static Application parseWadl(File file) throws FileNotFoundException, IOException {
-        Application unmarshal = JAXB.unmarshal(file, Application.class);
+        Application unmarshal = (Application) XmlUtils.unmarshal(file, Application.class);
         return unmarshal;
     }
 

@@ -123,7 +123,7 @@ public class BPEL_020_IntegrationTest {
                 @SuppressWarnings("unchecked")
                 Map<QName, PortType> portTypes = (Map<QName, PortType>) wsdlDefinition.getAllPortTypes();
                 String ns = wsdlDefinition.getTargetNamespace();
-                System.out.println("Namespace: " + ns);
+                logger.info("Namespace: " + ns);
 
                 boolean foundInterfaceOfTravelAgent=false;
                 boolean foundInterfaceOfCustomer=false;
@@ -133,8 +133,8 @@ public class BPEL_020_IntegrationTest {
                         QName qName = iterator.next();
                         String nsp = qName.getNamespaceURI();
                         String localpart = qName.getLocalPart();
-                        System.out.println("Namespace: " + nsp);
-                        System.out.println("LocalPart: " + localpart);
+                        logger.info("Namespace: " + nsp);
+                        logger.info("LocalPart: " + localpart);
                         if (localpart.equals("InterfaceOfTravelAgent"))
                                 foundInterfaceOfTravelAgent=true;
                         if (localpart.equals("InterfaceOfCustomer"))
@@ -168,7 +168,7 @@ public class BPEL_020_IntegrationTest {
                 URL serviceUrl = new URL("http://localhost:8080/helloworld");
                 bpel2UDDI.register(serviceName, portName, serviceUrl, wsdlDefinition);
 
-                System.out.println("DONE");
+                logger.info("DONE");
 
                 bpel2UDDI.unRegister(serviceName, portName, serviceUrl);
         }

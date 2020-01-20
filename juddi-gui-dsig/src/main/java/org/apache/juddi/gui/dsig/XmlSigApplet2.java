@@ -32,6 +32,7 @@ import javax.swing.JOptionPane;
 import javax.xml.bind.JAXB;
 import netscape.javascript.JSObject;
 import org.apache.juddi.v3.client.cryptor.DigSigUtil;
+import org.apache.juddi.v3.client.cryptor.XmlUtils;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
@@ -490,28 +491,28 @@ public class XmlSigApplet2 extends java.applet.Applet {
        if (objecttype.equalsIgnoreCase("business")) {
           try {
              StringReader sr = new StringReader(xml.trim());
-             j = (BusinessEntity) JAXB.unmarshal(sr, BusinessEntity.class);
+             j = (BusinessEntity) XmlUtils.unmarshal(sr, BusinessEntity.class);
           } catch (Exception ex) {
           }
        }
        if (objecttype.equalsIgnoreCase("service")) {
           try {
              StringReader sr = new StringReader(xml.trim());
-             j = (BusinessService) JAXB.unmarshal(sr, BusinessService.class);
+             j = (BusinessService) XmlUtils.unmarshal(sr, BusinessService.class);
           } catch (Exception ex) {
           }
        }
        if (objecttype.equalsIgnoreCase("bindingTemplate")) {
           try {
              StringReader sr = new StringReader(xml.trim());
-             j = (BindingTemplate) JAXB.unmarshal(sr, BindingTemplate.class);
+             j = (BindingTemplate) XmlUtils.unmarshal(sr, BindingTemplate.class);
           } catch (Exception ex) {
           }
        }
        if (objecttype.equalsIgnoreCase("tmodel")) {
           try {
              StringReader sr = new StringReader(xml.trim());
-             j = (TModel) JAXB.unmarshal(sr, TModel.class);
+             j = (TModel) XmlUtils.unmarshal(sr, TModel.class);
           } catch (Exception ex) {
           }
        }

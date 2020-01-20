@@ -46,6 +46,7 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
         private static TckPublisherAssertion tckAssertionSam = null;
         private static TckFindEntity tckFindEntitySam = null;
         private static TckTModel tckTModelMary = null;
+        private static TckTModel tckUDDI =null;
         private static TckBusiness tckBusinessMary = null;
         private static TckPublisherAssertion tckAssertionMary = null;
         private static TckFindEntity tckFindEntityMary = null;
@@ -113,7 +114,22 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
                         tckBusinessMary = new TckBusiness(publication, inquiry);
                         tckAssertionMary = new TckPublisherAssertion(publication);
                         tckFindEntityMary = new TckFindEntity(inquiry);
-                        tckTModelJoe.saveTmodels(authInfoJoe);
+                        
+                        
+                        transport = manager.getTransport("uddiv3");
+                        publication = transport.getUDDIPublishService();
+                        inquiry = transport.getUDDIInquiryService();
+                        if (!TckPublisher.isUDDIAuthMode()) {
+                                TckSecurity.setCredentials((BindingProvider) publication, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+                                TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+                        }
+                        String authUddi = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+                        tckUDDI = new TckTModel(publication, inquiry);
+                        tckUDDI.saveUDDIPublisherTmodel(authUddi);
+                        
+                        tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                        tckTModelJoe.saveUDDIPublisherTmodel(authUddi);
+                        tckTModelJoe.saveTmodels(authUddi);
 
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);

@@ -22,15 +22,11 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.*;
 import org.uddi.sub_v3.CoveragePeriod;
 import org.uddi.sub_v3.GetSubscriptionResults;
 import org.uddi.sub_v3.SubscriptionResultsList;
-import org.uddi.v3_service.UDDIInquiryPortType;
-import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
-import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
@@ -41,12 +37,9 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  */
 public class UddiSubscribeValidate {
 
-        private static UDDISecurityPortType security = null;
-        private static JUDDIApiPortType juddiApi = null;
-        private static UDDIPublicationPortType publish = null;
-        private static UDDIInquiryPortType uddiInquiryService = null;
-        private static UDDISubscriptionPortType uddiSubscriptionService = null;
-        private static UDDISubscriptionListenerPortType uddiSubscriptionListenerService = null;
+        private UDDISecurityPortType security = null;
+        private UDDISubscriptionPortType uddiSubscriptionService = null;
+        
 
         public UddiSubscribeValidate() {
                 try {
@@ -56,25 +49,17 @@ public class UddiSubscribeValidate {
                         Transport transport = clerkManager.getTransport();
                         // Now you create a reference to the UDDI API
                         security = transport.getUDDISecurityService();
-                        juddiApi = transport.getJUDDIApiService();
-                        publish = transport.getUDDIPublishService();
-                        uddiInquiryService = transport.getUDDIInquiryService();
                         uddiSubscriptionService = transport.getUDDISubscriptionService();
-                        uddiSubscriptionListenerService = transport.getUDDISubscriptionListenerService();
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
         }
-        
-          public UddiSubscribeValidate(Transport transport) {
+
+        public UddiSubscribeValidate(Transport transport) {
                 try {
                         // Now you create a reference to the UDDI API
                         security = transport.getUDDISecurityService();
-                        juddiApi = transport.getJUDDIApiService();
-                        publish = transport.getUDDIPublishService();
-                        uddiInquiryService = transport.getUDDIInquiryService();
                         uddiSubscriptionService = transport.getUDDISubscriptionService();
-                        uddiSubscriptionListenerService = transport.getUDDISubscriptionListenerService();
                 } catch (Exception e) {
                         e.printStackTrace();
                 }

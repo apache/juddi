@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import static org.apache.juddi.api.impl.AuthenticatedService.logger;
@@ -65,13 +66,15 @@ import org.uddi.vs_v3.ValidateValues;
  * From there, you need to create a class that either implements
  * {@link ValueSetValidator} or extends {@link AbstractSimpleValidator}. It must
  * be in the package named org.apache.juddi.validation.vsv and must by named
- * following the convention outlined in {@link #ConvertKeyToClass(java.lang.String)
+ * following the convention outlined in {@link #convertKeyToClass(java.lang.String)
  * }
  *
  * @see ValueSetValidator
  * @see AbstractSimpleValidator
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
+@WebService(serviceName="UDDIValueSetCachingService", endpointInterface = "org.uddi.v3_service.UDDIValueSetValidationPortType"
+       , targetNamespace = "urn:uddi-org:api_v3_portType")
 public class UDDIValueSetValidationImpl extends AuthenticatedService implements
      UDDIValueSetValidationPortType {
 
@@ -133,10 +136,10 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
                                 Tmodel find = em.find(org.apache.juddi.model.Tmodel.class, key);
                                 if (find != null) {
                                         //if it is, added it to the list
-                                        if (ContainsValidatedKey(find, UDDIConstants.IS_VALIDATED_BY)) {
+                                        if (containsValidatedKey(find, UDDIConstants.IS_VALIDATED_BY)) {
                                                 validators.add(key);
                                         }
-                                        if (ContainsValidatedKey(find, UDDIConstantsV2.IS_VALIDATED_BY)) {
+                                        if (containsValidatedKey(find, UDDIConstantsV2.IS_VALIDATED_BY)) {
                                                 validators.add(key);
                                         }
                                 }
@@ -154,7 +157,7 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
                 Iterator<String> iterator1 = validators.iterator();
                 while (iterator1.hasNext()) {
                         String tmodelkey = iterator1.next();
-                        String clazz = ConvertKeyToClass(tmodelkey);
+                        String clazz = convertKeyToClass(tmodelkey);
                         ValueSetValidator vsv;
                         if (clazz == null) {
                                 logger.info("No validator found for " + tmodelkey);
@@ -296,14 +299,14 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
                         return ret;
                 }
                 for (int i = 0; i < items.size(); i++) {
-                        validateValuesKeyRef(items.get(i).getKeyedReference());
+                        ret.addAll(validateValuesKeyRef(items.get(i).getKeyedReference()));
                 }
                 return ret;
         }
 
         
 
-        public static String ConvertKeyToClass(String tmodelkey) {
+        public static String convertKeyToClass(String tmodelkey) {
 
                 if (tmodelkey == null) {
                         return null;
@@ -323,7 +326,7 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
 
         public static List<String> getValidValues(String modelKey) {
                 try {
-                        ValueSetValidator vsv = (ValueSetValidator) Class.forName(ConvertKeyToClass(modelKey)).newInstance();
+                        ValueSetValidator vsv = (ValueSetValidator) Class.forName(convertKeyToClass(modelKey)).newInstance();
                         return vsv.getValidValues();
                 } catch (ClassNotFoundException ex) {
                 } catch (InstantiationException ex) {
@@ -332,7 +335,7 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
                 return null;
         }
 
-        private boolean ContainsValidatedKey(Tmodel find, String key) {
+        private boolean containsValidatedKey(Tmodel find, String key) {
                 if (find.getCategoryBag() != null) {
                         if (find.getCategoryBag().getKeyedReferences() != null) {
                                 for (int i = 0; i < find.getCategoryBag().getKeyedReferences().size(); i++) {

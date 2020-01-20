@@ -16,31 +16,12 @@
 package org.apache.juddi.samples;
 
 import java.util.List;
-import javax.xml.datatype.DatatypeFactory;
 import org.apache.juddi.jaxb.PrintUDDI;
-import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.subscription.SubscriptionCallbackListener;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.juddi.v3_service.JUDDIApiPortType;
-import org.uddi.api_v3.BindingTemplate;
-import org.uddi.api_v3.BusinessEntity;
-import org.uddi.api_v3.BusinessService;
-import org.uddi.api_v3.BusinessServices;
-import org.uddi.api_v3.FindBusiness;
-import org.uddi.api_v3.FindQualifiers;
-import org.uddi.api_v3.FindService;
-import org.uddi.api_v3.FindTModel;
-import org.uddi.api_v3.Name;
-import org.uddi.api_v3.TModel;
 import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.Subscription;
-import org.uddi.sub_v3.SubscriptionFilter;
-import org.uddi.sub_v3.SubscriptionResultsList;
-import org.uddi.v3_service.UDDIInquiryPortType;
-import org.uddi.v3_service.UDDIPublicationPortType;
-import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
@@ -48,15 +29,16 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  * @author Alex O'Ree
  */
 public class UddiSubscriptionManagement {
+        public static void main(String args[]) throws Exception {
+                UddiSubscriptionManagement sp = new UddiSubscriptionManagement();
+                sp.printSubscriptions(null);
+        }
 
-        private static UDDISecurityPortType security = null;
-
-        private static UDDIPublicationPortType publish = null;
-        private static UDDIInquiryPortType uddiInquiryService = null;
-        private static UDDISubscriptionPortType uddiSubscriptionService = null;
+        private UDDISubscriptionPortType uddiSubscriptionService = null;
 
         private UDDIClerk clerk = null;
         private UDDIClient client = null;
+        private PrintUDDI<Subscription> printer = new PrintUDDI<Subscription>();
 
         public UddiSubscriptionManagement() {
                 try {
@@ -66,34 +48,24 @@ public class UddiSubscriptionManagement {
                         clerk = client.getClerk("default");
                         Transport transport = client.getTransport();
                         // Now you create a reference to the UDDI API
-                        security = transport.getUDDISecurityService();
-                        publish = transport.getUDDIPublishService();
-                        uddiInquiryService = transport.getUDDIInquiryService();
                         uddiSubscriptionService = transport.getUDDISubscriptionService();
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
         }
-        
-         public UddiSubscriptionManagement(Transport transport) {
+
+        public UddiSubscriptionManagement(Transport transport) {
                 try {
-                       
+
                         // Now you create a reference to the UDDI API
-                        security = transport.getUDDISecurityService();
-                        publish = transport.getUDDIPublishService();
-                        uddiInquiryService = transport.getUDDIInquiryService();
                         uddiSubscriptionService = transport.getUDDISubscriptionService();
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
         }
 
-        public static void main(String args[]) throws Exception {
-                UddiSubscriptionManagement sp = new UddiSubscriptionManagement();
-                sp.PrintSubscriptions(null);
-        }
 
-        public void PrintSubscriptions(String authtoken) throws Exception {
+        public void printSubscriptions(String authtoken) throws Exception {
 
                 if (authtoken == null) {
                         authtoken = clerk.getAuthToken();
@@ -102,12 +74,12 @@ public class UddiSubscriptionManagement {
                 System.out.println(subscriptions.size() + " subscriptions found");
                 for (int i = 0; i < subscriptions.size(); i++) {
                         System.out.println("_____________________________________");
-                        
-                        System.out.println(p.print(subscriptions.get(i)));
+
+                        System.out.println(printer.print(subscriptions.get(i)));
                 }
         }
 
-        public void DeleteSubscription(String authtoken, String key) throws Exception {
+        public void deleteSubscription(String authtoken, String key) throws Exception {
 
                 if (authtoken == null) {
                         authtoken = clerk.getAuthToken();
@@ -124,7 +96,7 @@ public class UddiSubscriptionManagement {
 
         }
 
-        public void DeleteAllSubscriptions(String authtoken) throws Exception {
+        public void deleteAllSubscriptions(String authtoken) throws Exception {
 
                 if (authtoken == null) {
                         authtoken = clerk.getAuthToken();
@@ -143,7 +115,5 @@ public class UddiSubscriptionManagement {
 
         }
 
-        private boolean running = true;
-        PrintUDDI<Subscription> p = new PrintUDDI<Subscription>();
 
 }

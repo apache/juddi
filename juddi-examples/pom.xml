@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.3.5-SNAPSHOT</version>
+		<version>3.3.8-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<groupId>org.apache.juddi.example</groupId>
@@ -40,5 +40,6 @@
 		<module>service-version</module>
     <module>uddiv2-api-bridge-example</module>
     <module>ValueSetValidator</module>
-  </modules>
+	 <module>juddi-embedded</module>
+	</modules>
 </project>

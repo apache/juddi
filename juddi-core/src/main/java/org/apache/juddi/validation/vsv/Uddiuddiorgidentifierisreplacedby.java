@@ -295,30 +295,6 @@ public class Uddiuddiorgidentifierisreplacedby implements ValueSetValidator {
                 }
         }
 
-        private void validatedValuesKeyRef(List<KeyedReference> items, String xpath) throws DispositionReportFaultMessage {
-                if (items == null) {
-                        return;
-                }
-                String err = "";
-                for (int i = 0; i < items.size(); i++) {
-                        List<String> validValues = getValidValues();
-                        if (validValues != null) {
-                                //ok we have some work to do
-                                boolean valid = false;
-                                for (int k = 0; k < validValues.size(); k++) {
-                                        if (validValues.get(k).equals(items.get(i).getKeyValue())) {
-                                                valid = true;
-                                        }
-                                }
-                                if (!valid) {
-                                        err += xpath + "keyedReference(" + i + ") ";
-                                }
-                        }
-                }
-                if (err.length() > 0) {
-                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", err));
-                }
-        }
 
         @Override
         public void validateTmodelInstanceDetails(List<TModelInstanceInfo> tModelInstanceInfo, String xpath) throws DispositionReportFaultMessage {

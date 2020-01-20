@@ -166,8 +166,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         static final String MISSING_RESOURCE = "Can't find resource for bundle";
 
         static void HandleException(Exception ex) {
-                System.err.println("Error caught of type " + ex.getClass().getCanonicalName());
-                ex.printStackTrace();
+                logger.error("Error caught of type " + ex.getClass().getCanonicalName(),ex);
                 if (ex.getMessage() != null) {
                         Assert.assertFalse(ex.getMessage().contains(TRANS));
                         Assert.assertFalse(ex.getMessage().contains(MISSING_RESOURCE));
@@ -181,7 +180,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         }
 
         @Test
-        public void joePublisher() {
+        public void joePublisher() throws Exception {
              Assume.assumeTrue(TckPublisher.isEnabled());
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
                 try {
@@ -265,7 +264,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_1() {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_1");
+                logger.info("JUDDI_606_1");
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
                 // Null expiration time
 
@@ -300,7 +299,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_2() throws DatatypeConfigurationException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_2");
+                logger.info("JUDDI_606_2");
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
                 // invalid expiration time
                 DatatypeFactory df = DatatypeFactory.newInstance();
@@ -338,7 +337,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_3() {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_3");
+                logger.info("JUDDI_606_3");
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
                 //
 
@@ -372,7 +371,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_4() {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_4");
+                logger.info("JUDDI_606_4");
                 //
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
 
@@ -401,7 +400,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_5() {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_5");
+                logger.info("JUDDI_606_5");
                 //
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
 
@@ -431,7 +430,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_6() {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_6");
+                logger.info("JUDDI_606_6");
                 //
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
 
@@ -467,7 +466,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_7() throws DatatypeConfigurationException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_7");
+                logger.info("JUDDI_606_7");
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
                 //
                 DatatypeFactory df = DatatypeFactory.newInstance();
@@ -508,7 +507,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_8() {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_8");
+                logger.info("JUDDI_606_8");
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
                 //
 
@@ -556,7 +555,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_9() throws DatatypeConfigurationException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_9");
+                logger.info("JUDDI_606_9");
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
                 //
 
@@ -594,7 +593,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_10() throws DatatypeConfigurationException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_10");
+                logger.info("JUDDI_606_10");
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
                 //
                 try {
@@ -641,7 +640,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_11() throws DatatypeConfigurationException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_11");
+                logger.info("JUDDI_606_11");
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
 
                 String key = null;
@@ -703,7 +702,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_12() throws DatatypeConfigurationException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_12");
+                logger.info("JUDDI_606_12");
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
                 //
                 String key = null;
@@ -768,7 +767,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_13() throws DatatypeConfigurationException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_13");
+                logger.info("JUDDI_606_13");
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
 
                 String key = null;
@@ -836,7 +835,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_14() throws DatatypeConfigurationException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_14");
+                logger.info("JUDDI_606_14");
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
 
                 DatatypeFactory df = DatatypeFactory.newInstance();
@@ -907,7 +906,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_15() throws DatatypeConfigurationException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_15");
+                logger.info("JUDDI_606_15");
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
 
                 DatatypeFactory df = DatatypeFactory.newInstance();
@@ -996,7 +995,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_16() throws DatatypeConfigurationException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_16");
+                logger.info("JUDDI_606_16");
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
 
                 DatatypeFactory df = DatatypeFactory.newInstance();
@@ -1095,7 +1094,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
         @Test
         public void JUDDI_606_17() throws DatatypeConfigurationException {
              Assume.assumeTrue(TckPublisher.isEnabled());
-                System.out.println("JUDDI_606_17");
+                logger.info("JUDDI_606_17");
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
 
                 DatatypeFactory df = DatatypeFactory.newInstance();

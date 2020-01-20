@@ -39,10 +39,10 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiCustodyTransfer {
 
-        private static UDDISecurityPortType security = null;
-        private static UDDIPublicationPortType publish = null;
-        private static UDDIInquiryPortType uddiInquiryService = null;
-        private static UDDICustodyTransferPortType custodyTransferPortType = null;
+        private UDDISecurityPortType security = null;
+        private UDDIPublicationPortType publish = null;
+        private UDDIInquiryPortType uddiInquiryService = null;
+        private UDDICustodyTransferPortType custodyTransferPortType = null;
 
         public UddiCustodyTransfer() {
                 try {
@@ -61,7 +61,7 @@ public class UddiCustodyTransfer {
                 }
         }
 
-        public static void main(String args[]) throws Exception {
+        public void main(String args[]) throws Exception {
                 UddiCustodyTransfer sp = new UddiCustodyTransfer();
 
                 GetAuthToken getAuthTokenRoot = new GetAuthToken();
@@ -94,11 +94,9 @@ public class UddiCustodyTransfer {
                 String BusinessKey) throws Exception {
 
                 System.out.println("Transfering business key " + BusinessKey);
-                DatatypeFactory df = DatatypeFactory.newInstance();
                 GregorianCalendar gcal = new GregorianCalendar();
                 gcal.setTimeInMillis(System.currentTimeMillis());
-                XMLGregorianCalendar xcal = df.newXMLGregorianCalendar(gcal);
-
+       
                 //Create a transfer token from fromUser to toUser
                 KeyBag kb = new KeyBag();
                 kb.getKey().add(BusinessKey);

@@ -12,3 +12,11 @@ docs/db/ddl/*.ddl
 *.ddl
 uddi-tck/pref-rpt-*.txt
 nb-configuration.xml
+*.orig
+uddi-tck/drivers/
+*.releaseBackup
+*.versionsBackup
+**/bin/Debug/*
+**/obj/**
+*.suo
+juddi-client.net/.vs/juddi-client.net/v15/**

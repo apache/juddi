@@ -16,16 +16,13 @@
  */
 package org.apache.juddi.example.partition;
 
-import java.util.Properties;
 import javax.xml.ws.BindingProvider;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDINode;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.api_v3.AuthToken;
-import org.uddi.api_v3.BindingTemplates;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.GetAuthToken;
 import org.uddi.api_v3.KeyedReference;
@@ -46,7 +43,6 @@ public class SimpleCreateTmodelPartition {
 
         private static UDDISecurityPortType security = null;
         private static UDDIPublicationPortType publish = null;
-
         private static UDDIClient uddiClient = null;
 
         /**

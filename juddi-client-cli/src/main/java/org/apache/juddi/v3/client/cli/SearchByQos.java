@@ -15,7 +15,6 @@
  */
 package org.apache.juddi.v3.client.cli;
 
-import java.util.Properties;
 import javax.xml.bind.JAXB;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.UDDIConstants;
@@ -29,7 +28,6 @@ import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.ServiceList;
-import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelBag;
 import org.uddi.v3_service.UDDIInquiryPortType;
 
@@ -39,12 +37,9 @@ import org.uddi.v3_service.UDDIInquiryPortType;
  */
 public class SearchByQos {
 
-        static PrintUDDI<TModel> pTModel = new PrintUDDI<TModel>();
-        static Properties properties = new Properties();
-        static String wsdlURL = null;
-        private static UDDIInquiryPortType inquiry;
+        private UDDIInquiryPortType inquiry;
 
-        public static void doFindService(String token, Transport transport) throws Exception {
+        public void doFindService(String token, Transport transport) throws Exception {
 
                 // Now you create a reference to the UDDI API
             
@@ -66,7 +61,7 @@ public class SearchByQos {
 
         }
 
-        public static void doFindBinding(String token, Transport transport) throws Exception {
+        public void doFindBinding(String token, Transport transport) throws Exception {
 
                 // Now you create a reference to the UDDI API
                 inquiry = transport.getUDDIInquiryService();
@@ -86,7 +81,7 @@ public class SearchByQos {
 
         }
 
-        public static void doFindBusiness(String token, Transport transport) throws Exception {
+        public void doFindBusiness(String token, Transport transport) throws Exception {
                 // create a manager and read the config in the archive; 
                 // you can use your config file name
 
@@ -103,7 +98,7 @@ public class SearchByQos {
         }
 
 
-        private static BusinessList getBusinessList(String token) throws Exception {
+        private BusinessList getBusinessList(String token) throws Exception {
                 FindBusiness fb = new FindBusiness();
                 fb.setAuthInfo(token);
                 org.uddi.api_v3.FindQualifiers fq = new org.uddi.api_v3.FindQualifiers();
@@ -118,7 +113,7 @@ public class SearchByQos {
                 return inquiry.findBusiness(fb);
         }
 
-        private static ServiceList getServiceList(String token) throws Exception {
+        private ServiceList getServiceList(String token) throws Exception {
                 FindService fb = new FindService();
                 fb.setAuthInfo(token);
                 org.uddi.api_v3.FindQualifiers fq = new org.uddi.api_v3.FindQualifiers();
@@ -133,7 +128,7 @@ public class SearchByQos {
                 return inquiry.findService(fb);
         }
 
-        private static BindingDetail getBindingList(String token) throws Exception {
+        private BindingDetail getBindingList(String token) throws Exception {
                 FindBinding fb = new FindBinding();
                 fb.setAuthInfo(token);
                 fb.setTModelBag(new TModelBag());

@@ -18,12 +18,9 @@ package org.apache.juddi.samples;
 
 import javax.xml.bind.JAXB;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.*;
 import org.uddi.v3_service.UDDIInquiryPortType;
-import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
@@ -34,10 +31,8 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiGetServiceDetails {
 
-        private static UDDISecurityPortType security = null;
-        private static JUDDIApiPortType juddiApi = null;
-        private static UDDIPublicationPortType publish = null;
-        private static UDDIInquiryPortType inquiry = null;
+        private UDDISecurityPortType security = null;
+        private UDDIInquiryPortType inquiry = null;
 
         public UddiGetServiceDetails() {
                 try {
@@ -47,15 +42,13 @@ public class UddiGetServiceDetails {
                         Transport transport = clerkManager.getTransport();
                         // Now you create a reference to the UDDI API
                         security = transport.getUDDISecurityService();
-                        juddiApi = transport.getJUDDIApiService();
-                        publish = transport.getUDDIPublishService();
                         inquiry = transport.getUDDIInquiryService();
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
         }
 
-        public void Fire(String token, String key) {
+        public void fire(String token, String key) {
                 if (key == null) {
                         System.out.println("No key provided!");
                         return;
@@ -90,6 +83,6 @@ public class UddiGetServiceDetails {
 
         public static void main(String args[]) {
                 UddiGetServiceDetails sp = new UddiGetServiceDetails();
-                sp.Fire(null, "uddi:juddi.apache.org:services-inquiry");
+                sp.fire(null, "uddi:juddi.apache.org:services-inquiry");
         }
 }

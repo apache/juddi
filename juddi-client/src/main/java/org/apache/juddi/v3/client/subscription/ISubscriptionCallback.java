@@ -18,8 +18,10 @@ package org.apache.juddi.v3.client.subscription;
 import org.uddi.sub_v3.SubscriptionResultsList;
 
 /**
- * This is an interface for creating asynchronous callback clientsfor the
+ * This is an interface for creating asynchronous callback clients for the
  * UDDI Subscription API.
+ * 
+ * Change notice, since 3.3.5, methods were renamed for the most standard convention (lowercase)
  * @since 3.2
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  * @see SubscriptionCallbackListener
@@ -31,10 +33,10 @@ public interface ISubscriptionCallback {
      * Implementations should never block.
      * @param body 
      */
-    public void HandleCallback(SubscriptionResultsList body);
+    public void handleCallback(SubscriptionResultsList body);
 
     /**
      * Called when the callback endpoint is stopped
      */
-    public void NotifyEndpointStopped();
+    public void notifyEndpointStopped();
 }

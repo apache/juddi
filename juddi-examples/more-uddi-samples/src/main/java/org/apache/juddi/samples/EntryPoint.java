@@ -16,14 +16,6 @@
 package org.apache.juddi.samples;
 
 import java.io.File;
-import java.util.List;
-import org.apache.juddi.api_v3.Node;
-import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDINode;
-import org.apache.juddi.v3.client.transport.Transport;
-import org.uddi.api_v3.DiscardAuthToken;
-import org.uddi.api_v3.GetAuthToken;
-import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
  *
@@ -65,8 +57,7 @@ public class EntryPoint {
                 } else {
                         System.out.println("javax.net.ssl.trustStore = " + trustStore);
                 }
-                
-                
+
                 if (System.getProperty("javax.net.ssl.keyStore") == null) {
                         File f = new File("../../juddi-tomcat/keystore.jks");
                         if (f.exists()) {
@@ -142,18 +133,18 @@ public class EntryPoint {
                         System.out.println("2) Digitally sign a UDDI entity from a file.");
                         System.out.println(" q) Quit/exit");
                         System.out.print("#");
-                        input=System.console().readLine();
+                        input = System.console().readLine();
                         processOffline(input);
                 } while (!"q".equalsIgnoreCase(input));
 
         }
 
         private static void processOffline(String input) throws Exception {
-                if (input.equals("1")) {
-                        CompareByTModelInstanceInfoQOS.main(null);
+                if ("1".equals(input)) {
+                        CompareByTModelInstanceInfoQOS.main(new String[0]);
                 }
-                if (input.equals("2")) {
-                        new UddiDigitalSignatureFile().Fire(null, null, null);
+                if ("2".equals(input)) {
+                        new UddiDigitalSignatureFile().fire(null, null, null);
                 }
         }
 

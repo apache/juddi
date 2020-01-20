@@ -543,7 +543,7 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
                         for (int i = 0; i < callbacks.size(); i++) {
                                 if (callbacks.get(i) != null) {
                                         try {
-                                                callbacks.get(i).NotifyEndpointStopped();
+                                                callbacks.get(i).notifyEndpointStopped();
                                         } catch (Exception ex) {
                                                 log.warn("Your implementation on ISubscriptionCallback is faulty and threw an error, contact the developer", ex);
                                         }
@@ -614,7 +614,7 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
         public DispositionReport notifySubscriptionListener(NotifySubscriptionListener body) throws DispositionReportFaultMessage, RemoteException {
                 for (int i = 0; i < callbacks.size(); i++) {
                         try {
-                                callbacks.get(i).HandleCallback(body.getSubscriptionResultsList());
+                                callbacks.get(i).handleCallback(body.getSubscriptionResultsList());
                         } catch (Exception ex) {
                                 log.warn("Your implementation on ISubscriptionCallback is faulty and threw an error, contact the developer", ex);
                         }

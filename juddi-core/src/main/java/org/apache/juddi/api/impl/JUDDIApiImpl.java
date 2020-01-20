@@ -31,7 +31,6 @@ import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
-import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.ws.Holder;
@@ -136,7 +135,9 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  */
 @WebService(serviceName = "JUDDIApiService",
         endpointInterface = "org.apache.juddi.v3_service.JUDDIApiPortType",
-        targetNamespace = "urn:juddi-apache-org:v3_service", wsdlLocation = "classpath:/juddi_api_v1.wsdl")
+        targetNamespace = "urn:juddi-apache-org:v3_service"
+        //, wsdlLocation = "classpath:/juddi_api_v1.wsdl"
+)
 public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortType {
 
         private Log log = LogFactory.getLog(this.getClass());
@@ -444,17 +445,17 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                                 if (obj == null) {
                                         throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNotFound", entityKey));
                                 }
-                                if (!obj.getNodeId().equals(node)) {
-                                        throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNodeOwner", entityKey + " this node " + node + " owning node " + obj.getNodeId()));
+                                if (!obj.getNodeId().equals(getNode())) {
+                                        throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNodeOwner", entityKey + " this node " + getNode() + " owning node " + obj.getNodeId()));
                                 }
                                 em.remove(obj);
-                                changes.add(UDDIPublicationImpl.getChangeRecord_deleteTModelDelete(entityKey, node));
+                                changes.add(UDDIPublicationImpl.getChangeRecord_deleteTModelDelete(entityKey, getNode(), df));
 
                         }
 
                         tx.commit();
                         for (ChangeRecord cr : changes) {
-                                ReplicationNotifier.Enqueue(cr);
+                                ReplicationNotifier.enqueue(cr);
                         }
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.ADMIN_DELETE_TMODEL,
@@ -788,7 +789,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                         NodeDetail result = new NodeDetail();
 
-                        List<org.apache.juddi.api_v3.Node> apiNodeList = body.getNode();;
+                        List<org.apache.juddi.api_v3.Node> apiNodeList = body.getNode();
                         for (org.apache.juddi.api_v3.Node apiNode : apiNodeList) {
 
                                 org.apache.juddi.model.Node modelNode = new org.apache.juddi.model.Node();
@@ -1319,8 +1320,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         StringBuilder sql = new StringBuilder();
-                        sql.append("select distinct c from ReplicationConfiguration c ");
-                        sql.toString();
+                        sql.append("select distinct c from Subscription c ");
                         Query qry = em.createQuery(sql.toString());
                         List<org.apache.juddi.model.Subscription> resultList = qry.getResultList();
                         for (int i = 0; i < resultList.size(); i++) {
@@ -1365,10 +1365,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         if (!((Publisher) publisher).isAdmin()) {
                                 throw new UserMismatchException(new ErrorMessage("errors.AdminReqd"));
                         }
-                        new ValidateReplication(publisher).validateSetReplicationNodes(replicationConfiguration, em, node, AppConfig.getConfiguration());
+                        new ValidateReplication(publisher).validateSetReplicationNodes(replicationConfiguration, em, getNode(), AppConfig.getConfiguration());
 
-                        //StringWriter sw = new StringWriter();
-                        //JAXB.marshal(replicationConfiguration, sw);
                         org.apache.juddi.model.ReplicationConfiguration model = null;
                         logger.info(publisher.getAuthorizedName() + " is setting the replication config from " + getRequestorsIPAddress());// + " " + sw.toString());
                         try {
@@ -1406,7 +1404,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         }
 
                         tx.commit();
-                        UDDIReplicationImpl.notifyConfigurationChange(oldConfig, replicationConfiguration);
+                        UDDIReplicationImpl.notifyConfigurationChange(oldConfig, replicationConfiguration, this);
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(JUDDIQuery.SET_REPLICATION_NODES,
                                 QueryStatus.SUCCESS, procTime);
@@ -1417,7 +1415,6 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         throw drfm;
                 } catch (Exception ex) {
                         logger.error(ex, ex);
-                        JAXB.marshal(replicationConfiguration, System.out);
                         throw new FatalErrorException(new ErrorMessage("E_fatalError", ex.getMessage()));
                 } finally {
                         if (tx.isActive()) {
@@ -1433,7 +1430,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
         }
 
         @Override
-        public org.uddi.repl_v3.ReplicationConfiguration getReplicationNodes(String authInfo) throws DispositionReportFaultMessage, RemoteException {
+        public synchronized org.uddi.repl_v3.ReplicationConfiguration getReplicationNodes(String authInfo) throws DispositionReportFaultMessage, RemoteException {
                 long startTime = System.currentTimeMillis();
                 org.uddi.repl_v3.ReplicationConfiguration r = new org.uddi.repl_v3.ReplicationConfiguration();
 
@@ -1470,7 +1467,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
                         r.setCommunicationGraph(new CommunicationGraph());
                         Operator op = new Operator();
-                        op.setOperatorNodeID(node);
+                        op.setOperatorNodeID(getNode());
                         op.setSoapReplicationURL(baseUrlSSL + "replication/services/replication");
 
                         op.getContact().add(new Contact());
@@ -1478,7 +1475,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                         op.setOperatorStatus(OperatorStatusType.NORMAL);
 
                         r.getOperator().add(op);
-                        r.getCommunicationGraph().getNode().add(node);
+                        r.getCommunicationGraph().getNode().add(getNode());
                         r.getCommunicationGraph().getControlledMessage().add("*");
                         long procTime = System.currentTimeMillis() - startTime;
                         r.setSerialNumber(0);

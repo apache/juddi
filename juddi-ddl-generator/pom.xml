@@ -1,104 +1,101 @@
 <?xml version="1.0"?>
 <!--
- * Copyright 2001-2009 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */ -->
+* Copyright 2001-2009 The Apache Software Foundation.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+* 
+*      http://www.apache.org/licenses/LICENSE-2.0
+* 
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+*/ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.apache.juddi</groupId>
-		<artifactId>juddi-parent</artifactId>
-		<version>3.3.5-SNAPSHOT</version>
-	</parent>
-	<groupId>org.apache.juddi.client.plugins</groupId>
-	<artifactId>juddi-ddl-generator</artifactId>
-	<version>3.2.1</version>
-	<name>juddi-ddl-generator</name>
-	<url>http://maven.apache.org</url>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.juddi</groupId>
-			<artifactId>juddi-core</artifactId>
-			<version>3.3.5-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.derby</groupId>
-			<artifactId>derby</artifactId>
-		</dependency>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.apache.juddi</groupId>
+        <artifactId>juddi-parent</artifactId>
+        <version>3.3.8-SNAPSHOT</version>
+    </parent>
+    <artifactId>juddi-ddl-generator</artifactId>
+    <name>juddi-ddl-generator</name>
+    <url>http://maven.apache.org</url>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>juddi-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        
+       
 
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-		</dependency>
 
-	</dependencies>	
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>my-execution</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>java</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<mainClass>org.apache.juddi.ddl.generator.App</mainClass>
-					 <arguments>
-						<argument>juddi-core/target/classes/org/apache/juddi/model/</argument>
-					  </arguments>
-				</configuration>
-			</plugin>
-			<plugin>
-			   <groupId>org.apache.maven.plugins</groupId>
-			   <artifactId>maven-antrun-plugin</artifactId>
-			   <executions>
-				  <execution>
-				  <id>copy-swf-files</id>
-				  <phase>test</phase>
-				  <goals>
-							<goal>run</goal>
-						</goals>
-				  <configuration>
-					 <target name="copy ddl to doc folder">      
-						<copy todir="../docs/db/ddl/">
-							<fileset dir="${project.build.directory}/../" includes="*.ddl">
+    </dependencies>	
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>my-execution</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>org.apache.juddi.ddl.generator.App</mainClass>
+                    <arguments>
+                        <argument>juddi-core/target/classes/org/apache/juddi/model/</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-swf-files</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target name="copy ddl to doc folder">      
+                                <copy todir="../docs/db/ddl/">
+                                    <fileset dir="${project.build.directory}/../" includes="*.ddl">
 								
-							</fileset></copy>
-					 </target>
-				  </configuration>                       
-			   </execution> 
-			 </executions>
-			</plugin>
-		</plugins>
-	</build>
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>                       
+                    </execution> 
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

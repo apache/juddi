@@ -36,31 +36,30 @@ import org.uddi.sub_v3.SubscriptionResultsList;
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class UddiSubscribe implements ISubscriptionCallback {
-    public static void main(String args[]) throws Exception {
-        UddiSubscribe sp = new UddiSubscribe();
-        sp.fire();
-    }
 
-    
-        boolean callbackRecieved = false;
+        public static void main(String args[]) throws Exception {
+                UddiSubscribe sp = new UddiSubscribe();
+                sp.fire();
+        }
+
+        
         private UDDIClerk clerk = null;
         private UDDIClient client = null;
 
-        String nodename = "default";
-        PrintUDDI<SubscriptionResultsList> p = new PrintUDDI<SubscriptionResultsList>();
+        private String nodename = "default";
+        private PrintUDDI<SubscriptionResultsList> printer = new PrintUDDI<SubscriptionResultsList>();
+
         public UddiSubscribe() {
-            try {
-                // create a manager and read the config in the archive;
-                // you can use your config file name
-                client = new UDDIClient("META-INF/simple-publish-uddi.xml");
-                clerk = client.getClerk("default");
-                Transport transport = client.getTransport();
-                // Now you create a reference to the UDDI API
-                
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                try {
+                        // create a manager and read the config in the archive;
+                        // you can use your config file name
+                        client = new UDDIClient("META-INF/simple-publish-uddi.xml");
+                        clerk = client.getClerk("default");
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
         }
+
         public UddiSubscribe(UDDIClient client, String nodename, Transport transport) {
                 try {
                         // create a manager and read the config in the archive; 
@@ -69,12 +68,11 @@ public class UddiSubscribe implements ISubscriptionCallback {
                         clerk = client.getClerk(nodename);
                         this.nodename = nodename;
                         // Now you create a reference to the UDDI API
-    
+
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
         }
-
 
         public void fire() throws Exception {
 
@@ -207,18 +205,15 @@ public class UddiSubscribe implements ISubscriptionCallback {
                 //Runtime.getRuntime().removeShutdownHook(hook);
         }
 
-      
-
         @Override
-        public void HandleCallback(SubscriptionResultsList body) {
+        public void handleCallback(SubscriptionResultsList body) {
                 System.out.println("Callback received!");
-                System.out.println(p.print(body));
+                System.out.println(printer.print(body));
         }
 
         @Override
-        public void NotifyEndpointStopped() {
+        public void notifyEndpointStopped() {
                 System.out.println("The endpoint was stopped!");
         }
-
 
 }

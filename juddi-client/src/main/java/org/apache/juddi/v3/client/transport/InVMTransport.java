@@ -26,7 +26,9 @@ import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
-
+/**
+ * InVM transport expects that the service urls are in fact fully qualified classnames
+   */
 public class InVMTransport extends Transport {
 
 	private String nodeName = null;

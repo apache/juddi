@@ -27,7 +27,14 @@ namespace juddi_installer
     {
         static void Main(string[] args)
         {
-            EventLogger.RegisterLogSources();
+            try
+            {
+                EventLogger.RegisterLogSources();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unable to register event log source. Did you run this tool as administrator? " + ex.Message);
+            }
         }
     }
 }

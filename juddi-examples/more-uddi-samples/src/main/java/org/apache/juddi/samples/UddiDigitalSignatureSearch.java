@@ -33,94 +33,93 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiDigitalSignatureSearch {
 
-    private static UDDISecurityPortType security = null;
-    private static UDDIInquiryPortType inquiry = null;
-    private static UDDIPublicationPortType publish = null;
+        private UDDISecurityPortType security = null;
+        private UDDIInquiryPortType inquiry = null;
 
-    /**
-     * This sets up the ws proxies using uddi.xml in META-INF
-     */
-    public UddiDigitalSignatureSearch() {
-        try {
-            // create a manager and read the config in the archive; 
-            // you can use your config file name
-            UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
-            Transport transport = clerkManager.getTransport();
-            // Now you create a reference to the UDDI API
-            security = transport.getUDDISecurityService();
-            inquiry = transport.getUDDIInquiryService();
-            publish = transport.getUDDIPublishService();
-        } catch (Exception e) {
-            e.printStackTrace();
+        /**
+         * This sets up the ws proxies using uddi.xml in META-INF
+         */
+        public UddiDigitalSignatureSearch() {
+                try {
+                        // create a manager and read the config in the archive; 
+                        // you can use your config file name
+                        UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
+                        Transport transport = clerkManager.getTransport();
+                        // Now you create a reference to the UDDI API
+                        security = transport.getUDDISecurityService();
+                        inquiry = transport.getUDDIInquiryService();
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
         }
-    }
 
-    /**
-     * Main entry point
-     *
-     * @param args
-     */
-    public static void main(String args[]) {
+        /**
+         * Main entry point
+         *
+         * @param args
+         */
+        public static void main(String args[]) {
 
-        UddiDigitalSignatureSearch sp = new UddiDigitalSignatureSearch();
-        sp.Fire(null);
-    }
-
-    public void Fire(String token) {
-        try {
-
-            FindService fs = new FindService();
-            //optional, usually
-            if (token==null)
-                    token=GetAuthKey("root", "root");
-            fs.setAuthInfo(token);
-            fs.setFindQualifiers(new FindQualifiers());
-            fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.SORT_BY_DATE_ASC);
-            fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
-            fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.SIGNATURE_PRESENT);
-            Name n = new Name();
-            n.setValue("%");
-            fs.getName().add(n);
-            ServiceList findService = inquiry.findService(fs);
-            for (int i = 0; i < findService.getServiceInfos().getServiceInfo().size(); i++) {
-                System.out.println(ListToString(findService.getServiceInfos().getServiceInfo().get(i).getName()));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+                UddiDigitalSignatureSearch sp = new UddiDigitalSignatureSearch();
+                sp.fire(null);
         }
-    }
 
-    /**
-     * Gets a UDDI style auth token, otherwise, appends credentials to the ws
-     * proxies (not yet implemented)
-     *
-     * @param username
-     * @param password
-     * @param style
-     * @return
-     */
-    private String GetAuthKey(String username, String password) {
-        try {
+        public void fire(String token) {
+                try {
 
-            GetAuthToken getAuthTokenRoot = new GetAuthToken();
-            getAuthTokenRoot.setUserID(username);
-            getAuthTokenRoot.setCred(password);
-
-            // Making API call that retrieves the authentication token for the 'root' user.
-            AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-            System.out.println("root AUTHTOKEN = " + "dont log auth tokens!");
-            return rootAuthToken.getAuthInfo();
-        } catch (Exception ex) {
-            System.out.println("Could not authenticate with the provided credentials " + ex.getMessage());
+                        FindService fs = new FindService();
+                        //optional, usually
+                        if (token == null) {
+                                token = getAuthKey("root", "root");
+                        }
+                        fs.setAuthInfo(token);
+                        fs.setFindQualifiers(new FindQualifiers());
+                        fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.SORT_BY_DATE_ASC);
+                        fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                        fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.SIGNATURE_PRESENT);
+                        Name n = new Name();
+                        n.setValue("%");
+                        fs.getName().add(n);
+                        ServiceList findService = inquiry.findService(fs);
+                        for (int i = 0; i < findService.getServiceInfos().getServiceInfo().size(); i++) {
+                                System.out.println(listToString(findService.getServiceInfos().getServiceInfo().get(i).getName()));
+                        }
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
         }
-        return null;
-    }
 
-    private String ListToString(List<Name> name) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < name.size(); i++) {
-            sb.append(name.get(i).getValue()).append(" ");
+        /**
+         * Gets a UDDI style auth token, otherwise, appends credentials to the
+         * ws proxies (not yet implemented)
+         *
+         * @param username
+         * @param password
+         * @param style
+         * @return
+         */
+        private String getAuthKey(String username, String password) {
+                try {
+
+                        GetAuthToken getAuthTokenRoot = new GetAuthToken();
+                        getAuthTokenRoot.setUserID(username);
+                        getAuthTokenRoot.setCred(password);
+
+                        // Making API call that retrieves the authentication token for the 'root' user.
+                        AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
+                        System.out.println("root AUTHTOKEN = " + "dont log auth tokens!");
+                        return rootAuthToken.getAuthInfo();
+                } catch (Exception ex) {
+                        System.out.println("Could not authenticate with the provided credentials " + ex.getMessage());
+                }
+                return null;
         }
-        return sb.toString();
-    }
+
+        private String listToString(List<Name> name) {
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < name.size(); i++) {
+                        sb.append(name.get(i).getValue()).append(" ");
+                }
+                return sb.toString();
+        }
 }

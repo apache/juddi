@@ -36,10 +36,9 @@ import org.uddi.v3_service.UDDIInquiryPortType;
 public class EntryPoitMultiNode {
 
         static void goMultiNode() throws Exception {
-                
+
                 UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
 
-                
                 String input = null;
                 do {
                         System.out.println("1) Sets undirected replication two instances of jUDDI");
@@ -60,28 +59,11 @@ public class EntryPoitMultiNode {
 
         private static void processInput(String input, UDDIClient clerkManager) throws Exception {
                 if (input.equals("1")) {
-
                         new JuddiAdminService(clerkManager, null).autoMagic();
-                        List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
-                        for (int i = 0; i < uddiNodeList.size(); i++) {
-                                new UddiCreatebulk(uddiNodeList.get(i).getName()).publishBusiness(null, 1, 1, "root@" + uddiNodeList.get(i).getName());
-                        }
-                        //new UddiCreatebulk("uddi:another.juddi.apache.org:node2").publishBusiness(null, 1, 1);
                 } else if (input.equals("2")) {
-
                         new JuddiAdminService(clerkManager, null).autoMagic3();
-                        List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
-                        for (int i = 0; i < uddiNodeList.size(); i++) {
-                                new UddiCreatebulk(uddiNodeList.get(i).getName()).publishBusiness(null, 1, 1, "root@" + uddiNodeList.get(i).getName());
-                        }
-                        //new UddiCreatebulk("uddi:another.juddi.apache.org:node2").publishBusiness(null, 1, 1);
                 } else if (input.equals("3")) {
                         new JuddiAdminService(clerkManager, null).autoMagicDirected();
-
-                        List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
-                        for (int i = 0; i < uddiNodeList.size(); i++) {
-                                new UddiCreatebulk(uddiNodeList.get(i).getName()).publishBusiness(null, 1, 1, "root@" + uddiNodeList.get(i).getName());
-                        }
                 } else if (input.equals("4")) {
                         new JuddiAdminService(clerkManager, null).printStatus();
                 } else if (input.equals("5")) {

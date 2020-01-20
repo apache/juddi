@@ -51,7 +51,7 @@ import org.uddi.api_v3.KeyedReference;
 public class FindEntityByCategoryQuery extends EntityQuery {
 	
 	@SuppressWarnings("unused")
-	private static Log log = LogFactory.getLog(FindEntityByCategoryQuery.class);
+	private final static Log log = LogFactory.getLog(FindEntityByCategoryQuery.class);
 
 	private static final String ENTITY_KEYEDREFERENCE = "KeyedReference";
 	private static final String ALIAS_KEYEDREFERENCE = buildAlias(ENTITY_KEYEDREFERENCE);
@@ -117,7 +117,7 @@ public class FindEntityByCategoryQuery extends EntityQuery {
 		this.signaturePresent = signaturePresent;
 	}
 	
-	public List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
+	public List<Object> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, List<Object> keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.
 		if ((keysIn != null) && (keysIn.size() == 0))
 			return keysIn;

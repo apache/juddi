@@ -38,62 +38,61 @@ import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
  * This class was created to demonstrate that UDDI entities's keys do not need
- * to be from the same key domain.
- * I.e. Business key = "uddi:1234:business"
+ * to be from the same key domain. I.e. Business key = "uddi:1234:business"
  * which owns Service key "uddi:4567:service1"
  *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class BusinessServiceKeymismatch {
 
-    private static UDDISecurityPortType security = null;
-    private static JUDDIApiPortType juddiApi = null;
-    private static UDDIPublicationPortType publish = null;
+        private static UDDISecurityPortType security = null;
+        private static JUDDIApiPortType juddiApi = null;
+        private static UDDIPublicationPortType publish = null;
 
-    public static void main(String[] args) throws Exception {
+        public static void main(String[] args) throws Exception {
 
-        // create a manager and read the config in the archive; 
-        // you can use your config file name
-        UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
-        // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
-        Transport transport = clerkManager.getTransport("default");
-        // Now you create a reference to the UDDI API
-        security = transport.getUDDISecurityService();
-        publish = transport.getUDDIPublishService();
+                // create a manager and read the config in the archive; 
+                // you can use your config file name
+                UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
+                // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
+                Transport transport = clerkManager.getTransport("default");
+                // Now you create a reference to the UDDI API
+                security = transport.getUDDISecurityService();
+                publish = transport.getUDDIPublishService();
 
-        //step one, get a token
-        GetAuthToken getAuthTokenRoot = new GetAuthToken();
-        getAuthTokenRoot.setUserID("uddi");
+                //step one, get a token
+                GetAuthToken getAuthTokenRoot = new GetAuthToken();
+                getAuthTokenRoot.setUserID("uddi");
 
-        getAuthTokenRoot.setCred("uddi");
-        AuthToken authToken = security.getAuthToken(getAuthTokenRoot);
-        TModel createKeyGenator = UDDIClerk.createKeyGenator("uddi:testdomain:keygenerator", "a name", "en");
+                getAuthTokenRoot.setCred("uddi");
+                AuthToken authToken = security.getAuthToken(getAuthTokenRoot);
+                TModel createKeyGenator = UDDIClerk.createKeyGenator("uddi:testdomain:keygenerator", "a name", "en");
 
-        TModel createKeyGenator2 = UDDIClerk.createKeyGenator("uddi:testdomain2:keygenerator", "a name", "en");
+                TModel createKeyGenator2 = UDDIClerk.createKeyGenator("uddi:testdomain2:keygenerator", "a name", "en");
 
-        SaveTModel st = new SaveTModel();
-        st.setAuthInfo(authToken.getAuthInfo());
-        st.getTModel().add(createKeyGenator);
-        st.getTModel().add(createKeyGenator2);
-        publish.saveTModel(st);
+                SaveTModel st = new SaveTModel();
+                st.setAuthInfo(authToken.getAuthInfo());
+                st.getTModel().add(createKeyGenator);
+                st.getTModel().add(createKeyGenator2);
+                publish.saveTModel(st);
 
-        SaveBusiness sb = new SaveBusiness();
-        sb.setAuthInfo(authToken.getAuthInfo());
-        BusinessEntity be = new BusinessEntity();
-        be.setBusinessKey("uddi:testdomain:biz1");
-        be.getName().add(new Name("test", "en"));
-        be.setBusinessServices(new BusinessServices());
-        BusinessService bs = new BusinessService();
-        bs.setServiceKey("uddi:testdomain2:svc");
-        bs.setBusinessKey("uddi:testdomain:biz1");
-        bs.getName().add(new Name("svc", "en"));
-        bs.setBindingTemplates(new BindingTemplates());
-        BindingTemplate bt = new BindingTemplate();
-        bt.setAccessPoint(new AccessPoint("http://localhost", "wsdlDeployment"));
-        bt = UDDIClient.addSOAPtModels(bt);
-        bs.getBindingTemplates().getBindingTemplate().add(bt);
-        be.getBusinessServices().getBusinessService().add(bs);
-        sb.getBusinessEntity().add(be);
-        publish.saveBusiness(sb);
-    }
+                SaveBusiness sb = new SaveBusiness();
+                sb.setAuthInfo(authToken.getAuthInfo());
+                BusinessEntity be = new BusinessEntity();
+                be.setBusinessKey("uddi:testdomain:biz1");
+                be.getName().add(new Name("test", "en"));
+                be.setBusinessServices(new BusinessServices());
+                BusinessService bs = new BusinessService();
+                bs.setServiceKey("uddi:testdomain2:svc");
+                bs.setBusinessKey("uddi:testdomain:biz1");
+                bs.getName().add(new Name("svc", "en"));
+                bs.setBindingTemplates(new BindingTemplates());
+                BindingTemplate bt = new BindingTemplate();
+                bt.setAccessPoint(new AccessPoint("http://localhost", "wsdlDeployment"));
+                bt = UDDIClient.addSOAPtModels(bt);
+                bs.getBindingTemplates().getBindingTemplate().add(bt);
+                be.getBusinessServices().getBusinessService().add(bs);
+                sb.getBusinessEntity().add(be);
+                publish.saveBusiness(sb);
+        }
 }

@@ -47,6 +47,8 @@
 		<copy file="${basedir}/juddi-md5.sh" todir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
 		
         <copy file="${basedir}/tomcat-users.xml" todir="${conf.dir}" overwrite="true"/>
+		<!-- this disables TLDs scanning for faster start up-->
+		<copy file="${basedir}/serverContext.xml" tofile="${conf.dir}/context.xml" overwrite="true"/>
 		<copy file="${basedir}/context.xml" todir="${webapps.dir}/juddiv3/META-INF" overwrite="true"/>
 		<copy file="${basedir}/context.xml" todir="${webapps.dir}/juddiv3replication/META-INF" overwrite="true"/>
 		<copy file="${basedir}/server.xml" todir="${conf.dir}" overwrite="true"/>

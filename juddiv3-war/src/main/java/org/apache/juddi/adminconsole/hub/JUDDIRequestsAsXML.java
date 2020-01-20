@@ -20,6 +20,7 @@ import java.io.StringWriter;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXB;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -41,6 +42,7 @@ import org.apache.juddi.api_v3.SyncSubscription;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.v3.client.UDDIConstants;
+import org.apache.juddi.v3.client.cryptor.XmlUtils;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.Contact;
 import org.uddi.api_v3.FindBusiness;
@@ -70,7 +72,10 @@ public class JUDDIRequestsAsXML {
                         return "";
                 }
                 try {
-                        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                        TransformerFactory transFactory = TransformerFactory.newInstance();
+                        transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+                        transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+                        Transformer transformer = transFactory.newTransformer();
                         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
                         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
                         //initialize StreamResult with File object to save to file
@@ -182,25 +187,25 @@ public class JUDDIRequestsAsXML {
                 StringReader sr = new StringReader(content);
 
                 if (method.equalsIgnoreCase("save_ClientSubscriptionInfo")) {
-                        return JAXB.unmarshal(sr, SaveClientSubscriptionInfo.class);
+                        return XmlUtils.unmarshal(sr, SaveClientSubscriptionInfo.class);
                 }
                 if (method.equalsIgnoreCase("invoke_SyncSubscription")) {
-                        return JAXB.unmarshal(sr, SyncSubscription.class);
+                        return XmlUtils.unmarshal(sr, SyncSubscription.class);
                 }
                 if (method.equalsIgnoreCase("admin_SaveBusiness")) {
-                        return JAXB.unmarshal(sr, AdminSaveBusiness.class);
+                        return XmlUtils.unmarshal(sr, AdminSaveBusiness.class);
                 }
                 if (method.equalsIgnoreCase("admin_SaveTModel")) {
                         //System.out.println(content);
-                        return JAXB.unmarshal(sr, AdminSaveTModel.class);
+                        return XmlUtils.unmarshal(sr, AdminSaveTModel.class);
                 }
 
                 if (method.equalsIgnoreCase("admin_SaveSubscription")) {
-                        return JAXB.unmarshal(sr, AdminSaveSubscriptionRequest.class);
+                        return XmlUtils.unmarshal(sr, AdminSaveSubscriptionRequest.class);
                 }
 
                 if (method.equalsIgnoreCase("set_ReplicationNodes")) {
-                        return JAXB.unmarshal(sr, ReplicationConfiguration.class);
+                        return XmlUtils.unmarshal(sr, ReplicationConfiguration.class);
                 }
 
                 return null;

@@ -346,3 +346,16 @@ IMPORTANT: When switching nodes, any unsaved work that you have will be lost. Yo
 
 TIP: Administrators can define the default node via the Setting, Configuration page.
 
+=== Adding Additional Language Translations
+
+Adding support for a new translation is relatively simple.
+
+. Identify what language you want to add (i.e. French)
+. Identify the two letter language code (i.e. fr)
+. Copy the default language resource file "web.properties" and name it "web_fr.properties".
+. Edit "web_fr.properties" and translating each phrase as needed. It's a standard Java properties file that uses the format key=value.
+. Place this new file within "juddi-gui/WEB-INF/classes/org/apache/juddi/webconsole/resources"
+. Edit the "index.jsp" file in "juddi-gui" to add the new line for the "fr" langauge code. It's towards the bottom.
+. Restart Tomcat or your application server and test.
+
+Finally, contributions are always welcome. Either open a ticket with our issue tracker and attached the new translation or open a pull request.

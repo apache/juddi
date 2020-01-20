@@ -134,7 +134,6 @@ public class XRegisterHelper {
 						log.debug("Found service with key " +  existingToService.getServiceKey() + ". No need to add it again");
 					} else {
 						BusinessService fromService = uddiFromClerk.findService(bindingTemplate.getServiceKey(), fromClerk.getNode());
-						fromService.getBusinessKey();
 						//check if the business exist
 						BusinessEntity existingBusinessEntity = uddiToClerk.findBusiness(fromService.getBusinessKey(), toClerk.getNode());
 						if (existingBusinessEntity!=null) {

@@ -57,7 +57,7 @@ All jUDDI committers are encouraged to create public/ private key pairs and plac
 2. Grab the current version's release notes using JIRA. Goto JIRA, Versions, pick the version, then Release notes. Replace the release notes html file within the source with the contents from JIRA.
 3. mvn release:prepare -Papache-release
 4. mvn release:perform -Papache-release
-5. Sign in to Nexus and close the staging repo.
+5. Sign in to [Nexus](https://repository.apache.org/) and close the staging repo.
 6. Send a [VOTE] email to the dev mailing list regarding the new release.
 7. Upon a successful vote, sign in to Nexus and release the staging repo
 8. Add the release to svn https://dist.apache.org/repos/dist/release/juddi/

@@ -54,6 +54,11 @@ public class UDDIClientContainer {
 		} else throw new IllegalArgumentException("clientName is a required argument");
 	}
 	
+        /**
+         * adds the named client, but only if it isn't registered already
+         * @param manager
+         * @return true if successful
+         */
 	public static boolean addClient(UDDIClient manager) {
 		if (!clients.containsKey(manager.getClientConfig().getClientName())) {
 			clients.put(manager.getClientConfig().getClientName(), manager);

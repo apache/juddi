@@ -33,7 +33,7 @@ import org.apache.juddi.query.util.DynamicQuery;
  */
 public class DeletePublisherAssertionByBusinessQuery extends PublisherAssertionQuery {
 
-	private static Log log = LogFactory.getLog(DeletePublisherAssertionByBusinessQuery.class);
+	private static final Log log = LogFactory.getLog(DeletePublisherAssertionByBusinessQuery.class);
 
 	public static int delete(EntityManager em, List<?> businessKeys) {
 		if ((businessKeys == null) || (businessKeys.size() == 0))

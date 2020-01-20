@@ -34,7 +34,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 public class UDDISecurityService extends UnicastRemoteObject implements UDDISecurityPortType {
 
 	private static final long serialVersionUID = -7931578658303681458L;
-	private UDDISecurityPortType security = new UDDISecurityImpl();
+	private transient UDDISecurityPortType security = new UDDISecurityImpl();
 	
 	protected UDDISecurityService(int port) throws RemoteException {
 		super(port);

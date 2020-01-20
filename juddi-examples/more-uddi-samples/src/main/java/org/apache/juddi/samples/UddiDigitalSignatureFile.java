@@ -18,17 +18,13 @@ package org.apache.juddi.samples;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.xml.bind.JAXB;
 
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.cryptor.DigSigUtil;
-import org.apache.juddi.v3.client.transport.Transport;
+import org.apache.juddi.v3.client.cryptor.XmlUtils;
 import org.uddi.api_v3.*;
-import org.uddi.v3_service.UDDIInquiryPortType;
-import org.uddi.v3_service.UDDIPublicationPortType;
-import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
  * This class shows you how to digital sign a business and save to file
@@ -37,20 +33,11 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiDigitalSignatureFile {
 
-        private static UDDIClient clerkManager = null;
-
         /**
          * This sets up the ws proxies using uddi.xml in META-INF
          */
         public UddiDigitalSignatureFile() {
-                try {
-                        // create a manager and read the config in the archive; 
-                        // you can use your config file name
-                        clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
 
-                } catch (Exception e) {
-                        e.printStackTrace();
-                }
         }
 
         public enum UddiType {
@@ -58,7 +45,7 @@ public class UddiDigitalSignatureFile {
                 Business, Service, Binding, TModel, PublisherAssertion
         }
 
-        public void Fire(String fileIn, String fileOut, UddiType type) {
+        public void fire(String fileIn, String fileOut, UddiType type) {
                 try {
                         System.out.println("WARN - All previous signatures will be removed!");
                         if (fileIn == null || fileOut == null || type == null) {
@@ -110,25 +97,25 @@ public class UddiDigitalSignatureFile {
                                         expectedType = TModel.class;
                                         break;
                         }
-                        Object be = JAXB.unmarshal(fis, expectedType);
+                        Object be = XmlUtils.unmarshal(fis, expectedType);
                         fis.close();
                         fis = null;
-                        
+
                         switch (type) {
                                 case Binding:
-                                        ((BindingTemplate)be).getSignature().clear();
+                                        ((BindingTemplate) be).getSignature().clear();
                                         break;
                                 case Business:
-                                        ((BusinessEntity)be).getSignature().clear();
+                                        ((BusinessEntity) be).getSignature().clear();
                                         break;
                                 case PublisherAssertion:
-                                        ((PublisherAssertion)be).getSignature().clear();
+                                        ((PublisherAssertion) be).getSignature().clear();
                                         break;
                                 case Service:
-                                        ((BusinessService)be).getSignature().clear();
+                                        ((BusinessService) be).getSignature().clear();
                                         break;
                                 case TModel:
-                                        ((TModel)be).getSignature().clear();
+                                        ((TModel) be).getSignature().clear();
                                         break;
                         }
 
@@ -136,7 +123,6 @@ public class UddiDigitalSignatureFile {
                         Object signUDDI_JAXBObject = ds.signUddiEntity(be);
                         System.out.println("signed");
                         DigSigUtil.JAXB_ToStdOut(signUDDI_JAXBObject);
-                        
 
                         System.out.println("verifing");
                         AtomicReference<String> msg = new AtomicReference<String>();
@@ -156,5 +142,4 @@ public class UddiDigitalSignatureFile {
                 }
         }
 
-       
 }

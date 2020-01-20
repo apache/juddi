@@ -107,7 +107,7 @@ import org.uddi.v3_service.UDDIReplicationPortType;
 })
 public class UDDIReplicationImpl extends AuthenticatedService implements UDDIReplicationPortType {
 
-        static void notifyConfigurationChange(ReplicationConfiguration oldConfig, ReplicationConfiguration newConfig) {
+        static void notifyConfigurationChange(ReplicationConfiguration oldConfig, ReplicationConfiguration newConfig, AuthenticatedService service) {
 
                 //if the config is different
                 Set<String> oldnodes = getNodes(oldConfig);
@@ -118,8 +118,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                         queue = new ConcurrentLinkedQueue<NotifyChangeRecordsAvailable>();
                 }
                 for (String s : addedNodes) {
-                        if (!s.equals(node)) {
-                                logger.info("This node: " + node + ". New replication node queue for synchronization: " + s);
+                        if (!s.equals(service.getNode())) {
+                                logger.info("This node: " + service.getNode() + ". New replication node queue for synchronization: " + s);
                                 HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
                                 highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(s, 0L));
                                 queue.add(new NotifyChangeRecordsAvailable(s, highWaterMarkVectorType));
@@ -187,15 +187,16 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 } catch (Exception ex) {
                         logger.warn("Config error!", ex);
                 }
-                if (pub == null) {
-                        pub = new UDDIPublicationImpl();
-                }
+               
                 serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDIReplicationImpl.class);
-                Init();
+                init();
 
         }
 
-        private synchronized void Init() {
+        private synchronized void init() {
+                if (pub == null) {
+                        pub = new UDDIPublicationImpl();
+                }
                 if (queue == null) {
                         queue = new ConcurrentLinkedQueue<NotifyChangeRecordsAvailable>();
                 }
@@ -203,17 +204,6 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
         }
 
-        private boolean Excluded(HighWaterMarkVectorType changesAlreadySeen, ChangeRecord r) {
-                if (changesAlreadySeen != null) {
-                        for (int i = 0; i < changesAlreadySeen.getHighWaterMark().size(); i++) {
-                                if (changesAlreadySeen.getHighWaterMark().get(i).getNodeID().equals(r.getChangeID().getNodeID())
-                                        && changesAlreadySeen.getHighWaterMark().get(i).getOriginatingUSN().equals(r.getChangeID().getOriginatingUSN())) {
-                                        return true;
-                                }
-                        }
-                }
-                return false;
-        }
 
         /**
          * handles when a remote node tells me that there's an update(s)
@@ -243,7 +233,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                         //ok someone told me there's a change available
                         while (!queue.isEmpty()) {
                                 NotifyChangeRecordsAvailable poll = queue.poll();
-                                if (poll != null && !poll.getNotifyingNode().equalsIgnoreCase(node)) {
+                                if (poll != null && !poll.getNotifyingNode().equalsIgnoreCase(getNode())) {
                                         UDDIReplicationPortType replicationClient = getReplicationClient(poll.getNotifyingNode());
                                         if (replicationClient == null) {
                                                 logger.fatal("unable to obtain a replication client to node " + poll);
@@ -265,13 +255,13 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                                 logger.info("i've already hit the node " + poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID() + " this cycle, skipping");
                                                                                 break;
                                                                         }
-                                                                        if (poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID().equalsIgnoreCase(node)) {
-                                                                                logger.info("ignoring updates that were generated here " + poll.getChangesAvailable().getHighWaterMark().get(xx).getOriginatingUSN() + " sent by " + poll.getNotifyingNode() + " this node is " + node);
+                                                                        if (poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID().equalsIgnoreCase(getNode())) {
+                                                                                logger.info("ignoring updates that were generated here " + poll.getChangesAvailable().getHighWaterMark().get(xx).getOriginatingUSN() + " sent by " + poll.getNotifyingNode() + " this node is " + getNode());
                                                                                 break;
                                                                         }
                                                                         nodesHitThisCycle.add(poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID());
                                                                         GetChangeRecords body = new GetChangeRecords();
-                                                                        body.setRequestingNode(node);
+                                                                        body.setRequestingNode(getNode());
                                                                         body.setResponseLimitCount(BigInteger.valueOf(100L));
 
                                                                         body.setChangesAlreadySeen(getLastChangeRecordFrom(poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID()));
@@ -283,7 +273,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                         logger.info("Change records retrieved from " + poll.getNotifyingNode() + ", " + records.size());
                                                                         for (int i = 0; i < records.size(); i++) {
                                                                                 logger.info("Change records retrieved " + records.get(i).getChangeID().getNodeID() + " USN " + records.get(i).getChangeID().getOriginatingUSN());
-                                                                                PersistChangeRecord(records.get(i));
+                                                                                persistChangeRecord(records.get(i));
                                                                         }
                                                                         recordsreturned = records.size();
                                                                 }
@@ -295,7 +285,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 } else {
                                         if (poll == null) {
                                                 logger.warn("strange, popped a null object");
-                                        } else if (poll.getNotifyingNode().equalsIgnoreCase(node)) {
+                                        } else if (poll.getNotifyingNode().equalsIgnoreCase(getNode())) {
                                                 logger.warn("strange, popped an object from the queue but it was from myself. This probably indicates a configuration error! ignoring...first record: " + poll.getChangesAvailable().getHighWaterMark().get(0).getNodeID()+":" + poll.getChangesAvailable().getHighWaterMark().get(0).getOriginatingUSN());
                                         }
                                 }
@@ -314,13 +304,13 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                  *
                  * @param rec
                  */
-                private void PersistChangeRecord(ChangeRecord rec) {
+                private void persistChangeRecord(ChangeRecord rec) {
                         if (rec == null) {
                                 return;
                         }
                         logger.debug("_______________________Remote change request " + rec.getChangeID().getNodeID() + ":" + rec.getChangeID().getOriginatingUSN());
 
-                        if (rec.getChangeID().getNodeID().equalsIgnoreCase(node)) {
+                        if (rec.getChangeID().getNodeID().equalsIgnoreCase(getNode())) {
                                 logger.info("Just received a change record that i created, ignoring....");
                                 return;
                         }
@@ -374,18 +364,18 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                         if (rec.getChangeRecordDelete() != null && rec.getChangeRecordDelete().getBindingKey() != null && !"".equalsIgnoreCase(rec.getChangeRecordDelete().getBindingKey())) {
                                                 //delete a binding template
                                                 UddiEntity ue = em.find(BindingTemplate.class, rec.getChangeRecordDelete().getBindingKey());
-                                                ValidateNodeIdMisMatches(ue, node);
+                                                validateNodeIdMisMatches(ue, getNode());
                                                 pub.deleteBinding(rec.getChangeRecordDelete().getBindingKey(), em);
                                         }
                                         if (rec.getChangeRecordDelete() != null && rec.getChangeRecordDelete().getBusinessKey() != null && !"".equalsIgnoreCase(rec.getChangeRecordDelete().getBusinessKey())) {
                                                 //delete a business 
-                                                UddiEntity ue = em.find(BusinessEntity.class, rec.getChangeRecordDelete().getBindingKey());
-                                                ValidateNodeIdMisMatches(ue, node);
+                                                UddiEntity ue = em.find(BusinessEntity.class, rec.getChangeRecordDelete().getBusinessKey());
+                                                validateNodeIdMisMatches(ue, getNode());
                                                 pub.deleteBusiness(rec.getChangeRecordDelete().getBusinessKey(), em);
                                         }
                                         if (rec.getChangeRecordDelete() != null && rec.getChangeRecordDelete().getServiceKey() != null && !"".equalsIgnoreCase(rec.getChangeRecordDelete().getServiceKey())) {
-                                                UddiEntity ue = em.find(BusinessService.class, rec.getChangeRecordDelete().getBindingKey());
-                                                ValidateNodeIdMisMatches(ue, node);
+                                                UddiEntity ue = em.find(BusinessService.class, rec.getChangeRecordDelete().getServiceKey());
+                                                validateNodeIdMisMatches(ue, getNode());
                                                 //delete a service 
                                                 pub.deleteService(rec.getChangeRecordDelete().getServiceKey(), em);
                                         }
@@ -403,7 +393,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                  */
                                                 UddiEntity tm = em.find(Tmodel.class, rec.getChangeRecordDelete().getTModelKey());
                                                 if (tm != null) {
-                                                        ValidateNodeIdMisMatches(tm, node);
+                                                        validateNodeIdMisMatches(tm, getNode());
                                                         em.remove(tm);
                                                 } else {
                                                         logger.error("failed to adminstratively delete tmodel because it doesn't exist. " + rec.getChangeRecordDelete().getTModelKey());
@@ -427,7 +417,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                 if (rec.getChangeRecordNewData().getOperationalInfo().getNodeID() == null) {
                                                         throw new Exception("Inbound replication data is missiong node id! Change will not be applied");
                                                 }
-                                                if (rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equalsIgnoreCase(node)) {
+                                                if (rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equalsIgnoreCase(getNode())) {
                                                         logger.warn("Inbound replication data is modifying locally owned data. This is not allowed, except for custody transfer");
                                                 }
                                                 if (rec.getChangeRecordNewData().getBindingTemplate() != null) {
@@ -440,7 +430,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                         if (model == null) {
                                                                 logger.error("Replication error, attempting to insert a binding where the service doesn't exist yet");
                                                         } else {
-                                                                ValidateNodeIdMatches(rec.getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
+                                                                validateNodeIdMatches(rec.getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
 
                                                                 org.apache.juddi.model.BindingTemplate bt = em.find(org.apache.juddi.model.BindingTemplate.class, rec.getChangeRecordNewData().getBindingTemplate().getBindingKey());
                                                                 if (bt != null) {
@@ -459,8 +449,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                         BusinessEntity model = em.find(org.apache.juddi.model.BusinessEntity.class, rec.getChangeRecordNewData().getBusinessEntity().getBusinessKey());
                                                         if (model != null) {
                                                                 //if the owner of the new data is me, and the update didn't originate from me
-                                                                if (rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(node)
-                                                                        && !model.getNodeId().equals(node)) {
+                                                                if (rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(getNode())
+                                                                        && !model.getNodeId().equals(getNode())) {
                                                                         if (model.getIsTransferInProgress()) {
                                                                                 //allow the transfer
                                                                                 MappingApiToModel.mapBusinessEntity(rec.getChangeRecordNewData().getBusinessEntity(), model);
@@ -470,21 +460,21 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                                 em.merge(model);
                                                                         } else {
                                                                                 //block it, unexpected transfer
-                                                                                throw new Exception("Unexpected entity transfer to to node " + node + " from " + rec.getChangeID().getNodeID());
+                                                                                throw new Exception("Unexpected entity transfer to to node " + getNode() + " from " + rec.getChangeID().getNodeID());
                                                                         }
 
-                                                                } else if (rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(node)
-                                                                        && model.getNodeId().equals(node)) {
+                                                                } else if (rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(getNode())
+                                                                        && model.getNodeId().equals(getNode())) {
                                                                         //if destination is here and it's staying here, then this is strange also
                                                                         //someone else updated one of my records
                                                                         throw new Exception("unexpected modification of records that this server owns, " + model.getEntityKey());
-                                                                } else if (!rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(node)
-                                                                        && model.getNodeId().equals(node)) {
+                                                                } else if (!rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(getNode())
+                                                                        && model.getNodeId().equals(getNode())) {
                                                                         //this is also strange, destination is elsewhere however it's owned by me.
                                                                         throw new Exception("unexpected transfer from this node to elsewhere, possible that the key in question exists at two places prior to replication sync, " + model.getEntityKey());
 
-                                                                } else if (!rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(node)
-                                                                        && !model.getNodeId().equals(node)) {
+                                                                } else if (!rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(getNode())
+                                                                        && !model.getNodeId().equals(getNode())) {
                                                                         //changes on a remote node, for an existing item
                                                                         MappingApiToModel.mapBusinessEntity(rec.getChangeRecordNewData().getBusinessEntity(), model);
                                                                         MappingApiToModel.mapOperationalInfoIncludingChildren(model, rec.getChangeRecordNewData().getOperationalInfo());
@@ -508,7 +498,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                 org.apache.juddi.model.BusinessService model = null;
                                                                 model = em.find(org.apache.juddi.model.BusinessService.class, rec.getChangeRecordNewData().getBusinessService().getServiceKey());
                                                                 if (model != null) {
-                                                                        ValidateNodeIdMatches(rec.getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
+                                                                        validateNodeIdMatches(rec.getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
                                                                         em.remove(model);
                                                                 }
 
@@ -527,8 +517,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                 //in the case of a transfer
                                                                 //if the new entity is being transfer to ME, accept and i didn't previously own it, but only if the local record is flagged as transferable
                                                                 //meaning, only accept if i'm expecting a transfer
-                                                                if (rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(node)
-                                                                        && !model.getNodeId().equals(node)) {
+                                                                if (rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(getNode())
+                                                                        && !model.getNodeId().equals(getNode())) {
                                                                         if (model.getIsTransferInProgress()) {
                                                                                 //allow the transfer
                                                                                 em.remove(model);
@@ -542,18 +532,18 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                                 throw new Exception("Unexpected entity transfer to this node from " + rec.getChangeID().getNodeID());
                                                                         }
 
-                                                                } else if (rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(node)
-                                                                        && model.getNodeId().equals(node)) {
+                                                                } else if (rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(getNode())
+                                                                        && model.getNodeId().equals(getNode())) {
                                                                         //if destination is here and it's staying here, then this is strange also
                                                                         //someone else updated one of my records
                                                                         throw new Exception("unexpected modification of records that this server owns, " + model.getEntityKey());
-                                                                } else if (!rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(node)
-                                                                        && model.getNodeId().equals(node)) {
+                                                                } else if (!rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(getNode())
+                                                                        && model.getNodeId().equals(getNode())) {
                                                                         //this is also strange, destination is elsewhere however it's owned by me.
                                                                         throw new Exception("unexpected transfer from this node to elsewhere, possible that the key in question exists at two places prior to replication sync, " + model.getEntityKey());
 
-                                                                } else if (!rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(node)
-                                                                        && !model.getNodeId().equals(node)) {
+                                                                } else if (!rec.getChangeRecordNewData().getOperationalInfo().getNodeID().equals(getNode())
+                                                                        && !model.getNodeId().equals(getNode())) {
                                                                         //changes on a remote node, for an existing item
                                                                         em.remove(model);
                                                                         model = new Tmodel();
@@ -594,7 +584,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                 logger.error("Unexpected delete/hide tmodel message received for non existing key " + key);
                                         } else {
                                                 //no one else can delete/hide my tmodel
-                                                ValidateNodeIdMisMatches(existing, node);
+                                                validateNodeIdMisMatches(existing, getNode());
                                                 existing.setDeleted(true);
                                                 existing.setModified(rec.getChangeRecordHide().getModified().toGregorianCalendar().getTime());
                                                 existing.setModifiedIncludingChildren(rec.getChangeRecordHide().getModified().toGregorianCalendar().getTime());
@@ -668,7 +658,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                         posack.setChangeRecordAcknowledgement(new ChangeRecordAcknowledgement());
                                         posack.getChangeRecordAcknowledgement().setAcknowledgedChange(rec.getChangeID());
                                         posack.setAcknowledgementRequested(false);
-                                        ReplicationNotifier.Enqueue(MappingApiToModel.mapChangeRecord(posack));
+                                        ReplicationNotifier.enqueue(MappingApiToModel.mapChangeRecord(posack));
                                 }
                                 if (rec.getChangeRecordNewDataConditional() != null) {
 
@@ -693,7 +683,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                                                                 org.apache.juddi.model.BindingTemplate bt = em.find(org.apache.juddi.model.BindingTemplate.class, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBindingTemplate().getBindingKey());
                                                                 if (bt != null) {
-                                                                        ValidateNodeIdMatches(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID(), bt.getNodeId());
+                                                                        validateNodeIdMatches(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID(), bt.getNodeId());
 
                                                                         em.remove(bt);
                                                                 }
@@ -708,7 +698,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                                                         BusinessEntity model = em.find(org.apache.juddi.model.BusinessEntity.class, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBusinessEntity().getBusinessKey());
                                                         if (model != null) {
-                                                                ValidateNodeIdMatches(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
+                                                                validateNodeIdMatches(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
                                                                 //TODO revisit access control rules
                                                                 em.remove(model);
                                                         }
@@ -730,7 +720,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                                 org.apache.juddi.model.BusinessService model = null;
                                                                 model = em.find(org.apache.juddi.model.BusinessService.class, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getBusinessService().getServiceKey());
                                                                 if (model != null) {
-                                                                        ValidateNodeIdMatches(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
+                                                                        validateNodeIdMatches(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
                                                                         em.remove(model);
                                                                 }
 
@@ -746,7 +736,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                                                         Tmodel model = em.find(org.apache.juddi.model.Tmodel.class, rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getTModel().getTModelKey());
                                                         if (model != null) {
-                                                                ValidateNodeIdMatches(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
+                                                                validateNodeIdMatches(rec.getChangeRecordNewDataConditional().getChangeRecordNewData().getOperationalInfo().getNodeID(), model.getNodeId());
                                                                 em.remove(model);
                                                         }
                                                         model = new Tmodel();
@@ -862,7 +852,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 //no edges or graph defined, default to the operator list
                                 for (org.uddi.repl_v3.Operator o : repcfg.getOperator()) {
                                         //no need to tell myself about a change at myself
-                                        if (!o.getOperatorNodeID().equalsIgnoreCase(node)) {
+                                        if (!o.getOperatorNodeID().equalsIgnoreCase(getNode())) {
                                                 receivers.add(o.getOperatorNodeID());
                                         }
                                 }
@@ -872,7 +862,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 while (iterator.hasNext()) {
                                         Edge next = iterator.next();
 
-                                        if (next.getMessageReceiver().equalsIgnoreCase(node)) {
+                                        if (next.getMessageReceiver().equalsIgnoreCase(getNode())) {
                                                 receivers.add(next.getMessageSender());
                                         }
 
@@ -901,7 +891,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
          * @param node
          * @throws Exception
          */
-        private static void ValidateNodeIdMisMatches(UddiEntity ue, String node) throws Exception {
+        private static void validateNodeIdMisMatches(UddiEntity ue, String node) throws Exception {
                 if (ue == null) {
                         return;//object doesn't exist
                 }
@@ -918,13 +908,13 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
          * @param currentOwningNode
          * @throws Exception
          */
-        private static void ValidateNodeIdMatches(String newNodeId, String currentOwningNode) throws Exception {
+        private  void validateNodeIdMatches(String newNodeId, String currentOwningNode) throws Exception {
                 if (newNodeId == null || currentOwningNode == null) {
                         throw new Exception("either the local node ID is null or the inbound replication data's node id is null");
                 }
                 //only time this is allowed is custody transfer
                 if (!newNodeId.equals(currentOwningNode)) {
-                        logger.info("AUDIT, custody transfer from node, " + currentOwningNode + " to " + newNodeId + " current node is " + node);
+                        logger.info("AUDIT, custody transfer from node, " + currentOwningNode + " to " + newNodeId + " current node is " + getNode());
                         //throw new Exception("node id mismatch!");
                 }
 
@@ -944,7 +934,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                  * Custody and Ownership Transfer API.
                  */
                 //so someone else attempted to update one of my records, reject it
-                if (newNodeId.equals(node)) {
+                if (newNodeId.equals(getNode())) {
                         //throw new Exception("node id mismatch! this node already has a record for key " + newDataOperationalInfo.getEntityKey() + " and I'm the authority for it.");
                 }
         }
@@ -1002,7 +992,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 long procTime = System.currentTimeMillis() - startTime;
                 serviceCounter.update(ReplicationQuery.DO_PING, QueryStatus.SUCCESS, procTime);
 
-                return node;
+                return getNode();
 
         }
 
@@ -1061,7 +1051,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                         if (firstrecord == null) {
                                                 firstrecord = 0L;
                                         }
-                                        if (changesAlreadySeen.getHighWaterMark().get(i).getNodeID().equals(node)) {
+                                        if (changesAlreadySeen.getHighWaterMark().get(i).getNodeID().equals(getNode())) {
                                                 //special case, search by database id
                                                 createQuery = em.createQuery("select e from ChangeRecord e where "
                                                         + "(e.id > :inbound AND e.nodeID = :node) "
@@ -1073,7 +1063,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                         + "order by e.originatingUSN ASC");
                                         }
                                         logger.info("Query db for replication changes, lower index is " + (firstrecord) + " last index " + lastrecord + " record limit " + maxrecords);
-                                        logger.info("This node is" + node + ", request is for data originated from " + changesAlreadySeen.getHighWaterMark().get(i).getNodeID() + " and it's being sent back to " + requestingNode);
+                                        logger.info("This node is " + getNode() + ", request is for data originated from " + changesAlreadySeen.getHighWaterMark().get(i).getNodeID() + " and it's being sent back to " + requestingNode);
 
                                         createQuery.setMaxResults(maxrecords);
                                         createQuery.setParameter("inbound", firstrecord);
@@ -1102,7 +1092,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 }
                                 //assume that they just want records that originated from here?
                                 logger.info("Query db for replication changes, lower index is " + (firstrecord) + " last index " + lastrecord + " record limit " + maxrecords);
-                                logger.info("This node is" + node + " requesting node " + requestingNode);
+                                logger.info("This node is " + getNode() + " requesting node " + requestingNode);
 
                                 if (lastrecord != null) {
                                         createQuery = em.createQuery("select e from ChangeRecord e where "
@@ -1116,7 +1106,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 }
                                 createQuery.setMaxResults(maxrecords);
                                 createQuery.setParameter("inbound", firstrecord);
-                                createQuery.setParameter("node", node);
+                                createQuery.setParameter("node", getNode());
 
                                 List<org.apache.juddi.model.ChangeRecord> records = (List<org.apache.juddi.model.ChangeRecord>) createQuery.getResultList();
                                 logger.info(records.size() + " CR records returned from query");
@@ -1134,7 +1124,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 QueryStatus.SUCCESS, procTime);
 
                 } catch (Exception ex) {
-                        logger.fatal("Error, this node is: " + node, ex);
+                        logger.fatal("Error, this node is: " + getNode(), ex);
                         throw new FatalErrorException(new ErrorMessage("E_fatalError", ex.getMessage()));
 
                 } finally {
@@ -1179,7 +1169,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                 Iterator<String> it = FetchEdges.getCommunicationGraph().getNode().iterator();
                                 while (it.hasNext()) {
                                         String nextNode = it.next();
-                                        if (!nextNode.equals(node)) {
+                                        if (!nextNode.equals(getNode())) {
                                                 if (!map.containsKey(nextNode)) {
                                                         Long id = 0L;
                                                         try {
@@ -1199,12 +1189,12 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                         }
                         //dont forget this node
                         Long id = (Long) em.createQuery("select (e.id) from ChangeRecord e where e.nodeID = :node  order by e.id desc")
-                                .setParameter("node", node).setMaxResults(1).getSingleResult();
+                                .setParameter("node", getNode()).setMaxResults(1).getSingleResult();
                         if (id == null) {
                                 id = 0L;
                         }
                         ChangeRecordIDType x = new ChangeRecordIDType();
-                        x.setNodeID(node);
+                        x.setNodeID(getNode());
                         x.setOriginatingUSN(id);
                         ret.add(x);
 
@@ -1246,7 +1236,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 //getChangeRecords from the remote node asynch
                 new ValidateReplication(null).validateNotifyChangeRecordsAvailable(body, ctx);
 
-                logger.info(body.getNotifyingNode() + " just told me that there are change records available, enqueuing...size is " + queue.size() + " this node is " + node);
+                logger.info(body.getNotifyingNode() + " just told me that there are change records available, enqueuing...size is " + queue.size() + " this node is " + getNode());
                 //if (!queue.contains(body.getNotifyingNode())) {
                 queue.add(body);
                 //}
@@ -1315,9 +1305,9 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                         for (ChangeRecord c : executeTransfer) {
                                 try {
                                         c.setChangeID(new ChangeRecordIDType());
-                                        c.getChangeID().setNodeID(node);
+                                        c.getChangeID().setNodeID(getNode());
                                         c.getChangeID().setOriginatingUSN(null);
-                                        ReplicationNotifier.Enqueue(MappingApiToModel.mapChangeRecord(c));
+                                        ReplicationNotifier.enqueue(MappingApiToModel.mapChangeRecord(c));
                                 } catch (UnsupportedEncodingException ex) {
                                         logger.error("", ex);
                                 }

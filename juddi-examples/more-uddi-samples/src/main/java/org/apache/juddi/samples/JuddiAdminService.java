@@ -15,7 +15,6 @@
  */
 package org.apache.juddi.samples;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.math.BigInteger;
 import java.rmi.RemoteException;
@@ -43,7 +42,6 @@ import org.apache.juddi.v3.client.transport.TransportException;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.Contact;
 import org.uddi.api_v3.Description;
-import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.Email;
 import org.uddi.api_v3.GetAuthToken;
 import org.uddi.api_v3.PersonName;
@@ -64,11 +62,8 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class JuddiAdminService {
 
-        //  private static UDDISecurityPortType security = null;
-        //  private static UDDIPublicationPortType publish = null;
-        static JUDDIApiPortType juddi = null;
-        // static UDDIClerk clerk = null;
-        static UDDIClient clerkManager = null;
+        private JUDDIApiPortType juddi = null;
+        private UDDIClient clerkManager = null;
 
         public JuddiAdminService(UDDIClient client, Transport transport) {
                 try {
@@ -302,7 +297,7 @@ public class JuddiAdminService {
                 }
                 if (input.equalsIgnoreCase("d")) {
                         //save the changes
-                        DispositionReport setReplicationNodes = juddiApiService.setReplicationNodes(authtoken, replicationNodes);
+                        juddiApiService.setReplicationNodes(authtoken, replicationNodes);
                         System.out.println("Saved!, dumping config from the server");
                         replicationNodes = juddiApiService.getReplicationNodes(authtoken);
                         JAXB.marshal(replicationNodes, System.out);
@@ -483,8 +478,6 @@ public class JuddiAdminService {
         void autoMagic123() throws Exception {
 
                 //1 > 2 >3 >1
-                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
-
                 Transport transport = clerkManager.getTransport("default");
                 String authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
 
@@ -564,8 +557,6 @@ public class JuddiAdminService {
         void autoMagicDirected() throws Exception {
 
                 //1 > 2 >3 >1
-                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
-
                 Transport transport = clerkManager.getTransport("default");
                 String authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
 
@@ -665,8 +656,6 @@ public class JuddiAdminService {
 
         void autoMagic() throws Exception {
 
-                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
-
                 Transport transport = clerkManager.getTransport("default");
                 String authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
 
@@ -683,7 +672,7 @@ public class JuddiAdminService {
 
                 }
                 //if (replicationNodes.getCommunicationGraph() == null) {
-                        replicationNodes.setCommunicationGraph(new CommunicationGraph());
+                replicationNodes.setCommunicationGraph(new CommunicationGraph());
                 //}
                 Operator op = new Operator();
                 op.setOperatorNodeID("uddi:juddi.apache.org:node1");
@@ -727,8 +716,6 @@ public class JuddiAdminService {
         }
 
         void autoMagic3() throws Exception {
-
-                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
 
                 Transport transport = clerkManager.getTransport("default");
                 String authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();
@@ -919,7 +906,17 @@ public class JuddiAdminService {
                         = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 
                 KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-                ks.load(new FileInputStream(System.getProperty("javax.net.ssl.keyStore")), System.getProperty("javax.net.ssl.keyStorePassword").toCharArray());
+                FileInputStream fis = null;
+                try {
+                        fis = new FileInputStream(System.getProperty("javax.net.ssl.keyStore"));
+                        ks.load(fis, System.getProperty("javax.net.ssl.keyStorePassword").toCharArray());
+                } catch (Exception ex) {
+
+                } finally {
+                        if (fis != null) {
+                                fis.close();
+                        }
+                }
 
                 kmf.init(ks, System.getProperty("javax.net.ssl.keyStorePassword").toCharArray());
 
@@ -943,7 +940,6 @@ public class JuddiAdminService {
 
         void autoMagicDirectedSSL() throws Exception {
                 //1 > 2 >3 >1
-                List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
 
                 Transport transport = clerkManager.getTransport("default");
                 String authtoken = transport.getUDDISecurityService().getAuthToken(new GetAuthToken("root", "root")).getAuthInfo();

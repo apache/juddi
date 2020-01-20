@@ -56,13 +56,13 @@ public class FindServiceByTModelKeyQuery extends BusinessServiceQuery {
 
 	public static final String ENTITY_NAME_CHILD = "TmodelInstanceInfo";
 
-	protected static String entityAliasChild;
+	protected static final String entityAliasChild;
 	
 	static {
 		entityAliasChild = buildAlias(ENTITY_NAME_CHILD);
 	}
 
-	public static List<?> select(EntityManager em, FindQualifiers fq, TModelBag tModels, String parentKey, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
+	public static List<Object> select(EntityManager em, FindQualifiers fq, TModelBag tModels, String parentKey, List<Object> keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.
 		if ((keysIn != null) && (keysIn.isEmpty()))
 			return keysIn;

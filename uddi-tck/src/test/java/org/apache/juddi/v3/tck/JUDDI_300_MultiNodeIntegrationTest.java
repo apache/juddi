@@ -269,8 +269,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
                         try {
                                 replicationNode1 = juddiApiServiceNode1.getReplicationNodes(rootNode1Token);
                         } catch (Exception ex) {
-                                System.out.println("Error getting replication config");
-                                ex.printStackTrace();
+                                logger.error("Error getting replication config",ex);
                                 Assert.fail(ex.getMessage());
 
                         }
@@ -343,7 +342,7 @@ public class JUDDI_300_MultiNodeIntegrationTest {
          * @throws Exception
          */
         @Test
-        //@Ignore
+        @Ignore
         public void testMultiNodeBusinessCustodyTransfer() throws Exception {
                 logger.info("testMultiNodeBusinessCustodyTransfer");
                 try {
@@ -547,7 +546,9 @@ public class JUDDI_300_MultiNodeIntegrationTest {
 
                         }
 
-                        Assert.assertNotNull(tModelDetail);
+                        if (tModelDetail==null)
+                            TckCommon.PrintMarker();
+                        Assert.assertNotNull("node 2 never got mary's tmodel key generator", tModelDetail);
                         Assert.assertNotNull(tModelDetail.getTModel());
                         Assert.assertTrue(tModelDetail.getTModel().size() == 1);
                         Assert.assertTrue(tModelDetail.getTModel().get(0).getTModelKey().equals(TckTModel.MARY_PUBLISHER_TMODEL_KEY));
@@ -797,14 +798,14 @@ public class JUDDI_300_MultiNodeIntegrationTest {
          * @throws Exception
          */
         @Test
-        //@Ignore
+        @Ignore
         public void testReplicationServiceBindingAddRemove() throws Exception {
                 Assume.assumeTrue(TckPublisher.isReplicationEnabled());
                 Assume.assumeTrue(TckPublisher.isJUDDI());
                 logger.info("testReplicationServiceBindingAddRemove");
 
                 try {
-                        TckCommon.PrintMarker();
+                        //TckCommon.PrintMarker();
 
                         resetBusinesses();
                         resetTmodels();

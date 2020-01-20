@@ -2,6 +2,7 @@
 jUDDI (pronounced "Judy") is an open source Java implementation of [OASIS](https://www.oasis-open.org) the [Universal Description, Discovery, and Integration (UDDI)](https://www.oasis-open.org/standards#uddiv3.0.2) specification for (Web) Services. The jUDDI project includes [Scout](http://projects.apache.org/projects/scout.html). Scout is an implementation of the [JSR 93 - JavaTM API for XML Registries 1.0 (JAXR)](https://jcp.org/en/jsr/detail?id=93).
 
 ## Features
+
  - Open Source
  - Platform Independent
  - Use with any relational database that supports ANSI standard SQL (MySQL, Oracle, DB2, Sybase, Derby etc.)
@@ -25,7 +26,7 @@ jUDDI (pronounced "Judy") is an open source Java implementation of [OASIS](https
 
 ## UDDIv3 API Client Libraries
 
- - Java using JRE 1.6
+ - Java using JRE 1.6 or newer
  - .NET using Microsoft.NET Framework v3.5 (since jUDDI 3.2)
  - Developer Documentation, Examples
  - Digital Signature support
@@ -41,6 +42,12 @@ jUDDI (pronounced "Judy") is an open source Java implementation of [OASIS](https
  - Supports for JDK 1.3.1 and later
 
 ## News
+
+Jan 11, 2020, jUDDI Release 3.3.7
+
+Dec 5, 2018, jUDDI Release 3.3.6
+
+Nov 23, 2017, jUDDI Release 3.3.5
 
 Feb 11, 2017, jUDDI Release 3.3.4
 

@@ -199,7 +199,7 @@ public class EntryPoint {
 
         private static void processOffline(String input) throws Exception {
                 if (input.equals("1")) {
-                        CompareByTModelInstanceInfoQOS.main(null);
+                        CompareByTModelInstanceInfoQOS.main(new String[0]);
                 }
                 if (input.equals("2")) {
                         new UddiDigitalSignatureFile().fire(null, null, null);

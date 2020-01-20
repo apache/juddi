@@ -64,6 +64,12 @@ public enum ReplicationQuery implements UDDIQuery {
         return list;
     }
     
+    /**
+     * this doesn't appear to be used anywhere and will be removed in a future version
+     * @param query
+     * @return
+     * @deprecated
+     */
     public static ReplicationQuery fromQuery(final String query) {
         if (_replicationQueries == null) {
             initReplicationQueries();

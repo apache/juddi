@@ -17,7 +17,6 @@ package org.apache.juddi.v3.client.config;
 
 import java.util.UUID;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.configuration.ConfigurationException;
 import static org.apache.juddi.v3.client.config.WebHelper.JUDDI_CLIENT_NAME;
 import static org.apache.juddi.v3.client.config.WebHelper.UDDI_CLIENT_CONFIG_FILE;
@@ -27,7 +26,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
 import org.junit.Assert;
 

@@ -34,10 +34,10 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiDigitalSignatureBusiness {
 
-        private static UDDISecurityPortType security = null;
-        private static UDDIInquiryPortType inquiry = null;
-        private static UDDIPublicationPortType publish = null;
-        private static UDDIClient clerkManager = null;
+        private UDDISecurityPortType security = null;
+        private UDDIInquiryPortType inquiry = null;
+        private UDDIPublicationPortType publish = null;
+        private UDDIClient clerkManager = null;
 
         /**
          * This sets up the ws proxies using uddi.xml in META-INF
@@ -56,10 +56,10 @@ public class UddiDigitalSignatureBusiness {
                         e.printStackTrace();
                 }
         }
-        
+
         public UddiDigitalSignatureBusiness(Transport transport) {
                 try {
-                       
+
                         // Now you create a reference to the UDDI API
                         security = transport.getUDDISecurityService();
                         inquiry = transport.getUDDIInquiryService();
@@ -77,10 +77,10 @@ public class UddiDigitalSignatureBusiness {
         public static void main(String args[]) {
 
                 UddiDigitalSignatureBusiness sp = new UddiDigitalSignatureBusiness();
-                sp.Fire(null, null);
+                sp.fire(null, null);
         }
 
-        public void Fire(String token, String key) {
+        public void fire(String token, String key) {
                 try {
 
                         DigSigUtil ds = null;
@@ -128,14 +128,12 @@ public class UddiDigitalSignatureBusiness {
                         BusinessEntity be = clerkManager.getClerk("default").getBusinessDetail(key);
                         //sign the copy returned from the UDDI node (it may have made changes)
                         DigSigUtil.JAXB_ToStdOut(be);
-                        if (!be.getSignature().isEmpty())
-                        {
+                        if (!be.getSignature().isEmpty()) {
                                 System.out.println("WARN, the entity with the key " + key + " is already signed! aborting");
                                 return;
                         }
 
                         //if it's already signed, remove all existing signatures
-                        
                         System.out.println("signing");
                         BusinessEntity signUDDI_JAXBObject = ds.signUddiEntity(be);
                         DigSigUtil.JAXB_ToStdOut(signUDDI_JAXBObject);

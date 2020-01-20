@@ -34,7 +34,7 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 public class UDDISubscriptionListenerService extends UnicastRemoteObject implements UDDISubscriptionListenerPortType {
 
 	private static final long serialVersionUID = -5103095115366760255L;
-	private UDDISubscriptionListenerPortType subscriptionListener = new UDDISubscriptionListenerImpl();
+	private transient UDDISubscriptionListenerPortType subscriptionListener = new UDDISubscriptionListenerImpl();
 	
 	protected UDDISubscriptionListenerService(int port) throws RemoteException {
 		super(port);

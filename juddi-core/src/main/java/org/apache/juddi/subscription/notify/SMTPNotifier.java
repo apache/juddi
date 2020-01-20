@@ -64,11 +64,11 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public class SMTPNotifier implements Notifier {
 
-	static final Log log = LogFactory.getLog(SMTPNotifier.class);
-	String notificationEmailAddress = null;
+	protected static final Log log = LogFactory.getLog(SMTPNotifier.class);
+	protected String notificationEmailAddress = null;
 	//String from = null;
-	Session session = null;
-	Properties properties = null;
+	protected Session session = null;
+	protected Properties properties = null;
 
 	protected final static String[] mailProps = {"mail.smtp.from", "mail.smtp.host", "mail.smtp.port", 
 		"mail.smtp.socketFactory.class", "mail.smtp.socketFactory.fallback", "mail.smtp.starttls.enable",

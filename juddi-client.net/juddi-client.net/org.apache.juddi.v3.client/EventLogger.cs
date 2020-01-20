@@ -50,9 +50,19 @@ namespace org.apache.juddi.v3.client.log
         /// </summary>
         public static void RegisterLogSources()
         {
-            if (!System.Diagnostics.EventLog.SourceExists(EVENT_LOG_SOURCE))
+            Boolean isRegistered = false;
+            try {
+                isRegistered = System.Diagnostics.EventLog.SourceExists(EVENT_LOG_SOURCE);
+            } catch { }
+            if (!isRegistered)
             {
-                EventLog.CreateEventSource(EVENT_LOG_SOURCE, EVENT_LOG_SOURCE);
+                try
+                {
+                    EventLog.CreateEventSource(EVENT_LOG_SOURCE, EVENT_LOG_SOURCE);
+                }catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
 
 

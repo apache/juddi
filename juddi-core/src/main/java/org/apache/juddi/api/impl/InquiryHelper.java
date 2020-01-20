@@ -18,9 +18,8 @@ package org.apache.juddi.api.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.xml.ws.Holder;
@@ -31,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.model.BindingTemplate;
 import org.apache.juddi.query.FetchBindingTemplatesQuery;
 import org.apache.juddi.query.FetchBusinessEntitiesQuery;
 import org.apache.juddi.query.FetchBusinessServicesQuery;
@@ -82,15 +82,17 @@ public class InquiryHelper {
 
 	private static Log logger = LogFactory.getLog(InquiryHelper.class);
 	
-	public static List<?> findBinding(FindBinding body, FindQualifiers findQualifiers, EntityManager em) throws DispositionReportFaultMessage {
+	public static List<Object> findBinding(FindBinding body, FindQualifiers findQualifiers, EntityManager em) throws DispositionReportFaultMessage {
 
-		List<?> keysFound = null;
-
-		// First perform the embedded FindTModel search which will augment the tModel bag with any resulting tModel keys.
+		List<Object> keysFound = new LinkedList<Object>();
+                if (body.getServiceKey()!=null && body.getServiceKey().length() > 0) {
+                    keysFound = findBindingsByServiceKey(em, body.getServiceKey(), keysFound);
+                }
+		
 		if (body.getTModelBag() == null)
 			body.setTModelBag(new TModelBag());
+                // First perform the embedded FindTModel search which will augment the tModel bag with any resulting tModel keys.
 		doFindTModelEmbeddedSearch(em, body.getFindQualifiers(), body.getFindTModel(), body.getTModelBag());
-		
 		keysFound = FindBindingByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), body.getServiceKey(), keysFound);
 		keysFound = FindBindingByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), body.getServiceKey(), keysFound);
 		keysFound = FindBindingByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), body.getServiceKey(), keysFound);
@@ -168,9 +170,9 @@ public class InquiryHelper {
 		return result;
 	}	
 	
-	public static List<?> findBusiness(FindBusiness body, FindQualifiers findQualifiers, EntityManager em) throws DispositionReportFaultMessage {
+	public static List<Object> findBusiness(FindBusiness body, FindQualifiers findQualifiers, EntityManager em) throws DispositionReportFaultMessage {
 
-		List<?> keysFound = null;
+		List<Object> keysFound = null;
 
 		// First perform the embedded FindTModel search which will augment the tModel bag with any resulting tModel keys.
 		if (body.getTModelBag() == null)
@@ -192,7 +194,7 @@ public class InquiryHelper {
 			else if (body.getFindRelatedBusinesses().getToKey() != null)
 				getRelatedBusinesses(em, Direction.TO_KEY, frb.getToKey(), frb.getKeyedReference(), relatedBusinessInfos);
 			
-			List<String> relatedBusinessKeys = new ArrayList<String>(0);
+			List<Object> relatedBusinessKeys = new ArrayList<Object>(0);
 			for (org.uddi.api_v3.RelatedBusinessInfo rbi : relatedBusinessInfos.getRelatedBusinessInfo())
 				relatedBusinessKeys.add(rbi.getBusinessKey());
 			
@@ -322,7 +324,7 @@ public class InquiryHelper {
 	
 	public static List<?> findService(FindService body, FindQualifiers findQualifiers, EntityManager em) throws DispositionReportFaultMessage {
 
-		List<?> keysFound = null;
+		List<Object> keysFound = null;
 
 		// First perform the embedded FindTModel search which will augment the tModel bag with any resulting tModel keys.
 		if (body.getTModelBag() == null)
@@ -419,8 +421,8 @@ public class InquiryHelper {
 		return result;
 	}
 
-	public static List<?> findTModel(FindTModel body, FindQualifiers findQualifiers, EntityManager em) throws DispositionReportFaultMessage {
-		List<?> keysFound = null;
+	public static List<Object> findTModel(FindTModel body, FindQualifiers findQualifiers, EntityManager em) throws DispositionReportFaultMessage {
+		List<Object> keysFound = null;
 
 		keysFound = FindTModelByIdentifierQuery.select(em, findQualifiers, body.getIdentifierBag(), keysFound);
 		keysFound = FindTModelByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
@@ -608,7 +610,7 @@ public class InquiryHelper {
 		return result;
 	}
 		
-	/*
+	/**
 	 * Performs the necessary queries for the find_tModel search and adds resulting tModel keys to the tModelBag provided.
 	 */
 	private static void doFindTModelEmbeddedSearch(EntityManager em, 
@@ -623,7 +625,7 @@ public class InquiryHelper {
 			findQualifiers.mapApiFindQualifiers(findTmodel.getFindQualifiers());
 
 			
-			List<?> tmodelKeysFound = null;
+			List<Object> tmodelKeysFound = null;
 			tmodelKeysFound = FindTModelByIdentifierQuery.select(em, findQualifiers, findTmodel.getIdentifierBag(), tmodelKeysFound);
 			tmodelKeysFound = FindTModelByCategoryQuery.select(em, findQualifiers, findTmodel.getCategoryBag(), tmodelKeysFound);
 			tmodelKeysFound = FindTModelByCategoryGroupQuery.select(em, findQualifiers, findTmodel.getCategoryBag(), tmodelKeysFound);
@@ -635,6 +637,14 @@ public class InquiryHelper {
 			}
 		}
 	}
+
+    private static List<Object> findBindingsByServiceKey(EntityManager em, String serviceKey, List<Object> keysFound) {
+        org.apache.juddi.model.BusinessService modelBusinessService=em.find(org.apache.juddi.model.BusinessService.class, serviceKey);
+        for (BindingTemplate bt : modelBusinessService.getBindingTemplates()){
+            keysFound.add(bt.getEntityKey());
+        }
+        return keysFound;
+    }
 	
 	
 }

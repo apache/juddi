@@ -49,7 +49,7 @@ public class TckBindingTemplate
 		this.inquiry = inquiry;
 	}
 
-	public void saveJoePublisherBinding(String authInfoJoe) {
+	public void saveJoePublisherBinding(String authInfoJoe) throws Exception {
 		saveBinding(authInfoJoe, JOE_BINDING_XML, JOE_BINDING_KEY);
 	}
 	
@@ -57,7 +57,10 @@ public class TckBindingTemplate
 		deleteBinding(authInfoJoe, JOE_BINDING_KEY);
 	}
 	
-	public void saveBinding(String authInfo, String bindingXML, String bindingKey) {
+	public void saveBinding(String authInfo, String bindingXML, String bindingKey) throws Exception {
+            saveBinding(authInfo, bindingXML, bindingKey, true);
+        }
+	public void saveBinding(String authInfo, String bindingXML, String bindingKey, boolean withAssertFail) throws Exception {
 		try {
 			// First save the entity
 			SaveBinding sb = new SaveBinding();
@@ -82,7 +85,10 @@ public class TckBindingTemplate
 		}
 		catch(Exception e) {
 			logger.error(e.getMessage(), e);
+                        if(withAssertFail)
 			Assert.fail("No exception should be thrown: " + e.getMessage());
+                        else throw e;
+                        
 		}
 		
 	}

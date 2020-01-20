@@ -19,9 +19,6 @@ package org.apache.juddi.v3.client.cli;
 import java.util.List;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.transport.Transport;
-import org.uddi.v3_service.UDDIInquiryPortType;
-import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
  * This class show you how get all available Access Points/Endpoints for a
@@ -32,7 +29,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiFindEndpoints {
 
-        static UDDIClerk clerk = null;
+        private UDDIClerk clerk = null;
 
         public UddiFindEndpoints() {
                 try {

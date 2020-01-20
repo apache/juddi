@@ -37,7 +37,6 @@ import org.uddi.sub_v3.SubscriptionResultsList;
 public class UddiSubscribeAssertionStatus implements ISubscriptionCallback {
 
      
-        boolean callbackRecieved = false;
         private UDDIClerk clerk = null;
         private UDDIClient client = null;
 
@@ -47,29 +46,23 @@ public class UddiSubscribeAssertionStatus implements ISubscriptionCallback {
                         // you can use your config file name
                         client = new UDDIClient("META-INF/simple-publish-uddi.xml");
                         clerk = client.getClerk("default");
-                        Transport transport = client.getTransport();
-                        // Now you create a reference to the UDDI API
+                        
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
         }
 
          public UddiSubscribeAssertionStatus(Transport transport) {
-                try {
-                        // Now you create a reference to the UDDI API
-
-                } catch (Exception e) {
-                        e.printStackTrace();
-                }
+              
         }
 
          
         public static void main(String args[]) throws Exception {
                 UddiSubscribeAssertionStatus sp = new UddiSubscribeAssertionStatus();
-                sp.Fire("default");
+                sp.fire("default");
         }
 
-        public void Fire(String nodename) throws Exception {
+        public void fire(String nodename) throws Exception {
 
                 TModel createKeyGenator = UDDIClerk.createKeyGenator("somebusiness", "A test key domain SubscriptionCallbackTest1", "SubscriptionCallbackTest1");
 
@@ -126,13 +119,13 @@ public class UddiSubscribeAssertionStatus implements ISubscriptionCallback {
         PrintUDDI<SubscriptionResultsList> p = new PrintUDDI<SubscriptionResultsList>();
 
         @Override
-        public void HandleCallback(SubscriptionResultsList body) {
+        public void handleCallback(SubscriptionResultsList body) {
                 System.out.println("Callback received!");
                 System.out.println(p.print(body));
         }
 
         @Override
-        public void NotifyEndpointStopped() {
+        public void notifyEndpointStopped() {
                 System.out.println("The endpoint was stopped!");
         }
 

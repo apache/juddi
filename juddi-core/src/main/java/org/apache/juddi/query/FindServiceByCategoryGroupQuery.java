@@ -46,7 +46,7 @@ public class FindServiceByCategoryGroupQuery {
 	
 	private static final String ENTITY_NAME_CHILD = "ServiceCategoryBag";
 	
-	private static FindEntityByCategoryGroupQuery findQuery;
+	private static final FindEntityByCategoryGroupQuery findQuery;
 	
 	static {
 		findQuery = new FindEntityByCategoryGroupQuery(BusinessServiceQuery.ENTITY_NAME, 
@@ -57,7 +57,7 @@ public class FindServiceByCategoryGroupQuery {
 													   BusinessServiceQuery.SIGNATURE_PRESENT);
 	}
 	
-	public static List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, String parentKey, List<?> keysIn) {
+	public static List<Object> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, String parentKey, List<Object> keysIn) {
 		if (parentKey != null && parentKey.length() > 0) {
 			DynamicQuery.Parameter param = new DynamicQuery.Parameter(BusinessServiceQuery.ENTITY_ALIAS + "." + BusinessServiceQuery.KEY_NAME_PARENT, parentKey, DynamicQuery.PREDICATE_EQUALS); 
 			return findQuery.select(em, fq, categoryBag, keysIn, param);

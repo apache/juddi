@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import javax.xml.XMLConstants;
 
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.DigestMethod;
@@ -168,11 +169,14 @@ public class TckSigningUtil {
     
     public static void serializeNode(Node node, String filename) {
         try {
-            Transformer xform = TransformerFactory.newInstance().newTransformer();
+            TransformerFactory transFactory = TransformerFactory.newInstance();
+            transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+            Transformer transformer = transFactory.newTransformer();
             DOMSource domSrc = new DOMSource(node);
             FileOutputStream fos = new FileOutputStream(filename);
             StreamResult streamResult = new StreamResult(fos);
-            xform.transform(domSrc, streamResult);
+            transformer.transform(domSrc, streamResult);
             fos.close();
         } catch (Exception e) {
             throw new RuntimeException(e);

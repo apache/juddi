@@ -65,7 +65,7 @@ public class UDDI_090_RMIIntegrationTest extends UDDI_090_SubscriptionListenerIn
                         try {
                                 count++;
                                 randomPort = 19800 + new Random().nextInt(99);
-                                System.out.println("RMI Random port=" + randomPort);
+                                logger.info("RMI Random port=" + randomPort);
                                 //bring up the RMISubscriptionListener
                                 URI rmiEndPoint = new URI("rmi://localhost:" + randomPort + "/tck/rmisubscriptionlistener");
                                 registry = LocateRegistry.createRegistry(rmiEndPoint.getPort());
@@ -96,7 +96,7 @@ public class UDDI_090_RMIIntegrationTest extends UDDI_090_SubscriptionListenerIn
                                 Thread.sleep(1000);
                         } catch (InterruptedException ex) {
                         }
-                        System.out.println(".");
+                        logger.info(".");
                         //if (UDDISubscriptionListenerImpl.notificationCount > 0) {                        }
                 }
                 logger.info("RX " + UDDISubscriptionListenerImpl.notificationCount + " notifications");

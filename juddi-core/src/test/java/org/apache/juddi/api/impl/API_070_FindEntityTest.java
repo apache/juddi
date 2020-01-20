@@ -15,6 +15,7 @@
 package org.apache.juddi.api.impl;
 
 import java.rmi.RemoteException;
+import java.util.List;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
@@ -24,6 +25,8 @@ import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.tck.TckBindingTemplate;
 import org.apache.juddi.v3.tck.TckBusiness;
 import org.apache.juddi.v3.tck.TckBusinessService;
+import static org.apache.juddi.v3.tck.TckBusinessService.JOE_SERVICE_KEY_2;
+import static org.apache.juddi.v3.tck.TckBusinessService.JOE_SERVICE_XML_2;
 import org.apache.juddi.v3.tck.TckFindEntity;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
@@ -31,15 +34,18 @@ import org.apache.juddi.v3.tck.TckTModel;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.uddi.api_v3.BindingDetail;
+import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.CategoryBag;
+import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModel;
+import org.uddi.api_v3.TModelBag;
 import org.uddi.api_v3.TModelList;
 
 /**
@@ -64,7 +70,8 @@ public class API_070_FindEntityTest {
                 Registry.start();
                 logger.debug("Getting auth token..");
                 try {
-                         tckTModel.saveUDDIPublisherTmodel(TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword()));
+                        tckTModel.saveUDDIPublisherTmodel(TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword()));
+                        tckTModel.saveTmodels(TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword()));
                         api010.saveJoePublisher();
                         authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                 } catch (RemoteException e) {
@@ -79,7 +86,7 @@ public class API_070_FindEntityTest {
         }
 
         @Test
-        public void findEntities() {
+        public void findEntities() throws Exception {
                 try {
                         tckTModel.saveJoePublisherTmodel(authInfoJoe, true);
                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
@@ -102,7 +109,7 @@ public class API_070_FindEntityTest {
         }
 
         @Test
-        public void findSignedEntities() {
+        public void findSignedEntities() throws Exception {
                 try {
                         tckTModel.saveJoePublisherTmodel(authInfoJoe, true);
                         tckBusiness.saveJoePublisherBusinessX509Signature(authInfoJoe);
@@ -210,7 +217,6 @@ public class API_070_FindEntityTest {
         public void JUDDI_899_2() throws Exception {
                 UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
 
-                UDDIPublicationImpl pub = new UDDIPublicationImpl();
 
                 FindTModel ftm = new FindTModel();
                 ftm.setAuthInfo(authInfoJoe);
@@ -225,5 +231,84 @@ public class API_070_FindEntityTest {
                 Assert.assertNotNull(findTModel.getTModelInfos());
                 Assert.assertNotNull(findTModel.getTModelInfos().getTModelInfo());
 
+        }
+        
+        @Test
+        public void JUDDI_992() throws Exception {
+                try{
+                    
+                    tckTModel.saveJoePublisherTmodel(authInfoJoe);
+                    //save a business, service and bindings
+                    tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+                    tckBusinessService. saveService(authInfoJoe, JOE_SERVICE_XML_2, JOE_SERVICE_KEY_2);
+                    
+                    UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
+                    FindBinding body = new FindBinding();
+                    body.setServiceKey(TckBusinessService.JOE_SERVICE_KEY_2);
+                    body.setFindQualifiers(new FindQualifiers());
+			body.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+                        body.getFindQualifiers().getFindQualifier().add(UDDIConstants.SORT_BY_DATE_ASC);
+			BindingDetail result = inquiry.findBinding(body);
+			if (result == null)
+				Assert.fail("Null result from find binding operation");
+			List<BindingTemplate> btList = result.getBindingTemplate();
+			if (btList == null || btList.size() == 0)
+				Assert.fail("No result from find binding operation");
+			Assert.assertTrue(btList.size()==1);
+                        
+                }
+                finally {
+                    tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+                }
+        }
+        
+        /**
+         * find by binding by service key and category bag
+         * <pre>
+         * 
+         * &#x3C;find_binding xmlns=&#x22;urn:uddi-org:api_v2&#x22; xmlns:xml=&#x22;http://www.w3.org/XML/1998/namespace&#x22; serviceKey=&#x22;&#x22;&#x3E;
+            &#x3C;findQualifiers&#x3E;
+              &#x3C;findQualifier&#x3E;orAllKeys&#x3C;/findQualifier&#x3E;
+            &#x3C;/findQualifiers&#x3E;
+            &#x3C;tModelBag&#x3E;
+              &#x3C;tModelKey&#x3E;uddi:uddi.org:protocol:serverauthenticatedssl3&#x3C;/tModelKey&#x3E;
+            &#x3C;/tModelBag&#x3E;
+            &#x3C;categoryBag&#x3E;
+              &#x3C;keyedReference tModelKey=&#x22;uuid:f85a1fb1-2be1-4197-9a3f-fc310222cd34&#x22; keyName=&#x22;category&#x22; keyValue=&#x22;secure&#x22; /&#x3E;
+            &#x3C;/categoryBag&#x3E;
+          &#x3C;/find_binding&#x3E;
+         * </pre>
+         * @throws Exception 
+         */
+        @Test
+        public void JUDDI_992_2() throws Exception {
+                try{
+                    
+                    tckTModel.saveJoePublisherTmodel(authInfoJoe);
+                    //save a business, service and bindings
+                    tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+                    tckBusinessService. saveService(authInfoJoe, JOE_SERVICE_XML_2, JOE_SERVICE_KEY_2);
+                    
+                    UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
+                    FindBinding body = new FindBinding();
+                   // body.setServiceKey(TckBusinessService.JOE_SERVICE_KEY_2);
+                    body.setFindQualifiers(new FindQualifiers());
+                    body.getFindQualifiers().getFindQualifier().add(UDDIConstants.OR_ALL_KEYS);
+                    body.setTModelBag(new TModelBag());
+                    body.getTModelBag().getTModelKey().add("uddi:uddi.org:transport:telephone");
+                    body.setCategoryBag(new CategoryBag());
+                    body.getCategoryBag().getKeyedReference().add(new KeyedReference("uddi:tmodelkey:categories:bindings", "category", "accesspoint"));
+                    BindingDetail result = inquiry.findBinding(body);
+                    if (result == null)
+                            Assert.fail("Null result from find binding operation");
+                    List<BindingTemplate> btList = result.getBindingTemplate();
+                    if (btList == null || btList.size() == 0)
+                            Assert.fail("No result from find binding operation");
+                    Assert.assertTrue(btList.size()==1);
+                        
+                }
+                finally {
+                    tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+                }
         }
 }

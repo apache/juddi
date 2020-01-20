@@ -28,16 +28,13 @@ import javax.xml.namespace.QName;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
 import org.apache.juddi.v3.client.mapping.wsdl.ReadWSDL;
 import org.apache.juddi.v3.client.mapping.wsdl.WSDL2UDDI;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
-import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.BusinessServices;
 import org.uddi.api_v3.GetAuthToken;
 import org.uddi.api_v3.Name;
@@ -56,21 +53,20 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class WsdlImport {
 
-        static PrintUDDI<TModel> pTModel = new PrintUDDI<TModel>();
-        static Properties properties = new Properties();
-        static String wsdlURL = null;
-        private static UDDISecurityPortType security = null;
-        private static JUDDIApiPortType juddiApi = null;
-        private static UDDIPublicationPortType publish = null;
+        
+        private Properties properties = new Properties();
+        private String wsdlURL = null;
+        private UDDISecurityPortType security = null;
+        private UDDIPublicationPortType publish = null;
 
         public static void main(String[] args) throws Exception {
-                new WsdlImport().Fire("http://svn.apache.org/repos/asf/juddi/trunk/uddi-ws/src/main/resources/juddi_api_v1.wsdl", null, null, null);
+                new WsdlImport().fire("http://svn.apache.org/repos/asf/juddi/trunk/uddi-ws/src/main/resources/juddi_api_v1.wsdl", null, null, null);
         }
 
-        public void Fire(String pathOrURL, String businessKey, String token, Transport transport) throws Exception {
+        public void fire(String pathOrURL, String businessKey, String token, Transport transport) throws Exception {
 
                 if (transport == null) {
-                // create a manager and read the config in the archive; 
+                        // create a manager and read the config in the archive; 
                         // you can use your config file name
                         UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
                         transport = clerkManager.getTransport();
@@ -154,7 +150,7 @@ public class WsdlImport {
                 Set<TModel> portTypeTModels = wsdl2UDDI.createWSDLPortTypeTModels(wsdlURL, portTypes);
                 Map allBindings = wsdlDefinition.getAllBindings();
                 Set<TModel> createWSDLBindingTModels = wsdl2UDDI.createWSDLBindingTModels(wsdlURL, allBindings);
-        //When parsing a WSDL, there's really two things going on
+                //When parsing a WSDL, there's really two things going on
                 //1) convert a bunch of stuff (the portTypes) to tModels
                 //2) convert the service definition to a BusinessService
 

@@ -16,6 +16,7 @@
 package org.apache.juddi.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -144,7 +145,7 @@ public class KeyDataValue implements java.io.Serializable {
     public String toString() {
         return "KeyDataValue{" + "id=" + getId() + ", keyDataType=" + getKeyDataType() +
                 ", keyDataName=" + getKeyDataName() + ", keyDataValueBytes=" 
-                + getKeyDataValueBytes() + ", keyDataValueString=" + getKeyDataValueString()
+                + Arrays.toString(getKeyDataValueBytes()) + ", keyDataValueString=" + getKeyDataValueString()
                 + ", keyDataValueList=" +getKeyDataValueList()  + '}';
     }
 }

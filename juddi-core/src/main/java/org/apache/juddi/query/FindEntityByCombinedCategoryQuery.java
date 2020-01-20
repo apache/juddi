@@ -76,7 +76,7 @@ import org.uddi.api_v3.KeyedReference;
 public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery {
 	
 	@SuppressWarnings("unused")
-	private static Log log = LogFactory.getLog(FindEntityByCombinedCategoryQuery.class);
+	private final static Log log = LogFactory.getLog(FindEntityByCombinedCategoryQuery.class);
 	
 	protected String entityField2;
 	protected String entityNameChild2;
@@ -86,7 +86,6 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 	protected String entityNameChild3;
 	protected String entityAliasChild3;
 	
-	protected String signaturePresent;
 
 	public FindEntityByCombinedCategoryQuery(String entityName, String entityAlias, String keyName,
 			String entityField, String entityNameChild, String signaturePresent) {
@@ -127,8 +126,8 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 		return entityAliasChild3;
 	}
 		
-	public List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, 
-			List<?> keysIn, DynamicQuery.Parameter... restrictions) {
+	public List<Object> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, 
+			List<Object> keysIn, DynamicQuery.Parameter... restrictions) {
 	        
         // If keysIn is not null and empty, then search is over.
 		if ((keysIn != null) && (keysIn.size() == 0))
@@ -179,6 +178,7 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 					resultingEntityKeys = map.get(keyValue);
 					firstTime = false;
 				} else {
+                                        //FIXME this is wrong
 					resultingEntityKeys.retainAll(map.get(keyValue));
 				}
 			}
@@ -195,7 +195,7 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 				}
 			}
 		}
-		return new ArrayList<String>(resultingEntityKeys);
+		return new ArrayList<Object>(resultingEntityKeys);
 	}
 	/**
 	 * Finding the entities (businesses or services) that have a matching keyedReference in their
@@ -212,7 +212,7 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 	 */
 	private void findEntityByCategoryQuery(Map<KeyedReference,Set<String>> map, EntityManager em, 
 			FindQualifiers fq, CategoryBag categoryBag, String entityField, String entityNameChild, 
-			List<?> keysIn, DynamicQuery.Parameter... restrictions) 
+			List<Object> keysIn, DynamicQuery.Parameter... restrictions) 
 	{
 		FindEntityByCategoryQuery findEntityByCategoryQuery = new FindEntityByCategoryQuery(
 				entityName, entityAlias, keyName, entityField, entityNameChild, signaturePresent);

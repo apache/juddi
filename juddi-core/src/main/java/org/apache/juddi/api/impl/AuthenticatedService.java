@@ -21,6 +21,8 @@ import javax.annotation.Resource;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 
@@ -47,15 +49,24 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public abstract class AuthenticatedService {
 
+        /**
+         * @return the node
+         */
+        public String getNode() {
+            return node;
+        }
+
+        public static final String UTF8 = "UTF-8";
         public static final int AUTHTOKEN_ACTIVE = 1;
         public static final int AUTHTOKEN_RETIRED = 0;
         static final Log logger = LogFactory.getLog(AuthenticatedService.class);
         /**
          * the node id of this server instance, as loaded from the config file
          */
-        protected static String node = "UNDEFINED_NODE_NAME";
+        private String node = "UNDEFINED_NODE_NAME";
         protected String baseUrlSSL = "UNDEFINED";
         protected String baseUrl = "UNDEFINED";
+        protected DatatypeFactory df = null;
 
         public AuthenticatedService() {
                 try {
@@ -66,6 +77,25 @@ public abstract class AuthenticatedService {
                 } catch (ConfigurationException ex) {
                         logger.fatal(null, ex);
                 }
+                init();
+        }
+        
+        /**
+         * this method can be used to explicitly set a request context. this is useful
+         * in unit tests, embedded and in-vm scenarios only
+         * @param ctx 
+         * @since 3.3.8
+         */
+        public void setContext(WebServiceContext ctx) {
+                this.ctx = ctx;
+        }
+        
+        private synchronized  void init() {
+            try {
+                df = DatatypeFactory.newInstance();
+            } catch (DatatypeConfigurationException ex) {
+                logger.fatal(null, ex);
+            }
         }
 
         @Resource
@@ -145,7 +175,7 @@ public abstract class AuthenticatedService {
                                                         req = (HttpServletRequest) mc.get(MessageContext.SERVLET_REQUEST);
                                                 }
                                                 if (req != null
-                                                        && modelAuthToken.getIPAddress() != null
+                                                        && req.getRemoteAddr() != null
                                                         && modelAuthToken.getIPAddress() != null
                                                         && !modelAuthToken.getIPAddress().equalsIgnoreCase(req.getRemoteAddr())) {
                                                         modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);

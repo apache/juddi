@@ -91,7 +91,6 @@
 	<class>org.apache.juddi.model.ValueSetValues</class>
 
 	<class>org.apache.juddi.model.ChangeRecord</class>
-	<class>org.apache.juddi.model.CommunicationGraph</class>
 	<class>org.apache.juddi.model.Operator</class>
 	<class>org.apache.juddi.model.ReplicationConfiguration</class>
 	<class>org.apache.juddi.model.Edge</class>

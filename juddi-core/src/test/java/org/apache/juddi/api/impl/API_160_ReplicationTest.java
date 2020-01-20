@@ -332,6 +332,7 @@ public class API_160_ReplicationTest {
                 r.getCommunicationGraph().getNode().add("test_node");
 
                 JAXB.marshal(r, System.out);
+                Thread.sleep(50);
                 setReplicationNodes = juddi.setReplicationNodes(authInfoRoot, r);
 
                 replicationNodes = juddi.getReplicationNodes(authInfoRoot);

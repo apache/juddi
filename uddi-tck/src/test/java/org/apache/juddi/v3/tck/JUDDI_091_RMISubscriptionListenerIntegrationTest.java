@@ -60,7 +60,8 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
         @AfterClass
         public static void stopManager() throws ConfigurationException {
                 if (!TckPublisher.isEnabled()) return;
-                manager.stop();
+                if (manager!=null)
+                        manager.stop();
                 //shutting down the TCK SubscriptionListener
                 //re
         }
@@ -73,8 +74,10 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
                         //bring up the RMISubscriptionListener
                         //random port
                         randomPort = 19800 + new Random().nextInt(99);
-                        System.out.println("RMI Random port=" + randomPort);
+                        logger.info("RMI Random port=" + randomPort);
                         //bring up the RMISubscriptionListener
+                        //saw this once before
+                        // internal error: ObjID already in use
                         URI rmiEndPoint = new URI("rmi://localhost:" + randomPort + "/tck/rmisubscriptionlistener");
                         registry = LocateRegistry.createRegistry(rmiEndPoint.getPort());
                         String path = rmiEndPoint.getPath();
@@ -91,7 +94,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
 
                 } catch (Exception e2) {
                         e2.printStackTrace();
-                        Assert.fail();
+                        Assert.fail(e2.getMessage());
                 }
 
                 manager = new UDDIClient();
@@ -122,7 +125,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
 
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
-                        Assert.fail("Could not obtain authInfo token.");
+                        Assert.fail("Could not obtain authInfo token." + e.getMessage());
                 }
                 JUDDI_300_MultiNodeIntegrationTest.testSetupReplicationConfig();
         }
@@ -171,7 +174,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
                 } catch (Exception e) {
                         e.printStackTrace();
 
-                        Assert.fail();
+                        Assert.fail(e.getMessage());
                 } finally {
 
                         rmiSubscriptionListener.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListenerRMI.SUBSCRIPTION_KEY_RMI);

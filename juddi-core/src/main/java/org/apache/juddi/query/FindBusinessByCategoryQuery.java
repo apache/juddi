@@ -40,7 +40,7 @@ public class FindBusinessByCategoryQuery {
 	
 	private static final String ENTITY_NAME_CHILD = "BusinessCategoryBag";
 	
-	private static FindEntityByCategoryQuery findQuery;
+	private static final FindEntityByCategoryQuery findQuery;
 	
 	static {
 		findQuery = new FindEntityByCategoryQuery(BusinessEntityQuery.ENTITY_NAME, 
@@ -51,7 +51,7 @@ public class FindBusinessByCategoryQuery {
 												  BusinessEntityQuery.SIGNATURE_PRESENT);
 	}
 	
-	public static List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, List<?> keysIn) {
+	public static List<Object> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, List<Object> keysIn) {
 		return findQuery.select(em, fq, categoryBag, keysIn);
 	}
 }

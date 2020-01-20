@@ -25,7 +25,7 @@ public class SubscriptionQuery extends EntityQuery {
 	public static final String ENTITY_NAME = "Subscription";
 	public static final String ENTITY_ALIAS = "ss";
 	
-	protected static String selectSQL;
+	protected static final String selectSQL;
 
 	static {
 		StringBuilder sql = new StringBuilder(200);

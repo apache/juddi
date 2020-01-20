@@ -20,12 +20,12 @@
      <parent>
         <groupId>org.apache.juddi</groupId>
         <artifactId>juddi-parent</artifactId>
-        <version>3.3.5-SNAPSHOT</version>
+        <version>3.3.8-SNAPSHOT</version>
     </parent> 
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-client-cli</artifactId>
-    <version>3.3.5-SNAPSHOT</version>
-    <packaging>bundle</packaging>
+    <version>3.3.8-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <name>jUDDI CLI Client</name>
     <url>http://maven.apache.org</url>
@@ -57,14 +57,6 @@
     </dependencies>
     <build>
         <plugins>
-            <!-- examples are not very useful from a maven repo, so don't put it there -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
             <plugin>
               <artifactId>maven-assembly-plugin</artifactId>
               <configuration>

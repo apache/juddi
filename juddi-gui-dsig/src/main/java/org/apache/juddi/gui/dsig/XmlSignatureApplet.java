@@ -58,6 +58,7 @@ import netscape.javascript.JSObject;
 //import netscape.javascript.JSObject;
 
 import org.apache.juddi.v3.client.cryptor.DigSigUtil;
+import org.apache.juddi.v3.client.cryptor.XmlUtils;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
@@ -127,6 +128,7 @@ public class XmlSignatureApplet extends java.applet.Applet {
     private static Document stringToDom(String xmlSource)
             throws SAXException, ParserConfigurationException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         DocumentBuilder builder = factory.newDocumentBuilder();
         return builder.parse(new InputSource(new StringReader(xmlSource)));
     }
@@ -341,25 +343,25 @@ public class XmlSignatureApplet extends java.applet.Applet {
         StringReader sr = new StringReader(xml);
         if (objecttype.equalsIgnoreCase("business")) {
             try {
-                j = (BusinessEntity) JAXB.unmarshal(sr, BusinessEntity.class);
+                j = (BusinessEntity) XmlUtils.unmarshal(sr, BusinessEntity.class);
             } catch (Exception ex) {
             }
         }
         if (objecttype.equalsIgnoreCase("service")) {
             try {
-                j = (BusinessService) JAXB.unmarshal(sr, BusinessService.class);
+                j = (BusinessService) XmlUtils.unmarshal(sr, BusinessService.class);
             } catch (Exception ex) {
             }
         }
         if (objecttype.equalsIgnoreCase("binding")) {
             try {
-                j = (BindingTemplate) JAXB.unmarshal(sr, BindingTemplate.class);
+                j = (BindingTemplate) XmlUtils.unmarshal(sr, BindingTemplate.class);
             } catch (Exception ex) {
             }
         }
         if (objecttype.equalsIgnoreCase("tmodel")) {
             try {
-                j = (TModel) JAXB.unmarshal(sr, TModel.class);
+                j = (TModel) XmlUtils.unmarshal(sr, TModel.class);
             } catch (Exception ex) {
             }
         }

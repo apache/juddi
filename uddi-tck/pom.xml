@@ -20,13 +20,13 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.3.5-SNAPSHOT</version>
+		<version>3.3.8-SNAPSHOT</version>
 	</parent>
 	<artifactId>uddi-tck</artifactId>
 	<packaging>jar</packaging>
 	<name>UDDI TCK Tests</name>
 	<properties>
-	     <cargo.version>1.4.16</cargo.version>
+	     <cargo.version>1.7.9</cargo.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -208,7 +208,7 @@
 						<configuration>
 							<wait>false</wait>
 							<container>
-								<containerId>tomcat7x</containerId>
+								<containerId>tomcat9x</containerId>
 								<home>${basedir}/target/juddi-tomcat-${project.parent.version}</home>
 							</container>
 							<configuration>
@@ -234,7 +234,7 @@
 						<configuration>
 							<wait>false</wait>
 							<container>
-								<containerId>tomcat7x</containerId>
+								<containerId>tomcat9x</containerId>
 								<home>${basedir}/target/node2/juddi-tomcat-${project.parent.version}</home>
 							</container>
 							<configuration>
@@ -258,7 +258,8 @@
 						<phase>post-integration-test</phase>
 						<configuration>
 							<container>
-								<containerId>tomcat7x</containerId>
+								<containerId>tomcat9x</containerId>
+                                                                <home>${project.build.directory}/juddi-tomcat-${project.parent.version}</home>
 							</container>
 							<configuration>
 								<properties>
@@ -277,7 +278,8 @@
 						<phase>post-integration-test</phase>
 						<configuration>
 							<container>
-								<containerId>tomcat7x</containerId>
+								<containerId>tomcat9x</containerId>
+                                                                <home>${basedir}/target/node2/juddi-tomcat-${project.parent.version}</home>
 							</container>
 							<configuration>
 								<properties>
@@ -321,6 +323,8 @@
 						</goals>
 						<configuration>
 							<skip>false</skip>
+                                                        <runOrder>random</runOrder>
+                                                        <skipAfterFailureCount>1</skipAfterFailureCount>
 							<systemProperties>
 								<property>
 									<name>cactus.contextURL</name>
@@ -342,7 +346,6 @@
 			<executions>
 				<execution>
 					<goals>
-					   <goal>jar</goal> 
 						<goal>test-jar</goal>
 					</goals>
 				</execution>
@@ -406,6 +409,7 @@
 									<goal>test</goal>
 								</goals>
 								<configuration>
+                                                                        <runOrder>random</runOrder>
 									<skip>false</skip>
 									<systemProperties>
 										<property>

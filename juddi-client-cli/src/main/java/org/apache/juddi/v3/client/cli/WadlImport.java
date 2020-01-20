@@ -54,12 +54,9 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class WadlImport {
 
-        static PrintUDDI<TModel> pTModel = new PrintUDDI<TModel>();
-        static Properties properties = new Properties();
-
-        private static UDDISecurityPortType security = null;
-        private static JUDDIApiPortType juddiApi = null;
-        private static UDDIPublicationPortType publish = null;
+        private Properties properties = new Properties();
+        private UDDISecurityPortType security = null;
+        private UDDIPublicationPortType publish = null;
 
         public void fire(String pathOrURL, String businessKey, String token, Transport transport) throws Exception {
 

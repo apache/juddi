@@ -46,9 +46,9 @@ import org.uddi.api_v3.ListDescription;
  */
 public class FetchTModelsQuery extends TModelQuery {
 
-	private static Log log = LogFactory.getLog(FetchTModelsQuery.class);
+	private static final Log log = LogFactory.getLog(FetchTModelsQuery.class);
 
-	protected static String selectSQL;
+	protected static final String selectSQL;
 
 	static {
 		StringBuilder sql = new StringBuilder(200);

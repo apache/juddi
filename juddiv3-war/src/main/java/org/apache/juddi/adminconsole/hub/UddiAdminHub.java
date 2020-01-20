@@ -32,6 +32,7 @@ import javax.persistence.Query;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXB;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.parsers.DocumentBuilder;
@@ -971,12 +972,16 @@ public class UddiAdminHub {
          */
         private String PrettyPrintJaxbObject(Object jaxb) throws Exception {
                 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
                 DocumentBuilder db = dbf.newDocumentBuilder();
                 StringWriter sw = new StringWriter();
                 JAXB.marshal(jaxb, sw);
                 InputSource is = new InputSource(new StringReader(sw.toString()));
 
-                Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                TransformerFactory transFactory = TransformerFactory.newInstance();
+                transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+                transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+                Transformer transformer = transFactory.newTransformer();
                 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
                 //initialize StreamResult with File object to save to file
                 StreamResult result = new StreamResult(new StringWriter());
@@ -1230,7 +1235,10 @@ public class UddiAdminHub {
 
         private static String PrettyPrintXML(String input) {
                 try {
-                        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                        TransformerFactory transFactory = TransformerFactory.newInstance();
+                        transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+                        transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+                        Transformer transformer = transFactory.newTransformer(); 
                         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 //initialize StreamResult with File object to save to file
                         StreamResult result = new StreamResult(new StringWriter());

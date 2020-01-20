@@ -76,7 +76,8 @@ public class ServiceLocator {
 		this.clerk = clerk;
 		this.urlLocalizer = urlLocalizer;
 		this.properties = properties;
-		if (properties == null) properties = clerk.getUDDINode().getProperties();
+		if (properties == null) 
+                        this.properties = clerk.getUDDINode().getProperties();
 	}
 	
 	public ServiceLocator withCache(URL baseCallbackURL) throws ConfigurationException {

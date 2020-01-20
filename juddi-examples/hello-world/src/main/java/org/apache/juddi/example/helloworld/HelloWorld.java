@@ -41,7 +41,7 @@ public class HelloWorld {
         	// a UddiClient can be a client to multiple UDDI nodes, so 
                         // supply the nodeName (defined in your uddi.xml.
                         // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
-                        Transport transport = uddiClient.getTransport();
+                        Transport transport = uddiClient.getTransport("default");
                         // Now you create a reference to the UDDI API
                         security = transport.getUDDISecurityService();
                 } catch (Exception e) {

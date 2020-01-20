@@ -85,7 +85,7 @@
             ok = false;
         }
         if (!ok) {
-            response.sendRedirect("../index.jsp");
+            response.sendError(400);
         }
 
         UddiHub x = UddiHub.getInstance(application, session);
@@ -94,7 +94,7 @@
                 response.setStatus(406);
         out.write(msg);
     } else {
-        response.sendRedirect("../index.jsp");
+        response.sendError(400);
     }
 
 %>

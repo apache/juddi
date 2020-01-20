@@ -57,8 +57,8 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class SimpleBrowse {
 
-        private  UDDISecurityPortType security = null;
-        private  UDDIInquiryPortType inquiry = null;
+        private UDDISecurityPortType security = null;
+        private UDDIInquiryPortType inquiry = null;
 
         /**
          * This sets up the ws proxies using uddi.xml in META-INF
@@ -274,8 +274,8 @@ public class SimpleBrowse {
 
         public void printBusinessList(String authtoken, String searchString, boolean rawXml) throws Exception {
 
-                int offset=0;
-                int maxrecords=100;
+                int offset = 0;
+                int maxrecords = 100;
                 BusinessList findBusiness = getBusinessList(authtoken, searchString, offset, maxrecords);
                 while (findBusiness != null && findBusiness.getBusinessInfos() != null
                         && !findBusiness.getBusinessInfos().getBusinessInfo().isEmpty()) {
@@ -287,18 +287,17 @@ public class SimpleBrowse {
                                 printServiceDetailsByBusiness(findBusiness.getBusinessInfos(), authtoken);
                         }
                         offset = offset + maxrecords;
-                                
+
                         findBusiness = getBusinessList(authtoken, searchString, offset, maxrecords);
                 }
         }
-        
-        
+
         public void printServiceList(String authtoken, String searchString, boolean rawXml) throws Exception {
 
-                int offset=0;
-                int maxrecords=100;
+                int offset = 0;
+                int maxrecords = 100;
                 ServiceList findBusiness = getServiceList(authtoken, searchString, offset, maxrecords);
-                while (findBusiness != null && findBusiness.getServiceInfos()!= null
+                while (findBusiness != null && findBusiness.getServiceInfos() != null
                         && !findBusiness.getServiceInfos().getServiceInfo().isEmpty()) {
                         if (rawXml) {
                                 JAXB.marshal(findBusiness, System.out);
@@ -308,7 +307,7 @@ public class SimpleBrowse {
                                 //PrintServiceDetailsByBusiness(findBusiness.getBusinessInfos(), authtoken);
                         }
                         offset = offset + maxrecords;
-                                
+
                         findBusiness = getServiceList(authtoken, searchString, offset, maxrecords);
                 }
         }
@@ -318,22 +317,22 @@ public class SimpleBrowse {
                 fs.setAuthInfo(authtoken);
                 fs.setListHead(offset);
                 fs.setMaxRows(maxrecords);
-                if (searchString!=null)
-                {
+                if (searchString != null) {
                         fs.getName().add(new Name("%" + searchString + " %", null));
-                        
+
+                } else {
+                        fs.getName().add(new Name(UDDIConstants.WILDCARD, null));
                 }
-                else fs.getName().add(new Name(UDDIConstants.WILDCARD, null));
                 fs.setFindQualifiers(new FindQualifiers());
                 fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
-               return inquiry.findService(fs);
+                return inquiry.findService(fs);
         }
 
-        void printTModelList(String authtoken, String searchString, boolean rawXml) throws Exception{
-                  int offset=0;
-                int maxrecords=100;
+        void printTModelList(String authtoken, String searchString, boolean rawXml) throws Exception {
+                int offset = 0;
+                int maxrecords = 100;
                 TModelList findBusiness = getTmodelList(authtoken, searchString, offset, maxrecords);
-                while (findBusiness != null && findBusiness.getTModelInfos()!= null
+                while (findBusiness != null && findBusiness.getTModelInfos() != null
                         && !findBusiness.getTModelInfos().getTModelInfo().isEmpty()) {
                         if (rawXml) {
                                 JAXB.marshal(findBusiness, System.out);
@@ -343,40 +342,40 @@ public class SimpleBrowse {
                                 //PrintServiceDetailsByBusiness(findBusiness.getBusinessInfos(), authtoken);
                         }
                         offset = offset + maxrecords;
-                                
+
                         findBusiness = getTmodelList(authtoken, searchString, offset, maxrecords);
                 }
         }
 
         private void printTModelInfo(TModelInfos tModelInfos) {
-                if (tModelInfos==null){
+                if (tModelInfos == null) {
                         System.out.println("No data returned");
                         return;
                 }
                 for (TModelInfo tModelInfo : tModelInfos.getTModelInfo()) {
                         System.out.println("tModel key: " + tModelInfo.getTModelKey());
                         System.out.println("tModel name: " + tModelInfo.getName().getLang() + " " + tModelInfo.getName().getValue());
-                       // PrintServiceInfo(null);
-                         for (int k = 0; k < tModelInfo.getDescription().size(); k++) {
+                        // PrintServiceInfo(null);
+                        for (int k = 0; k < tModelInfo.getDescription().size(); k++) {
                                 System.out.println("Desc: " + tModelInfo.getDescription().get(k).getValue());
                         }
                 }
         }
 
         private TModelList getTmodelList(String authtoken, String searchString, int offset, int maxrecords) throws Exception {
-                 FindTModel fs = new FindTModel();
+                FindTModel fs = new FindTModel();
                 fs.setAuthInfo(authtoken);
                 fs.setListHead(offset);
                 fs.setMaxRows(maxrecords);
-                if (searchString!=null)
-                {
+                if (searchString != null) {
                         fs.setName(new Name("%" + searchString + " %", null));
-                        
+
+                } else {
+                        fs.setName(new Name(UDDIConstants.WILDCARD, null));
                 }
-                else fs.setName(new Name(UDDIConstants.WILDCARD, null));
                 fs.setFindQualifiers(new FindQualifiers());
                 fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
-               return inquiry.findTModel(fs);
+                return inquiry.findTModel(fs);
         }
 
         private enum AuthStyle {

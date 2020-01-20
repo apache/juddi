@@ -70,7 +70,7 @@ public class TripleDESCrytor implements Cryptor {
             cipher.init(Cipher.ENCRYPT_MODE, key);
             byte[] plainText = clear.getBytes(UNICODE_FORMAT);
             byte[] encryptedText = cipher.doFinal(plainText);
-            encryptedString = new String(Base64.encodeBase64(encryptedText));
+            encryptedString = new String(Base64.encodeBase64(encryptedText), UNICODE_FORMAT);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,7 +88,7 @@ public class TripleDESCrytor implements Cryptor {
             kgen.init(168);
             SecretKey skey = kgen.generateKey();
             byte[] raw = skey.getEncoded();
-            return new String(Base64.encodeBase64(raw));
+            return new String(Base64.encodeBase64(raw),UNICODE_FORMAT);
         } catch (Exception ex) {
             ex.printStackTrace();;
         }
@@ -100,9 +100,9 @@ public class TripleDESCrytor implements Cryptor {
         String encryptedString = str;
         try {
             cipher.init(Cipher.DECRYPT_MODE, key);
-            byte[] encryptedText = Base64.decodeBase64(str.getBytes());
+            byte[] encryptedText = Base64.decodeBase64(str.getBytes(UNICODE_FORMAT));
             byte[] plainTest = cipher.doFinal(encryptedText);
-            encryptedString = new String(plainTest);
+            encryptedString = new String(plainTest, UNICODE_FORMAT);
         } catch (Exception e) {
             e.printStackTrace();
         }

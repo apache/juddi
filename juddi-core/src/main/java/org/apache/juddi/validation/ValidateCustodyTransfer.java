@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.validation;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -24,6 +25,7 @@ import java.util.Vector;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import static org.apache.juddi.api.impl.AuthenticatedService.UTF8;
 
 import org.apache.juddi.model.TransferTokenKey;
 import org.apache.juddi.model.UddiEntity;
@@ -32,6 +34,7 @@ import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.InvalidValueException;
 import org.apache.juddi.v3.error.TokenAlreadyExistsException;
 import org.apache.juddi.v3.error.TransferNotAllowedException;
 import org.apache.juddi.v3.error.UserMismatchException;
@@ -228,7 +231,12 @@ public class ValidateCustodyTransfer extends ValidateUDDIApi {
                         throw new ValueNotAllowedException(new ErrorMessage("errors.keybag.NoInput"));
                 }
 
-                String transferTokenId = new String(apiTransferToken.getOpaqueToken());
+                String transferTokenId = null;
+                try{
+                    transferTokenId = new String(apiTransferToken.getOpaqueToken(), UTF8);
+                } catch (UnsupportedEncodingException ex) {
+                    throw new InvalidValueException(new ErrorMessage("errors.stringEncoding"));
+                }
                 if (nodeID.equals(apiTransferToken.getNodeID())) {
                         validateTransferLocalEntities(em, transferTokenId, apiKeyList);
                 } else {

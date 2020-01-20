@@ -102,7 +102,7 @@ public class UDDI_050_BindingTemplateIntegrationTest {
         }
 
         @Test
-        public void joepublisher() {
+        public void joepublisher() throws Exception {
              Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
@@ -118,7 +118,7 @@ public class UDDI_050_BindingTemplateIntegrationTest {
         }
 
         @Test
-        public void findService() {
+        public void findService() throws Exception {
              Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModel.saveJoePublisherTmodel(authInfoJoe);

@@ -31,8 +31,8 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiFindBinding {
 
-        private static UDDISecurityPortType security = null;
-        private static UDDIInquiryPortType inquiry = null;
+        private UDDISecurityPortType security = null;
+        private UDDIInquiryPortType inquiry = null;
 
         public UddiFindBinding() {
                 try {

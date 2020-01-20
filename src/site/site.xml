@@ -60,7 +60,7 @@
 		</breadcrumbs>
 		<menu name="Apache jUDDI">
 			<item name="Welcome" href="index.html"/>
-			<item name="Live Demos">
+			<item name="Live Demos" href="demos.html">
 				<item name="Prod UI" href="http://uddi-jbossoverlord.rhcloud.com/"/>
 				<item name="Prod SVC" href="http://uddi-jbossoverlord.rhcloud.com/juddiv3/"/>
 				<item name="Sandbox UI" href="http://uddiconsole-jbossoverlord.rhcloud.com/" />
@@ -75,7 +75,8 @@
 
 
 		<menu name="Documentation">
-
+			<item name="Supported UDDI Interfaces" href="uddi.html"/>
+			<item name="Security Advisories" href="security.html"/>
 			<item name="jUDDI Docs" href="docs.html"/>
 			<item name="Wiki" href="http://wiki.apache.org/juddi"/>
 			<item name="UDDI Library" href="library.html" />

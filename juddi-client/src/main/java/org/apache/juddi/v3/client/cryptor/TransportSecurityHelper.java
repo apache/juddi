@@ -21,7 +21,6 @@ import java.security.KeyStore;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.xml.ws.BindingProvider;
 import org.apache.commons.logging.Log;
@@ -29,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  *
- * @author alex
+ * @author alexoree@apache.org
  */
 public class TransportSecurityHelper {
 
@@ -42,7 +41,7 @@ public class TransportSecurityHelper {
                         String st = System.getProperty("javax.net.ssl.trustStore");
                         log.info("Attempting to initialize keystore and truststore from " + s + " " + st);
                         if (s == null) {
-                                log.warn("keystore isn't defined! " + s);
+                                log.warn("keystore isn't defined!");
                                 return false;
                         } else if (st == null) {
                                 log.warn("truststore isn't defined! " + s);
@@ -75,34 +74,51 @@ public class TransportSecurityHelper {
                                 }
 
                                 if (keystore.exists()) {
+                                        TrustManagerFactory tmFact = null;
+                                        FileInputStream fis = null;
+                                        SSLContext sc = SSLContext.getInstance("SSLv3");
+                                        KeyManagerFactory kmf
+                                                = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
                                         try {
                                                 log.info("Using keystore from " + keystore.getAbsolutePath() + " current dir is " + currentdir.getAbsolutePath());
 
                                                 log.info("Using truststore from " + truststore.getAbsolutePath() + " current dir is " + currentdir.getAbsolutePath());
-                                                //log.info("Using truststure from " + truststore.getAbsolutePath() + " current dir is " + currentdir.getAbsolutePath());
-                                                SSLContext sc = SSLContext.getInstance("SSLv3");
-
-                                                KeyManagerFactory kmf
-                                                        = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 
                                                 KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-                                                ks.load(new FileInputStream(keystore), pwd.toCharArray());
+                                                try {
+                                                        fis = new FileInputStream(keystore);
+                                                        ks.load(fis, pwd.toCharArray());
+                                                } catch (Exception ex) {
+                                                        log.warn("unable to load key store " + keystore.getAbsolutePath(), ex);
+                                                } finally {
+                                                        if (fis != null) {
+                                                                fis.close();
+                                                        }
+                                                }
 
                                                 kmf.init(ks, pwd.toCharArray());
 
                                                 String alg = TrustManagerFactory.getDefaultAlgorithm();
-                                                TrustManagerFactory tmFact = TrustManagerFactory.getInstance(alg);
-
-                                                FileInputStream fis = new FileInputStream(st);
+                                                tmFact = TrustManagerFactory.getInstance(alg);
+                                        } catch (Exception ex) {
+                                                log.warn("unable to establish ssl settings", ex);
+                                        } 
+                                        try {
+                                                fis = new FileInputStream(st);
                                                 KeyStore kst = KeyStore.getInstance("jks");
-                                                kst.load(fis, pwdt.toCharArray());
-                                                fis.close();
+                                                try {
+                                                        kst.load(fis, pwdt.toCharArray());
+                                                } catch (Exception ex) {
+                                                        log.warn("unable to load key store " + st, ex);
+                                                } finally {
+                                                        if (fis != null) {
+                                                                fis.close();
+                                                        }
+                                                }
 
                                                 tmFact.init(kst);
 
-                                                TrustManager[] tms = tmFact.getTrustManagers();
-
-                                                sc.init(kmf.getKeyManagers(), null, null);
+                                                sc.init(kmf.getKeyManagers(), tmFact.getTrustManagers(), null);
                                                 HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
                                                 ((BindingProvider) webServicePort).getRequestContext().put("com.sun.xml.internal.ws.transport.https.client.SSLSocketFactory", sc.getSocketFactory());
                                                 ((BindingProvider) webServicePort).getRequestContext().put("com.sun.xml.ws.transport.https.client.SSLSocketFactory", sc.getSocketFactory());

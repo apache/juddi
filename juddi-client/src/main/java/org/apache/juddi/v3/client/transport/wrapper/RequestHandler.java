@@ -19,6 +19,7 @@ import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.rmi.Remote;
 import java.util.List;
+import javax.xml.XMLConstants;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -115,11 +116,13 @@ public class RequestHandler {
         public static synchronized String getText(Element element) throws TransformerException {
                 if (transFactory == null) {
                         transFactory = TransformerFactory.newInstance();
+                        transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+                        transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
                 }
                 Transformer trans = transFactory.newTransformer();
                 StringWriter sw = new StringWriter();
                 trans.transform(new DOMSource(element), new StreamResult(sw));
-                return new String(sw.toString());
+                return sw.toString();
         }
 
         @SuppressWarnings("unchecked")
@@ -225,6 +228,7 @@ public class RequestHandler {
 
                 try {
                         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
                         factory.setNamespaceAware(true);
                         //factory.setValidating(true);
 

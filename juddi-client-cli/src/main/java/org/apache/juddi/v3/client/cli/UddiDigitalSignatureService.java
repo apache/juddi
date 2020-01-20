@@ -18,7 +18,6 @@ package org.apache.juddi.v3.client.cli;
 
 import java.util.concurrent.atomic.AtomicReference;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.api_v3.*;
@@ -33,10 +32,10 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiDigitalSignatureService {
 
-        private static UDDISecurityPortType security = null;
-        private static UDDIInquiryPortType inquiry = null;
-        private static UDDIPublicationPortType publish = null;
-        private static UDDIClient clerkManager = null;
+        private UDDISecurityPortType security = null;
+        private UDDIInquiryPortType inquiry = null;
+        private UDDIPublicationPortType publish = null;
+        private UDDIClient clerkManager = null;
 
         /**
          * This sets up the ws proxies using uddi.xml in META-INF

@@ -76,7 +76,10 @@ public class ReplicationNotifier extends TimerTask {
          * @throws ConfigurationException
          */
         public ReplicationNotifier() throws ConfigurationException {
-                super();
+               super();
+               init();
+        }
+        private synchronized void init() throws ConfigurationException {
                 timer = new Timer(true);
                 startBuffer=AppConfig.getConfiguration().getLong(Property.JUDDI_REPLICATION_START_BUFFER, 5000l);
                 interval = AppConfig.getConfiguration().getLong(Property.JUDDI_REPLICATION_INTERVAL, 5000l);
@@ -95,7 +98,7 @@ public class ReplicationNotifier extends TimerTask {
         }
 
         //ReplicationNotifier.Enqueue(this);
-        public synchronized static void Enqueue(org.apache.juddi.model.ChangeRecord change) {
+        public synchronized static void enqueue(org.apache.juddi.model.ChangeRecord change) {
                 if (queue == null) {
                         queue = new ConcurrentLinkedQueue<org.apache.juddi.model.ChangeRecord>();
                 }
@@ -288,7 +291,7 @@ public class ReplicationNotifier extends TimerTask {
                 return false;
         }
 
-        class PrimaryAlternate {
+        private static class PrimaryAlternate {
 
                 String primaryUrl = null;
                 List<String> alternateUrls = new ArrayList<String>();

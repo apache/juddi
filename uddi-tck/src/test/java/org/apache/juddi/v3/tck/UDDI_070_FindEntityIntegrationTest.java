@@ -67,6 +67,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         private static TckBindingTemplate tckBindingTemplate = null;
         private static TckFindEntity tckFindEntity = null;
         private static String authInfoJoe = null;
+        private static String authInfoUddi = null;
         private static UDDIClient manager;
         private static UDDIInquiryPortType inquiry = null;
 
@@ -88,6 +89,7 @@ public class UDDI_070_FindEntityIntegrationTest {
                         Transport transport = manager.getTransport("uddiv3");
                         UDDISecurityPortType security = transport.getUDDISecurityService();
                         authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                        authInfoUddi = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
                         //Assert.assertNotNull(authInfoJoe);
 
                         UDDIPublicationPortType publication = transport.getUDDIPublishService();
@@ -115,6 +117,8 @@ public class UDDI_070_FindEntityIntegrationTest {
         public void findEntities() {
              Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
+                        tckTModel.saveUDDIPublisherTmodel(authInfoUddi);
+                        tckTModel.saveTmodels(authInfoUddi);
                         tckTModel.saveJoePublisherTmodel(authInfoJoe, true);
                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
                         tckBusinessService.saveJoePublisherService(authInfoJoe);
@@ -126,10 +130,10 @@ public class UDDI_070_FindEntityIntegrationTest {
                         tckFindEntity.getNonExitingBusiness();
                 } catch (Exception e) {
                         e.printStackTrace();
-                        Assert.fail();
+                        Assert.fail(e.getMessage());
                 } catch (Throwable t) {
                         t.printStackTrace();
-                        Assert.fail();
+                        Assert.fail(t.getMessage());
                 } finally {
                         tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
                         tckBusinessService.deleteJoePublisherService(authInfoJoe);
@@ -139,7 +143,7 @@ public class UDDI_070_FindEntityIntegrationTest {
         }
 
         @Test
-        public void findSignedEntities() {
+        public void findSignedEntities() throws Exception {
              Assume.assumeTrue(TckPublisher.isEnabled());
                 try {
                         tckTModel.saveJoePublisherTmodel(authInfoJoe);

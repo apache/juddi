@@ -17,7 +17,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
---%><%@page import="java.util.concurrent.atomic.AtomicReference"%>
+--%><%@page import="org.apache.juddi.v3.client.cryptor.XmlUtils"%>
+<%@page import="java.util.concurrent.atomic.AtomicReference"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.Set"%>
 <%@page import="java.util.Set"%>
@@ -59,16 +60,16 @@
                 StringReader sr = new StringReader(signedxml);
                 String msg = null;
                 if (type.equalsIgnoreCase("business")) {
-                    BusinessEntity be = (BusinessEntity) JAXB.unmarshal(sr, BusinessEntity.class);
+                    BusinessEntity be = (BusinessEntity) XmlUtils.unmarshal(sr, BusinessEntity.class);
                     msg = (x.SaveBusinessDetails(be));
                 } else if (type.equalsIgnoreCase("service")) {
-                    BusinessService be = (BusinessService) JAXB.unmarshal(sr, BusinessService.class);
+                    BusinessService be = (BusinessService) XmlUtils.unmarshal(sr, BusinessService.class);
                     msg = (x.SaveServiceDetails(be));
                 } else if (type.equalsIgnoreCase("bindingTemplate")) {
-                    BindingTemplate be = (BindingTemplate) JAXB.unmarshal(sr, BindingTemplate.class);
+                    BindingTemplate be = (BindingTemplate) XmlUtils.unmarshal(sr, BindingTemplate.class);
                     msg = (x.SaveBindingTemplate(be));
                 } else if (type.equalsIgnoreCase("tModel")) {
-                    TModel be = (TModel) JAXB.unmarshal(sr, TModel.class);
+                    TModel be = (TModel) XmlUtils.unmarshal(sr, TModel.class);
                     msg = (x.SaveTModel(be));
                 } else {
                     msg = (ResourceLoader.GetResource(session, "errors.unknownentity"));

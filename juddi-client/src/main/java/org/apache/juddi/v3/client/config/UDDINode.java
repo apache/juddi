@@ -33,8 +33,8 @@ import org.apache.juddi.v3.client.transport.TransportException;
 public class UDDINode implements Serializable {
 
 	private static final long serialVersionUID = 5721040459195558161L;
-	private Properties properties;
-	private Transport transport;
+	private Properties properties=new Properties();
+        private transient Transport transport;
 	
 	private boolean isHomeJUDDI;
 	private String name;

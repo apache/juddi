@@ -46,9 +46,9 @@ import org.uddi.api_v3.ListDescription;
  */
 public class FetchBindingTemplatesQuery extends BindingTemplateQuery {
 
-	private static Log log = LogFactory.getLog(FetchBindingTemplatesQuery.class);
+	private static final Log log = LogFactory.getLog(FetchBindingTemplatesQuery.class);
 
-	protected static String selectSQL;
+	protected static final String selectSQL;
 
 	static {
 		StringBuilder sql = new StringBuilder(200);

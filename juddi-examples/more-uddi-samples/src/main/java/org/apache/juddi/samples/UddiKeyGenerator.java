@@ -18,11 +18,8 @@ package org.apache.juddi.samples;
 
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.*;
-import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
@@ -34,30 +31,26 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiKeyGenerator {
 
-        private static UDDISecurityPortType security = null;
-        private static JUDDIApiPortType juddiApi = null;
-        private static UDDIPublicationPortType publish = null;
-        private static UDDIInquiryPortType inquiry = null;
+        private UDDISecurityPortType security = null;
+        private UDDIPublicationPortType publish = null;
 
         public UddiKeyGenerator() {
                 try {
-            // create a manager and read the config in the archive; 
+                        // create a manager and read the config in the archive; 
                         // you can use your config file name
                         UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
                         Transport transport = clerkManager.getTransport();
                         // Now you create a reference to the UDDI API
                         security = transport.getUDDISecurityService();
-                        juddiApi = transport.getJUDDIApiService();
                         publish = transport.getUDDIPublishService();
-                        inquiry = transport.getUDDIInquiryService();
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
         }
 
-        public void Fire(String token, String domain) {
+        public void fire(String token, String domain) {
                 try {
-            // Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
+                        // Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
                         // and can save other publishers).
                         if (token == null) {
                                 GetAuthToken getAuthTokenRoot = new GetAuthToken();
@@ -91,7 +84,7 @@ public class UddiKeyGenerator {
                         st.getTModel().add(m);
                         publish.saveTModel(st);
 
-                                */
+                         */
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
@@ -99,6 +92,6 @@ public class UddiKeyGenerator {
 
         public static void main(String args[]) {
                 UddiKeyGenerator sp = new UddiKeyGenerator();
-                sp.Fire(null, "www.juddi.is.cool.org");
+                sp.fire(null, "www.juddi.is.cool.org");
         }
 }

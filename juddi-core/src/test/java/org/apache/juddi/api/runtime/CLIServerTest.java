@@ -15,7 +15,6 @@
  */
 package org.apache.juddi.api.runtime;
 
-import java.math.BigInteger;
 import java.util.Random;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Endpoint;
@@ -26,7 +25,6 @@ import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.uddi.repl_v3.HighWaterMarkVectorType;
 import org.uddi.repl_v3.ReplicationConfiguration;
 import org.uddi.v3_service.UDDIReplicationPortType;
 import org.apache.juddi.v3.client.UDDIService;

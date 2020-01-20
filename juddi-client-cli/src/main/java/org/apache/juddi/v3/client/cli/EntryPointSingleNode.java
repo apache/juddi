@@ -86,7 +86,6 @@ public class EntryPointSingleNode {
 
                         System.out.println("- [ Publishing ] -");
                         System.out.println("20) Make a Key Generator tModel");
-                        System.out.println("21) UDDI Create Bulk (makes N business with N services) (create for load testing)");
                         System.out.println("22) WSDL2UDDI - Register a service from a WSDL document (business key required)");
                         System.out.println("23) WADL2UDDI - Register a service from a WADL document (business key required)");
                         System.out.println("24) UDDI Custody Transfer (within a single node)");
@@ -122,7 +121,6 @@ public class EntryPointSingleNode {
                         System.out.println("43) View the replication config from the current jUDDI server");
                         System.out.println("44) Set the replication config on a remote jUDDI server");
                         System.out.println("45) Prints the current replication status of a given node");
-                        System.out.println("46) Periodic publisher, 1biz+1svc every 5 seconds");
 
                         //deleters
                         System.out.println("47) Bulk delete business");
@@ -220,11 +218,11 @@ public class EntryPointSingleNode {
                         String url = (System.console().readLine());
                         new SimpleBrowse(transport).printTModelList(authtoken, url, false);
                 } else if (input.equals("13")) {
-                        SearchByQos.doFindBinding(authtoken, transport);
+                        new SearchByQos().doFindBinding(authtoken, transport);
                 } else if (input.equals("14")) {
-                        SearchByQos.doFindBusiness(authtoken, transport);
+                        new SearchByQos().doFindBusiness(authtoken, transport);
                 } else if (input.equals("15")) {
-                        SearchByQos.doFindService(authtoken, transport);
+                        new SearchByQos().doFindService(authtoken, transport);
                 } else if (input.equals("16")) {
                         new UddiFindBinding().fire(authtoken);
                 } else if (input.equals("17")) {
@@ -241,13 +239,6 @@ public class EntryPointSingleNode {
                         System.out.print("Get FQDN: ");
                         String key = (System.console().readLine());
                         new UddiKeyGenerator().fire(authtoken, key);
-                } else if (input.equals("21")) {
-
-                        System.out.print("businesses: ");
-                        int biz = Integer.parseInt(System.console().readLine());
-                        System.out.print("servicesPerBusiness: ");
-                        int svc = Integer.parseInt(System.console().readLine());
-                        new UddiCreatebulk(transport, false, currentNode).publishBusiness(authtoken, biz, svc, username);
                 } else if (input.equals("22")) {
                         System.out.print("Path or URL to WSDL file: ");
                         String url = (System.console().readLine());
@@ -345,7 +336,7 @@ public class EntryPointSingleNode {
                 } else if (input.equals("33")) {
                         new UddiSubscriptionManagement(transport).deleteAllSubscriptions(authtoken);
                 } else if (input.equals("34")) {
-                        new UddiSubscribeAssertionStatus(transport).Fire(currentNode);
+                        new UddiSubscribeAssertionStatus(transport).fire(currentNode);
 
                 } else if (input.equals("35")) {
 
@@ -403,23 +394,9 @@ public class EntryPointSingleNode {
                         new JuddiAdminService(client, transport).registerLocalNodeToRemoteNode(authtoken, uddiNodeList.get(index), uddiNodeList.get(index2));
 
                 } else if (input.equals("41")) {
-
-                        // System.out.println("33) View all register remote nodes on a jUDDI server");
+                 
                         new JuddiAdminService(client, transport).viewRemoteNodes(authtoken);
-                } /*  if (input.equals("35")) {
-                 UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
-                 List<Node> uddiNodeList = clerkManager.getClientConfig().getUDDINodeList();
-                 for (int i = 0; i < uddiNodeList.size(); i++) {
-                 System.out.println("________________________________________________________________________________");
-                 System.out.println("Client name: " + uddiNodeList.get(i).getClientName());
-                 System.out.println("Node name: " + uddiNodeList.get(i).getName());
-                 System.out.println("Node description: " + uddiNodeList.get(i).getDescription());
-                 System.out.println("Transport: " + uddiNodeList.get(i).getProxyTransport());
-                 System.out.println(i + ") jUDDI URL: " + uddiNodeList.get(i).getJuddiApiUrl());
-
-                 }
-
-                 }*/ else if (input.equals("42")) {
+                }  else if (input.equals("42")) {
 
                         new JuddiAdminService(client, transport).viewRemoveRemoteNode(authtoken);
                         //System.out.println("35) UnRegister a node on a jUDDI server");
@@ -429,98 +406,6 @@ public class EntryPointSingleNode {
                         new JuddiAdminService(client, transport).setReplicationConfig(authtoken);
                 } else if (input.equals("45")) {
                         new JuddiAdminService(client, transport).printStatus(transport, authtoken);
-                } else if (input.equals("46")) {
-                        //TODO current counts
-                        UDDIInquiryPortType uddiInquiryService = transport.getUDDIInquiryService();
-                        FindBusiness fb = new FindBusiness();
-                        fb.setAuthInfo(authtoken);
-                        fb.getName().add(new Name(UDDIConstants.WILDCARD, null));
-                        fb.setFindQualifiers(new FindQualifiers());
-                        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
-                        fb.setMaxRows(1);
-                        fb.setListHead(0);
-                        BusinessList findBusiness = uddiInquiryService.findBusiness(fb);
-                        System.out.println("current business counts "
-                                + findBusiness.getListDescription().getActualCount() + " "
-                                + findBusiness.getListDescription().getIncludeCount() + " "
-                                + findBusiness.getListDescription().getListHead());
-                        FindService fs = new FindService();
-                        fs.setAuthInfo(authtoken);
-                        fs.getName().add(new Name(UDDIConstants.WILDCARD, null));
-                        fs.setFindQualifiers(new FindQualifiers());
-                        fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
-                        fs.setMaxRows(1);
-                        fs.setListHead(0);
-                        ServiceList findService = uddiInquiryService.findService(fs);
-                        System.out.println("current service counts "
-                                + findService.getListDescription().getActualCount() + " "
-                                + findService.getListDescription().getIncludeCount() + " "
-                                + findService.getListDescription().getListHead());
-
-                        running = true;
-                        createdServices = 0;
-                        createdBusinesses = 0;
-
-                        new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                        UddiCreatebulk uddiCreatebulk = new UddiCreatebulk(transport, false, currentNode);
-                                        while (running) {
-                                                try {
-                                                        uddiCreatebulk.publishBusiness(authtoken, 1, 1, username);
-                                                        createdBusinesses++;
-                                                        createdServices++;
-                                                        Thread.sleep(5000);
-                                                } catch (Exception ex) {
-                                                        System.out.println("eception caught, assuming it's an expired token, attempting to reauthenticate " + ex.getMessage());
-                                                        //potentially an expired token, reauthenticate
-                                                        try {
-                                                                UDDISecurityPortType security = null;
-                                                                security = transport.getUDDISecurityService();
-
-                                                                GetAuthToken getAuthTokenRoot = new GetAuthToken();
-                                                                getAuthTokenRoot.setUserID(username);
-                                                                getAuthTokenRoot.setCred((password));
-                                                                authtoken = security.getAuthToken(getAuthTokenRoot).getAuthInfo();
-                                                        } catch (Exception x) {
-                                                                System.out.println("unable to reauthenticate, aborting!");
-                                                                ex.printStackTrace();
-                                                                running = false;
-                                                        }
-
-                                                }
-                                        }
-                                }
-                        }).start();
-                        System.out.println("Started, press <Enter> to stop!");
-                        System.console().readLine();
-                        running = false;
-
-                        System.out.println("before business counts "
-                                + findBusiness.getListDescription().getActualCount());
-
-                        fb.setAuthInfo(authtoken);
-                        BusinessList afterfindBusiness = uddiInquiryService.findBusiness(fb);
-                        System.out.println("after business counts "
-                                + afterfindBusiness.getListDescription().getActualCount());
-                        System.out.println("actual created " + createdBusinesses);
-                        System.out.println("Delta = " + (afterfindBusiness.getListDescription().getActualCount() - findBusiness.getListDescription().getActualCount()));
-
-                        System.out.println("before service counts "
-                                + findService.getListDescription().getActualCount());
-
-                        fs.setAuthInfo(authtoken);
-                        ServiceList afterfindService = uddiInquiryService.findService(fs);
-                        System.out.println("after service counts "
-                                + afterfindService.getListDescription().getActualCount());
-                        System.out.println("actual created " + createdServices);
-                        System.out.println("delta = " + (afterfindService.getListDescription().getActualCount() - findService.getListDescription().getActualCount()));
-                        if ((afterfindService.getListDescription().getActualCount() - findService.getListDescription().getActualCount()) == createdServices) {
-                                System.out.println("success");
-                        } else {
-                                System.out.println("failure!");
-                        }
-
                 } else if (input.equals("47")) {
                         System.out.println("We'll run a search first, then the results will be deleted (after confirmation). Use % as a wild card");
                         System.out.print("Search query: ");

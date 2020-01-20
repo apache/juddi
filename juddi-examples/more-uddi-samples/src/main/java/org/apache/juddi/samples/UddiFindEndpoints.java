@@ -32,29 +32,21 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UddiFindEndpoints {
 
-        private static UDDISecurityPortType security = null;
-        private static UDDIInquiryPortType inquiry = null;
-        static UDDIClerk clerk = null;
+        private UDDIClerk clerk = null;
 
         public UddiFindEndpoints() {
                 try {
-            // create a manager and read the config in the archive; 
+                        // create a manager and read the config in the archive; 
                         // you can use your config file name
                         UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
                         clerk = clerkManager.getClerk("default");
-            // a ClerkManager can be a client to multiple UDDI nodes, so 
-                        // supply the nodeName (defined in your uddi.xml.
-                        // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
-                        Transport transport = clerkManager.getTransport();
-                        // Now you create a reference to the UDDI API
-                        security = transport.getUDDISecurityService();
-                        inquiry = transport.getUDDIInquiryService();
+
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
         }
 
-        public void Fire(String authtoken, String key) {
+        public void fire(String authtoken, String key) {
                 try {
                         if (key == null) {
                                 key = "uddi:juddi.apache.org:services-inquiry";
@@ -73,6 +65,6 @@ public class UddiFindEndpoints {
 
         public static void main(String args[]) {
                 UddiFindEndpoints sp = new UddiFindEndpoints();
-                sp.Fire(null, null);
+                sp.fire(null, null);
         }
 }

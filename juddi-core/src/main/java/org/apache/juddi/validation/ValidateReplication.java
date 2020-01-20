@@ -16,17 +16,21 @@
  */
 package org.apache.juddi.validation;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.xml.ws.WebServiceContext;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import static org.apache.juddi.api.impl.AuthenticatedService.UTF8;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.model.Node;
@@ -305,7 +309,12 @@ public class ValidateReplication extends ValidateUDDIApi {
                 TransferEntities x = new TransferEntities();
                 x.setKeyBag(body.getKeyBag());
                 x.setTransferToken(body.getTransferToken());
-                String transferTokenId = new String(body.getTransferToken().getOpaqueToken());
+                String transferTokenId;
+                try {
+                    transferTokenId = new String(body.getTransferToken().getOpaqueToken(), UTF8);
+                } catch (UnsupportedEncodingException ex) {
+                    throw new InvalidValueException(new ErrorMessage("errors.stringEncoding"));
+                }
                 new ValidateCustodyTransfer(null).validateTransferLocalEntities(em, transferTokenId, body.getKeyBag().getKey());
 
         }

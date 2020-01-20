@@ -31,7 +31,7 @@ public class BindingTemplateQuery extends EntityQuery {
 			ENTITY_ALIAS + ".businessService." + EntityQuery.SIGNATURE_FIELD + " IS NOT EMPTY OR " +
 			ENTITY_ALIAS + ".businessService.businessEntity." + EntityQuery.SIGNATURE_FIELD + " IS NOT EMPTY ";
 	
-	protected static String selectSQL;
+	protected final static String selectSQL;
 
 	static {
 		StringBuilder sql = new StringBuilder(200);

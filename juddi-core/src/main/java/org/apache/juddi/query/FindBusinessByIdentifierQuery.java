@@ -39,7 +39,7 @@ public class FindBusinessByIdentifierQuery {
 	
 	private static final String ENTITY_NAME_CHILD = "BusinessIdentifier";
 	
-	private static FindEntityByIdentifierQuery findQuery;
+	private static final FindEntityByIdentifierQuery findQuery;
 	
 	static {
 		findQuery = new FindEntityByIdentifierQuery(BusinessEntityQuery.ENTITY_NAME, 
@@ -50,7 +50,7 @@ public class FindBusinessByIdentifierQuery {
 													BusinessEntityQuery.SIGNATURE_PRESENT);
 	}
 	
-	public static List<?> select(EntityManager em, FindQualifiers fq, IdentifierBag identifiers, List<?> keysIn) {
+	public static List<Object> select(EntityManager em, FindQualifiers fq, IdentifierBag identifiers, List<Object> keysIn) {
 		return findQuery.select(em, fq, identifiers, keysIn);
 	}
 	

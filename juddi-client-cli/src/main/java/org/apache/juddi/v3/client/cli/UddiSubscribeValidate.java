@@ -37,8 +37,8 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  */
 public class UddiSubscribeValidate {
 
-        private static UDDISecurityPortType security = null;
-        private static UDDISubscriptionPortType uddiSubscriptionService = null;
+        private UDDISecurityPortType security = null;
+        private UDDISubscriptionPortType uddiSubscriptionService = null;
 
         public UddiSubscribeValidate() {
                 try {

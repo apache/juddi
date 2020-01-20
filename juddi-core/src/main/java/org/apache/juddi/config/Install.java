@@ -32,6 +32,8 @@ import java.util.StringTokenizer;
 import java.util.UUID;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -40,6 +42,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.configuration.Configuration;
@@ -47,6 +52,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.ClassUtil;
+import org.apache.juddi.api.impl.AuthenticatedService;
 import org.apache.juddi.api.impl.UDDIInquiryImpl;
 import org.apache.juddi.api.impl.UDDIPublicationImpl;
 import org.apache.juddi.keygen.KeyGenerator;
@@ -55,6 +61,7 @@ import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.ReplicationConfiguration;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.replication.ReplicationNotifier;
+import org.apache.juddi.v3.client.cryptor.XmlUtils;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
@@ -89,7 +96,7 @@ public class Install {
         public static final String FILE_REPLICATION_CONFIG = "_replicationConfiguration.xml";
         public static final Log log = LogFactory.getLog(Install.class);
 
-        protected static void install(Configuration config) throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
+        protected static void install(Configuration config) throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException, XMLStreamException {
 
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
@@ -165,7 +172,11 @@ public class Install {
                         log.error(ie.getMessage(), ie);
                         tx.rollback();
                         throw ie;
-                } finally {
+                } catch (XMLStreamException ex) {
+                        log.error(ex.getMessage(), ex);
+                        tx.rollback();
+                        throw ex;
+            } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
                         }
@@ -325,7 +336,7 @@ public class Install {
                 em.persist(modelBusinessEntity);
                 SaveBusiness sb = new SaveBusiness();
                 sb.getBusinessEntity().add(rootBusinessEntity);
-                ReplicationNotifier.Enqueue(UDDIPublicationImpl.getChangeRecord(modelBusinessEntity, rootBusinessEntity, modelBusinessEntity.getNodeId()));
+                ReplicationNotifier.enqueue(UDDIPublicationImpl.getChangeRecord(modelBusinessEntity, rootBusinessEntity, modelBusinessEntity.getNodeId()));
 
                 return modelBusinessEntity.getEntityKey();
 
@@ -504,7 +515,7 @@ public class Install {
 
                                         SaveTModel stm = new SaveTModel();
                                         stm.getTModel().add(apiTModel);
-                                        ReplicationNotifier.Enqueue(UDDIPublicationImpl.getChangeRecord(modelTModel, apiTModel, nodeId));
+                                        ReplicationNotifier.enqueue(UDDIPublicationImpl.getChangeRecord(modelTModel, apiTModel, nodeId));
                                 }
 
                         }
@@ -559,12 +570,13 @@ public class Install {
                 if (dir.exists()) {
                         log.debug("Discovering the Publisher XML data files in directory: " + path);
                         File[] files = dir.listFiles(new PublisherFileFilter());
-                        for (File f : files) {
-                                String publisher = f.getName().substring(0, f.getName().indexOf(FILE_PUBLISHER));
-                                if (!rootPublisherStr.equalsIgnoreCase(publisher)) {
-                                        publishers.add(publisher);
+                        if (files!=null)
+                                for (File f : files) {
+                                        String publisher = f.getName().substring(0, f.getName().indexOf(FILE_PUBLISHER));
+                                        if (!rootPublisherStr.equalsIgnoreCase(publisher)) {
+                                                publishers.add(publisher);
+                                        }
                                 }
-                        }
                 } else {
                         String[] paths = {};
                         Enumeration<JarEntry> en = null;
@@ -644,14 +656,17 @@ public class Install {
                 StringBuilder xml = new StringBuilder();
                 byte[] b = new byte[4096];
                 for (int n; (n = resourceStream.read(b)) != -1;) {
-                        xml.append(new String(b, 0, n));
+                        xml.append(new String(b, 0, n, AuthenticatedService.UTF8));
                 }
                 log.debug("inserting: " + xml.toString());
                 StringReader reader = new StringReader(xml.toString());
-                return JAXB.unmarshal(reader, outputtype);
+             
+               Object obj= XmlUtils.unmarshal(reader, outputtype);
+               reader.close();
+               return obj;
         }
 
-        private static Object buildInstallEntity(final String fileName, String packageName, Configuration config) throws JAXBException, IOException, ConfigurationException {
+        private static Object buildInstallEntity(final String fileName, String packageName, Configuration config) throws JAXBException, IOException, ConfigurationException, XMLStreamException {
                 InputStream resourceStream = null;
 
                 // First try the custom install directory
@@ -680,14 +695,13 @@ public class Install {
                 StringBuilder xml = new StringBuilder();
                 byte[] b = new byte[4096];
                 for (int n; (n = resourceStream.read(b)) != -1;) {
-                        xml.append(new String(b, 0, n));
+                        xml.append(new String(b, 0, n, AuthenticatedService.UTF8));
                 }
                 log.debug("inserting: " + xml.toString());
                 StringReader reader = new StringReader(xml.toString());
 
-                JAXBContext jc = JAXBContext.newInstance(packageName);
-                Unmarshaller unmarshaller = jc.createUnmarshaller();
-                Object obj = ((JAXBElement<?>) unmarshaller.unmarshal(new StreamSource(reader))).getValue();
+                Object obj= XmlUtils.unmarshal(reader, packageName);
+                reader.close();
                 return obj;
         }
 
@@ -731,7 +745,7 @@ public class Install {
          * @throws ConfigurationException
          */
         public static void installSaveTModel(EntityManager em, String fileName, UddiEntityPublisher publisher, String nodeId, Configuration config)
-                throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
+                throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException, XMLStreamException {
 
                 SaveTModel apiSaveTModel = (SaveTModel) buildInstallEntity(fileName, "org.uddi.api_v3", config);
                 if (apiSaveTModel != null) {
@@ -752,7 +766,7 @@ public class Install {
          * @throws ConfigurationException
          */
         public static UddiEntityPublisher installPublisher(EntityManager em, String fileName, Configuration config)
-                throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
+                throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException, XMLStreamException {
 
                 org.apache.juddi.api_v3.Publisher apiPub = (org.apache.juddi.api_v3.Publisher) buildInstallEntity(fileName, "org.apache.juddi.api_v3", config);
                 if (apiPub == null) {
