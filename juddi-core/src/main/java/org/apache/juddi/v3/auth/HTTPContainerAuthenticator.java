@@ -92,8 +92,8 @@ public class HTTPContainerAuthenticator implements Authenticator {
                                 log.warn("Publisher \"" + user + "\" was not found in the database, adding the publisher in on the fly.");
                                 publisher = new Publisher();
                                 publisher.setAuthorizedName(user);
-                                publisher.setIsAdmin("false");
-                                publisher.setIsEnabled("true");
+                                publisher.setIsAdmin(false);
+                                publisher.setIsEnabled(true);
                                 publisher.setMaxBindingsPerService(MaxBindingsPerService);
                                 publisher.setMaxBusinesses(MaxBusinesses);
                                 publisher.setMaxServicesPerBusiness(MaxServicesPerBusiness);

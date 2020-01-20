@@ -40,5 +40,6 @@
 		<module>service-version</module>
     <module>uddiv2-api-bridge-example</module>
     <module>ValueSetValidator</module>
-  </modules>
+	 <module>juddi-embedded</module>
+	</modules>
 </project>

@@ -18,6 +18,7 @@ package org.apache.juddi.api.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.jws.WebService;
 
 import javax.xml.ws.Holder;
 
@@ -29,9 +30,9 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIValueSetCachingPortType;
 import org.uddi.vscache_v3.ValidValue;
 
-//@WebService(serviceName="UDDIValueSetCachingService", 
-//			endpointInterface="org.uddi.v3_service.UDDIValueSetCachingPortType",
-//			targetNamespace = "urn:uddi-org:v3_service")
+@WebService(serviceName="UDDIValueSetCachingService", 
+			endpointInterface="org.uddi.v3_service.UDDIValueSetCachingPortType",
+			targetNamespace = "urn:uddi-org:v3_service")
 public class UDDIValueSetCachingImpl extends AuthenticatedService implements UDDIValueSetCachingPortType {
 
         private static Log logger = LogFactory.getLog(UDDIValueSetCachingImpl.class);

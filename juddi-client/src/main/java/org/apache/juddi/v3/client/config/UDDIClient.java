@@ -192,6 +192,8 @@ public class UDDIClient {
                         if (this.clientConfig.isRegisterOnStartup()) {
                                 Runnable runnable = new BackGroundRegistration(this);
                                 Thread thread = new Thread(runnable);
+                                thread.setName("juddi background registration");
+                                thread.setDaemon(true);
                                 thread.start();
                         }
                 }

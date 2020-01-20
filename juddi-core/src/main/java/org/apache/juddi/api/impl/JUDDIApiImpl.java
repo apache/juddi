@@ -135,7 +135,9 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  */
 @WebService(serviceName = "JUDDIApiService",
         endpointInterface = "org.apache.juddi.v3_service.JUDDIApiPortType",
-        targetNamespace = "urn:juddi-apache-org:v3_service", wsdlLocation = "classpath:/juddi_api_v1.wsdl")
+        targetNamespace = "urn:juddi-apache-org:v3_service"
+        //, wsdlLocation = "classpath:/juddi_api_v1.wsdl"
+)
 public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortType {
 
         private Log log = LogFactory.getLog(this.getClass());

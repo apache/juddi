@@ -16,7 +16,7 @@ language governing permissions and * limitations under the License. * */ -->
     </parent>
     <artifactId>juddi-gui-war</artifactId>
     <packaging>war</packaging>
-    <name>jUDDI GUI WAR construction</name>
+    <name>jUDDI GUI WAR</name>
     <url>http://juddi.apache.org</url>
     <dependencies>
         <dependency>

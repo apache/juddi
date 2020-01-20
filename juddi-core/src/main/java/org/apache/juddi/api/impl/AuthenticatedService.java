@@ -17,8 +17,6 @@
 package org.apache.juddi.api.impl;
 
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Resource;
 
 import javax.persistence.EntityManager;
@@ -81,6 +79,17 @@ public abstract class AuthenticatedService {
                 }
                 init();
         }
+        
+        /**
+         * this method can be used to explicitly set a request context. this is useful
+         * in unit tests, embedded and in-vm scenarios only
+         * @param ctx 
+         * @since 3.3.8
+         */
+        public void setContext(WebServiceContext ctx) {
+                this.ctx = ctx;
+        }
+        
         private synchronized  void init() {
             try {
                 df = DatatypeFactory.newInstance();

@@ -121,8 +121,7 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 		return getAuthToken(publisherId);
 	}
 	
-	public AuthToken getAuthToken(String publisherId)
-	throws DispositionReportFaultMessage {
+	public AuthToken getAuthToken(String publisherId) throws DispositionReportFaultMessage {
 	        long startTime = System.currentTimeMillis();
 
 		if (publisherId == null || publisherId.length() == 0)

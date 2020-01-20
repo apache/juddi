@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import static org.apache.juddi.api.impl.AuthenticatedService.logger;
@@ -72,6 +73,8 @@ import org.uddi.vs_v3.ValidateValues;
  * @see AbstractSimpleValidator
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
+@WebService(serviceName="UDDIValueSetCachingService", endpointInterface = "org.uddi.v3_service.UDDIValueSetValidationPortType"
+       , targetNamespace = "urn:uddi-org:api_v3_portType")
 public class UDDIValueSetValidationImpl extends AuthenticatedService implements
      UDDIValueSetValidationPortType {
 
