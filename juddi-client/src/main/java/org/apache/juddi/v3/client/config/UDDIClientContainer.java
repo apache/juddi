@@ -89,5 +89,9 @@ public class UDDIClientContainer {
     public static boolean contains(String name) {
         return 	(clients.containsKey(name)) ;
     }
+
+        public static void removeAll() {
+                clients.clear();
+        }
 	
 }

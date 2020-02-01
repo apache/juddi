@@ -53,8 +53,8 @@ public class CLIServerTest {
         static String replUrl = null;
         static String juddiUrl = null;
         static boolean sink = false;
-     static  replicantImpl repl= new replicantImpl();
-      static  juddiTestimpl jude= new juddiTestimpl();
+     static  ReplicantImpl repl= new ReplicantImpl();
+      static  JuddiTestimpl jude= new JuddiTestimpl();
 
         @BeforeClass
         public static void startManager() throws Exception {

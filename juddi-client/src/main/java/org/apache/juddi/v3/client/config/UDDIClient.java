@@ -77,6 +77,10 @@ public class UDDIClient {
         private Properties properties = null;
         private static Map<String, ServiceLocator> serviceLocators = new HashMap<String, ServiceLocator>();
 
+        
+        public static void  clearServiceLocatorCaches(){
+                serviceLocators.clear();
+        }
         /**
          * Default constructor, loads from the default config, META-INF/uddi.xml
          *

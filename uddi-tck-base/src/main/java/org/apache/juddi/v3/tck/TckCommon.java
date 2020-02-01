@@ -19,10 +19,12 @@ import java.rmi.RemoteException;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BindingTemplates;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessInfos;
 import org.uddi.api_v3.BusinessList;
+import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.Contacts;
 import org.uddi.api_v3.DeleteBusiness;
@@ -32,9 +34,11 @@ import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.GetOperationalInfo;
+import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.OperationalInfos;
+import org.uddi.api_v3.ServiceDetail;
 import org.uddi.api_v3.ServiceInfos;
 import org.uddi.api_v3.ServiceList;
 import org.uddi.api_v3.TModelList;
@@ -268,8 +272,23 @@ public class TckCommon {
                                 return ("NO SERVICES RETURNED!");
                         } else {
                                 for (int i = 0; i < findService.getServiceInfos().getServiceInfo().size(); i++) {
-                                        sb.append(findService.getServiceInfos().getServiceInfo().get(i).getName().get(0).getValue()).append(" lang=").append(findService.getServiceInfos().getServiceInfo().get(i).getName().get(0).getLang()).append(" ").append(findService.getServiceInfos().getServiceInfo().get(i).getServiceKey()).append(" ").append(findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey()).append(
-                                                System.getProperty("line.separator"));
+                                        sb.append(findService.getServiceInfos().getServiceInfo().get(i).getName().get(0).getValue()).
+                                                append(" lang=").append(findService.getServiceInfos().getServiceInfo().get(i).getName().get(0).getLang()).
+                                                append(" ").append(findService.getServiceInfos().getServiceInfo().get(i).getServiceKey()).
+                                                append(" ").append(findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey()).
+                                                append(System.getProperty("line.separator"));
+                                        GetServiceDetail req=new GetServiceDetail();
+                                        req.setAuthInfo(authinfo);
+                                        req.getServiceKey().add(findService.getServiceInfos().getServiceInfo().get(i).getServiceKey());
+                                         ServiceDetail d=inquiry.getServiceDetail(req);
+                                        for(BusinessService bs : d.getBusinessService()){
+                                           for(BindingTemplate bt:bs.getBindingTemplates().getBindingTemplate()){
+                                               sb.append(bt.getBindingKey());
+                                               sb.append(" ");
+                                               sb.append(bt.getAccessPoint().getValue());
+                                               sb. append(System.getProperty("line.separator"));
+                                           }
+                                        }
                                 }
                         }
                 } catch (Exception ex) {
