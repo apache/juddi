@@ -62,7 +62,7 @@
             <plugin>
                 <groupId>org.apache.openjpa</groupId>
                 <artifactId>openjpa-maven-plugin</artifactId>
-                <version>2.3.0</version>
+                <version>3.1.0</version>
                 <configuration>
                     <includes>**/org/apache/juddi/model/*.class</includes>
                     <addDefaultConstructor>true</addDefaultConstructor>
@@ -82,7 +82,7 @@
                     <dependency>
                         <groupId>org.apache.openjpa</groupId>
                         <artifactId>openjpa</artifactId>
-                        <version>2.3.0</version>
+                        <version>3.1.0</version>
                     </dependency>
                 </dependencies>
             </plugin>

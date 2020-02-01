@@ -12,8 +12,8 @@ jUDDI currently builds with the following configuration matrix.
 
 | JPA Provider	|	JDK			| Operating System 	| .NET Runtime		| Application Container	| SOAP Framework |
 | --- 			| ---			| ---				| ---				| ---					| ---			 |
-| OpenJPA		| OpenJDK 6		| Ubuntu			| Microsoft.NET 3.5	| Apache Tomcat 6.x		| Apache CXF	 |
-| Hibernate		| Oracle JDK 6	| Windows 7			| Mono	3.x			| Apache Tomcat 6.x		| .NET WCF, .NET ASP.NET |
+| OpenJPA		| OpenJDK 8		| Ubuntu			| Microsoft.NET 3.5	| Apache Tomcat 9.x		| Apache CXF	 |
+| Hibernate		| Oracle JDK 8	| Windows 7			| Mono	3.x			| Apache Tomcat 9.x		| .NET WCF, .NET ASP.NET |
 
 ## Access
 

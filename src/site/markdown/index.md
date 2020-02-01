@@ -15,7 +15,7 @@ jUDDI (pronounced "Judy") is an open source Java implementation of [OASIS](https
 
  - UDDI Specification version [3.0.2](http://uddi.org/pubs/uddi-v3.0.2-20041019.htm) compliant
  - UDDI Specification version [2.0.4](http://uddi.org/pubs/ProgrammersAPI-V2.04-Published-20020719.htm) interoperability services (BETA)
- - JDK 1.6 Recommended
+ - JDK 1.8 Recommended
  - Built on [JAXB](https://jcp.org/en/jsr/detail?id=222) and [JAX-WS](https://jcp.org/en/jsr/detail?id=224) standardized interfaces, tested on [Apache CXF](http://cxf.apache.org)
  - Built on JPA standardized interfaces, tested with [Apache OpenJPA](http://openjpa.apache.org/) and [Hibernate](http://hibernate.org/)
  - Pre-configured bundle deployed to [Apache Tomcat](http://tomcat.apache.org/)
