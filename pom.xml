@@ -853,6 +853,13 @@ under the License.
 			<url>https://repo1.maven.org/maven2</url>
 			<layout>default</layout>
 		</repository>
+                
+                <repository>
+			<id>central1</id>
+			<name>Maven Central Repository</name>
+			<url>https://repo.maven.org/maven2</url>
+			<layout>default</layout>
+		</repository>
 		<repository>
 			<id>jboss3</id>
 			<name>JBoss 3rd Party</name>
