@@ -54,6 +54,7 @@ language governing permissions and * limitations under the License. * */ -->
             <groupId>org.apache.juddi</groupId>
             <artifactId>uddi-migration-tool</artifactId>
             <version>${project.parent.version}</version>
+			<classifier>jar-with-dependencies</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.juddi</groupId>
