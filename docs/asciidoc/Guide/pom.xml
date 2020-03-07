@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.apache.juddi.juddi-docs</groupId>
         <artifactId>juddi-guide-parent</artifactId>
-        <version>3.3.8-SNAPSHOT</version>
+        <version>3.3.8</version>
     </parent>
     <artifactId>juddi-guide</artifactId>
     <packaging>jdocbook</packaging>
