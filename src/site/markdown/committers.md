@@ -39,7 +39,7 @@ Creating a key pair is pretty simple using gpg. Simply invoke gpg and take all t
 
     gpg --gen-key
         
-You should also generate a revocation certificate. This allows you to declare the key pair invalid publically, if you ever lose your private key, or it becomes compromised.
+You should also generate a revocation certificate. This allows you to declare the key pair invalid publicly, if you ever lose your private key, or it becomes compromised.
 
     gpg --output revoke.as --gen-revoke mykey
         

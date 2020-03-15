@@ -84,7 +84,7 @@ public class WadlImport {
                 //step two, identify the key used for all your stuff
                 //you must have a key generator created already
                 //here, we are assuming that you don't have one
-                //NOTE: these are some of the publically available WSDLs that were used to test WSDL2UDDI
+                //NOTE: these are some of the publicly available WSDLs that were used to test WSDL2UDDI
                 //publish.saveTModel(stm);
                 //step three, we have two options
                 //1) import the wsdl's services into a brand new business
