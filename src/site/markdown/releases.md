@@ -4,7 +4,7 @@ Title: Downloads and Releases
 
 | Name 																| Date  		| Description  			|
 | ---				| --- | --- |										
-| [3.3.7](http://www.apache.org/dyn/closer.cgi/juddi/juddi/3.3.7/)  | Jan 11, 2020   | Stable 3.3.7 Release  |		| 
+| [3.3.8](http://www.apache.org/dyn/closer.cgi/juddi/juddi/3.3.8/)  | Mar 15, 2020   | Stable 3.3.8 Release  |		| 
 | [Older releases](http://archive.apache.org/dist/juddi/)		    | 			  	| Archived Releases  	|
 
 

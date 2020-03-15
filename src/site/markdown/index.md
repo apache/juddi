@@ -26,7 +26,7 @@ jUDDI (pronounced "Judy") is an open source Java implementation of [OASIS](https
 
 ## UDDIv3 API Client Libraries
 
- - Java using JRE 1.6 or newer
+ - Java using JRE 1.8 or newer
  - .NET using Microsoft.NET Framework v3.5 (since jUDDI 3.2)
  - Developer Documentation, Examples
  - Digital Signature support
@@ -42,6 +42,8 @@ jUDDI (pronounced "Judy") is an open source Java implementation of [OASIS](https
  - Supports for JDK 1.3.1 and later
 
 ## News
+
+Mar 15, 2020, jUDDI Release 3.3.8
 
 Jan 11, 2020, jUDDI Release 3.3.7
 
