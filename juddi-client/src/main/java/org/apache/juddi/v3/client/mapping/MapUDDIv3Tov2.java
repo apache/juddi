@@ -123,14 +123,14 @@ public class MapUDDIv3Tov2 {
                 item.setBusinessKey(be.getBusinessKey());
                 if (item.getBusinessKey()==null)
                         item.setBusinessKey("");
-                item.setCategoryBag(MapCategoryBag(be.getCategoryBag()));
+                item.setCategoryBag(mapCategoryBag(be.getCategoryBag()));
                 item.setContacts(MapContacts(be.getContacts()));
                 item.setDiscoveryURLs(MapDiscoveryURLs(be.getDiscoveryURLs()));
-                item.setIdentifierBag(MapIdentBag(be.getIdentifierBag()));
+                item.setIdentifierBag(mapIdentBag(be.getIdentifierBag()));
                 item.setOperator(operator);
-                item.getDescription().addAll(MapDescription(be.getDescription()));
+                item.getDescription().addAll(mapDescription(be.getDescription()));
 
-                item.getName().addAll(MapName(be.getName()));
+                item.getName().addAll(mapName(be.getName()));
                 if (be.getBusinessServices() != null && !be.getBusinessServices().getBusinessService().isEmpty()) {
                         item.setBusinessServices(new BusinessServices());
                         item.getBusinessServices().getBusinessService().addAll(MapService(be.getBusinessServices().getBusinessService()));
@@ -143,11 +143,11 @@ public class MapUDDIv3Tov2 {
                         return null;
                 }
                 BusinessService item = new org.uddi.api_v2.BusinessService();
-                item.setCategoryBag(MapCategoryBag(be.getCategoryBag()));
-                item.getDescription().addAll(MapDescription(be.getDescription()));
+                item.setCategoryBag(mapCategoryBag(be.getCategoryBag()));
+                item.getDescription().addAll(mapDescription(be.getDescription()));
                 item.setBusinessKey(be.getBusinessKey());
                 item.setServiceKey(be.getServiceKey());
-                item.getName().addAll(MapName(be.getName()));
+                item.getName().addAll(mapName(be.getName()));
                 if (be.getBindingTemplates() != null && !be.getBindingTemplates().getBindingTemplate().isEmpty()) {
                         item.setBindingTemplates(new BindingTemplates());
                         item.getBindingTemplates().getBindingTemplate().addAll(MapBinding(be.getBindingTemplates().getBindingTemplate()));
@@ -171,14 +171,14 @@ public class MapUDDIv3Tov2 {
                         return null;
                 }
                 BindingTemplate item = new org.uddi.api_v2.BindingTemplate();
-                item.getDescription().addAll(MapDescription(be.getDescription()));
+                item.getDescription().addAll(mapDescription(be.getDescription()));
 
                 item.setBindingKey(be.getBindingKey());
                 item.setServiceKey(be.getServiceKey());
-                item.setAccessPoint(MapAccessPoint(be.getAccessPoint()));
-                item.setHostingRedirector(MapHostingRedir(be.getHostingRedirector()));
+                item.setAccessPoint(mapAccessPoint(be.getAccessPoint()));
+                item.setHostingRedirector(mapHostingRedir(be.getHostingRedirector()));
 
-                item.setTModelInstanceDetails(MapTModelInstanceDetails(be.getTModelInstanceDetails()));
+                item.setTModelInstanceDetails(mapTModelInstanceDetails(be.getTModelInstanceDetails()));
 
                 return item;
         }
@@ -201,14 +201,14 @@ public class MapUDDIv3Tov2 {
                 TModel item = new org.uddi.api_v2.TModel();
                 item.setTModelKey(be.getTModelKey());
                 item.setName(new Name(be.getName().getValue(), be.getName().getLang()));
-                item.setCategoryBag(MapCategoryBag(be.getCategoryBag()));
-                item.getDescription().addAll(MapDescription(be.getDescription()));
-                item.setIdentifierBag(MapIdentBag(be.getIdentifierBag()));
-                item.setOverviewDoc(MapOverviewDoc(be.getOverviewDoc()));
+                item.setCategoryBag(mapCategoryBag(be.getCategoryBag()));
+                item.getDescription().addAll(mapDescription(be.getDescription()));
+                item.setIdentifierBag(mapIdentBag(be.getIdentifierBag()));
+                item.setOverviewDoc(mapOverviewDoc(be.getOverviewDoc()));
                 return item;
         }
 
-        private static List<Name> MapName(List<org.uddi.api_v3.Name> name) {
+        private static List<Name> mapName(List<org.uddi.api_v3.Name> name) {
                 List<Name> items = new ArrayList<Name>();
                 for (int i = 0; i < name.size(); i++) {
                         Name n = new Name(name.get(i).getValue(), name.get(i).getLang());
@@ -217,16 +217,16 @@ public class MapUDDIv3Tov2 {
                 return items;
         }
 
-        private static CategoryBag MapCategoryBag(org.uddi.api_v3.CategoryBag categoryBag) {
+        private static CategoryBag mapCategoryBag(org.uddi.api_v3.CategoryBag categoryBag) {
                 if (categoryBag == null) {
                         return null;
                 }
                 CategoryBag c = new CategoryBag();
-                c.getKeyedReference().addAll(MapKeyedReference(categoryBag.getKeyedReference()));
+                c.getKeyedReference().addAll(mapKeyedReference(categoryBag.getKeyedReference()));
                 return c;
         }
 
-        private static List<Description> MapDescription(List<org.uddi.api_v3.Description> description) {
+        private static List<Description> mapDescription(List<org.uddi.api_v3.Description> description) {
                 List<Description> ret = new ArrayList<Description>();
                 if (description == null || description.isEmpty()) {
                         return ret;
@@ -238,13 +238,13 @@ public class MapUDDIv3Tov2 {
 
         }
 
-        private static IdentifierBag MapIdentBag(org.uddi.api_v3.IdentifierBag identifierBag) {
+        private static IdentifierBag mapIdentBag(org.uddi.api_v3.IdentifierBag identifierBag) {
 
                 if (identifierBag == null) {
                         return null;
                 }
                 IdentifierBag r = new IdentifierBag();
-                r.getKeyedReference().addAll(MapKeyedReference(identifierBag.getKeyedReference()));
+                r.getKeyedReference().addAll(mapKeyedReference(identifierBag.getKeyedReference()));
                 return r;
         }
 
@@ -254,13 +254,13 @@ public class MapUDDIv3Tov2 {
          * @param overviewDoc
          * @return overviewDoc or null
          */
-        private static OverviewDoc MapOverviewDoc(List<org.uddi.api_v3.OverviewDoc> overviewDoc) {
+        private static OverviewDoc mapOverviewDoc(List<org.uddi.api_v3.OverviewDoc> overviewDoc) {
                 if (overviewDoc == null || overviewDoc.isEmpty()) {
                         return null;
                 }
                 OverviewDoc r = new OverviewDoc();
 
-                r.getDescription().addAll(MapDescription(overviewDoc.get(0).getDescription()));
+                r.getDescription().addAll(mapDescription(overviewDoc.get(0).getDescription()));
                 if (overviewDoc.get(0).getOverviewURL() != null && overviewDoc.get(0).getOverviewURL().getValue() != null) {
                         r.setOverviewURL(overviewDoc.get(0).getOverviewURL().getValue());
                 }
@@ -268,14 +268,14 @@ public class MapUDDIv3Tov2 {
                 return r;
         }
 
-        private static AccessPoint MapAccessPoint(org.uddi.api_v3.AccessPoint accessPoint) {
+        private static AccessPoint mapAccessPoint(org.uddi.api_v3.AccessPoint accessPoint) {
                 if (accessPoint == null) {
                         return null;
                 }
-                return new AccessPoint(accessPoint.getValue(), MapURLType(accessPoint.getValue()));
+                return new AccessPoint(accessPoint.getValue(), mapURLType(accessPoint.getValue(), accessPoint.getUseType()));
         }
 
-        private static HostingRedirector MapHostingRedir(org.uddi.api_v3.HostingRedirector hostingRedirector) {
+        private static HostingRedirector mapHostingRedir(org.uddi.api_v3.HostingRedirector hostingRedirector) {
                 if (hostingRedirector == null) {
                         return null;
                 }
@@ -284,7 +284,7 @@ public class MapUDDIv3Tov2 {
                 return r;
         }
 
-        private static TModelInstanceDetails MapTModelInstanceDetails(org.uddi.api_v3.TModelInstanceDetails tModelInstanceDetails) {
+        private static TModelInstanceDetails mapTModelInstanceDetails(org.uddi.api_v3.TModelInstanceDetails tModelInstanceDetails) {
                 if (tModelInstanceDetails == null) {
                         return new TModelInstanceDetails();
                 }
@@ -293,7 +293,7 @@ public class MapUDDIv3Tov2 {
                 return r;
         }
 
-        private static List<KeyedReference> MapKeyedReference(List<org.uddi.api_v3.KeyedReference> keyedReference) {
+        private static List<KeyedReference> mapKeyedReference(List<org.uddi.api_v3.KeyedReference> keyedReference) {
                 List<KeyedReference> r = new ArrayList<KeyedReference>();
                 if (keyedReference == null) {
                         return r;
@@ -304,7 +304,12 @@ public class MapUDDIv3Tov2 {
                 return r;
         }
 
-        private static URLType MapURLType(String url) {
+        private static URLType mapURLType(String url, String useType) {
+                try {
+                        return URLType.fromValue(useType);
+                } catch (Exception ex) {
+                        //ignore
+                }
                 if (url == null) {
                         return URLType.OTHER;
                 }
@@ -337,12 +342,12 @@ public class MapUDDIv3Tov2 {
                 for (int i = 0; i < tModelInstanceInfo.size(); i++) {
                         TModelInstanceInfo t = new TModelInstanceInfo();
                         t.setTModelKey(tModelInstanceInfo.get(i).getTModelKey());
-                        t.getDescription().addAll(MapDescription(tModelInstanceInfo.get(i).getDescription()));
+                        t.getDescription().addAll(mapDescription(tModelInstanceInfo.get(i).getDescription()));
                         if (tModelInstanceInfo.get(i).getInstanceDetails() != null) {
                                 t.setInstanceDetails(new InstanceDetails());
-                                t.getInstanceDetails().getDescription().addAll(MapDescription(tModelInstanceInfo.get(i).getInstanceDetails().getDescription()));
+                                t.getInstanceDetails().getDescription().addAll(mapDescription(tModelInstanceInfo.get(i).getInstanceDetails().getDescription()));
                                 t.getInstanceDetails().setInstanceParms(StringEscapeUtils.escapeXml(tModelInstanceInfo.get(i).getInstanceDetails().getInstanceParms()));
-                                t.getInstanceDetails().setOverviewDoc(MapOverviewDoc(tModelInstanceInfo.get(i).getInstanceDetails().getOverviewDoc()));
+                                t.getInstanceDetails().setOverviewDoc(mapOverviewDoc(tModelInstanceInfo.get(i).getInstanceDetails().getOverviewDoc()));
                         }
                         r.add(t);
                 }
@@ -375,11 +380,11 @@ public class MapUDDIv3Tov2 {
                 r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers()));
                 r.setMaxRows(body.getMaxRows());
                 r.setTModelBag(MapTModelBag(body.getTModelBag()));
-                r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));
+                r.setCategoryBag(mapCategoryBag(body.getCategoryBag()));
                 r.setGeneric(VERSION);
                 r.setDiscoveryURLs(MapDiscoveryURLs(body.getDiscoveryURLs()));
-                r.setIdentifierBag(MapIdentBag(body.getIdentifierBag()));
-                r.getName().addAll(MapName(body.getName()));
+                r.setIdentifierBag(mapIdentBag(body.getIdentifierBag()));
+                r.getName().addAll(mapName(body.getName()));
                 if (ContainsWildCard(r.getName())) {
                         //r.setFindQualifiers(AddApproximateMatch(r.getFindQualifiers()));
                 }
@@ -407,11 +412,11 @@ public class MapUDDIv3Tov2 {
                 r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers()));
                 r.setMaxRows(body.getMaxRows());
                 r.setTModelBag(MapTModelBag(body.getTModelBag()));
-                r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));
+                r.setCategoryBag(mapCategoryBag(body.getCategoryBag()));
                 r.setGeneric(VERSION);
 
                 r.setBusinessKey(body.getBusinessKey());
-                r.getName().addAll(MapName(body.getName()));
+                r.getName().addAll(mapName(body.getName()));
                 return r;
         }
 
@@ -419,7 +424,7 @@ public class MapUDDIv3Tov2 {
                 FindTModel r = new FindTModel();
                 r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers()));
                 r.setMaxRows(body.getMaxRows());
-                r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));
+                r.setCategoryBag(mapCategoryBag(body.getCategoryBag()));
                 r.setGeneric(VERSION);
 
                 if (body.getName() != null) {
@@ -818,8 +823,8 @@ public class MapUDDIv3Tov2 {
                         for (int i = 0; i < findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().size(); i++) {
                                 RelatedBusinessInfo x = new RelatedBusinessInfo();
                                 x.setBusinessKey(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getBusinessKey());
-                                x.getDescription().addAll(MapDescription(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getDescription()));
-                                x.getName().addAll(MapName(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getName()));
+                                x.getDescription().addAll(mapDescription(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getDescription()));
+                                x.getName().addAll(mapName(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getName()));
                                 x.getSharedRelationships().addAll(MapSharedRelationships(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getSharedRelationships()));
                                 r.getRelatedBusinessInfos().getRelatedBusinessInfo().add(x);
                         }
@@ -950,8 +955,8 @@ public class MapUDDIv3Tov2 {
                         BusinessInfo x = new BusinessInfo();
                         x.setBusinessKey(businessInfos.getBusinessInfo().get(i).getBusinessKey());
                         x.setServiceInfos(MapServiceInfos(businessInfos.getBusinessInfo().get(i).getServiceInfos()));
-                        x.getDescription().addAll(MapDescription(businessInfos.getBusinessInfo().get(i).getDescription()));
-                        x.getName().addAll(MapName(businessInfos.getBusinessInfo().get(i).getName()));
+                        x.getDescription().addAll(mapDescription(businessInfos.getBusinessInfo().get(i).getDescription()));
+                        x.getName().addAll(mapName(businessInfos.getBusinessInfo().get(i).getName()));
                         r.getBusinessInfo().add(x);
                 }
 
@@ -967,7 +972,7 @@ public class MapUDDIv3Tov2 {
                         ServiceInfo x = new ServiceInfo();
                         x.setBusinessKey(serviceInfos.getServiceInfo().get(i).getBusinessKey());
                         x.setServiceKey(serviceInfos.getServiceInfo().get(i).getServiceKey());
-                        x.getName().addAll(MapName(serviceInfos.getServiceInfo().get(i).getName()));
+                        x.getName().addAll(mapName(serviceInfos.getServiceInfo().get(i).getName()));
                         r.getServiceInfo().add(x);
                 }
                 return r;
@@ -1005,8 +1010,8 @@ public class MapUDDIv3Tov2 {
                         for (int i = 0; i < registeredInfo.getBusinessInfos().getBusinessInfo().size(); i++) {
                                 BusinessInfo x = new BusinessInfo();
                                 x.setBusinessKey(registeredInfo.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey());
-                                x.getName().addAll(MapName(registeredInfo.getBusinessInfos().getBusinessInfo().get(i).getName()));
-                                x.getDescription().addAll(MapDescription(registeredInfo.getBusinessInfos().getBusinessInfo().get(i).getDescription()));
+                                x.getName().addAll(mapName(registeredInfo.getBusinessInfos().getBusinessInfo().get(i).getName()));
+                                x.getDescription().addAll(mapDescription(registeredInfo.getBusinessInfos().getBusinessInfo().get(i).getDescription()));
                                 x.setServiceInfos(MapServiceInfos(registeredInfo.getBusinessInfos().getBusinessInfo().get(i).getServiceInfos()));
                         }
                 }
@@ -1109,7 +1114,7 @@ public class MapUDDIv3Tov2 {
                         c.setUseType(contact.get(i).getUseType());
                         c.setPersonName(contact.get(i).getPersonName().get(0).getValue());
                         c.getAddress().addAll(MapAddress(contact.get(i).getAddress()));
-                        c.getDescription().addAll(MapDescription(contact.get(i).getDescription()));
+                        c.getDescription().addAll(mapDescription(contact.get(i).getDescription()));
                         c.getEmail().addAll(MapEmail(contact.get(i).getEmail()));
                         c.getPhone().addAll(MapPhone(contact.get(i).getPhone()));
 
@@ -1230,7 +1235,7 @@ public class MapUDDIv3Tov2 {
                 if (sharedRelationships==null) return r;
                 for (int i=0; i < sharedRelationships.size(); i++){
                         SharedRelationships x = new SharedRelationships();
-                        x.getKeyedReference().addAll(MapKeyedReference(sharedRelationships.get(i).getKeyedReference()));
+                        x.getKeyedReference().addAll(mapKeyedReference(sharedRelationships.get(i).getKeyedReference()));
                         if (sharedRelationships.get(i).getDirection()!=null)
                         switch (sharedRelationships.get(i).getDirection()){
                                 case FROM_KEY:

@@ -173,8 +173,8 @@ public class MapUDDIv2Tov3 {
                 item.setBindingKey(be.getBindingKey());
                 item.setServiceKey(be.getServiceKey());
 
-                item.setAccessPoint(MapAccessPoint(be.getAccessPoint()));
-                item.setHostingRedirector(MapHostingRedir(be.getHostingRedirector()));
+                item.setAccessPoint(mapAccessPoint(be.getAccessPoint()));
+                item.setHostingRedirector(mapHostingRedir(be.getHostingRedirector()));
                 item.getDescription().addAll(MapDescription(be.getDescription()));
                 item.setTModelInstanceDetails(MapTModelInstanceDetails(be.getTModelInstanceDetails()));
 
@@ -202,7 +202,7 @@ public class MapUDDIv2Tov3 {
                 item.setCategoryBag(MapCategoryBag(be.getCategoryBag()));
                 item.setIdentifierBag(MapIdentBag(be.getIdentifierBag()));
                 item.getDescription().addAll(MapDescription(be.getDescription()));
-                OverviewDoc MapOverviewDoc = MapOverviewDoc(be.getOverviewDoc());
+                OverviewDoc MapOverviewDoc = mapOverviewDoc(be.getOverviewDoc());
                 if (MapOverviewDoc != null) {
                         item.getOverviewDoc().add(MapOverviewDoc);
                 }
@@ -255,7 +255,7 @@ public class MapUDDIv2Tov3 {
          * @param overviewDoc
          * @return overdoc or null
          */
-        private static OverviewDoc MapOverviewDoc(org.uddi.api_v2.OverviewDoc overviewDoc) {
+        private static OverviewDoc mapOverviewDoc(org.uddi.api_v2.OverviewDoc overviewDoc) {
                 if (overviewDoc == null) {
                         return null;
                 }
@@ -269,14 +269,16 @@ public class MapUDDIv2Tov3 {
                 return r;
         }
 
-        private static AccessPoint MapAccessPoint(org.uddi.api_v2.AccessPoint accessPoint) {
+        private static AccessPoint mapAccessPoint(org.uddi.api_v2.AccessPoint accessPoint) {
                 if (accessPoint == null) {
                         return null;
                 }
-                return new AccessPoint(accessPoint.getValue(), MapURLType(accessPoint.getValue()));
+                return new AccessPoint(accessPoint.getValue(), 
+                        mapURLType(accessPoint.getValue(),
+                                accessPoint.getURLType()));
         }
 
-        private static HostingRedirector MapHostingRedir(org.uddi.api_v2.HostingRedirector hostingRedirector) {
+        private static HostingRedirector mapHostingRedir(org.uddi.api_v2.HostingRedirector hostingRedirector) {
                 if (hostingRedirector == null) {
                         return null;
                 }
@@ -305,14 +307,13 @@ public class MapUDDIv2Tov3 {
                 return r;
         }
 
-        private static String MapURLType(String url) {
+        private static String mapURLType(String url, org.uddi.api_v2.URLType type) {
                 if (url == null) {
                         return null;
                 }
-                if (url.toLowerCase().endsWith("wsdl")) {
-                        return AccessPointType.WSDL_DEPLOYMENT.toString();
-                }
-                return AccessPointType.END_POINT.toString();
+                if (type!=null)
+                        return type.name();
+                return null;
         }
 
         private static List<TModelInstanceInfo> MapTModelInstanceInfo(List<org.uddi.api_v2.TModelInstanceInfo> tModelInstanceInfo) {
@@ -328,7 +329,7 @@ public class MapUDDIv2Tov3 {
                                 t.setInstanceDetails(new InstanceDetails());
                                 t.getInstanceDetails().getDescription().addAll(MapDescription(tModelInstanceInfo.get(i).getInstanceDetails().getDescription()));
                                 t.getInstanceDetails().setInstanceParms(tModelInstanceInfo.get(i).getInstanceDetails().getInstanceParms());
-                                t.getInstanceDetails().getOverviewDoc().add(MapOverviewDoc(tModelInstanceInfo.get(i).getInstanceDetails().getOverviewDoc()));
+                                t.getInstanceDetails().getOverviewDoc().add(mapOverviewDoc(tModelInstanceInfo.get(i).getInstanceDetails().getOverviewDoc()));
                         }
                         r.add(t);
                 }
