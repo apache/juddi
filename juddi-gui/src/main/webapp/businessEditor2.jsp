@@ -64,7 +64,8 @@
                }
 
             %>
-            <%                   if (!newitem) {
+            <%
+                if (!newitem) {
                   out.write("<i class=\"icon-lock icon-large\"></i> ");
                }
             %>

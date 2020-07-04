@@ -1071,6 +1071,8 @@ public class UddiHub implements Serializable {
                         }
 
                         return ResourceLoader.GetResource(session, "actions.saved") + " "
+                             + " <script type=\"text/javascript\">window.location.href='"+ 
+                                 "businessEditor2.jsp?id=" + URLEncoder.encode(saveBusiness.getBusinessEntity().get(0).getBusinessKey(), "UTF8") + "';</script>"
                              + "<a href=\"businessEditor2.jsp?id=" + URLEncoder.encode(saveBusiness.getBusinessEntity().get(0).getBusinessKey(), "UTF8")
                              + "\">" + StringEscapeUtils.escapeHtml(saveBusiness.getBusinessEntity().get(0).getBusinessKey()) + "</a>";
                 } catch (Exception ex) {

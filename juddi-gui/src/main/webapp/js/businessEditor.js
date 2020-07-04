@@ -508,6 +508,7 @@ function saveBusiness()
         window.console && console.log('postback done '  + url);                
         
         $("#alert_results").html('<i class="icon-2x icon-thumbs-up"></i><br>'  + msg);
+        //the msg object is an i18n success message along with a link
         $("#alert").modal();
     });
 
