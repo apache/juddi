@@ -264,8 +264,15 @@ public class App {
                 Derby("org.hibernate.dialect.DerbyDialect"),
                 MySQLInnoDB("org.hibernate.dialect.MySQLInnoDBDialect"),
                 Oracle9i("org.hibernate.dialect.Oracle9iDialect"),
+                Oracle10g("org.hibernate.dialect.Oracle10gDialect"),
+                Oracle12c("org.hibernate.dialect.Oracle12cDialect"),
                 Sybase("org.hibernate.dialect.SybaseDialect"),
-                MSSQL2000("org.hibernate.dialect.SQLServerDialect");
+                MSSQL2000("org.hibernate.dialect.SQLServerDialect"),
+                MSSQL2005("org.hibernate.dialect.SQLServer2005Dialect"),
+                MSSQL2008("org.hibernate.dialect.SQLServer2008Dialect"),
+                MSSQL2012("org.hibernate.dialect.SQLServer2012Dialect");
+
+
                 //   MSSQL2008("org.hibernate.dialect.SQLServer2008Dialect");
 
                 private String dialectClass;
