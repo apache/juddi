@@ -766,6 +766,7 @@ public class MapUDDIv2Tov3 {
                 FindBusiness r = new FindBusiness();
                 r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));
                 r.setDiscoveryURLs(MapDiscoveryURLs(body.getDiscoveryURLs()));
+                r.setIdentifierBag(MapIdentBag(body.getIdentifierBag()));
                 r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers(), false));
                 r.setTModelBag(MapTModelBag(body.getTModelBag()));
                 r.setMaxRows(body.getMaxRows());
