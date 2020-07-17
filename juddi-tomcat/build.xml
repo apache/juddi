@@ -57,7 +57,6 @@
  		<copy file="${dependency.mysql.jar}" todir="${lib.dir}"/>
 		<copy file="${dependency.postgres.jar}" todir="${lib.dir}"/>
 		<copy file="${dependency.mssql.jar}" todir="${lib.dir}"/>
-		<copy file="${dependency.oracle.jar}" todir="${lib.dir}"/>
 		<copy file="${dependency.log4j.jar}" todir="${lib.dir}"/>
 		<copy file="${dependency.derby.jar}" todir="${lib.dir}"/>
 		<copy file="${dependency.commons-discovery.jar}" todir="${lib.dir}"/>
