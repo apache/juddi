@@ -190,6 +190,10 @@ function saveService()
         
         $("#alert_results").html('<i class="icon-2x icon-thumbs-up"></i><br>'  + msg);
         $("#alert").modal();
+        
+        
+        
+        
     });
 
     request.fail(function(jqXHR, textStatus) {

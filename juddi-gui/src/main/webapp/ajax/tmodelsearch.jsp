@@ -28,7 +28,7 @@
 <!DOCTYPE html>
 <%
     UddiHub x = UddiHub.getInstance(application, request.getSession());
-    int maxrecords = 50;
+    int maxrecords = 1000;
     int offset = 0;
     String lang = request.getParameter("lang");
     if (lang == null || lang.length() == 0) { 
@@ -53,8 +53,8 @@
     if (offset < 0) {
         offset = 0;
     }
-    if (maxrecords > 50) {
-        maxrecords = 50;
+    if (maxrecords > 1000) {
+        maxrecords = 1000;
     }
     boolean isChooser = false;
     try {
