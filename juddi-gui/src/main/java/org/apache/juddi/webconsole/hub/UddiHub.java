@@ -3957,4 +3957,14 @@ public class UddiHub implements Serializable {
                 x.add(id.trim());
                 return deleteBinding(x);
         }
+        
+        public String getTmodelDisplayName(String id) {
+            TModel tmodel = GettModelDetailsAsObject(id);
+            if (tmodel!=null &&
+                    tmodel.getName()!=null &&
+                    tmodel.getName().getValue()!=null) {
+                return tmodel.getName().getValue();
+            }
+            return "";
+        }
 }

@@ -56,7 +56,6 @@ function AddTmodelInstanceParam(key)
         +"<a href=\"javascript:AddDescriptionSpecific('" + div + i + "instanceDescription');\"><i class=\"icon-plus-sign icon-large\"></i></a> "
         +i18n_tmodelInstanceDescriptionAdd+"<br>"
         +"<div id=\"" + div + i + "instanceDescription\" style=\"border-width: 1px; border-style: groove;\">"
-        //issue
 
         +"<div><br><b>" + i18n_overviewdoc + "</b> - " + i18n_overviewdocDescription + "<br>"
         +"<a href=\"javascript:AddOverviewDocumentSpecific('" + div + i + 
