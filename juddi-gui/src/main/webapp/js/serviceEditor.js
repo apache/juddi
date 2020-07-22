@@ -132,7 +132,9 @@ function AddTmodelInstance(div)
     var k = currentOverviewDocs;
     $("<div id=\"" + div + i + "\" style=\"border-width: 2px; border-style: dashed; border-color: red\">"        
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + div + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div><div style=\"float:left\">"
-        +"<b>" + i18n_tmodelkey + "</b> (<a href=\"javascript:tModelModal('"+div + i + "KeyName\')\" ><i class=\"icon-list-alt icon-large\"></i>" + il8n_picker + "</a>): &nbsp;</div><div class=\"edit\" id=\"" + div + i + "KeyName\"></div>"
+        +"<b>" + i18n_tmodelkey + "</b> (<a href=\"javascript:tModelModal('"+div + i + "KeyName\','"+div + i + "DisplayName\')\" >\n\
+        <i class=\"icon-list-alt icon-large\"></i>" + il8n_picker + "</a>): &nbsp;</div><div class=\"edit\" id=\"" + div + i + "KeyName\"></div>"
+        +"<div id=\"" + div + i + "DisplayName\"></div>"
         +"<br><div style=\"float:left\"><b>" + i18n_tmodelInstanceParams + ":</b> &nbsp;</div><div class=\"edit\" id=\"" + div + i + "instanceValue\"></div>"
         +"<br><b>" + i18n_tmodelInstanceDescription + "</b> - " + i18n_tmodelInstanceDescription2 + "<br>"
         +"<a href=\"javascript:AddDescriptionSpecific('" + div + i + "instanceDescription');\"><i class=\"icon-plus-sign icon-large\"></i></a> "
@@ -190,6 +192,10 @@ function saveService()
         
         $("#alert_results").html('<i class="icon-2x icon-thumbs-up"></i><br>'  + msg);
         $("#alert").modal();
+        
+        
+        
+        
     });
 
     request.fail(function(jqXHR, textStatus) {

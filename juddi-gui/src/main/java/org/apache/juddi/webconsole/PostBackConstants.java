@@ -51,6 +51,7 @@ public interface PostBackConstants {
     public static final String EMAIL = "Email";
     public static final String SORTCODE = "Sortcode";
     public static final String KEYNAME = "KeyName";
+    public static final String DISPLAYNAME = "DisplayName";
     public static final String KEYVALUE = "KeyValue";
     public static final String CATBAG_KEY_REF = "catbagkeyref";
     public static final String IDENT_KEY_REF = "identbagkeyref";

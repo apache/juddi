@@ -26,12 +26,12 @@
 <%@include file="header-top.jsp" %>
 <div class="container">
 
-     <!-- Main hero unit for a primary marketing message or call to action -->
+     
      <div class="well" >
           <h1><%= ResourceLoader.GetResource(session, "navbar.search")%> </h1>
      </div>
 
-     <!-- Example row of columns -->
+     
      <div class="row">
           <div class="span12" >
 

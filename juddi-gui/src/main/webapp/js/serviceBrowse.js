@@ -27,18 +27,18 @@ RenderServiceListBySearch('%', offsetService, maxrecordsService);
 //offset += maxrecords;
 function pagedownService()
 {                                            
-    offsetService = $("#offsetService").text();
+    offsetService = $("#offsetService").val();
     //alert(offset);
     var newoffset = offsetService - maxrecordsService;
     if (newoffset < 0)
-        return;
+        newoffset=0;
     //alert(newoffset);
     if (newoffset != offsetService)
         RenderServiceListBySearch('%', newoffset, maxrecordsService);
 }
 function pageupService()
 {
-    offsetService = $("#offsetService").text();
+    offsetService = $("#offsetService").val();
     //alert(offset);
     var fetch = maxrecordsService;
     if ((parseInt(offsetService) + parseInt(maxrecordsService))  > totalrecordsService)
@@ -53,6 +53,12 @@ function pageupService()
 
 function RenderServiceListBySearch(keyword, offset, maxrecords)
 {
+    var maxr = 10;
+    try {
+        maxr = parseInt($("#fetch").val());
+    } catch (e) {
+    }
+    maxrecordsService=maxr;
     var    keyword2 = $("#name_service_search").val();
    
     var lang = $("#lang_service_search").val();
@@ -62,7 +68,7 @@ function RenderServiceListBySearch(keyword, offset, maxrecords)
        keyword2="";
     lang = encodeURIComponent(lang);
     offset = encodeURIComponent(offset);
-    maxrecords = encodeURIComponent(maxrecords);
+    maxrecords = encodeURIComponent(maxrecordsService);
     keyword2 = encodeURIComponent(keyword2);
     $("#serviceBrowserListing").html("<img src=\"img/bigrollergreen.gif\" title=\"Loading\"/>");
     var request=   $.ajax({

@@ -24,11 +24,11 @@ RenderBusinessListBySearch('%', offsetBusiness, maxrecordsBusiness);
 
 function pagedownBusiness()
 {
-    offset = $("#offsetBusiness").text();
+    offset = $("#offsetBusiness").val();
     //alert(offset);
     var newoffset = offsetBusiness - maxrecordsBusiness;
     if (newoffset < 0)
-        return;
+        newoffset=0;
     //alert(newoffset);
     if (newoffset != offsetBusiness)
     {
@@ -42,7 +42,7 @@ function refreshBusinessList()
 }
 function pageupBusiness()
 {
-    offsetBusiness = $("#offsetBusiness").text();
+    offsetBusiness = $("#offsetBusiness").val();
     //alert(offset);
     var fetch = maxrecordsBusiness;
     if ((parseInt(offsetBusiness) + parseInt(maxrecordsBusiness))  > totalrecordsBusiness)
@@ -58,6 +58,13 @@ function pageupBusiness()
 //offset, maxrecords, keyword
 function RenderBusinessListBySearch(keyword1, offset1, maxrecords1)
 {
+    var maxrecords1 = $("#fetch").val();
+    try{
+        maxrecords1 = parseInt(maxrecords1);
+    }catch (e){
+        maxrecords1=40;
+    }
+    maxrecordsBusiness=maxrecords1;
    var    keyword =$("#name_business").val();
     var lang = $("#lang_business").text();
     if (lang==undefined)

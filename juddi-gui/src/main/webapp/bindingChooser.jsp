@@ -82,9 +82,6 @@ this page is meant to be included via jsp:include
    </div>
 </div>
 <%
-//<a href="javascript:tModelCancel();" class="close" class="btn btn-danger">Cancel</a>
-//<a href="javascript:tModelModal();" class="btn" >Pick a tModel</a>
 
-//<a href="javascript:$('#bindingChooser').modal();" class="btn btn-primary" data-dismiss="modal">< %=ResourceLoader.GetResource(session, "actions.select")% ></a>
 %>
 

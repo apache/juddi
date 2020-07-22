@@ -173,6 +173,7 @@ public class Printers {
 
                 sb.append("<table class=\"table table-hover\"><tr><th>");
                 if (isChooser) {
+                        //for the input checkbox
                         sb.append("</th><th>");
                 }
                 sb.append(ResourceLoader.GetResource(session, "items.key"))
@@ -186,7 +187,10 @@ public class Printers {
                         if (isChooser) {
                                 sb.append("<input class=\"modalableTmodel\" type=checkbox id=\"")
                                         .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey()))
-                                        .append("\"></td><td>");
+                                        .append("\"   value=\"" + 
+                                                StringEscapeUtils.escapeHtml(trunc(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getValue()))
+                                                +
+                                                "\"></td><td>");
                         }
                         if (!isChooser) {
                                 sb.append("<a href=\"tmodelEditor.jsp?id=")

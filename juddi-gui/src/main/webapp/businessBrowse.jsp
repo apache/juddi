@@ -24,12 +24,12 @@
 <%@include file="header-top.jsp" %>
 <div class="container">
 
-   <!-- Main hero unit for a primary marketing message or call to action -->
+   
    <div class="well" >
       <h1><%=ResourceLoader.GetResource(session, "navbar.businesses")%></h1>
    </div>
 
-   <!-- Example row of columns -->
+   
    <div class="row">
       <div class="span12" >
          <table class="table-bordered table-striped">
@@ -38,13 +38,16 @@
                   <table>
                      <tr><td><%=ResourceLoader.GetResource(session, "totals.records")%></td><td><span id="totalrecordsBusiness"></span></td></tr>
                      <tr><td><%=ResourceLoader.GetResource(session, "totals.recordsreturned")%></td><td><span id="displayrecordsBusiness"></span></td></tr>
-                     <tr><td><%=ResourceLoader.GetResource(session, "totals.offset")%></td><td><span id="offsetBusiness">0</span></td></tr>
+                     <tr><td title="<%=ResourceLoader.GetResource(session, "totals.offset.v2disclaimer")%>">
+                                <%=ResourceLoader.GetResource(session, "totals.offset")%></td><td><input id="offsetBusiness" value="0"></td></tr>
                   </table>
                </td>
                <td>
                   <table>
                      <tr><td><%=ResourceLoader.GetResource(session, "items.name")%></td><td><input type="text" id="name_business" value="%" tabindex="1"></td></tr>
                      <tr><td><%=ResourceLoader.GetResource(session, "items.lang")%></td><td><input type="text" id="lang_business" tabindex="2"></td></tr>
+                     <tr><td><%=ResourceLoader.GetResource(session, "totals.fetch")%></td><td><input type="number" id="fetch" value="40"></td></tr>
+
                   </table>
                </td>
             </tr>
