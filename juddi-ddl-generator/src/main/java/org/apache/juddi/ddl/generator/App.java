@@ -255,7 +255,6 @@ public class App {
          */
         private static enum Dialect {
 
-                ORACLE("org.hibernate.dialect.Oracle10gDialect"),
                 MYSQL("org.hibernate.dialect.MySQLDialect"),
                 HSQL("org.hibernate.dialect.HSQLDialect"),
                 POSTGRES("org.hibernate.dialect.PostgreSQLDialect"),

@@ -91,10 +91,10 @@ public class FindBusinessByDiscoveryURLQuery extends BusinessEntityQuery {
 			String urlValue = discURL.getValue();
 			
 			if (discURL.getUseType() == null || discURL.getUseType().length() == 0 ) {
-				qry.appendGroupedAnd(new DynamicQuery.Parameter(urlTerm, urlValue, DynamicQuery.PREDICATE_EQUALS));
+				qry.appendGroupedAnd(new DynamicQuery.Parameter(urlTerm, urlValue, DynamicQuery.PREDICATE_LIKE));
 			}
 			else {
-				qry.appendGroupedAnd(new DynamicQuery.Parameter(urlTerm, urlValue, DynamicQuery.PREDICATE_EQUALS), 
+				qry.appendGroupedAnd(new DynamicQuery.Parameter(urlTerm, urlValue, DynamicQuery.PREDICATE_LIKE), 
 									 new DynamicQuery.Parameter(entityAliasChild + ".useType", discURL.getUseType(), DynamicQuery.PREDICATE_EQUALS));
 			}
 			

@@ -37,7 +37,7 @@ import javax.persistence.TemporalType;
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
  */
 @Entity
-@Table(name = "j3_publisher_assertion")
+@Table(name = "j3_pubassrt")
 public class PublisherAssertion implements java.io.Serializable {
 
         private static final long serialVersionUID = -5285434317957104272L;
