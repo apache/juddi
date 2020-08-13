@@ -24,6 +24,12 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import static org.apache.http.client.methods.RequestBuilder.options;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -37,7 +43,7 @@ import org.hibernate.tool.schema.TargetType;
  * http://jandrewthompson.blogspot.com/2009/10/how-to-generate-ddl-scripts-from.html
  * https://stackoverflow.com/a/33761464/1203182
  * https://stackoverflow.com/a/41894432/1203182
- * 
+ *
  * @author john.thompson
  * @author Alex O'Ree
  *
@@ -46,21 +52,26 @@ public class App {
 
         private List<Class> jpaClasses = new ArrayList<>();
 
-        public App(String packageName) throws Exception {
+        public App() {
 
-                List<Class> classesForPackage = getClassesForPackage(org.apache.juddi.model.Address.class.getPackage());
+        }
+
+        //initial from the current class path
+        private void initialJpsClassList(String packageName) throws Exception {
+
+                List<Class> classesForPackage = getClassesForPackage(Package.getPackage(packageName));
                 for (Class<Object> clazz : classesForPackage) {
 
                         jpaClasses.add(clazz);
                 }
         }
 
-        public App(String dir, String packageName) throws Exception {
+        //initialize from a directory /target/classes
+        private void initialJpsClassList(File dir, String packageName) throws Exception {
 
                 List<Class> c = new ArrayList<Class>();
-                processDirectory(new File("../" + dir), packageName, c);
 
-                processDirectory(new File(dir), packageName, c);
+                processDirectory(dir, packageName, c);
                 for (Class<Object> clazz : c) {
 
                         jpaClasses.add(clazz);
@@ -73,10 +84,10 @@ public class App {
          *
          * @param dbDialect to use
          */
-        private void generate(Dialect dialect) {
+        private void generate(org.hibernate.dialect.Dialect dialect, File outputDir) {
 
                 StandardServiceRegistryBuilder ssrb = new StandardServiceRegistryBuilder();
-                ssrb.applySetting("hibernate.dialect", dialect.getDialectClass());
+                ssrb.applySetting("hibernate.dialect", dialect.getClass().getCanonicalName());
                 StandardServiceRegistry standardServiceRegistry = ssrb.build();
 
                 MetadataSources metadataSources = new MetadataSources(standardServiceRegistry);
@@ -89,7 +100,7 @@ public class App {
                 SchemaExport export = new SchemaExport();
 
                 export.setDelimiter(";");
-                export.setOutputFile(dialect.name().toLowerCase() + ".ddl");
+                export.setOutputFile(outputDir.getAbsolutePath() + File.separator + dialect.getClass().getSimpleName() + ".ddl");
                 //export.execute(true, false, false, true);
                 export.execute(EnumSet.of(TargetType.SCRIPT), Action.BOTH, metadata);
         }
@@ -98,15 +109,52 @@ public class App {
          * @param args
          */
         public static void main(String[] args) throws Exception {
-                App gen = null;
-                if (args != null && args.length == 1) {
-                        gen = new App(args[0], "org.apache.juddi.model");
+                Options opts = new Options();
+                opts.addOption("path", true, "Source path");
+                opts.addOption("output", true, "Output path");
+                opts.addOption("package", true, "Class name prefix, defaults to org.apache.juddi.model");
+                opts.addOption("help", false, "this menu");
+
+                CommandLineParser parser = new DefaultParser();
+                CommandLine cmd = parser.parse(opts, args);
+                if (cmd.hasOption("help")) {
+                        HelpFormatter formatter = new HelpFormatter();
+                        formatter.printHelp("juddi-ddl-generator", opts);
+                        return;
+                }
+                App gen = new App();
+                String pkg = "org.apache.juddi.model";
+                if (cmd.hasOption("package")) {
+                        pkg = cmd.getOptionValue("package");
+                }
+                File src = new File("../juddi-core/target/classes/org/apache/juddi/model/");
+                if (cmd.hasOption("path")) {
+                        src = new File(cmd.getOptionValue("path"));
+                }
+                File output = new File(".");
+                if (cmd.hasOption("output")) {
+                        output = new File(cmd.getOptionValue("output"));
+                }
+                if (src.exists()) {
+                        gen.initialJpsClassList(src, pkg);
                 } else {
-                        gen = new App("org.apache.juddi.model");
+                        gen.initialJpsClassList(pkg);
                 }
-                for (int i = 0; i < Dialect.values().length; i++) {
-                        gen.generate(Dialect.values()[i]);
+                
+                Package hibernate = Package.getPackage("org.hibernate.dialect");
+                if (hibernate == null) {
+                        hibernate = org.hibernate.dialect.DerbyTenSevenDialect.class.getPackage();
                 }
+                List<Class> dialetcs = getClassesForPackage(hibernate);
+                for (Class clz : dialetcs) {
+                        try {
+                                org.hibernate.dialect.Dialect d = (org.hibernate.dialect.Dialect) clz.newInstance();
+                                gen.generate(d, output);
+                        } catch (Throwable t) {
+                                //System.out.println(clz.getCanonicalName() + " failed with " + t.getMessage());
+                        }
+                }
+                System.out.println(src + " " + output + " " + pkg);
         }
 
         private static void log(String msg) {
@@ -184,9 +232,20 @@ public class App {
                 // Get a File object for the package
                 URL resource = ClassLoader.getSystemClassLoader().getResource(relPath);
                 if (resource == null) {
-                        processDirectory(new File(pkgname), pkgname, classes);
+                        resource = Thread.currentThread().getContextClassLoader().getResource(relPath);
+                }
+                if (resource == null) {
+                        resource = App.class.getClassLoader().getResource(relPath);
+                }
+                if (resource == null) {
+                        File s = new File(pkgname);
+                        if (s.exists()) {
+                                processDirectory(s, pkgname, classes);
+                        }
+
                         throw new RuntimeException("Unexpected problem: No resource for " + relPath);
                 }
+
                 log("Package: '" + pkgname + "' becomes Resource: '" + resource.toString() + "'");
 
                 resource.getPath();
@@ -250,38 +309,4 @@ public class App {
                 return classes;
         }
 
-        /**
-         * Holds the classnames of hibernate dialects for easy reference.
-         */
-        private static enum Dialect {
-
-                MYSQL("org.hibernate.dialect.MySQLDialect"),
-                HSQL("org.hibernate.dialect.HSQLDialect"),
-                POSTGRES("org.hibernate.dialect.PostgreSQLDialect"),
-                MYSQL5("org.hibernate.dialect.MySQL5Dialect"),
-                DB2("org.hibernate.dialect.DB2Dialect"),
-                Derby("org.hibernate.dialect.DerbyDialect"),
-                MySQLInnoDB("org.hibernate.dialect.MySQLInnoDBDialect"),
-                Oracle9i("org.hibernate.dialect.Oracle9iDialect"),
-                Oracle10g("org.hibernate.dialect.Oracle10gDialect"),
-                Oracle12c("org.hibernate.dialect.Oracle12cDialect"),
-                Sybase("org.hibernate.dialect.SybaseDialect"),
-                MSSQL2000("org.hibernate.dialect.SQLServerDialect"),
-                MSSQL2005("org.hibernate.dialect.SQLServer2005Dialect"),
-                MSSQL2008("org.hibernate.dialect.SQLServer2008Dialect"),
-                MSSQL2012("org.hibernate.dialect.SQLServer2012Dialect");
-
-
-                //   MSSQL2008("org.hibernate.dialect.SQLServer2008Dialect");
-
-                private String dialectClass;
-
-                private Dialect(String dialectClass) {
-                        this.dialectClass = dialectClass;
-                }
-
-                public String getDialectClass() {
-                        return dialectClass;
-                }
-        }
 }
