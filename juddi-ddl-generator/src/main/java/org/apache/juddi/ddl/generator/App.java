@@ -58,8 +58,13 @@ public class App {
 
         //initial from the current class path
         private void initialJpsClassList(String packageName) throws Exception {
-
-                List<Class> classesForPackage = getClassesForPackage(Package.getPackage(packageName));
+                Package pk = Package.getPackage(packageName);
+                List<Class> classesForPackage = new ArrayList<>();
+                if (pk != null) {
+                        classesForPackage.addAll(getClassesForPackage(pk));
+                } else {
+                        classesForPackage.addAll(getClassesForPackage(packageName));
+                }
                 for (Class<Object> clazz : classesForPackage) {
 
                         jpaClasses.add(clazz);
@@ -140,12 +145,17 @@ public class App {
                 } else {
                         gen.initialJpsClassList(pkg);
                 }
-                
+
                 Package hibernate = Package.getPackage("org.hibernate.dialect");
                 if (hibernate == null) {
                         hibernate = org.hibernate.dialect.DerbyTenSevenDialect.class.getPackage();
                 }
-                List<Class> dialetcs = getClassesForPackage(hibernate);
+                List<Class> dialetcs = null;
+                if (hibernate == null) {
+                        dialetcs = getClassesForPackage("org.hibernate.dialect");
+                } else {
+                        dialetcs = getClassesForPackage(hibernate);
+                }
                 for (Class clz : dialetcs) {
                         try {
                                 org.hibernate.dialect.Dialect d = (org.hibernate.dialect.Dialect) clz.newInstance();
@@ -222,11 +232,13 @@ public class App {
         }
 
         public static List<Class> getClassesForPackage(Package pkg) {
+                return getClassesForPackage(pkg.getName());
+        }
+
+        public static List<Class> getClassesForPackage(String pkgname) {
                 List<Class> classes = new ArrayList<Class>();
 
-                String pkgname = pkg.getName();
                 log(pkgname);
-                log(pkg.getName());
                 String relPath = pkgname.replace('.', '/');
 
                 // Get a File object for the package
