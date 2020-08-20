@@ -173,8 +173,8 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 <span class="nc" id="L173">                item.setBindingKey(be.getBindingKey());</span>
 <span class="nc" id="L174">                item.setServiceKey(be.getServiceKey());</span>
 
-<span class="nc" id="L176">                item.setAccessPoint(MapAccessPoint(be.getAccessPoint()));</span>
-<span class="nc" id="L177">                item.setHostingRedirector(MapHostingRedir(be.getHostingRedirector()));</span>
+<span class="nc" id="L176">                item.setAccessPoint(mapAccessPoint(be.getAccessPoint()));</span>
+<span class="nc" id="L177">                item.setHostingRedirector(mapHostingRedir(be.getHostingRedirector()));</span>
 <span class="nc" id="L178">                item.getDescription().addAll(MapDescription(be.getDescription()));</span>
 <span class="nc" id="L179">                item.setTModelInstanceDetails(MapTModelInstanceDetails(be.getTModelInstanceDetails()));</span>
 
@@ -202,7 +202,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 <span class="nc" id="L202">                item.setCategoryBag(MapCategoryBag(be.getCategoryBag()));</span>
 <span class="nc" id="L203">                item.setIdentifierBag(MapIdentBag(be.getIdentifierBag()));</span>
 <span class="nc" id="L204">                item.getDescription().addAll(MapDescription(be.getDescription()));</span>
-<span class="nc" id="L205">                OverviewDoc MapOverviewDoc = MapOverviewDoc(be.getOverviewDoc());</span>
+<span class="nc" id="L205">                OverviewDoc MapOverviewDoc = mapOverviewDoc(be.getOverviewDoc());</span>
 <span class="nc bnc" id="L206" title="All 2 branches missed.">                if (MapOverviewDoc != null) {</span>
 <span class="nc" id="L207">                        item.getOverviewDoc().add(MapOverviewDoc);</span>
                 }
@@ -255,7 +255,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
          * @param overviewDoc
          * @return overdoc or null
          */
-        private static OverviewDoc MapOverviewDoc(org.uddi.api_v2.OverviewDoc overviewDoc) {
+        private static OverviewDoc mapOverviewDoc(org.uddi.api_v2.OverviewDoc overviewDoc) {
 <span class="nc bnc" id="L259" title="All 2 branches missed.">                if (overviewDoc == null) {</span>
 <span class="nc" id="L260">                        return null;</span>
                 }
@@ -269,952 +269,954 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 <span class="nc" id="L269">                return r;</span>
         }
 
-        private static AccessPoint MapAccessPoint(org.uddi.api_v2.AccessPoint accessPoint) {
+        private static AccessPoint mapAccessPoint(org.uddi.api_v2.AccessPoint accessPoint) {
 <span class="nc bnc" id="L273" title="All 2 branches missed.">                if (accessPoint == null) {</span>
 <span class="nc" id="L274">                        return null;</span>
                 }
-<span class="nc" id="L276">                return new AccessPoint(accessPoint.getValue(), MapURLType(accessPoint.getValue()));</span>
+<span class="nc" id="L276">                return new AccessPoint(accessPoint.getValue(), </span>
+<span class="nc" id="L277">                        mapURLType(accessPoint.getValue(),</span>
+<span class="nc" id="L278">                                accessPoint.getURLType()));</span>
         }
 
-        private static HostingRedirector MapHostingRedir(org.uddi.api_v2.HostingRedirector hostingRedirector) {
-<span class="nc bnc" id="L280" title="All 2 branches missed.">                if (hostingRedirector == null) {</span>
-<span class="nc" id="L281">                        return null;</span>
+        private static HostingRedirector mapHostingRedir(org.uddi.api_v2.HostingRedirector hostingRedirector) {
+<span class="nc bnc" id="L282" title="All 2 branches missed.">                if (hostingRedirector == null) {</span>
+<span class="nc" id="L283">                        return null;</span>
                 }
-<span class="nc" id="L283">                HostingRedirector r = new HostingRedirector();</span>
-<span class="nc" id="L284">                r.setBindingKey(hostingRedirector.getBindingKey());</span>
-<span class="nc" id="L285">                return r;</span>
+<span class="nc" id="L285">                HostingRedirector r = new HostingRedirector();</span>
+<span class="nc" id="L286">                r.setBindingKey(hostingRedirector.getBindingKey());</span>
+<span class="nc" id="L287">                return r;</span>
         }
 
         private static TModelInstanceDetails MapTModelInstanceDetails(org.uddi.api_v2.TModelInstanceDetails tModelInstanceDetails) {
-<span class="nc bnc" id="L289" title="All 6 branches missed.">                if (tModelInstanceDetails == null || tModelInstanceDetails.getTModelInstanceInfo()==null || tModelInstanceDetails.getTModelInstanceInfo().isEmpty()) {</span>
-<span class="nc" id="L290">                        return null;</span>
+<span class="nc bnc" id="L291" title="All 6 branches missed.">                if (tModelInstanceDetails == null || tModelInstanceDetails.getTModelInstanceInfo()==null || tModelInstanceDetails.getTModelInstanceInfo().isEmpty()) {</span>
+<span class="nc" id="L292">                        return null;</span>
                 }
-<span class="nc" id="L292">                TModelInstanceDetails r = new TModelInstanceDetails();</span>
-<span class="nc" id="L293">                r.getTModelInstanceInfo().addAll(MapTModelInstanceInfo(tModelInstanceDetails.getTModelInstanceInfo()));</span>
-<span class="nc" id="L294">                return r;</span>
+<span class="nc" id="L294">                TModelInstanceDetails r = new TModelInstanceDetails();</span>
+<span class="nc" id="L295">                r.getTModelInstanceInfo().addAll(MapTModelInstanceInfo(tModelInstanceDetails.getTModelInstanceInfo()));</span>
+<span class="nc" id="L296">                return r;</span>
         }
 
         private static List&lt;KeyedReference&gt; MapKeyedReference(List&lt;org.uddi.api_v2.KeyedReference&gt; keyedReference) {
-<span class="nc" id="L298">                List&lt;KeyedReference&gt; r = new ArrayList&lt;KeyedReference&gt;();</span>
-<span class="nc bnc" id="L299" title="All 2 branches missed.">                if (keyedReference == null) {</span>
-<span class="nc" id="L300">                        return r;</span>
+<span class="nc" id="L300">                List&lt;KeyedReference&gt; r = new ArrayList&lt;KeyedReference&gt;();</span>
+<span class="nc bnc" id="L301" title="All 2 branches missed.">                if (keyedReference == null) {</span>
+<span class="nc" id="L302">                        return r;</span>
                 }
-<span class="nc bnc" id="L302" title="All 2 branches missed.">                for (int i = 0; i &lt; keyedReference.size(); i++) {</span>
-<span class="nc" id="L303">                        r.add(new KeyedReference(keyedReference.get(i).getTModelKey(), keyedReference.get(i).getKeyName(), keyedReference.get(i).getKeyValue()));</span>
+<span class="nc bnc" id="L304" title="All 2 branches missed.">                for (int i = 0; i &lt; keyedReference.size(); i++) {</span>
+<span class="nc" id="L305">                        r.add(new KeyedReference(keyedReference.get(i).getTModelKey(), keyedReference.get(i).getKeyName(), keyedReference.get(i).getKeyValue()));</span>
                 }
-<span class="nc" id="L305">                return r;</span>
+<span class="nc" id="L307">                return r;</span>
         }
 
-        private static String MapURLType(String url) {
-<span class="nc bnc" id="L309" title="All 2 branches missed.">                if (url == null) {</span>
-<span class="nc" id="L310">                        return null;</span>
+        private static String mapURLType(String url, org.uddi.api_v2.URLType type) {
+<span class="nc bnc" id="L311" title="All 2 branches missed.">                if (url == null) {</span>
+<span class="nc" id="L312">                        return null;</span>
                 }
-<span class="nc bnc" id="L312" title="All 2 branches missed.">                if (url.toLowerCase().endsWith(&quot;wsdl&quot;)) {</span>
-<span class="nc" id="L313">                        return AccessPointType.WSDL_DEPLOYMENT.toString();</span>
-                }
-<span class="nc" id="L315">                return AccessPointType.END_POINT.toString();</span>
+<span class="nc bnc" id="L314" title="All 2 branches missed.">                if (type!=null)</span>
+<span class="nc" id="L315">                        return type.name();</span>
+<span class="nc" id="L316">                return null;</span>
         }
 
         private static List&lt;TModelInstanceInfo&gt; MapTModelInstanceInfo(List&lt;org.uddi.api_v2.TModelInstanceInfo&gt; tModelInstanceInfo) {
-<span class="nc" id="L319">                List&lt;TModelInstanceInfo&gt; r = new ArrayList&lt;TModelInstanceInfo&gt;();</span>
-<span class="nc bnc" id="L320" title="All 2 branches missed.">                if (tModelInstanceInfo == null) {</span>
-<span class="nc" id="L321">                        return r;</span>
+<span class="nc" id="L320">                List&lt;TModelInstanceInfo&gt; r = new ArrayList&lt;TModelInstanceInfo&gt;();</span>
+<span class="nc bnc" id="L321" title="All 2 branches missed.">                if (tModelInstanceInfo == null) {</span>
+<span class="nc" id="L322">                        return r;</span>
                 }
-<span class="nc bnc" id="L323" title="All 2 branches missed.">                for (int i = 0; i &lt; tModelInstanceInfo.size(); i++) {</span>
-<span class="nc" id="L324">                        TModelInstanceInfo t = new TModelInstanceInfo();</span>
-<span class="nc" id="L325">                        t.setTModelKey(tModelInstanceInfo.get(i).getTModelKey());</span>
-<span class="nc" id="L326">                        t.getDescription().addAll(MapDescription(tModelInstanceInfo.get(i).getDescription()));</span>
-<span class="nc bnc" id="L327" title="All 2 branches missed.">                        if (tModelInstanceInfo.get(i).getInstanceDetails() != null) {</span>
-<span class="nc" id="L328">                                t.setInstanceDetails(new InstanceDetails());</span>
-<span class="nc" id="L329">                                t.getInstanceDetails().getDescription().addAll(MapDescription(tModelInstanceInfo.get(i).getInstanceDetails().getDescription()));</span>
-<span class="nc" id="L330">                                t.getInstanceDetails().setInstanceParms(tModelInstanceInfo.get(i).getInstanceDetails().getInstanceParms());</span>
-<span class="nc" id="L331">                                t.getInstanceDetails().getOverviewDoc().add(MapOverviewDoc(tModelInstanceInfo.get(i).getInstanceDetails().getOverviewDoc()));</span>
+<span class="nc bnc" id="L324" title="All 2 branches missed.">                for (int i = 0; i &lt; tModelInstanceInfo.size(); i++) {</span>
+<span class="nc" id="L325">                        TModelInstanceInfo t = new TModelInstanceInfo();</span>
+<span class="nc" id="L326">                        t.setTModelKey(tModelInstanceInfo.get(i).getTModelKey());</span>
+<span class="nc" id="L327">                        t.getDescription().addAll(MapDescription(tModelInstanceInfo.get(i).getDescription()));</span>
+<span class="nc bnc" id="L328" title="All 2 branches missed.">                        if (tModelInstanceInfo.get(i).getInstanceDetails() != null) {</span>
+<span class="nc" id="L329">                                t.setInstanceDetails(new InstanceDetails());</span>
+<span class="nc" id="L330">                                t.getInstanceDetails().getDescription().addAll(MapDescription(tModelInstanceInfo.get(i).getInstanceDetails().getDescription()));</span>
+<span class="nc" id="L331">                                t.getInstanceDetails().setInstanceParms(tModelInstanceInfo.get(i).getInstanceDetails().getInstanceParms());</span>
+<span class="nc" id="L332">                                t.getInstanceDetails().getOverviewDoc().add(mapOverviewDoc(tModelInstanceInfo.get(i).getInstanceDetails().getOverviewDoc()));</span>
                         }
-<span class="nc" id="L333">                        r.add(t);</span>
+<span class="nc" id="L334">                        r.add(t);</span>
                 }
-<span class="nc" id="L335">                return r;</span>
+<span class="nc" id="L336">                return r;</span>
         }
 
         public static org.uddi.api_v3.BindingDetail MapBindingDetail(org.uddi.api_v2.BindingDetail findBinding) {
-<span class="nc" id="L339">                org.uddi.api_v3.BindingDetail r = new org.uddi.api_v3.BindingDetail();</span>
-<span class="nc bnc" id="L340" title="All 2 branches missed.">                for (int i = 0; i &lt; findBinding.getBindingTemplate().size(); i++) {</span>
-<span class="nc" id="L341">                        r.getBindingTemplate().addAll(MapBinding(findBinding.getBindingTemplate()));</span>
+<span class="nc" id="L340">                org.uddi.api_v3.BindingDetail r = new org.uddi.api_v3.BindingDetail();</span>
+<span class="nc bnc" id="L341" title="All 2 branches missed.">                for (int i = 0; i &lt; findBinding.getBindingTemplate().size(); i++) {</span>
+<span class="nc" id="L342">                        r.getBindingTemplate().addAll(MapBinding(findBinding.getBindingTemplate()));</span>
                 }
-<span class="nc bnc" id="L343" title="All 2 branches missed.">                r.setTruncated(findBinding.getTruncated() == Truncated.TRUE);</span>
-<span class="nc" id="L344">                return r;</span>
+<span class="nc bnc" id="L344" title="All 2 branches missed.">                r.setTruncated(findBinding.getTruncated() == Truncated.TRUE);</span>
+<span class="nc" id="L345">                return r;</span>
         }
 
         public static BusinessList MapBusinessList(org.uddi.api_v2.BusinessList findBinding) {
-<span class="nc" id="L348">                org.uddi.api_v3.BusinessList r = new org.uddi.api_v3.BusinessList();</span>
-<span class="nc" id="L349">                r.setListDescription(new ListDescription());</span>
-<span class="nc" id="L350">                r.getListDescription().setActualCount(0);</span>
-<span class="nc" id="L351">                r.getListDescription().setIncludeCount(0);</span>
-<span class="nc" id="L352">                r.getListDescription().setListHead(0);</span>
-<span class="nc bnc" id="L353" title="All 2 branches missed.">                if (findBinding.getBusinessInfos() != null) {</span>
-<span class="nc" id="L354">                        r.getListDescription().setIncludeCount(findBinding.getBusinessInfos().getBusinessInfo().size());</span>
-<span class="nc" id="L355">                        r.getListDescription().setActualCount(findBinding.getBusinessInfos().getBusinessInfo().size());</span>
-<span class="nc" id="L356">                        r.setBusinessInfos(new BusinessInfos());</span>
-<span class="nc" id="L357">                        r.getBusinessInfos().getBusinessInfo().addAll(MapBusinessInfo(findBinding.getBusinessInfos().getBusinessInfo()));</span>
+<span class="nc" id="L349">                org.uddi.api_v3.BusinessList r = new org.uddi.api_v3.BusinessList();</span>
+<span class="nc" id="L350">                r.setListDescription(new ListDescription());</span>
+<span class="nc" id="L351">                r.getListDescription().setActualCount(0);</span>
+<span class="nc" id="L352">                r.getListDescription().setIncludeCount(0);</span>
+<span class="nc" id="L353">                r.getListDescription().setListHead(0);</span>
+<span class="nc bnc" id="L354" title="All 2 branches missed.">                if (findBinding.getBusinessInfos() != null) {</span>
+<span class="nc" id="L355">                        r.getListDescription().setIncludeCount(findBinding.getBusinessInfos().getBusinessInfo().size());</span>
+<span class="nc" id="L356">                        r.getListDescription().setActualCount(findBinding.getBusinessInfos().getBusinessInfo().size());</span>
+<span class="nc" id="L357">                        r.setBusinessInfos(new BusinessInfos());</span>
+<span class="nc" id="L358">                        r.getBusinessInfos().getBusinessInfo().addAll(MapBusinessInfo(findBinding.getBusinessInfos().getBusinessInfo()));</span>
 
                 }
-<span class="nc bnc" id="L360" title="All 2 branches missed.">                r.setTruncated(findBinding.getTruncated() == Truncated.TRUE);</span>
-<span class="nc" id="L361">                return r;</span>
+<span class="nc bnc" id="L361" title="All 2 branches missed.">                r.setTruncated(findBinding.getTruncated() == Truncated.TRUE);</span>
+<span class="nc" id="L362">                return r;</span>
         }
 
         public static DispositionReportFaultMessage MapException(DispositionReport ex) {
-<span class="nc" id="L365">                org.uddi.api_v3.DispositionReport r = new org.uddi.api_v3.DispositionReport();</span>
-<span class="nc bnc" id="L366" title="All 2 branches missed.">                r.setTruncated(ex.getFaultInfo().getTruncated() == Truncated.TRUE);</span>
-<span class="nc" id="L367">                r.getResult().addAll(MapResult(ex.getFaultInfo().getResult()));</span>
+<span class="nc" id="L366">                org.uddi.api_v3.DispositionReport r = new org.uddi.api_v3.DispositionReport();</span>
+<span class="nc bnc" id="L367" title="All 2 branches missed.">                r.setTruncated(ex.getFaultInfo().getTruncated() == Truncated.TRUE);</span>
+<span class="nc" id="L368">                r.getResult().addAll(MapResult(ex.getFaultInfo().getResult()));</span>
 
-<span class="nc" id="L369">                DispositionReportFaultMessage x = new DispositionReportFaultMessage(ex.getMessage(), r);</span>
-<span class="nc" id="L370">                return x;</span>
+<span class="nc" id="L370">                DispositionReportFaultMessage x = new DispositionReportFaultMessage(ex.getMessage(), r);</span>
+<span class="nc" id="L371">                return x;</span>
         }
 
         public static RelatedBusinessesList MapRelatedBusinessesList(org.uddi.api_v2.RelatedBusinessesList findRelatedBusinesses) {
-<span class="nc bnc" id="L374" title="All 2 branches missed.">                if (findRelatedBusinesses == null) {</span>
-<span class="nc" id="L375">                        return null;</span>
+<span class="nc bnc" id="L375" title="All 2 branches missed.">                if (findRelatedBusinesses == null) {</span>
+<span class="nc" id="L376">                        return null;</span>
                 }
-<span class="nc" id="L377">                RelatedBusinessesList r = new RelatedBusinessesList();</span>
-<span class="nc bnc" id="L378" title="All 2 branches missed.">                r.setTruncated(findRelatedBusinesses.getTruncated() == Truncated.TRUE);</span>
-<span class="nc" id="L379">                r.setBusinessKey(findRelatedBusinesses.getBusinessKey());</span>
+<span class="nc" id="L378">                RelatedBusinessesList r = new RelatedBusinessesList();</span>
+<span class="nc bnc" id="L379" title="All 2 branches missed.">                r.setTruncated(findRelatedBusinesses.getTruncated() == Truncated.TRUE);</span>
+<span class="nc" id="L380">                r.setBusinessKey(findRelatedBusinesses.getBusinessKey());</span>
 
-<span class="nc bnc" id="L381" title="All 2 branches missed.">                if (findRelatedBusinesses.getRelatedBusinessInfos() != null) {</span>
-<span class="nc" id="L382">                        r.setRelatedBusinessInfos(new RelatedBusinessInfos());</span>
-<span class="nc bnc" id="L383" title="All 2 branches missed.">                        for (int i = 0; i &lt; findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().size(); i++) {</span>
-<span class="nc" id="L384">                                RelatedBusinessInfo x = new RelatedBusinessInfo();</span>
-<span class="nc" id="L385">                                x.setBusinessKey(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getBusinessKey());</span>
-<span class="nc" id="L386">                                x.getDescription().addAll(MapDescription(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getDescription()));</span>
-<span class="nc" id="L387">                                x.getName().addAll(MapName(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getName()));</span>
-<span class="nc" id="L388">                                x.getSharedRelationships().addAll(MapSharedRelationship(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getSharedRelationships()));</span>
-<span class="nc" id="L389">                                r.getRelatedBusinessInfos().getRelatedBusinessInfo().add(x);</span>
+<span class="nc bnc" id="L382" title="All 2 branches missed.">                if (findRelatedBusinesses.getRelatedBusinessInfos() != null) {</span>
+<span class="nc" id="L383">                        r.setRelatedBusinessInfos(new RelatedBusinessInfos());</span>
+<span class="nc bnc" id="L384" title="All 2 branches missed.">                        for (int i = 0; i &lt; findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().size(); i++) {</span>
+<span class="nc" id="L385">                                RelatedBusinessInfo x = new RelatedBusinessInfo();</span>
+<span class="nc" id="L386">                                x.setBusinessKey(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getBusinessKey());</span>
+<span class="nc" id="L387">                                x.getDescription().addAll(MapDescription(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getDescription()));</span>
+<span class="nc" id="L388">                                x.getName().addAll(MapName(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getName()));</span>
+<span class="nc" id="L389">                                x.getSharedRelationships().addAll(MapSharedRelationship(findRelatedBusinesses.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getSharedRelationships()));</span>
+<span class="nc" id="L390">                                r.getRelatedBusinessInfos().getRelatedBusinessInfo().add(x);</span>
                         }
                 }
-<span class="nc" id="L392">                return r;</span>
+<span class="nc" id="L393">                return r;</span>
         }
 
         public static ServiceList MapServiceList(org.uddi.api_v2.ServiceList serviceDetail) {
-<span class="nc bnc" id="L396" title="All 2 branches missed.">                if (serviceDetail == null) {</span>
-<span class="nc" id="L397">                        return null;</span>
+<span class="nc bnc" id="L397" title="All 2 branches missed.">                if (serviceDetail == null) {</span>
+<span class="nc" id="L398">                        return null;</span>
                 }
-<span class="nc" id="L399">                ServiceList r = new ServiceList();</span>
-<span class="nc" id="L400">                r.setListDescription(new ListDescription());</span>
-<span class="nc" id="L401">                r.getListDescription().setActualCount(0);</span>
-<span class="nc" id="L402">                r.getListDescription().setIncludeCount(0);</span>
-<span class="nc" id="L403">                r.getListDescription().setListHead(0);</span>
+<span class="nc" id="L400">                ServiceList r = new ServiceList();</span>
+<span class="nc" id="L401">                r.setListDescription(new ListDescription());</span>
+<span class="nc" id="L402">                r.getListDescription().setActualCount(0);</span>
+<span class="nc" id="L403">                r.getListDescription().setIncludeCount(0);</span>
+<span class="nc" id="L404">                r.getListDescription().setListHead(0);</span>
 
-<span class="nc bnc" id="L405" title="All 2 branches missed.">                if (serviceDetail.getServiceInfos() != null) {</span>
-<span class="nc" id="L406">                        r.setServiceInfos(new ServiceInfos());</span>
-<span class="nc" id="L407">                        r.getListDescription().setIncludeCount(serviceDetail.getServiceInfos().getServiceInfo().size());</span>
-<span class="nc" id="L408">                        r.getListDescription().setActualCount(serviceDetail.getServiceInfos().getServiceInfo().size());</span>
-<span class="nc bnc" id="L409" title="All 2 branches missed.">                        for (int i = 0; i &lt; serviceDetail.getServiceInfos().getServiceInfo().size(); i++) {</span>
-<span class="nc" id="L410">                                ServiceInfo x = new ServiceInfo();</span>
-<span class="nc" id="L411">                                x.setBusinessKey(serviceDetail.getServiceInfos().getServiceInfo().get(i).getBusinessKey());</span>
-<span class="nc" id="L412">                                x.setServiceKey(serviceDetail.getServiceInfos().getServiceInfo().get(i).getServiceKey());</span>
-<span class="nc" id="L413">                                x.getName().addAll(MapName(serviceDetail.getServiceInfos().getServiceInfo().get(i).getName()));</span>
-<span class="nc" id="L414">                                r.getServiceInfos().getServiceInfo().add(x);</span>
+<span class="nc bnc" id="L406" title="All 2 branches missed.">                if (serviceDetail.getServiceInfos() != null) {</span>
+<span class="nc" id="L407">                        r.setServiceInfos(new ServiceInfos());</span>
+<span class="nc" id="L408">                        r.getListDescription().setIncludeCount(serviceDetail.getServiceInfos().getServiceInfo().size());</span>
+<span class="nc" id="L409">                        r.getListDescription().setActualCount(serviceDetail.getServiceInfos().getServiceInfo().size());</span>
+<span class="nc bnc" id="L410" title="All 2 branches missed.">                        for (int i = 0; i &lt; serviceDetail.getServiceInfos().getServiceInfo().size(); i++) {</span>
+<span class="nc" id="L411">                                ServiceInfo x = new ServiceInfo();</span>
+<span class="nc" id="L412">                                x.setBusinessKey(serviceDetail.getServiceInfos().getServiceInfo().get(i).getBusinessKey());</span>
+<span class="nc" id="L413">                                x.setServiceKey(serviceDetail.getServiceInfos().getServiceInfo().get(i).getServiceKey());</span>
+<span class="nc" id="L414">                                x.getName().addAll(MapName(serviceDetail.getServiceInfos().getServiceInfo().get(i).getName()));</span>
+<span class="nc" id="L415">                                r.getServiceInfos().getServiceInfo().add(x);</span>
                         }
                 }
-<span class="nc bnc" id="L417" title="All 2 branches missed.">                r.setTruncated(serviceDetail.getTruncated() == Truncated.TRUE);</span>
-<span class="nc" id="L418">                return r;</span>
+<span class="nc bnc" id="L418" title="All 2 branches missed.">                r.setTruncated(serviceDetail.getTruncated() == Truncated.TRUE);</span>
+<span class="nc" id="L419">                return r;</span>
         }
 
         public static BusinessDetail MapBusinessDetail(org.uddi.api_v2.BusinessDetail businessDetail) {
-<span class="nc bnc" id="L422" title="All 2 branches missed.">                if (businessDetail == null) {</span>
-<span class="nc" id="L423">                        return null;</span>
+<span class="nc bnc" id="L423" title="All 2 branches missed.">                if (businessDetail == null) {</span>
+<span class="nc" id="L424">                        return null;</span>
                 }
-<span class="nc" id="L425">                BusinessDetail r = new BusinessDetail();</span>
-<span class="nc bnc" id="L426" title="All 2 branches missed.">                for (int i = 0; i &lt; businessDetail.getBusinessEntity().size(); i++) {</span>
-<span class="nc" id="L427">                        r.getBusinessEntity().add(MapBusiness(businessDetail.getBusinessEntity().get(i)));</span>
+<span class="nc" id="L426">                BusinessDetail r = new BusinessDetail();</span>
+<span class="nc bnc" id="L427" title="All 2 branches missed.">                for (int i = 0; i &lt; businessDetail.getBusinessEntity().size(); i++) {</span>
+<span class="nc" id="L428">                        r.getBusinessEntity().add(MapBusiness(businessDetail.getBusinessEntity().get(i)));</span>
                 }
-<span class="nc bnc" id="L429" title="All 2 branches missed.">                r.setTruncated(businessDetail.getTruncated() == Truncated.TRUE);</span>
-<span class="nc" id="L430">                return r;</span>
+<span class="nc bnc" id="L430" title="All 2 branches missed.">                r.setTruncated(businessDetail.getTruncated() == Truncated.TRUE);</span>
+<span class="nc" id="L431">                return r;</span>
         }
 
         public static ServiceDetail MapServiceDetail(org.uddi.api_v2.ServiceDetail serviceDetail) {
-<span class="nc bnc" id="L434" title="All 2 branches missed.">                if (serviceDetail == null) {</span>
-<span class="nc" id="L435">                        return null;</span>
+<span class="nc bnc" id="L435" title="All 2 branches missed.">                if (serviceDetail == null) {</span>
+<span class="nc" id="L436">                        return null;</span>
                 }
-<span class="nc" id="L437">                ServiceDetail r = new ServiceDetail();</span>
-<span class="nc bnc" id="L438" title="All 2 branches missed.">                for (int i = 0; i &lt; serviceDetail.getBusinessService().size(); i++) {</span>
-<span class="nc" id="L439">                        r.getBusinessService().add(MapService(serviceDetail.getBusinessService().get(i)));</span>
+<span class="nc" id="L438">                ServiceDetail r = new ServiceDetail();</span>
+<span class="nc bnc" id="L439" title="All 2 branches missed.">                for (int i = 0; i &lt; serviceDetail.getBusinessService().size(); i++) {</span>
+<span class="nc" id="L440">                        r.getBusinessService().add(MapService(serviceDetail.getBusinessService().get(i)));</span>
                 }
-<span class="nc bnc" id="L441" title="All 2 branches missed.">                r.setTruncated(serviceDetail.getTruncated() == Truncated.TRUE);</span>
-<span class="nc" id="L442">                return r;</span>
+<span class="nc bnc" id="L442" title="All 2 branches missed.">                r.setTruncated(serviceDetail.getTruncated() == Truncated.TRUE);</span>
+<span class="nc" id="L443">                return r;</span>
         }
 
         public static TModelDetail MapTModelDetail(org.uddi.api_v2.TModelDetail tModelDetail) {
-<span class="nc bnc" id="L446" title="All 2 branches missed.">                if (tModelDetail == null) {</span>
-<span class="nc" id="L447">                        return null;</span>
+<span class="nc bnc" id="L447" title="All 2 branches missed.">                if (tModelDetail == null) {</span>
+<span class="nc" id="L448">                        return null;</span>
                 }
-<span class="nc" id="L449">                TModelDetail r = new TModelDetail();</span>
-<span class="nc bnc" id="L450" title="All 2 branches missed.">                for (int i = 0; i &lt; tModelDetail.getTModel().size(); i++) {</span>
-<span class="nc" id="L451">                        r.getTModel().add(MapTModel(tModelDetail.getTModel().get(i)));</span>
+<span class="nc" id="L450">                TModelDetail r = new TModelDetail();</span>
+<span class="nc bnc" id="L451" title="All 2 branches missed.">                for (int i = 0; i &lt; tModelDetail.getTModel().size(); i++) {</span>
+<span class="nc" id="L452">                        r.getTModel().add(MapTModel(tModelDetail.getTModel().get(i)));</span>
                 }
-<span class="nc bnc" id="L453" title="All 2 branches missed.">                r.setTruncated(tModelDetail.getTruncated() == Truncated.TRUE);</span>
-<span class="nc" id="L454">                return r;</span>
+<span class="nc bnc" id="L454" title="All 2 branches missed.">                r.setTruncated(tModelDetail.getTruncated() == Truncated.TRUE);</span>
+<span class="nc" id="L455">                return r;</span>
         }
 
         public static TModelList MapTModelList(org.uddi.api_v2.TModelList findTModel) {
-<span class="nc" id="L458">                org.uddi.api_v3.TModelList r = new org.uddi.api_v3.TModelList();</span>
-<span class="nc" id="L459">                r.setListDescription(new ListDescription());</span>
-<span class="nc" id="L460">                r.getListDescription().setActualCount(0);</span>
-<span class="nc" id="L461">                r.getListDescription().setIncludeCount(0);</span>
-<span class="nc" id="L462">                r.getListDescription().setListHead(0);</span>
+<span class="nc" id="L459">                org.uddi.api_v3.TModelList r = new org.uddi.api_v3.TModelList();</span>
+<span class="nc" id="L460">                r.setListDescription(new ListDescription());</span>
+<span class="nc" id="L461">                r.getListDescription().setActualCount(0);</span>
+<span class="nc" id="L462">                r.getListDescription().setIncludeCount(0);</span>
+<span class="nc" id="L463">                r.getListDescription().setListHead(0);</span>
 
-<span class="nc bnc" id="L464" title="All 4 branches missed.">                if (findTModel.getTModelInfos() != null &amp;&amp; !findTModel.getTModelInfos().getTModelInfo().isEmpty()) {</span>
-<span class="nc" id="L465">                        r.setTModelInfos(new TModelInfos());</span>
-<span class="nc" id="L466">                        r.getListDescription().setIncludeCount(findTModel.getTModelInfos().getTModelInfo().size());</span>
-<span class="nc" id="L467">                        r.getListDescription().setActualCount(findTModel.getTModelInfos().getTModelInfo().size());</span>
-<span class="nc bnc" id="L468" title="All 2 branches missed.">                        for (int i = 0; i &lt; findTModel.getTModelInfos().getTModelInfo().size(); i++) {</span>
-<span class="nc" id="L469">                                TModelInfo x = new TModelInfo();</span>
-<span class="nc" id="L470">                                x.setName(new Name(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getValue(), findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang()));</span>
-<span class="nc" id="L471">                                x.setTModelKey(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey());</span>
+<span class="nc bnc" id="L465" title="All 4 branches missed.">                if (findTModel.getTModelInfos() != null &amp;&amp; !findTModel.getTModelInfos().getTModelInfo().isEmpty()) {</span>
+<span class="nc" id="L466">                        r.setTModelInfos(new TModelInfos());</span>
+<span class="nc" id="L467">                        r.getListDescription().setIncludeCount(findTModel.getTModelInfos().getTModelInfo().size());</span>
+<span class="nc" id="L468">                        r.getListDescription().setActualCount(findTModel.getTModelInfos().getTModelInfo().size());</span>
+<span class="nc bnc" id="L469" title="All 2 branches missed.">                        for (int i = 0; i &lt; findTModel.getTModelInfos().getTModelInfo().size(); i++) {</span>
+<span class="nc" id="L470">                                TModelInfo x = new TModelInfo();</span>
+<span class="nc" id="L471">                                x.setName(new Name(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getValue(), findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang()));</span>
+<span class="nc" id="L472">                                x.setTModelKey(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey());</span>
 
-<span class="nc" id="L473">                                r.getTModelInfos().getTModelInfo().add(x);</span>
+<span class="nc" id="L474">                                r.getTModelInfos().getTModelInfo().add(x);</span>
                         }
 
                 }
-<span class="nc bnc" id="L477" title="All 2 branches missed.">                r.setTruncated(findTModel.getTruncated() == Truncated.TRUE);</span>
-<span class="nc" id="L478">                return r;</span>
+<span class="nc bnc" id="L478" title="All 2 branches missed.">                r.setTruncated(findTModel.getTruncated() == Truncated.TRUE);</span>
+<span class="nc" id="L479">                return r;</span>
         }
 
         public static List&lt;PublisherAssertion&gt; MapListPublisherAssertion(List&lt;org.uddi.api_v2.PublisherAssertion&gt; publisherAssertions) {
-<span class="nc" id="L482">                List&lt;PublisherAssertion&gt; r = new ArrayList&lt;PublisherAssertion&gt;();</span>
-<span class="nc bnc" id="L483" title="All 2 branches missed.">                if (publisherAssertions == null) {</span>
-<span class="nc" id="L484">                        return r;</span>
+<span class="nc" id="L483">                List&lt;PublisherAssertion&gt; r = new ArrayList&lt;PublisherAssertion&gt;();</span>
+<span class="nc bnc" id="L484" title="All 2 branches missed.">                if (publisherAssertions == null) {</span>
+<span class="nc" id="L485">                        return r;</span>
                 }
-<span class="nc bnc" id="L486" title="All 2 branches missed.">                for (int i = 0; i &lt; publisherAssertions.size(); i++) {</span>
-<span class="nc" id="L487">                        PublisherAssertion x = new PublisherAssertion();</span>
-<span class="nc" id="L488">                        x.setFromKey(publisherAssertions.get(i).getFromKey());</span>
-<span class="nc" id="L489">                        x.setToKey(publisherAssertions.get(i).getToKey());</span>
-<span class="nc bnc" id="L490" title="All 2 branches missed.">                        if (publisherAssertions.get(i).getKeyedReference() != null) {</span>
-<span class="nc" id="L491">                                x.setKeyedReference(new KeyedReference(publisherAssertions.get(i).getKeyedReference().getTModelKey(),</span>
-<span class="nc" id="L492">                                     publisherAssertions.get(i).getKeyedReference().getKeyName(),</span>
-<span class="nc" id="L493">                                     publisherAssertions.get(i).getKeyedReference().getKeyValue()));</span>
+<span class="nc bnc" id="L487" title="All 2 branches missed.">                for (int i = 0; i &lt; publisherAssertions.size(); i++) {</span>
+<span class="nc" id="L488">                        PublisherAssertion x = new PublisherAssertion();</span>
+<span class="nc" id="L489">                        x.setFromKey(publisherAssertions.get(i).getFromKey());</span>
+<span class="nc" id="L490">                        x.setToKey(publisherAssertions.get(i).getToKey());</span>
+<span class="nc bnc" id="L491" title="All 2 branches missed.">                        if (publisherAssertions.get(i).getKeyedReference() != null) {</span>
+<span class="nc" id="L492">                                x.setKeyedReference(new KeyedReference(publisherAssertions.get(i).getKeyedReference().getTModelKey(),</span>
+<span class="nc" id="L493">                                     publisherAssertions.get(i).getKeyedReference().getKeyName(),</span>
+<span class="nc" id="L494">                                     publisherAssertions.get(i).getKeyedReference().getKeyValue()));</span>
                         }
-<span class="nc" id="L495">                        r.add(x);</span>
+<span class="nc" id="L496">                        r.add(x);</span>
                 }
-<span class="nc" id="L497">                return r;</span>
+<span class="nc" id="L498">                return r;</span>
         }
 
         public static List&lt;PublisherAssertion&gt; MapListPublisherAssertion(org.uddi.api_v2.PublisherAssertions publisherAssertions) {
-<span class="nc" id="L501">                List&lt;PublisherAssertion&gt; r = new ArrayList&lt;PublisherAssertion&gt;();</span>
-<span class="nc bnc" id="L502" title="All 2 branches missed.">                if (publisherAssertions == null) {</span>
-<span class="nc" id="L503">                        return r;</span>
+<span class="nc" id="L502">                List&lt;PublisherAssertion&gt; r = new ArrayList&lt;PublisherAssertion&gt;();</span>
+<span class="nc bnc" id="L503" title="All 2 branches missed.">                if (publisherAssertions == null) {</span>
+<span class="nc" id="L504">                        return r;</span>
                 }
 
-<span class="nc" id="L506">                r.addAll(MapListPublisherAssertion(publisherAssertions.getPublisherAssertion()));</span>
+<span class="nc" id="L507">                r.addAll(MapListPublisherAssertion(publisherAssertions.getPublisherAssertion()));</span>
 
-<span class="nc" id="L508">                return r;</span>
+<span class="nc" id="L509">                return r;</span>
         }
 
         public static RegisteredInfo MapListRegisteredInfo(org.uddi.api_v2.RegisteredInfo registeredInfo) {
-<span class="nc bnc" id="L512" title="All 2 branches missed.">                if (registeredInfo == null) {</span>
-<span class="nc" id="L513">                        return null;</span>
+<span class="nc bnc" id="L513" title="All 2 branches missed.">                if (registeredInfo == null) {</span>
+<span class="nc" id="L514">                        return null;</span>
                 }
-<span class="nc" id="L515">                RegisteredInfo r = new RegisteredInfo();</span>
-<span class="nc bnc" id="L516" title="All 2 branches missed.">                if (registeredInfo.getBusinessInfos() != null) {</span>
-<span class="nc" id="L517">                        r.setBusinessInfos(new BusinessInfos());</span>
-<span class="nc" id="L518">                        r.getBusinessInfos().getBusinessInfo().addAll(MapBusinessInfo(registeredInfo.getBusinessInfos().getBusinessInfo()));</span>
+<span class="nc" id="L516">                RegisteredInfo r = new RegisteredInfo();</span>
+<span class="nc bnc" id="L517" title="All 2 branches missed.">                if (registeredInfo.getBusinessInfos() != null) {</span>
+<span class="nc" id="L518">                        r.setBusinessInfos(new BusinessInfos());</span>
+<span class="nc" id="L519">                        r.getBusinessInfos().getBusinessInfo().addAll(MapBusinessInfo(registeredInfo.getBusinessInfos().getBusinessInfo()));</span>
                 }
-<span class="nc bnc" id="L520" title="All 2 branches missed.">                if (registeredInfo.getTModelInfos() != null) {</span>
-<span class="nc" id="L521">                        r.setTModelInfos(new TModelInfos());</span>
-<span class="nc bnc" id="L522" title="All 2 branches missed.">                        for (int i = 0; i &lt; registeredInfo.getTModelInfos().getTModelInfo().size(); i++) {</span>
-<span class="nc" id="L523">                                TModelInfo x = new TModelInfo();</span>
-<span class="nc" id="L524">                                x.setTModelKey(registeredInfo.getTModelInfos().getTModelInfo().get(i).getTModelKey());</span>
-<span class="nc" id="L525">                                x.setName(new Name(registeredInfo.getTModelInfos().getTModelInfo().get(i).getName().getValue(),</span>
-<span class="nc" id="L526">                                     registeredInfo.getTModelInfos().getTModelInfo().get(i).getName().getValue()));</span>
-<span class="nc" id="L527">                                r.getTModelInfos().getTModelInfo().add(x);</span>
+<span class="nc bnc" id="L521" title="All 2 branches missed.">                if (registeredInfo.getTModelInfos() != null) {</span>
+<span class="nc" id="L522">                        r.setTModelInfos(new TModelInfos());</span>
+<span class="nc bnc" id="L523" title="All 2 branches missed.">                        for (int i = 0; i &lt; registeredInfo.getTModelInfos().getTModelInfo().size(); i++) {</span>
+<span class="nc" id="L524">                                TModelInfo x = new TModelInfo();</span>
+<span class="nc" id="L525">                                x.setTModelKey(registeredInfo.getTModelInfos().getTModelInfo().get(i).getTModelKey());</span>
+<span class="nc" id="L526">                                x.setName(new Name(registeredInfo.getTModelInfos().getTModelInfo().get(i).getName().getValue(),</span>
+<span class="nc" id="L527">                                     registeredInfo.getTModelInfos().getTModelInfo().get(i).getName().getValue()));</span>
+<span class="nc" id="L528">                                r.getTModelInfos().getTModelInfo().add(x);</span>
                         }
 
                 }
-<span class="nc bnc" id="L531" title="All 2 branches missed.">                r.setTruncated(registeredInfo.getTruncated() == Truncated.TRUE);</span>
-<span class="nc" id="L532">                return r;</span>
+<span class="nc bnc" id="L532" title="All 2 branches missed.">                r.setTruncated(registeredInfo.getTruncated() == Truncated.TRUE);</span>
+<span class="nc" id="L533">                return r;</span>
         }
 
         private static List&lt; BusinessInfo&gt; MapBusinessInfo(List&lt;org.uddi.api_v2.BusinessInfo&gt; businessInfo) {
 
-<span class="nc" id="L537">                List&lt; BusinessInfo&gt; r = new ArrayList&lt;BusinessInfo&gt;();</span>
-<span class="nc bnc" id="L538" title="All 2 branches missed.">                if (businessInfo == null) {</span>
-<span class="nc" id="L539">                        return r;</span>
+<span class="nc" id="L538">                List&lt; BusinessInfo&gt; r = new ArrayList&lt;BusinessInfo&gt;();</span>
+<span class="nc bnc" id="L539" title="All 2 branches missed.">                if (businessInfo == null) {</span>
+<span class="nc" id="L540">                        return r;</span>
                 }
-<span class="nc bnc" id="L541" title="All 2 branches missed.">                for (int i = 0; i &lt; businessInfo.size(); i++) {</span>
-<span class="nc" id="L542">                        BusinessInfo x = new BusinessInfo();</span>
-<span class="nc" id="L543">                        x.setBusinessKey(businessInfo.get(i).getBusinessKey());</span>
-<span class="nc" id="L544">                        x.setServiceInfos(MapServiceInfo(businessInfo.get(i).getServiceInfos()));</span>
-<span class="nc" id="L545">                        x.getName().addAll(MapName(businessInfo.get(i).getName()));</span>
-<span class="nc" id="L546">                        x.getDescription().addAll(MapDescription(businessInfo.get(i).getDescription()));</span>
-<span class="nc" id="L547">                        r.add(x);</span>
+<span class="nc bnc" id="L542" title="All 2 branches missed.">                for (int i = 0; i &lt; businessInfo.size(); i++) {</span>
+<span class="nc" id="L543">                        BusinessInfo x = new BusinessInfo();</span>
+<span class="nc" id="L544">                        x.setBusinessKey(businessInfo.get(i).getBusinessKey());</span>
+<span class="nc" id="L545">                        x.setServiceInfos(MapServiceInfo(businessInfo.get(i).getServiceInfos()));</span>
+<span class="nc" id="L546">                        x.getName().addAll(MapName(businessInfo.get(i).getName()));</span>
+<span class="nc" id="L547">                        x.getDescription().addAll(MapDescription(businessInfo.get(i).getDescription()));</span>
+<span class="nc" id="L548">                        r.add(x);</span>
                 }
 
-<span class="nc" id="L550">                return r;</span>
+<span class="nc" id="L551">                return r;</span>
         }
 
         private static ServiceInfos MapServiceInfo(org.uddi.api_v2.ServiceInfos serviceInfos) {
-<span class="nc bnc" id="L554" title="All 2 branches missed.">                if (serviceInfos == null) {</span>
-<span class="nc" id="L555">                        return null;</span>
+<span class="nc bnc" id="L555" title="All 2 branches missed.">                if (serviceInfos == null) {</span>
+<span class="nc" id="L556">                        return null;</span>
                 }
-<span class="nc" id="L557">                ServiceInfos r = new ServiceInfos();</span>
-<span class="nc bnc" id="L558" title="All 2 branches missed.">                for (int i = 0; i &lt; serviceInfos.getServiceInfo().size(); i++) {</span>
-<span class="nc" id="L559">                        ServiceInfo x = new ServiceInfo();</span>
-<span class="nc" id="L560">                        x.setBusinessKey(serviceInfos.getServiceInfo().get(i).getBusinessKey());</span>
-<span class="nc" id="L561">                        x.setServiceKey(serviceInfos.getServiceInfo().get(i).getServiceKey());</span>
-<span class="nc" id="L562">                        x.getName().addAll(MapName(serviceInfos.getServiceInfo().get(i).getName()));</span>
-<span class="nc" id="L563">                        r.getServiceInfo().add(x);</span>
+<span class="nc" id="L558">                ServiceInfos r = new ServiceInfos();</span>
+<span class="nc bnc" id="L559" title="All 2 branches missed.">                for (int i = 0; i &lt; serviceInfos.getServiceInfo().size(); i++) {</span>
+<span class="nc" id="L560">                        ServiceInfo x = new ServiceInfo();</span>
+<span class="nc" id="L561">                        x.setBusinessKey(serviceInfos.getServiceInfo().get(i).getBusinessKey());</span>
+<span class="nc" id="L562">                        x.setServiceKey(serviceInfos.getServiceInfo().get(i).getServiceKey());</span>
+<span class="nc" id="L563">                        x.getName().addAll(MapName(serviceInfos.getServiceInfo().get(i).getName()));</span>
+<span class="nc" id="L564">                        r.getServiceInfo().add(x);</span>
                 }
-<span class="nc" id="L565">                return r;</span>
+<span class="nc" id="L566">                return r;</span>
         }
 
         private static List&lt;Result&gt; MapResult(List&lt;org.uddi.api_v2.Result&gt; result) {
-<span class="nc" id="L569">                List&lt;Result&gt; r = new ArrayList&lt;Result&gt;();</span>
-<span class="nc bnc" id="L570" title="All 2 branches missed.">                if (result == null) {</span>
-<span class="nc" id="L571">                        return r;</span>
+<span class="nc" id="L570">                List&lt;Result&gt; r = new ArrayList&lt;Result&gt;();</span>
+<span class="nc bnc" id="L571" title="All 2 branches missed.">                if (result == null) {</span>
+<span class="nc" id="L572">                        return r;</span>
                 }
-<span class="nc bnc" id="L573" title="All 2 branches missed.">                for (int i = 0; i &lt; result.size(); i++) {</span>
-<span class="nc" id="L574">                        Result x = new Result();</span>
-<span class="nc" id="L575">                        x.setErrno(result.get(i).getErrno());</span>
-<span class="nc bnc" id="L576" title="All 2 branches missed.">                        if (result.get(i).getKeyType() != null) {</span>
-<span class="nc bnc" id="L577" title="All 5 branches missed.">                                switch (result.get(i).getKeyType()) {</span>
+<span class="nc bnc" id="L574" title="All 2 branches missed.">                for (int i = 0; i &lt; result.size(); i++) {</span>
+<span class="nc" id="L575">                        Result x = new Result();</span>
+<span class="nc" id="L576">                        x.setErrno(result.get(i).getErrno());</span>
+<span class="nc bnc" id="L577" title="All 2 branches missed.">                        if (result.get(i).getKeyType() != null) {</span>
+<span class="nc bnc" id="L578" title="All 5 branches missed.">                                switch (result.get(i).getKeyType()) {</span>
                                         case BINDING_KEY:
-<span class="nc" id="L579">                                                x.setKeyType(KeyType.BINDING_KEY);</span>
-<span class="nc" id="L580">                                                break;</span>
+<span class="nc" id="L580">                                                x.setKeyType(KeyType.BINDING_KEY);</span>
+<span class="nc" id="L581">                                                break;</span>
                                         case BUSINESS_KEY:
-<span class="nc" id="L582">                                                x.setKeyType(KeyType.BUSINESS_KEY);</span>
-<span class="nc" id="L583">                                                break;</span>
+<span class="nc" id="L583">                                                x.setKeyType(KeyType.BUSINESS_KEY);</span>
+<span class="nc" id="L584">                                                break;</span>
                                         case SERVICE_KEY:
-<span class="nc" id="L585">                                                x.setKeyType(KeyType.SERVICE_KEY);</span>
-<span class="nc" id="L586">                                                break;</span>
+<span class="nc" id="L586">                                                x.setKeyType(KeyType.SERVICE_KEY);</span>
+<span class="nc" id="L587">                                                break;</span>
                                         case T_MODEL_KEY:
-<span class="nc" id="L588">                                                x.setKeyType(KeyType.T_MODEL_KEY);</span>
+<span class="nc" id="L589">                                                x.setKeyType(KeyType.T_MODEL_KEY);</span>
                                                 break;
                                 }
                         }
-<span class="nc bnc" id="L592" title="All 2 branches missed.">                        if (result.get(i).getErrInfo() != null) {</span>
-<span class="nc" id="L593">                                x.setErrInfo(new ErrInfo());</span>
-<span class="nc" id="L594">                                x.getErrInfo().setErrCode(result.get(i).getErrInfo().getErrCode());</span>
-<span class="nc" id="L595">                                x.getErrInfo().setValue(result.get(i).getErrInfo().getValue());</span>
+<span class="nc bnc" id="L593" title="All 2 branches missed.">                        if (result.get(i).getErrInfo() != null) {</span>
+<span class="nc" id="L594">                                x.setErrInfo(new ErrInfo());</span>
+<span class="nc" id="L595">                                x.getErrInfo().setErrCode(result.get(i).getErrInfo().getErrCode());</span>
+<span class="nc" id="L596">                                x.getErrInfo().setValue(result.get(i).getErrInfo().getValue());</span>
                         }
-<span class="nc" id="L597">                        r.add(x);</span>
+<span class="nc" id="L598">                        r.add(x);</span>
                 }
-<span class="nc" id="L599">                return r;</span>
+<span class="nc" id="L600">                return r;</span>
         }
 
         public static DispositionReportFaultMessage MapException(SOAPFaultException ex) {
-<span class="nc" id="L603">                org.uddi.api_v3.DispositionReport r = new org.uddi.api_v3.DispositionReport();</span>
-<span class="nc" id="L604">                r.setTruncated(false);</span>
-<span class="nc" id="L605">                r.getResult().addAll(MapFault(ex.getFault()));</span>
-<span class="nc" id="L606">                DispositionReportFaultMessage x = new DispositionReportFaultMessage(ex.getMessage(), r);</span>
-<span class="nc" id="L607">                return x;</span>
+<span class="nc" id="L604">                org.uddi.api_v3.DispositionReport r = new org.uddi.api_v3.DispositionReport();</span>
+<span class="nc" id="L605">                r.setTruncated(false);</span>
+<span class="nc" id="L606">                r.getResult().addAll(MapFault(ex.getFault()));</span>
+<span class="nc" id="L607">                DispositionReportFaultMessage x = new DispositionReportFaultMessage(ex.getMessage(), r);</span>
+<span class="nc" id="L608">                return x;</span>
         }
 
         private static List&lt;Result&gt; MapFault(SOAPFault result) {
-<span class="nc" id="L611">                List&lt;Result&gt; r = new ArrayList&lt;Result&gt;();</span>
-<span class="nc bnc" id="L612" title="All 2 branches missed.">                if (result == null) {</span>
-<span class="nc" id="L613">                        return r;</span>
+<span class="nc" id="L612">                List&lt;Result&gt; r = new ArrayList&lt;Result&gt;();</span>
+<span class="nc bnc" id="L613" title="All 2 branches missed.">                if (result == null) {</span>
+<span class="nc" id="L614">                        return r;</span>
                 }
-<span class="nc bnc" id="L615" title="All 2 branches missed.">                if (result.getDetail() != null) {</span>
-<span class="nc bnc" id="L616" title="All 2 branches missed.">                        while (result.getDetail().getDetailEntries().hasNext()) {</span>
-<span class="nc" id="L617">                                Object next = result.getDetail().getDetailEntries().next();</span>
-<span class="nc bnc" id="L618" title="All 2 branches missed.">                                if (next instanceof DispositionReport) {</span>
+<span class="nc bnc" id="L616" title="All 2 branches missed.">                if (result.getDetail() != null) {</span>
+<span class="nc bnc" id="L617" title="All 2 branches missed.">                        while (result.getDetail().getDetailEntries().hasNext()) {</span>
+<span class="nc" id="L618">                                Object next = result.getDetail().getDetailEntries().next();</span>
+<span class="nc bnc" id="L619" title="All 2 branches missed.">                                if (next instanceof DispositionReport) {</span>
 
-<span class="nc" id="L620">                                        DispositionReport z = (DispositionReport) next;</span>
-<span class="nc" id="L621">                                        r.addAll(MapResult(z.getFaultInfo().getResult()));</span>
+<span class="nc" id="L621">                                        DispositionReport z = (DispositionReport) next;</span>
+<span class="nc" id="L622">                                        r.addAll(MapResult(z.getFaultInfo().getResult()));</span>
 
                                 }
-<span class="nc" id="L624">                                logger.warn(&quot;unable to parse fault detail, type:&quot; + next.getClass().getCanonicalName() + &quot; &quot; + next.toString());</span>
-<span class="nc" id="L625">                        }</span>
+<span class="nc" id="L625">                                logger.warn(&quot;unable to parse fault detail, type:&quot; + next.getClass().getCanonicalName() + &quot; &quot; + next.toString());</span>
+<span class="nc" id="L626">                        }</span>
                 }
-<span class="nc" id="L627">                return r;</span>
+<span class="nc" id="L628">                return r;</span>
         }
-<span class="nc" id="L629">        private static Log logger = LogFactory.getLog(MapUDDIv2Tov3.class);</span>
+<span class="nc" id="L630">        private static Log logger = LogFactory.getLog(MapUDDIv2Tov3.class);</span>
 
         public static FindBinding MapFindBinding(org.uddi.api_v2.FindBinding body) {
-<span class="nc bnc" id="L632" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L633">                        return null;</span>
+<span class="nc bnc" id="L633" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L634">                        return null;</span>
                 }
-<span class="nc" id="L635">                FindBinding r = new FindBinding();</span>
-<span class="nc" id="L636">                r.setServiceKey(body.getServiceKey());</span>
-<span class="nc" id="L637">                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers(), true));</span>
-<span class="nc" id="L638">                r.setMaxRows(body.getMaxRows());</span>
-<span class="nc" id="L639">                r.setTModelBag(MapTModelBag(body.getTModelBag()));</span>
-<span class="nc" id="L640">                return r;</span>
+<span class="nc" id="L636">                FindBinding r = new FindBinding();</span>
+<span class="nc" id="L637">                r.setServiceKey(body.getServiceKey());</span>
+<span class="nc" id="L638">                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers(), true));</span>
+<span class="nc" id="L639">                r.setMaxRows(body.getMaxRows());</span>
+<span class="nc" id="L640">                r.setTModelBag(MapTModelBag(body.getTModelBag()));</span>
+<span class="nc" id="L641">                return r;</span>
 
         }
 
         private static TModelBag MapTModelBag(org.uddi.api_v2.TModelBag tModelBag) {
-<span class="nc bnc" id="L645" title="All 4 branches missed.">                if (tModelBag == null || tModelBag.getTModelKey().isEmpty()) {</span>
-<span class="nc" id="L646">                        return null;</span>
+<span class="nc bnc" id="L646" title="All 4 branches missed.">                if (tModelBag == null || tModelBag.getTModelKey().isEmpty()) {</span>
+<span class="nc" id="L647">                        return null;</span>
                 }
-<span class="nc" id="L648">                TModelBag r = new TModelBag();</span>
-<span class="nc" id="L649">                r.getTModelKey().addAll(tModelBag.getTModelKey());</span>
-<span class="nc" id="L650">                return r;</span>
+<span class="nc" id="L649">                TModelBag r = new TModelBag();</span>
+<span class="nc" id="L650">                r.getTModelKey().addAll(tModelBag.getTModelKey());</span>
+<span class="nc" id="L651">                return r;</span>
         }
 
         private static FindQualifiers MapFindQualifiers(org.uddi.api_v2.FindQualifiers findQualifiers, boolean isBinding) {
-<span class="nc bnc" id="L654" title="All 4 branches missed.">                if (findQualifiers == null || findQualifiers.getFindQualifier().isEmpty()) {</span>
-<span class="nc" id="L655">                        return null;</span>
+<span class="nc bnc" id="L655" title="All 4 branches missed.">                if (findQualifiers == null || findQualifiers.getFindQualifier().isEmpty()) {</span>
+<span class="nc" id="L656">                        return null;</span>
                 }
-<span class="nc" id="L657">                FindQualifiers r = new FindQualifiers();</span>
-<span class="nc bnc" id="L658" title="All 2 branches missed.">                for (int i = 0; i &lt; findQualifiers.getFindQualifier().size(); i++) {</span>
-<span class="nc bnc" id="L659" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:68DE9E80-AD09-469D-8A37-088422BFBC36&quot;)) {</span>
-<span class="nc" id="L660">                                r.getFindQualifier().add(UDDIConstants.TRANSPORT_HTTP);</span>
+<span class="nc" id="L658">                FindQualifiers r = new FindQualifiers();</span>
+<span class="nc bnc" id="L659" title="All 2 branches missed.">                for (int i = 0; i &lt; findQualifiers.getFindQualifier().size(); i++) {</span>
+<span class="nc bnc" id="L660" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:68DE9E80-AD09-469D-8A37-088422BFBC36&quot;)) {</span>
+<span class="nc" id="L661">                                r.getFindQualifier().add(UDDIConstants.TRANSPORT_HTTP);</span>
                         }
-<span class="nc bnc" id="L662" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:93335D49-3EFB-48A0-ACEA-EA102B60DDC6&quot;)) {</span>
-<span class="nc" id="L663">                                r.getFindQualifier().add(UDDIConstants.TRANSPORT_EMAIL);</span>
+<span class="nc bnc" id="L663" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:93335D49-3EFB-48A0-ACEA-EA102B60DDC6&quot;)) {</span>
+<span class="nc" id="L664">                                r.getFindQualifier().add(UDDIConstants.TRANSPORT_EMAIL);</span>
                         }
-<span class="nc bnc" id="L665" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:5FCF5CD0-629A-4C50-8B16-F94E9CF2A674&quot;)) {</span>
-<span class="nc" id="L666">                                r.getFindQualifier().add(UDDIConstants.TRANSPORT_FTP);</span>
+<span class="nc bnc" id="L666" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:5FCF5CD0-629A-4C50-8B16-F94E9CF2A674&quot;)) {</span>
+<span class="nc" id="L667">                                r.getFindQualifier().add(UDDIConstants.TRANSPORT_FTP);</span>
                         }
-<span class="nc bnc" id="L668" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:1A2B00BE-6E2C-42F5-875B-56F32686E0E7&quot;)) {</span>
-<span class="nc" id="L669">                                r.getFindQualifier().add(UDDIConstants.TRANSPORT_FAX);</span>
+<span class="nc bnc" id="L669" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:1A2B00BE-6E2C-42F5-875B-56F32686E0E7&quot;)) {</span>
+<span class="nc" id="L670">                                r.getFindQualifier().add(UDDIConstants.TRANSPORT_FAX);</span>
                         }
-<span class="nc bnc" id="L671" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:38E12427-5536-4260-A6F9-B5B530E63A07&quot;)) {</span>
-<span class="nc" id="L672">                                r.getFindQualifier().add(UDDIConstants.TRANSPORT_POTS);</span>
+<span class="nc bnc" id="L672" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:38E12427-5536-4260-A6F9-B5B530E63A07&quot;)) {</span>
+<span class="nc" id="L673">                                r.getFindQualifier().add(UDDIConstants.TRANSPORT_POTS);</span>
                         }
-<span class="nc bnc" id="L674" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:E59AE320-77A5-11D5-B898-0004AC49CC1E&quot;)) {</span>
-<span class="nc" id="L675">                                r.getFindQualifier().add(UDDIConstants.IS_REPLACED_BY);</span>
+<span class="nc bnc" id="L675" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:E59AE320-77A5-11D5-B898-0004AC49CC1E&quot;)) {</span>
+<span class="nc" id="L676">                                r.getFindQualifier().add(UDDIConstants.IS_REPLACED_BY);</span>
                         }
-<span class="nc bnc" id="L677" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:4064C064-6D14-4F35-8953-9652106476A9&quot;)) {</span>
-<span class="nc" id="L678">                                r.getFindQualifier().add(UDDIConstants.OWNING_BUSINESS);</span>
+<span class="nc bnc" id="L678" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:4064C064-6D14-4F35-8953-9652106476A9&quot;)) {</span>
+<span class="nc" id="L679">                                r.getFindQualifier().add(UDDIConstants.OWNING_BUSINESS);</span>
                         }
-<span class="nc bnc" id="L680" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:807A2C6A-EE22-470D-ADC7-E0424A337C03&quot;)) {</span>
-<span class="nc" id="L681">                                r.getFindQualifier().add(UDDIConstants.RELATIONSHIPS);</span>
+<span class="nc bnc" id="L681" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:807A2C6A-EE22-470D-ADC7-E0424A337C03&quot;)) {</span>
+<span class="nc" id="L682">                                r.getFindQualifier().add(UDDIConstants.RELATIONSHIPS);</span>
                         }
-<span class="nc bnc" id="L683" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:327A56F0-3299-4461-BC23-5CD513E95C55&quot;)) {</span>
-<span class="nc" id="L684">                                r.getFindQualifier().add(&quot;uddi:uddi.org:categorization:nodes&quot;);</span>
+<span class="nc bnc" id="L684" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:327A56F0-3299-4461-BC23-5CD513E95C55&quot;)) {</span>
+<span class="nc" id="L685">                                r.getFindQualifier().add(&quot;uddi:uddi.org:categorization:nodes&quot;);</span>
                         }
-<span class="nc bnc" id="L686" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:A035A07C-F362-44dd-8F95-E2B134BF43B4&quot;)) {</span>
-<span class="nc" id="L687">                                r.getFindQualifier().add(&quot;uddi:uddi.org:categorization:general_keywords&quot;);</span>
+<span class="nc bnc" id="L687" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:A035A07C-F362-44dd-8F95-E2B134BF43B4&quot;)) {</span>
+<span class="nc" id="L688">                                r.getFindQualifier().add(&quot;uddi:uddi.org:categorization:general_keywords&quot;);</span>
                         }
-<span class="nc bnc" id="L689" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4&quot;)) {</span>
-<span class="nc" id="L690">                                r.getFindQualifier().add(&quot;uddi:uddi.org:categorization:types&quot;);</span>
+<span class="nc bnc" id="L690" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4&quot;)) {</span>
+<span class="nc" id="L691">                                r.getFindQualifier().add(&quot;uddi:uddi.org:categorization:types&quot;);</span>
                         }
-<span class="nc bnc" id="L692" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;exactNameMatch&quot;)) {</span>
-<span class="nc" id="L693">                                r.getFindQualifier().add(UDDIConstants.EXACT_MATCH);</span>
+<span class="nc bnc" id="L693" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(&quot;exactNameMatch&quot;)) {</span>
+<span class="nc" id="L694">                                r.getFindQualifier().add(UDDIConstants.EXACT_MATCH);</span>
                         }
-<span class="nc bnc" id="L695" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.EXACT_MATCH)) {</span>
-<span class="nc" id="L696">                                r.getFindQualifier().add(UDDIConstants.EXACT_MATCH);</span>
+<span class="nc bnc" id="L696" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.EXACT_MATCH)) {</span>
+<span class="nc" id="L697">                                r.getFindQualifier().add(UDDIConstants.EXACT_MATCH);</span>
                         }
-<span class="nc bnc" id="L698" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.CASE_SENSITIVE_MATCH)) {</span>
-<span class="nc" id="L699">                                r.getFindQualifier().add(&quot;caseSensitiveMatch&quot;);</span>
+<span class="nc bnc" id="L699" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.CASE_SENSITIVE_MATCH)) {</span>
+<span class="nc" id="L700">                                r.getFindQualifier().add(&quot;caseSensitiveMatch&quot;);</span>
                         }
-<span class="nc bnc" id="L701" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.OR_ALL_KEYS)) {</span>
-<span class="nc" id="L702">                                r.getFindQualifier().add(&quot;orAllKeys&quot;);</span>
+<span class="nc bnc" id="L702" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.OR_ALL_KEYS)) {</span>
+<span class="nc" id="L703">                                r.getFindQualifier().add(&quot;orAllKeys&quot;);</span>
                         }
-<span class="nc bnc" id="L704" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.OR_LIKE_KEYS)) {</span>
-<span class="nc" id="L705">                                r.getFindQualifier().add(&quot;orLikeKeys&quot;);</span>
+<span class="nc bnc" id="L705" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.OR_LIKE_KEYS)) {</span>
+<span class="nc" id="L706">                                r.getFindQualifier().add(&quot;orLikeKeys&quot;);</span>
                         }
-<span class="nc bnc" id="L707" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.AND_ALL_KEYS)) {</span>
-<span class="nc" id="L708">                                r.getFindQualifier().add(&quot;andAllKeys&quot;);</span>
+<span class="nc bnc" id="L708" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.AND_ALL_KEYS)) {</span>
+<span class="nc" id="L709">                                r.getFindQualifier().add(&quot;andAllKeys&quot;);</span>
                         }
-<span class="nc bnc" id="L710" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_DATE_ASC)) {</span>
-<span class="nc" id="L711">                                r.getFindQualifier().add(UDDIConstants.SORT_BY_DATE_ASC);</span>
+<span class="nc bnc" id="L711" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_DATE_ASC)) {</span>
+<span class="nc" id="L712">                                r.getFindQualifier().add(UDDIConstants.SORT_BY_DATE_ASC);</span>
                         }
-<span class="nc bnc" id="L713" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_DATE_DESC)) {</span>
-<span class="nc" id="L714">                                r.getFindQualifier().add(UDDIConstants.SORT_BY_DATE_DESC);</span>
+<span class="nc bnc" id="L714" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_DATE_DESC)) {</span>
+<span class="nc" id="L715">                                r.getFindQualifier().add(UDDIConstants.SORT_BY_DATE_DESC);</span>
                         }
 
-<span class="nc bnc" id="L717" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_NAME_ASC)) {</span>
-<span class="nc" id="L718">                                r.getFindQualifier().add(UDDIConstants.SORT_BY_NAME_ASC);</span>
+<span class="nc bnc" id="L718" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_NAME_ASC)) {</span>
+<span class="nc" id="L719">                                r.getFindQualifier().add(UDDIConstants.SORT_BY_NAME_ASC);</span>
                         }
-<span class="nc bnc" id="L720" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_NAME_DESC)) {</span>
-<span class="nc" id="L721">                                r.getFindQualifier().add(UDDIConstants.SORT_BY_NAME_DESC);</span>
+<span class="nc bnc" id="L721" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SORT_BY_NAME_DESC)) {</span>
+<span class="nc" id="L722">                                r.getFindQualifier().add(UDDIConstants.SORT_BY_NAME_DESC);</span>
                         }
-<span class="nc bnc" id="L723" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SERVICE_SUBSET)) {</span>
-<span class="nc" id="L724">                                r.getFindQualifier().add(UDDIConstants.SERVICE_SUBSET);</span>
+<span class="nc bnc" id="L724" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.SERVICE_SUBSET)) {</span>
+<span class="nc" id="L725">                                r.getFindQualifier().add(UDDIConstants.SERVICE_SUBSET);</span>
                         }
-<span class="nc bnc" id="L726" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.COMBINE_CATEGORY_BAGS)) {</span>
-<span class="nc" id="L727">                                r.getFindQualifier().add(UDDIConstants.COMBINE_CATEGORY_BAGS);</span>
+<span class="nc bnc" id="L727" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.COMBINE_CATEGORY_BAGS)) {</span>
+<span class="nc" id="L728">                                r.getFindQualifier().add(UDDIConstants.COMBINE_CATEGORY_BAGS);</span>
                         }
-<span class="nc bnc" id="L729" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIv2Constants.exactNameMatch)) {</span>
-<span class="nc" id="L730">                                r.getFindQualifier().add(UDDIConstants.EXACT_MATCH);</span>
+<span class="nc bnc" id="L730" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIv2Constants.exactNameMatch)) {</span>
+<span class="nc" id="L731">                                r.getFindQualifier().add(UDDIConstants.EXACT_MATCH);</span>
                         }
-<span class="nc bnc" id="L732" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.APPROXIMATE_MATCH)) {</span>
-<span class="nc" id="L733">                                r.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
+<span class="nc bnc" id="L733" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.APPROXIMATE_MATCH)) {</span>
+<span class="nc" id="L734">                                r.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
                         }
-<span class="nc bnc" id="L735" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.APPROXIMATE_MATCH_TMODEL)) {</span>
-<span class="nc" id="L736">                                r.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
+<span class="nc bnc" id="L736" title="All 2 branches missed.">                        if (findQualifiers.getFindQualifier().get(i).equalsIgnoreCase(UDDIConstants.APPROXIMATE_MATCH_TMODEL)) {</span>
+<span class="nc" id="L737">                                r.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
                         }
                         
                 }
                 //default behavior of v2, caseInsensitive, sortByNameAsc or sortByDateAsc, approximateMatch
-<span class="nc bnc" id="L741" title="All 2 branches missed.">                if (!r.getFindQualifier().contains(UDDIConstants.CASE_INSENSITIVE_MATCH) &amp;&amp;</span>
-<span class="nc bnc" id="L742" title="All 2 branches missed.">                     !r.getFindQualifier().contains(UDDIConstants.CASE_INSENSITIVE_MATCH_TMODEL) &amp;&amp;</span>
-<span class="nc bnc" id="L743" title="All 2 branches missed.">                     !r.getFindQualifier().contains(UDDIConstants.CASE_SENSITIVE_MATCH) &amp;&amp; </span>
-<span class="nc bnc" id="L744" title="All 4 branches missed.">                     !r.getFindQualifier().contains(UDDIConstants.EXACT_MATCH) &amp;&amp;</span>
+<span class="nc bnc" id="L742" title="All 2 branches missed.">                if (!r.getFindQualifier().contains(UDDIConstants.CASE_INSENSITIVE_MATCH) &amp;&amp;</span>
+<span class="nc bnc" id="L743" title="All 2 branches missed.">                     !r.getFindQualifier().contains(UDDIConstants.CASE_INSENSITIVE_MATCH_TMODEL) &amp;&amp;</span>
+<span class="nc bnc" id="L744" title="All 2 branches missed.">                     !r.getFindQualifier().contains(UDDIConstants.CASE_SENSITIVE_MATCH) &amp;&amp; </span>
+<span class="nc bnc" id="L745" title="All 4 branches missed.">                     !r.getFindQualifier().contains(UDDIConstants.EXACT_MATCH) &amp;&amp;</span>
                      !isBinding)
                         
-<span class="nc" id="L747">                     r.getFindQualifier().add(UDDIConstants.CASE_INSENSITIVE_MATCH);</span>
+<span class="nc" id="L748">                     r.getFindQualifier().add(UDDIConstants.CASE_INSENSITIVE_MATCH);</span>
                 
-<span class="nc bnc" id="L749" title="All 2 branches missed.">                if (!r.getFindQualifier().contains(UDDIConstants.APPROXIMATE_MATCH) &amp;&amp;</span>
-<span class="nc bnc" id="L750" title="All 2 branches missed.">                     !r.getFindQualifier().contains(UDDIConstants.APPROXIMATE_MATCH_TMODEL) &amp;&amp;</span>
-<span class="nc bnc" id="L751" title="All 4 branches missed.">                     !r.getFindQualifier().contains(UDDIConstants.EXACT_MATCH) &amp;&amp;</span>
+<span class="nc bnc" id="L750" title="All 2 branches missed.">                if (!r.getFindQualifier().contains(UDDIConstants.APPROXIMATE_MATCH) &amp;&amp;</span>
+<span class="nc bnc" id="L751" title="All 2 branches missed.">                     !r.getFindQualifier().contains(UDDIConstants.APPROXIMATE_MATCH_TMODEL) &amp;&amp;</span>
+<span class="nc bnc" id="L752" title="All 4 branches missed.">                     !r.getFindQualifier().contains(UDDIConstants.EXACT_MATCH) &amp;&amp;</span>
                      !isBinding)
-<span class="nc" id="L753">                     r.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
+<span class="nc" id="L754">                     r.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
                 //dedup
-<span class="nc" id="L755">                HashSet&lt;String&gt; s = new HashSet&lt;String&gt;(r.getFindQualifier());</span>
-<span class="nc" id="L756">                r.getFindQualifier().clear();</span>
-<span class="nc" id="L757">                r.getFindQualifier().addAll(s);</span>
-<span class="nc" id="L758">                return r;</span>
+<span class="nc" id="L756">                HashSet&lt;String&gt; s = new HashSet&lt;String&gt;(r.getFindQualifier());</span>
+<span class="nc" id="L757">                r.getFindQualifier().clear();</span>
+<span class="nc" id="L758">                r.getFindQualifier().addAll(s);</span>
+<span class="nc" id="L759">                return r;</span>
         }
 
         public static FindBusiness MapFindBusiness(org.uddi.api_v2.FindBusiness body) {
-<span class="nc bnc" id="L762" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L763">                        return null;</span>
+<span class="nc bnc" id="L763" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L764">                        return null;</span>
                 }
-<span class="nc" id="L765">                FindBusiness r = new FindBusiness();</span>
-<span class="nc" id="L766">                r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));</span>
-<span class="nc" id="L767">                r.setDiscoveryURLs(MapDiscoveryURLs(body.getDiscoveryURLs()));</span>
-<span class="nc" id="L768">                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers(), false));</span>
-<span class="nc" id="L769">                r.setTModelBag(MapTModelBag(body.getTModelBag()));</span>
-<span class="nc" id="L770">                r.setMaxRows(body.getMaxRows());</span>
-<span class="nc" id="L771">                r.getName().addAll(MapName(body.getName()));</span>
-<span class="nc bnc" id="L772" title="All 2 branches missed.">                if (ContainsWildCard(r.getName())) {</span>
-<span class="nc" id="L773">                        r.setFindQualifiers(AddApproximateMatch(r.getFindQualifiers()));</span>
+<span class="nc" id="L766">                FindBusiness r = new FindBusiness();</span>
+<span class="nc" id="L767">                r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));</span>
+<span class="nc" id="L768">                r.setDiscoveryURLs(MapDiscoveryURLs(body.getDiscoveryURLs()));</span>
+<span class="nc" id="L769">                r.setIdentifierBag(MapIdentBag(body.getIdentifierBag()));</span>
+<span class="nc" id="L770">                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers(), false));</span>
+<span class="nc" id="L771">                r.setTModelBag(MapTModelBag(body.getTModelBag()));</span>
+<span class="nc" id="L772">                r.setMaxRows(body.getMaxRows());</span>
+<span class="nc" id="L773">                r.getName().addAll(MapName(body.getName()));</span>
+<span class="nc bnc" id="L774" title="All 2 branches missed.">                if (ContainsWildCard(r.getName())) {</span>
+<span class="nc" id="L775">                        r.setFindQualifiers(AddApproximateMatch(r.getFindQualifiers()));</span>
                 }
-<span class="nc" id="L775">                return r;</span>
+<span class="nc" id="L777">                return r;</span>
         }
 
         private static org.uddi.api_v3.FindQualifiers AddApproximateMatch(org.uddi.api_v3.FindQualifiers findQualifiers) {
-<span class="nc bnc" id="L779" title="All 2 branches missed.">                if (findQualifiers == null) {</span>
-<span class="nc" id="L780">                        findQualifiers = new org.uddi.api_v3.FindQualifiers();</span>
+<span class="nc bnc" id="L781" title="All 2 branches missed.">                if (findQualifiers == null) {</span>
+<span class="nc" id="L782">                        findQualifiers = new org.uddi.api_v3.FindQualifiers();</span>
                 }
-<span class="nc" id="L782">                Set&lt;String&gt; s = new HashSet&lt;String&gt;(findQualifiers.getFindQualifier());</span>
-<span class="nc" id="L783">                s.add(UDDIConstants.APPROXIMATE_MATCH);</span>
-<span class="nc" id="L784">                findQualifiers.getFindQualifier().clear();</span>
-<span class="nc" id="L785">                findQualifiers.getFindQualifier().addAll(s);</span>
-<span class="nc" id="L786">                return findQualifiers;</span>
+<span class="nc" id="L784">                Set&lt;String&gt; s = new HashSet&lt;String&gt;(findQualifiers.getFindQualifier());</span>
+<span class="nc" id="L785">                s.add(UDDIConstants.APPROXIMATE_MATCH);</span>
+<span class="nc" id="L786">                findQualifiers.getFindQualifier().clear();</span>
+<span class="nc" id="L787">                findQualifiers.getFindQualifier().addAll(s);</span>
+<span class="nc" id="L788">                return findQualifiers;</span>
         }
 
         private static boolean ContainsWildCard(List&lt;org.uddi.api_v3.Name&gt; name) {
-<span class="nc bnc" id="L790" title="All 2 branches missed.">                for (int i = 0; i &lt; name.size(); i++) {</span>
-<span class="nc bnc" id="L791" title="All 4 branches missed.">                        if (name.get(i).getValue() != null &amp;&amp; name.get(i).getValue().contains(UDDIConstants.WILDCARD)) {</span>
-<span class="nc" id="L792">                                return true;</span>
+<span class="nc bnc" id="L792" title="All 2 branches missed.">                for (int i = 0; i &lt; name.size(); i++) {</span>
+<span class="nc bnc" id="L793" title="All 4 branches missed.">                        if (name.get(i).getValue() != null &amp;&amp; name.get(i).getValue().contains(UDDIConstants.WILDCARD)) {</span>
+<span class="nc" id="L794">                                return true;</span>
                         }
-<span class="nc bnc" id="L794" title="All 4 branches missed.">                        if (name.get(i).getValue() != null &amp;&amp; name.get(i).getValue().contains(UDDIConstants.WILDCARD_CHAR)) {</span>
-<span class="nc" id="L795">                                return true;</span>
+<span class="nc bnc" id="L796" title="All 4 branches missed.">                        if (name.get(i).getValue() != null &amp;&amp; name.get(i).getValue().contains(UDDIConstants.WILDCARD_CHAR)) {</span>
+<span class="nc" id="L797">                                return true;</span>
                         }
-<span class="nc bnc" id="L797" title="All 2 branches missed.">                        if (name.get(i).getLang() != null</span>
-<span class="nc bnc" id="L798" title="All 2 branches missed.">                             &amp;&amp; name.get(i).getLang().contains(UDDIConstants.WILDCARD)) {</span>
-<span class="nc" id="L799">                                return true;</span>
+<span class="nc bnc" id="L799" title="All 2 branches missed.">                        if (name.get(i).getLang() != null</span>
+<span class="nc bnc" id="L800" title="All 2 branches missed.">                             &amp;&amp; name.get(i).getLang().contains(UDDIConstants.WILDCARD)) {</span>
+<span class="nc" id="L801">                                return true;</span>
                         }
-<span class="nc bnc" id="L801" title="All 2 branches missed.">                        if (name.get(i).getLang() != null</span>
-<span class="nc bnc" id="L802" title="All 2 branches missed.">                             &amp;&amp; name.get(i).getLang().contains(UDDIConstants.WILDCARD_CHAR)) {</span>
-<span class="nc" id="L803">                                return true;</span>
+<span class="nc bnc" id="L803" title="All 2 branches missed.">                        if (name.get(i).getLang() != null</span>
+<span class="nc bnc" id="L804" title="All 2 branches missed.">                             &amp;&amp; name.get(i).getLang().contains(UDDIConstants.WILDCARD_CHAR)) {</span>
+<span class="nc" id="L805">                                return true;</span>
                         }
                 }
-<span class="nc" id="L806">                return false;</span>
+<span class="nc" id="L808">                return false;</span>
         }
 
         private static DiscoveryURLs MapDiscoveryURLs(org.uddi.api_v2.DiscoveryURLs discoveryURLs) {
-<span class="nc bnc" id="L810" title="All 2 branches missed.">                if (discoveryURLs == null) {</span>
-<span class="nc" id="L811">                        return null;</span>
+<span class="nc bnc" id="L812" title="All 2 branches missed.">                if (discoveryURLs == null) {</span>
+<span class="nc" id="L813">                        return null;</span>
                 }
-<span class="nc" id="L813">                DiscoveryURLs r = new DiscoveryURLs();</span>
-<span class="nc bnc" id="L814" title="All 2 branches missed.">                for (int i = 0; i &lt; discoveryURLs.getDiscoveryURL().size(); i++) {</span>
-<span class="nc" id="L815">                        DiscoveryURL x = new DiscoveryURL(discoveryURLs.getDiscoveryURL().get(i).getUseType(), discoveryURLs.getDiscoveryURL().get(i).getValue());</span>
-<span class="nc" id="L816">                        r.getDiscoveryURL().add(x);</span>
+<span class="nc" id="L815">                DiscoveryURLs r = new DiscoveryURLs();</span>
+<span class="nc bnc" id="L816" title="All 2 branches missed.">                for (int i = 0; i &lt; discoveryURLs.getDiscoveryURL().size(); i++) {</span>
+<span class="nc" id="L817">                        DiscoveryURL x = new DiscoveryURL(discoveryURLs.getDiscoveryURL().get(i).getUseType(), discoveryURLs.getDiscoveryURL().get(i).getValue());</span>
+<span class="nc" id="L818">                        r.getDiscoveryURL().add(x);</span>
                 }
-<span class="nc" id="L818">                return r;</span>
+<span class="nc" id="L820">                return r;</span>
         }
 
         public static FindRelatedBusinesses MapFindRelatedBusiness(org.uddi.api_v2.FindRelatedBusinesses body) {
-<span class="nc bnc" id="L822" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L823">                        return null;</span>
+<span class="nc bnc" id="L824" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L825">                        return null;</span>
                 }
-<span class="nc" id="L825">                FindRelatedBusinesses r = new FindRelatedBusinesses();</span>
-<span class="nc" id="L826">                r.setBusinessKey(body.getBusinessKey());</span>
-<span class="nc" id="L827">                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers(),false));</span>
-<span class="nc bnc" id="L828" title="All 2 branches missed.">                if (body.getKeyedReference() != null) {</span>
-<span class="nc" id="L829">                        r.setKeyedReference(new KeyedReference(body.getKeyedReference().getTModelKey(), body.getKeyedReference().getKeyName(), body.getKeyedReference().getKeyValue()));</span>
+<span class="nc" id="L827">                FindRelatedBusinesses r = new FindRelatedBusinesses();</span>
+<span class="nc" id="L828">                r.setBusinessKey(body.getBusinessKey());</span>
+<span class="nc" id="L829">                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers(),false));</span>
+<span class="nc bnc" id="L830" title="All 2 branches missed.">                if (body.getKeyedReference() != null) {</span>
+<span class="nc" id="L831">                        r.setKeyedReference(new KeyedReference(body.getKeyedReference().getTModelKey(), body.getKeyedReference().getKeyName(), body.getKeyedReference().getKeyValue()));</span>
                 }
-<span class="nc" id="L831">                r.setMaxRows(body.getMaxRows());</span>
-<span class="nc" id="L832">                return r;</span>
+<span class="nc" id="L833">                r.setMaxRows(body.getMaxRows());</span>
+<span class="nc" id="L834">                return r;</span>
         }
 
         public static FindService MapFindService(org.uddi.api_v2.FindService body) {
-<span class="nc bnc" id="L836" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L837">                        return null;</span>
+<span class="nc bnc" id="L838" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L839">                        return null;</span>
                 }
-<span class="nc" id="L839">                FindService r = new FindService();</span>
-<span class="nc" id="L840">                r.setBusinessKey(body.getBusinessKey());</span>
-<span class="nc" id="L841">                r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));</span>
-<span class="nc" id="L842">                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers(),false));</span>
-<span class="nc" id="L843">                r.setMaxRows(body.getMaxRows());</span>
-<span class="nc" id="L844">                r.setTModelBag(MapTModelBag(body.getTModelBag()));</span>
-<span class="nc" id="L845">                r.getName().addAll(MapName(body.getName()));</span>
-<span class="nc bnc" id="L846" title="All 2 branches missed.">                if (ContainsWildCard(r.getName())) {</span>
-<span class="nc" id="L847">                        r.setFindQualifiers(AddApproximateMatch(r.getFindQualifiers()));</span>
+<span class="nc" id="L841">                FindService r = new FindService();</span>
+<span class="nc" id="L842">                r.setBusinessKey(body.getBusinessKey());</span>
+<span class="nc" id="L843">                r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));</span>
+<span class="nc" id="L844">                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers(),false));</span>
+<span class="nc" id="L845">                r.setMaxRows(body.getMaxRows());</span>
+<span class="nc" id="L846">                r.setTModelBag(MapTModelBag(body.getTModelBag()));</span>
+<span class="nc" id="L847">                r.getName().addAll(MapName(body.getName()));</span>
+<span class="nc bnc" id="L848" title="All 2 branches missed.">                if (ContainsWildCard(r.getName())) {</span>
+<span class="nc" id="L849">                        r.setFindQualifiers(AddApproximateMatch(r.getFindQualifiers()));</span>
                 }
-<span class="nc" id="L849">                return r;</span>
+<span class="nc" id="L851">                return r;</span>
 
         }
 
         public static FindTModel MapFindTModel(org.uddi.api_v2.FindTModel body) {
-<span class="nc bnc" id="L854" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L855">                        return null;</span>
+<span class="nc bnc" id="L856" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L857">                        return null;</span>
                 }
-<span class="nc" id="L857">                FindTModel r = new FindTModel();</span>
-<span class="nc" id="L858">                r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));</span>
-<span class="nc" id="L859">                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers(),false));</span>
-<span class="nc" id="L860">                r.setMaxRows(body.getMaxRows());</span>
-<span class="nc bnc" id="L861" title="All 2 branches missed.">                if (body.getName() != null) {</span>
-<span class="nc" id="L862">                        r.setName(new Name(body.getName().getValue(), body.getName().getLang()));</span>
+<span class="nc" id="L859">                FindTModel r = new FindTModel();</span>
+<span class="nc" id="L860">                r.setCategoryBag(MapCategoryBag(body.getCategoryBag()));</span>
+<span class="nc" id="L861">                r.setFindQualifiers(MapFindQualifiers(body.getFindQualifiers(),false));</span>
+<span class="nc" id="L862">                r.setMaxRows(body.getMaxRows());</span>
+<span class="nc bnc" id="L863" title="All 2 branches missed.">                if (body.getName() != null) {</span>
+<span class="nc" id="L864">                        r.setName(new Name(body.getName().getValue(), body.getName().getLang()));</span>
                 }
-<span class="nc bnc" id="L864" title="All 2 branches missed.">                if (ContainsWildCardSingle(r.getName())) {</span>
-<span class="nc" id="L865">                        r.setFindQualifiers(AddApproximateMatch(r.getFindQualifiers()));</span>
+<span class="nc bnc" id="L866" title="All 2 branches missed.">                if (ContainsWildCardSingle(r.getName())) {</span>
+<span class="nc" id="L867">                        r.setFindQualifiers(AddApproximateMatch(r.getFindQualifiers()));</span>
                 }
-<span class="nc" id="L867">                return r;</span>
+<span class="nc" id="L869">                return r;</span>
         }
 
         public static GetBusinessDetail MapGetBusinessDetailExt(GetBusinessDetailExt body) {
-<span class="nc bnc" id="L871" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L872">                        return null;</span>
+<span class="nc bnc" id="L873" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L874">                        return null;</span>
                 }
-<span class="nc" id="L874">                GetBusinessDetail r = new GetBusinessDetail();</span>
-<span class="nc" id="L875">                r.getBusinessKey().addAll(body.getBusinessKey());</span>
-<span class="nc" id="L876">                return r;</span>
+<span class="nc" id="L876">                GetBusinessDetail r = new GetBusinessDetail();</span>
+<span class="nc" id="L877">                r.getBusinessKey().addAll(body.getBusinessKey());</span>
+<span class="nc" id="L878">                return r;</span>
         }
 
         public static GetServiceDetail MapGetServiceDetail(org.uddi.api_v2.GetServiceDetail body) {
-<span class="nc bnc" id="L880" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L881">                        return null;</span>
+<span class="nc bnc" id="L882" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L883">                        return null;</span>
                 }
-<span class="nc" id="L883">                GetServiceDetail r = new GetServiceDetail();</span>
-<span class="nc" id="L884">                r.getServiceKey().addAll(body.getServiceKey());</span>
-<span class="nc" id="L885">                return r;</span>
+<span class="nc" id="L885">                GetServiceDetail r = new GetServiceDetail();</span>
+<span class="nc" id="L886">                r.getServiceKey().addAll(body.getServiceKey());</span>
+<span class="nc" id="L887">                return r;</span>
         }
 
         public static org.uddi.api_v3.GetTModelDetail MapGetTModelDetail(GetTModelDetail body) {
-<span class="nc bnc" id="L889" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L890">                        return null;</span>
+<span class="nc bnc" id="L891" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L892">                        return null;</span>
                 }
-<span class="nc" id="L892">                org.uddi.api_v3.GetTModelDetail r = new org.uddi.api_v3.GetTModelDetail();</span>
-<span class="nc" id="L893">                r.getTModelKey().addAll(body.getTModelKey());</span>
-<span class="nc" id="L894">                return r;</span>
+<span class="nc" id="L894">                org.uddi.api_v3.GetTModelDetail r = new org.uddi.api_v3.GetTModelDetail();</span>
+<span class="nc" id="L895">                r.getTModelKey().addAll(body.getTModelKey());</span>
+<span class="nc" id="L896">                return r;</span>
         }
 
         public static GetBindingDetail MapGetBindingDetail(org.uddi.api_v2.GetBindingDetail body) {
-<span class="nc bnc" id="L898" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L899">                        return null;</span>
+<span class="nc bnc" id="L900" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L901">                        return null;</span>
                 }
-<span class="nc" id="L901">                GetBindingDetail r = new GetBindingDetail();</span>
-<span class="nc" id="L902">                r.getBindingKey().addAll(body.getBindingKey());</span>
-<span class="nc" id="L903">                return r;</span>
+<span class="nc" id="L903">                GetBindingDetail r = new GetBindingDetail();</span>
+<span class="nc" id="L904">                r.getBindingKey().addAll(body.getBindingKey());</span>
+<span class="nc" id="L905">                return r;</span>
         }
 
         public static GetBusinessDetail MapGetBusinessDetail(org.uddi.api_v2.GetBusinessDetail body) {
-<span class="nc bnc" id="L907" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L908">                        return null;</span>
+<span class="nc bnc" id="L909" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L910">                        return null;</span>
                 }
-<span class="nc" id="L910">                GetBusinessDetail r = new GetBusinessDetail();</span>
-<span class="nc" id="L911">                r.getBusinessKey().addAll(body.getBusinessKey());</span>
-<span class="nc" id="L912">                return r;</span>
+<span class="nc" id="L912">                GetBusinessDetail r = new GetBusinessDetail();</span>
+<span class="nc" id="L913">                r.getBusinessKey().addAll(body.getBusinessKey());</span>
+<span class="nc" id="L914">                return r;</span>
         }
 
         private static List&lt;SharedRelationships&gt; MapSharedRelationship(List&lt;org.uddi.api_v2.SharedRelationships&gt; sharedRelationships) {
-<span class="nc bnc" id="L916" title="All 2 branches missed.">                if (sharedRelationships == null) {</span>
-<span class="nc" id="L917">                        return null;</span>
+<span class="nc bnc" id="L918" title="All 2 branches missed.">                if (sharedRelationships == null) {</span>
+<span class="nc" id="L919">                        return null;</span>
                 }
-<span class="nc" id="L919">                List&lt;SharedRelationships&gt; r = new ArrayList&lt;SharedRelationships&gt;();</span>
-<span class="nc bnc" id="L920" title="All 2 branches missed.">                for (int i = 0; i &lt; sharedRelationships.size(); i++) {</span>
-<span class="nc" id="L921">                        SharedRelationships x = new SharedRelationships();</span>
+<span class="nc" id="L921">                List&lt;SharedRelationships&gt; r = new ArrayList&lt;SharedRelationships&gt;();</span>
+<span class="nc bnc" id="L922" title="All 2 branches missed.">                for (int i = 0; i &lt; sharedRelationships.size(); i++) {</span>
+<span class="nc" id="L923">                        SharedRelationships x = new SharedRelationships();</span>
 
-<span class="nc bnc" id="L923" title="All 3 branches missed.">                        switch (sharedRelationships.get(i).getDirection()) {</span>
+<span class="nc bnc" id="L925" title="All 3 branches missed.">                        switch (sharedRelationships.get(i).getDirection()) {</span>
                                 case FROM_KEY:
-<span class="nc" id="L925">                                        x.setDirection(Direction.FROM_KEY);</span>
-<span class="nc" id="L926">                                        break;</span>
+<span class="nc" id="L927">                                        x.setDirection(Direction.FROM_KEY);</span>
+<span class="nc" id="L928">                                        break;</span>
                                 case TO_KEY:
-<span class="nc" id="L928">                                        x.setDirection(Direction.TO_KEY);</span>
+<span class="nc" id="L930">                                        x.setDirection(Direction.TO_KEY);</span>
                                         break;
                         }
-<span class="nc" id="L931">                        x.getKeyedReference().addAll(MapKeyedReference(sharedRelationships.get(i).getKeyedReference()));</span>
-<span class="nc" id="L932">                        r.add(x);</span>
+<span class="nc" id="L933">                        x.getKeyedReference().addAll(MapKeyedReference(sharedRelationships.get(i).getKeyedReference()));</span>
+<span class="nc" id="L934">                        r.add(x);</span>
                 }
-<span class="nc" id="L934">                return r;</span>
+<span class="nc" id="L936">                return r;</span>
         }
 
         public static DeleteBinding MapDeleteBinding(org.uddi.api_v2.DeleteBinding body) {
-<span class="nc bnc" id="L938" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L939">                        return null;</span>
+<span class="nc bnc" id="L940" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L941">                        return null;</span>
                 }
-<span class="nc" id="L941">                DeleteBinding r = new DeleteBinding();</span>
-<span class="nc" id="L942">                r.setAuthInfo(body.getAuthInfo());</span>
-<span class="nc" id="L943">                r.getBindingKey().addAll(body.getBindingKey());</span>
-<span class="nc" id="L944">                return r;</span>
+<span class="nc" id="L943">                DeleteBinding r = new DeleteBinding();</span>
+<span class="nc" id="L944">                r.setAuthInfo(body.getAuthInfo());</span>
+<span class="nc" id="L945">                r.getBindingKey().addAll(body.getBindingKey());</span>
+<span class="nc" id="L946">                return r;</span>
         }
 
         public static DeleteBusiness MapDeleteBusiness(org.uddi.api_v2.DeleteBusiness body) {
-<span class="nc bnc" id="L948" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L949">                        return null;</span>
+<span class="nc bnc" id="L950" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L951">                        return null;</span>
                 }
-<span class="nc" id="L951">                DeleteBusiness r = new DeleteBusiness();</span>
-<span class="nc" id="L952">                r.setAuthInfo(body.getAuthInfo());</span>
-<span class="nc" id="L953">                r.getBusinessKey().addAll(body.getBusinessKey());</span>
-<span class="nc" id="L954">                return r;</span>
+<span class="nc" id="L953">                DeleteBusiness r = new DeleteBusiness();</span>
+<span class="nc" id="L954">                r.setAuthInfo(body.getAuthInfo());</span>
+<span class="nc" id="L955">                r.getBusinessKey().addAll(body.getBusinessKey());</span>
+<span class="nc" id="L956">                return r;</span>
         }
 
         public static DeletePublisherAssertions MapDeletePublisherAssertion(org.uddi.api_v2.DeletePublisherAssertions body) {
-<span class="nc bnc" id="L958" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L959">                        return null;</span>
+<span class="nc bnc" id="L960" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L961">                        return null;</span>
                 }
-<span class="nc" id="L961">                DeletePublisherAssertions r = new DeletePublisherAssertions();</span>
-<span class="nc" id="L962">                r.setAuthInfo(body.getAuthInfo());</span>
-<span class="nc" id="L963">                r.getPublisherAssertion().addAll(MapListPublisherAssertion(body.getPublisherAssertion()));</span>
-<span class="nc" id="L964">                return r;</span>
+<span class="nc" id="L963">                DeletePublisherAssertions r = new DeletePublisherAssertions();</span>
+<span class="nc" id="L964">                r.setAuthInfo(body.getAuthInfo());</span>
+<span class="nc" id="L965">                r.getPublisherAssertion().addAll(MapListPublisherAssertion(body.getPublisherAssertion()));</span>
+<span class="nc" id="L966">                return r;</span>
         }
 
         public static DeleteService MapDeleteService(org.uddi.api_v2.DeleteService body) {
-<span class="nc bnc" id="L968" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L969">                        return null;</span>
+<span class="nc bnc" id="L970" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L971">                        return null;</span>
                 }
-<span class="nc" id="L971">                DeleteService r = new DeleteService();</span>
-<span class="nc" id="L972">                r.setAuthInfo(body.getAuthInfo());</span>
-<span class="nc" id="L973">                r.getServiceKey().addAll(body.getServiceKey());</span>
-<span class="nc" id="L974">                return r;</span>
+<span class="nc" id="L973">                DeleteService r = new DeleteService();</span>
+<span class="nc" id="L974">                r.setAuthInfo(body.getAuthInfo());</span>
+<span class="nc" id="L975">                r.getServiceKey().addAll(body.getServiceKey());</span>
+<span class="nc" id="L976">                return r;</span>
         }
 
         public static DeleteTModel MapDeleteTModel(org.uddi.api_v2.DeleteTModel body) {
-<span class="nc bnc" id="L978" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L979">                        return null;</span>
+<span class="nc bnc" id="L980" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L981">                        return null;</span>
                 }
-<span class="nc" id="L981">                DeleteTModel r = new DeleteTModel();</span>
-<span class="nc" id="L982">                r.setAuthInfo(body.getAuthInfo());</span>
-<span class="nc" id="L983">                r.getTModelKey().addAll(body.getTModelKey());</span>
-<span class="nc" id="L984">                return r;</span>
+<span class="nc" id="L983">                DeleteTModel r = new DeleteTModel();</span>
+<span class="nc" id="L984">                r.setAuthInfo(body.getAuthInfo());</span>
+<span class="nc" id="L985">                r.getTModelKey().addAll(body.getTModelKey());</span>
+<span class="nc" id="L986">                return r;</span>
         }
 
         public static SaveTModel MapSaveTModel(org.uddi.api_v2.SaveTModel body) {
-<span class="nc bnc" id="L988" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L989">                        return null;</span>
+<span class="nc bnc" id="L990" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L991">                        return null;</span>
                 }
-<span class="nc" id="L991">                SaveTModel r = new SaveTModel();</span>
-<span class="nc" id="L992">                r.setAuthInfo(body.getAuthInfo());</span>
-<span class="nc bnc" id="L993" title="All 2 branches missed.">                for (int i = 0; i &lt; body.getTModel().size(); i++) {</span>
-<span class="nc" id="L994">                        r.getTModel().add(MapTModel(body.getTModel().get(i)));</span>
+<span class="nc" id="L993">                SaveTModel r = new SaveTModel();</span>
+<span class="nc" id="L994">                r.setAuthInfo(body.getAuthInfo());</span>
+<span class="nc bnc" id="L995" title="All 2 branches missed.">                for (int i = 0; i &lt; body.getTModel().size(); i++) {</span>
+<span class="nc" id="L996">                        r.getTModel().add(MapTModel(body.getTModel().get(i)));</span>
                 }
-<span class="nc" id="L996">                return r;</span>
+<span class="nc" id="L998">                return r;</span>
         }
 
         public static SaveService MapSaveService(org.uddi.api_v2.SaveService body) {
-<span class="nc bnc" id="L1000" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L1001">                        return null;</span>
+<span class="nc bnc" id="L1002" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L1003">                        return null;</span>
                 }
-<span class="nc" id="L1003">                SaveService r = new SaveService();</span>
-<span class="nc" id="L1004">                r.setAuthInfo(body.getAuthInfo());</span>
-<span class="nc bnc" id="L1005" title="All 2 branches missed.">                for (int i = 0; i &lt; body.getBusinessService().size(); i++) {</span>
-<span class="nc" id="L1006">                        r.getBusinessService().add(MapService(body.getBusinessService().get(i)));</span>
+<span class="nc" id="L1005">                SaveService r = new SaveService();</span>
+<span class="nc" id="L1006">                r.setAuthInfo(body.getAuthInfo());</span>
+<span class="nc bnc" id="L1007" title="All 2 branches missed.">                for (int i = 0; i &lt; body.getBusinessService().size(); i++) {</span>
+<span class="nc" id="L1008">                        r.getBusinessService().add(MapService(body.getBusinessService().get(i)));</span>
                 }
-<span class="nc" id="L1008">                return r;</span>
+<span class="nc" id="L1010">                return r;</span>
         }
 
         public static SaveBusiness MapSaveBusiness(org.uddi.api_v2.SaveBusiness body) {
-<span class="nc bnc" id="L1012" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L1013">                        return null;</span>
+<span class="nc bnc" id="L1014" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L1015">                        return null;</span>
                 }
-<span class="nc" id="L1015">                SaveBusiness r = new SaveBusiness();</span>
-<span class="nc" id="L1016">                r.setAuthInfo(body.getAuthInfo());</span>
-<span class="nc bnc" id="L1017" title="All 2 branches missed.">                for (int i = 0; i &lt; body.getBusinessEntity().size(); i++) {</span>
-<span class="nc" id="L1018">                        r.getBusinessEntity().add(MapBusiness(body.getBusinessEntity().get(i)));</span>
+<span class="nc" id="L1017">                SaveBusiness r = new SaveBusiness();</span>
+<span class="nc" id="L1018">                r.setAuthInfo(body.getAuthInfo());</span>
+<span class="nc bnc" id="L1019" title="All 2 branches missed.">                for (int i = 0; i &lt; body.getBusinessEntity().size(); i++) {</span>
+<span class="nc" id="L1020">                        r.getBusinessEntity().add(MapBusiness(body.getBusinessEntity().get(i)));</span>
                 }
-<span class="nc" id="L1020">                return r;</span>
+<span class="nc" id="L1022">                return r;</span>
         }
 
         public static GetRegisteredInfo MapGetRegisteredInfo(org.uddi.api_v2.GetRegisteredInfo body) {
-<span class="nc bnc" id="L1024" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L1025">                        return null;</span>
+<span class="nc bnc" id="L1026" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L1027">                        return null;</span>
                 }
-<span class="nc" id="L1027">                GetRegisteredInfo r = new GetRegisteredInfo();</span>
-<span class="nc" id="L1028">                r.setAuthInfo(body.getAuthInfo());</span>
-<span class="nc" id="L1029">                r.setInfoSelection(InfoSelection.ALL);</span>
-<span class="nc" id="L1030">                return r;</span>
+<span class="nc" id="L1029">                GetRegisteredInfo r = new GetRegisteredInfo();</span>
+<span class="nc" id="L1030">                r.setAuthInfo(body.getAuthInfo());</span>
+<span class="nc" id="L1031">                r.setInfoSelection(InfoSelection.ALL);</span>
+<span class="nc" id="L1032">                return r;</span>
         }
 
         public static SaveBinding MapSaveBinding(org.uddi.api_v2.SaveBinding body) {
-<span class="nc bnc" id="L1034" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L1035">                        return null;</span>
+<span class="nc bnc" id="L1036" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L1037">                        return null;</span>
                 }
-<span class="nc" id="L1037">                SaveBinding r = new SaveBinding();</span>
-<span class="nc" id="L1038">                r.setAuthInfo(body.getAuthInfo());</span>
-<span class="nc bnc" id="L1039" title="All 2 branches missed.">                for (int i = 0; i &lt; body.getBindingTemplate().size(); i++) {</span>
-<span class="nc" id="L1040">                        r.getBindingTemplate().add(MapBinding(body.getBindingTemplate().get(i)));</span>
+<span class="nc" id="L1039">                SaveBinding r = new SaveBinding();</span>
+<span class="nc" id="L1040">                r.setAuthInfo(body.getAuthInfo());</span>
+<span class="nc bnc" id="L1041" title="All 2 branches missed.">                for (int i = 0; i &lt; body.getBindingTemplate().size(); i++) {</span>
+<span class="nc" id="L1042">                        r.getBindingTemplate().add(MapBinding(body.getBindingTemplate().get(i)));</span>
                 }
-<span class="nc" id="L1042">                return r;</span>
+<span class="nc" id="L1044">                return r;</span>
         }
 
         public static List&lt;PublisherAssertion&gt; MapSetPublisherAssertions(SetPublisherAssertions body) {
-<span class="nc bnc" id="L1046" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L1047">                        return null;</span>
+<span class="nc bnc" id="L1048" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L1049">                        return null;</span>
                 }
-<span class="nc" id="L1049">                return MapListPublisherAssertion(body.getPublisherAssertion());</span>
+<span class="nc" id="L1051">                return MapListPublisherAssertion(body.getPublisherAssertion());</span>
         }
 
         private static boolean ContainsWildCardSingle(Name name) {
-<span class="nc bnc" id="L1053" title="All 2 branches missed.">                if (name != null) {</span>
-<span class="nc bnc" id="L1054" title="All 4 branches missed.">                        if (name.getValue() != null &amp;&amp; name.getValue().contains(UDDIConstants.WILDCARD)) {</span>
-<span class="nc" id="L1055">                                return true;</span>
+<span class="nc bnc" id="L1055" title="All 2 branches missed.">                if (name != null) {</span>
+<span class="nc bnc" id="L1056" title="All 4 branches missed.">                        if (name.getValue() != null &amp;&amp; name.getValue().contains(UDDIConstants.WILDCARD)) {</span>
+<span class="nc" id="L1057">                                return true;</span>
                         }
-<span class="nc bnc" id="L1057" title="All 4 branches missed.">                        if (name.getValue() != null &amp;&amp; name.getValue().contains(UDDIConstants.WILDCARD_CHAR)) {</span>
-<span class="nc" id="L1058">                                return true;</span>
+<span class="nc bnc" id="L1059" title="All 4 branches missed.">                        if (name.getValue() != null &amp;&amp; name.getValue().contains(UDDIConstants.WILDCARD_CHAR)) {</span>
+<span class="nc" id="L1060">                                return true;</span>
                         }
-<span class="nc bnc" id="L1060" title="All 4 branches missed.">                        if (name.getLang() != null &amp;&amp; name.getLang().contains(UDDIConstants.WILDCARD)) {</span>
-<span class="nc" id="L1061">                                return true;</span>
+<span class="nc bnc" id="L1062" title="All 4 branches missed.">                        if (name.getLang() != null &amp;&amp; name.getLang().contains(UDDIConstants.WILDCARD)) {</span>
+<span class="nc" id="L1063">                                return true;</span>
                         }
-<span class="nc bnc" id="L1063" title="All 4 branches missed.">                        if (name.getLang() != null &amp;&amp; name.getLang().contains(UDDIConstants.WILDCARD_CHAR)) {</span>
-<span class="nc" id="L1064">                                return true;</span>
+<span class="nc bnc" id="L1065" title="All 4 branches missed.">                        if (name.getLang() != null &amp;&amp; name.getLang().contains(UDDIConstants.WILDCARD_CHAR)) {</span>
+<span class="nc" id="L1066">                                return true;</span>
                         }
                 }
-<span class="nc" id="L1067">                return false;</span>
+<span class="nc" id="L1069">                return false;</span>
         }
 
         public static List&lt;AssertionStatusItem&gt; MapAssertionStatusItems(AssertionStatusReport assertionStatusReport) {
-<span class="nc" id="L1071">                List&lt;AssertionStatusItem&gt; r = new ArrayList&lt;AssertionStatusItem&gt;();</span>
-<span class="nc bnc" id="L1072" title="All 2 branches missed.">                if (assertionStatusReport == null) {</span>
-<span class="nc" id="L1073">                        return r;</span>
+<span class="nc" id="L1073">                List&lt;AssertionStatusItem&gt; r = new ArrayList&lt;AssertionStatusItem&gt;();</span>
+<span class="nc bnc" id="L1074" title="All 2 branches missed.">                if (assertionStatusReport == null) {</span>
+<span class="nc" id="L1075">                        return r;</span>
                 }
-<span class="nc bnc" id="L1075" title="All 2 branches missed.">                for (int i = 0; i &lt; assertionStatusReport.getAssertionStatusItem().size(); i++) {</span>
-<span class="nc" id="L1076">                        AssertionStatusItem x = new AssertionStatusItem();</span>
-<span class="nc" id="L1077">                        x.setFromKey(assertionStatusReport.getAssertionStatusItem().get(i).getFromKey());</span>
-<span class="nc" id="L1078">                        x.setToKey(assertionStatusReport.getAssertionStatusItem().get(i).getToKey());</span>
-<span class="nc" id="L1079">                        x.setCompletionStatus(MapCompletionStatus(assertionStatusReport.getAssertionStatusItem().get(i).getCompletionStatus()));</span>
+<span class="nc bnc" id="L1077" title="All 2 branches missed.">                for (int i = 0; i &lt; assertionStatusReport.getAssertionStatusItem().size(); i++) {</span>
+<span class="nc" id="L1078">                        AssertionStatusItem x = new AssertionStatusItem();</span>
+<span class="nc" id="L1079">                        x.setFromKey(assertionStatusReport.getAssertionStatusItem().get(i).getFromKey());</span>
+<span class="nc" id="L1080">                        x.setToKey(assertionStatusReport.getAssertionStatusItem().get(i).getToKey());</span>
+<span class="nc" id="L1081">                        x.setCompletionStatus(MapCompletionStatus(assertionStatusReport.getAssertionStatusItem().get(i).getCompletionStatus()));</span>
 
-<span class="nc" id="L1081">                        x.setKeysOwned(MapKeysOwned(assertionStatusReport.getAssertionStatusItem().get(i).getKeysOwned()));</span>
-<span class="nc bnc" id="L1082" title="All 2 branches missed.">                        if (assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference() != null) {</span>
-<span class="nc" id="L1083">                                x.setKeyedReference(new KeyedReference(assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getTModelKey(),</span>
-<span class="nc" id="L1084">                                     assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getKeyName(),</span>
-<span class="nc" id="L1085">                                     assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getKeyValue()));</span>
+<span class="nc" id="L1083">                        x.setKeysOwned(MapKeysOwned(assertionStatusReport.getAssertionStatusItem().get(i).getKeysOwned()));</span>
+<span class="nc bnc" id="L1084" title="All 2 branches missed.">                        if (assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference() != null) {</span>
+<span class="nc" id="L1085">                                x.setKeyedReference(new KeyedReference(assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getTModelKey(),</span>
+<span class="nc" id="L1086">                                     assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getKeyName(),</span>
+<span class="nc" id="L1087">                                     assertionStatusReport.getAssertionStatusItem().get(i).getKeyedReference().getKeyValue()));</span>
                         }
-<span class="nc" id="L1087">                        r.add(x);</span>
+<span class="nc" id="L1089">                        r.add(x);</span>
                 }
-<span class="nc" id="L1089">                return r;</span>
+<span class="nc" id="L1091">                return r;</span>
         }
 
         private static KeysOwned MapKeysOwned(org.uddi.api_v2.KeysOwned keysOwned) {
-<span class="nc bnc" id="L1093" title="All 2 branches missed.">                if (keysOwned == null) {</span>
-<span class="nc" id="L1094">                        return null;</span>
+<span class="nc bnc" id="L1095" title="All 2 branches missed.">                if (keysOwned == null) {</span>
+<span class="nc" id="L1096">                        return null;</span>
                 }
-<span class="nc" id="L1096">                KeysOwned r = new KeysOwned();</span>
-<span class="nc" id="L1097">                r.setFromKey(keysOwned.getFromKey());</span>
-<span class="nc" id="L1098">                r.setToKey(keysOwned.getToKey());</span>
-<span class="nc" id="L1099">                return r;</span>
+<span class="nc" id="L1098">                KeysOwned r = new KeysOwned();</span>
+<span class="nc" id="L1099">                r.setFromKey(keysOwned.getFromKey());</span>
+<span class="nc" id="L1100">                r.setToKey(keysOwned.getToKey());</span>
+<span class="nc" id="L1101">                return r;</span>
         }
 
         private static Contacts MapContacts(org.uddi.api_v2.Contacts contacts) {
-<span class="nc bnc" id="L1103" title="All 2 branches missed.">                if (contacts == null) {</span>
-<span class="nc" id="L1104">                        return null;</span>
+<span class="nc bnc" id="L1105" title="All 2 branches missed.">                if (contacts == null) {</span>
+<span class="nc" id="L1106">                        return null;</span>
                 }
-<span class="nc" id="L1106">                Contacts c = new Contacts();</span>
-<span class="nc" id="L1107">                c.getContact().addAll(MapContactList(contacts.getContact()));</span>
-<span class="nc" id="L1108">                return c;</span>
+<span class="nc" id="L1108">                Contacts c = new Contacts();</span>
+<span class="nc" id="L1109">                c.getContact().addAll(MapContactList(contacts.getContact()));</span>
+<span class="nc" id="L1110">                return c;</span>
 
         }
 
         private static List&lt;Contact&gt; MapContactList(List&lt;org.uddi.api_v2.Contact&gt; contact) {
-<span class="nc" id="L1113">                List&lt;Contact&gt; r = new ArrayList&lt;Contact&gt;();</span>
-<span class="nc bnc" id="L1114" title="All 2 branches missed.">                if (contact == null) {</span>
-<span class="nc" id="L1115">                        return r;</span>
+<span class="nc" id="L1115">                List&lt;Contact&gt; r = new ArrayList&lt;Contact&gt;();</span>
+<span class="nc bnc" id="L1116" title="All 2 branches missed.">                if (contact == null) {</span>
+<span class="nc" id="L1117">                        return r;</span>
                 }
-<span class="nc bnc" id="L1117" title="All 2 branches missed.">                for (int i = 0; i &lt; contact.size(); i++) {</span>
-<span class="nc" id="L1118">                        Contact c = new Contact();</span>
-<span class="nc" id="L1119">                        c.setUseType(contact.get(i).getUseType());</span>
-<span class="nc bnc" id="L1120" title="All 2 branches missed.">                        if (contact.get(i).getPersonName() != null) {</span>
-<span class="nc" id="L1121">                                c.getPersonName().add(new PersonName(contact.get(i).getPersonName(), null));</span>
+<span class="nc bnc" id="L1119" title="All 2 branches missed.">                for (int i = 0; i &lt; contact.size(); i++) {</span>
+<span class="nc" id="L1120">                        Contact c = new Contact();</span>
+<span class="nc" id="L1121">                        c.setUseType(contact.get(i).getUseType());</span>
+<span class="nc bnc" id="L1122" title="All 2 branches missed.">                        if (contact.get(i).getPersonName() != null) {</span>
+<span class="nc" id="L1123">                                c.getPersonName().add(new PersonName(contact.get(i).getPersonName(), null));</span>
                         }
-<span class="nc" id="L1123">                        c.getAddress().addAll(MapAddress(contact.get(i).getAddress()));</span>
-<span class="nc" id="L1124">                        c.getDescription().addAll(MapDescription(contact.get(i).getDescription()));</span>
-<span class="nc" id="L1125">                        c.getEmail().addAll(MapEmail(contact.get(i).getEmail()));</span>
-<span class="nc" id="L1126">                        c.getPhone().addAll(MapPhone(contact.get(i).getPhone()));</span>
+<span class="nc" id="L1125">                        c.getAddress().addAll(MapAddress(contact.get(i).getAddress()));</span>
+<span class="nc" id="L1126">                        c.getDescription().addAll(MapDescription(contact.get(i).getDescription()));</span>
+<span class="nc" id="L1127">                        c.getEmail().addAll(MapEmail(contact.get(i).getEmail()));</span>
+<span class="nc" id="L1128">                        c.getPhone().addAll(MapPhone(contact.get(i).getPhone()));</span>
 
-<span class="nc" id="L1128">                        r.add(c);</span>
+<span class="nc" id="L1130">                        r.add(c);</span>
                 }
-<span class="nc" id="L1130">                return r;</span>
+<span class="nc" id="L1132">                return r;</span>
         }
 
         private static Collection&lt;? extends Address&gt; MapAddress(List&lt;org.uddi.api_v2.Address&gt; address) {
-<span class="nc" id="L1134">                List&lt;Address&gt; r = new ArrayList&lt;Address&gt;();</span>
-<span class="nc bnc" id="L1135" title="All 2 branches missed.">                if (address == null) {</span>
-<span class="nc" id="L1136">                        return r;</span>
+<span class="nc" id="L1136">                List&lt;Address&gt; r = new ArrayList&lt;Address&gt;();</span>
+<span class="nc bnc" id="L1137" title="All 2 branches missed.">                if (address == null) {</span>
+<span class="nc" id="L1138">                        return r;</span>
                 }
-<span class="nc bnc" id="L1138" title="All 2 branches missed.">                for (int i = 0; i &lt; address.size(); i++) {</span>
-<span class="nc" id="L1139">                        Address x = new Address();</span>
-<span class="nc" id="L1140">                        x.setSortCode(address.get(i).getSortCode());</span>
-<span class="nc" id="L1141">                        x.setTModelKey(address.get(i).getTModelKey());</span>
-<span class="nc" id="L1142">                        x.setUseType(address.get(i).getUseType());</span>
-<span class="nc" id="L1143">                        x.getAddressLine().addAll(MapAddressLine(address.get(i).getAddressLine()));</span>
-<span class="nc" id="L1144">                        r.add(x);</span>
+<span class="nc bnc" id="L1140" title="All 2 branches missed.">                for (int i = 0; i &lt; address.size(); i++) {</span>
+<span class="nc" id="L1141">                        Address x = new Address();</span>
+<span class="nc" id="L1142">                        x.setSortCode(address.get(i).getSortCode());</span>
+<span class="nc" id="L1143">                        x.setTModelKey(address.get(i).getTModelKey());</span>
+<span class="nc" id="L1144">                        x.setUseType(address.get(i).getUseType());</span>
+<span class="nc" id="L1145">                        x.getAddressLine().addAll(MapAddressLine(address.get(i).getAddressLine()));</span>
+<span class="nc" id="L1146">                        r.add(x);</span>
                 }
-<span class="nc" id="L1146">                return r;</span>
+<span class="nc" id="L1148">                return r;</span>
 
         }
 
         private static Collection&lt;? extends Email&gt; MapEmail(List&lt;org.uddi.api_v2.Email&gt; email) {
-<span class="nc" id="L1151">                List&lt;Email&gt; r = new ArrayList&lt;Email&gt;();</span>
-<span class="nc bnc" id="L1152" title="All 2 branches missed.">                if (email == null) {</span>
-<span class="nc" id="L1153">                        return r;</span>
+<span class="nc" id="L1153">                List&lt;Email&gt; r = new ArrayList&lt;Email&gt;();</span>
+<span class="nc bnc" id="L1154" title="All 2 branches missed.">                if (email == null) {</span>
+<span class="nc" id="L1155">                        return r;</span>
                 }
-<span class="nc bnc" id="L1155" title="All 2 branches missed.">                for (int i = 0; i &lt; email.size(); i++) {</span>
-<span class="nc" id="L1156">                        Email x = new Email();</span>
-<span class="nc" id="L1157">                        x.setUseType(email.get(i).getUseType());</span>
-<span class="nc" id="L1158">                        x.setValue(email.get(i).getValue());</span>
-<span class="nc" id="L1159">                        r.add(x);</span>
+<span class="nc bnc" id="L1157" title="All 2 branches missed.">                for (int i = 0; i &lt; email.size(); i++) {</span>
+<span class="nc" id="L1158">                        Email x = new Email();</span>
+<span class="nc" id="L1159">                        x.setUseType(email.get(i).getUseType());</span>
+<span class="nc" id="L1160">                        x.setValue(email.get(i).getValue());</span>
+<span class="nc" id="L1161">                        r.add(x);</span>
                 }
 
-<span class="nc" id="L1162">                return r;</span>
+<span class="nc" id="L1164">                return r;</span>
         }
 
         private static Collection&lt;? extends Phone&gt; MapPhone(List&lt;org.uddi.api_v2.Phone&gt; phone) {
-<span class="nc" id="L1166">                List&lt;Phone&gt; r = new ArrayList&lt;Phone&gt;();</span>
-<span class="nc bnc" id="L1167" title="All 2 branches missed.">                if (phone == null) {</span>
-<span class="nc" id="L1168">                        return r;</span>
+<span class="nc" id="L1168">                List&lt;Phone&gt; r = new ArrayList&lt;Phone&gt;();</span>
+<span class="nc bnc" id="L1169" title="All 2 branches missed.">                if (phone == null) {</span>
+<span class="nc" id="L1170">                        return r;</span>
                 }
-<span class="nc bnc" id="L1170" title="All 2 branches missed.">                for (int i = 0; i &lt; phone.size(); i++) {</span>
-<span class="nc" id="L1171">                        Phone x = new Phone();</span>
-<span class="nc" id="L1172">                        x.setUseType(phone.get(i).getUseType());</span>
-<span class="nc" id="L1173">                        x.setValue(phone.get(i).getValue());</span>
-<span class="nc" id="L1174">                        r.add(x);</span>
+<span class="nc bnc" id="L1172" title="All 2 branches missed.">                for (int i = 0; i &lt; phone.size(); i++) {</span>
+<span class="nc" id="L1173">                        Phone x = new Phone();</span>
+<span class="nc" id="L1174">                        x.setUseType(phone.get(i).getUseType());</span>
+<span class="nc" id="L1175">                        x.setValue(phone.get(i).getValue());</span>
+<span class="nc" id="L1176">                        r.add(x);</span>
                 }
 
-<span class="nc" id="L1177">                return r;</span>
+<span class="nc" id="L1179">                return r;</span>
         }
 
         private static List&lt;org.uddi.api_v3.AddressLine&gt; MapAddressLine(List&lt;org.uddi.api_v2.AddressLine&gt; addressLine) {
-<span class="nc" id="L1181">                List&lt;org.uddi.api_v3.AddressLine&gt; r = new ArrayList&lt;org.uddi.api_v3.AddressLine&gt;();</span>
-<span class="nc bnc" id="L1182" title="All 2 branches missed.">                if (addressLine == null) {</span>
-<span class="nc" id="L1183">                        return r;</span>
+<span class="nc" id="L1183">                List&lt;org.uddi.api_v3.AddressLine&gt; r = new ArrayList&lt;org.uddi.api_v3.AddressLine&gt;();</span>
+<span class="nc bnc" id="L1184" title="All 2 branches missed.">                if (addressLine == null) {</span>
+<span class="nc" id="L1185">                        return r;</span>
                 }
-<span class="nc bnc" id="L1185" title="All 2 branches missed.">                for (int i = 0; i &lt; addressLine.size(); i++) {</span>
-<span class="nc" id="L1186">                        org.uddi.api_v3.AddressLine x = new org.uddi.api_v3.AddressLine();</span>
-<span class="nc" id="L1187">                        x.setKeyName(addressLine.get(i).getKeyName());</span>
-<span class="nc" id="L1188">                        x.setKeyValue(addressLine.get(i).getKeyValue());</span>
-<span class="nc" id="L1189">                        x.setValue(addressLine.get(i).getValue());</span>
-<span class="nc" id="L1190">                        r.add(x);</span>
+<span class="nc bnc" id="L1187" title="All 2 branches missed.">                for (int i = 0; i &lt; addressLine.size(); i++) {</span>
+<span class="nc" id="L1188">                        org.uddi.api_v3.AddressLine x = new org.uddi.api_v3.AddressLine();</span>
+<span class="nc" id="L1189">                        x.setKeyName(addressLine.get(i).getKeyName());</span>
+<span class="nc" id="L1190">                        x.setKeyValue(addressLine.get(i).getKeyValue());</span>
+<span class="nc" id="L1191">                        x.setValue(addressLine.get(i).getValue());</span>
+<span class="nc" id="L1192">                        r.add(x);</span>
                 }
 
-<span class="nc" id="L1193">                return r;</span>
+<span class="nc" id="L1195">                return r;</span>
         }
 
         public static AddPublisherAssertions MapAddPublisherAssertions(org.uddi.api_v2.AddPublisherAssertions body) {
 
-<span class="nc bnc" id="L1198" title="All 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L1199">                        return null;</span>
+<span class="nc bnc" id="L1200" title="All 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L1201">                        return null;</span>
                 }
-<span class="nc" id="L1201">                AddPublisherAssertions r = new AddPublisherAssertions();</span>
-<span class="nc" id="L1202">                r.setAuthInfo(body.getAuthInfo());</span>
-<span class="nc" id="L1203">                r.getPublisherAssertion().addAll(MapListPublisherAssertion(body.getPublisherAssertion()));</span>
-<span class="nc" id="L1204">                return r;</span>
+<span class="nc" id="L1203">                AddPublisherAssertions r = new AddPublisherAssertions();</span>
+<span class="nc" id="L1204">                r.setAuthInfo(body.getAuthInfo());</span>
+<span class="nc" id="L1205">                r.getPublisherAssertion().addAll(MapListPublisherAssertion(body.getPublisherAssertion()));</span>
+<span class="nc" id="L1206">                return r;</span>
 
         }
 
         public static CompletionStatus MapCompletionStatus(String completionStatus) {
 
-<span class="nc bnc" id="L1210" title="All 2 branches missed.">                if (&quot;status:complete&quot;.equalsIgnoreCase(completionStatus)) {</span>
-<span class="nc" id="L1211">                        return (CompletionStatus.STATUS_COMPLETE);</span>
-<span class="nc bnc" id="L1212" title="All 2 branches missed.">                } else if (&quot;status:toKey_incomplete&quot;.equalsIgnoreCase(completionStatus)) {</span>
-<span class="nc" id="L1213">                        return (CompletionStatus.STATUS_TO_KEY_INCOMPLETE);</span>
-<span class="nc bnc" id="L1214" title="All 2 branches missed.">                } else if (&quot;status:fromKey_incomplete&quot;.equalsIgnoreCase(completionStatus)) {</span>
-<span class="nc" id="L1215">                        return (CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);</span>
+<span class="nc bnc" id="L1212" title="All 2 branches missed.">                if (&quot;status:complete&quot;.equalsIgnoreCase(completionStatus)) {</span>
+<span class="nc" id="L1213">                        return (CompletionStatus.STATUS_COMPLETE);</span>
+<span class="nc bnc" id="L1214" title="All 2 branches missed.">                } else if (&quot;status:toKey_incomplete&quot;.equalsIgnoreCase(completionStatus)) {</span>
+<span class="nc" id="L1215">                        return (CompletionStatus.STATUS_TO_KEY_INCOMPLETE);</span>
+<span class="nc bnc" id="L1216" title="All 2 branches missed.">                } else if (&quot;status:fromKey_incomplete&quot;.equalsIgnoreCase(completionStatus)) {</span>
+<span class="nc" id="L1217">                        return (CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);</span>
                 } else {
-<span class="nc" id="L1217">                        return (CompletionStatus.STATUS_BOTH_INCOMPLETE);</span>
+<span class="nc" id="L1219">                        return (CompletionStatus.STATUS_BOTH_INCOMPLETE);</span>
                 }
 
         }

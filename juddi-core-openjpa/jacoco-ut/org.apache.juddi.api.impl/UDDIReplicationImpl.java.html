@@ -222,12 +222,12 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                 @Override
                 public void run() {
-<span class="fc bfc" id="L225" title="All 2 branches covered.">                        if (firstrun) {</span>
+<span class="pc bpc" id="L225" title="1 of 2 branches missed.">                        if (firstrun) {</span>
 <span class="fc" id="L226">                                enqueueAllReceivingNodes();</span>
 <span class="fc" id="L227">                                firstrun = false;</span>
                         }
 
-<span class="fc bfc" id="L230" title="All 2 branches covered.">                        if (!queue.isEmpty()) {</span>
+<span class="pc bpc" id="L230" title="1 of 2 branches missed.">                        if (!queue.isEmpty()) {</span>
 <span class="fc" id="L231">                                logger.info(&quot;Replication change puller thread started. Queue size: &quot; + queue.size());</span>
                         }
                         //ok someone told me there's a change available

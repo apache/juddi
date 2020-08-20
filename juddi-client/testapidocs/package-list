@@ -1,0 +1,8 @@
+org.apache.juddi.v3.annotations
+org.apache.juddi.v3.client
+org.apache.juddi.v3.client.compare
+org.apache.juddi.v3.client.config
+org.apache.juddi.v3.client.cryptor
+org.apache.juddi.v3.client.mapping
+org.apache.juddi.v3.client.mapping.wsdl
+org.apache.juddi.v3.client.subscription

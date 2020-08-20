@@ -73,7 +73,7 @@ import javax.persistence.Table;
          * Gets the value of the serialNumber property.
          *
          */
-        @Column(name = &quot;serialnumb&quot;)
+        @Column(name = &quot;serno&quot;)
         @OrderBy(value = &quot;SerialNumber DESC&quot;)
         @Id
         public Long getSerialNumber() {
@@ -206,13 +206,16 @@ import javax.persistence.Table;
 <span class="fc" id="L206">        }</span>
 
         // @OneToMany( fetch = FetchType.LAZY,targetEntity = Edge.class, mappedBy = &quot;Edge&quot;)
-        @OneToMany(targetEntity = Edge.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+        @OneToMany(targetEntity = Edge.class, 
+                fetch = FetchType.LAZY, cascade = CascadeType.ALL
+                //mappedBy = &quot;j3_edge&quot;
+                )
         public List&lt;Edge&gt; getEdge() {
-<span class="fc" id="L211">                return this.edge;</span>
+<span class="fc" id="L214">                return this.edge;</span>
         }
 
         public void setEdge(List&lt;Edge&gt; edges) {
-<span class="fc" id="L215">                this.edge = edges;</span>
-<span class="fc" id="L216">        }</span>
+<span class="fc" id="L218">                this.edge = edges;</span>
+<span class="fc" id="L219">        }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

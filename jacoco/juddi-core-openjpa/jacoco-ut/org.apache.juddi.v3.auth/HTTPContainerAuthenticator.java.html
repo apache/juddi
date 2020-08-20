@@ -92,8 +92,8 @@ import org.apache.juddi.v3.error.UnknownUserException;
 <span class="nc" id="L92">                                log.warn(&quot;Publisher \&quot;&quot; + user + &quot;\&quot; was not found in the database, adding the publisher in on the fly.&quot;);</span>
 <span class="nc" id="L93">                                publisher = new Publisher();</span>
 <span class="nc" id="L94">                                publisher.setAuthorizedName(user);</span>
-<span class="nc" id="L95">                                publisher.setIsAdmin(&quot;false&quot;);</span>
-<span class="nc" id="L96">                                publisher.setIsEnabled(&quot;true&quot;);</span>
+<span class="nc" id="L95">                                publisher.setIsAdmin(false);</span>
+<span class="nc" id="L96">                                publisher.setIsEnabled(true);</span>
 <span class="nc" id="L97">                                publisher.setMaxBindingsPerService(MaxBindingsPerService);</span>
 <span class="nc" id="L98">                                publisher.setMaxBusinesses(MaxBusinesses);</span>
 <span class="nc" id="L99">                                publisher.setMaxServicesPerBusiness(MaxServicesPerBusiness);</span>

@@ -1,0 +1,5 @@
+org.apache.juddi.adminconsole
+org.apache.juddi.adminconsole.hub
+org.apache.juddi.adminconsole.hub.builders
+org.apache.juddi.adminconsole.resources
+org.apache.juddi.servlets

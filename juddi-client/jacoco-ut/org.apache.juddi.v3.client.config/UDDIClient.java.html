@@ -77,17 +77,21 @@ public class UDDIClient {
 <span class="pc" id="L77">        private Properties properties = null;</span>
 <span class="fc" id="L78">        private static Map&lt;String, ServiceLocator&gt; serviceLocators = new HashMap&lt;String, ServiceLocator&gt;();</span>
 
+        
+        public static void  clearServiceLocatorCaches(){
+<span class="nc" id="L82">                serviceLocators.clear();</span>
+<span class="nc" id="L83">        }</span>
         /**
          * Default constructor, loads from the default config, META-INF/uddi.xml
          *
          * @throws ConfigurationException
          */
         public UDDIClient() throws ConfigurationException {
-<span class="fc" id="L86">                super();</span>
-<span class="fc" id="L87">                log.info(&quot;jUDDI Client version - &quot; + Release.getjUDDIClientVersion());</span>
-<span class="fc" id="L88">                clientConfig = new ClientConfig(CONFIG_FILE, properties);</span>
-<span class="fc" id="L89">                UDDIClientContainer.addClient(this);</span>
-<span class="fc" id="L90">        }</span>
+<span class="fc" id="L90">                super();</span>
+<span class="fc" id="L91">                log.info(&quot;jUDDI Client version - &quot; + Release.getjUDDIClientVersion());</span>
+<span class="fc" id="L92">                clientConfig = new ClientConfig(CONFIG_FILE, properties);</span>
+<span class="fc" id="L93">                UDDIClientContainer.addClient(this);</span>
+<span class="fc" id="L94">        }</span>
 
         /**
          * Manages the clerks. Initiates reading the client configuration from
@@ -96,11 +100,11 @@ public class UDDIClient {
          * @throws ConfigurationException
          */
         public UDDIClient(String configurationFile) throws ConfigurationException {
-<span class="fc" id="L99">                super();</span>
-<span class="fc" id="L100">                log.info(&quot;jUDDI Client version - &quot; + Release.getjUDDIClientVersion());</span>
-<span class="fc" id="L101">                clientConfig = new ClientConfig(configurationFile);</span>
-<span class="fc" id="L102">                UDDIClientContainer.addClient(this);</span>
-<span class="fc" id="L103">        }</span>
+<span class="fc" id="L103">                super();</span>
+<span class="fc" id="L104">                log.info(&quot;jUDDI Client version - &quot; + Release.getjUDDIClientVersion());</span>
+<span class="fc" id="L105">                clientConfig = new ClientConfig(configurationFile);</span>
+<span class="fc" id="L106">                UDDIClientContainer.addClient(this);</span>
+<span class="fc" id="L107">        }</span>
 
         /**
          * Manages the clerks. Initiates reading the client configuration from
@@ -111,11 +115,11 @@ public class UDDIClient {
          * @throws ConfigurationException
          */
         public UDDIClient(String configurationFile, Properties properties) throws ConfigurationException {
-<span class="nc" id="L114">                super();</span>
-<span class="nc" id="L115">                log.info(&quot;jUDDI Client version - &quot; + Release.getjUDDIClientVersion());</span>
-<span class="nc" id="L116">                clientConfig = new ClientConfig(configurationFile, properties);</span>
-<span class="nc" id="L117">                UDDIClientContainer.addClient(this);</span>
-<span class="nc" id="L118">        }</span>
+<span class="nc" id="L118">                super();</span>
+<span class="nc" id="L119">                log.info(&quot;jUDDI Client version - &quot; + Release.getjUDDIClientVersion());</span>
+<span class="nc" id="L120">                clientConfig = new ClientConfig(configurationFile, properties);</span>
+<span class="nc" id="L121">                UDDIClientContainer.addClient(this);</span>
+<span class="nc" id="L122">        }</span>
 
         /**
          * Uses the client config, and looks for a clerk called &quot;default&quot;
@@ -124,7 +128,7 @@ public class UDDIClient {
          * @throws ConfigurationException
          */
         public synchronized ServiceLocator getServiceLocator() throws ConfigurationException {
-<span class="nc" id="L127">                return getServiceLocator(null);</span>
+<span class="nc" id="L131">                return getServiceLocator(null);</span>
         }
 
         /**
@@ -133,15 +137,15 @@ public class UDDIClient {
          * @throws ConfigurationException
          */
         public synchronized ServiceLocator getServiceLocator(String clerkName) throws ConfigurationException {
-<span class="fc" id="L136">                UDDIClerk clerk = getClerk(clerkName);</span>
-<span class="fc bfc" id="L137" title="All 2 branches covered.">                if (clerk==null){</span>
-<span class="fc" id="L138">                    throw new ConfigurationException(&quot;could not locate the UDDI Clerk '&quot; + clerkName +&quot;'.&quot;);</span>
+<span class="fc" id="L140">                UDDIClerk clerk = getClerk(clerkName);</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">                if (clerk==null){</span>
+<span class="fc" id="L142">                    throw new ConfigurationException(&quot;could not locate the UDDI Clerk '&quot; + clerkName +&quot;'.&quot;);</span>
                 }
-<span class="pc bpc" id="L140" title="1 of 2 branches missed.">                if (!serviceLocators.containsKey(clerk.getName())) {</span>
-<span class="fc" id="L141">                        ServiceLocator serviceLocator = new ServiceLocator(clerk, new URLLocalizerDefaultImpl(), properties);</span>
-<span class="fc" id="L142">                        serviceLocators.put(clerk.getName(), serviceLocator);</span>
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">                if (!serviceLocators.containsKey(clerk.getName())) {</span>
+<span class="fc" id="L145">                        ServiceLocator serviceLocator = new ServiceLocator(clerk, new URLLocalizerDefaultImpl(), properties);</span>
+<span class="fc" id="L146">                        serviceLocators.put(clerk.getName(), serviceLocator);</span>
                 }
-<span class="fc" id="L144">                return serviceLocators.get(clerk.getName());</span>
+<span class="fc" id="L148">                return serviceLocators.get(clerk.getName());</span>
         }
 
         /**
@@ -152,27 +156,27 @@ public class UDDIClient {
          * @throws ConfigurationException
          */
         public void stop() throws ConfigurationException {
-<span class="fc" id="L155">                log.info(&quot;Stopping UDDI Client &quot; + clientConfig.getClientName());</span>
-<span class="fc" id="L156">                releaseResources();</span>
+<span class="fc" id="L159">                log.info(&quot;Stopping UDDI Client &quot; + clientConfig.getClientName());</span>
+<span class="fc" id="L160">                releaseResources();</span>
                 //fix for when someone runs UDDIClient.stop more than once
-<span class="fc bfc" id="L158" title="All 2 branches covered.">                if (UDDIClientContainer.contains(getName())) {</span>
-<span class="fc" id="L159">                        UDDIClientContainer.removeClerkManager(getName());</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">                if (UDDIClientContainer.contains(getName())) {</span>
+<span class="fc" id="L163">                        UDDIClientContainer.removeClerkManager(getName());</span>
                 }
 
                 //If running in embedded mode
-<span class="pc bpc" id="L163" title="1 of 2 branches missed.">                if (InVMTransport.class.getCanonicalName().equals(getClientConfig().getHomeNode().getProxyTransport())) {</span>
-<span class="nc" id="L164">                        log.info(&quot;Shutting down embedded Server&quot;);</span>
-<span class="nc" id="L165">                        stopEmbeddedServer();</span>
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">                if (InVMTransport.class.getCanonicalName().equals(getClientConfig().getHomeNode().getProxyTransport())) {</span>
+<span class="nc" id="L168">                        log.info(&quot;Shutting down embedded Server&quot;);</span>
+<span class="nc" id="L169">                        stopEmbeddedServer();</span>
                 }
-<span class="fc" id="L167">                log.info(&quot;UDDI Clerks shutdown completed for manager &quot; + clientConfig.getClientName());</span>
-<span class="fc" id="L168">        }</span>
+<span class="fc" id="L171">                log.info(&quot;UDDI Clerks shutdown completed for manager &quot; + clientConfig.getClientName());</span>
+<span class="fc" id="L172">        }</span>
 
         private void releaseResources() {
-<span class="pc bpc" id="L171" title="1 of 2 branches missed.">                if (this.clientConfig.isRegisterOnStartup()) {</span>
-<span class="nc" id="L172">                        unRegisterWSDLs();</span>
-<span class="nc" id="L173">                        unRegisterBindingsOfAnnotatedServices(true);</span>
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">                if (this.clientConfig.isRegisterOnStartup()) {</span>
+<span class="nc" id="L176">                        unRegisterWSDLs();</span>
+<span class="nc" id="L177">                        unRegisterBindingsOfAnnotatedServices(true);</span>
                 }
-<span class="fc" id="L175">        }</span>
+<span class="fc" id="L179">        }</span>
 
         /**
          * Initializes the UDDI Clerk. If transport is set to InVM, this will
@@ -183,43 +187,45 @@ public class UDDIClient {
          */
         public void start() throws ConfigurationException {
 
-<span class="pc bpc" id="L186" title="1 of 2 branches missed.">                if (UDDIClientContainer.addClient(this)) {</span>
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">                if (UDDIClientContainer.addClient(this)) {</span>
                         //If running in embedded mode
-<span class="nc bnc" id="L188" title="All 2 branches missed.">                        if (InVMTransport.class.getCanonicalName().equals(getClientConfig().getHomeNode().getProxyTransport())) {</span>
-<span class="nc" id="L189">                                log.info(&quot;Starting embedded Server&quot;);</span>
-<span class="nc" id="L190">                                startEmbeddedServer();</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">                        if (InVMTransport.class.getCanonicalName().equals(getClientConfig().getHomeNode().getProxyTransport())) {</span>
+<span class="nc" id="L193">                                log.info(&quot;Starting embedded Server&quot;);</span>
+<span class="nc" id="L194">                                startEmbeddedServer();</span>
                         }
-<span class="nc bnc" id="L192" title="All 2 branches missed.">                        if (this.clientConfig.isRegisterOnStartup()) {</span>
-<span class="nc" id="L193">                                Runnable runnable = new BackGroundRegistration(this);</span>
-<span class="nc" id="L194">                                Thread thread = new Thread(runnable);</span>
-<span class="nc" id="L195">                                thread.start();</span>
+<span class="nc bnc" id="L196" title="All 2 branches missed.">                        if (this.clientConfig.isRegisterOnStartup()) {</span>
+<span class="nc" id="L197">                                Runnable runnable = new BackGroundRegistration(this);</span>
+<span class="nc" id="L198">                                Thread thread = new Thread(runnable);</span>
+<span class="nc" id="L199">                                thread.setName(&quot;juddi background registration&quot;);</span>
+<span class="nc" id="L200">                                thread.setDaemon(true);</span>
+<span class="nc" id="L201">                                thread.start();</span>
                         }
                 }
-<span class="fc" id="L198">        }</span>
+<span class="fc" id="L204">        }</span>
 
         protected void startEmbeddedServer() throws ConfigurationException {
 
                 try {
-<span class="nc" id="L203">                        String embeddedServerClass = getClientConfig().getHomeNode().getProperties().getProperty(&quot;embeddedServer&quot;, &quot;org.apache.juddi.v3.client.embed.JUDDIRegistry&quot;);</span>
-<span class="nc" id="L204">                        Class&lt;?&gt; clazz = ClassUtil.forName(embeddedServerClass, this.getClass());</span>
-<span class="nc" id="L205">                        EmbeddedRegistry embeddedRegistry = (EmbeddedRegistry) clazz.newInstance();</span>
-<span class="nc" id="L206">                        embeddedRegistry.start();</span>
-<span class="nc" id="L207">                } catch (Exception e) {</span>
-<span class="nc" id="L208">                        throw new ConfigurationException(e.getMessage(), e);</span>
-<span class="nc" id="L209">                }</span>
-<span class="nc" id="L210">        }</span>
+<span class="nc" id="L209">                        String embeddedServerClass = getClientConfig().getHomeNode().getProperties().getProperty(&quot;embeddedServer&quot;, &quot;org.apache.juddi.v3.client.embed.JUDDIRegistry&quot;);</span>
+<span class="nc" id="L210">                        Class&lt;?&gt; clazz = ClassUtil.forName(embeddedServerClass, this.getClass());</span>
+<span class="nc" id="L211">                        EmbeddedRegistry embeddedRegistry = (EmbeddedRegistry) clazz.newInstance();</span>
+<span class="nc" id="L212">                        embeddedRegistry.start();</span>
+<span class="nc" id="L213">                } catch (Exception e) {</span>
+<span class="nc" id="L214">                        throw new ConfigurationException(e.getMessage(), e);</span>
+<span class="nc" id="L215">                }</span>
+<span class="nc" id="L216">        }</span>
 
         protected void stopEmbeddedServer() throws ConfigurationException {
 
                 try {
-<span class="nc" id="L215">                        String embeddedServerClass = getClientConfig().getHomeNode().getProperties().getProperty(&quot;embeddedServer&quot;, &quot;org.apache.juddi.v3.client.embed.JUDDIRegistry&quot;);</span>
-<span class="nc" id="L216">                        Class&lt;?&gt; clazz = ClassUtil.forName(embeddedServerClass, this.getClass());</span>
-<span class="nc" id="L217">                        EmbeddedRegistry embeddedRegistry = (EmbeddedRegistry) clazz.newInstance();</span>
-<span class="nc" id="L218">                        embeddedRegistry.stop();</span>
-<span class="nc" id="L219">                } catch (Exception e) {</span>
-<span class="nc" id="L220">                        throw new ConfigurationException(e.getMessage(), e);</span>
-<span class="nc" id="L221">                }</span>
-<span class="nc" id="L222">        }</span>
+<span class="nc" id="L221">                        String embeddedServerClass = getClientConfig().getHomeNode().getProperties().getProperty(&quot;embeddedServer&quot;, &quot;org.apache.juddi.v3.client.embed.JUDDIRegistry&quot;);</span>
+<span class="nc" id="L222">                        Class&lt;?&gt; clazz = ClassUtil.forName(embeddedServerClass, this.getClass());</span>
+<span class="nc" id="L223">                        EmbeddedRegistry embeddedRegistry = (EmbeddedRegistry) clazz.newInstance();</span>
+<span class="nc" id="L224">                        embeddedRegistry.stop();</span>
+<span class="nc" id="L225">                } catch (Exception e) {</span>
+<span class="nc" id="L226">                        throw new ConfigurationException(e.getMessage(), e);</span>
+<span class="nc" id="L227">                }</span>
+<span class="nc" id="L228">        }</span>
 
         /**
          * calls stop and start again
@@ -227,9 +233,9 @@ public class UDDIClient {
          * @throws ConfigurationException
          */
         public void restart() throws ConfigurationException {
-<span class="nc" id="L230">                stop();</span>
-<span class="nc" id="L231">                start();</span>
-<span class="nc" id="L232">        }</span>
+<span class="nc" id="L236">                stop();</span>
+<span class="nc" id="L237">                start();</span>
+<span class="nc" id="L238">        }</span>
 
         /**
          * Saves the clerk and node info from the uddi.xml to the home jUDDI
@@ -238,75 +244,75 @@ public class UDDIClient {
          */
         public void saveClerkAndNodeInfo() {
 
-<span class="nc" id="L241">                Map&lt;String, UDDIClerk&gt; uddiClerks = clientConfig.getUDDIClerks();</span>
+<span class="nc" id="L247">                Map&lt;String, UDDIClerk&gt; uddiClerks = clientConfig.getUDDIClerks();</span>
 
-<span class="nc bnc" id="L243" title="All 2 branches missed.">                if (uddiClerks.size() &gt; 0) {</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">                if (uddiClerks.size() &gt; 0) {</span>
 
                         //obtaining a clerk that can write to the home registry
-<span class="nc" id="L246">                        UDDIClerk homeClerk = null;</span>
-<span class="nc bnc" id="L247" title="All 2 branches missed.">                        for (UDDIClerk clerk : uddiClerks.values()) {</span>
-<span class="nc bnc" id="L248" title="All 2 branches missed.">                                if (clerk.getUDDINode().isHomeJUDDI()) {</span>
-<span class="nc" id="L249">                                        homeClerk = clerk;</span>
+<span class="nc" id="L252">                        UDDIClerk homeClerk = null;</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">                        for (UDDIClerk clerk : uddiClerks.values()) {</span>
+<span class="nc bnc" id="L254" title="All 2 branches missed.">                                if (clerk.getUDDINode().isHomeJUDDI()) {</span>
+<span class="nc" id="L255">                                        homeClerk = clerk;</span>
                                 }
-<span class="nc" id="L251">                        }</span>
+<span class="nc" id="L257">                        }</span>
                         //registering nodes and clerks
-<span class="nc bnc" id="L253" title="All 2 branches missed.">                        if (homeClerk != null) {</span>
-<span class="nc" id="L254">                                int numberOfHomeJUDDIs = 0;</span>
-<span class="nc bnc" id="L255" title="All 2 branches missed.">                                for (UDDINode uddiNode : clientConfig.getUDDINodes().values()) {</span>
-<span class="nc bnc" id="L256" title="All 2 branches missed.">                                        if (uddiNode.isHomeJUDDI()) {</span>
-<span class="nc" id="L257">                                                numberOfHomeJUDDIs++;</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">                        if (homeClerk != null) {</span>
+<span class="nc" id="L260">                                int numberOfHomeJUDDIs = 0;</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">                                for (UDDINode uddiNode : clientConfig.getUDDINodes().values()) {</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">                                        if (uddiNode.isHomeJUDDI()) {</span>
+<span class="nc" id="L263">                                                numberOfHomeJUDDIs++;</span>
                                         }
-<span class="nc" id="L259">                                        homeClerk.saveNode(uddiNode.getApiNode());</span>
-<span class="nc" id="L260">                                }</span>
-<span class="nc bnc" id="L261" title="All 2 branches missed.">                                if (numberOfHomeJUDDIs == 1) {</span>
-<span class="nc bnc" id="L262" title="All 2 branches missed.">                                        for (UDDIClerk clerk : clientConfig.getUDDIClerks().values()) {</span>
-<span class="nc" id="L263">                                                homeClerk.saveClerk(clerk);</span>
-<span class="nc" id="L264">                                        }</span>
+<span class="nc" id="L265">                                        homeClerk.saveNode(uddiNode.getApiNode());</span>
+<span class="nc" id="L266">                                }</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">                                if (numberOfHomeJUDDIs == 1) {</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">                                        for (UDDIClerk clerk : clientConfig.getUDDIClerks().values()) {</span>
+<span class="nc" id="L269">                                                homeClerk.saveClerk(clerk);</span>
+<span class="nc" id="L270">                                        }</span>
                                 } else {
-<span class="nc" id="L266">                                        log.error(&quot;The client config needs to have one homeJUDDI node and found &quot; + numberOfHomeJUDDIs);</span>
+<span class="nc" id="L272">                                        log.error(&quot;The client config needs to have one homeJUDDI node and found &quot; + numberOfHomeJUDDIs);</span>
                                 }
-<span class="nc" id="L268">                        } else {</span>
-<span class="nc" id="L269">                                log.debug(&quot;No home clerk found.&quot;);</span>
+<span class="nc" id="L274">                        } else {</span>
+<span class="nc" id="L275">                                log.debug(&quot;No home clerk found.&quot;);</span>
                         }
                 }
-<span class="nc" id="L272">        }</span>
+<span class="nc" id="L278">        }</span>
 
         /**
          * X-Register services listed in the uddi.xml
          */
         public void xRegister() {
-<span class="nc" id="L278">                log.debug(&quot;Starting cross registration...&quot;);</span>
+<span class="nc" id="L284">                log.debug(&quot;Starting cross registration...&quot;);</span>
                 //XRegistration of listed businesses
-<span class="nc" id="L280">                Set&lt;XRegistration&gt; xBusinessRegistrations = clientConfig.getXBusinessRegistrations();</span>
-<span class="nc bnc" id="L281" title="All 2 branches missed.">                for (XRegistration xRegistration : xBusinessRegistrations) {</span>
-<span class="nc" id="L282">                        xRegistration.xRegisterBusiness();</span>
-<span class="nc" id="L283">                }</span>
+<span class="nc" id="L286">                Set&lt;XRegistration&gt; xBusinessRegistrations = clientConfig.getXBusinessRegistrations();</span>
+<span class="nc bnc" id="L287" title="All 2 branches missed.">                for (XRegistration xRegistration : xBusinessRegistrations) {</span>
+<span class="nc" id="L288">                        xRegistration.xRegisterBusiness();</span>
+<span class="nc" id="L289">                }</span>
                 //XRegistration of listed serviceBindings
-<span class="nc" id="L285">                Set&lt;XRegistration&gt; xServiceBindingRegistrations = clientConfig.getXServiceBindingRegistrations();</span>
-<span class="nc bnc" id="L286" title="All 2 branches missed.">                for (XRegistration xRegistration : xServiceBindingRegistrations) {</span>
-<span class="nc" id="L287">                        xRegistration.xRegisterServiceBinding();</span>
-<span class="nc" id="L288">                }</span>
-<span class="nc" id="L289">                log.debug(&quot;Cross registration completed&quot;);</span>
-<span class="nc" id="L290">        }</span>
+<span class="nc" id="L291">                Set&lt;XRegistration&gt; xServiceBindingRegistrations = clientConfig.getXServiceBindingRegistrations();</span>
+<span class="nc bnc" id="L292" title="All 2 branches missed.">                for (XRegistration xRegistration : xServiceBindingRegistrations) {</span>
+<span class="nc" id="L293">                        xRegistration.xRegisterServiceBinding();</span>
+<span class="nc" id="L294">                }</span>
+<span class="nc" id="L295">                log.debug(&quot;Cross registration completed&quot;);</span>
+<span class="nc" id="L296">        }</span>
 
         /**
          * Registers services to UDDI using a clerk, and the uddi.xml
          * configuration.
          */
         public void registerAnnotatedServices() {
-<span class="nc" id="L297">                Map&lt;String, UDDIClerk&gt; uddiClerks = clientConfig.getUDDIClerks();</span>
-<span class="nc bnc" id="L298" title="All 2 branches missed.">                if (uddiClerks.size() &gt; 0) {</span>
-<span class="nc" id="L299">                        AnnotationProcessor ap = new AnnotationProcessor();</span>
-<span class="nc bnc" id="L300" title="All 2 branches missed.">                        for (UDDIClerk uddiClerk : uddiClerks.values()) {</span>
-<span class="nc" id="L301">                                Collection&lt;BusinessService&gt; services = ap.readServiceAnnotations(</span>
-<span class="nc" id="L302">                                        uddiClerk.getClassWithAnnotations(), uddiClerk.getUDDINode().getProperties());</span>
-<span class="nc bnc" id="L303" title="All 2 branches missed.">                                for (BusinessService businessService : services) {</span>
-<span class="nc" id="L304">                                        log.info(&quot;Node=&quot; + uddiClerk.getUDDINode().getApiNode().getName());</span>
-<span class="nc" id="L305">                                        uddiClerk.register(businessService, uddiClerk.getUDDINode().getApiNode());</span>
-<span class="nc" id="L306">                                }</span>
-<span class="nc" id="L307">                        }</span>
+<span class="nc" id="L303">                Map&lt;String, UDDIClerk&gt; uddiClerks = clientConfig.getUDDIClerks();</span>
+<span class="nc bnc" id="L304" title="All 2 branches missed.">                if (uddiClerks.size() &gt; 0) {</span>
+<span class="nc" id="L305">                        AnnotationProcessor ap = new AnnotationProcessor();</span>
+<span class="nc bnc" id="L306" title="All 2 branches missed.">                        for (UDDIClerk uddiClerk : uddiClerks.values()) {</span>
+<span class="nc" id="L307">                                Collection&lt;BusinessService&gt; services = ap.readServiceAnnotations(</span>
+<span class="nc" id="L308">                                        uddiClerk.getClassWithAnnotations(), uddiClerk.getUDDINode().getProperties());</span>
+<span class="nc bnc" id="L309" title="All 2 branches missed.">                                for (BusinessService businessService : services) {</span>
+<span class="nc" id="L310">                                        log.info(&quot;Node=&quot; + uddiClerk.getUDDINode().getApiNode().getName());</span>
+<span class="nc" id="L311">                                        uddiClerk.register(businessService, uddiClerk.getUDDINode().getApiNode());</span>
+<span class="nc" id="L312">                                }</span>
+<span class="nc" id="L313">                        }</span>
                 }
-<span class="nc" id="L309">        }</span>
+<span class="nc" id="L315">        }</span>
 
         /**
          * Removes the service and all of its bindingTemplates of the annotated
@@ -314,18 +320,18 @@ public class UDDIClient {
          *
          */
         public void unRegisterAnnotatedServices() {
-<span class="nc" id="L317">                Map&lt;String, UDDIClerk&gt; clerks = clientConfig.getUDDIClerks();</span>
-<span class="nc bnc" id="L318" title="All 2 branches missed.">                if (clerks.size() &gt; 0) {</span>
-<span class="nc" id="L319">                        AnnotationProcessor ap = new AnnotationProcessor();</span>
-<span class="nc bnc" id="L320" title="All 2 branches missed.">                        for (UDDIClerk clerk : clerks.values()) {</span>
-<span class="nc" id="L321">                                Collection&lt;BusinessService&gt; services = ap.readServiceAnnotations(</span>
-<span class="nc" id="L322">                                        clerk.getClassWithAnnotations(), clerk.getUDDINode().getProperties());</span>
-<span class="nc bnc" id="L323" title="All 2 branches missed.">                                for (BusinessService businessService : services) {</span>
-<span class="nc" id="L324">                                        clerk.unRegisterService(businessService.getServiceKey(), clerk.getUDDINode().getApiNode());</span>
-<span class="nc" id="L325">                                }</span>
-<span class="nc" id="L326">                        }</span>
+<span class="nc" id="L323">                Map&lt;String, UDDIClerk&gt; clerks = clientConfig.getUDDIClerks();</span>
+<span class="nc bnc" id="L324" title="All 2 branches missed.">                if (clerks.size() &gt; 0) {</span>
+<span class="nc" id="L325">                        AnnotationProcessor ap = new AnnotationProcessor();</span>
+<span class="nc bnc" id="L326" title="All 2 branches missed.">                        for (UDDIClerk clerk : clerks.values()) {</span>
+<span class="nc" id="L327">                                Collection&lt;BusinessService&gt; services = ap.readServiceAnnotations(</span>
+<span class="nc" id="L328">                                        clerk.getClassWithAnnotations(), clerk.getUDDINode().getProperties());</span>
+<span class="nc bnc" id="L329" title="All 2 branches missed.">                                for (BusinessService businessService : services) {</span>
+<span class="nc" id="L330">                                        clerk.unRegisterService(businessService.getServiceKey(), clerk.getUDDINode().getApiNode());</span>
+<span class="nc" id="L331">                                }</span>
+<span class="nc" id="L332">                        }</span>
                 }
-<span class="nc" id="L328">        }</span>
+<span class="nc" id="L334">        }</span>
 
         /**
          * Removes the bindings of the services in the annotated classes.
@@ -338,34 +344,34 @@ public class UDDIClient {
          */
         public void unRegisterBindingsOfAnnotatedServices(boolean removeServiceWithNoBindingTemplates) {
 
-<span class="nc" id="L341">                Map&lt;String, UDDIClerk&gt; clerks = clientConfig.getUDDIClerks();</span>
-<span class="nc bnc" id="L342" title="All 2 branches missed.">                if (clerks.size() &gt; 0) {</span>
-<span class="nc" id="L343">                        AnnotationProcessor ap = new AnnotationProcessor();</span>
-<span class="nc bnc" id="L344" title="All 2 branches missed.">                        for (UDDIClerk clerk : clerks.values()) {</span>
-<span class="nc" id="L345">                                Collection&lt;BusinessService&gt; services = ap.readServiceAnnotations(</span>
-<span class="nc" id="L346">                                        clerk.getClassWithAnnotations(), clerk.getUDDINode().getProperties());</span>
-<span class="nc bnc" id="L347" title="All 2 branches missed.">                                for (BusinessService businessService : services) {</span>
-<span class="nc bnc" id="L348" title="All 2 branches missed.">                                        if (businessService.getBindingTemplates() != null) {</span>
-<span class="nc" id="L349">                                                List&lt;BindingTemplate&gt; bindingTemplates = businessService.getBindingTemplates().getBindingTemplate();</span>
-<span class="nc bnc" id="L350" title="All 2 branches missed.">                                                for (BindingTemplate bindingTemplate : bindingTemplates) {</span>
-<span class="nc" id="L351">                                                        clerk.unRegisterBinding(bindingTemplate.getBindingKey(), clerk.getUDDINode().getApiNode());</span>
-<span class="nc" id="L352">                                                }</span>
+<span class="nc" id="L347">                Map&lt;String, UDDIClerk&gt; clerks = clientConfig.getUDDIClerks();</span>
+<span class="nc bnc" id="L348" title="All 2 branches missed.">                if (clerks.size() &gt; 0) {</span>
+<span class="nc" id="L349">                        AnnotationProcessor ap = new AnnotationProcessor();</span>
+<span class="nc bnc" id="L350" title="All 2 branches missed.">                        for (UDDIClerk clerk : clerks.values()) {</span>
+<span class="nc" id="L351">                                Collection&lt;BusinessService&gt; services = ap.readServiceAnnotations(</span>
+<span class="nc" id="L352">                                        clerk.getClassWithAnnotations(), clerk.getUDDINode().getProperties());</span>
+<span class="nc bnc" id="L353" title="All 2 branches missed.">                                for (BusinessService businessService : services) {</span>
+<span class="nc bnc" id="L354" title="All 2 branches missed.">                                        if (businessService.getBindingTemplates() != null) {</span>
+<span class="nc" id="L355">                                                List&lt;BindingTemplate&gt; bindingTemplates = businessService.getBindingTemplates().getBindingTemplate();</span>
+<span class="nc bnc" id="L356" title="All 2 branches missed.">                                                for (BindingTemplate bindingTemplate : bindingTemplates) {</span>
+<span class="nc" id="L357">                                                        clerk.unRegisterBinding(bindingTemplate.getBindingKey(), clerk.getUDDINode().getApiNode());</span>
+<span class="nc" id="L358">                                                }</span>
                                         }
-<span class="nc bnc" id="L354" title="All 2 branches missed.">                                        if (removeServiceWithNoBindingTemplates) {</span>
+<span class="nc bnc" id="L360" title="All 2 branches missed.">                                        if (removeServiceWithNoBindingTemplates) {</span>
                                                 try {
-<span class="nc" id="L356">                                                        BusinessService existingService = clerk.getServiceDetail(businessService.getServiceKey(), clerk.getUDDINode().getApiNode());</span>
-<span class="nc bnc" id="L357" title="All 4 branches missed.">                                                        if (existingService.getBindingTemplates() == null || existingService.getBindingTemplates().getBindingTemplate().size() == 0) {</span>
-<span class="nc" id="L358">                                                                clerk.unRegisterService(businessService.getServiceKey(), clerk.getUDDINode().getApiNode());</span>
+<span class="nc" id="L362">                                                        BusinessService existingService = clerk.getServiceDetail(businessService.getServiceKey(), clerk.getUDDINode().getApiNode());</span>
+<span class="nc bnc" id="L363" title="All 4 branches missed.">                                                        if (existingService.getBindingTemplates() == null || existingService.getBindingTemplates().getBindingTemplate().size() == 0) {</span>
+<span class="nc" id="L364">                                                                clerk.unRegisterService(businessService.getServiceKey(), clerk.getUDDINode().getApiNode());</span>
                                                         }
-<span class="nc" id="L360">                                                } catch (Exception e) {</span>
-<span class="nc" id="L361">                                                        log.error(e.getMessage(), e);</span>
-<span class="nc" id="L362">                                                }</span>
+<span class="nc" id="L366">                                                } catch (Exception e) {</span>
+<span class="nc" id="L367">                                                        log.error(e.getMessage(), e);</span>
+<span class="nc" id="L368">                                                }</span>
                                         }
-<span class="nc" id="L364">                                }</span>
-<span class="nc" id="L365">                        }</span>
+<span class="nc" id="L370">                                }</span>
+<span class="nc" id="L371">                        }</span>
                 }
 
-<span class="nc" id="L368">        }</span>
+<span class="nc" id="L374">        }</span>
 
         /**
          * Returns a live instance of the raw configuration file
@@ -373,7 +379,7 @@ public class UDDIClient {
          * @return the client config loaded from file
          */
         public ClientConfig getClientConfig() {
-<span class="fc" id="L376">                return clientConfig;</span>
+<span class="fc" id="L382">                return clientConfig;</span>
         }
 
         /**
@@ -382,7 +388,7 @@ public class UDDIClient {
          * @return getClientConfig().getClientName()
          */
         public String getName() {
-<span class="fc" id="L385">                return clientConfig.getClientName();</span>
+<span class="fc" id="L391">                return clientConfig.getClientName();</span>
         }
 
         /**
@@ -394,7 +400,7 @@ public class UDDIClient {
          */
         @Deprecated 
         public String getClientCallbackUrl() {
-<span class="nc" id="L397">                return clientConfig.getClientCallbackUrl();</span>
+<span class="nc" id="L403">                return clientConfig.getClientCallbackUrl();</span>
         }
 
         /**
@@ -408,7 +414,7 @@ public class UDDIClient {
          * @throws ConfigurationException
          */
         public Transport getTransport() throws ConfigurationException {
-<span class="nc" id="L411">                return getTransport(&quot;default&quot;);</span>
+<span class="nc" id="L417">                return getTransport(&quot;default&quot;);</span>
         }
 
         /**
@@ -421,17 +427,17 @@ public class UDDIClient {
          */
         public Transport getTransport(String nodeName) throws ConfigurationException {
                 try {
-<span class="fc" id="L424">                        String clazz = clientConfig.getUDDINode(nodeName).getProxyTransport();</span>
-<span class="fc" id="L425">                        String managerName = clientConfig.getClientName();</span>
-<span class="fc" id="L426">                        Class&lt;?&gt; transportClass = ClassUtil.forName(clazz, UDDIClient.class);</span>
-<span class="pc bpc" id="L427" title="1 of 2 branches missed.">                        if (transportClass != null) {</span>
-<span class="fc" id="L428">                                Transport transport = (Transport) transportClass.getConstructor(String.class, String.class).newInstance(managerName, nodeName);</span>
-<span class="fc" id="L429">                                return transport;</span>
+<span class="fc" id="L430">                        String clazz = clientConfig.getUDDINode(nodeName).getProxyTransport();</span>
+<span class="fc" id="L431">                        String managerName = clientConfig.getClientName();</span>
+<span class="fc" id="L432">                        Class&lt;?&gt; transportClass = ClassUtil.forName(clazz, UDDIClient.class);</span>
+<span class="pc bpc" id="L433" title="1 of 2 branches missed.">                        if (transportClass != null) {</span>
+<span class="fc" id="L434">                                Transport transport = (Transport) transportClass.getConstructor(String.class, String.class).newInstance(managerName, nodeName);</span>
+<span class="fc" id="L435">                                return transport;</span>
                         } else {
-<span class="nc" id="L431">                                throw new ConfigurationException(&quot;ProxyTransport was not defined in the &quot; + clientConfig.getConfigurationFile());</span>
+<span class="nc" id="L437">                                throw new ConfigurationException(&quot;ProxyTransport was not defined in the &quot; + clientConfig.getConfigurationFile());</span>
                         }
-<span class="fc" id="L433">                } catch (Exception e) {</span>
-<span class="fc" id="L434">                        throw new ConfigurationException(e.getMessage(), e);</span>
+<span class="fc" id="L439">                } catch (Exception e) {</span>
+<span class="fc" id="L440">                        throw new ConfigurationException(e.getMessage(), e);</span>
                 }
         }
         
@@ -447,10 +453,10 @@ public class UDDIClient {
          * or NULL if not found
          */
         public UDDIClerk getClerk(String clerkName) {
-<span class="pc bpc" id="L450" title="2 of 4 branches missed.">                if (clerkName == null || clerkName.length() == 0) {</span>
-<span class="nc" id="L451">                        return getClientConfig().getUDDIClerks().get(&quot;default&quot;);</span>
+<span class="pc bpc" id="L456" title="2 of 4 branches missed.">                if (clerkName == null || clerkName.length() == 0) {</span>
+<span class="nc" id="L457">                        return getClientConfig().getUDDIClerks().get(&quot;default&quot;);</span>
                 }
-<span class="fc" id="L453">                return getClientConfig().getUDDIClerks().get(clerkName);</span>
+<span class="fc" id="L459">                return getClientConfig().getUDDIClerks().get(clerkName);</span>
         }
 
         /**
@@ -459,25 +465,25 @@ public class UDDIClient {
          *
          */
         public void registerWSDLs() {
-<span class="nc" id="L462">                Map&lt;String, UDDIClerk&gt; uddiClerks = clientConfig.getUDDIClerks();</span>
-<span class="nc bnc" id="L463" title="All 2 branches missed.">                if (uddiClerks.size() &gt; 0) {</span>
-<span class="nc bnc" id="L464" title="All 2 branches missed.">                        for (UDDIClerk uddiClerk : uddiClerks.values()) {</span>
-<span class="nc" id="L465">                                uddiClerk.registerWsdls();</span>
-<span class="nc" id="L466">                        }</span>
+<span class="nc" id="L468">                Map&lt;String, UDDIClerk&gt; uddiClerks = clientConfig.getUDDIClerks();</span>
+<span class="nc bnc" id="L469" title="All 2 branches missed.">                if (uddiClerks.size() &gt; 0) {</span>
+<span class="nc bnc" id="L470" title="All 2 branches missed.">                        for (UDDIClerk uddiClerk : uddiClerks.values()) {</span>
+<span class="nc" id="L471">                                uddiClerk.registerWsdls();</span>
+<span class="nc" id="L472">                        }</span>
                 }
-<span class="nc" id="L468">        }</span>
+<span class="nc" id="L474">        }</span>
 
         /**
          * unregisters all config defined wsdls
          */
         public void unRegisterWSDLs() {
-<span class="nc" id="L474">                Map&lt;String, UDDIClerk&gt; uddiClerks = clientConfig.getUDDIClerks();</span>
-<span class="nc bnc" id="L475" title="All 2 branches missed.">                if (uddiClerks.size() &gt; 0) {</span>
-<span class="nc bnc" id="L476" title="All 2 branches missed.">                        for (UDDIClerk uddiClerk : uddiClerks.values()) {</span>
-<span class="nc" id="L477">                                uddiClerk.unRegisterWsdls();</span>
-<span class="nc" id="L478">                        }</span>
+<span class="nc" id="L480">                Map&lt;String, UDDIClerk&gt; uddiClerks = clientConfig.getUDDIClerks();</span>
+<span class="nc bnc" id="L481" title="All 2 branches missed.">                if (uddiClerks.size() &gt; 0) {</span>
+<span class="nc bnc" id="L482" title="All 2 branches missed.">                        for (UDDIClerk uddiClerk : uddiClerks.values()) {</span>
+<span class="nc" id="L483">                                uddiClerk.unRegisterWsdls();</span>
+<span class="nc" id="L484">                        }</span>
                 }
-<span class="nc" id="L480">        }</span>
+<span class="nc" id="L486">        }</span>
 
         /**
          * adds the typical SOAP tmodel references, but only if they aren't
@@ -487,106 +493,106 @@ public class UDDIClient {
          * @return a modified instance of the source binding template
          */
         public static BindingTemplate addSOAPtModels(BindingTemplate bt) {
-<span class="pc bpc" id="L490" title="1 of 2 branches missed.">                if (bt.getCategoryBag() == null) {</span>
-<span class="fc" id="L491">                        bt.setCategoryBag(new CategoryBag());</span>
+<span class="pc bpc" id="L496" title="1 of 2 branches missed.">                if (bt.getCategoryBag() == null) {</span>
+<span class="fc" id="L497">                        bt.setCategoryBag(new CategoryBag());</span>
                 }
-<span class="fc" id="L493">                boolean found = false;</span>
-<span class="pc bpc" id="L494" title="1 of 2 branches missed.">                for (int i = 0; i &lt; bt.getCategoryBag().getKeyedReference().size(); i++) {</span>
-<span class="nc bnc" id="L495" title="All 2 branches missed.">                        if (bt.getCategoryBag().getKeyedReference().get(i).getTModelKey() != null</span>
-<span class="nc bnc" id="L496" title="All 2 branches missed.">                                &amp;&amp; bt.getCategoryBag().getKeyedReference().get(i).getTModelKey().equalsIgnoreCase(&quot;uddi:uddi.org:categorization:types&quot;)) {</span>
-<span class="nc bnc" id="L497" title="All 2 branches missed.">                                if (bt.getCategoryBag().getKeyedReference().get(i).getKeyName() != null</span>
-<span class="nc bnc" id="L498" title="All 2 branches missed.">                                        &amp;&amp; bt.getCategoryBag().getKeyedReference().get(i).getKeyName().equalsIgnoreCase(&quot;uddi-org:types:wsdl&quot;)) {</span>
-<span class="nc" id="L499">                                        found = true;</span>
+<span class="fc" id="L499">                boolean found = false;</span>
+<span class="pc bpc" id="L500" title="1 of 2 branches missed.">                for (int i = 0; i &lt; bt.getCategoryBag().getKeyedReference().size(); i++) {</span>
+<span class="nc bnc" id="L501" title="All 2 branches missed.">                        if (bt.getCategoryBag().getKeyedReference().get(i).getTModelKey() != null</span>
+<span class="nc bnc" id="L502" title="All 2 branches missed.">                                &amp;&amp; bt.getCategoryBag().getKeyedReference().get(i).getTModelKey().equalsIgnoreCase(&quot;uddi:uddi.org:categorization:types&quot;)) {</span>
+<span class="nc bnc" id="L503" title="All 2 branches missed.">                                if (bt.getCategoryBag().getKeyedReference().get(i).getKeyName() != null</span>
+<span class="nc bnc" id="L504" title="All 2 branches missed.">                                        &amp;&amp; bt.getCategoryBag().getKeyedReference().get(i).getKeyName().equalsIgnoreCase(&quot;uddi-org:types:wsdl&quot;)) {</span>
+<span class="nc" id="L505">                                        found = true;</span>
                                 }
                         }
                 }
-<span class="pc bpc" id="L503" title="1 of 2 branches missed.">                if (!found) {</span>
-<span class="fc" id="L504">                        bt.getCategoryBag().getKeyedReference().add(new KeyedReference(&quot;uddi:uddi.org:categorization:types&quot;, &quot;uddi-org:types:wsdl&quot;, &quot;wsdlDeployment&quot;));</span>
+<span class="pc bpc" id="L509" title="1 of 2 branches missed.">                if (!found) {</span>
+<span class="fc" id="L510">                        bt.getCategoryBag().getKeyedReference().add(new KeyedReference(&quot;uddi:uddi.org:categorization:types&quot;, &quot;uddi-org:types:wsdl&quot;, &quot;wsdlDeployment&quot;));</span>
                 }
-<span class="pc bpc" id="L506" title="3 of 4 branches missed.">                if (bt.getCategoryBag().getKeyedReference().isEmpty() &amp;&amp; bt.getCategoryBag().getKeyedReferenceGroup().isEmpty()) {</span>
-<span class="nc" id="L507">                        bt.setCategoryBag(null);</span>
+<span class="pc bpc" id="L512" title="3 of 4 branches missed.">                if (bt.getCategoryBag().getKeyedReference().isEmpty() &amp;&amp; bt.getCategoryBag().getKeyedReferenceGroup().isEmpty()) {</span>
+<span class="nc" id="L513">                        bt.setCategoryBag(null);</span>
                 }
-<span class="pc bpc" id="L509" title="1 of 2 branches missed.">                if (bt.getTModelInstanceDetails() == null) {</span>
-<span class="nc" id="L510">                        bt.setTModelInstanceDetails(new TModelInstanceDetails());</span>
+<span class="pc bpc" id="L515" title="1 of 2 branches missed.">                if (bt.getTModelInstanceDetails() == null) {</span>
+<span class="nc" id="L516">                        bt.setTModelInstanceDetails(new TModelInstanceDetails());</span>
                 }
                 TModelInstanceInfo tModelInstanceInfo;
-<span class="pc bpc" id="L513" title="1 of 2 branches missed.">                if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SOAP)) {</span>
-<span class="fc" id="L514">                        tModelInstanceInfo = new TModelInstanceInfo();</span>
-<span class="fc" id="L515">                        tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_SOAP);</span>
-<span class="fc" id="L516">                        bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
+<span class="pc bpc" id="L519" title="1 of 2 branches missed.">                if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SOAP)) {</span>
+<span class="fc" id="L520">                        tModelInstanceInfo = new TModelInstanceInfo();</span>
+<span class="fc" id="L521">                        tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_SOAP);</span>
+<span class="fc" id="L522">                        bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                 }
 
-<span class="pc bpc" id="L519" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;http:&quot;)) {</span>
-<span class="pc bpc" id="L520" title="1 of 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_HTTP)) {</span>
-<span class="fc" id="L521">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
-<span class="fc" id="L522">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_HTTP);</span>
-<span class="fc" id="L523">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
+<span class="pc bpc" id="L525" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;http:&quot;)) {</span>
+<span class="pc bpc" id="L526" title="1 of 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_HTTP)) {</span>
+<span class="fc" id="L527">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
+<span class="fc" id="L528">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_HTTP);</span>
+<span class="fc" id="L529">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
-<span class="pc bpc" id="L526" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;jms:&quot;)) {</span>
-<span class="nc bnc" id="L527" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_JMS)) {</span>
-<span class="nc" id="L528">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
-<span class="nc" id="L529">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_JMS);</span>
-<span class="nc" id="L530">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
+<span class="pc bpc" id="L532" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;jms:&quot;)) {</span>
+<span class="nc bnc" id="L533" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_JMS)) {</span>
+<span class="nc" id="L534">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
+<span class="nc" id="L535">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_JMS);</span>
+<span class="nc" id="L536">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
-<span class="pc bpc" id="L533" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;rmi:&quot;)) {</span>
-<span class="nc bnc" id="L534" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_RMI)) {</span>
-<span class="nc" id="L535">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
-<span class="nc" id="L536">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_RMI);</span>
-<span class="nc" id="L537">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
+<span class="pc bpc" id="L539" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;rmi:&quot;)) {</span>
+<span class="nc bnc" id="L540" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_RMI)) {</span>
+<span class="nc" id="L541">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
+<span class="nc" id="L542">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_RMI);</span>
+<span class="nc" id="L543">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
-<span class="pc bpc" id="L540" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;udp:&quot;)) {</span>
-<span class="nc bnc" id="L541" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_UDP)) {</span>
-<span class="nc" id="L542">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
-<span class="nc" id="L543">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_UDP);</span>
-<span class="nc" id="L544">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
+<span class="pc bpc" id="L546" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;udp:&quot;)) {</span>
+<span class="nc bnc" id="L547" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_UDP)) {</span>
+<span class="nc" id="L548">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
+<span class="nc" id="L549">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_UDP);</span>
+<span class="nc" id="L550">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
-<span class="pc bpc" id="L547" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;amqp:&quot;)) {</span>
-<span class="nc bnc" id="L548" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_AMQP)) {</span>
-<span class="nc" id="L549">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
-<span class="nc" id="L550">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_AMQP);</span>
-<span class="nc" id="L551">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
+<span class="pc bpc" id="L553" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;amqp:&quot;)) {</span>
+<span class="nc bnc" id="L554" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_AMQP)) {</span>
+<span class="nc" id="L555">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
+<span class="nc" id="L556">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_AMQP);</span>
+<span class="nc" id="L557">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
-<span class="pc bpc" id="L554" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;mailto:&quot;)) {</span>
-<span class="nc bnc" id="L555" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_EMAIL)) {</span>
-<span class="nc" id="L556">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
-<span class="nc" id="L557">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_EMAIL);</span>
-<span class="nc" id="L558">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
+<span class="pc bpc" id="L560" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;mailto:&quot;)) {</span>
+<span class="nc bnc" id="L561" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_EMAIL)) {</span>
+<span class="nc" id="L562">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
+<span class="nc" id="L563">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_EMAIL);</span>
+<span class="nc" id="L564">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
-<span class="pc bpc" id="L561" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;ftp:&quot;)) {</span>
-<span class="nc bnc" id="L562" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_FTP)) {</span>
-<span class="nc" id="L563">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
-<span class="nc" id="L564">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_FTP);</span>
-<span class="nc" id="L565">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
+<span class="pc bpc" id="L567" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;ftp:&quot;)) {</span>
+<span class="nc bnc" id="L568" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_FTP)) {</span>
+<span class="nc" id="L569">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
+<span class="nc" id="L570">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_FTP);</span>
+<span class="nc" id="L571">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
-<span class="pc bpc" id="L568" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;https:&quot;)) {</span>
-<span class="nc bnc" id="L569" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {</span>
-<span class="nc" id="L570">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
-<span class="nc" id="L571">                                tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_SSLv3);</span>
-<span class="nc" id="L572">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
+<span class="pc bpc" id="L574" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;https:&quot;)) {</span>
+<span class="nc bnc" id="L575" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {</span>
+<span class="nc" id="L576">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
+<span class="nc" id="L577">                                tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_SSLv3);</span>
+<span class="nc" id="L578">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
-<span class="pc bpc" id="L575" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;ftps:&quot;)) {</span>
-<span class="nc bnc" id="L576" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {</span>
-<span class="nc" id="L577">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
-<span class="nc" id="L578">                                tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_SSLv3);</span>
-<span class="nc" id="L579">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
+<span class="pc bpc" id="L581" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;ftps:&quot;)) {</span>
+<span class="nc bnc" id="L582" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {</span>
+<span class="nc" id="L583">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
+<span class="nc" id="L584">                                tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_SSLv3);</span>
+<span class="nc" id="L585">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
-<span class="pc bpc" id="L582" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;jndi:&quot;)) {</span>
-<span class="nc bnc" id="L583" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_JNDI_RMI)) {</span>
-<span class="nc" id="L584">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
-<span class="nc" id="L585">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_JNDI_RMI);</span>
-<span class="nc" id="L586">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
+<span class="pc bpc" id="L588" title="2 of 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;jndi:&quot;)) {</span>
+<span class="nc bnc" id="L589" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_JNDI_RMI)) {</span>
+<span class="nc" id="L590">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
+<span class="nc" id="L591">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_JNDI_RMI);</span>
+<span class="nc" id="L592">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
-<span class="fc" id="L589">                return bt;</span>
+<span class="fc" id="L595">                return bt;</span>
         }
 
         /**
@@ -597,41 +603,41 @@ public class UDDIClient {
          * @return a modified instance of the source binding template
          */
         public static BindingTemplate addRESTtModels(BindingTemplate bt) {
-<span class="nc bnc" id="L600" title="All 2 branches missed.">                if (bt.getTModelInstanceDetails() == null) {</span>
-<span class="nc" id="L601">                        bt.setTModelInstanceDetails(new TModelInstanceDetails());</span>
+<span class="nc bnc" id="L606" title="All 2 branches missed.">                if (bt.getTModelInstanceDetails() == null) {</span>
+<span class="nc" id="L607">                        bt.setTModelInstanceDetails(new TModelInstanceDetails());</span>
                 }
                 TModelInstanceInfo tModelInstanceInfo;
-<span class="nc bnc" id="L604" title="All 2 branches missed.">                if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_REST)) {</span>
-<span class="nc" id="L605">                        tModelInstanceInfo = new TModelInstanceInfo();</span>
-<span class="nc" id="L606">                        tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_REST);</span>
-<span class="nc" id="L607">                        bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
+<span class="nc bnc" id="L610" title="All 2 branches missed.">                if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_REST)) {</span>
+<span class="nc" id="L611">                        tModelInstanceInfo = new TModelInstanceInfo();</span>
+<span class="nc" id="L612">                        tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_REST);</span>
+<span class="nc" id="L613">                        bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                 }
 
-<span class="nc bnc" id="L610" title="All 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;http:&quot;)) {</span>
-<span class="nc bnc" id="L611" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_HTTP)) {</span>
-<span class="nc" id="L612">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
-<span class="nc" id="L613">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_HTTP);</span>
-<span class="nc" id="L614">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
+<span class="nc bnc" id="L616" title="All 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;http:&quot;)) {</span>
+<span class="nc bnc" id="L617" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.TRANSPORT_HTTP)) {</span>
+<span class="nc" id="L618">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
+<span class="nc" id="L619">                                tModelInstanceInfo.setTModelKey(UDDIConstants.TRANSPORT_HTTP);</span>
+<span class="nc" id="L620">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
-<span class="nc bnc" id="L617" title="All 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;https:&quot;)) {</span>
-<span class="nc bnc" id="L618" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {</span>
-<span class="nc" id="L619">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
-<span class="nc" id="L620">                                tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_SSLv3);</span>
-<span class="nc" id="L621">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
+<span class="nc bnc" id="L623" title="All 4 branches missed.">                if (bt.getAccessPoint() != null &amp;&amp; bt.getAccessPoint().getValue().startsWith(&quot;https:&quot;)) {</span>
+<span class="nc bnc" id="L624" title="All 2 branches missed.">                        if (!exists(bt.getTModelInstanceDetails().getTModelInstanceInfo(), UDDIConstants.PROTOCOL_SSLv3)) {</span>
+<span class="nc" id="L625">                                tModelInstanceInfo = new TModelInstanceInfo();</span>
+<span class="nc" id="L626">                                tModelInstanceInfo.setTModelKey(UDDIConstants.PROTOCOL_SSLv3);</span>
+<span class="nc" id="L627">                                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tModelInstanceInfo);</span>
                         }
                 }
-<span class="nc" id="L624">                return bt;</span>
+<span class="nc" id="L630">                return bt;</span>
         }
 
         private static boolean exists(List&lt;TModelInstanceInfo&gt; items, String key) {
-<span class="fc bfc" id="L628" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
-<span class="pc bpc" id="L629" title="1 of 2 branches missed.">                        if (items.get(i).getTModelKey() != null</span>
-<span class="pc bpc" id="L630" title="1 of 2 branches missed.">                                &amp;&amp; items.get(i).getTModelKey().equalsIgnoreCase(key)) {</span>
-<span class="nc" id="L631">                                return true;</span>
+<span class="fc bfc" id="L634" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="pc bpc" id="L635" title="1 of 2 branches missed.">                        if (items.get(i).getTModelKey() != null</span>
+<span class="pc bpc" id="L636" title="1 of 2 branches missed.">                                &amp;&amp; items.get(i).getTModelKey().equalsIgnoreCase(key)) {</span>
+<span class="nc" id="L637">                                return true;</span>
                         }
                 }
-<span class="fc" id="L634">                return false;</span>
+<span class="fc" id="L640">                return false;</span>
         }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

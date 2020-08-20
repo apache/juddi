@@ -10,10 +10,10 @@ org.apache.juddi.api_v3
 org.apache.juddi.api_v3.rest
 org.apache.juddi.config
 org.apache.juddi.cryptor
-org.apache.juddi.ddl.generator
 org.apache.juddi.example
 org.apache.juddi.example.browse
 org.apache.juddi.example.helloworld
+org.apache.juddi.example.juddi.embedded
 org.apache.juddi.example.partition
 org.apache.juddi.example.publish
 org.apache.juddi.example.uddiv2.api.bridge.example
@@ -33,7 +33,6 @@ org.apache.juddi.samples
 org.apache.juddi.servlets
 org.apache.juddi.subscription
 org.apache.juddi.subscription.notify
-org.apache.juddi.tckrunner
 org.apache.juddi.v2.tck
 org.apache.juddi.v3.annotations
 org.apache.juddi.v3.auth

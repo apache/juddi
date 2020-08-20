@@ -1,0 +1,4 @@
+org.apache.juddi.webconsole
+org.apache.juddi.webconsole.hub
+org.apache.juddi.webconsole.hub.builders
+org.apache.juddi.webconsole.resources

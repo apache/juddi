@@ -17,8 +17,6 @@
 package org.apache.juddi.api.impl;
 
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Resource;
 
 import javax.persistence.EntityManager;
@@ -55,166 +53,177 @@ public abstract class AuthenticatedService {
          * @return the node
          */
         public String getNode() {
-<span class="fc" id="L58">            return node;</span>
+<span class="fc" id="L56">            return node;</span>
         }
 
         public static final String UTF8 = &quot;UTF-8&quot;;
         public static final int AUTHTOKEN_ACTIVE = 1;
         public static final int AUTHTOKEN_RETIRED = 0;
-<span class="fc" id="L64">        static final Log logger = LogFactory.getLog(AuthenticatedService.class);</span>
+<span class="fc" id="L62">        static final Log logger = LogFactory.getLog(AuthenticatedService.class);</span>
         /**
          * the node id of this server instance, as loaded from the config file
          */
-<span class="fc" id="L68">        private String node = &quot;UNDEFINED_NODE_NAME&quot;;</span>
-<span class="fc" id="L69">        protected String baseUrlSSL = &quot;UNDEFINED&quot;;</span>
-<span class="fc" id="L70">        protected String baseUrl = &quot;UNDEFINED&quot;;</span>
-<span class="fc" id="L71">        protected DatatypeFactory df = null;</span>
+<span class="fc" id="L66">        private String node = &quot;UNDEFINED_NODE_NAME&quot;;</span>
+<span class="fc" id="L67">        protected String baseUrlSSL = &quot;UNDEFINED&quot;;</span>
+<span class="fc" id="L68">        protected String baseUrl = &quot;UNDEFINED&quot;;</span>
+<span class="fc" id="L69">        protected DatatypeFactory df = null;</span>
 
-<span class="fc" id="L73">        public AuthenticatedService() {</span>
+<span class="fc" id="L71">        public AuthenticatedService() {</span>
                 try {
-<span class="fc" id="L75">                        node = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID, &quot;UNDEFINED_NODE_NAME&quot;);</span>
-<span class="fc" id="L76">                        node = node.trim();</span>
-<span class="fc" id="L77">                        baseUrlSSL = AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL_SECURE, Property.DEFAULT_BASE_URL_SECURE);</span>
-<span class="fc" id="L78">                        baseUrlSSL = baseUrlSSL.trim();</span>
-<span class="nc" id="L79">                } catch (ConfigurationException ex) {</span>
-<span class="nc" id="L80">                        logger.fatal(null, ex);</span>
-<span class="fc" id="L81">                }</span>
-<span class="fc" id="L82">                init();</span>
-<span class="fc" id="L83">        }</span>
+<span class="fc" id="L73">                        node = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID, &quot;UNDEFINED_NODE_NAME&quot;);</span>
+<span class="fc" id="L74">                        node = node.trim();</span>
+<span class="fc" id="L75">                        baseUrlSSL = AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL_SECURE, Property.DEFAULT_BASE_URL_SECURE);</span>
+<span class="fc" id="L76">                        baseUrlSSL = baseUrlSSL.trim();</span>
+<span class="nc" id="L77">                } catch (ConfigurationException ex) {</span>
+<span class="nc" id="L78">                        logger.fatal(null, ex);</span>
+<span class="fc" id="L79">                }</span>
+<span class="fc" id="L80">                init();</span>
+<span class="fc" id="L81">        }</span>
+        
+        /**
+         * this method can be used to explicitly set a request context. this is useful
+         * in unit tests, embedded and in-vm scenarios only
+         * @param ctx 
+         * @since 3.3.8
+         */
+        public void setContext(WebServiceContext ctx) {
+<span class="nc" id="L90">                this.ctx = ctx;</span>
+<span class="nc" id="L91">        }</span>
+        
         private synchronized  void init() {
             try {
-<span class="fc" id="L86">                df = DatatypeFactory.newInstance();</span>
-<span class="nc" id="L87">            } catch (DatatypeConfigurationException ex) {</span>
-<span class="nc" id="L88">                logger.fatal(null, ex);</span>
-<span class="fc" id="L89">            }</span>
-<span class="fc" id="L90">        }</span>
+<span class="fc" id="L95">                df = DatatypeFactory.newInstance();</span>
+<span class="nc" id="L96">            } catch (DatatypeConfigurationException ex) {</span>
+<span class="nc" id="L97">                logger.fatal(null, ex);</span>
+<span class="fc" id="L98">            }</span>
+<span class="fc" id="L99">        }</span>
 
         @Resource
         protected WebServiceContext ctx;
 
         public UddiEntityPublisher getEntityPublisher(EntityManager em, String authInfo) throws DispositionReportFaultMessage {
-<span class="fc" id="L96">                boolean useAuthInfo = true;</span>
+<span class="fc" id="L105">                boolean useAuthInfo = true;</span>
                 try {
-<span class="fc" id="L98">                        useAuthInfo = AppConfig.getConfiguration().getBoolean(Property.JUDDI_AUTHENTICATOR_USE_TOKEN, true);</span>
-<span class="nc" id="L99">                } catch (ConfigurationException ex) {</span>
+<span class="fc" id="L107">                        useAuthInfo = AppConfig.getConfiguration().getBoolean(Property.JUDDI_AUTHENTICATOR_USE_TOKEN, true);</span>
+<span class="nc" id="L108">                } catch (ConfigurationException ex) {</span>
 
-<span class="fc" id="L101">                }</span>
-<span class="pc bpc" id="L102" title="1 of 2 branches missed.">                if (useAuthInfo) {</span>
+<span class="fc" id="L110">                }</span>
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">                if (useAuthInfo) {</span>
 
-<span class="pc bpc" id="L104" title="1 of 4 branches missed.">                        if (authInfo == null || authInfo.length() == 0) {</span>
-<span class="fc" id="L105">                                throw new AuthTokenRequiredException(new ErrorMessage(&quot;errors.auth.AuthRequired&quot;));</span>
+<span class="pc bpc" id="L113" title="1 of 4 branches missed.">                        if (authInfo == null || authInfo.length() == 0) {</span>
+<span class="fc" id="L114">                                throw new AuthTokenRequiredException(new ErrorMessage(&quot;errors.auth.AuthRequired&quot;));</span>
                         }
 
-<span class="fc" id="L108">                        org.apache.juddi.model.AuthToken modelAuthToken = em.find(org.apache.juddi.model.AuthToken.class, authInfo);</span>
-<span class="pc bpc" id="L109" title="1 of 2 branches missed.">                        if (modelAuthToken == null) {</span>
-<span class="nc" id="L110">                                throw new AuthTokenRequiredException(new ErrorMessage(&quot;errors.auth.AuthInvalid&quot;));</span>
+<span class="fc" id="L117">                        org.apache.juddi.model.AuthToken modelAuthToken = em.find(org.apache.juddi.model.AuthToken.class, authInfo);</span>
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">                        if (modelAuthToken == null) {</span>
+<span class="nc" id="L119">                                throw new AuthTokenRequiredException(new ErrorMessage(&quot;errors.auth.AuthInvalid&quot;));</span>
                         }
 
-<span class="fc" id="L113">                        int allowedMinutesOfInactivity = 0;</span>
+<span class="fc" id="L122">                        int allowedMinutesOfInactivity = 0;</span>
                         try {
-<span class="fc" id="L115">                                allowedMinutesOfInactivity = AppConfig.getConfiguration().getInt(Property.JUDDI_AUTH_TOKEN_TIMEOUT, 0);</span>
-<span class="nc" id="L116">                        } catch (ConfigurationException ce) {</span>
-<span class="nc" id="L117">                                logger.error(&quot;Error reading property &quot; + Property.JUDDI_AUTH_TOKEN_EXPIRATION + &quot; from &quot;</span>
+<span class="fc" id="L124">                                allowedMinutesOfInactivity = AppConfig.getConfiguration().getInt(Property.JUDDI_AUTH_TOKEN_TIMEOUT, 0);</span>
+<span class="nc" id="L125">                        } catch (ConfigurationException ce) {</span>
+<span class="nc" id="L126">                                logger.error(&quot;Error reading property &quot; + Property.JUDDI_AUTH_TOKEN_EXPIRATION + &quot; from &quot;</span>
                                         + &quot;the application's configuration. No automatic timeout token invalidation will occur. &quot;
-<span class="nc" id="L119">                                        + ce.getMessage(), ce);</span>
-<span class="fc" id="L120">                        }</span>
-<span class="fc" id="L121">                        int maxMinutesOfAge = 0;</span>
+<span class="nc" id="L128">                                        + ce.getMessage(), ce);</span>
+<span class="fc" id="L129">                        }</span>
+<span class="fc" id="L130">                        int maxMinutesOfAge = 0;</span>
                         try {
-<span class="fc" id="L123">                                maxMinutesOfAge = AppConfig.getConfiguration().getInt(Property.JUDDI_AUTH_TOKEN_EXPIRATION, 0);</span>
-<span class="nc" id="L124">                        } catch (ConfigurationException ce) {</span>
-<span class="nc" id="L125">                                logger.error(&quot;Error reading property &quot; + Property.JUDDI_AUTH_TOKEN_EXPIRATION + &quot; from &quot;</span>
+<span class="fc" id="L132">                                maxMinutesOfAge = AppConfig.getConfiguration().getInt(Property.JUDDI_AUTH_TOKEN_EXPIRATION, 0);</span>
+<span class="nc" id="L133">                        } catch (ConfigurationException ce) {</span>
+<span class="nc" id="L134">                                logger.error(&quot;Error reading property &quot; + Property.JUDDI_AUTH_TOKEN_EXPIRATION + &quot; from &quot;</span>
                                         + &quot;the application's configuration. No automatic timeout token invalidation will occur. &quot;
-<span class="nc" id="L127">                                        + ce.getMessage(), ce);</span>
-<span class="fc" id="L128">                        }</span>
-<span class="fc" id="L129">                        Date now = new Date();</span>
+<span class="nc" id="L136">                                        + ce.getMessage(), ce);</span>
+<span class="fc" id="L137">                        }</span>
+<span class="fc" id="L138">                        Date now = new Date();</span>
                         // 0 or negative means token does not expire
-<span class="pc bpc" id="L131" title="1 of 2 branches missed.">                        if (allowedMinutesOfInactivity &gt; 0) {</span>
+<span class="pc bpc" id="L140" title="1 of 2 branches missed.">                        if (allowedMinutesOfInactivity &gt; 0) {</span>
                                 // expire tokens after # minutes of inactivity
                                 // compare the time in milli-seconds
-<span class="pc bpc" id="L134" title="1 of 2 branches missed.">                                if (now.getTime() &gt; modelAuthToken.getLastUsed().getTime() + allowedMinutesOfInactivity * 60000l) {</span>
-<span class="nc" id="L135">                                        logger.info(&quot;AUDIT: FAILTURE Token &quot; + modelAuthToken.getAuthToken() + &quot; expired due to inactivity &quot; + getRequestorsIPAddress());</span>
-<span class="nc" id="L136">                                        modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);</span>
-                                }
-                        }
-<span class="pc bpc" id="L139" title="1 of 2 branches missed.">                        if (maxMinutesOfAge &gt; 0) {</span>
-                                // expire tokens when max age is reached
-                                // compare the time in milli-seconds
-<span class="pc bpc" id="L142" title="1 of 2 branches missed.">                                if (now.getTime() &gt; modelAuthToken.getCreated().getTime() + maxMinutesOfAge * 60000l) {</span>
-
-<span class="nc" id="L144">                                        logger.info(&quot;AUDIT: FAILURE - Token &quot; + modelAuthToken.getAuthorizedName() + &quot; expired due to old age &quot; + getRequestorsIPAddress());</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">                                if (now.getTime() &gt; modelAuthToken.getLastUsed().getTime() + allowedMinutesOfInactivity * 60000l) {</span>
+<span class="nc" id="L144">                                        logger.info(&quot;AUDIT: FAILTURE Token &quot; + modelAuthToken.getAuthToken() + &quot; expired due to inactivity &quot; + getRequestorsIPAddress());</span>
 <span class="nc" id="L145">                                        modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);</span>
                                 }
                         }
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">                        if (maxMinutesOfAge &gt; 0) {</span>
+                                // expire tokens when max age is reached
+                                // compare the time in milli-seconds
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">                                if (now.getTime() &gt; modelAuthToken.getCreated().getTime() + maxMinutesOfAge * 60000l) {</span>
 
-<span class="pc bpc" id="L149" title="1 of 2 branches missed.">                        if (modelAuthToken.getTokenState() == AUTHTOKEN_RETIRED) {</span>
-
-<span class="nc" id="L151">                                throw new AuthTokenExpiredException(new ErrorMessage(&quot;errors.auth.AuthTokenExpired&quot;));</span>
+<span class="nc" id="L153">                                        logger.info(&quot;AUDIT: FAILURE - Token &quot; + modelAuthToken.getAuthorizedName() + &quot; expired due to old age &quot; + getRequestorsIPAddress());</span>
+<span class="nc" id="L154">                                        modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);</span>
+                                }
                         }
-<span class="fc bfc" id="L153" title="All 2 branches covered.">                        if (ctx != null) {</span>
+
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">                        if (modelAuthToken.getTokenState() == AUTHTOKEN_RETIRED) {</span>
+
+<span class="nc" id="L160">                                throw new AuthTokenExpiredException(new ErrorMessage(&quot;errors.auth.AuthTokenExpired&quot;));</span>
+                        }
+<span class="fc bfc" id="L162" title="All 2 branches covered.">                        if (ctx != null) {</span>
                                 try {
-<span class="fc" id="L155">                                        boolean check = true;</span>
+<span class="fc" id="L164">                                        boolean check = true;</span>
                                         try {
-<span class="fc" id="L157">                                                check = AppConfig.getConfiguration().getBoolean(Property.JUDDI_AUTH_TOKEN_ENFORCE_SAME_IP, true);</span>
-<span class="nc" id="L158">                                        } catch (ConfigurationException ex) {</span>
-<span class="nc" id="L159">                                                logger.warn(&quot;Error loading config property &quot; + Property.JUDDI_AUTH_TOKEN_ENFORCE_SAME_IP</span>
+<span class="fc" id="L166">                                                check = AppConfig.getConfiguration().getBoolean(Property.JUDDI_AUTH_TOKEN_ENFORCE_SAME_IP, true);</span>
+<span class="nc" id="L167">                                        } catch (ConfigurationException ex) {</span>
+<span class="nc" id="L168">                                                logger.warn(&quot;Error loading config property &quot; + Property.JUDDI_AUTH_TOKEN_ENFORCE_SAME_IP</span>
                                                         + &quot; Enforcing Same IP for Auth Tokens will be enabled by default&quot;, ex);
-<span class="fc" id="L161">                                        }</span>
-<span class="pc bpc" id="L162" title="1 of 2 branches missed.">                                        if (check) {</span>
-<span class="fc" id="L163">                                                MessageContext mc = ctx.getMessageContext();</span>
-<span class="fc" id="L164">                                                HttpServletRequest req = null;</span>
-<span class="pc bpc" id="L165" title="1 of 2 branches missed.">                                                if (mc != null) {</span>
-<span class="fc" id="L166">                                                        req = (HttpServletRequest) mc.get(MessageContext.SERVLET_REQUEST);</span>
+<span class="fc" id="L170">                                        }</span>
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">                                        if (check) {</span>
+<span class="fc" id="L172">                                                MessageContext mc = ctx.getMessageContext();</span>
+<span class="fc" id="L173">                                                HttpServletRequest req = null;</span>
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">                                                if (mc != null) {</span>
+<span class="fc" id="L175">                                                        req = (HttpServletRequest) mc.get(MessageContext.SERVLET_REQUEST);</span>
                                                 }
-<span class="pc bpc" id="L168" title="1 of 2 branches missed.">                                                if (req != null</span>
-<span class="fc bfc" id="L169" title="All 2 branches covered.">                                                        &amp;&amp; req.getRemoteAddr() != null</span>
-<span class="fc bfc" id="L170" title="All 2 branches covered.">                                                        &amp;&amp; modelAuthToken.getIPAddress() != null</span>
-<span class="fc bfc" id="L171" title="All 2 branches covered.">                                                        &amp;&amp; !modelAuthToken.getIPAddress().equalsIgnoreCase(req.getRemoteAddr())) {</span>
-<span class="fc" id="L172">                                                        modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);</span>
-<span class="fc" id="L173">                                                        logger.error(&quot;AUDIT FAILURE - Security Alert - Attempt to use issued auth token from a different IP address, user &quot;</span>
-<span class="fc" id="L174">                                                                + modelAuthToken.getAuthorizedName() + &quot;, issued IP &quot; + modelAuthToken.getIPAddress()</span>
-<span class="fc" id="L175">                                                                + &quot;, attempted use from &quot; + req.getRemoteAddr() + &quot;, forcing reauthentication.&quot;);</span>
-<span class="fc" id="L176">                                                        throw new AuthTokenRequiredException(new ErrorMessage(&quot;errors.auth.AuthInvalid&quot;));</span>
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">                                                if (req != null</span>
+<span class="fc bfc" id="L178" title="All 2 branches covered.">                                                        &amp;&amp; req.getRemoteAddr() != null</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">                                                        &amp;&amp; modelAuthToken.getIPAddress() != null</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">                                                        &amp;&amp; !modelAuthToken.getIPAddress().equalsIgnoreCase(req.getRemoteAddr())) {</span>
+<span class="fc" id="L181">                                                        modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);</span>
+<span class="fc" id="L182">                                                        logger.error(&quot;AUDIT FAILURE - Security Alert - Attempt to use issued auth token from a different IP address, user &quot;</span>
+<span class="fc" id="L183">                                                                + modelAuthToken.getAuthorizedName() + &quot;, issued IP &quot; + modelAuthToken.getIPAddress()</span>
+<span class="fc" id="L184">                                                                + &quot;, attempted use from &quot; + req.getRemoteAddr() + &quot;, forcing reauthentication.&quot;);</span>
+<span class="fc" id="L185">                                                        throw new AuthTokenRequiredException(new ErrorMessage(&quot;errors.auth.AuthInvalid&quot;));</span>
                                                         //invalidate the token, someone's intercepted it or it was reused on another ip
                                                 }
                                         }
-<span class="fc" id="L180">                                } catch (Exception ex) {</span>
-<span class="pc bpc" id="L181" title="1 of 2 branches missed.">                                        if (ex instanceof AuthTokenRequiredException) {</span>
-<span class="fc" id="L182">                                                throw (AuthTokenRequiredException) ex;</span>
+<span class="fc" id="L189">                                } catch (Exception ex) {</span>
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">                                        if (ex instanceof AuthTokenRequiredException) {</span>
+<span class="fc" id="L191">                                                throw (AuthTokenRequiredException) ex;</span>
                                         }
-<span class="nc" id="L184">                                        logger.error(&quot;unexpected error caught looking up requestor's ip address&quot;, ex);</span>
-<span class="fc" id="L185">                                }</span>
+<span class="nc" id="L193">                                        logger.error(&quot;unexpected error caught looking up requestor's ip address&quot;, ex);</span>
+<span class="fc" id="L194">                                }</span>
 
                         }
-<span class="fc" id="L188">                        Authenticator authenticator = AuthenticatorFactory.getAuthenticator();</span>
-<span class="fc" id="L189">                        UddiEntityPublisher entityPublisher = authenticator.identify(authInfo, modelAuthToken.getAuthorizedName(), ctx);</span>
+<span class="fc" id="L197">                        Authenticator authenticator = AuthenticatorFactory.getAuthenticator();</span>
+<span class="fc" id="L198">                        UddiEntityPublisher entityPublisher = authenticator.identify(authInfo, modelAuthToken.getAuthorizedName(), ctx);</span>
 
                         // Must make sure the returned publisher has all the necessary fields filled
-<span class="pc bpc" id="L192" title="1 of 2 branches missed.">                        if (entityPublisher == null) {</span>
-<span class="nc" id="L193">                                logger.warn(&quot;AUDIT FAILURE - Auth token invalid, publisher does not exist &quot; + getRequestorsIPAddress());</span>
-<span class="nc" id="L194">                                throw new AuthTokenRequiredException(new ErrorMessage(&quot;errors.auth.AuthInvalid&quot;));</span>
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">                        if (entityPublisher == null) {</span>
+<span class="nc" id="L202">                                logger.warn(&quot;AUDIT FAILURE - Auth token invalid, publisher does not exist &quot; + getRequestorsIPAddress());</span>
+<span class="nc" id="L203">                                throw new AuthTokenRequiredException(new ErrorMessage(&quot;errors.auth.AuthInvalid&quot;));</span>
                         }
-<span class="pc bpc" id="L196" title="1 of 2 branches missed.">                        if (entityPublisher.getAuthorizedName() == null) {</span>
-<span class="nc" id="L197">                                logger.warn(&quot;AUDIT FAILURE - Auth token invalid, username does exist&quot; + getRequestorsIPAddress());</span>
-<span class="nc" id="L198">                                throw new AuthTokenRequiredException(new ErrorMessage(&quot;errors.auth.AuthInvalid&quot;));</span>
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">                        if (entityPublisher.getAuthorizedName() == null) {</span>
+<span class="nc" id="L206">                                logger.warn(&quot;AUDIT FAILURE - Auth token invalid, username does exist&quot; + getRequestorsIPAddress());</span>
+<span class="nc" id="L207">                                throw new AuthTokenRequiredException(new ErrorMessage(&quot;errors.auth.AuthInvalid&quot;));</span>
                         }
                         // Auth token is being used.  Adjust appropriate values so that it's internal 'expiration clock' is reset.
-<span class="fc" id="L201">                        modelAuthToken.setLastUsed(new Date());</span>
-<span class="fc" id="L202">                        modelAuthToken.setNumberOfUses(modelAuthToken.getNumberOfUses() + 1);</span>
-<span class="fc" id="L203">                        return entityPublisher;</span>
+<span class="fc" id="L210">                        modelAuthToken.setLastUsed(new Date());</span>
+<span class="fc" id="L211">                        modelAuthToken.setNumberOfUses(modelAuthToken.getNumberOfUses() + 1);</span>
+<span class="fc" id="L212">                        return entityPublisher;</span>
                 } else {
                         //use non-token based authentication
-<span class="nc" id="L206">                        Authenticator authenticator = AuthenticatorFactory.getAuthenticator();</span>
-<span class="nc" id="L207">                        UddiEntityPublisher entityPublisher = authenticator.identify(null, null, ctx);</span>
+<span class="nc" id="L215">                        Authenticator authenticator = AuthenticatorFactory.getAuthenticator();</span>
+<span class="nc" id="L216">                        UddiEntityPublisher entityPublisher = authenticator.identify(null, null, ctx);</span>
                         // Must make sure the returned publisher has all the necessary fields filled
-<span class="nc bnc" id="L209" title="All 2 branches missed.">                        if (entityPublisher == null) {</span>
-<span class="nc" id="L210">                                logger.warn(&quot;AUDIT FAILURE - Auth token invalid, publisher does not exist &quot; + getRequestorsIPAddress());</span>
-<span class="nc" id="L211">                                throw new AuthTokenRequiredException(new ErrorMessage(&quot;errors.auth.AuthInvalid&quot;));</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">                        if (entityPublisher == null) {</span>
+<span class="nc" id="L219">                                logger.warn(&quot;AUDIT FAILURE - Auth token invalid, publisher does not exist &quot; + getRequestorsIPAddress());</span>
+<span class="nc" id="L220">                                throw new AuthTokenRequiredException(new ErrorMessage(&quot;errors.auth.AuthInvalid&quot;));</span>
                         }
-<span class="nc bnc" id="L213" title="All 2 branches missed.">                        if (entityPublisher.getAuthorizedName() == null) {</span>
-<span class="nc" id="L214">                                logger.warn(&quot;AUDIT FAILURE - Auth token invalid, username does exist&quot; + getRequestorsIPAddress());</span>
-<span class="nc" id="L215">                                throw new AuthTokenRequiredException(new ErrorMessage(&quot;errors.auth.AuthInvalid&quot;));</span>
+<span class="nc bnc" id="L222" title="All 2 branches missed.">                        if (entityPublisher.getAuthorizedName() == null) {</span>
+<span class="nc" id="L223">                                logger.warn(&quot;AUDIT FAILURE - Auth token invalid, username does exist&quot; + getRequestorsIPAddress());</span>
+<span class="nc" id="L224">                                throw new AuthTokenRequiredException(new ErrorMessage(&quot;errors.auth.AuthInvalid&quot;));</span>
                         }
-<span class="nc" id="L217">                        return entityPublisher;</span>
+<span class="nc" id="L226">                        return entityPublisher;</span>
 
                 }
 
@@ -228,18 +237,18 @@ public abstract class AuthenticatedService {
          */
         public String getRequestorsIPAddress() {
                 try {
-<span class="fc" id="L231">                        MessageContext mc = ctx.getMessageContext();</span>
-<span class="fc" id="L232">                        HttpServletRequest req = null;</span>
-<span class="pc bpc" id="L233" title="1 of 2 branches missed.">                        if (mc != null) {</span>
-<span class="fc" id="L234">                                req = (HttpServletRequest) mc.get(MessageContext.SERVLET_REQUEST);</span>
+<span class="fc" id="L240">                        MessageContext mc = ctx.getMessageContext();</span>
+<span class="fc" id="L241">                        HttpServletRequest req = null;</span>
+<span class="pc bpc" id="L242" title="1 of 2 branches missed.">                        if (mc != null) {</span>
+<span class="fc" id="L243">                                req = (HttpServletRequest) mc.get(MessageContext.SERVLET_REQUEST);</span>
                         }
-<span class="pc bpc" id="L236" title="1 of 2 branches missed.">                        if (req != null) {</span>
-<span class="fc" id="L237">                                return req.getRemoteAddr();</span>
+<span class="pc bpc" id="L245" title="1 of 2 branches missed.">                        if (req != null) {</span>
+<span class="fc" id="L246">                                return req.getRemoteAddr();</span>
                         }
-<span class="fc" id="L239">                } catch (Exception ex) {</span>
-<span class="fc" id="L240">                        logger.debug(&quot;Error caught looking up the requestor's ip address&quot;, ex);</span>
-<span class="nc" id="L241">                }</span>
-<span class="fc" id="L242">                return null;</span>
+<span class="fc" id="L248">                } catch (Exception ex) {</span>
+<span class="fc" id="L249">                        logger.debug(&quot;Error caught looking up the requestor's ip address&quot;, ex);</span>
+<span class="nc" id="L250">                }</span>
+<span class="fc" id="L251">                return null;</span>
         }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

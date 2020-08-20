@@ -67,23 +67,23 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         endpointInterface = &quot;org.uddi.v2_service.Inquire&quot;)
 public class UDDIv2InquiryImpl implements Inquire {
 
-<span class="nc" id="L70">        private static Log logger = LogFactory.getLog(UDDIv2InquiryImpl.class);</span>
-<span class="nc" id="L71">        static UDDIInquiryImpl inquiryService = new UDDIInquiryImpl();</span>
+<span class="fc" id="L70">        private static Log logger = LogFactory.getLog(UDDIv2InquiryImpl.class);</span>
+<span class="fc" id="L71">        static UDDIInquiryImpl inquiryService = new UDDIInquiryImpl();</span>
 
-<span class="nc" id="L73">        public UDDIv2InquiryImpl() {</span>
-<span class="nc" id="L74">                logger.warn(&quot;This implementation of UDDIv2 Inquire service &quot; + UDDIv2InquiryImpl.class.getCanonicalName() + &quot; is considered BETA. Please&quot;</span>
+<span class="fc" id="L73">        public UDDIv2InquiryImpl() {</span>
+<span class="fc" id="L74">                logger.warn(&quot;This implementation of UDDIv2 Inquire service &quot; + UDDIv2InquiryImpl.class.getCanonicalName() + &quot; is considered BETA. Please&quot;</span>
                         + &quot; report any issues to https://issues.apache.org/jira/browse/JUDDI&quot;);
-<span class="nc" id="L76">        }</span>
+<span class="fc" id="L76">        }</span>
 
-<span class="nc" id="L78">        static String nodeId=null;</span>
+<span class="fc" id="L78">        static String nodeId=null;</span>
         public static String getNodeID(){
                  try {
-<span class="nc" id="L81">                         nodeId=AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);</span>
+<span class="fc" id="L81">                         nodeId=AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);</span>
 <span class="nc" id="L82">                 } catch (ConfigurationException ex) {</span>
 <span class="nc" id="L83">                         logger.warn(ex.getMessage());</span>
 <span class="nc" id="L84">                         nodeId=&quot;JUDDI_v3&quot;;</span>
-<span class="nc" id="L85">                 }</span>
-<span class="nc" id="L86">                 return nodeId;</span>
+<span class="fc" id="L85">                 }</span>
+<span class="fc" id="L86">                 return nodeId;</span>
         }
         
         @Override
@@ -98,9 +98,9 @@ public class UDDIv2InquiryImpl implements Inquire {
 
         @Override
         public BusinessList findBusiness(FindBusiness body) throws DispositionReport {
-<span class="nc" id="L101">                ValidateUDDIv2Inquiry.validateFindBusiness(body);</span>
+<span class="fc" id="L101">                ValidateUDDIv2Inquiry.validateFindBusiness(body);</span>
                 try {
-<span class="nc" id="L103">                        return MapUDDIv3Tov2.MapBusinessListEntity(inquiryService.findBusiness(MapUDDIv2Tov3.MapFindBusiness(body)), getNodeID());</span>
+<span class="fc" id="L103">                        return MapUDDIv3Tov2.MapBusinessListEntity(inquiryService.findBusiness(MapUDDIv2Tov3.MapFindBusiness(body)), getNodeID());</span>
 <span class="nc" id="L104">                } catch (DispositionReportFaultMessage ex) {</span>
 <span class="nc" id="L105">                        throw MapUDDIv3Tov2.MapException(ex, getNodeID());</span>
                 }

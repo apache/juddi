@@ -100,8 +100,8 @@
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>                                  log.warn(<span class="jxr_string">"Publisher \&quot;"</span> + user + <span class="jxr_string">"\&quot; was not found in the database, adding the publisher in on the fly."</span>);
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>                                  publisher = <strong class="jxr_keyword">new</strong> <a href="../../../../../org/apache/juddi/model/Publisher.html">Publisher</a>();
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>                                  publisher.setAuthorizedName(user);
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>                                  publisher.setIsAdmin(<span class="jxr_string">"false"</span>);
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>                                  publisher.setIsEnabled(<span class="jxr_string">"true"</span>);
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>                                  publisher.setIsAdmin(false);
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>                                  publisher.setIsEnabled(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>                                  publisher.setMaxBindingsPerService(MaxBindingsPerService);
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>                                  publisher.setMaxBusinesses(MaxBusinesses);
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>                                  publisher.setMaxServicesPerBusiness(MaxServicesPerBusiness);

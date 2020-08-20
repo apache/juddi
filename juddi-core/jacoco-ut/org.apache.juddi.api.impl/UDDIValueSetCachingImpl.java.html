@@ -18,6 +18,7 @@ package org.apache.juddi.api.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.jws.WebService;
 
 import javax.xml.ws.Holder;
 
@@ -29,18 +30,18 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIValueSetCachingPortType;
 import org.uddi.vscache_v3.ValidValue;
 
-//@WebService(serviceName=&quot;UDDIValueSetCachingService&quot;, 
-//			endpointInterface=&quot;org.uddi.v3_service.UDDIValueSetCachingPortType&quot;,
-//			targetNamespace = &quot;urn:uddi-org:v3_service&quot;)
+@WebService(serviceName=&quot;UDDIValueSetCachingService&quot;, 
+			endpointInterface=&quot;org.uddi.v3_service.UDDIValueSetCachingPortType&quot;,
+			targetNamespace = &quot;urn:uddi-org:v3_service&quot;)
 public class UDDIValueSetCachingImpl extends AuthenticatedService implements UDDIValueSetCachingPortType {
 
-<span class="nc" id="L37">        private static Log logger = LogFactory.getLog(UDDIValueSetCachingImpl.class);</span>
+<span class="nc" id="L38">        private static Log logger = LogFactory.getLog(UDDIValueSetCachingImpl.class);</span>
         private UDDIServiceCounter serviceCounter;
 
         public UDDIValueSetCachingImpl() {
-<span class="nc" id="L41">                super();</span>
-<span class="nc" id="L42">                serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());</span>
-<span class="nc" id="L43">        }</span>
+<span class="nc" id="L42">                super();</span>
+<span class="nc" id="L43">                serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());</span>
+<span class="nc" id="L44">        }</span>
 
         /**
          *
@@ -72,26 +73,26 @@ public class UDDIValueSetCachingImpl extends AuthenticatedService implements UDD
                 Holder&lt;String&gt; chunkToken, Holder&lt;List&lt;ValidValue&gt;&gt; validValue)
                 throws DispositionReportFaultMessage {
 
-<span class="nc" id="L75">                long startTime = System.currentTimeMillis();</span>
-<span class="nc" id="L76">                List&lt;String&gt; validValues = UDDIValueSetValidationImpl.getValidValues(modelKey);</span>
+<span class="nc" id="L76">                long startTime = System.currentTimeMillis();</span>
+<span class="nc" id="L77">                List&lt;String&gt; validValues = UDDIValueSetValidationImpl.getValidValues(modelKey);</span>
 
-<span class="nc" id="L78">                Holder&lt;List&lt;ValidValue&gt;&gt; ret = new Holder&lt;List&lt;ValidValue&gt;&gt;(new ArrayList&lt;ValidValue&gt;());</span>
-<span class="nc bnc" id="L79" title="All 2 branches missed.">                if (validValues != null) {</span>
-<span class="nc bnc" id="L80" title="All 2 branches missed.">                        for (int i = 0; i &lt; validValues.size(); i++) {</span>
-<span class="nc" id="L81">                                ValidValue x = new ValidValue(validValues.get(i));</span>
-<span class="nc" id="L82">                                ret.value.add(x);</span>
+<span class="nc" id="L79">                Holder&lt;List&lt;ValidValue&gt;&gt; ret = new Holder&lt;List&lt;ValidValue&gt;&gt;(new ArrayList&lt;ValidValue&gt;());</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                if (validValues != null) {</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">                        for (int i = 0; i &lt; validValues.size(); i++) {</span>
+<span class="nc" id="L82">                                ValidValue x = new ValidValue(validValues.get(i));</span>
+<span class="nc" id="L83">                                ret.value.add(x);</span>
                         }
                 }
                 //findbugs will flag the following as &quot;UC_USELESS_OBJECT&quot; when in fact
                 //it is returned as part of the service call
-<span class="nc" id="L87">                chunkToken = new Holder&lt;String&gt;();</span>
-<span class="nc" id="L88">                chunkToken.value =&quot;0&quot;;</span>
+<span class="nc" id="L88">                chunkToken = new Holder&lt;String&gt;();</span>
+<span class="nc" id="L89">                chunkToken.value =&quot;0&quot;;</span>
 
-<span class="nc" id="L90">                long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="nc" id="L91">                serviceCounter.update(ValueSetCachingQuery.GET_ALLVALIDVALUES,</span>
+<span class="nc" id="L91">                long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L92">                serviceCounter.update(ValueSetCachingQuery.GET_ALLVALIDVALUES,</span>
                         QueryStatus.SUCCESS, procTime);
 
 
-<span class="nc" id="L95">        }</span>
+<span class="nc" id="L96">        }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -22,6 +22,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -39,53 +40,54 @@ public class Email implements java.io.Serializable {
 	private String useType;
 	private String emailAddress;
 
-<span class="fc" id="L42">	public Email() {</span>
-<span class="fc" id="L43">	}</span>
+<span class="fc" id="L43">	public Email() {</span>
+<span class="fc" id="L44">	}</span>
 
-<span class="nc" id="L45">	public Email(Contact contact, String emailAddress) {</span>
-<span class="nc" id="L46">		this.contact = contact;</span>
-<span class="nc" id="L47">		this.emailAddress = emailAddress;</span>
-<span class="nc" id="L48">	}</span>
+<span class="nc" id="L46">	public Email(Contact contact, String emailAddress) {</span>
+<span class="nc" id="L47">		this.contact = contact;</span>
+<span class="nc" id="L48">		this.emailAddress = emailAddress;</span>
+<span class="nc" id="L49">	}</span>
 	public Email(Contact contact, String useType,
-<span class="fc" id="L50">			String emailAddress) {</span>
-<span class="fc" id="L51">		this.contact = contact;</span>
-<span class="fc" id="L52">		this.useType = useType;</span>
-<span class="fc" id="L53">		this.emailAddress = emailAddress;</span>
-<span class="fc" id="L54">	}</span>
+<span class="fc" id="L51">			String emailAddress) {</span>
+<span class="fc" id="L52">		this.contact = contact;</span>
+<span class="fc" id="L53">		this.useType = useType;</span>
+<span class="fc" id="L54">		this.emailAddress = emailAddress;</span>
+<span class="fc" id="L55">	}</span>
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
-<span class="fc" id="L59">		return this.id;</span>
+<span class="fc" id="L60">		return this.id;</span>
 	}
 	public void setId(Long id) {
-<span class="fc" id="L62">		this.id = id;</span>
-<span class="fc" id="L63">	}</span>
+<span class="fc" id="L63">		this.id = id;</span>
+<span class="fc" id="L64">	}</span>
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = &quot;contact_id&quot;, nullable = false)
 	public Contact getContact() {
-<span class="fc" id="L68">		return this.contact;</span>
+<span class="fc" id="L69">		return this.contact;</span>
 	}
 	public void setContact(Contact contact) {
-<span class="fc" id="L71">		this.contact = contact;</span>
-<span class="fc" id="L72">	}</span>
+<span class="fc" id="L72">		this.contact = contact;</span>
+<span class="fc" id="L73">	}</span>
 
 	@Column(name = &quot;use_type&quot;, length=255)
 	public String getUseType() {
-<span class="fc" id="L76">		return this.useType;</span>
+<span class="fc" id="L77">		return this.useType;</span>
 	}
 	public void setUseType(String useType) {
-<span class="fc" id="L79">		this.useType = useType;</span>
-<span class="fc" id="L80">	}</span>
+<span class="fc" id="L80">		this.useType = useType;</span>
+<span class="fc" id="L81">	}</span>
 
+        @Lob
 	@Column(name = &quot;email_address&quot;, nullable = false, length=4096)
 	public String getEmailAddress() {
-<span class="fc" id="L84">		return this.emailAddress;</span>
+<span class="fc" id="L86">		return this.emailAddress;</span>
 	}
 	public void setEmailAddress(String emailAddress) {
-<span class="fc" id="L87">		this.emailAddress = emailAddress;</span>
-<span class="fc" id="L88">	}</span>
+<span class="fc" id="L89">		this.emailAddress = emailAddress;</span>
+<span class="fc" id="L90">	}</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

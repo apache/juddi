@@ -1,0 +1,13 @@
+org.apache.juddi.example
+org.apache.juddi.example.browse
+org.apache.juddi.example.helloworld
+org.apache.juddi.example.juddi.embedded
+org.apache.juddi.example.partition
+org.apache.juddi.example.publish
+org.apache.juddi.example.uddiv2.api.bridge.example
+org.apache.juddi.example.wsdl2uddi
+org.apache.juddi.examples.service.version
+org.apache.juddi.examples.vsv.valuesetvalidator
+org.apache.juddi.samples
+org.apache.juddi.subscription.notify
+org.apache.juddi.validation.vsv

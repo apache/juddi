@@ -57,8 +57,8 @@ import org.uddi.api_v3.DiscoveryURL;
 	public static List&lt;Object&gt; select(EntityManager em, FindQualifiers fq, DiscoveryURLs discURLs, 
 			List&lt;Object&gt; keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.
-<span class="pc bpc" id="L60" title="1 of 4 branches missed.">		if ((keysIn != null) &amp;&amp; (keysIn.size() == 0))</span>
-<span class="nc" id="L61">			return keysIn;</span>
+<span class="fc bfc" id="L60" title="All 4 branches covered.">		if ((keysIn != null) &amp;&amp; (keysIn.size() == 0))</span>
+<span class="fc" id="L61">			return keysIn;</span>
 		
 <span class="fc bfc" id="L63" title="All 2 branches covered.">		if (discURLs == null)</span>
 <span class="fc" id="L64">			return keysIn;</span>
@@ -91,10 +91,10 @@ import org.uddi.api_v3.DiscoveryURL;
 <span class="fc" id="L91">			String urlValue = discURL.getValue();</span>
 			
 <span class="pc bpc" id="L93" title="2 of 4 branches missed.">			if (discURL.getUseType() == null || discURL.getUseType().length() == 0 ) {</span>
-<span class="nc" id="L94">				qry.appendGroupedAnd(new DynamicQuery.Parameter(urlTerm, urlValue, DynamicQuery.PREDICATE_EQUALS));</span>
+<span class="nc" id="L94">				qry.appendGroupedAnd(new DynamicQuery.Parameter(urlTerm, urlValue, DynamicQuery.PREDICATE_LIKE));</span>
 			}
 			else {
-<span class="fc" id="L97">				qry.appendGroupedAnd(new DynamicQuery.Parameter(urlTerm, urlValue, DynamicQuery.PREDICATE_EQUALS), </span>
+<span class="fc" id="L97">				qry.appendGroupedAnd(new DynamicQuery.Parameter(urlTerm, urlValue, DynamicQuery.PREDICATE_LIKE), </span>
 <span class="fc" id="L98">									 new DynamicQuery.Parameter(entityAliasChild + &quot;.useType&quot;, discURL.getUseType(), DynamicQuery.PREDICATE_EQUALS));</span>
 			}
 			

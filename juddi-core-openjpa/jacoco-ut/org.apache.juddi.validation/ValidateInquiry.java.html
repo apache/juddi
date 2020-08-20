@@ -226,8 +226,8 @@ public class ValidateInquiry extends ValidateUDDIApi {
 <span class="nc" id="L226">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.NullInput&quot;));</span>
                 }
 
-<span class="pc bpc" id="L229" title="2 of 8 branches missed.">                if (body.getCategoryBag() == null &amp;&amp; body.getFindTModel() == null &amp;&amp; body.getTModelBag() == null &amp;&amp; body.getName().size() == 0</span>
-<span class="nc bnc" id="L230" title="All 6 branches missed.">                     &amp;&amp; body.getIdentifierBag() == null &amp;&amp; body.getDiscoveryURLs() == null &amp;&amp; body.getFindRelatedBusinesses() == null) {</span>
+<span class="pc bpc" id="L229" title="1 of 8 branches missed.">                if (body.getCategoryBag() == null &amp;&amp; body.getFindTModel() == null &amp;&amp; body.getTModelBag() == null &amp;&amp; body.getName().size() == 0</span>
+<span class="pc bpc" id="L230" title="5 of 6 branches missed.">                     &amp;&amp; body.getIdentifierBag() == null &amp;&amp; body.getDiscoveryURLs() == null &amp;&amp; body.getFindRelatedBusinesses() == null) {</span>
 <span class="nc" id="L231">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.findbusiness.NoInput&quot;));</span>
                 }
 

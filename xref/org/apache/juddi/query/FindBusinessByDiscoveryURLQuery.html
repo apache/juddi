@@ -99,10 +99,10 @@
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>  			String urlValue = discURL.getValue();
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>  			
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  			<strong class="jxr_keyword">if</strong> (discURL.getUseType() == <strong class="jxr_keyword">null</strong> || discURL.getUseType().length() == 0 ) {
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>  				qry.appendGroupedAnd(<strong class="jxr_keyword">new</strong> DynamicQuery.Parameter(urlTerm, urlValue, DynamicQuery.PREDICATE_EQUALS));
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  				qry.appendGroupedAnd(<strong class="jxr_keyword">new</strong> DynamicQuery.Parameter(urlTerm, urlValue, DynamicQuery.PREDICATE_LIKE));
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  			}
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>  			<strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>  				qry.appendGroupedAnd(<strong class="jxr_keyword">new</strong> DynamicQuery.Parameter(urlTerm, urlValue, DynamicQuery.PREDICATE_EQUALS), 
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  				qry.appendGroupedAnd(<strong class="jxr_keyword">new</strong> DynamicQuery.Parameter(urlTerm, urlValue, DynamicQuery.PREDICATE_LIKE), 
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>  									 <strong class="jxr_keyword">new</strong> DynamicQuery.Parameter(entityAliasChild + <span class="jxr_string">".useType"</span>, discURL.getUseType(), DynamicQuery.PREDICATE_EQUALS));
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>  			}
 <a class="jxr_linenumber" name="L100" href="#L100">100</a> 			

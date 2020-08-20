@@ -16,13 +16,13 @@ jUDDI Client side Code,org.apache.juddi.v3.client.mapping,URLLocalizerDefaultImp
 jUDDI Client side Code,org.apache.juddi.v3.client.mapping,MapUDDIv3Tov2.new Object() {...},83,0,0,0,3,0,1,0,1,0
 jUDDI Client side Code,org.apache.juddi.v3.client.mapping,MockSSLSocketFactory.new TrustStrategy() {...},5,0,0,0,2,0,2,0,2,0
 jUDDI Client side Code,org.apache.juddi.v3.client.mapping,MockSSLSocketFactory.new X509HostnameVerifier() {...},8,0,0,0,5,0,5,0,5,0
-jUDDI Client side Code,org.apache.juddi.v3.client.mapping,MapUDDIv3Tov2,3107,0,344,0,667,0,250,0,73,0
-jUDDI Client side Code,org.apache.juddi.v3.client.mapping,ServiceLocator,378,46,51,1,70,15,36,2,10,2
+jUDDI Client side Code,org.apache.juddi.v3.client.mapping,MapUDDIv3Tov2,3113,0,344,0,669,0,250,0,73,0
+jUDDI Client side Code,org.apache.juddi.v3.client.mapping,ServiceLocator,421,48,65,1,83,16,45,3,12,3
 jUDDI Client side Code,org.apache.juddi.v3.client.mapping,RegistrationType,46,0,0,0,7,0,5,0,5,0
 jUDDI Client side Code,org.apache.juddi.v3.client.mapping,MapUDDIv2Tov3.new Object() {...},51,0,0,0,2,0,1,0,1,0
 jUDDI Client side Code,org.apache.juddi.v3.client.mapping,UDDIClientSubscriptionListenerImpl,78,0,2,0,20,0,5,0,4,0
 jUDDI Client side Code,org.apache.juddi.v3.client.mapping,UDDIServiceCache,604,0,28,0,124,0,34,0,20,0
-jUDDI Client side Code,org.apache.juddi.v3.client.mapping,MapUDDIv2Tov3,3319,0,394,0,674,0,273,0,74,0
+jUDDI Client side Code,org.apache.juddi.v3.client.mapping,MapUDDIv2Tov3,3322,0,394,0,677,0,273,0,74,0
 jUDDI Client side Code,org.apache.juddi.v3.client.mapping,PolicyRoundRobin,2,27,1,1,0,6,1,2,0,2
 jUDDI Client side Code,org.apache.juddi.v3.client.mapping,Common2UDDI,5,62,1,7,2,17,2,4,1,1
 jUDDI Client side Code,org.apache.juddi.v3.client.mapping,RegistrationInfo,52,0,0,0,22,0,15,0,15,0
@@ -67,18 +67,18 @@ jUDDI Client side Code,org.apache.juddi.v3.client.embed,JUDDIRegistry,58,0,0,0,1
 jUDDI Client side Code,org.apache.juddi.v3.client.ext.wsdm,WSDMQosConstants,57,0,0,0,15,0,2,0,2,0
 jUDDI Client side Code,org.apache.juddi.v3.client.config,Constants,3,0,0,0,1,0,1,0,1,0
 jUDDI Client side Code,org.apache.juddi.v3.client.config,XRegistration,439,0,0,0,59,0,14,0,14,0
-jUDDI Client side Code,org.apache.juddi.v3.client.config,UDDIClient,867,434,140,42,191,76,103,16,15,13
+jUDDI Client side Code,org.apache.juddi.v3.client.config,UDDIClient,876,434,140,42,195,76,104,16,16,13
 jUDDI Client side Code,org.apache.juddi.v3.client.config,UDDIKeyConvention,23,110,6,6,7,28,7,5,2,4
-jUDDI Client side Code,org.apache.juddi.v3.client.config,UDDIClientContainer,54,87,7,9,9,20,6,8,1,5
+jUDDI Client side Code,org.apache.juddi.v3.client.config,UDDIClientContainer,57,87,7,9,11,20,7,8,2,5
 jUDDI Client side Code,org.apache.juddi.v3.client.config,BackGroundRegistration,54,0,0,0,12,0,3,0,3,0
 jUDDI Client side Code,org.apache.juddi.v3.client.config,TokenResolver,3,104,0,8,1,16,1,6,1,2
 jUDDI Client side Code,org.apache.juddi.v3.client.config,UDDIClerk,2868,185,143,9,560,56,140,21,64,21
 jUDDI Client side Code,org.apache.juddi.v3.client.config,Property,13,0,2,0,5,0,3,0,2,0
 jUDDI Client side Code,org.apache.juddi.v3.client.config,UDDIClerk.WSDL,0,24,0,0,0,10,0,7,0,7
 jUDDI Client side Code,org.apache.juddi.v3.client.config,WebHelper,42,81,3,7,10,18,4,4,1,2
-jUDDI Client side Code,org.apache.juddi.v3.client.config,UDDINode,131,192,2,0,25,73,3,38,2,38
+jUDDI Client side Code,org.apache.juddi.v3.client.config,UDDINode,131,202,2,0,25,74,3,38,2,38
 jUDDI Client side Code,org.apache.juddi.v3.client.config,UDDIClerkServlet,104,0,2,0,26,0,5,0,4,0
-jUDDI Client side Code,org.apache.juddi.v3.client.config,ClientConfig,755,2410,90,130,124,373,79,64,7,26
+jUDDI Client side Code,org.apache.juddi.v3.client.config,ClientConfig,759,2406,91,129,125,372,80,63,7,26
 jUDDI Client side Code,org.apache.juddi.v3.client.subscription,RegistrationAbortedException,4,0,0,0,2,0,1,0,1,0
 jUDDI Client side Code,org.apache.juddi.v3.client.subscription,SubscriptionCallbackListener.SignatureBehavior,0,58,0,0,0,5,0,4,0,4
 jUDDI Client side Code,org.apache.juddi.v3.client.subscription,SubscriptionCallbackListener.new Object() {...},33,0,0,0,1,0,1,0,1,0

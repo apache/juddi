@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import static org.apache.juddi.api.impl.AuthenticatedService.logger;
@@ -72,27 +73,29 @@ import org.uddi.vs_v3.ValidateValues;
  * @see AbstractSimpleValidator
  * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
  */
+@WebService(serviceName=&quot;UDDIValueSetCachingService&quot;, endpointInterface = &quot;org.uddi.v3_service.UDDIValueSetValidationPortType&quot;
+       , targetNamespace = &quot;urn:uddi-org:api_v3_portType&quot;)
 public class UDDIValueSetValidationImpl extends AuthenticatedService implements
      UDDIValueSetValidationPortType {
 
         private UDDIServiceCounter serviceCounter;
 
         public UDDIValueSetValidationImpl() {
-<span class="fc" id="L81">                super();</span>
-<span class="fc" id="L82">                serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());</span>
-<span class="fc" id="L83">        }</span>
+<span class="fc" id="L84">                super();</span>
+<span class="fc" id="L85">                serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());</span>
+<span class="fc" id="L86">        }</span>
 
         @Override
         public DispositionReport validateValues(ValidateValues body)
              throws DispositionReportFaultMessage {
-<span class="fc" id="L88">                long startTime = System.currentTimeMillis();</span>
+<span class="fc" id="L91">                long startTime = System.currentTimeMillis();</span>
 
-<span class="pc bpc" id="L90" title="1 of 2 branches missed.">                if (body == null) {</span>
-<span class="nc" id="L91">                        long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="nc" id="L92">                        serviceCounter.update(ValueSetValidationQuery.VALIDATE_VALUES,</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">                if (body == null) {</span>
+<span class="nc" id="L94">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L95">                        serviceCounter.update(ValueSetValidationQuery.VALIDATE_VALUES,</span>
                              QueryStatus.FAILED, procTime);
 
-<span class="nc" id="L95">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.valuesetvalidation.noinput&quot;));</span>
+<span class="nc" id="L98">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.valuesetvalidation.noinput&quot;));</span>
                 }
                 /*
                  * The UDDI node that is calling validate_values MUST pass one 
@@ -113,254 +116,254 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
                 //look up keys in database for a validation class
                 //dedup results
                 //run validation classes
-<span class="fc" id="L116">                List&lt;String&gt; classNames = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L117">                classNames.addAll(validateValuesBindingTemplate(body.getBindingTemplate()));</span>
-<span class="fc" id="L118">                classNames.addAll(validateValuesBusinessEntity(body.getBusinessEntity()));</span>
-<span class="fc" id="L119">                classNames.addAll(validateValuesBusinessService(body.getBusinessService()));</span>
-<span class="fc" id="L120">                classNames.addAll(validateValuesPublisherAssertion(body.getPublisherAssertion()));</span>
-<span class="fc" id="L121">                classNames.addAll(validateValuesTModel(body.getTModel()));</span>
-<span class="fc" id="L122">                Set&lt;String&gt; set = new HashSet&lt;String&gt;(classNames);</span>
-<span class="fc" id="L123">                Iterator&lt;String&gt; iterator = set.iterator();</span>
-<span class="fc" id="L124">                Set&lt;String&gt; validators = new HashSet&lt;String&gt;();</span>
-<span class="fc" id="L125">                EntityManager em = PersistenceManager.getEntityManager();</span>
-<span class="fc" id="L126">                EntityTransaction tx = em.getTransaction();</span>
+<span class="fc" id="L119">                List&lt;String&gt; classNames = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L120">                classNames.addAll(validateValuesBindingTemplate(body.getBindingTemplate()));</span>
+<span class="fc" id="L121">                classNames.addAll(validateValuesBusinessEntity(body.getBusinessEntity()));</span>
+<span class="fc" id="L122">                classNames.addAll(validateValuesBusinessService(body.getBusinessService()));</span>
+<span class="fc" id="L123">                classNames.addAll(validateValuesPublisherAssertion(body.getPublisherAssertion()));</span>
+<span class="fc" id="L124">                classNames.addAll(validateValuesTModel(body.getTModel()));</span>
+<span class="fc" id="L125">                Set&lt;String&gt; set = new HashSet&lt;String&gt;(classNames);</span>
+<span class="fc" id="L126">                Iterator&lt;String&gt; iterator = set.iterator();</span>
+<span class="fc" id="L127">                Set&lt;String&gt; validators = new HashSet&lt;String&gt;();</span>
+<span class="fc" id="L128">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L129">                EntityTransaction tx = em.getTransaction();</span>
                 //for each key to process
                 try {
-<span class="fc bfc" id="L129" title="All 2 branches covered.">                        while (iterator.hasNext()) {</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">                        while (iterator.hasNext()) {</span>
 
-<span class="fc" id="L131">                                String key = iterator.next();</span>
+<span class="fc" id="L134">                                String key = iterator.next();</span>
                                 //find out if it needs to be validated
-<span class="fc" id="L133">                                Tmodel find = em.find(org.apache.juddi.model.Tmodel.class, key);</span>
-<span class="pc bpc" id="L134" title="1 of 2 branches missed.">                                if (find != null) {</span>
+<span class="fc" id="L136">                                Tmodel find = em.find(org.apache.juddi.model.Tmodel.class, key);</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">                                if (find != null) {</span>
                                         //if it is, added it to the list
-<span class="fc bfc" id="L136" title="All 2 branches covered.">                                        if (containsValidatedKey(find, UDDIConstants.IS_VALIDATED_BY)) {</span>
-<span class="fc" id="L137">                                                validators.add(key);</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">                                        if (containsValidatedKey(find, UDDIConstants.IS_VALIDATED_BY)) {</span>
+<span class="fc" id="L140">                                                validators.add(key);</span>
                                         }
-<span class="pc bpc" id="L139" title="1 of 2 branches missed.">                                        if (containsValidatedKey(find, UDDIConstantsV2.IS_VALIDATED_BY)) {</span>
-<span class="nc" id="L140">                                                validators.add(key);</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">                                        if (containsValidatedKey(find, UDDIConstantsV2.IS_VALIDATED_BY)) {</span>
+<span class="nc" id="L143">                                                validators.add(key);</span>
                                         }
                                 }
-<span class="fc" id="L143">                        }</span>
+<span class="fc" id="L146">                        }</span>
 
-<span class="nc" id="L145">                } catch (Exception drfm) {</span>
-<span class="nc" id="L146">                        logger.warn(&quot;Unable to process vsv validation&quot;, drfm);</span>
-<span class="nc" id="L147">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.valuesetvalidation.fatal&quot;, drfm.getMessage()));</span>
+<span class="nc" id="L148">                } catch (Exception drfm) {</span>
+<span class="nc" id="L149">                        logger.warn(&quot;Unable to process vsv validation&quot;, drfm);</span>
+<span class="nc" id="L150">                        throw new FatalErrorException(new ErrorMessage(&quot;errors.valuesetvalidation.fatal&quot;, drfm.getMessage()));</span>
                 } finally {
-<span class="pc bpc" id="L149" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
-<span class="nc" id="L150">                                tx.rollback();</span>
+<span class="pc bpc" id="L152" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L153">                                tx.rollback();</span>
                         }
-<span class="pc" id="L152">                        em.close();</span>
-<span class="fc" id="L153">                }</span>
-<span class="fc" id="L154">                Iterator&lt;String&gt; iterator1 = validators.iterator();</span>
-<span class="fc bfc" id="L155" title="All 2 branches covered.">                while (iterator1.hasNext()) {</span>
-<span class="fc" id="L156">                        String tmodelkey = iterator1.next();</span>
-<span class="fc" id="L157">                        String clazz = convertKeyToClass(tmodelkey);</span>
+<span class="pc" id="L155">                        em.close();</span>
+<span class="fc" id="L156">                }</span>
+<span class="fc" id="L157">                Iterator&lt;String&gt; iterator1 = validators.iterator();</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">                while (iterator1.hasNext()) {</span>
+<span class="fc" id="L159">                        String tmodelkey = iterator1.next();</span>
+<span class="fc" id="L160">                        String clazz = convertKeyToClass(tmodelkey);</span>
                         ValueSetValidator vsv;
-<span class="pc bpc" id="L159" title="1 of 2 branches missed.">                        if (clazz == null) {</span>
-<span class="nc" id="L160">                                logger.info(&quot;No validator found for &quot; + tmodelkey);</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">                        if (clazz == null) {</span>
+<span class="nc" id="L163">                                logger.info(&quot;No validator found for &quot; + tmodelkey);</span>
                         } else {
                                 try {
-<span class="fc" id="L163">                                        vsv = (ValueSetValidator) Class.forName(clazz).newInstance();</span>
-<span class="fc" id="L164">                                        logger.info(&quot;translated &quot; + tmodelkey + &quot; to class &quot; + clazz);</span>
-<span class="fc" id="L165">                                        vsv.validateValuesBindingTemplate(body.getBindingTemplate(), &quot;&quot;);</span>
-<span class="fc" id="L166">                                        vsv.validateValuesBusinessEntity(body.getBusinessEntity());</span>
-<span class="fc" id="L167">                                        vsv.validateValuesBusinessService(body.getBusinessService(), &quot;&quot;);</span>
-<span class="fc" id="L168">                                        vsv.validateValuesPublisherAssertion(body.getPublisherAssertion());</span>
-<span class="fc" id="L169">                                        vsv.validateValuesTModel(body.getTModel());</span>
-<span class="fc" id="L170">                                } catch (ClassNotFoundException ex) {</span>
-<span class="fc" id="L171">                                        logger.warn(&quot;Unable to process vsv validation for &quot; + tmodelkey, ex);</span>
-<span class="fc" id="L172">                                        throw new FatalErrorException(new ErrorMessage(&quot;errors.valuesetvalidation.fatal&quot;, &quot;key=&quot; + tmodelkey + &quot; class=&quot; + clazz + &quot; &quot; + ex.getMessage()));</span>
-<span class="nc" id="L173">                                } catch (InstantiationException ex) {</span>
-<span class="nc" id="L174">                                        logger.warn(&quot;Unable to process vsv validation for &quot; + tmodelkey, ex);</span>
-<span class="nc" id="L175">                                        throw new FatalErrorException(new ErrorMessage(&quot;errors.valuesetvalidation.fatal&quot;, &quot;key=&quot; + tmodelkey + &quot; class=&quot; + clazz + &quot; &quot; + ex.getMessage()));</span>
-<span class="nc" id="L176">                                } catch (IllegalAccessException ex) {</span>
+<span class="fc" id="L166">                                        vsv = (ValueSetValidator) Class.forName(clazz).newInstance();</span>
+<span class="fc" id="L167">                                        logger.info(&quot;translated &quot; + tmodelkey + &quot; to class &quot; + clazz);</span>
+<span class="fc" id="L168">                                        vsv.validateValuesBindingTemplate(body.getBindingTemplate(), &quot;&quot;);</span>
+<span class="fc" id="L169">                                        vsv.validateValuesBusinessEntity(body.getBusinessEntity());</span>
+<span class="fc" id="L170">                                        vsv.validateValuesBusinessService(body.getBusinessService(), &quot;&quot;);</span>
+<span class="fc" id="L171">                                        vsv.validateValuesPublisherAssertion(body.getPublisherAssertion());</span>
+<span class="fc" id="L172">                                        vsv.validateValuesTModel(body.getTModel());</span>
+<span class="fc" id="L173">                                } catch (ClassNotFoundException ex) {</span>
+<span class="fc" id="L174">                                        logger.warn(&quot;Unable to process vsv validation for &quot; + tmodelkey, ex);</span>
+<span class="fc" id="L175">                                        throw new FatalErrorException(new ErrorMessage(&quot;errors.valuesetvalidation.fatal&quot;, &quot;key=&quot; + tmodelkey + &quot; class=&quot; + clazz + &quot; &quot; + ex.getMessage()));</span>
+<span class="nc" id="L176">                                } catch (InstantiationException ex) {</span>
 <span class="nc" id="L177">                                        logger.warn(&quot;Unable to process vsv validation for &quot; + tmodelkey, ex);</span>
 <span class="nc" id="L178">                                        throw new FatalErrorException(new ErrorMessage(&quot;errors.valuesetvalidation.fatal&quot;, &quot;key=&quot; + tmodelkey + &quot; class=&quot; + clazz + &quot; &quot; + ex.getMessage()));</span>
-<span class="fc" id="L179">                                }</span>
+<span class="nc" id="L179">                                } catch (IllegalAccessException ex) {</span>
+<span class="nc" id="L180">                                        logger.warn(&quot;Unable to process vsv validation for &quot; + tmodelkey, ex);</span>
+<span class="nc" id="L181">                                        throw new FatalErrorException(new ErrorMessage(&quot;errors.valuesetvalidation.fatal&quot;, &quot;key=&quot; + tmodelkey + &quot; class=&quot; + clazz + &quot; &quot; + ex.getMessage()));</span>
+<span class="fc" id="L182">                                }</span>
                         }
-<span class="fc" id="L181">                }</span>
+<span class="fc" id="L184">                }</span>
 
-<span class="fc" id="L183">                DispositionReport r = new DispositionReport();</span>
-<span class="fc" id="L184">                r.getResult().add(new Result());</span>
-<span class="fc" id="L185">                long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="fc" id="L186">                serviceCounter.update(ValueSetValidationQuery.VALIDATE_VALUES,</span>
+<span class="fc" id="L186">                DispositionReport r = new DispositionReport();</span>
+<span class="fc" id="L187">                r.getResult().add(new Result());</span>
+<span class="fc" id="L188">                long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L189">                serviceCounter.update(ValueSetValidationQuery.VALIDATE_VALUES,</span>
                      QueryStatus.SUCCESS, procTime);
 
-<span class="fc" id="L189">                return r;</span>
+<span class="fc" id="L192">                return r;</span>
         }
 
         private List&lt;String&gt; validateValuesBindingTemplate(List&lt;BindingTemplate&gt; items) {
-<span class="fc" id="L193">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
-<span class="pc bpc" id="L194" title="1 of 2 branches missed.">                if (items == null) {</span>
-<span class="nc" id="L195">                        return ret;</span>
+<span class="fc" id="L196">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L198">                        return ret;</span>
                 }
-<span class="fc bfc" id="L197" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
-<span class="fc bfc" id="L198" title="All 2 branches covered.">                        if (items.get(i).getCategoryBag() != null) {</span>
-<span class="fc" id="L199">                                ret.addAll(validateValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference()));</span>
-<span class="fc" id="L200">                                ret.addAll(validateValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup()));</span>
+<span class="fc bfc" id="L200" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="fc bfc" id="L201" title="All 2 branches covered.">                        if (items.get(i).getCategoryBag() != null) {</span>
+<span class="fc" id="L202">                                ret.addAll(validateValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference()));</span>
+<span class="fc" id="L203">                                ret.addAll(validateValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup()));</span>
                         }
-<span class="fc bfc" id="L202" title="All 2 branches covered.">                        if (items.get(i).getTModelInstanceDetails() != null) {</span>
+<span class="fc bfc" id="L205" title="All 2 branches covered.">                        if (items.get(i).getTModelInstanceDetails() != null) {</span>
 
                                 //validateTmodelInstanceDetails(items.get(i).getTModelInstanceDetails().getTModelInstanceInfo(), xpath + &quot;bindingTemplate(&quot; + i + &quot;).tModelInstanceDetails.&quot;);
                         }
                 }
-<span class="fc" id="L207">                return ret;</span>
+<span class="fc" id="L210">                return ret;</span>
         }
 
         private List&lt;String&gt; validateValuesBusinessEntity(List&lt;BusinessEntity&gt; items) {
-<span class="fc" id="L211">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
-<span class="pc bpc" id="L212" title="1 of 2 branches missed.">                if (items == null) {</span>
-<span class="nc" id="L213">                        return ret;</span>
+<span class="fc" id="L214">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L216">                        return ret;</span>
                 }
-<span class="fc bfc" id="L215" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
-<span class="fc bfc" id="L216" title="All 2 branches covered.">                        if (items.get(i).getCategoryBag() != null) {</span>
-<span class="fc" id="L217">                                ret.addAll(validateValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference()));</span>
-<span class="fc" id="L218">                                ret.addAll(validateValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup()));</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="fc bfc" id="L219" title="All 2 branches covered.">                        if (items.get(i).getCategoryBag() != null) {</span>
+<span class="fc" id="L220">                                ret.addAll(validateValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference()));</span>
+<span class="fc" id="L221">                                ret.addAll(validateValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup()));</span>
                         }
-<span class="fc bfc" id="L220" title="All 2 branches covered.">                        if (items.get(i).getIdentifierBag() != null) {</span>
-<span class="fc" id="L221">                                ret.addAll(validateValuesKeyRef(items.get(i).getIdentifierBag().getKeyedReference()));</span>
+<span class="fc bfc" id="L223" title="All 2 branches covered.">                        if (items.get(i).getIdentifierBag() != null) {</span>
+<span class="fc" id="L224">                                ret.addAll(validateValuesKeyRef(items.get(i).getIdentifierBag().getKeyedReference()));</span>
                         }
-<span class="fc bfc" id="L223" title="All 2 branches covered.">                        if (items.get(i).getBusinessServices() != null) {</span>
-<span class="fc" id="L224">                                ret.addAll(validateValuesBusinessService(items.get(i).getBusinessServices().getBusinessService()));</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">                        if (items.get(i).getBusinessServices() != null) {</span>
+<span class="fc" id="L227">                                ret.addAll(validateValuesBusinessService(items.get(i).getBusinessServices().getBusinessService()));</span>
                         }
                 }
-<span class="fc" id="L227">                return ret;</span>
+<span class="fc" id="L230">                return ret;</span>
         }
 
         private List&lt;String&gt; validateValuesBusinessService(List&lt;BusinessService&gt; items) {
-<span class="fc" id="L231">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
-<span class="pc bpc" id="L232" title="1 of 2 branches missed.">                if (items == null) {</span>
-<span class="nc" id="L233">                        return ret;</span>
+<span class="fc" id="L234">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L236">                        return ret;</span>
                 }
-<span class="fc bfc" id="L235" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
-<span class="fc bfc" id="L236" title="All 2 branches covered.">                        if (items.get(i).getCategoryBag() != null) {</span>
-<span class="fc" id="L237">                                ret.addAll(validateValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference()));</span>
-<span class="fc" id="L238">                                ret.addAll(validateValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup()));</span>
+<span class="fc bfc" id="L238" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="fc bfc" id="L239" title="All 2 branches covered.">                        if (items.get(i).getCategoryBag() != null) {</span>
+<span class="fc" id="L240">                                ret.addAll(validateValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference()));</span>
+<span class="fc" id="L241">                                ret.addAll(validateValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup()));</span>
                         }
-<span class="pc bpc" id="L240" title="1 of 2 branches missed.">                        if (items.get(i).getBindingTemplates() != null) {</span>
-<span class="fc" id="L241">                                ret.addAll(validateValuesBindingTemplate(items.get(i).getBindingTemplates().getBindingTemplate()));</span>
+<span class="pc bpc" id="L243" title="1 of 2 branches missed.">                        if (items.get(i).getBindingTemplates() != null) {</span>
+<span class="fc" id="L244">                                ret.addAll(validateValuesBindingTemplate(items.get(i).getBindingTemplates().getBindingTemplate()));</span>
                         }
                 }
-<span class="fc" id="L244">                return ret;</span>
+<span class="fc" id="L247">                return ret;</span>
         }
 
         private List&lt;String&gt; validateValuesPublisherAssertion(List&lt;PublisherAssertion&gt; items) {
 
-<span class="fc" id="L249">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
-<span class="pc bpc" id="L250" title="1 of 2 branches missed.">                if (items == null) {</span>
-<span class="nc" id="L251">                        return ret;</span>
+<span class="fc" id="L252">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
+<span class="pc bpc" id="L253" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L254">                        return ret;</span>
                 }
-<span class="pc bpc" id="L253" title="1 of 2 branches missed.">                for (int i = 0; i &lt; items.size(); i++) {</span>
-<span class="nc bnc" id="L254" title="All 2 branches missed.">                        if (items.get(i).getKeyedReference() != null) {</span>
-<span class="nc" id="L255">                                List&lt;KeyedReference&gt; temp = new ArrayList&lt;KeyedReference&gt;();</span>
-<span class="nc" id="L256">                                temp.add(items.get(i).getKeyedReference());</span>
-<span class="nc" id="L257">                                ret.addAll(validateValuesKeyRef(temp));</span>
+<span class="pc bpc" id="L256" title="1 of 2 branches missed.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">                        if (items.get(i).getKeyedReference() != null) {</span>
+<span class="nc" id="L258">                                List&lt;KeyedReference&gt; temp = new ArrayList&lt;KeyedReference&gt;();</span>
+<span class="nc" id="L259">                                temp.add(items.get(i).getKeyedReference());</span>
+<span class="nc" id="L260">                                ret.addAll(validateValuesKeyRef(temp));</span>
                         }
                 }
-<span class="fc" id="L260">                return ret;</span>
+<span class="fc" id="L263">                return ret;</span>
         }
 
         private List&lt;String&gt; validateValuesTModel(List&lt;TModel&gt; items) {
-<span class="fc" id="L264">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
-<span class="pc bpc" id="L265" title="1 of 2 branches missed.">                if (items == null) {</span>
-<span class="nc" id="L266">                        return ret;</span>
+<span class="fc" id="L267">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
+<span class="pc bpc" id="L268" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L269">                        return ret;</span>
                 }
-<span class="fc bfc" id="L268" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
-<span class="fc bfc" id="L269" title="All 2 branches covered.">                        if (items.get(i).getCategoryBag() != null) {</span>
-<span class="fc" id="L270">                                ret.addAll(validateValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference()));</span>
-<span class="fc" id="L271">                                ret.addAll(validateValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup()));</span>
+<span class="fc bfc" id="L271" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">                        if (items.get(i).getCategoryBag() != null) {</span>
+<span class="fc" id="L273">                                ret.addAll(validateValuesKeyRef(items.get(i).getCategoryBag().getKeyedReference()));</span>
+<span class="fc" id="L274">                                ret.addAll(validateValuesKeyRefGrp(items.get(i).getCategoryBag().getKeyedReferenceGroup()));</span>
                         }
-<span class="fc bfc" id="L273" title="All 2 branches covered.">                        if (items.get(i).getIdentifierBag() != null) {</span>
-<span class="fc" id="L274">                                ret.addAll(validateValuesKeyRef(items.get(i).getIdentifierBag().getKeyedReference()));</span>
+<span class="fc bfc" id="L276" title="All 2 branches covered.">                        if (items.get(i).getIdentifierBag() != null) {</span>
+<span class="fc" id="L277">                                ret.addAll(validateValuesKeyRef(items.get(i).getIdentifierBag().getKeyedReference()));</span>
                         }
                 }
-<span class="fc" id="L277">                return ret;</span>
+<span class="fc" id="L280">                return ret;</span>
         }
 
         private List&lt;String&gt; validateValuesKeyRef(List&lt;KeyedReference&gt; items) {
-<span class="fc" id="L281">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
-<span class="pc bpc" id="L282" title="1 of 2 branches missed.">                if (items == null) {</span>
-<span class="nc" id="L283">                        return ret;</span>
+<span class="fc" id="L284">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
+<span class="pc bpc" id="L285" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L286">                        return ret;</span>
                 }
 
-<span class="fc bfc" id="L286" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
-<span class="fc" id="L287">                        ret.add(items.get(i).getTModelKey());</span>
+<span class="fc bfc" id="L289" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="fc" id="L290">                        ret.add(items.get(i).getTModelKey());</span>
                 }
 
-<span class="fc" id="L290">                return ret;</span>
+<span class="fc" id="L293">                return ret;</span>
         }
 
         private List&lt;String&gt; validateValuesKeyRefGrp(List&lt;KeyedReferenceGroup&gt; items) {
-<span class="fc" id="L294">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
-<span class="pc bpc" id="L295" title="1 of 2 branches missed.">                if (items == null) {</span>
-<span class="nc" id="L296">                        return ret;</span>
+<span class="fc" id="L297">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
+<span class="pc bpc" id="L298" title="1 of 2 branches missed.">                if (items == null) {</span>
+<span class="nc" id="L299">                        return ret;</span>
                 }
-<span class="fc bfc" id="L298" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
-<span class="fc" id="L299">                        ret.addAll(validateValuesKeyRef(items.get(i).getKeyedReference()));</span>
+<span class="fc bfc" id="L301" title="All 2 branches covered.">                for (int i = 0; i &lt; items.size(); i++) {</span>
+<span class="fc" id="L302">                        ret.addAll(validateValuesKeyRef(items.get(i).getKeyedReference()));</span>
                 }
-<span class="fc" id="L301">                return ret;</span>
+<span class="fc" id="L304">                return ret;</span>
         }
 
         
 
         public static String convertKeyToClass(String tmodelkey) {
 
-<span class="pc bpc" id="L308" title="1 of 2 branches missed.">                if (tmodelkey == null) {</span>
-<span class="nc" id="L309">                        return null;</span>
-                }
-<span class="pc bpc" id="L311" title="1 of 2 branches missed.">                if (tmodelkey.length() &lt; 2) {</span>
+<span class="pc bpc" id="L311" title="1 of 2 branches missed.">                if (tmodelkey == null) {</span>
 <span class="nc" id="L312">                        return null;</span>
                 }
+<span class="pc bpc" id="L314" title="1 of 2 branches missed.">                if (tmodelkey.length() &lt; 2) {</span>
+<span class="nc" id="L315">                        return null;</span>
+                }
 
-<span class="fc" id="L315">                String key = new String(new char[]{tmodelkey.charAt(0)}).toUpperCase() + tmodelkey.substring(1).toLowerCase();</span>
-<span class="fc" id="L316">                key = key.replaceAll(&quot;[^a-zA-Z0-9]&quot;, &quot;&quot;);</span>
+<span class="fc" id="L318">                String key = new String(new char[]{tmodelkey.charAt(0)}).toUpperCase() + tmodelkey.substring(1).toLowerCase();</span>
+<span class="fc" id="L319">                key = key.replaceAll(&quot;[^a-zA-Z0-9]&quot;, &quot;&quot;);</span>
 
-<span class="fc" id="L318">                String clazz = &quot;org.apache.juddi.validation.vsv.&quot; + key;</span>
+<span class="fc" id="L321">                String clazz = &quot;org.apache.juddi.validation.vsv.&quot; + key;</span>
 
-<span class="fc" id="L320">                return clazz;</span>
+<span class="fc" id="L323">                return clazz;</span>
 
         }
 
         public static List&lt;String&gt; getValidValues(String modelKey) {
                 try {
-<span class="nc" id="L326">                        ValueSetValidator vsv = (ValueSetValidator) Class.forName(convertKeyToClass(modelKey)).newInstance();</span>
-<span class="nc" id="L327">                        return vsv.getValidValues();</span>
-<span class="nc" id="L328">                } catch (ClassNotFoundException ex) {</span>
-<span class="nc" id="L329">                } catch (InstantiationException ex) {</span>
-<span class="nc" id="L330">                } catch (IllegalAccessException ex) {</span>
-<span class="nc" id="L331">                }</span>
-<span class="nc" id="L332">                return null;</span>
+<span class="nc" id="L329">                        ValueSetValidator vsv = (ValueSetValidator) Class.forName(convertKeyToClass(modelKey)).newInstance();</span>
+<span class="nc" id="L330">                        return vsv.getValidValues();</span>
+<span class="nc" id="L331">                } catch (ClassNotFoundException ex) {</span>
+<span class="nc" id="L332">                } catch (InstantiationException ex) {</span>
+<span class="nc" id="L333">                } catch (IllegalAccessException ex) {</span>
+<span class="nc" id="L334">                }</span>
+<span class="nc" id="L335">                return null;</span>
         }
 
         private boolean containsValidatedKey(Tmodel find, String key) {
-<span class="pc bpc" id="L336" title="1 of 2 branches missed.">                if (find.getCategoryBag() != null) {</span>
-<span class="pc bpc" id="L337" title="1 of 2 branches missed.">                        if (find.getCategoryBag().getKeyedReferences() != null) {</span>
-<span class="fc bfc" id="L338" title="All 2 branches covered.">                                for (int i = 0; i &lt; find.getCategoryBag().getKeyedReferences().size(); i++) {</span>
-<span class="fc bfc" id="L339" title="All 2 branches covered.">                                        if (key.equalsIgnoreCase(find.getCategoryBag().getKeyedReferences().get(i).getTmodelKeyRef())) {</span>
-<span class="fc" id="L340">                                                return true;</span>
+<span class="pc bpc" id="L339" title="1 of 2 branches missed.">                if (find.getCategoryBag() != null) {</span>
+<span class="pc bpc" id="L340" title="1 of 2 branches missed.">                        if (find.getCategoryBag().getKeyedReferences() != null) {</span>
+<span class="fc bfc" id="L341" title="All 2 branches covered.">                                for (int i = 0; i &lt; find.getCategoryBag().getKeyedReferences().size(); i++) {</span>
+<span class="fc bfc" id="L342" title="All 2 branches covered.">                                        if (key.equalsIgnoreCase(find.getCategoryBag().getKeyedReferences().get(i).getTmodelKeyRef())) {</span>
+<span class="fc" id="L343">                                                return true;</span>
                                         }
                                 }
                         }
-<span class="pc bpc" id="L344" title="1 of 2 branches missed.">                        if (find.getCategoryBag().getKeyedReferenceGroups() != null) {</span>
-<span class="pc bpc" id="L345" title="1 of 2 branches missed.">                                for (int i = 0; i &lt; find.getCategoryBag().getKeyedReferenceGroups().size(); i++) {</span>
-<span class="nc bnc" id="L346" title="All 2 branches missed.">                                        for (int k = 0; k &lt; find.getCategoryBag().getKeyedReferenceGroups().get(i).getKeyedReferences().size(); k++) {</span>
-<span class="nc bnc" id="L347" title="All 2 branches missed.">                                                if (key.equalsIgnoreCase(find.getCategoryBag().getKeyedReferenceGroups().get(i).getKeyedReferences().get(k).getTmodelKeyRef())) {</span>
-<span class="nc" id="L348">                                                        return true;</span>
+<span class="pc bpc" id="L347" title="1 of 2 branches missed.">                        if (find.getCategoryBag().getKeyedReferenceGroups() != null) {</span>
+<span class="pc bpc" id="L348" title="1 of 2 branches missed.">                                for (int i = 0; i &lt; find.getCategoryBag().getKeyedReferenceGroups().size(); i++) {</span>
+<span class="nc bnc" id="L349" title="All 2 branches missed.">                                        for (int k = 0; k &lt; find.getCategoryBag().getKeyedReferenceGroups().get(i).getKeyedReferences().size(); k++) {</span>
+<span class="nc bnc" id="L350" title="All 2 branches missed.">                                                if (key.equalsIgnoreCase(find.getCategoryBag().getKeyedReferenceGroups().get(i).getKeyedReferences().get(k).getTmodelKeyRef())) {</span>
+<span class="nc" id="L351">                                                        return true;</span>
                                                 }
                                         }
                                 }
                         }
                 }
-<span class="pc bpc" id="L354" title="1 of 2 branches missed.">                if (find.getTmodelIdentifiers() != null) {</span>
+<span class="pc bpc" id="L357" title="1 of 2 branches missed.">                if (find.getTmodelIdentifiers() != null) {</span>
 
-<span class="pc bpc" id="L356" title="1 of 2 branches missed.">                        for (int i = 0; i &lt; find.getTmodelIdentifiers().size(); i++) {</span>
-<span class="nc bnc" id="L357" title="All 2 branches missed.">                                if (key.equalsIgnoreCase(find.getTmodelIdentifiers().get(i).getTmodelKeyRef())) {</span>
-<span class="nc" id="L358">                                        return true;</span>
+<span class="pc bpc" id="L359" title="1 of 2 branches missed.">                        for (int i = 0; i &lt; find.getTmodelIdentifiers().size(); i++) {</span>
+<span class="nc bnc" id="L360" title="All 2 branches missed.">                                if (key.equalsIgnoreCase(find.getTmodelIdentifiers().get(i).getTmodelKeyRef())) {</span>
+<span class="nc" id="L361">                                        return true;</span>
                                 }
                         }
                 }
 
-<span class="fc" id="L363">                return false;</span>
+<span class="fc" id="L366">                return false;</span>
         }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
