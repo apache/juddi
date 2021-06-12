@@ -2,8 +2,8 @@ Welcome to the Apache JUDDI Project!
 
 Here's some quick notes for building, testing and deploying JUDDI from source.
 
-1) Acquire a JDK5 or higher and setup the JAVA_HOME environment variable
-2) Acquire Apache Maven. Known working version: 3.0.4
+1) Acquire a JDK8 or higher and setup the JAVA_HOME environment variable
+2) Acquire Apache Maven. Known working version: 3.2.1 or newer
 3) Setup an environment variable, MAVEN_OPTS=-Xmx768m -XX:MaxPermSize=512m
 4) Make sure the Maven/bin folder and the JDK/bin folders are in the current path
 5) execute "mvn clean install"
@@ -34,8 +34,8 @@ cd juddi-console
 mvn clean install
 
 To start Juddi's embedded Tomcat server:
-juddi-tomcat\target\tomcat\apache-tomcat-6.0.26\bin\startup.bat
-juddi-tomcat\target\tomcat\apache-tomcat-6.0.26\bin\startup.sh
+juddi-tomcat\target\tomcat\apache-tomcat-9.0.XX\bin\startup.bat
+juddi-tomcat\target\tomcat\apache-tomcat-9.0.XX\bin\startup.sh
 
 To build the .NET components of jUDDI
 cd juddi-client.net

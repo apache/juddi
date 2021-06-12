@@ -674,10 +674,12 @@ public interface UDDIConstants {
         /**
          * Java RMI based service registered to the Java Registry
          */
+        @Deprecated
         public static final String TRANSPORT_RMI = "uddi:uddi.org:transport:rmi";
         /**
          * A Java RMI based service registered to a JNDI Registry
          */
+        @Deprecated
         public static final String TRANSPORT_JNDI_RMI = "uddi:uddi.org:transport:jndi-rmi";
         /**
          * A Web service that uses the AMQP transport

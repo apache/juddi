@@ -50,7 +50,7 @@ import org.hibernate.tool.schema.TargetType;
  */
 public class App {
 
-        private List<Class> jpaClasses = new ArrayList<>();
+        private List<Class> jpaClasses = new ArrayList<Class>();
 
         public App() {
 
@@ -59,7 +59,7 @@ public class App {
         //initial from the current class path
         private void initialJpsClassList(String packageName) throws Exception {
                 Package pk = Package.getPackage(packageName);
-                List<Class> classesForPackage = new ArrayList<>();
+                List<Class> classesForPackage = new ArrayList<Class>();
                 if (pk != null) {
                         classesForPackage.addAll(getClassesForPackage(pk));
                 } else {

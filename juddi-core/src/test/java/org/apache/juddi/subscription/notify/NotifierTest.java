@@ -57,37 +57,7 @@ public class NotifierTest
 		
 		Assert.assertEquals(SMTPNotifier.class, notifier.getClass());
 	}
-	//Expected error because we can't connect to the registry on localhost:11099
-	@Test(expected=java.lang.reflect.InvocationTargetException.class)
-	public void testRMINotifier() throws IllegalArgumentException, SecurityException, URISyntaxException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
-		BindingTemplate bindingTemplate = new BindingTemplate();
-		bindingTemplate.setEntityKey("uddi:uddi.joepublisher.com:bindingnotifier");
-		bindingTemplate.setAccessPointType(AccessPointType.END_POINT.toString());
-		bindingTemplate.setAccessPointUrl("rmi://localhost:11099/tcksubscriptionlistener");
-		TmodelInstanceInfo instanceInfo = new TmodelInstanceInfo();
-		instanceInfo.setTmodelKey("uddi:uddi.org:transport:rmi");
-		bindingTemplate.getTmodelInstanceInfos().add(instanceInfo);
-		
-		Notifier notifier = new NotifierFactory().getNotifier(bindingTemplate);
-		
-		Assert.assertEquals(RMINotifier.class, notifier.getClass());
-	}
-	//Expected error because we did not specify a correct InitialContext
-	@Test(expected=java.lang.reflect.InvocationTargetException.class)
-	public void testJNDIRMINotifier() throws IllegalArgumentException, SecurityException, URISyntaxException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
-		BindingTemplate bindingTemplate = new BindingTemplate();
-		bindingTemplate.setEntityKey("uddi:uddi.joepublisher.com:bindingnotifier");
-		bindingTemplate.setAccessPointType(AccessPointType.END_POINT.toString());
-		bindingTemplate.setAccessPointUrl("jndi-rmi://localhost:11099/tcksubscriptionlistener");
-		TmodelInstanceInfo instanceInfo = new TmodelInstanceInfo();
-		instanceInfo.setTmodelKey("uddi:uddi.org:transport:jndi-rmi");
-		bindingTemplate.getTmodelInstanceInfos().add(instanceInfo);
-		
-		Notifier notifier = new NotifierFactory().getNotifier(bindingTemplate);
-		
-		Assert.assertEquals(JNDI_RMINotifier.class, notifier.getClass());
-	}
-		
 	
+        
 	
 }

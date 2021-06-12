@@ -114,16 +114,9 @@ public class ValidateNode extends ValidateUDDIApi {
                                 throw new ValueNotAllowedException(new ErrorMessage("errors.node.illegalProxyTransport"));
                         }
                 }
-                if (node.getProxyTransport().equalsIgnoreCase(org.apache.juddi.v3.client.transport.RMITransport.class.getCanonicalName())) {
-                        if (node.getFactoryInitial() == null || node.getFactoryInitial().length() == 0 || node.getFactoryInitial().length() > 255) {
-                                throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoRMIData"));
-                        }
-                        if (node.getFactoryNamingProvider() == null || node.getFactoryNamingProvider().length() == 0 || node.getFactoryNamingProvider().length() > 255) {
-                                throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoRMIData"));
-                        }
-                        if (node.getFactoryURLPkgs() == null || node.getFactoryURLPkgs().length() == 0 || node.getFactoryURLPkgs().length() > 255) {
-                                throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoRMIDataF"));
-                        }
+                if (node.getProxyTransport().equalsIgnoreCase("org.apache.juddi.v3.client.transport.RMITransport")) {
+                        throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoRMIData"));
+
                 }
 
         }

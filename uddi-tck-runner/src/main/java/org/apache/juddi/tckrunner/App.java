@@ -92,8 +92,6 @@ public class App {
                                 //org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerExternalTest.class,
                                 org.apache.juddi.v3.tck.UDDI_090_HttpExternalTest.class,
                                 org.apache.juddi.v3.tck.UDDI_090_Smtp_ExternalTest.class,
-                                org.apache.juddi.v3.tck.UDDI_090_RMIIntegrationTest.class,
-                                //org.apache.juddi.v3.tck.JUDDI_091_RMISubscriptionListenerIntegrationTest.class,
                                 
                                 org.apache.juddi.v3.tck.UDDI_110_FindBusinessIntegrationTest.class,
                                 org.apache.juddi.v3.tck.UDDI_120_CombineCategoryBagsFindServiceIntegrationTest.class,
