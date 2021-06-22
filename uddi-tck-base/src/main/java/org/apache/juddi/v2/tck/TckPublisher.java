@@ -190,11 +190,8 @@ public class TckPublisher {
                 return false;
         }
 
+        @Deprecated
         public static boolean isRMI() {
-                String x = tckProperties.getProperty("rmi.enabled");
-                if (x.equalsIgnoreCase("true")) {
-                        return true;
-                }
                 return false;
         }
 

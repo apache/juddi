@@ -68,7 +68,7 @@ public class FindBusinessBugHunt {
                 
                 // a ClerkManager can be a client to multiple UDDI nodes, so 
                 // supply the nodeName (defined in your uddi.xml.
-                // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
+                // The transport can be WS, inVM etc which is defined in the uddi.xml
                 Transport transport = clerkManager.getTransport();
                 // Now you create a reference to the UDDI API
                 security = transport.getUDDISecurityService();

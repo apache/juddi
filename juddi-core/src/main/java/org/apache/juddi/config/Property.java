@@ -168,9 +168,12 @@ public interface Property {
          * @since 3.2
          */
         public final static String JUDDI_NOTIFICATION_SENDAUTHTOKEN = "juddi.notification.sendAuthTokenWithResultList";
+        @Deprecated
         public final static String JUDDI_JNDI_REGISTRATION = "juddi.jndi.registration";
         public final static String JUDDI_RMI_PORT = "juddi.rmi.port";
+        @Deprecated
         public final static String JUDDI_RMI_REGISTRATION = "juddi.rmi.registration";
+        @Deprecated
         public final static String JUDDI_RMI_REGISTRY_PORT = "juddi.rmi.registry.port";
 
         public final static String JUDDI_EMAIL_PREFIX = "juddi.mail.smtp.prefix";

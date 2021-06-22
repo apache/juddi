@@ -72,7 +72,7 @@ public class JuddiAdminService {
                         // you can use your config file name
                         // clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
                         //clerk = clerkManager.getClerk("default");
-                        // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
+                        // The transport can be WS, inVM etc which is defined in the uddi.xml
                         {
                                 transport = clerkManager.getTransport();
                                 juddi = transport.getJUDDIApiService();
@@ -111,7 +111,7 @@ public class JuddiAdminService {
                         // you can use your config file name
                         // clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
                         //clerk = clerkManager.getClerk("default");
-                        // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
+                        // The transport can be WS, inVM etc which is defined in the uddi.xml
                         {
                                 transport = clerkManager.getTransport();
                         }

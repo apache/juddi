@@ -39,7 +39,6 @@ under the License.
 	</prerequisites>
 
 	<properties>
-		<javadoc.extra.settings />
 		<sourceReleaseAssemblyDescriptor>source-release</sourceReleaseAssemblyDescriptor>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -246,14 +245,15 @@ under the License.
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
-                    <version>3.6</version>
+                    <version>3.9.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.3.0</version>
 					<configuration>
 						<aggregate>true</aggregate>
-						<additionalparam>${javadoc.extra.settings}</additionalparam>
+						<doclint>none</doclint>
 					</configuration>
 					<executions>
 						<execution>
@@ -472,7 +472,12 @@ under the License.
 		<plugins>
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.1.1</version>
+				<version>3.2.0</version>
+				<configuration>
+					<doclint>none</doclint>
+				</configuration>
+				
+				
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -918,15 +923,7 @@ under the License.
                     </plugins>
                 </build>
             </profile>
-		<profile>
-			<id>doclint-java8-disable</id>
-			<activation>
-				<jdk>[1.8,)</jdk>
-			</activation>
-			<properties>
-				<javadoc.extra.settings>-Xdoclint:none</javadoc.extra.settings>
-			</properties>
-		</profile>
+	
 
 		<!-- inherit from the apache parent: release-profile -->
 		<profile>

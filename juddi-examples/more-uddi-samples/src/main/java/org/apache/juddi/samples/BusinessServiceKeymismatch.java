@@ -54,7 +54,7 @@ public class BusinessServiceKeymismatch {
                 // create a manager and read the config in the archive; 
                 // you can use your config file name
                 UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
-                // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
+                // The transport can be WS, inVM etc which is defined in the uddi.xml
                 Transport transport = clerkManager.getTransport("default");
                 // Now you create a reference to the UDDI API
                 security = transport.getUDDISecurityService();

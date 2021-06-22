@@ -28,8 +28,7 @@ import org.uddi.v3_service.UDDISubscriptionPortType;;
  * This abstract class defined the basic model for accessing different transport mechanisms
  * using the same interfaces for UDDIv3.
  * @see JAXWSTransport
- * @see RMITransport
- * @see InVMTransport
+  * @see InVMTransport
  * 
  */
 public abstract class Transport {

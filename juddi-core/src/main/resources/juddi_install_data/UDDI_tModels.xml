@@ -565,30 +565,7 @@
             <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
         </categoryBag>
     </tModel>
-    <tModel tModelKey="uddi:uddi.org:transport:rmi">
-        <name>uddi-org:rmi</name>
-        <description>Java RMI based service registered to the Java Registry</description>
-        <overviewDoc>
-            <overviewURL useType="text">
-                http://juddi.apache.org/docs/3.0/userguide/html_single/index.html#sect-overRMI
-            </overviewURL>
-        </overviewDoc>
-        <categoryBag>
-            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
-        </categoryBag>
-    </tModel>
-    <tModel tModelKey="uddi:uddi.org:transport:jndi-rmi">
-        <name>uddi-org:jndi-rmi</name>
-        <description>A Java RMI based service registered to a JNDI Registry</description>
-        <overviewDoc>
-            <overviewURL useType="text">
-                http://juddi.apache.org/docs/3.0/userguide/html_single/index.html#sect-overJNDIRMI
-            </overviewURL>
-        </overviewDoc>
-        <categoryBag>
-            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
-        </categoryBag>
-    </tModel>
+
 	
 	
 	    <tModel tModelKey="uddi:uddi.org:transport:amqp">
