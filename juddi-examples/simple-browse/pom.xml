@@ -19,7 +19,7 @@
 	<parent>
 		<groupId>org.apache.juddi.example</groupId>
 		<artifactId>juddi-examples</artifactId>
-		<version>3.3.10-SNAPSHOT</version>
+		<version>3.3.10</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>simple-browse</artifactId>
