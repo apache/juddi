@@ -98,7 +98,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 <span class="nc" id="L98">                UDDIClerk clerk = clerkManager.getClerk(name);</span>
                 // a ClerkManager can be a client to multiple UDDI nodes, so 
                 // supply the nodeName (defined in your uddi.xml.
-                // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
+                // The transport can be WS, inVM, etc which is defined in the uddi.xml
 <span class="nc" id="L102">                Transport transport = clerkManager.getTransport(name);</span>
                 // Now you create a reference to the UDDI API
 <span class="nc" id="L104">                security = transport.getUDDISecurityService();</span>

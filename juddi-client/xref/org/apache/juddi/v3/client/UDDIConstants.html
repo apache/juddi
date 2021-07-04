@@ -682,68 +682,70 @@
 <a class="jxr_linenumber" name="L674" href="#L674">674</a>         <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L675" href="#L675">675</a> <em class="jxr_javadoccomment">         * Java RMI based service registered to the Java Registry</em>
 <a class="jxr_linenumber" name="L676" href="#L676">676</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L677" href="#L677">677</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String TRANSPORT_RMI = <span class="jxr_string">"uddi:uddi.org:transport:rmi"</span>;
-<a class="jxr_linenumber" name="L678" href="#L678">678</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L679" href="#L679">679</a> <em class="jxr_javadoccomment">         * A Java RMI based service registered to a JNDI Registry</em>
-<a class="jxr_linenumber" name="L680" href="#L680">680</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L681" href="#L681">681</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String TRANSPORT_JNDI_RMI = <span class="jxr_string">"uddi:uddi.org:transport:jndi-rmi"</span>;
-<a class="jxr_linenumber" name="L682" href="#L682">682</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L683" href="#L683">683</a> <em class="jxr_javadoccomment">         * A Web service that uses the AMQP transport</em>
-<a class="jxr_linenumber" name="L684" href="#L684">684</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L685" href="#L685">685</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String TRANSPORT_AMQP = <span class="jxr_string">"uddi:uddi.org:transport:amqp"</span>;
-<a class="jxr_linenumber" name="L686" href="#L686">686</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L687" href="#L687">687</a> <em class="jxr_javadoccomment">         * A Web service that uses the OMG DDS transport</em>
-<a class="jxr_linenumber" name="L688" href="#L688">688</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L689" href="#L689">689</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String TRANSPORT_OMGDDS = <span class="jxr_string">"uddi:uddi.org:transport:omgdds"</span>;
-<a class="jxr_linenumber" name="L690" href="#L690">690</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L691" href="#L691">691</a> <em class="jxr_javadoccomment">         * A Web service that uses UDP</em>
-<a class="jxr_linenumber" name="L692" href="#L692">692</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L693" href="#L693">693</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String TRANSPORT_UDP = <span class="jxr_string">"uddi:uddi.org:transport:udp"</span>;
-<a class="jxr_linenumber" name="L694" href="#L694">694</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L695" href="#L695">695</a> <em class="jxr_javadoccomment">         * A Web service that uses the JMS API</em>
-<a class="jxr_linenumber" name="L696" href="#L696">696</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L697" href="#L697">697</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String TRANSPORT_JMS = <span class="jxr_string">"uddi:uddi.org:transport:jms"</span>;
-<a class="jxr_linenumber" name="L698" href="#L698">698</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L699" href="#L699">699</a> <em class="jxr_javadoccomment">         * A tModel that represents the Representational State Transfer</em>
-<a class="jxr_linenumber" name="L700" href="#L700">700</a> <em class="jxr_javadoccomment">         * architectural style</em>
-<a class="jxr_linenumber" name="L701" href="#L701">701</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L702" href="#L702">702</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String PROTOCOL_REST = <span class="jxr_string">"uddi:uddi.org:protocol:rest"</span>;
-<a class="jxr_linenumber" name="L703" href="#L703">703</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L704" href="#L704">704</a> <em class="jxr_javadoccomment">         * A tModel that represents the SOAP 1.1 protocol</em>
-<a class="jxr_linenumber" name="L705" href="#L705">705</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L706" href="#L706">706</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String PROTOCOL_SOAP = <span class="jxr_string">"uddi:uddi.org:protocol:soap"</span>;
-<a class="jxr_linenumber" name="L707" href="#L707">707</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L708" href="#L708">708</a> <em class="jxr_javadoccomment">         * A tModel that represents the SOAP 1.2 protocol</em>
-<a class="jxr_linenumber" name="L709" href="#L709">709</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L710" href="#L710">710</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String PROTOCOL_SOAP12 = <span class="jxr_string">"uddi:uddi.org:protocol:soap12"</span>;
-<a class="jxr_linenumber" name="L711" href="#L711">711</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L712" href="#L712">712</a> <em class="jxr_javadoccomment">         * A tModel that represents the HTTP protocol</em>
-<a class="jxr_linenumber" name="L713" href="#L713">713</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L714" href="#L714">714</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String PROTOCOL_HTTP = <span class="jxr_string">"uddi:uddi.org:protocol:http"</span>;
-<a class="jxr_linenumber" name="L715" href="#L715">715</a> 
-<a class="jxr_linenumber" name="L716" href="#L716">716</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String INQUIRY = <span class="jxr_string">"uddi:uddi.org:v3_inquiry"</span>;
-<a class="jxr_linenumber" name="L717" href="#L717">717</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String PUBLISH = <span class="jxr_string">"uddi:uddi.org:v3_publication"</span>;
-<a class="jxr_linenumber" name="L718" href="#L718">718</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String SECURITY = <span class="jxr_string">"uddi:uddi.org:v3_security"</span>;
-<a class="jxr_linenumber" name="L719" href="#L719">719</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String REPLICATION = <span class="jxr_string">"uddi:uddi.org:v3_replication"</span>;
-<a class="jxr_linenumber" name="L720" href="#L720">720</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CUSTODY_TRANSFER = <span class="jxr_string">"uddi:uddi.org:v3_ownership_transfer"</span>;
-<a class="jxr_linenumber" name="L721" href="#L721">721</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String NODE_TRANSFER = <span class="jxr_string">"uddi:uddi.org:v3_node_custody_transfer"</span>;
-<a class="jxr_linenumber" name="L722" href="#L722">722</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String VSV_CACHE = <span class="jxr_string">"uddi:uddi.org:v3_valuesetcaching"</span>;
-<a class="jxr_linenumber" name="L723" href="#L723">723</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String VSV_VALIDATE = <span class="jxr_string">"uddi:uddi.org:v3_valuesetvalidation"</span>;
-<a class="jxr_linenumber" name="L724" href="#L724">724</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String SUBSCRIPTION = <span class="jxr_string">"uddi:uddi.org:v3_subscription"</span>;
-<a class="jxr_linenumber" name="L725" href="#L725">725</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String SUBSCRIPTION_LISTENER = <span class="jxr_string">"uddi:uddi.org:v3_subscriptionlistener"</span>;
-<a class="jxr_linenumber" name="L726" href="#L726">726</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L727" href="#L727">727</a> <em class="jxr_javadoccomment">         * @since 3.3</em>
-<a class="jxr_linenumber" name="L728" href="#L728">728</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L729" href="#L729">729</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CategorizationTypes_Cacheable = <span class="jxr_string">"uddi-org:types:cacheable"</span>;
-<a class="jxr_linenumber" name="L730" href="#L730">730</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L731" href="#L731">731</a> <em class="jxr_javadoccomment">         * @since 3.3</em>
-<a class="jxr_linenumber" name="L732" href="#L732">732</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L733" href="#L733">733</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CategorizationTypes = <span class="jxr_string">"uddi-org:categorization:types"</span>;
-<a class="jxr_linenumber" name="L734" href="#L734">734</a> 
-<a class="jxr_linenumber" name="L735" href="#L735">735</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String General_Keywords = <span class="jxr_string">"uddi:uddi.org:categorization:general_keywords"</span>;
-<a class="jxr_linenumber" name="L736" href="#L736">736</a> }
+<a class="jxr_linenumber" name="L677" href="#L677">677</a>         @Deprecated
+<a class="jxr_linenumber" name="L678" href="#L678">678</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String TRANSPORT_RMI = <span class="jxr_string">"uddi:uddi.org:transport:rmi"</span>;
+<a class="jxr_linenumber" name="L679" href="#L679">679</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L680" href="#L680">680</a> <em class="jxr_javadoccomment">         * A Java RMI based service registered to a JNDI Registry</em>
+<a class="jxr_linenumber" name="L681" href="#L681">681</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L682" href="#L682">682</a>         @Deprecated
+<a class="jxr_linenumber" name="L683" href="#L683">683</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String TRANSPORT_JNDI_RMI = <span class="jxr_string">"uddi:uddi.org:transport:jndi-rmi"</span>;
+<a class="jxr_linenumber" name="L684" href="#L684">684</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L685" href="#L685">685</a> <em class="jxr_javadoccomment">         * A Web service that uses the AMQP transport</em>
+<a class="jxr_linenumber" name="L686" href="#L686">686</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L687" href="#L687">687</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String TRANSPORT_AMQP = <span class="jxr_string">"uddi:uddi.org:transport:amqp"</span>;
+<a class="jxr_linenumber" name="L688" href="#L688">688</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L689" href="#L689">689</a> <em class="jxr_javadoccomment">         * A Web service that uses the OMG DDS transport</em>
+<a class="jxr_linenumber" name="L690" href="#L690">690</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L691" href="#L691">691</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String TRANSPORT_OMGDDS = <span class="jxr_string">"uddi:uddi.org:transport:omgdds"</span>;
+<a class="jxr_linenumber" name="L692" href="#L692">692</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L693" href="#L693">693</a> <em class="jxr_javadoccomment">         * A Web service that uses UDP</em>
+<a class="jxr_linenumber" name="L694" href="#L694">694</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L695" href="#L695">695</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String TRANSPORT_UDP = <span class="jxr_string">"uddi:uddi.org:transport:udp"</span>;
+<a class="jxr_linenumber" name="L696" href="#L696">696</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L697" href="#L697">697</a> <em class="jxr_javadoccomment">         * A Web service that uses the JMS API</em>
+<a class="jxr_linenumber" name="L698" href="#L698">698</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L699" href="#L699">699</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String TRANSPORT_JMS = <span class="jxr_string">"uddi:uddi.org:transport:jms"</span>;
+<a class="jxr_linenumber" name="L700" href="#L700">700</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L701" href="#L701">701</a> <em class="jxr_javadoccomment">         * A tModel that represents the Representational State Transfer</em>
+<a class="jxr_linenumber" name="L702" href="#L702">702</a> <em class="jxr_javadoccomment">         * architectural style</em>
+<a class="jxr_linenumber" name="L703" href="#L703">703</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L704" href="#L704">704</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String PROTOCOL_REST = <span class="jxr_string">"uddi:uddi.org:protocol:rest"</span>;
+<a class="jxr_linenumber" name="L705" href="#L705">705</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L706" href="#L706">706</a> <em class="jxr_javadoccomment">         * A tModel that represents the SOAP 1.1 protocol</em>
+<a class="jxr_linenumber" name="L707" href="#L707">707</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L708" href="#L708">708</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String PROTOCOL_SOAP = <span class="jxr_string">"uddi:uddi.org:protocol:soap"</span>;
+<a class="jxr_linenumber" name="L709" href="#L709">709</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L710" href="#L710">710</a> <em class="jxr_javadoccomment">         * A tModel that represents the SOAP 1.2 protocol</em>
+<a class="jxr_linenumber" name="L711" href="#L711">711</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L712" href="#L712">712</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String PROTOCOL_SOAP12 = <span class="jxr_string">"uddi:uddi.org:protocol:soap12"</span>;
+<a class="jxr_linenumber" name="L713" href="#L713">713</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L714" href="#L714">714</a> <em class="jxr_javadoccomment">         * A tModel that represents the HTTP protocol</em>
+<a class="jxr_linenumber" name="L715" href="#L715">715</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L716" href="#L716">716</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String PROTOCOL_HTTP = <span class="jxr_string">"uddi:uddi.org:protocol:http"</span>;
+<a class="jxr_linenumber" name="L717" href="#L717">717</a> 
+<a class="jxr_linenumber" name="L718" href="#L718">718</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String INQUIRY = <span class="jxr_string">"uddi:uddi.org:v3_inquiry"</span>;
+<a class="jxr_linenumber" name="L719" href="#L719">719</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String PUBLISH = <span class="jxr_string">"uddi:uddi.org:v3_publication"</span>;
+<a class="jxr_linenumber" name="L720" href="#L720">720</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String SECURITY = <span class="jxr_string">"uddi:uddi.org:v3_security"</span>;
+<a class="jxr_linenumber" name="L721" href="#L721">721</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String REPLICATION = <span class="jxr_string">"uddi:uddi.org:v3_replication"</span>;
+<a class="jxr_linenumber" name="L722" href="#L722">722</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CUSTODY_TRANSFER = <span class="jxr_string">"uddi:uddi.org:v3_ownership_transfer"</span>;
+<a class="jxr_linenumber" name="L723" href="#L723">723</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String NODE_TRANSFER = <span class="jxr_string">"uddi:uddi.org:v3_node_custody_transfer"</span>;
+<a class="jxr_linenumber" name="L724" href="#L724">724</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String VSV_CACHE = <span class="jxr_string">"uddi:uddi.org:v3_valuesetcaching"</span>;
+<a class="jxr_linenumber" name="L725" href="#L725">725</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String VSV_VALIDATE = <span class="jxr_string">"uddi:uddi.org:v3_valuesetvalidation"</span>;
+<a class="jxr_linenumber" name="L726" href="#L726">726</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String SUBSCRIPTION = <span class="jxr_string">"uddi:uddi.org:v3_subscription"</span>;
+<a class="jxr_linenumber" name="L727" href="#L727">727</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String SUBSCRIPTION_LISTENER = <span class="jxr_string">"uddi:uddi.org:v3_subscriptionlistener"</span>;
+<a class="jxr_linenumber" name="L728" href="#L728">728</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L729" href="#L729">729</a> <em class="jxr_javadoccomment">         * @since 3.3</em>
+<a class="jxr_linenumber" name="L730" href="#L730">730</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L731" href="#L731">731</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CategorizationTypes_Cacheable = <span class="jxr_string">"uddi-org:types:cacheable"</span>;
+<a class="jxr_linenumber" name="L732" href="#L732">732</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L733" href="#L733">733</a> <em class="jxr_javadoccomment">         * @since 3.3</em>
+<a class="jxr_linenumber" name="L734" href="#L734">734</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L735" href="#L735">735</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CategorizationTypes = <span class="jxr_string">"uddi-org:categorization:types"</span>;
+<a class="jxr_linenumber" name="L736" href="#L736">736</a> 
+<a class="jxr_linenumber" name="L737" href="#L737">737</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String General_Keywords = <span class="jxr_string">"uddi:uddi.org:categorization:general_keywords"</span>;
+<a class="jxr_linenumber" name="L738" href="#L738">738</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2004&#x2013;2020 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2004&#x2013;2021 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
 </body>
 </html>

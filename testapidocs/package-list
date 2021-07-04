@@ -8,7 +8,6 @@ org.apache.juddi.config
 org.apache.juddi.juddi.migration.tool
 org.apache.juddi.keygen
 org.apache.juddi.replication
-org.apache.juddi.rmi
 org.apache.juddi.subscription
 org.apache.juddi.subscription.notify
 org.apache.juddi.util

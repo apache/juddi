@@ -24,23 +24,21 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.replication.ReplicationNotifier;
-import org.apache.juddi.rmi.JNDIRegistration;
-import org.apache.juddi.rmi.RMIRegistration;
 import org.apache.juddi.subscription.SubscriptionNotifier;
 
 public class Registry {
 
-<span class="fc" id="L33">        private static Registry registry = null;</span>
-<span class="fc" id="L34">        private static Log log = LogFactory.getLog(Registry.class);</span>
-<span class="fc" id="L35">        private static SubscriptionNotifier subscriptionNotifier = null;</span>
-<span class="fc" id="L36">        private static ReplicationNotifier replicationNotifier = null;</span>
+<span class="fc" id="L31">        private static Registry registry = null;</span>
+<span class="fc" id="L32">        private static Log log = LogFactory.getLog(Registry.class);</span>
+<span class="fc" id="L33">        private static SubscriptionNotifier subscriptionNotifier = null;</span>
+<span class="fc" id="L34">        private static ReplicationNotifier replicationNotifier = null;</span>
 
         /**
          * Singleton.
          */
         private Registry() {
-<span class="fc" id="L42">                super();</span>
-<span class="fc" id="L43">        }</span>
+<span class="fc" id="L40">                super();</span>
+<span class="fc" id="L41">        }</span>
 
         /**
          * Stops the registry.
@@ -48,28 +46,21 @@ public class Registry {
          * @throws ConfigurationException
          */
         public synchronized static void stop() throws ConfigurationException {
-<span class="fc bfc" id="L51" title="All 2 branches covered.">                if (registry != null) {</span>
-<span class="fc" id="L52">                        log.info(&quot;Stopping jUDDI registry...&quot;);</span>
-<span class="pc bpc" id="L53" title="1 of 2 branches missed.">                        if (subscriptionNotifier != null) {</span>
-<span class="fc" id="L54">                                log.info(&quot;Shutting down SubscriptionNotifier&quot;);</span>
-<span class="fc" id="L55">                                subscriptionNotifier.cancel();</span>
-<span class="fc" id="L56">                                subscriptionNotifier = null;</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">                if (registry != null) {</span>
+<span class="fc" id="L50">                        log.info(&quot;Stopping jUDDI registry...&quot;);</span>
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">                        if (subscriptionNotifier != null) {</span>
+<span class="fc" id="L52">                                log.info(&quot;Shutting down SubscriptionNotifier&quot;);</span>
+<span class="fc" id="L53">                                subscriptionNotifier.cancel();</span>
+<span class="fc" id="L54">                                subscriptionNotifier = null;</span>
                         }
-<span class="pc bpc" id="L58" title="1 of 2 branches missed.">                        if (replicationNotifier != null) {</span>
-<span class="fc" id="L59">                                replicationNotifier.cancel();</span>
-<span class="fc" id="L60">                                replicationNotifier = null;</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">                        if (replicationNotifier != null) {</span>
+<span class="fc" id="L57">                                replicationNotifier.cancel();</span>
+<span class="fc" id="L58">                                replicationNotifier = null;</span>
                         }
-<span class="pc bpc" id="L62" title="1 of 2 branches missed.">                        if (AppConfig.getConfiguration().getBoolean(Property.JUDDI_JNDI_REGISTRATION, false)) {</span>
-                                try {
-<span class="nc" id="L64">                                        JNDIRegistration.getInstance().unregister();</span>
-<span class="nc" id="L65">                                } catch (NamingException e) {</span>
-<span class="nc" id="L66">                                        log.error(&quot;Unable to Register jUDDI services with JNDI. &quot; + e.getMessage(), e);</span>
-<span class="nc" id="L67">                                }</span>
-                        }
-<span class="fc" id="L69">                        registry = null;</span>
-<span class="fc" id="L70">                        log.info(&quot;jUDDI shutdown completed.&quot;);</span>
+<span class="fc" id="L60">                        registry = null;</span>
+<span class="fc" id="L61">                        log.info(&quot;jUDDI shutdown completed.&quot;);</span>
                 }
-<span class="fc" id="L72">        }</span>
+<span class="fc" id="L63">        }</span>
 
         /**
          * Starts the registry.
@@ -77,35 +68,17 @@ public class Registry {
          * @throws ConfigurationException
          */
         public synchronized static void start() throws ConfigurationException {
-<span class="fc bfc" id="L80" title="All 2 branches covered.">                if (registry == null) {</span>
-<span class="fc" id="L81">                        log.info(&quot;Starting jUDDI registry...This is node &quot; + AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID, &quot;&quot;));</span>
-<span class="fc" id="L82">                        registry = new Registry();</span>
-<span class="fc" id="L83">                        replicationNotifier = new ReplicationNotifier();</span>
-<span class="fc" id="L84">                        AppConfig.triggerReload();</span>
-<span class="pc bpc" id="L85" title="1 of 2 branches missed.">                        if (AppConfig.getConfiguration().getBoolean(Property.JUDDI_SUBSCRIPTION_NOTIFICATION, true)) {</span>
-<span class="fc" id="L86">                                subscriptionNotifier = new SubscriptionNotifier();</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">                if (registry == null) {</span>
+<span class="fc" id="L72">                        log.info(&quot;Starting jUDDI registry...This is node &quot; + AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID, &quot;&quot;));</span>
+<span class="fc" id="L73">                        registry = new Registry();</span>
+<span class="fc" id="L74">                        replicationNotifier = new ReplicationNotifier();</span>
+<span class="fc" id="L75">                        AppConfig.triggerReload();</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                        if (AppConfig.getConfiguration().getBoolean(Property.JUDDI_SUBSCRIPTION_NOTIFICATION, true)) {</span>
+<span class="fc" id="L77">                                subscriptionNotifier = new SubscriptionNotifier();</span>
                         }
-<span class="pc bpc" id="L88" title="1 of 2 branches missed.">                        if (AppConfig.getConfiguration().getBoolean(Property.JUDDI_JNDI_REGISTRATION, false)) {</span>
-                                try {
-<span class="nc" id="L90">                                        int port = AppConfig.getConfiguration().getInteger(Property.JUDDI_RMI_PORT, 0);</span>
-<span class="nc" id="L91">                                        JNDIRegistration.getInstance().register(port);</span>
-<span class="nc" id="L92">                                } catch (NamingException e) {</span>
-<span class="nc" id="L93">                                        log.error(&quot;Unable to Register jUDDI services with JNDI. &quot; + e.getMessage(), e);</span>
-<span class="nc" id="L94">                                }</span>
-                        }
-<span class="pc bpc" id="L96" title="1 of 2 branches missed.">                        if (AppConfig.getConfiguration().getBoolean(Property.JUDDI_RMI_REGISTRATION, false)) {</span>
-                                try {
-<span class="nc" id="L98">                                        int rmiport = AppConfig.getConfiguration().getInteger(Property.JUDDI_RMI_REGISTRY_PORT, 1099);</span>
-<span class="nc" id="L99">                                        int port = AppConfig.getConfiguration().getInteger(Property.JUDDI_RMI_PORT, 0);</span>
-<span class="nc" id="L100">                                        RMIRegistration.getInstance(rmiport).register(port);</span>
-<span class="nc" id="L101">                                } catch (Exception e) {</span>
-<span class="nc" id="L102">                                        log.error(&quot;Unable to Register jUDDI services with RMI Registry. &quot; + e.getMessage(), e);</span>
-<span class="nc" id="L103">                                }</span>
-                        }
-
-<span class="fc" id="L106">                        log.info(&quot;jUDDI registry started successfully.&quot;);</span>
+<span class="fc" id="L79">                        log.info(&quot;jUDDI registry started successfully.&quot;);</span>
                 }
-<span class="fc" id="L108">        }</span>
+<span class="fc" id="L81">        }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

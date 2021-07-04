@@ -70,7 +70,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 <span class="fc bfc" id="L70" title="All 2 branches covered.">			while (iter.hasNext()) {</span>
 <span class="fc" id="L71">				String thisDomain = iter.next();</span>
 <span class="fc" id="L72">				String[] parts = thisDomain.split(&quot;:&quot;);</span>
-<span class="pc bpc" id="L73" title="2 of 8 branches missed.">				if ((domain == null || (2 &lt;= parts.length &amp;&amp; parts.length &lt; partsMax)) &amp;&amp; thisDomain.length() + 37 &lt; 255) {</span>
+<span class="pc bpc" id="L73" title="3 of 8 branches missed.">				if ((domain == null || (2 &lt;= parts.length &amp;&amp; parts.length &lt; partsMax)) &amp;&amp; thisDomain.length() + 37 &lt; 255) {</span>
 <span class="fc" id="L74">					partsMax = parts.length;</span>
 <span class="fc" id="L75">					domain = thisDomain;</span>
 				}

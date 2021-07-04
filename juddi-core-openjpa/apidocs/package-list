@@ -9,7 +9,6 @@ org.apache.juddi.model
 org.apache.juddi.query
 org.apache.juddi.query.util
 org.apache.juddi.replication
-org.apache.juddi.rmi
 org.apache.juddi.subscription
 org.apache.juddi.subscription.notify
 org.apache.juddi.v3.auth

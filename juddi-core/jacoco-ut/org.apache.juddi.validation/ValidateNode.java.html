@@ -114,18 +114,11 @@ public class ValidateNode extends ValidateUDDIApi {
 <span class="fc" id="L114">                                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.illegalProxyTransport&quot;));</span>
 <span class="fc" id="L115">                        }</span>
                 }
-<span class="pc bpc" id="L117" title="1 of 2 branches missed.">                if (node.getProxyTransport().equalsIgnoreCase(org.apache.juddi.v3.client.transport.RMITransport.class.getCanonicalName())) {</span>
-<span class="nc bnc" id="L118" title="All 6 branches missed.">                        if (node.getFactoryInitial() == null || node.getFactoryInitial().length() == 0 || node.getFactoryInitial().length() &gt; 255) {</span>
-<span class="nc" id="L119">                                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoRMIData&quot;));</span>
-                        }
-<span class="nc bnc" id="L121" title="All 6 branches missed.">                        if (node.getFactoryNamingProvider() == null || node.getFactoryNamingProvider().length() == 0 || node.getFactoryNamingProvider().length() &gt; 255) {</span>
-<span class="nc" id="L122">                                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoRMIData&quot;));</span>
-                        }
-<span class="nc bnc" id="L124" title="All 6 branches missed.">                        if (node.getFactoryURLPkgs() == null || node.getFactoryURLPkgs().length() == 0 || node.getFactoryURLPkgs().length() &gt; 255) {</span>
-<span class="nc" id="L125">                                throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoRMIDataF&quot;));</span>
-                        }
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">                if (node.getProxyTransport().equalsIgnoreCase(&quot;org.apache.juddi.v3.client.transport.RMITransport&quot;)) {</span>
+<span class="nc" id="L118">                        throw new ValueNotAllowedException(new ErrorMessage(&quot;errors.node.NoRMIData&quot;));</span>
+
                 }
 
-<span class="fc" id="L129">        }</span>
+<span class="fc" id="L122">        }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

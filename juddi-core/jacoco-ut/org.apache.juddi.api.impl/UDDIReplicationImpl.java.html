@@ -222,20 +222,20 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
                 @Override
                 public void run() {
-<span class="pc bpc" id="L225" title="1 of 2 branches missed.">                        if (firstrun) {</span>
-<span class="fc" id="L226">                                enqueueAllReceivingNodes();</span>
-<span class="fc" id="L227">                                firstrun = false;</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">                        if (firstrun) {</span>
+<span class="nc" id="L226">                                enqueueAllReceivingNodes();</span>
+<span class="nc" id="L227">                                firstrun = false;</span>
                         }
 
-<span class="pc bpc" id="L230" title="1 of 2 branches missed.">                        if (!queue.isEmpty()) {</span>
-<span class="fc" id="L231">                                logger.info(&quot;Replication change puller thread started. Queue size: &quot; + queue.size());</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">                        if (!queue.isEmpty()) {</span>
+<span class="nc" id="L231">                                logger.info(&quot;Replication change puller thread started. Queue size: &quot; + queue.size());</span>
                         }
                         //ok someone told me there's a change available
-<span class="pc bpc" id="L234" title="1 of 2 branches missed.">                        while (!queue.isEmpty()) {</span>
-<span class="fc" id="L235">                                NotifyChangeRecordsAvailable poll = queue.poll();</span>
-<span class="pc bpc" id="L236" title="2 of 4 branches missed.">                                if (poll != null &amp;&amp; !poll.getNotifyingNode().equalsIgnoreCase(getNode())) {</span>
-<span class="fc" id="L237">                                        UDDIReplicationPortType replicationClient = getReplicationClient(poll.getNotifyingNode());</span>
-<span class="pc bpc" id="L238" title="1 of 2 branches missed.">                                        if (replicationClient == null) {</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">                        while (!queue.isEmpty()) {</span>
+<span class="nc" id="L235">                                NotifyChangeRecordsAvailable poll = queue.poll();</span>
+<span class="nc bnc" id="L236" title="All 4 branches missed.">                                if (poll != null &amp;&amp; !poll.getNotifyingNode().equalsIgnoreCase(getNode())) {</span>
+<span class="nc" id="L237">                                        UDDIReplicationPortType replicationClient = getReplicationClient(poll.getNotifyingNode());</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">                                        if (replicationClient == null) {</span>
 <span class="nc" id="L239">                                                logger.fatal(&quot;unable to obtain a replication client to node &quot; + poll);</span>
                                         } else {
                                                 try {
@@ -247,27 +247,27 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                                         //        logger.info(&quot;Node &quot; + poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID()
                                                         //                + &quot; USN &quot; + poll.getChangesAvailable().getHighWaterMark().get(xx).getOriginatingUSN());
                                                         //}
-<span class="fc" id="L250">                                                        Set&lt;String&gt; nodesHitThisCycle = new HashSet&lt;String&gt;();</span>
-<span class="pc bpc" id="L251" title="1 of 2 branches missed.">                                                        for (int xx = 0; xx &lt; poll.getChangesAvailable().getHighWaterMark().size(); xx++) {</span>
-<span class="fc" id="L252">                                                                int recordsreturned = 21;</span>
-<span class="pc bpc" id="L253" title="1 of 2 branches missed.">                                                                while (recordsreturned &gt;= 20) {</span>
-<span class="pc bpc" id="L254" title="1 of 2 branches missed.">                                                                        if (nodesHitThisCycle.contains(poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID())) {</span>
+<span class="nc" id="L250">                                                        Set&lt;String&gt; nodesHitThisCycle = new HashSet&lt;String&gt;();</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">                                                        for (int xx = 0; xx &lt; poll.getChangesAvailable().getHighWaterMark().size(); xx++) {</span>
+<span class="nc" id="L252">                                                                int recordsreturned = 21;</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">                                                                while (recordsreturned &gt;= 20) {</span>
+<span class="nc bnc" id="L254" title="All 2 branches missed.">                                                                        if (nodesHitThisCycle.contains(poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID())) {</span>
 <span class="nc" id="L255">                                                                                logger.info(&quot;i've already hit the node &quot; + poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID() + &quot; this cycle, skipping&quot;);</span>
 <span class="nc" id="L256">                                                                                break;</span>
                                                                         }
-<span class="pc bpc" id="L258" title="1 of 2 branches missed.">                                                                        if (poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID().equalsIgnoreCase(getNode())) {</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">                                                                        if (poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID().equalsIgnoreCase(getNode())) {</span>
 <span class="nc" id="L259">                                                                                logger.info(&quot;ignoring updates that were generated here &quot; + poll.getChangesAvailable().getHighWaterMark().get(xx).getOriginatingUSN() + &quot; sent by &quot; + poll.getNotifyingNode() + &quot; this node is &quot; + getNode());</span>
 <span class="nc" id="L260">                                                                                break;</span>
                                                                         }
-<span class="fc" id="L262">                                                                        nodesHitThisCycle.add(poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID());</span>
-<span class="fc" id="L263">                                                                        GetChangeRecords body = new GetChangeRecords();</span>
-<span class="fc" id="L264">                                                                        body.setRequestingNode(getNode());</span>
-<span class="fc" id="L265">                                                                        body.setResponseLimitCount(BigInteger.valueOf(100L));</span>
+<span class="nc" id="L262">                                                                        nodesHitThisCycle.add(poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID());</span>
+<span class="nc" id="L263">                                                                        GetChangeRecords body = new GetChangeRecords();</span>
+<span class="nc" id="L264">                                                                        body.setRequestingNode(getNode());</span>
+<span class="nc" id="L265">                                                                        body.setResponseLimitCount(BigInteger.valueOf(100L));</span>
 
-<span class="fc" id="L267">                                                                        body.setChangesAlreadySeen(getLastChangeRecordFrom(poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID()));</span>
-<span class="fc" id="L268">                                                                        logger.info(&quot;fetching updates from &quot; + poll.getNotifyingNode() + &quot; since &quot; + body.getChangesAlreadySeen().getHighWaterMark().get(0).getNodeID() + &quot;:&quot; + body.getChangesAlreadySeen().getHighWaterMark().get(0).getOriginatingUSN() + &quot;, items still in the queue: &quot; + queue.size());</span>
+<span class="nc" id="L267">                                                                        body.setChangesAlreadySeen(getLastChangeRecordFrom(poll.getChangesAvailable().getHighWaterMark().get(xx).getNodeID()));</span>
+<span class="nc" id="L268">                                                                        logger.info(&quot;fetching updates from &quot; + poll.getNotifyingNode() + &quot; since &quot; + body.getChangesAlreadySeen().getHighWaterMark().get(0).getNodeID() + &quot;:&quot; + body.getChangesAlreadySeen().getHighWaterMark().get(0).getOriginatingUSN() + &quot;, items still in the queue: &quot; + queue.size());</span>
                                                                         //JAXB.marshal(body, System.out);
-<span class="fc" id="L270">                                                                        List&lt;ChangeRecord&gt; records</span>
+<span class="nc" id="L270">                                                                        List&lt;ChangeRecord&gt; records</span>
 <span class="nc" id="L271">                                                                                = replicationClient.getChangeRecords(body).getChangeRecord();</span>
                                                                         //ok now we need to persist the change records
 <span class="nc" id="L273">                                                                        logger.info(&quot;Change records retrieved from &quot; + poll.getNotifyingNode() + &quot;, &quot; + records.size());</span>
@@ -278,18 +278,18 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 <span class="nc" id="L278">                                                                        recordsreturned = records.size();</span>
 <span class="nc" id="L279">                                                                }</span>
                                                         }
-<span class="fc" id="L281">                                                } catch (Exception ex) {</span>
-<span class="fc" id="L282">                                                        logger.error(&quot;Error caught fetching replication changes from &quot; + poll + &quot; @&quot; + ((BindingProvider) replicationClient).getRequestContext().get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY), ex);</span>
+<span class="nc" id="L281">                                                } catch (Exception ex) {</span>
+<span class="nc" id="L282">                                                        logger.error(&quot;Error caught fetching replication changes from &quot; + poll + &quot; @&quot; + ((BindingProvider) replicationClient).getRequestContext().get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY), ex);</span>
 <span class="nc" id="L283">                                                }</span>
                                         }
-<span class="fc" id="L285">                                } else {</span>
+<span class="nc" id="L285">                                } else {</span>
 <span class="nc bnc" id="L286" title="All 2 branches missed.">                                        if (poll == null) {</span>
 <span class="nc" id="L287">                                                logger.warn(&quot;strange, popped a null object&quot;);</span>
 <span class="nc bnc" id="L288" title="All 2 branches missed.">                                        } else if (poll.getNotifyingNode().equalsIgnoreCase(getNode())) {</span>
 <span class="nc" id="L289">                                                logger.warn(&quot;strange, popped an object from the queue but it was from myself. This probably indicates a configuration error! ignoring...first record: &quot; + poll.getChangesAvailable().getHighWaterMark().get(0).getNodeID()+&quot;:&quot; + poll.getChangesAvailable().getHighWaterMark().get(0).getOriginatingUSN());</span>
                                         }
                                 }
-<span class="fc" id="L292">                        }</span>
+<span class="nc" id="L292">                        }</span>
 <span class="nc" id="L293">                }</span>
 
                 @Override
@@ -799,63 +799,63 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 <span class="nc" id="L799">                }</span>
 
                 private HighWaterMarkVectorType getLastChangeRecordFrom(String sourcenode) {
-<span class="fc" id="L802">                        HighWaterMarkVectorType ret = new HighWaterMarkVectorType();</span>
-<span class="fc" id="L803">                        ChangeRecordIDType cid = new ChangeRecordIDType();</span>
-<span class="fc" id="L804">                        cid.setNodeID(sourcenode);</span>
-<span class="fc" id="L805">                        cid.setOriginatingUSN(0L);</span>
-<span class="fc" id="L806">                        EntityManager em = PersistenceManager.getEntityManager();</span>
-<span class="fc" id="L807">                        EntityTransaction tx = em.getTransaction();</span>
+<span class="nc" id="L802">                        HighWaterMarkVectorType ret = new HighWaterMarkVectorType();</span>
+<span class="nc" id="L803">                        ChangeRecordIDType cid = new ChangeRecordIDType();</span>
+<span class="nc" id="L804">                        cid.setNodeID(sourcenode);</span>
+<span class="nc" id="L805">                        cid.setOriginatingUSN(0L);</span>
+<span class="nc" id="L806">                        EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="nc" id="L807">                        EntityTransaction tx = em.getTransaction();</span>
                         try {
-<span class="fc" id="L809">                                tx.begin();</span>
+<span class="nc" id="L809">                                tx.begin();</span>
                                 //Long id = 0L;
                                 try {
-<span class="fc" id="L812">                                        cid.setOriginatingUSN((Long) em.createQuery(&quot;select MAX(e.originatingUSN) from ChangeRecord e where e.nodeID = :node&quot;)</span>
-<span class="fc" id="L813">                                                .setParameter(&quot;node&quot;, sourcenode)</span>
-<span class="fc" id="L814">                                                .getSingleResult());</span>
+<span class="nc" id="L812">                                        cid.setOriginatingUSN((Long) em.createQuery(&quot;select MAX(e.originatingUSN) from ChangeRecord e where e.nodeID = :node&quot;)</span>
+<span class="nc" id="L813">                                                .setParameter(&quot;node&quot;, sourcenode)</span>
+<span class="nc" id="L814">                                                .getSingleResult());</span>
 <span class="nc" id="L815">                                } catch (Exception ex) {</span>
 <span class="nc" id="L816">                                        logger.info(&quot;unexpected error searching for last record from &quot; + sourcenode, ex);</span>
-<span class="fc" id="L817">                                }</span>
+<span class="nc" id="L817">                                }</span>
 
-<span class="fc" id="L819">                                tx.rollback();</span>
+<span class="nc" id="L819">                                tx.rollback();</span>
 
 <span class="nc" id="L821">                        } catch (Exception drfm) {</span>
 <span class="nc" id="L822">                                logger.warn(&quot;error caught fetching newest record from node &quot; + sourcenode, drfm);</span>
                         } finally {
-<span class="pc bpc" id="L824" title="5 of 6 branches missed.">                                if (tx.isActive()) {</span>
+<span class="nc bnc" id="L824" title="All 6 branches missed.">                                if (tx.isActive()) {</span>
 <span class="nc" id="L825">                                        tx.rollback();</span>
                                 }
-<span class="pc" id="L827">                                em.close();</span>
-<span class="pc" id="L828">                        }</span>
-<span class="fc" id="L829">                        logger.info(&quot;Highest known record for &quot; + sourcenode + &quot; is &quot; + cid.getOriginatingUSN());</span>
-<span class="fc" id="L830">                        ret.getHighWaterMark().add(cid);</span>
+<span class="nc" id="L827">                                em.close();</span>
+<span class="nc" id="L828">                        }</span>
+<span class="nc" id="L829">                        logger.info(&quot;Highest known record for &quot; + sourcenode + &quot; is &quot; + cid.getOriginatingUSN());</span>
+<span class="nc" id="L830">                        ret.getHighWaterMark().add(cid);</span>
 
-<span class="fc" id="L832">                        return ret;</span>
+<span class="nc" id="L832">                        return ret;</span>
                 }
 
                 private void enqueueAllReceivingNodes() {
-<span class="pc bpc" id="L836" title="1 of 2 branches missed.">                        if (queue == null) {</span>
+<span class="nc bnc" id="L836" title="All 2 branches missed.">                        if (queue == null) {</span>
 <span class="nc" id="L837">                                queue = new ConcurrentLinkedQueue&lt;NotifyChangeRecordsAvailable&gt;();</span>
                         }
                         //get the replication config
                         //get everyone we are expecting to receive data from, then enqueue them for pulling
-<span class="fc" id="L841">                        ReplicationConfiguration repcfg = ReplicationNotifier.FetchEdges();</span>
-<span class="pc bpc" id="L842" title="1 of 2 branches missed.">                        if (repcfg == null) {</span>
+<span class="nc" id="L841">                        ReplicationConfiguration repcfg = ReplicationNotifier.FetchEdges();</span>
+<span class="nc bnc" id="L842" title="All 2 branches missed.">                        if (repcfg == null) {</span>
 <span class="nc" id="L843">                                return;</span>
                         }
-<span class="fc" id="L845">                        Set&lt;String&gt; allnodes = new HashSet&lt;String&gt;();</span>
-<span class="fc bfc" id="L846" title="All 2 branches covered.">                        for (int i = 0; i &lt; repcfg.getOperator().size(); i++) {</span>
-<span class="fc" id="L847">                                allnodes.add(repcfg.getOperator().get(i).getOperatorNodeID());</span>
+<span class="nc" id="L845">                        Set&lt;String&gt; allnodes = new HashSet&lt;String&gt;();</span>
+<span class="nc bnc" id="L846" title="All 2 branches missed.">                        for (int i = 0; i &lt; repcfg.getOperator().size(); i++) {</span>
+<span class="nc" id="L847">                                allnodes.add(repcfg.getOperator().get(i).getOperatorNodeID());</span>
                         }
-<span class="fc" id="L849">                        Set&lt;String&gt; receivers = new HashSet&lt;String&gt;();</span>
-<span class="pc bpc" id="L850" title="1 of 2 branches missed.">                        if (repcfg.getCommunicationGraph() == null</span>
-<span class="pc bpc" id="L851" title="1 of 2 branches missed.">                                || repcfg.getCommunicationGraph().getEdge().isEmpty()) {</span>
+<span class="nc" id="L849">                        Set&lt;String&gt; receivers = new HashSet&lt;String&gt;();</span>
+<span class="nc bnc" id="L850" title="All 2 branches missed.">                        if (repcfg.getCommunicationGraph() == null</span>
+<span class="nc bnc" id="L851" title="All 2 branches missed.">                                || repcfg.getCommunicationGraph().getEdge().isEmpty()) {</span>
                                 //no edges or graph defined, default to the operator list
-<span class="fc bfc" id="L853" title="All 2 branches covered.">                                for (org.uddi.repl_v3.Operator o : repcfg.getOperator()) {</span>
+<span class="nc bnc" id="L853" title="All 2 branches missed.">                                for (org.uddi.repl_v3.Operator o : repcfg.getOperator()) {</span>
                                         //no need to tell myself about a change at myself
-<span class="pc bpc" id="L855" title="1 of 2 branches missed.">                                        if (!o.getOperatorNodeID().equalsIgnoreCase(getNode())) {</span>
-<span class="fc" id="L856">                                                receivers.add(o.getOperatorNodeID());</span>
+<span class="nc bnc" id="L855" title="All 2 branches missed.">                                        if (!o.getOperatorNodeID().equalsIgnoreCase(getNode())) {</span>
+<span class="nc" id="L856">                                                receivers.add(o.getOperatorNodeID());</span>
                                         }
-<span class="fc" id="L858">                                }</span>
+<span class="nc" id="L858">                                }</span>
                         } else {
                                 //repcfg.getCommunicationGraph()
 <span class="nc" id="L861">                                Iterator&lt;Edge&gt; iterator = repcfg.getCommunicationGraph().getEdge().iterator();</span>
@@ -869,17 +869,17 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 <span class="nc" id="L869">                                }</span>
 
                         }
-<span class="fc bfc" id="L872" title="All 2 branches covered.">                        for (String s : receivers) {</span>
+<span class="nc bnc" id="L872" title="All 2 branches missed.">                        for (String s : receivers) {</span>
                                 //this is a list of nodes that this node is expecting updates from
                                 //here are we ticking the notification engine to ping the remove service for updates
-<span class="fc bfc" id="L875" title="All 2 branches covered.">                                for (String nodeping : allnodes) {</span>
-<span class="fc" id="L876">                                        queue.add(new NotifyChangeRecordsAvailable(s, getLastChangeRecordFrom(nodeping)));</span>
+<span class="nc bnc" id="L875" title="All 2 branches missed.">                                for (String nodeping : allnodes) {</span>
+<span class="nc" id="L876">                                        queue.add(new NotifyChangeRecordsAvailable(s, getLastChangeRecordFrom(nodeping)));</span>
                                         //for each node we are expecting data from, go fetch it, along the way, we'll request all data for all nodes
                                         //that we know about
-<span class="fc" id="L879">                                }</span>
+<span class="nc" id="L879">                                }</span>
 
-<span class="fc" id="L881">                        }</span>
-<span class="fc" id="L882">                }</span>
+<span class="nc" id="L881">                        }</span>
+<span class="nc" id="L882">                }</span>
 
         }
 
@@ -940,29 +940,29 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 <span class="nc" id="L940">        }</span>
 
         private synchronized UDDIReplicationPortType getReplicationClient(String node) {
-<span class="pc bpc" id="L943" title="1 of 2 branches missed.">                if (cache.containsKey(node)) {</span>
+<span class="nc bnc" id="L943" title="All 2 branches missed.">                if (cache.containsKey(node)) {</span>
 <span class="nc" id="L944">                        return cache.get(node);</span>
                 }
-<span class="fc" id="L946">                UDDIService svc = new UDDIService();</span>
-<span class="fc" id="L947">                UDDIReplicationPortType replicationClient = svc.getUDDIReplicationPort();</span>
-<span class="fc" id="L948">                TransportSecurityHelper.applyTransportSecurity((BindingProvider) replicationClient);</span>
+<span class="nc" id="L946">                UDDIService svc = new UDDIService();</span>
+<span class="nc" id="L947">                UDDIReplicationPortType replicationClient = svc.getUDDIReplicationPort();</span>
+<span class="nc" id="L948">                TransportSecurityHelper.applyTransportSecurity((BindingProvider) replicationClient);</span>
 
-<span class="fc" id="L950">                EntityManager em = PersistenceManager.getEntityManager();</span>
-<span class="fc" id="L951">                EntityTransaction tx = em.getTransaction();</span>
+<span class="nc" id="L950">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="nc" id="L951">                EntityTransaction tx = em.getTransaction();</span>
                 try {
-<span class="fc" id="L953">                        tx.begin();</span>
-<span class="fc" id="L954">                        StringBuilder sql = new StringBuilder();</span>
-<span class="fc" id="L955">                        sql.append(&quot;select c from ReplicationConfiguration c order by c.serialNumber desc&quot;);</span>
+<span class="nc" id="L953">                        tx.begin();</span>
+<span class="nc" id="L954">                        StringBuilder sql = new StringBuilder();</span>
+<span class="nc" id="L955">                        sql.append(&quot;select c from ReplicationConfiguration c order by c.serialNumber desc&quot;);</span>
                         //sql.toString();
-<span class="fc" id="L957">                        Query qry = em.createQuery(sql.toString());</span>
-<span class="fc" id="L958">                        qry.setMaxResults(1);</span>
+<span class="nc" id="L957">                        Query qry = em.createQuery(sql.toString());</span>
+<span class="nc" id="L958">                        qry.setMaxResults(1);</span>
 
-<span class="fc" id="L960">                        org.apache.juddi.model.ReplicationConfiguration resultList = (org.apache.juddi.model.ReplicationConfiguration) qry.getSingleResult();</span>
-<span class="pc bpc" id="L961" title="1 of 2 branches missed.">                        for (Operator o : resultList.getOperator()) {</span>
-<span class="pc bpc" id="L962" title="1 of 2 branches missed.">                                if (o.getOperatorNodeID().equalsIgnoreCase(node)) {</span>
-<span class="fc" id="L963">                                        ((BindingProvider) replicationClient).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, o.getSoapReplicationURL());</span>
-<span class="fc" id="L964">                                        cache.put(node, replicationClient);</span>
-<span class="fc" id="L965">                                        return replicationClient;</span>
+<span class="nc" id="L960">                        org.apache.juddi.model.ReplicationConfiguration resultList = (org.apache.juddi.model.ReplicationConfiguration) qry.getSingleResult();</span>
+<span class="nc bnc" id="L961" title="All 2 branches missed.">                        for (Operator o : resultList.getOperator()) {</span>
+<span class="nc bnc" id="L962" title="All 2 branches missed.">                                if (o.getOperatorNodeID().equalsIgnoreCase(node)) {</span>
+<span class="nc" id="L963">                                        ((BindingProvider) replicationClient).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, o.getSoapReplicationURL());</span>
+<span class="nc" id="L964">                                        cache.put(node, replicationClient);</span>
+<span class="nc" id="L965">                                        return replicationClient;</span>
                                 }
 <span class="nc" id="L967">                        }</span>
 <span class="nc" id="L968">                        tx.rollback();</span>
@@ -970,10 +970,10 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 <span class="nc" id="L970">                } catch (Exception ex) {</span>
 <span class="nc" id="L971">                        logger.fatal(&quot;Node not found!&quot; + node, ex);</span>
                 } finally {
-<span class="pc bpc" id="L973" title="7 of 8 branches missed.">                        if (tx.isActive()) {</span>
-<span class="pc" id="L974">                                tx.rollback();</span>
+<span class="nc bnc" id="L973" title="All 8 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L974">                                tx.rollback();</span>
                         }
-<span class="pc" id="L976">                        em.close();</span>
+<span class="nc" id="L976">                        em.close();</span>
 <span class="nc" id="L977">                }</span>
                 //em.close();
 <span class="nc" id="L979">                return null;</span>

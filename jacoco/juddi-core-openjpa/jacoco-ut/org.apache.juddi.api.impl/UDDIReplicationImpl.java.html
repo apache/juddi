@@ -231,12 +231,12 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 <span class="fc" id="L231">                                logger.info(&quot;Replication change puller thread started. Queue size: &quot; + queue.size());</span>
                         }
                         //ok someone told me there's a change available
-<span class="fc bfc" id="L234" title="All 2 branches covered.">                        while (!queue.isEmpty()) {</span>
+<span class="pc bpc" id="L234" title="1 of 2 branches missed.">                        while (!queue.isEmpty()) {</span>
 <span class="fc" id="L235">                                NotifyChangeRecordsAvailable poll = queue.poll();</span>
 <span class="pc bpc" id="L236" title="2 of 4 branches missed.">                                if (poll != null &amp;&amp; !poll.getNotifyingNode().equalsIgnoreCase(getNode())) {</span>
 <span class="fc" id="L237">                                        UDDIReplicationPortType replicationClient = getReplicationClient(poll.getNotifyingNode());</span>
-<span class="fc bfc" id="L238" title="All 2 branches covered.">                                        if (replicationClient == null) {</span>
-<span class="fc" id="L239">                                                logger.fatal(&quot;unable to obtain a replication client to node &quot; + poll);</span>
+<span class="pc bpc" id="L238" title="1 of 2 branches missed.">                                        if (replicationClient == null) {</span>
+<span class="nc" id="L239">                                                logger.fatal(&quot;unable to obtain a replication client to node &quot; + poll);</span>
                                         } else {
                                                 try {
                                                         //get the high water marks for this node
@@ -278,19 +278,19 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 <span class="nc" id="L278">                                                                        recordsreturned = records.size();</span>
 <span class="nc" id="L279">                                                                }</span>
                                                         }
-<span class="fc" id="L281">                                                } catch (Exception ex) {</span>
-<span class="fc" id="L282">                                                        logger.error(&quot;Error caught fetching replication changes from &quot; + poll + &quot; @&quot; + ((BindingProvider) replicationClient).getRequestContext().get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY), ex);</span>
+<span class="nc" id="L281">                                                } catch (Exception ex) {</span>
+<span class="nc" id="L282">                                                        logger.error(&quot;Error caught fetching replication changes from &quot; + poll + &quot; @&quot; + ((BindingProvider) replicationClient).getRequestContext().get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY), ex);</span>
 <span class="nc" id="L283">                                                }</span>
                                         }
-<span class="fc" id="L285">                                } else {</span>
+<span class="nc" id="L285">                                } else {</span>
 <span class="nc bnc" id="L286" title="All 2 branches missed.">                                        if (poll == null) {</span>
 <span class="nc" id="L287">                                                logger.warn(&quot;strange, popped a null object&quot;);</span>
 <span class="nc bnc" id="L288" title="All 2 branches missed.">                                        } else if (poll.getNotifyingNode().equalsIgnoreCase(getNode())) {</span>
 <span class="nc" id="L289">                                                logger.warn(&quot;strange, popped an object from the queue but it was from myself. This probably indicates a configuration error! ignoring...first record: &quot; + poll.getChangesAvailable().getHighWaterMark().get(0).getNodeID()+&quot;:&quot; + poll.getChangesAvailable().getHighWaterMark().get(0).getOriginatingUSN());</span>
                                         }
                                 }
-<span class="fc" id="L292">                        }</span>
-<span class="fc" id="L293">                }</span>
+<span class="nc" id="L292">                        }</span>
+<span class="nc" id="L293">                }</span>
 
                 @Override
                 public boolean cancel() {
@@ -940,8 +940,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 <span class="nc" id="L940">        }</span>
 
         private synchronized UDDIReplicationPortType getReplicationClient(String node) {
-<span class="fc bfc" id="L943" title="All 2 branches covered.">                if (cache.containsKey(node)) {</span>
-<span class="fc" id="L944">                        return cache.get(node);</span>
+<span class="pc bpc" id="L943" title="1 of 2 branches missed.">                if (cache.containsKey(node)) {</span>
+<span class="nc" id="L944">                        return cache.get(node);</span>
                 }
 <span class="fc" id="L946">                UDDIService svc = new UDDIService();</span>
 <span class="fc" id="L947">                UDDIReplicationPortType replicationClient = svc.getUDDIReplicationPort();</span>
@@ -958,25 +958,25 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 <span class="fc" id="L958">                        qry.setMaxResults(1);</span>
 
 <span class="fc" id="L960">                        org.apache.juddi.model.ReplicationConfiguration resultList = (org.apache.juddi.model.ReplicationConfiguration) qry.getSingleResult();</span>
-<span class="fc bfc" id="L961" title="All 2 branches covered.">                        for (Operator o : resultList.getOperator()) {</span>
-<span class="fc bfc" id="L962" title="All 2 branches covered.">                                if (o.getOperatorNodeID().equalsIgnoreCase(node)) {</span>
+<span class="pc bpc" id="L961" title="1 of 2 branches missed.">                        for (Operator o : resultList.getOperator()) {</span>
+<span class="pc bpc" id="L962" title="1 of 2 branches missed.">                                if (o.getOperatorNodeID().equalsIgnoreCase(node)) {</span>
 <span class="fc" id="L963">                                        ((BindingProvider) replicationClient).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, o.getSoapReplicationURL());</span>
 <span class="fc" id="L964">                                        cache.put(node, replicationClient);</span>
 <span class="fc" id="L965">                                        return replicationClient;</span>
                                 }
-<span class="fc" id="L967">                        }</span>
-<span class="fc" id="L968">                        tx.rollback();</span>
+<span class="nc" id="L967">                        }</span>
+<span class="nc" id="L968">                        tx.rollback();</span>
 
 <span class="nc" id="L970">                } catch (Exception ex) {</span>
 <span class="nc" id="L971">                        logger.fatal(&quot;Node not found!&quot; + node, ex);</span>
                 } finally {
-<span class="pc bpc" id="L973" title="6 of 8 branches missed.">                        if (tx.isActive()) {</span>
+<span class="pc bpc" id="L973" title="7 of 8 branches missed.">                        if (tx.isActive()) {</span>
 <span class="pc" id="L974">                                tx.rollback();</span>
                         }
 <span class="pc" id="L976">                        em.close();</span>
-<span class="pc" id="L977">                }</span>
+<span class="nc" id="L977">                }</span>
                 //em.close();
-<span class="fc" id="L979">                return null;</span>
+<span class="nc" id="L979">                return null;</span>
 
         }
 <span class="fc" id="L982">        private Map&lt;String, UDDIReplicationPortType&gt; cache = new HashMap&lt;String, UDDIReplicationPortType&gt;();</span>

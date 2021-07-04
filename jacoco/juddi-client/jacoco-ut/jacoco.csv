@@ -33,7 +33,6 @@ jUDDI Client side Code,org.apache.juddi.v3.client.transport,JAXWSTransport,142,4
 jUDDI Client side Code,org.apache.juddi.v3.client.transport,Transport,0,31,0,0,0,8,0,8,0,8
 jUDDI Client side Code,org.apache.juddi.v3.client.transport,InVMTransport,354,0,28,0,89,0,24,0,10,0
 jUDDI Client side Code,org.apache.juddi.v3.client.transport,JAXWSv2TranslationTransport,252,136,28,10,64,41,28,5,9,5
-jUDDI Client side Code,org.apache.juddi.v3.client.transport,RMITransport,597,0,40,0,125,0,31,0,11,0
 jUDDI Client side Code,org.apache.juddi.v3.annotations,AnnotationProcessor,92,447,19,33,15,88,17,14,1,4
 jUDDI Client side Code,org.apache.juddi.v3.client.mapping.wadl,Link,54,0,4,0,18,0,12,0,10,0
 jUDDI Client side Code,org.apache.juddi.v3.client.mapping.wadl,Method,64,8,6,0,22,2,15,1,12,1

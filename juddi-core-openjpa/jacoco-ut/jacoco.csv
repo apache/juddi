@@ -78,8 +78,8 @@ jUDDI Core - OpenJPA,org.apache.juddi.model,ReplicationConfiguration,530,816,92,
 jUDDI Core - OpenJPA,org.apache.juddi.model,ServiceCategoryBag,162,149,27,11,0,8,27,12,10,10
 jUDDI Core - OpenJPA,org.apache.juddi.model,AddressLine,455,439,78,34,4,23,80,41,29,30
 jUDDI Core - OpenJPA,org.apache.juddi.model,ServiceName,424,378,73,30,4,19,75,36,28,27
-jUDDI Core - OpenJPA,org.apache.juddi.model,Publisher,384,724,57,55,16,35,59,67,10,48
-jUDDI Core - OpenJPA,org.apache.juddi.model,TmodelInstanceInfo,516,616,81,49,8,30,83,58,29,38
+jUDDI Core - OpenJPA,org.apache.juddi.model,Publisher,386,722,57,55,16,35,60,66,11,47
+jUDDI Core - OpenJPA,org.apache.juddi.model,TmodelInstanceInfo,519,613,82,48,8,30,84,57,29,38
 jUDDI Core - OpenJPA,org.apache.juddi.model,ReplicationConfigurationNode,379,313,67,27,0,10,68,31,24,25
 jUDDI Core - OpenJPA,org.apache.juddi.model,TransferToken,363,342,63,29,5,12,65,34,23,27
 jUDDI Core - OpenJPA,org.apache.juddi.model,Signature,777,894,125,68,0,43,126,83,39,54
@@ -89,7 +89,7 @@ jUDDI Core - OpenJPA,org.apache.juddi.model,BusinessIdentifier,455,439,78,34,4,2
 jUDDI Core - OpenJPA,org.apache.juddi.model,SubscriptionChunkToken,426,528,78,41,0,23,78,51,22,40
 jUDDI Core - OpenJPA,org.apache.juddi.model,OverviewDocDescr,424,378,73,30,4,19,75,36,28,27
 jUDDI Core - OpenJPA,org.apache.juddi.model,BusinessEntity,530,901,59,71,18,47,63,78,16,45
-jUDDI Core - OpenJPA,org.apache.juddi.model,InstanceDetailsDescr,672,130,96,7,20,3,106,5,50,5
+jUDDI Core - OpenJPA,org.apache.juddi.model,InstanceDetailsDescr,670,132,96,7,20,3,105,6,49,6
 jUDDI Core - OpenJPA,org.apache.juddi.model,ControlMessage,422,365,73,30,0,16,74,36,26,28
 jUDDI Core - OpenJPA,org.apache.juddi.model,BindingDescr,424,378,73,30,4,19,75,36,28,27
 jUDDI Core - OpenJPA,org.apache.juddi.model,BusinessName,424,378,73,30,4,19,75,36,28,27
@@ -136,10 +136,10 @@ jUDDI Core - OpenJPA,org.apache.juddi.model,Subscription,546,888,100,70,8,36,100
 jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDIValueSetCachingImpl,66,0,4,0,16,0,5,0,3,0
 jUDDI Core - OpenJPA,org.apache.juddi.api.impl,XRegisterHelper,584,0,46,0,84,0,26,0,3,0
 jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDIPublicationImpl,783,2984,84,148,166,708,68,88,3,37
-jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDICustodyTransferImpl,608,409,51,15,125,108,31,10,2,6
+jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDICustodyTransferImpl,608,409,52,14,125,108,32,9,2,6
 jUDDI Core - OpenJPA,org.apache.juddi.api.impl,JUDDIApiImpl,1747,1784,159,79,378,462,107,39,7,20
 jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDIv2InquiryImpl,154,42,0,0,45,11,9,4,9,4
-jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDIReplicationImpl,740,441,75,37,137,119,49,21,5,9
+jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDIReplicationImpl,757,424,79,33,142,114,52,18,5,9
 jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDIServiceCounter,428,546,38,24,71,84,30,14,5,8
 jUDDI Core - OpenJPA,org.apache.juddi.api.impl,PublicationHelper,22,28,2,2,6,7,3,1,1,1
 jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDIServiceCounter.LongHolder,4,3,0,0,1,1,1,1,1,1
@@ -148,11 +148,11 @@ jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDIServiceCounter.IntHolder,0,7,
 jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDISubscriptionImpl,986,1134,143,119,226,286,99,43,1,10
 jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDISecurityImpl,167,154,12,4,32,37,9,4,1,4
 jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDIv2PublishImpl,366,0,6,0,106,0,24,0,21,0
-jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDIReplicationImpl.PullTimerTask,1683,378,198,26,306,73,108,10,2,4
+jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDIReplicationImpl.PullTimerTask,1717,344,200,24,312,67,110,8,2,4
 jUDDI Core - OpenJPA,org.apache.juddi.api.impl,ServiceCounterLifecycleResource,13,145,1,5,2,31,2,6,1,4
 jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDIInquiryImpl,385,870,45,49,82,256,37,30,0,20
 jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDIValueSetValidationImpl,239,634,32,60,40,116,28,30,1,11
-jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDISubscriptionListenerImpl,149,7,6,0,35,2,4,2,1,2
+jUDDI Core - OpenJPA,org.apache.juddi.api.impl,UDDISubscriptionListenerImpl,156,0,6,0,37,0,6,0,3,0
 jUDDI Core - OpenJPA,org.apache.juddi.api.impl,AuthenticatedService,197,269,20,26,36,75,19,11,1,6
 jUDDI Core - OpenJPA,org.apache.juddi.v3.error,MaxEntitiesExceededException,6,0,0,0,2,0,1,0,1,0
 jUDDI Core - OpenJPA,org.apache.juddi.v3.error,UserMismatchException,0,6,0,0,0,2,0,1,0,1
@@ -202,7 +202,7 @@ jUDDI Core - OpenJPA,org.apache.juddi.validation,ValidateReplication,460,269,76,
 jUDDI Core - OpenJPA,org.apache.juddi.validation,ValidateValueSetValidation,195,0,28,0,51,0,19,0,5,0
 jUDDI Core - OpenJPA,org.apache.juddi.validation,ValidateClientSubscriptionInfo,119,126,19,23,16,36,19,8,1,5
 jUDDI Core - OpenJPA,org.apache.juddi.validation,ValidateSubscriptionListener,15,0,2,0,5,0,3,0,2,0
-jUDDI Core - OpenJPA,org.apache.juddi.validation,ValidateNode,164,201,57,43,19,31,48,6,0,4
+jUDDI Core - OpenJPA,org.apache.juddi.validation,ValidateNode,112,200,39,43,14,31,39,6,0,4
 jUDDI Core - OpenJPA,org.apache.juddi.validation,ValidateInquiry,1145,1640,239,273,100,327,200,82,0,26
 jUDDI Core - OpenJPA,org.apache.juddi.validation,ValidatePublisher,220,36,40,6,43,11,26,3,4,2
 jUDDI Core - OpenJPA,org.apache.juddi.validation,ValidateClerk,56,60,10,12,7,19,10,4,0,3
@@ -227,11 +227,9 @@ jUDDI Core - OpenJPA,org.apache.juddi.subscription.notify,HTTPNotifier,35,62,3,3
 jUDDI Core - OpenJPA,org.apache.juddi.subscription.notify,NotifierFactory,28,95,4,4,3,15,4,2,0,2
 jUDDI Core - OpenJPA,org.apache.juddi.subscription.notify,SMTPNotifier,164,290,10,14,31,44,9,7,0,4
 jUDDI Core - OpenJPA,org.apache.juddi.subscription.notify,USERFRIENDLYSMTPNotifier,886,235,74,8,197,43,45,2,5,1
-jUDDI Core - OpenJPA,org.apache.juddi.subscription.notify,JNDI_RMINotifier,130,62,11,7,17,15,9,2,1,1
 jUDDI Core - OpenJPA,org.apache.juddi.subscription.notify,TemporaryMailContainer,15,18,0,0,7,7,4,3,4,3
 jUDDI Core - OpenJPA,org.apache.juddi.subscription.notify,USERFRIENDLYSMTPNotifier.new Authenticator() {...},17,0,0,0,2,0,2,0,2,0
 jUDDI Core - OpenJPA,org.apache.juddi.subscription.notify,USERFRIENDLYSMTPNotifier.new Authenticator() {...},17,0,0,0,2,0,2,0,2,0
-jUDDI Core - OpenJPA,org.apache.juddi.subscription.notify,RMINotifier,25,69,2,2,2,15,2,2,0,2
 jUDDI Core - OpenJPA,org.apache.juddi.api.util,ReplicationQuery,33,120,6,2,5,23,7,5,3,5
 jUDDI Core - OpenJPA,org.apache.juddi.api.util,PublicationQuery,33,273,6,2,5,41,7,5,3,5
 jUDDI Core - OpenJPA,org.apache.juddi.api.util,SubscriptionListenerQuery,33,52,6,2,5,15,7,5,3,5
@@ -243,17 +241,8 @@ jUDDI Core - OpenJPA,org.apache.juddi.api.util,QueryStatus,66,36,8,0,15,7,10,2,6
 jUDDI Core - OpenJPA,org.apache.juddi.api.util,ValueSetValidationQuery,33,52,6,2,5,15,7,5,3,5
 jUDDI Core - OpenJPA,org.apache.juddi.api.util,CustodyTransferQuery,33,83,6,2,5,19,7,5,3,5
 jUDDI Core - OpenJPA,org.apache.juddi.api.util,InquiryQuery,33,195,6,2,5,33,7,5,3,5
-jUDDI Core - OpenJPA,org.apache.juddi.rmi,RMIRegistration,366,0,16,0,77,0,13,0,5,0
-jUDDI Core - OpenJPA,org.apache.juddi.rmi,UDDISubscriptionService,21,9,0,0,6,3,4,1,4,1
-jUDDI Core - OpenJPA,org.apache.juddi.rmi,UDDIPublicationService,72,9,0,0,21,3,14,1,14,1
-jUDDI Core - OpenJPA,org.apache.juddi.rmi,UDDIInquiryService,50,9,0,0,10,3,10,1,10,1
-jUDDI Core - OpenJPA,org.apache.juddi.rmi,JUDDIApiService,121,9,0,0,30,3,23,1,23,1
-jUDDI Core - OpenJPA,org.apache.juddi.rmi,UDDISecurityService,10,9,0,0,3,3,2,1,2,1
-jUDDI Core - OpenJPA,org.apache.juddi.rmi,UDDICustodyTransferService,19,9,0,0,6,3,3,1,3,1
-jUDDI Core - OpenJPA,org.apache.juddi.rmi,UDDISubscriptionListenerService,5,9,0,0,1,3,1,1,1,1
-jUDDI Core - OpenJPA,org.apache.juddi.rmi,JNDIRegistration,154,222,7,9,18,64,7,6,0,5
 jUDDI Core - OpenJPA,org.apache.juddi.cryptor,CryptorFactory,49,48,2,4,11,17,4,4,2,3
-jUDDI Core - OpenJPA,org.apache.juddi.keygen,DefaultKeyGenerator,10,94,3,17,1,23,3,10,0,3
+jUDDI Core - OpenJPA,org.apache.juddi.keygen,DefaultKeyGenerator,10,94,4,16,1,23,4,9,0,3
 jUDDI Core - OpenJPA,org.apache.juddi.keygen,KeyGeneratorFactory,44,110,1,5,9,26,2,6,1,4
-jUDDI Core - OpenJPA,org.apache.juddi,Registry,72,93,6,10,15,30,6,6,0,4
+jUDDI Core - OpenJPA,org.apache.juddi,Registry,0,78,3,7,0,27,3,6,0,4
 jUDDI Core - OpenJPA,org.apache.juddi,ClassUtil,17,43,5,7,5,16,6,3,1,2

@@ -28,11 +28,10 @@ import org.uddi.v3_service.UDDISubscriptionPortType;;
  * This abstract class defined the basic model for accessing different transport mechanisms
  * using the same interfaces for UDDIv3.
  * @see JAXWSTransport
- * @see RMITransport
- * @see InVMTransport
+  * @see InVMTransport
  * 
  */
-<span class="fc" id="L35">public abstract class Transport {</span>
+<span class="fc" id="L34">public abstract class Transport {</span>
 	
 	public final static String DEFAULT_NODE_NAME             = &quot;default&quot;;
 	
@@ -45,25 +44,25 @@ import org.uddi.v3_service.UDDISubscriptionPortType;;
 	public abstract JUDDIApiPortType getJUDDIApiService(String endpointURL) throws TransportException;
 	
 	public UDDIInquiryPortType getUDDIInquiryService() throws TransportException {
-<span class="fc" id="L48">		return getUDDIInquiryService(null);</span>
+<span class="fc" id="L47">		return getUDDIInquiryService(null);</span>
 	}
 	public UDDISecurityPortType getUDDISecurityService() throws TransportException {
-<span class="fc" id="L51">		return getUDDISecurityService(null);</span>
+<span class="fc" id="L50">		return getUDDISecurityService(null);</span>
 	}
 	public UDDIPublicationPortType getUDDIPublishService() throws TransportException {
-<span class="fc" id="L54">		return getUDDIPublishService(null);</span>
+<span class="fc" id="L53">		return getUDDIPublishService(null);</span>
 	}
 	public UDDISubscriptionPortType getUDDISubscriptionService() throws TransportException {
-<span class="fc" id="L57">		return getUDDISubscriptionService(null);</span>
+<span class="fc" id="L56">		return getUDDISubscriptionService(null);</span>
 	}
 	public UDDISubscriptionListenerPortType getUDDISubscriptionListenerService() throws TransportException {
-<span class="fc" id="L60">		return getUDDISubscriptionListenerService(null);</span>
+<span class="fc" id="L59">		return getUDDISubscriptionListenerService(null);</span>
 	}
 	public UDDICustodyTransferPortType getUDDICustodyTransferService() throws TransportException {
-<span class="fc" id="L63">		return getUDDICustodyTransferService(null);</span>
+<span class="fc" id="L62">		return getUDDICustodyTransferService(null);</span>
 	}
 	public JUDDIApiPortType getJUDDIApiService() throws TransportException {
-<span class="fc" id="L66">		return getJUDDIApiService(null);</span>
+<span class="fc" id="L65">		return getJUDDIApiService(null);</span>
 	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
