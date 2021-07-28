@@ -29,6 +29,10 @@ The appropriate settings are located below in xpath style notation.
 	
 If the settings are not present, then JNDI and RMI are already disabled. This is the default setting.
 
+Credit:
+
+Artem Smotrakov
+
 ### CVEID  [CVE-2018-1307](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-1307)
 
 VERSION:  3.2 through 3.3.4
