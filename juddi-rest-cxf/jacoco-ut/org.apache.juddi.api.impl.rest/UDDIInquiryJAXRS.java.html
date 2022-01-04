@@ -49,10 +49,10 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 @Produces({&quot;application/xml&quot;, &quot;application/json&quot;, &quot;text/html&quot;})
 @org.apache.cxf.jaxrs.model.wadl.Description(&quot;This service provides access to UDDIv3 data via a REST interface, including the &quot;
         + &quot;recommendation specified in the UDDIv3 spec titled, HTTP GET, as well as a number of methods above and beyond.&quot;)
-<span class="fc" id="L52">public class UDDIInquiryJAXRS {</span>
+<span class="nc" id="L52">public class UDDIInquiryJAXRS {</span>
 
-<span class="fc" id="L54">        private static org.apache.juddi.api.impl.UDDIInquiryImpl inquiry = new UDDIInquiryImpl();</span>
-<span class="fc" id="L55">        private static final Log log = LogFactory.getLog(UDDIInquiryJAXRS.class);</span>
+<span class="nc" id="L54">        private static org.apache.juddi.api.impl.UDDIInquiryImpl inquiry = new UDDIInquiryImpl();</span>
+<span class="nc" id="L55">        private static final Log log = LogFactory.getLog(UDDIInquiryJAXRS.class);</span>
 
         /**
          * Returns the details of a business entity in JSON
@@ -80,17 +80,17 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/xml&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the details of a business entity in XML&quot;)
         public org.uddi.api_v3.BusinessEntity getBusinessDetailXML(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
-<span class="fc" id="L83">                return getBusinessDetail(id);</span>
+<span class="nc" id="L83">                return getBusinessDetail(id);</span>
         }
 
         private org.uddi.api_v3.BusinessEntity getBusinessDetail(String id) {
-<span class="fc" id="L87">                GetBusinessDetail gbd = new GetBusinessDetail();</span>
-<span class="fc" id="L88">                gbd.getBusinessKey().add(id);</span>
+<span class="nc" id="L87">                GetBusinessDetail gbd = new GetBusinessDetail();</span>
+<span class="nc" id="L88">                gbd.getBusinessKey().add(id);</span>
                 BusinessDetail businessDetail;
                 try {
-<span class="fc" id="L91">                        businessDetail = inquiry.getBusinessDetail(gbd);</span>
-<span class="fc" id="L92">                        return businessDetail.getBusinessEntity().get(0);</span>
-<span class="fc" id="L93">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L91">                        businessDetail = inquiry.getBusinessDetail(gbd);</span>
+<span class="nc" id="L92">                        return businessDetail.getBusinessEntity().get(0);</span>
+<span class="nc" id="L93">                } catch (DispositionReportFaultMessage ex) {</span>
 <span class="nc" id="L94">                        HandleException(ex);</span>
                 }
 <span class="nc" id="L96">                return null;</span>
@@ -108,7 +108,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/xml&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the details of a tModel entity in XML&quot;)
         public org.uddi.api_v3.TModel getTModelDetailXML(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
-<span class="fc" id="L111">                return getTModelDetail(id);</span>
+<span class="nc" id="L111">                return getTModelDetail(id);</span>
         }
 
         /**
@@ -123,17 +123,17 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/json&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the details of a tModel entity in JSON&quot;)
         public org.uddi.api_v3.TModel getTModelDetailJSON(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
-<span class="fc" id="L126">                return getTModelDetail(id);</span>
+<span class="nc" id="L126">                return getTModelDetail(id);</span>
         }
 
         private org.uddi.api_v3.TModel getTModelDetail(String id) {
-<span class="fc" id="L130">                GetTModelDetail gbd = new GetTModelDetail();</span>
-<span class="fc" id="L131">                gbd.getTModelKey().add(id);</span>
+<span class="nc" id="L130">                GetTModelDetail gbd = new GetTModelDetail();</span>
+<span class="nc" id="L131">                gbd.getTModelKey().add(id);</span>
 
                 try {
-<span class="fc" id="L134">                        TModelDetail tModelDetail = inquiry.getTModelDetail(gbd);</span>
-<span class="fc" id="L135">                        return tModelDetail.getTModel().get(0);</span>
-<span class="fc" id="L136">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L134">                        TModelDetail tModelDetail = inquiry.getTModelDetail(gbd);</span>
+<span class="nc" id="L135">                        return tModelDetail.getTModel().get(0);</span>
+<span class="nc" id="L136">                } catch (DispositionReportFaultMessage ex) {</span>
 <span class="nc" id="L137">                        HandleException(ex);</span>
                 }
 <span class="nc" id="L139">                return null;</span>
@@ -151,7 +151,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/json&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the details of a service entity in JSON&quot;)
         public org.uddi.api_v3.BusinessService getServiceDetailJSON(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
-<span class="fc" id="L154">                return getServiceDetail(id);</span>
+<span class="nc" id="L154">                return getServiceDetail(id);</span>
         }
 
         /**
@@ -175,33 +175,33 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
                 @QueryParam(&quot;businessKey&quot;) String businessKey,
                 @QueryParam(&quot;tModelKey&quot;) String tModelKey,
                 @QueryParam(&quot;bindingKey&quot;) String bindingKey) throws WebApplicationException {
-<span class="fc" id="L178">                int params = 0;</span>
-<span class="pc bpc" id="L179" title="1 of 2 branches missed.">                if (businessKey != null) {</span>
+<span class="nc" id="L178">                int params = 0;</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">                if (businessKey != null) {</span>
 <span class="nc" id="L180">                        params++;</span>
                 }
-<span class="pc bpc" id="L182" title="1 of 2 branches missed.">                if (tModelKey != null) {</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">                if (tModelKey != null) {</span>
 <span class="nc" id="L183">                        params++;</span>
                 }
-<span class="pc bpc" id="L185" title="1 of 2 branches missed.">                if (bindingKey != null) {</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">                if (bindingKey != null) {</span>
 <span class="nc" id="L186">                        params++;</span>
                 }
-<span class="fc bfc" id="L188" title="All 2 branches covered.">                if (serviceKey != null) {</span>
-<span class="fc" id="L189">                        params++;</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">                if (serviceKey != null) {</span>
+<span class="nc" id="L189">                        params++;</span>
                 }
-<span class="fc bfc" id="L191" title="All 2 branches covered.">                if (params != 1) {</span>
-<span class="fc" id="L192">                        throw new WebApplicationException(400);</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">                if (params != 1) {</span>
+<span class="nc" id="L192">                        throw new WebApplicationException(400);</span>
                 }
 
-<span class="pc bpc" id="L195" title="1 of 2 branches missed.">                if (businessKey != null) {</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">                if (businessKey != null) {</span>
 <span class="nc" id="L196">                        return getBusinessDetail(businessKey);</span>
                 }
-<span class="pc bpc" id="L198" title="1 of 2 branches missed.">                if (tModelKey != null) {</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">                if (tModelKey != null) {</span>
 <span class="nc" id="L199">                        return getTModelDetail(tModelKey);</span>
                 }
-<span class="pc bpc" id="L201" title="1 of 2 branches missed.">                if (bindingKey != null) {</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">                if (bindingKey != null) {</span>
 <span class="nc" id="L202">                        return getBindingDetail(bindingKey);</span>
                 }
-<span class="pc bpc" id="L204" title="1 of 2 branches missed.">                if (serviceKey != null) {</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">                if (serviceKey != null) {</span>
 <span class="nc" id="L205">                        return getServiceDetail(serviceKey);</span>
                 }
 <span class="nc" id="L207">                throw new WebApplicationException(400);</span>
@@ -228,32 +228,32 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
                 @QueryParam(&quot;businessKey&quot;) String businessKey,
                 @QueryParam(&quot;tModelKey&quot;) String tModelKey,
                 @QueryParam(&quot;bindingKey&quot;) String bindingKey) throws WebApplicationException {
-<span class="fc" id="L231">                int params = 0;</span>
-<span class="pc bpc" id="L232" title="1 of 2 branches missed.">                if (businessKey != null) {</span>
+<span class="nc" id="L231">                int params = 0;</span>
+<span class="nc bnc" id="L232" title="All 2 branches missed.">                if (businessKey != null) {</span>
 <span class="nc" id="L233">                        params++;</span>
                 }
-<span class="pc bpc" id="L235" title="1 of 2 branches missed.">                if (tModelKey != null) {</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">                if (tModelKey != null) {</span>
 <span class="nc" id="L236">                        params++;</span>
                 }
-<span class="pc bpc" id="L238" title="1 of 2 branches missed.">                if (bindingKey != null) {</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">                if (bindingKey != null) {</span>
 <span class="nc" id="L239">                        params++;</span>
                 }
-<span class="fc bfc" id="L241" title="All 2 branches covered.">                if (serviceKey != null) {</span>
-<span class="fc" id="L242">                        params++;</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">                if (serviceKey != null) {</span>
+<span class="nc" id="L242">                        params++;</span>
                 }
-<span class="fc bfc" id="L244" title="All 2 branches covered.">                if (params != 1) {</span>
-<span class="fc" id="L245">                        throw new WebApplicationException(400);</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">                if (params != 1) {</span>
+<span class="nc" id="L245">                        throw new WebApplicationException(400);</span>
                 }
-<span class="pc bpc" id="L247" title="1 of 2 branches missed.">                if (businessKey != null) {</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">                if (businessKey != null) {</span>
 <span class="nc" id="L248">                        return getBusinessDetail(businessKey);</span>
                 }
-<span class="pc bpc" id="L250" title="1 of 2 branches missed.">                if (tModelKey != null) {</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">                if (tModelKey != null) {</span>
 <span class="nc" id="L251">                        return getTModelDetail(tModelKey);</span>
                 }
-<span class="pc bpc" id="L253" title="1 of 2 branches missed.">                if (bindingKey != null) {</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">                if (bindingKey != null) {</span>
 <span class="nc" id="L254">                        return getBindingDetail(bindingKey);</span>
                 }
-<span class="pc bpc" id="L256" title="1 of 2 branches missed.">                if (serviceKey != null) {</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">                if (serviceKey != null) {</span>
 <span class="nc" id="L257">                        return getServiceDetail(serviceKey);</span>
                 }
 <span class="nc" id="L259">                throw new WebApplicationException(400);</span>
@@ -271,17 +271,17 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/xml&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the details of a service entity in XML&quot;)
         public org.uddi.api_v3.BusinessService getServiceDetailXML(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
-<span class="fc" id="L274">                return getServiceDetail(id);</span>
+<span class="nc" id="L274">                return getServiceDetail(id);</span>
         }
 
         private BusinessService getServiceDetail(String id) {
-<span class="fc" id="L278">                GetServiceDetail gbd = new GetServiceDetail();</span>
-<span class="fc" id="L279">                gbd.getServiceKey().add(id);</span>
+<span class="nc" id="L278">                GetServiceDetail gbd = new GetServiceDetail();</span>
+<span class="nc" id="L279">                gbd.getServiceKey().add(id);</span>
 
                 try {
-<span class="fc" id="L282">                        ServiceDetail serviceDetail = inquiry.getServiceDetail(gbd);</span>
-<span class="fc" id="L283">                        return serviceDetail.getBusinessService().get(0);</span>
-<span class="fc" id="L284">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L282">                        ServiceDetail serviceDetail = inquiry.getServiceDetail(gbd);</span>
+<span class="nc" id="L283">                        return serviceDetail.getBusinessService().get(0);</span>
+<span class="nc" id="L284">                } catch (DispositionReportFaultMessage ex) {</span>
 <span class="nc" id="L285">                        HandleException(ex);</span>
                 }
 <span class="nc" id="L287">                return null;</span>
@@ -299,7 +299,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/json&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the operational details of a given entity in JSON&quot;)
         public org.uddi.api_v3.OperationalInfo getOpInfoJSON(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
-<span class="fc" id="L302">                return getOpInfoDetail(id);</span>
+<span class="nc" id="L302">                return getOpInfoDetail(id);</span>
         }
 
         /**
@@ -314,16 +314,16 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/xml&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the operational details of a given entity in XML&quot;)
         public org.uddi.api_v3.OperationalInfo getOpInfoXML(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
-<span class="fc" id="L317">                return getOpInfoDetail(id);</span>
+<span class="nc" id="L317">                return getOpInfoDetail(id);</span>
         }
 
         private OperationalInfo getOpInfoDetail(String id) {
-<span class="fc" id="L321">                GetOperationalInfo req = new GetOperationalInfo();</span>
-<span class="fc" id="L322">                req.getEntityKey().add(id);</span>
+<span class="nc" id="L321">                GetOperationalInfo req = new GetOperationalInfo();</span>
+<span class="nc" id="L322">                req.getEntityKey().add(id);</span>
                 try {
-<span class="fc" id="L324">                        OperationalInfos operationalInfo = inquiry.getOperationalInfo(req);</span>
-<span class="fc" id="L325">                        return operationalInfo.getOperationalInfo().get(0);</span>
-<span class="fc" id="L326">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L324">                        OperationalInfos operationalInfo = inquiry.getOperationalInfo(req);</span>
+<span class="nc" id="L325">                        return operationalInfo.getOperationalInfo().get(0);</span>
+<span class="nc" id="L326">                } catch (DispositionReportFaultMessage ex) {</span>
 <span class="nc" id="L327">                        HandleException(ex);</span>
                 }
 <span class="nc" id="L329">                return null;</span>
@@ -341,7 +341,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/json&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the binding details of a given entity in JSON&quot;)
         public org.uddi.api_v3.BindingTemplate getBindingDetailJSON(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
-<span class="fc" id="L344">                return getBindingDetail(id);</span>
+<span class="nc" id="L344">                return getBindingDetail(id);</span>
         }
 
         /**
@@ -356,16 +356,16 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/xml&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the binding details of a given entity in XML&quot;)
         public org.uddi.api_v3.BindingTemplate getBindingDetailXML(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
-<span class="fc" id="L359">                return getBindingDetail(id);</span>
+<span class="nc" id="L359">                return getBindingDetail(id);</span>
         }
 
         private BindingTemplate getBindingDetail(String id) {
-<span class="fc" id="L363">                GetBindingDetail req = new GetBindingDetail();</span>
-<span class="fc" id="L364">                req.getBindingKey().add(id);</span>
+<span class="nc" id="L363">                GetBindingDetail req = new GetBindingDetail();</span>
+<span class="nc" id="L364">                req.getBindingKey().add(id);</span>
                 try {
-<span class="fc" id="L366">                        BindingDetail bindingDetail = inquiry.getBindingDetail(req);</span>
-<span class="fc" id="L367">                        return bindingDetail.getBindingTemplate().get(0);</span>
-<span class="fc" id="L368">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L366">                        BindingDetail bindingDetail = inquiry.getBindingDetail(req);</span>
+<span class="nc" id="L367">                        return bindingDetail.getBindingTemplate().get(0);</span>
+<span class="nc" id="L368">                } catch (DispositionReportFaultMessage ex) {</span>
 <span class="nc" id="L369">                        HandleException(ex);</span>
                 }
 <span class="nc" id="L371">                return null;</span>
@@ -383,7 +383,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/json&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the service access points of a given service in JSON&quot;)
         public UriContainer geEndpointsByServiceJSON(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
-<span class="fc" id="L386">                return getEndpointsByService(id);</span>
+<span class="nc" id="L386">                return getEndpointsByService(id);</span>
         }
 
         /**
@@ -398,7 +398,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/xml&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the service access points of a given service in XML&quot;)
         public UriContainer getEndpointsByServiceXML(@PathParam(&quot;id&quot;) String id) throws WebApplicationException {
-<span class="fc" id="L401">                return getEndpointsByService(id);</span>
+<span class="nc" id="L401">                return getEndpointsByService(id);</span>
         }
 
         /**
@@ -413,7 +413,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/xml&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the business keys of the first 100 registered businesses in XML&quot;)
         public KeyBag getBusinessListXML() throws WebApplicationException {
-<span class="fc" id="L416">                return getBusinessListData();</span>
+<span class="nc" id="L416">                return getBusinessListData();</span>
         }
 
         /**
@@ -428,7 +428,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/json&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the business keys of the first 100 registered businesses in JSON&quot;)
         public KeyBag getBusinessListJSON() throws WebApplicationException {
-<span class="fc" id="L431">                return getBusinessListData();</span>
+<span class="nc" id="L431">                return getBusinessListData();</span>
         }
 
         /**
@@ -442,7 +442,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/xml&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the Service keys of the first 100 registered services in XML&quot;)
         public KeyBag getServiceListXML() throws WebApplicationException {
-<span class="fc" id="L445">                return getServiceListData();</span>
+<span class="nc" id="L445">                return getServiceListData();</span>
         }
 
         /**
@@ -456,7 +456,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/json&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the Service keys of the first 100 registered services in JSON&quot;)
         public KeyBag getServiceListJSON() throws WebApplicationException {
-<span class="fc" id="L459">                return getServiceListData();</span>
+<span class="nc" id="L459">                return getServiceListData();</span>
         }
 
         /**
@@ -470,7 +470,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/xml&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the tModel keys of the first 100 registered services in XML&quot;)
         public KeyBag getTModelListXML() throws WebApplicationException {
-<span class="fc" id="L473">                return getTmodelListData();</span>
+<span class="nc" id="L473">                return getTmodelListData();</span>
         }
 
         /**
@@ -576,7 +576,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         @Produces(&quot;application/json&quot;)
         @org.apache.cxf.jaxrs.model.wadl.Description(&quot;Returns the tModel keys of the first 100 registered services in JSON&quot;)
         public KeyBag getTModelListJSON() throws WebApplicationException {
-<span class="fc" id="L579">                return getTmodelListData();</span>
+<span class="nc" id="L579">                return getTmodelListData();</span>
         }
 
         /**
@@ -626,39 +626,39 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         }
 
         private UriContainer getEndpointsByService(String id) throws WebApplicationException {
-<span class="fc" id="L629">                UriContainer c = new UriContainer();</span>
-<span class="fc" id="L630">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L631">                GetServiceDetail fs = new GetServiceDetail();</span>
+<span class="nc" id="L629">                UriContainer c = new UriContainer();</span>
+<span class="nc" id="L630">                List&lt;String&gt; ret = new ArrayList&lt;String&gt;();</span>
+<span class="nc" id="L631">                GetServiceDetail fs = new GetServiceDetail();</span>
 
-<span class="fc" id="L633">                fs.getServiceKey().add(id);</span>
+<span class="nc" id="L633">                fs.getServiceKey().add(id);</span>
                 try {
-<span class="fc" id="L635">                        ServiceDetail serviceDetail = inquiry.getServiceDetail(fs);</span>
-<span class="pc bpc" id="L636" title="2 of 4 branches missed.">                        if (serviceDetail == null || serviceDetail.getBusinessService().isEmpty()) {</span>
+<span class="nc" id="L635">                        ServiceDetail serviceDetail = inquiry.getServiceDetail(fs);</span>
+<span class="nc bnc" id="L636" title="All 4 branches missed.">                        if (serviceDetail == null || serviceDetail.getBusinessService().isEmpty()) {</span>
 <span class="nc" id="L637">                                throw new WebApplicationException(400);</span>
                         } else {
-<span class="fc" id="L639">                                List&lt;String&gt; endpoints = GetEndpoints(serviceDetail, null);</span>
-<span class="fc" id="L640">                                ret.addAll(endpoints);</span>
+<span class="nc" id="L639">                                List&lt;String&gt; endpoints = GetEndpoints(serviceDetail, null);</span>
+<span class="nc" id="L640">                                ret.addAll(endpoints);</span>
                         }
-<span class="fc" id="L642">                } catch (DispositionReportFaultMessage ex) {</span>
+<span class="nc" id="L642">                } catch (DispositionReportFaultMessage ex) {</span>
 <span class="nc" id="L643">                        HandleException(ex);</span>
-<span class="fc" id="L644">                }</span>
-<span class="fc" id="L645">                c.setUriList(ret);</span>
-<span class="fc" id="L646">                return c;</span>
+<span class="nc" id="L644">                }</span>
+<span class="nc" id="L645">                c.setUriList(ret);</span>
+<span class="nc" id="L646">                return c;</span>
         }
 
         private List&lt;String&gt; GetEndpoints(ServiceDetail serviceDetail, String authInfo) throws DispositionReportFaultMessage {
-<span class="fc" id="L650">                List&lt;String&gt; items = new ArrayList&lt;String&gt;();</span>
-<span class="pc bpc" id="L651" title="1 of 2 branches missed.">                if (serviceDetail == null) {</span>
+<span class="nc" id="L650">                List&lt;String&gt; items = new ArrayList&lt;String&gt;();</span>
+<span class="nc bnc" id="L651" title="All 2 branches missed.">                if (serviceDetail == null) {</span>
 <span class="nc" id="L652">                        return items;</span>
                 }
-<span class="fc bfc" id="L654" title="All 2 branches covered.">                for (int i = 0; i &lt; serviceDetail.getBusinessService().size(); i++) {</span>
-<span class="pc bpc" id="L655" title="1 of 2 branches missed.">                        if (serviceDetail.getBusinessService().get(i).getBindingTemplates() != null) {</span>
-<span class="fc bfc" id="L656" title="All 2 branches covered.">                                for (int k = 0; k &lt; serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {</span>
-<span class="fc" id="L657">                                        items.addAll(ParseBinding(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k), authInfo));</span>
+<span class="nc bnc" id="L654" title="All 2 branches missed.">                for (int i = 0; i &lt; serviceDetail.getBusinessService().size(); i++) {</span>
+<span class="nc bnc" id="L655" title="All 2 branches missed.">                        if (serviceDetail.getBusinessService().get(i).getBindingTemplates() != null) {</span>
+<span class="nc bnc" id="L656" title="All 2 branches missed.">                                for (int k = 0; k &lt; serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {</span>
+<span class="nc" id="L657">                                        items.addAll(ParseBinding(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k), authInfo));</span>
                                 }
                         }
                 }
-<span class="fc" id="L661">                return items;</span>
+<span class="nc" id="L661">                return items;</span>
         }
 
         private List&lt;String&gt; GetBindingInfo(String value, String cred) throws DispositionReportFaultMessage {
@@ -677,12 +677,12 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
         }
 
         private List&lt;String&gt; FetchWSDL(String value) {
-<span class="fc" id="L680">                List&lt;String&gt; items = new ArrayList&lt;String&gt;();</span>
+<span class="nc" id="L680">                List&lt;String&gt; items = new ArrayList&lt;String&gt;();</span>
 
-<span class="pc bpc" id="L682" title="1 of 4 branches missed.">                if (value.startsWith(&quot;http://&quot;) || value.startsWith(&quot;https://&quot;)) {</span>
+<span class="nc bnc" id="L682" title="All 4 branches missed.">                if (value.startsWith(&quot;http://&quot;) || value.startsWith(&quot;https://&quot;)) {</span>
                         //here, we need an HTTP Get for WSDLs
-<span class="fc" id="L684">                        org.apache.juddi.v3.client.mapping.wsdl.ReadWSDL r = new ReadWSDL();</span>
-<span class="fc" id="L685">                        r.setIgnoreSSLErrors(true);</span>
+<span class="nc" id="L684">                        org.apache.juddi.v3.client.mapping.wsdl.ReadWSDL r = new ReadWSDL();</span>
+<span class="nc" id="L685">                        r.setIgnoreSSLErrors(true);</span>
                         try {
 <span class="nc" id="L687">                                Definition wsdlDefinition = r.readWSDL(new URL(value));</span>
 <span class="nc" id="L688">                                Properties properties = new Properties();</span>
@@ -701,41 +701,41 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
                                                 }
                                         }
                                 }
-<span class="fc" id="L704">                        } catch (Exception ex) {</span>
+<span class="nc" id="L704">                        } catch (Exception ex) {</span>
 <span class="nc" id="L705">                        }</span>
 
                 }
-<span class="fc" id="L708">                return items;</span>
+<span class="nc" id="L708">                return items;</span>
         }
 
         private List&lt;String&gt; ParseBinding(BindingTemplate get, String authInfo) throws DispositionReportFaultMessage {
-<span class="fc" id="L712">                List&lt;String&gt; items = new ArrayList&lt;String&gt;();</span>
-<span class="pc bpc" id="L713" title="2 of 4 branches missed.">                if (get == null || get.getAccessPoint() == null) {</span>
+<span class="nc" id="L712">                List&lt;String&gt; items = new ArrayList&lt;String&gt;();</span>
+<span class="nc bnc" id="L713" title="All 4 branches missed.">                if (get == null || get.getAccessPoint() == null) {</span>
 <span class="nc" id="L714">                        return items;</span>
                 }
-<span class="pc bpc" id="L716" title="1 of 2 branches missed.">                if (get.getHostingRedirector() != null) {</span>
+<span class="nc bnc" id="L716" title="All 2 branches missed.">                if (get.getHostingRedirector() != null) {</span>
                         //hosting Redirector is the same as &quot;reference this other binding template&quot;. It's actually deprecated so 
                         //don't expect to see this too often
 <span class="nc" id="L719">                        items.addAll(GetBindingInfo(get.getHostingRedirector().getBindingKey(), authInfo));</span>
                 }
-<span class="pc bpc" id="L721" title="1 of 2 branches missed.">                if (get.getAccessPoint() != null) {</span>
-<span class="fc" id="L722">                        String usetype = get.getAccessPoint().getUseType();</span>
-<span class="pc bpc" id="L723" title="1 of 2 branches missed.">                        if (usetype == null) {</span>
+<span class="nc bnc" id="L721" title="All 2 branches missed.">                if (get.getAccessPoint() != null) {</span>
+<span class="nc" id="L722">                        String usetype = get.getAccessPoint().getUseType();</span>
+<span class="nc bnc" id="L723" title="All 2 branches missed.">                        if (usetype == null) {</span>
 
                                 //this is unexpected, usetype is a required field
 <span class="nc" id="L726">                                items.add((get.getAccessPoint().getValue()));</span>
 
-<span class="pc bpc" id="L728" title="1 of 2 branches missed.">                        } else if (usetype.equalsIgnoreCase(AccessPointType.BINDING_TEMPLATE.toString())) {</span>
+<span class="nc bnc" id="L728" title="All 2 branches missed.">                        } else if (usetype.equalsIgnoreCase(AccessPointType.BINDING_TEMPLATE.toString())) {</span>
                                 //referencing another binding template
 <span class="nc" id="L730">                                items.addAll(GetBindingInfo(get.getAccessPoint().getValue(), authInfo));</span>
-<span class="pc bpc" id="L731" title="1 of 2 branches missed.">                        } else if (usetype.equalsIgnoreCase(AccessPointType.HOSTING_REDIRECTOR.toString())) {</span>
+<span class="nc bnc" id="L731" title="All 2 branches missed.">                        } else if (usetype.equalsIgnoreCase(AccessPointType.HOSTING_REDIRECTOR.toString())) {</span>
                                 //this one is a bit strange. the value should be a binding template
 
 <span class="nc" id="L734">                                items.addAll(GetBindingInfo(get.getAccessPoint().getValue(), authInfo));</span>
 
-<span class="pc bpc" id="L736" title="1 of 2 branches missed.">                        } else if (usetype.equalsIgnoreCase(AccessPointType.WSDL_DEPLOYMENT.toString())) {</span>
+<span class="nc bnc" id="L736" title="All 2 branches missed.">                        } else if (usetype.equalsIgnoreCase(AccessPointType.WSDL_DEPLOYMENT.toString())) {</span>
                                 //fetch wsdl and parse
-<span class="fc" id="L738">                                items.addAll(FetchWSDL(get.getAccessPoint().getValue()));</span>
+<span class="nc" id="L738">                                items.addAll(FetchWSDL(get.getAccessPoint().getValue()));</span>
 <span class="nc bnc" id="L739" title="All 2 branches missed.">                        } else if (usetype.equalsIgnoreCase(AccessPointType.END_POINT.toString())) {</span>
 
 <span class="nc" id="L741">                                items.add((get.getAccessPoint().getValue()));</span>
@@ -748,95 +748,95 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
                         }
 
                 }
-<span class="fc" id="L751">                return items;</span>
+<span class="nc" id="L751">                return items;</span>
         }
 
         private static void HandleException(Exception ex) throws WebApplicationException {
-<span class="pc bpc" id="L755" title="1 of 2 branches missed.">                if (ex == null) {</span>
+<span class="nc bnc" id="L755" title="All 2 branches missed.">                if (ex == null) {</span>
 <span class="nc" id="L756">                        throw new WebApplicationException(500);</span>
                 }
-<span class="fc" id="L758">                log.error(ex.getMessage());</span>
-<span class="fc" id="L759">                log.debug(ex);</span>
-<span class="pc bpc" id="L760" title="1 of 2 branches missed.">                if (ex instanceof DispositionReportFaultMessage) {</span>
-<span class="fc" id="L761">                        DispositionReportFaultMessage dr = (DispositionReportFaultMessage) ex;</span>
-<span class="pc bpc" id="L762" title="1 of 2 branches missed.">                        if (dr.getFaultInfo() == null) {</span>
+<span class="nc" id="L758">                log.error(ex.getMessage());</span>
+<span class="nc" id="L759">                log.debug(ex);</span>
+<span class="nc bnc" id="L760" title="All 2 branches missed.">                if (ex instanceof DispositionReportFaultMessage) {</span>
+<span class="nc" id="L761">                        DispositionReportFaultMessage dr = (DispositionReportFaultMessage) ex;</span>
+<span class="nc bnc" id="L762" title="All 2 branches missed.">                        if (dr.getFaultInfo() == null) {</span>
 <span class="nc" id="L763">                                throw new WebApplicationException(500);</span>
                         }
-<span class="pc bpc" id="L765" title="1 of 2 branches missed.">                        if (dr.getFaultInfo().countainsErrorCode(UDDIErrorHelper.lookupErrCode(UDDIErrorHelper.E_AUTH_TOKEN_EXPIRED))) {</span>
+<span class="nc bnc" id="L765" title="All 2 branches missed.">                        if (dr.getFaultInfo().countainsErrorCode(UDDIErrorHelper.lookupErrCode(UDDIErrorHelper.E_AUTH_TOKEN_EXPIRED))) {</span>
 <span class="nc" id="L766">                                throw new WebApplicationException(ex, 401);</span>
                         }
-<span class="pc bpc" id="L768" title="1 of 2 branches missed.">                        if (dr.getFaultInfo().countainsErrorCode(UDDIErrorHelper.lookupErrCode(UDDIErrorHelper.E_AUTH_TOKEN_REQUIRED))) {</span>
+<span class="nc bnc" id="L768" title="All 2 branches missed.">                        if (dr.getFaultInfo().countainsErrorCode(UDDIErrorHelper.lookupErrCode(UDDIErrorHelper.E_AUTH_TOKEN_REQUIRED))) {</span>
 <span class="nc" id="L769">                                throw new WebApplicationException(ex, 401);</span>
                         }
-<span class="pc bpc" id="L771" title="1 of 2 branches missed.">                        if (dr.getFaultInfo().countainsErrorCode(UDDIErrorHelper.lookupErrCode(UDDIErrorHelper.E_FATAL_ERROR))) {</span>
+<span class="nc bnc" id="L771" title="All 2 branches missed.">                        if (dr.getFaultInfo().countainsErrorCode(UDDIErrorHelper.lookupErrCode(UDDIErrorHelper.E_FATAL_ERROR))) {</span>
 <span class="nc" id="L772">                                throw new WebApplicationException(ex, 500);</span>
                         }
                 }
-<span class="fc" id="L775">                throw new WebApplicationException(ex, 400);</span>
+<span class="nc" id="L775">                throw new WebApplicationException(ex, 400);</span>
         }
-<span class="fc" id="L777">        private final int MAX_ROWS = 100;</span>
+<span class="nc" id="L777">        private final int MAX_ROWS = 100;</span>
 
         private KeyBag getBusinessListData() {
-<span class="fc" id="L780">                FindBusiness fb = new FindBusiness();</span>
-<span class="fc" id="L781">                fb.getName().add(new Name(UDDIConstants.WILDCARD, null));</span>
-<span class="fc" id="L782">                fb.setFindQualifiers(new FindQualifiers());</span>
-<span class="fc" id="L783">                fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
-<span class="fc" id="L784">                fb.setMaxRows(MAX_ROWS);</span>
-<span class="fc" id="L785">                BusinessList findBusiness = null;</span>
+<span class="nc" id="L780">                FindBusiness fb = new FindBusiness();</span>
+<span class="nc" id="L781">                fb.getName().add(new Name(UDDIConstants.WILDCARD, null));</span>
+<span class="nc" id="L782">                fb.setFindQualifiers(new FindQualifiers());</span>
+<span class="nc" id="L783">                fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
+<span class="nc" id="L784">                fb.setMaxRows(MAX_ROWS);</span>
+<span class="nc" id="L785">                BusinessList findBusiness = null;</span>
                 try {
-<span class="fc" id="L787">                        findBusiness = inquiry.findBusiness(fb);</span>
+<span class="nc" id="L787">                        findBusiness = inquiry.findBusiness(fb);</span>
 <span class="nc" id="L788">                } catch (Exception ex) {</span>
 <span class="nc" id="L789">                        HandleException(ex);</span>
-<span class="fc" id="L790">                }</span>
-<span class="fc" id="L791">                KeyBag kb = new KeyBag();</span>
-<span class="pc bpc" id="L792" title="2 of 4 branches missed.">                if (findBusiness != null &amp;&amp; findBusiness.getBusinessInfos() != null) {</span>
-<span class="fc bfc" id="L793" title="All 2 branches covered.">                        for (int i = 0; i &lt; findBusiness.getBusinessInfos().getBusinessInfo().size(); i++) {</span>
-<span class="fc" id="L794">                                kb.getBusinessKey().add(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey());</span>
+<span class="nc" id="L790">                }</span>
+<span class="nc" id="L791">                KeyBag kb = new KeyBag();</span>
+<span class="nc bnc" id="L792" title="All 4 branches missed.">                if (findBusiness != null &amp;&amp; findBusiness.getBusinessInfos() != null) {</span>
+<span class="nc bnc" id="L793" title="All 2 branches missed.">                        for (int i = 0; i &lt; findBusiness.getBusinessInfos().getBusinessInfo().size(); i++) {</span>
+<span class="nc" id="L794">                                kb.getBusinessKey().add(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey());</span>
                         }
                 }
-<span class="fc" id="L797">                return kb;</span>
+<span class="nc" id="L797">                return kb;</span>
         }
 
         private KeyBag getServiceListData() {
-<span class="fc" id="L801">                FindService fb = new FindService();</span>
-<span class="fc" id="L802">                fb.getName().add(new Name(UDDIConstants.WILDCARD, null));</span>
-<span class="fc" id="L803">                fb.setFindQualifiers(new FindQualifiers());</span>
-<span class="fc" id="L804">                fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
-<span class="fc" id="L805">                fb.setMaxRows(MAX_ROWS);</span>
-<span class="fc" id="L806">                ServiceList findBusiness = null;</span>
+<span class="nc" id="L801">                FindService fb = new FindService();</span>
+<span class="nc" id="L802">                fb.getName().add(new Name(UDDIConstants.WILDCARD, null));</span>
+<span class="nc" id="L803">                fb.setFindQualifiers(new FindQualifiers());</span>
+<span class="nc" id="L804">                fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
+<span class="nc" id="L805">                fb.setMaxRows(MAX_ROWS);</span>
+<span class="nc" id="L806">                ServiceList findBusiness = null;</span>
                 try {
-<span class="fc" id="L808">                        findBusiness = inquiry.findService(fb);</span>
+<span class="nc" id="L808">                        findBusiness = inquiry.findService(fb);</span>
 <span class="nc" id="L809">                } catch (Exception ex) {</span>
 <span class="nc" id="L810">                        HandleException(ex);</span>
-<span class="fc" id="L811">                }</span>
-<span class="fc" id="L812">                KeyBag kb = new KeyBag();</span>
-<span class="pc bpc" id="L813" title="2 of 4 branches missed.">                if (findBusiness != null &amp;&amp; findBusiness.getServiceInfos() != null) {</span>
-<span class="fc bfc" id="L814" title="All 2 branches covered.">                        for (int i = 0; i &lt; findBusiness.getServiceInfos().getServiceInfo().size(); i++) {</span>
-<span class="fc" id="L815">                                kb.getServiceKey().add(findBusiness.getServiceInfos().getServiceInfo().get(i).getServiceKey());</span>
+<span class="nc" id="L811">                }</span>
+<span class="nc" id="L812">                KeyBag kb = new KeyBag();</span>
+<span class="nc bnc" id="L813" title="All 4 branches missed.">                if (findBusiness != null &amp;&amp; findBusiness.getServiceInfos() != null) {</span>
+<span class="nc bnc" id="L814" title="All 2 branches missed.">                        for (int i = 0; i &lt; findBusiness.getServiceInfos().getServiceInfo().size(); i++) {</span>
+<span class="nc" id="L815">                                kb.getServiceKey().add(findBusiness.getServiceInfos().getServiceInfo().get(i).getServiceKey());</span>
                         }
                 }
-<span class="fc" id="L818">                return kb;</span>
+<span class="nc" id="L818">                return kb;</span>
         }
 
         private KeyBag getTmodelListData() {
-<span class="fc" id="L822">                FindTModel fb = new FindTModel();</span>
-<span class="fc" id="L823">                fb.setName(new Name(UDDIConstants.WILDCARD, null));</span>
-<span class="fc" id="L824">                fb.setFindQualifiers(new FindQualifiers());</span>
-<span class="fc" id="L825">                fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
-<span class="fc" id="L826">                fb.setMaxRows(MAX_ROWS);</span>
-<span class="fc" id="L827">                TModelList findBusiness = null;</span>
+<span class="nc" id="L822">                FindTModel fb = new FindTModel();</span>
+<span class="nc" id="L823">                fb.setName(new Name(UDDIConstants.WILDCARD, null));</span>
+<span class="nc" id="L824">                fb.setFindQualifiers(new FindQualifiers());</span>
+<span class="nc" id="L825">                fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);</span>
+<span class="nc" id="L826">                fb.setMaxRows(MAX_ROWS);</span>
+<span class="nc" id="L827">                TModelList findBusiness = null;</span>
                 try {
-<span class="fc" id="L829">                        findBusiness = inquiry.findTModel(fb);</span>
+<span class="nc" id="L829">                        findBusiness = inquiry.findTModel(fb);</span>
 <span class="nc" id="L830">                } catch (Exception ex) {</span>
 <span class="nc" id="L831">                        HandleException(ex);</span>
-<span class="fc" id="L832">                }</span>
-<span class="fc" id="L833">                KeyBag kb = new KeyBag();</span>
-<span class="pc bpc" id="L834" title="2 of 4 branches missed.">                if (findBusiness != null &amp;&amp; findBusiness.getTModelInfos() != null) {</span>
-<span class="fc bfc" id="L835" title="All 2 branches covered.">                        for (int i = 0; i &lt; findBusiness.getTModelInfos().getTModelInfo().size(); i++) {</span>
-<span class="fc" id="L836">                                kb.getTModelKey().add(findBusiness.getTModelInfos().getTModelInfo().get(i).getTModelKey());</span>
+<span class="nc" id="L832">                }</span>
+<span class="nc" id="L833">                KeyBag kb = new KeyBag();</span>
+<span class="nc bnc" id="L834" title="All 4 branches missed.">                if (findBusiness != null &amp;&amp; findBusiness.getTModelInfos() != null) {</span>
+<span class="nc bnc" id="L835" title="All 2 branches missed.">                        for (int i = 0; i &lt; findBusiness.getTModelInfos().getTModelInfo().size(); i++) {</span>
+<span class="nc" id="L836">                                kb.getTModelKey().add(findBusiness.getTModelInfos().getTModelInfo().get(i).getTModelKey());</span>
                         }
                 }
-<span class="fc" id="L839">                return kb;</span>
+<span class="nc" id="L839">                return kb;</span>
         }
 
         private BusinessList getBusinessSearch(String name, String lang, String findQualifiers, Integer maxrows, Integer offset) {
