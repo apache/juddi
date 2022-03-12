@@ -61,10 +61,7 @@
 		<menu name="Apache jUDDI">
 			<item name="Welcome" href="index.html"/>
 			<item name="Live Demos" href="demos.html">
-				<item name="Prod UI" href="http://uddi-jbossoverlord.rhcloud.com/"/>
-				<item name="Prod SVC" href="http://uddi-jbossoverlord.rhcloud.com/juddiv3/"/>
-				<item name="Sandbox UI" href="http://uddiconsole-jbossoverlord.rhcloud.com/" />
-				<item name="Sandbox SVC" href="http://uddiconsole-jbossoverlord.rhcloud.com/juddiv3/"/>
+				<item name="Sandbox" href="https://demo.apache.juddi.org/"/>
 			</item>
 		</menu>
 		<menu name="Downloads">
