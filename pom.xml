@@ -612,7 +612,7 @@ under the License.
 			<dependency>
 				<groupId>dumbster</groupId>
 				<artifactId>dumbster</artifactId>
-				<version>1.5</version>
+				<version>1.6</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-net</groupId>
