@@ -54,13 +54,9 @@ language governing permissions and * limitations under the License. * */ -->
             <groupId>org.apache.juddi</groupId>
             <artifactId>uddi-migration-tool</artifactId>
             <version>${project.parent.version}</version>
-			<classifier>jar-with-dependencies</classifier>
+            <classifier>jar-with-dependencies</classifier>
         </dependency>
-        <dependency>
-            <groupId>org.apache.juddi</groupId>
-            <artifactId>juddi-gui-dsig</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
+        
         <dependency>
             <groupId>org.apache.juddi</groupId>
             <artifactId>uddi-migration-tool</artifactId>
@@ -129,13 +125,7 @@ language governing permissions and * limitations under the License. * */ -->
             <type>jar</type>
             <classifier>test-sources</classifier>
         </dependency>
-        <dependency>
-            <groupId>org.apache.juddi</groupId>
-            <artifactId>juddi-gui-dsig</artifactId>
-            <version>${project.parent.version}</version>
-            <type>jar</type>
-            <classifier>sources</classifier>
-        </dependency>
+       
         <dependency>
             <groupId>org.apache.juddi</groupId>
             <artifactId>juddi-gui-war</artifactId>
@@ -192,13 +182,7 @@ language governing permissions and * limitations under the License. * */ -->
             <classifier>test-javadoc</classifier>
             <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>org.apache.juddi</groupId>
-            <artifactId>juddi-gui-dsig</artifactId>
-            <version>${project.parent.version}</version>
-            <type>jar</type>
-            <classifier>javadoc</classifier>
-        </dependency>
+       
         <dependency>
             <groupId>org.apache.juddi</groupId>
             <artifactId>juddi-gui-war</artifactId>

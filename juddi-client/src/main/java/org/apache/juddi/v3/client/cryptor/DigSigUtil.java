@@ -829,7 +829,7 @@ public class DigSigUtil {
 
                 String dm = map.getProperty(SIGNATURE_OPTION_DIGEST_METHOD);
                 if (dm == null) {
-                        dm = DigestMethod.SHA1;
+                        dm = DigestMethod.SHA256;
                 }
                 Reference ref = fac.newReference("", fac.newDigestMethod(dm, null), transformers, null, null);
                 return ref;
@@ -842,7 +842,7 @@ public class DigSigUtil {
                 String sigmethod = null;
                 sigmethod = map.getProperty(SIGNATURE_METHOD);
                 if (sigmethod == null) {
-                        sigmethod = SignatureMethod.RSA_SHA1;
+                        sigmethod = SignatureMethod.RSA_SHA256;
                 }
                 if (cm == null) {
                         cm = CanonicalizationMethod.EXCLUSIVE;

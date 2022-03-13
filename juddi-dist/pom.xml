@@ -59,11 +59,7 @@
             <artifactId>uddi-tck-base</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.juddi</groupId>
-            <artifactId>juddi-gui-dsig</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
+       
 		<!--  source archives -->
 		<dependency>
             <groupId>org.apache.juddi</groupId>
@@ -96,13 +92,7 @@
             <version>${project.parent.version}</version>
             <classifier>sources</classifier>
         </dependency>
-        <dependency>
-            <groupId>org.apache.juddi</groupId>
-            <artifactId>juddi-gui-dsig</artifactId>
-            <version>${project.parent.version}</version>
-            <type>jar</type>
-            <classifier>sources</classifier>
-        </dependency>
+       
         <dependency>
             <groupId>org.apache.juddi</groupId>
             <artifactId>juddiv3-war</artifactId>
@@ -152,13 +142,7 @@
             <version>${project.parent.version}</version>
             <classifier>javadoc</classifier>
         </dependency>
-        <dependency>
-            <groupId>org.apache.juddi</groupId>
-            <artifactId>juddi-gui-dsig</artifactId>
-            <version>${project.parent.version}</version>
-            <type>jar</type>
-            <classifier>javadoc</classifier>
-        </dependency>
+      
         
 		<!--  documentation -->
 		<dependency>

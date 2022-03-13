@@ -18,542 +18,535 @@ specific language governing permissions and limitations
 under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.apache</groupId>
-		<artifactId>apache</artifactId>
-		<version>18</version>
-	</parent>
-	<packaging>pom</packaging>
-	<groupId>org.apache.juddi</groupId>
-	<artifactId>juddi-parent</artifactId>
-	<version>3.3.11-SNAPSHOT</version>
-	<name>jUDDI_v3 Parent</name>
-	<description>jUDDI (pronounced "Judy") is an open source Java
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.apache</groupId>
+        <artifactId>apache</artifactId>
+        <version>25</version>
+    </parent>
+    <packaging>pom</packaging>
+    <groupId>org.apache.juddi</groupId>
+    <artifactId>juddi-parent</artifactId>
+    <version>3.3.11-SNAPSHOT</version>
+    <name>jUDDI_v3 Parent</name>
+    <description>jUDDI (pronounced "Judy") is an open source Java
         implementation of the Universal Description, Discovery, and
         Integration (UDDI) specification for Web Services.</description>
-	<url>http://juddi.apache.org/</url>
+    <url>http://juddi.apache.org/</url>
 
-	<prerequisites>
-		<maven>3.0.3</maven>
-	</prerequisites>
+    <properties>
+        <sourceReleaseAssemblyDescriptor>source-release</sourceReleaseAssemblyDescriptor>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <cxf.version>3.3.4</cxf.version>
+        <springframework.version>5.3.16</springframework.version>
+        <apache.tomcat.version>9.0.59</apache.tomcat.version>
+        <jacoco.it.execution.data.file>${project.build.directory}/coverage-reports/jacoco-it.exec</jacoco.it.execution.data.file>
+        <jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file>
 
-	<properties>
-		<sourceReleaseAssemblyDescriptor>source-release</sourceReleaseAssemblyDescriptor>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<cxf.version>3.3.4</cxf.version>
-		<springframework.version>5.2.4.RELEASE</springframework.version>
-		<apache.tomcat.version>9.0.37</apache.tomcat.version>
-		<jacoco.it.execution.data.file>${project.build.directory}/coverage-reports/jacoco-it.exec</jacoco.it.execution.data.file>
-		<jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file>
+    </properties>
 
-	</properties>
-
-	<issueManagement>
-		<system>JIRA</system>
-		<url>https://issues.apache.org/jira/browse/JUDDI</url>
-	</issueManagement>
-	<ciManagement>
-		<system>Buildbot</system>
-		<url>http://ci.apache.org/buildbot.html</url>
-		<notifiers>
-			<notifier>
-				<sendOnError>true</sendOnError>
-				<sendOnFailure>true</sendOnFailure>
-				<sendOnSuccess>true</sendOnSuccess>
-				<sendOnWarning>true</sendOnWarning>
-				<configuration>
-					<address>dev@juddi.apache.org</address>
-				</configuration>
-			</notifier>
-		</notifiers>
-	</ciManagement>
-	<inceptionYear>2004</inceptionYear>
-	<mailingLists>
-		<mailingList>
-			<name>jUDDI User List</name>
-			<subscribe>user-subscribe@juddi.apache.org</subscribe>
-			<unsubscribe>user-unsubscribe@juddi.apache.org</unsubscribe>
-			<post>user@juddi.apache.org</post>
-			<archive>http://mail-archives.apache.org/mod_mbox/juddi-user/</archive>
-		</mailingList>
-		<mailingList>
-			<name>jUDDI Developer List</name>
-			<subscribe>dev-subscribe@juddi.apache.org</subscribe>
-			<unsubscribe>dev-unsubscribe@juddi.apache.org</unsubscribe>
-			<post>dev@juddi.apache.org</post>
-			<archive>http://mail-archives.apache.org/mod_mbox/juddi-dev/</archive>
-		</mailingList>
-		<mailingList>
-			<name>jUDDI SVN List</name>
-			<subscribe>cvs-subscribe@juddi.apache.org</subscribe>
-			<unsubscribe>cvs-unsubscribe@juddi.apache.org</unsubscribe>
-			<post>commits@juddi.apache.org</post>
-			<archive>http://mail-archives.apache.org/mod_mbox/juddi-cvs/</archive>
-		</mailingList>
-	</mailingLists>
-	<developers>
-		<developer>
-			<id>kstam</id>
-			<name>Kurt Stam</name>
-			<email>kstam AT apache.org</email>
-			<organization>ASF</organization>
-		</developer>
-		<developer>
-			<id>jfaath</id>
-			<name>Jeffrey Faath</name>
-			<email>jfaath AT apache.org</email>
-			<url>http://www.esigma.com</url>
-			<organization>ESigma</organization>
-		</developer>
-		<developer>
-			<id>tcunning</id>
-			<name>Tom Cunningham</name>
-			<email>tcunning AT apache.org</email>
-			<url>http://www.jboss.org/jbossesb</url>
-			<organization>JBoss/Red Hat</organization>
-		</developer>
-		<developer>
-			<id>sviens</id>
-			<name>Steve Viens</name>
-			<email>steve AT viens.net</email>
-			<url>http://www.viens.net</url>
-			<organization>ASF</organization>
-		</developer>
-		<developer>
-			<id>anil</id>
-			<name>Anil Saldhana</name>
-			<email>anil AT apache.org</email>
-			<url>http://www.jboss.org</url>
-			<organization>JBoss/Red Hat</organization>
-		</developer>
-		<developer>
-			<id>djencks</id>
-			<name>David Jencks</name>
-			<email>djencks AT apache.org</email>
-			<url>http://www.apache.org</url>
-			<organization>ASF</organization>
-		</developer>
-		<developer>
-			<id>alexoree</id>
-			<name>Alex O'Ree</name>
-			<email>alexoree AT apache.org</email>
-			<url>http://www.apache.org</url>
-			<organization>ASF</organization>
-		</developer>
-	</developers>
-	<contributors>
-		<contributor>
-			<name>Ken Wilson</name>
-			<organization>Dynamic Site Design</organization>
-			<url>http://www.dynamicsitedesign.com</url>
-		</contributor>
-		<contributor>
-			<name>Jeremi Thebeau</name>
-			<organization>Xceptance Software Technologies</organization>
-			<url>http://www.xceptance.com</url>
-		</contributor>
-	</contributors>
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-	<scm>
-		<connection>scm:git:https://gitbox.apache.org/repos/asf/juddi.git</connection>
-		<developerConnection>scm:git:https://gitbox.apache.org/repos/asf/juddi.git</developerConnection>
-		<url>https://gitbox.apache.org/repos/asf/juddi.git/?p=juddi.git;a=summary</url>
-		<tag>HEAD</tag>
-	</scm>
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jarsigner-plugin</artifactId>
-					<version>1.4</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.sling</groupId>
-					<artifactId>maven-jspc-plugin</artifactId>
-					<version>2.0.8</version>
-				</plugin>
-				<plugin>
-					<groupId>org.asciidoctor</groupId>
-					<artifactId>asciidoctor-maven-plugin</artifactId>
-					<version>0.1.4</version>
-				</plugin>
-				<plugin>
-					<!-- Entry needed to enable jdocbook unzipping -->
-					<groupId>org.jboss.maven.plugins</groupId>
-					<artifactId>maven-jdocbook-plugin</artifactId>
-					<version>2.3.8</version>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>exec-maven-plugin</artifactId>
-					<version>1.1.1</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-war-plugin</artifactId>
-					<version>2.4</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.6</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<source>1.7</source>
-						<target>1.7</target>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-release-plugin</artifactId>
-					<version>2.5.3</version>
-					<configuration>
-						<autoVersionSubmodules>true</autoVersionSubmodules>
-						<preparationGoals>clean install</preparationGoals>
-						<goals>deploy</goals>
-						<releaseProfiles>apache-release</releaseProfiles>
-						<tagNameFormat>juddi-@{project.version}</tagNameFormat>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.felix</groupId>
-					<artifactId>maven-bundle-plugin</artifactId>
-					<version>2.3.6</version>
-					<extensions>true</extensions>
-					<configuration>
-						<classifier>${envClassifier}</classifier>
-						<obrRepository>target/OBRRepository.xml</obrRepository>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>ianal-maven-plugin</artifactId>
-					<version>1.0-alpha-1</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-site-plugin</artifactId>
-                    <version>3.9.1</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.3.0</version>
-					<configuration>
-						<aggregate>true</aggregate>
-						<doclint>none</doclint>
-					</configuration>
-					<executions>
-						<execution>
-							<id>aggregate</id>
-							<goals>
-								<goal>aggregate</goal>
-							</goals>
-							<phase>site</phase>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.rat</groupId>
-					<artifactId>apache-rat-plugin</artifactId>
-					<version>0.12</version>
-				</plugin>
-				<plugin>
-					<groupId>org.jacoco</groupId>
-					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.7.5.201505241946</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-antrun-plugin</artifactId>
-					<version>1.6</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-dependency-plugin</artifactId>
-					<version>2.1</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-clean-plugin</artifactId>
-					<version>2.6.1</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.19.1</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-		<plugins>
-			<plugin>
-			<groupId>net.nicoulaj.maven.plugins</groupId>
-			<artifactId>checksum-maven-plugin</artifactId>
-			<version>1.8</version>
-			<executions>
-			  <execution>
-				<goals>
-				  <goal>artifacts</goal>
-				</goals>
-			  </execution>
-			</executions>
-			<configuration>
-			<algorithms>
-				<algorithm>SHA-512</algorithm>
-			</algorithms>
-			  <!-- put your configurations here -->
-			</configuration>
-		  </plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0-M1</version>
-				<executions>
-				  <execution>
-					<id>enforce-versions</id>
-					<goals>
-					  <goal>enforce</goal>
-					</goals>
-					<phase>validate</phase>
-					<configuration>
-					  <rules>
+    <issueManagement>
+        <system>JIRA</system>
+        <url>https://issues.apache.org/jira/browse/JUDDI</url>
+    </issueManagement>
+    <ciManagement>
+        <system>Buildbot</system>
+        <url>http://ci.apache.org/buildbot.html</url>
+        <notifiers>
+            <notifier>
+                <sendOnError>true</sendOnError>
+                <sendOnFailure>true</sendOnFailure>
+                <sendOnSuccess>true</sendOnSuccess>
+                <sendOnWarning>true</sendOnWarning>
+                <configuration>
+                    <address>dev@juddi.apache.org</address>
+                </configuration>
+            </notifier>
+        </notifiers>
+    </ciManagement>
+    <inceptionYear>2004</inceptionYear>
+    <mailingLists>
+        <mailingList>
+            <name>jUDDI User List</name>
+            <subscribe>user-subscribe@juddi.apache.org</subscribe>
+            <unsubscribe>user-unsubscribe@juddi.apache.org</unsubscribe>
+            <post>user@juddi.apache.org</post>
+            <archive>http://mail-archives.apache.org/mod_mbox/juddi-user/</archive>
+        </mailingList>
+        <mailingList>
+            <name>jUDDI Developer List</name>
+            <subscribe>dev-subscribe@juddi.apache.org</subscribe>
+            <unsubscribe>dev-unsubscribe@juddi.apache.org</unsubscribe>
+            <post>dev@juddi.apache.org</post>
+            <archive>http://mail-archives.apache.org/mod_mbox/juddi-dev/</archive>
+        </mailingList>
+        <mailingList>
+            <name>jUDDI SVN List</name>
+            <subscribe>cvs-subscribe@juddi.apache.org</subscribe>
+            <unsubscribe>cvs-unsubscribe@juddi.apache.org</unsubscribe>
+            <post>commits@juddi.apache.org</post>
+            <archive>http://mail-archives.apache.org/mod_mbox/juddi-cvs/</archive>
+        </mailingList>
+    </mailingLists>
+    <developers>
+        <developer>
+            <id>kstam</id>
+            <name>Kurt Stam</name>
+            <email>kstam AT apache.org</email>
+            <organization>ASF</organization>
+        </developer>
+        <developer>
+            <id>jfaath</id>
+            <name>Jeffrey Faath</name>
+            <email>jfaath AT apache.org</email>
+            <url>http://www.esigma.com</url>
+            <organization>ESigma</organization>
+        </developer>
+        <developer>
+            <id>tcunning</id>
+            <name>Tom Cunningham</name>
+            <email>tcunning AT apache.org</email>
+            <url>http://www.jboss.org/jbossesb</url>
+            <organization>JBoss/Red Hat</organization>
+        </developer>
+        <developer>
+            <id>sviens</id>
+            <name>Steve Viens</name>
+            <email>steve AT viens.net</email>
+            <url>http://www.viens.net</url>
+            <organization>ASF</organization>
+        </developer>
+        <developer>
+            <id>anil</id>
+            <name>Anil Saldhana</name>
+            <email>anil AT apache.org</email>
+            <url>http://www.jboss.org</url>
+            <organization>JBoss/Red Hat</organization>
+        </developer>
+        <developer>
+            <id>djencks</id>
+            <name>David Jencks</name>
+            <email>djencks AT apache.org</email>
+            <url>http://www.apache.org</url>
+            <organization>ASF</organization>
+        </developer>
+        <developer>
+            <id>alexoree</id>
+            <name>Alex O'Ree</name>
+            <email>alexoree AT apache.org</email>
+            <url>http://www.apache.org</url>
+            <organization>ASF</organization>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Ken Wilson</name>
+            <organization>Dynamic Site Design</organization>
+            <url>http://www.dynamicsitedesign.com</url>
+        </contributor>
+        <contributor>
+            <name>Jeremi Thebeau</name>
+            <organization>Xceptance Software Technologies</organization>
+            <url>http://www.xceptance.com</url>
+        </contributor>
+    </contributors>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:git:https://gitbox.apache.org/repos/asf/juddi.git</connection>
+        <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/juddi.git</developerConnection>
+        <url>https://gitbox.apache.org/repos/asf/juddi.git/?p=juddi.git;a=summary</url>
+        <tag>HEAD</tag>
+    </scm>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jarsigner-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.sling</groupId>
+                    <artifactId>maven-jspc-plugin</artifactId>
+                    <version>2.0.8</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.asciidoctor</groupId>
+                    <artifactId>asciidoctor-maven-plugin</artifactId>
+                    <version>2.2.2</version>
+                </plugin>
+                <plugin>
+                    <!-- Entry needed to enable jdocbook unzipping -->
+                    <groupId>org.jboss.maven.plugins</groupId>
+                    <artifactId>maven-jdocbook-plugin</artifactId>
+                    <version>2.3.10</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>3.3.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.10.0</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.3</version>
+                    <configuration>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <preparationGoals>clean install</preparationGoals>
+                        <goals>deploy</goals>
+                        <releaseProfiles>apache-release</releaseProfiles>
+                        <tagNameFormat>juddi-@{project.version}</tagNameFormat>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>5.1.4</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <classifier>${envClassifier}</classifier>
+                        <obrRepository>target/OBRRepository.xml</obrRepository>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>ianal-maven-plugin</artifactId>
+                    <version>1.0-alpha-1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.11.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.3.2</version>
+                    <configuration>
+                        <aggregate>true</aggregate>
+                        <doclint>none</doclint>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>aggregate</id>
+                            <goals>
+                                <goal>aggregate</goal>
+                            </goals>
+                            <phase>site</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.rat</groupId>
+                    <artifactId>apache-rat-plugin</artifactId>
+                    <version>0.13</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.8.7</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>net.nicoulaj.maven.plugins</groupId>
+                <artifactId>checksum-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>artifacts</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <algorithms>
+                        <algorithm>SHA-512</algorithm>
+                    </algorithms>
+                    <!-- put your configurations here -->
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <rules>
 						
-						<requireMavenVersion>
-						  <version>[3.0.3,)</version>
-						</requireMavenVersion>
-						<requireJavaVersion>
-						  <version>[1.6,)</version>
-						</requireJavaVersion>
-					  </rules>
-					</configuration>
-				  </execution>
-				</executions>
-			  </plugin>
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>ianal-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>2.6.1</version>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>.</directory>
-							<includes>
-								<include>*.ddl</include>
-								<include>*.log</include>
-							</includes>
+                                <requireMavenVersion>
+                                    <version>[3.2.1,)</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>[1.11,)</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>ianal-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>.</directory>
+                            <includes>
+                                <include>*.ddl</include>
+                                <include>*.log</include>
+                            </includes>
 
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.9</version>
-				<executions>
-					<!--
-							Prepares the property pointing to the JaCoCo runtime agent which
-							is passed as VM argument when Maven the Surefire plugin is executed.
-						-->
-					<execution>
-						<id>pre-unit-test</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-						<configuration>
-							<!-- Sets the path to the file which contains the execution data. -->
-							<destFile>${jacoco.ut.execution.data.file}</destFile>
-							<!--
-									Sets the name of the property containing the settings
-									for JaCoCo runtime agent.
-								-->
-							<propertyName>surefireArgLine</propertyName>
-						</configuration>
-					</execution>
-					<!--
-							Ensures that the code coverage report for unit tests is created after
-							unit tests have been run.
-						-->
-					<execution>
-						<id>post-unit-test</id>
-						<phase>test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-						<configuration>
-							<!-- Sets the path to the file which contains the execution data. -->
-							<dataFile>${jacoco.ut.execution.data.file}</dataFile>
-							<!-- Sets the output directory for the code coverage report. -->
-							<outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
-						</configuration>
-					</execution>
-					<!--
-							Prepares the property pointing to the JaCoCo runtime agent which
-							is passed as VM argument when Maven the Failsafe plugin is executed.
-						-->
-					<execution>
-						<id>pre-integration-test</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-						<configuration>
-							<!-- Sets the path to the file which contains the execution data. -->
-							<destFile>${jacoco.it.execution.data.file}</destFile>
-							<!--
-									Sets the name of the property containing the settings
-									for JaCoCo runtime agent.
-								-->
-							<propertyName>failsafeArgLine</propertyName>
-						</configuration>
-					</execution>
-					<!--
-							Ensures that the code coverage report for integration tests after
-							integration tests have been run.
-						-->
-					<execution>
-						<id>post-integration-test</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-						<configuration>
-							<!-- Sets the path to the file which contains the execution data. -->
-							<dataFile>${jacoco.it.execution.data.file}</dataFile>
-							<!-- Sets the output directory for the code coverage report. -->
-							<outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
-						</configuration>
-					</execution>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <!--
+                            Prepares the property pointing to the JaCoCo runtime agent which
+                            is passed as VM argument when Maven the Surefire plugin is executed.
+                    -->
+                    <execution>
+                        <id>pre-unit-test</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Sets the path to the file which contains the execution data. -->
+                            <destFile>${jacoco.ut.execution.data.file}</destFile>
+                            <!--
+                                    Sets the name of the property containing the settings
+                                    for JaCoCo runtime agent.
+                            -->
+                            <propertyName>surefireArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <!--
+                            Ensures that the code coverage report for unit tests is created after
+                            unit tests have been run.
+                    -->
+                    <execution>
+                        <id>post-unit-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Sets the path to the file which contains the execution data. -->
+                            <dataFile>${jacoco.ut.execution.data.file}</dataFile>
+                            <!-- Sets the output directory for the code coverage report. -->
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <!--
+                            Prepares the property pointing to the JaCoCo runtime agent which
+                            is passed as VM argument when Maven the Failsafe plugin is executed.
+                    -->
+                    <execution>
+                        <id>pre-integration-test</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Sets the path to the file which contains the execution data. -->
+                            <destFile>${jacoco.it.execution.data.file}</destFile>
+                            <!--
+                                    Sets the name of the property containing the settings
+                                    for JaCoCo runtime agent.
+                            -->
+                            <propertyName>failsafeArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <!--
+                            Ensures that the code coverage report for integration tests after
+                            integration tests have been run.
+                    -->
+                    <execution>
+                        <id>post-integration-test</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Sets the path to the file which contains the execution data. -->
+                            <dataFile>${jacoco.it.execution.data.file}</dataFile>
+                            <!-- Sets the output directory for the code coverage report. -->
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+                        </configuration>
+                    </execution>
 
-				</executions>
-			</plugin>
+                </executions>
+            </plugin>
 
-			<!-- Used for unit tests -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19.1</version>
-				<configuration>
-					<!-- Sets the VM argument line used when unit tests are run. -->
-					<argLine>${surefireArgLine}</argLine>
-					<!-- Skips unit tests if the value of skip.unit.tests property is true -->
-					<skipTests>${skipTests}</skipTests>
-					<!-- Excludes integration tests when unit tests are run. -->
-                                        <skipAfterFailureCount>1</skipAfterFailureCount>
-
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	<reporting>
-		<plugins>
-			<plugin>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.2.0</version>
-				<configuration>
-					<doclint>none</doclint>
-				</configuration>
-				
-				
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.9</version>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jdepend-maven-plugin</artifactId>
-				<version>2.0</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jxr-plugin</artifactId>
-				<version>2.5</version>
-			</plugin>
-			<!--<plugin> this generates a large file that's of little value
+            <!-- Used for unit tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <!-- Sets the VM argument line used when unit tests are run.   -verbose:class-->
+                    <argLine>${surefireArgLine}</argLine>
+                    <!-- Skips unit tests if the value of skip.unit.tests property is true -->
+                    <skipTests>${skipTests}</skipTests>
+                    <!-- Excludes integration tests when unit tests are run. -->
+                    <skipAfterFailureCount>1</skipAfterFailureCount>
+                    <trimStackTrace>false</trimStackTrace>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <doclint>none</doclint>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.9</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jdepend-maven-plugin</artifactId>
+                <version>2.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.5</version>
+            </plugin>
+            <!--<plugin> this generates a large file that's of little value
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
                 <version>0.11</version>
             </plugin>-->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.5</version>
-				<configuration>
-					<xmlOutput>true</xmlOutput>
-					<!-- Optional directory to put findbugs xdoc xml report -->
-					<xmlOutputDirectory>target/site</xmlOutputDirectory>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-changes-plugin</artifactId>
-				<version>2.12.1</version>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>jira-report</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-			<!--
-			  great plugin, but takes a long time to run
             <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <version>1.4.5</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>3.0.5</version>
+                <configuration>
+                    <xmlOutput>true</xmlOutput>
+                    <!-- Optional directory to put findbugs xdoc xml report -->
+                    <xmlOutputDirectory>target/site</xmlOutputDirectory>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changes-plugin</artifactId>
+                <version>2.12.1</version>
                 <reportSets>
                     <reportSet>
                         <reports>
-                            <report>aggregate</report>
+                            <report>jira-report</report>
                         </reports>
                     </reportSet>
                 </reportSets>
             </plugin>
-			 -->
-			<plugin>
-				<groupId>com.github.spyhunter99</groupId>
-				<artifactId>jacoco-report-plugin</artifactId>
-				<version>1.0.3</version>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>jacoco-aggregate</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-			 <plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.5</version>
-			  </plugin>
-			<plugin>
+            <!--
+             great plugin, but takes a long time to run
+<plugin>
+   <groupId>org.owasp</groupId>
+   <artifactId>dependency-check-maven</artifactId>
+   <version>1.4.5</version>
+   <reportSets>
+       <reportSet>
+           <reports>
+               <report>aggregate</report>
+           </reports>
+       </reportSet>
+   </reportSets>
+</plugin>
+            -->
+            <plugin>
+                <groupId>com.github.spyhunter99</groupId>
+                <artifactId>jacoco-report-plugin</artifactId>
+                <version>1.0.3</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>jacoco-aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>3.0.5</version>
+            </plugin>
+            <plugin>
                 <groupId>com.github.spyhunter99</groupId>
                 <artifactId>findbugs-report-plugin</artifactId>
                 <version>1.0.0</version>
@@ -565,549 +558,549 @@ under the License.
                     </reportSet>
                 </reportSets>
             </plugin>
-		</plugins>
-	</reporting>
-	<modules>
-		<module>uddi-ws</module>
-		<module>uddi-tck-base</module>
-		<module>juddi-client</module>
-		<module>juddi-client-cli</module>
-		<module>uddi-migration-tool</module>
-		<module>juddi-core</module>
-		<module>juddi-rest-cxf</module>
-		<module>juddi-core-openjpa</module>
-		<module>juddiv3-war</module>
-		<module>juddiv3-war-repl</module>
-		<module>juddi-examples</module>
-		<module>juddi-gui-dsig</module>
-		<module>juddi-gui</module>
-		<module>juddi-tomcat</module>
-	</modules>
-	<distributionManagement>
-		<site>
-			<id>website</id>
-			<url>scpexe://people.apache.org/www/juddi.apache.org/</url>
-		</site>
-	</distributionManagement>
-	<dependencies>
-		<!-- these dependencies apply to all subject projects -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging-api</artifactId>
-		</dependency>
-	</dependencies>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.easymock</groupId>
-				<artifactId>easymock</artifactId>
-				<version>2.0</version>
+        </plugins>
+    </reporting>
+    <modules>
+        <module>uddi-ws</module>
+        <module>uddi-tck-base</module>
+        <module>juddi-client</module>
+        <module>juddi-client-cli</module>
+        <module>uddi-migration-tool</module>
+        <module>juddi-core</module>
+        <module>juddi-rest-cxf</module>
+        <module>juddi-core-openjpa</module>
+        <module>juddiv3-war</module>
+        <module>juddiv3-war-repl</module>
+        <module>juddi-examples</module>
+        <module>juddi-gui</module>
+        <module>juddi-tomcat</module>
+        <module>uddi-tck</module>
+    </modules>
+    <distributionManagement>
+        <site>
+            <id>website</id>
+            <url>scpexe://people.apache.org/www/juddi.apache.org/</url>
+        </site>
+    </distributionManagement>
+    <dependencies>
+        <!-- these dependencies apply to all subject projects -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
+        </dependency>
+    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymock</artifactId>
+                <version>2.0</version>
 
-			</dependency>
-			<dependency>
-				<groupId>dumbster</groupId>
-				<artifactId>dumbster</artifactId>
-				<version>1.5</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-net</groupId>
-				<artifactId>commons-net</artifactId>
-				<version>3.3</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.mail</groupId>
-				<artifactId>mail</artifactId>
-				<version>1.4.7</version>
-			</dependency>
+            </dependency>
+            <dependency>
+                <groupId>dumbster</groupId>
+                <artifactId>dumbster</artifactId>
+                <version>1.5</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>3.3</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>mail</artifactId>
+                <version>1.4.7</version>
+            </dependency>
 
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-email</artifactId>
-				<version>1.3.2</version>
-			</dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-email</artifactId>
+                <version>1.3.2</version>
+            </dependency>
 
-			<dependency>
-				<!-- Entry needed to enable jdocbook unzipping -->
-				<groupId>org.jboss.maven.plugins</groupId>
-				<artifactId>maven-jdocbook-plugin</artifactId>
-				<version>2.3.10</version>
-			</dependency>
+            <dependency>
+                <!-- Entry needed to enable jdocbook unzipping -->
+                <groupId>org.jboss.maven.plugins</groupId>
+                <artifactId>maven-jdocbook-plugin</artifactId>
+                <version>2.3.10</version>
+            </dependency>
 
-			<dependency>
-				<groupId>org.hibernate.javax.persistence</groupId>
-				<artifactId>hibernate-jpa-2.1-api</artifactId>
-				<version>1.0.0.Final</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-codec</groupId>
-				<artifactId>commons-codec</artifactId>
-				<version>1.10</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.geronimo.specs</groupId>
-				<artifactId>geronimo-jta_1.1_spec</artifactId>
-				<version>1.1.1</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.geronimo.specs</groupId>
-				<artifactId>geronimo-jaxrs_1.1_spec</artifactId>
-				<version>1.0</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.geronimo.specs</groupId>
-				<artifactId>geronimo-jms_1.1_spec</artifactId>
-				<version>1.0</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.qpid</groupId>
-				<artifactId>qpid-client</artifactId>
-				<version>0.24</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.qpid</groupId>
-				<artifactId>qpid-amqp-1-0-client-jms</artifactId>
-				<version>0.24</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>servlet-api</artifactId>
-				<version>2.5</version>
+            <dependency>
+                <groupId>org.hibernate.javax.persistence</groupId>
+                <artifactId>hibernate-jpa-2.1-api</artifactId>
+                <version>1.0.0.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.15</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jta_1.1_spec</artifactId>
+                <version>1.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jaxrs_1.1_spec</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jms_1.1_spec</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.qpid</groupId>
+                <artifactId>qpid-client</artifactId>
+                <version>6.4.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.qpid</groupId>
+                <artifactId>qpid-amqp-1-0-client-jms</artifactId>
+                <version>0.32</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>2.5</version>
 
-			</dependency>
-			<dependency>
-				<groupId>org.jboss.security</groupId>
-				<artifactId>jboss-security-spi</artifactId>
-				<version>2.0.1.GA</version>
-			</dependency>
-			<dependency>
-				<groupId>org.jboss.javaee</groupId>
-				<artifactId>jboss-jaspi-api</artifactId>
-				<version>1.0.0.GA</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.jmdns</groupId>
-				<artifactId>jmdns</artifactId>
-				<version>3.4.1</version>
-			</dependency>
-			<dependency>
-				<groupId>org.jgroups</groupId>
-				<artifactId>jgroups</artifactId>
-				<version>3.4.1.Final</version>
-			</dependency>
-			<!-- a lorem ipsum generator MIT license-->
-			<dependency>
-				<groupId>de.sven-jacobs</groupId>
-				<artifactId>loremipsum</artifactId>
-				<version>1.0</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-cli</groupId>
-				<artifactId>commons-cli</artifactId>
-				<version>1.3.1</version>
-			</dependency>
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.12</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-logging</groupId>
-				<artifactId>commons-logging-api</artifactId>
-				<version>1.1</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-logging</groupId>
-				<artifactId>commons-logging</artifactId>
-				<version>1.2</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-collections</groupId>
-				<artifactId>commons-collections</artifactId>
-				<version>3.2.2</version>
-			</dependency>
-			<dependency>
-				<groupId>mysql</groupId>
-				<artifactId>mysql-connector-java</artifactId>
-				<version>6.0.5</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.derby</groupId>
-				<artifactId>derby</artifactId>
-				<version>10.10.1.1</version>
-			</dependency>
-			<dependency>
-				<groupId>org.postgresql</groupId>
-				<artifactId>postgresql</artifactId>
-				<version>9.4.1212</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.geronimo.javamail</groupId>
-				<artifactId>geronimo-javamail_1.4_mail</artifactId>
-				<version>1.8.4</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>4.5.2</version>
-			</dependency>
-			<dependency>
-				<groupId>org.json</groupId>
-				<artifactId>json</artifactId>
-				<version>20090211</version>
-			</dependency>
-			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>1.2.17</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.persistence</groupId>
-				<artifactId>persistence-api</artifactId>
-				<version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.security</groupId>
+                <artifactId>jboss-security-spi</artifactId>
+                <version>2.0.1.GA</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.javaee</groupId>
+                <artifactId>jboss-jaspi-api</artifactId>
+                <version>1.0.0.GA</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.jmdns</groupId>
+                <artifactId>jmdns</artifactId>
+                <version>3.4.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jgroups</groupId>
+                <artifactId>jgroups</artifactId>
+                <version>5.2.0.Final</version>
+            </dependency>
+            <!-- a lorem ipsum generator MIT license-->
+            <dependency>
+                <groupId>de.sven-jacobs</groupId>
+                <artifactId>loremipsum</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-cli</groupId>
+                <artifactId>commons-cli</artifactId>
+                <version>1.5.0</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.13.2</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging-api</artifactId>
+                <version>1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>3.2.2</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>8.0.28</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.derby</groupId>
+                <artifactId>derby</artifactId>
+                <version>10.10.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>42.3.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.javamail</groupId>
+                <artifactId>geronimo-javamail_1.4_mail</artifactId>
+                <version>1.8.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.13</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>20211205</version>
+            </dependency>
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>1.2.17</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.persistence</groupId>
+                <artifactId>persistence-api</artifactId>
+                <version>1.0.2</version>
 
-			</dependency>
-			<dependency>
-				<groupId>cglib</groupId>
-				<artifactId>cglib-nodep</artifactId>
-				<version>2.1_3</version>
+            </dependency>
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib-nodep</artifactId>
+                <version>2.1_3</version>
 
-			</dependency>
+            </dependency>
 		
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-core</artifactId>
-				<version>5.4.18.Final</version>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>5.4.18.Final</version>
 
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-entitymanager</artifactId>
-				<version>5.4.18.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-entitymanager</artifactId>
+                <version>5.4.18.Final</version>
 
-			</dependency>
+            </dependency>
 
-			<dependency>
-				<groupId>org.apache.axis2</groupId>
-				<artifactId>axis2</artifactId>
-				<version>1.6.2</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.axis2</groupId>
-				<artifactId>axis2-jaxws</artifactId>
-				<version>1.6.2</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.axis2</groupId>
-				<artifactId>axis2-transport-http</artifactId>
-				<version>1.6.2</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.axis2</groupId>
-				<artifactId>axis2-transport-local</artifactId>
-				<version>1.6.2</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.xmlbeans</groupId>
-				<artifactId>xmlbeans</artifactId>
-				<version>2.4.0</version>
-			</dependency>
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2</artifactId>
+                <version>1.8.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-jaxws</artifactId>
+                <version>1.8.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-transport-http</artifactId>
+                <version>1.8.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-transport-local</artifactId>
+                <version>1.8.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.xmlbeans</groupId>
+                <artifactId>xmlbeans</artifactId>
+                <version>5.0.3</version>
+            </dependency>
 
-			<dependency>
-				<groupId>org.codehaus.jettison</groupId>
-				<artifactId>jettison</artifactId>
-				<version>1.3.4</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-configuration</groupId>
-				<artifactId>commons-configuration</artifactId>
-				<version>1.10</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-lang3</artifactId>
-				<version>3.5</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+            <dependency>
+                <groupId>org.codehaus.jettison</groupId>
+                <artifactId>jettison</artifactId>
+                <version>1.3.4</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-configuration</groupId>
+                <artifactId>commons-configuration</artifactId>
+                <version>1.10</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.12.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
-	<repositories>
-		<repository>
-			<id>apache.nexus</id>
-			<name>Apache NEXUS Maven 2 Repository</name>
-			<url>https://repository.apache.org/content/repositories/releases/</url>
-			<layout>default</layout>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>jboss</id>
-			<name>JBoss Repository</name>
-			<url>https://repository.jboss.org/nexus/content/groups/public</url>
-			<layout>default</layout>
-		</repository>
+    <repositories>
+        <repository>
+            <id>apache.nexus</id>
+            <name>Apache NEXUS Maven 2 Repository</name>
+            <url>https://repository.apache.org/content/repositories/releases/</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>jboss</id>
+            <name>JBoss Repository</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public</url>
+            <layout>default</layout>
+        </repository>
 
-		<repository>
-			<id>central</id>
-			<name>Maven Central Repository</name>
-			<url>https://repo1.maven.org/maven2</url>
-			<layout>default</layout>
-		</repository>
+        <repository>
+            <id>central</id>
+            <name>Maven Central Repository</name>
+            <url>https://repo1.maven.org/maven2</url>
+            <layout>default</layout>
+        </repository>
                 
-                <repository>
-			<id>central1</id>
-			<name>Maven Central Repository</name>
-			<url>https://repo.maven.org/maven2</url>
-			<layout>default</layout>
-		</repository>
-		<repository>
-			<id>jboss3</id>
-			<name>JBoss 3rd Party</name>
-			<url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/</url>
-			<layout>default</layout>
-		</repository>
-	</repositories>
+   
+        <repository>
+            <id>jboss3</id>
+            <name>JBoss 3rd Party</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
 
 
-	<profiles>
-            <profile>
-                <id>prepare-site</id>
-                <activation>
-                    <file>
-                        <exists>src/site/site.xml</exists>
-                    </file>
-                </activation>
-                <build>
-                    <plugins>
-                         <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-antrun-plugin</artifactId>
-                                <dependencies>
-                                    <!-- force the juddi docs module to build -->
-                                    <dependency>
-                                        <groupId>org.apache.juddi.juddi-docs</groupId>
-                                        <artifactId>juddi-docs</artifactId>
-                                        <version>${project.version}</version>
-										<type>pom</type>
-                                    </dependency>
+    <profiles>
+        <profile>
+            <id>prepare-site</id>
+            <activation>
+                <file>
+                    <exists>src/site/site.xml</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <dependencies>
+                            <!-- force the juddi docs module to build -->
+                            <dependency>
+                                <groupId>org.apache.juddi.juddi-docs</groupId>
+                                <artifactId>juddi-docs</artifactId>
+                                <version>${project.version}</version>
+                                <type>pom</type>
+                            </dependency>
                                                                         
-                                </dependencies>
-                                <executions>
-                                    <execution>
-                                      <phase>site</phase>
-                                      <configuration>
-                                        <target>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <phase>site</phase>
+                                <configuration>
+                                    <target>
                                             
                                             
-                                            <copy todir="target/site/docs/3.3/juddi-client-guide/">
-                                                <fileset dir="docs/asciidoc/ClientGuide/target/docbook/publish/en-US" />
-                                              </copy>
+                                        <copy todir="target/site/docs/3.3/juddi-client-guide/">
+                                            <fileset dir="docs/asciidoc/ClientGuide/target/docbook/publish/en-US" />
+                                        </copy>
                                               
-                                              <copy todir="target/site/docs/3.3/juddi-guide/">
-                                                <fileset dir="docs/asciidoc/Guide/target/docbook/publish/en-US" />
-                                              </copy>
+                                        <copy todir="target/site/docs/3.3/juddi-guide/">
+                                            <fileset dir="docs/asciidoc/Guide/target/docbook/publish/en-US" />
+                                        </copy>
                                             
-                                        </target>
-                                      </configuration>
-                                      <goals>
-                                        <goal>run</goal>
-                                      </goals>
-                                    </execution>
-                                  </executions>
-                        </plugin>
-                    </plugins>
-                </build>
-            </profile>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 	
 
-		<!-- inherit from the apache parent: release-profile -->
-		<profile>
-			<id>apache-release</id>
-			<modules>
-				<!-- adding these modules for release only -->
-				<module>uddi-tck</module>
-				<module>uddi-tck-runner</module>
-				<module>juddi-ddl-generator</module>
-				<module>docs</module>
-				<module>juddi-dist</module>
-				<module>uddi-client-dist</module>
-			</modules>
-		</profile>
+        <!-- inherit from the apache parent: release-profile -->
+        <profile>
+            <id>apache-release</id>
+            <modules>
+                <!-- adding these modules for release only -->
+                <module>uddi-tck</module>
+                <module>uddi-tck-runner</module>
+                <module>juddi-ddl-generator</module>
+                <module>docs</module>
+                <module>juddi-dist</module>
+                <module>uddi-client-dist</module>
+            </modules>
+        </profile>
 
-		<!-- same as the apache-release minus signing. CI should use this -->
-		<profile>
-			<id>dist</id>
-			<modules>
-				<!-- adding these module for dist only -->
-				<module>uddi-tck</module>
-				<module>uddi-tck-runner</module>
-				<module>juddi-ddl-generator</module>
-				<module>docs</module>
-				<module>juddi-dist</module>
-				<module>uddi-client-dist</module>
-			</modules>
-			<build>
-				<plugins>
-					<!-- Create a source-release artifact that contains the fully buildable 
+        <!-- same as the apache-release minus signing. CI should use this -->
+        <profile>
+            <id>dist</id>
+            <modules>
+                <!-- adding these module for dist only -->
+                <module>uddi-tck</module>
+                <module>uddi-tck-runner</module>
+                <module>juddi-ddl-generator</module>
+                <module>docs</module>
+                <module>juddi-dist</module>
+                <module>uddi-client-dist</module>
+            </modules>
+            <build>
+                <plugins>
+                    <!-- Create a source-release artifact that contains the fully buildable 
                     project directory source structure. This is the artifact which is the official 
                     subject of any release vote. -->
-					<plugin>
-						<artifactId>maven-assembly-plugin</artifactId>
-						<dependencies>
-							<dependency>
-								<groupId>org.apache.apache.resources</groupId>
-								<artifactId>apache-source-release-assembly-descriptor</artifactId>
-								<version>1.0.6</version>
-							</dependency>
-						</dependencies>
-						<executions>
-							<execution>
-								<id>source-release-assembly</id>
-								<phase>package</phase>
-								<goals>
-									<goal>single</goal>
-								</goals>
-								<configuration>
-									<runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
-									<descriptorRefs>
-										<descriptorRef>${sourceReleaseAssemblyDescriptor}</descriptorRef>
-									</descriptorRefs>
-									<tarLongFileFormat>gnu</tarLongFileFormat>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<!-- We want to deploy the artifact to a staging location for perusal -->
-					<plugin>
-						<inherited>true</inherited>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-deploy-plugin</artifactId>
-						<configuration>
-							<updateReleaseInfo>true</updateReleaseInfo>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<version>3.0.1</version>
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.rat</groupId>
-						<artifactId>apache-rat-plugin</artifactId>
-						<configuration>
-							<excludes>
-								<exclude>**/*.nupkg</exclude>
-								<exclude>**/*.psd</exclude>
-								<exclude>**/*.ddl</exclude>
-								<exclude>Doxyfile</exclude>
-								<exclude>**/*log</exclude>
-								<exclude>*.log</exclude>
-								<exclude>qa/*.*</exclude>
-								<exclude>qa/**/*.*</exclude>
-								<exclude>juddi-client.net/packages/NUnit.2.6.2/NUnit.2.6.2.nuspec</exclude>
-								<exclude>juddi-client.net/clean.txt</exclude>
-								<exclude>juddi-client.net/input.txt</exclude>
-								<exclude>juddi-client.net/juddi-client.net/org.apache.juddi.v3.client.mapping/wadl.xsd</exclude>
-								<exclude>juddi-client.net/juddi-client.net/org.apache.juddi.v3.client.mapping/wsdl.xsd</exclude>
-								<exclude>juddi-client.net/juddi-client.net/org.apache.juddi.v3.client.mapping/XMLSchema.xsd</exclude>
-								<exclude>juddi-client.net/packages/NUnit.2.6.2/lib/nunit.framework.xml</exclude>
-								<exclude>juddi-client.net/example/AspnetServiceLifeCycle/global.asa</exclude>
-								<!-- uddi-ws-->
-								<exclude>src/main/resources/inquire_v2.wsdl</exclude>
-								<exclude>src/main/resources/publish_v2.wsdl</exclude>
-								<exclude>src/main/resources/uddi_v2.xsd</exclude>
-								<exclude>src/main/resources/uddi_v2custody.xsd</exclude>
-								<exclude>src/main/resources/uddi_v2replication.xsd</exclude>
-								<exclude>**/datatypes.dtd</exclude>
-								<exclude>**/xml.xsd</exclude>
-								<exclude>**/*.pfx</exclude>
-								<exclude>**/XMLSchema.dtd</exclude>
-								<exclude>**/xmldsig-core-schema.xsd</exclude>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.apache.resources</groupId>
+                                <artifactId>apache-source-release-assembly-descriptor</artifactId>
+                                <version>1.0.6</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>source-release-assembly</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
+                                    <descriptorRefs>
+                                        <descriptorRef>${sourceReleaseAssemblyDescriptor}</descriptorRef>
+                                    </descriptorRefs>
+                                    <tarLongFileFormat>gnu</tarLongFileFormat>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- We want to deploy the artifact to a staging location for perusal -->
+                    <plugin>
+                        <inherited>true</inherited>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <configuration>
+                            <updateReleaseInfo>true</updateReleaseInfo>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <doclint>none</doclint>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.rat</groupId>
+                        <artifactId>apache-rat-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/.github/*.*</exclude>
+                                <exclude>**/.github/**/*.*</exclude>
+                                <exclude>**/*.nupkg</exclude>
+                                <exclude>**/*.psd</exclude>
+                                <exclude>**/*.ddl</exclude>
+                                <exclude>Doxyfile</exclude>
+                                <exclude>**/*log</exclude>
+                                <exclude>*.log</exclude>
+                                <exclude>qa/*.*</exclude>
+                                <exclude>qa/**/*.*</exclude>
+                                <exclude>juddi-client.net/packages/NUnit.2.6.2/NUnit.2.6.2.nuspec</exclude>
+                                <exclude>juddi-client.net/clean.txt</exclude>
+                                <exclude>juddi-client.net/input.txt</exclude>
+                                <exclude>juddi-client.net/juddi-client.net/org.apache.juddi.v3.client.mapping/wadl.xsd</exclude>
+                                <exclude>juddi-client.net/juddi-client.net/org.apache.juddi.v3.client.mapping/wsdl.xsd</exclude>
+                                <exclude>juddi-client.net/juddi-client.net/org.apache.juddi.v3.client.mapping/XMLSchema.xsd</exclude>
+                                <exclude>juddi-client.net/packages/NUnit.2.6.2/lib/nunit.framework.xml</exclude>
+                                <exclude>juddi-client.net/example/AspnetServiceLifeCycle/global.asa</exclude>
+                                <!-- uddi-ws-->
+                                <exclude>src/main/resources/inquire_v2.wsdl</exclude>
+                                <exclude>src/main/resources/publish_v2.wsdl</exclude>
+                                <exclude>src/main/resources/uddi_v2.xsd</exclude>
+                                <exclude>src/main/resources/uddi_v2custody.xsd</exclude>
+                                <exclude>src/main/resources/uddi_v2replication.xsd</exclude>
+                                <exclude>**/datatypes.dtd</exclude>
+                                <exclude>**/xml.xsd</exclude>
+                                <exclude>**/*.pfx</exclude>
+                                <exclude>**/XMLSchema.dtd</exclude>
+                                <exclude>**/xmldsig-core-schema.xsd</exclude>
 
-								<!-- TCK BASE -->
-								<exclude>src/main/resources/uddi_data/bpel/riftsaw/bpel-technote.bpel</exclude>
-								<exclude>src/main/resources/uddi_data/bpel/riftsaw/bpel-technote.wsdl</exclude>
-								<!-- juddi-client-->
-								<exclude>src/test/resources/bpel/bpel-technote.bpel</exclude>
-								<exclude>src/test/resources/bpel/bpel-technote.wsdl</exclude>
-								<exclude>**/*.key</exclude>
-								<exclude>**/log4j.xml</exclude>
+                                <!-- TCK BASE -->
+                                <exclude>src/main/resources/uddi_data/bpel/riftsaw/bpel-technote.bpel</exclude>
+                                <exclude>src/main/resources/uddi_data/bpel/riftsaw/bpel-technote.wsdl</exclude>
+                                <!-- juddi-client-->
+                                <exclude>src/test/resources/bpel/bpel-technote.bpel</exclude>
+                                <exclude>src/test/resources/bpel/bpel-technote.wsdl</exclude>
+                                <exclude>**/*.key</exclude>
+                                <exclude>**/log4j.xml</exclude>
 
-								<exclude>**/spring-beans.xsd</exclude>
-								<exclude>**/spring-util.xsd</exclude>
-								<exclude>**/spring-beans.xsd</exclude>
+                                <exclude>**/spring-beans.xsd</exclude>
+                                <exclude>**/spring-util.xsd</exclude>
+                                <exclude>**/spring-beans.xsd</exclude>
 
-								<exclude>**/font-awesome*</exclude>
-								<exclude>**/jquery*.css</exclude>
-								<exclude>**/*.svg</exclude>
-								<exclude>**/*.txt</exclude>
-								<exclude>**/jquery*.js</exclude>
-								<exclude>**/log4j.properties</exclude>
-								<exclude>**/log4j.xml</exclude>
-								<exclude>**/*.sh</exclude>
-								<exclude>**/*.bat</exclude>
-								<exclude>**/*.policy</exclude>
-								<exclude>**/*.md</exclude>
-								<exclude>**/*.form</exclude>
-								<exclude>**/jboss-deployment-structure.xml</exclude>
-								<exclude>**/MANIFEST.MF</exclude>
-								<exclude>**/license/*.*</exclude>
-								<exclude>src/main/resources/schemas/orm_1_0.xsd</exclude>
-								<exclude>src/main/resources/schemas/persistence_1_0.xsd</exclude>
-								<exclude>src/main/resources/spring-beans.xsd.xml</exclude>
+                                <exclude>**/font-awesome*</exclude>
+                                <exclude>**/jquery*.css</exclude>
+                                <exclude>**/*.svg</exclude>
+                                <exclude>**/*.txt</exclude>
+                                <exclude>**/jquery*.js</exclude>
+                                <exclude>**/log4j.properties</exclude>
+                                <exclude>**/log4j.xml</exclude>
+                                <exclude>**/*.sh</exclude>
+                                <exclude>**/*.bat</exclude>
+                                <exclude>**/*.policy</exclude>
+                                <exclude>**/*.md</exclude>
+                                <exclude>**/*.form</exclude>
+                                <exclude>**/jboss-deployment-structure.xml</exclude>
+                                <exclude>**/MANIFEST.MF</exclude>
+                                <exclude>**/license/*.*</exclude>
+                                <exclude>src/main/resources/schemas/orm_1_0.xsd</exclude>
+                                <exclude>src/main/resources/schemas/persistence_1_0.xsd</exclude>
+                                <exclude>src/main/resources/spring-beans.xsd.xml</exclude>
 
-								<exclude>**/bootstrap-timepicker.*</exclude>
-								<exclude>**/test/selenium/*.*</exclude>
-								<exclude>**/*.properties</exclude>
-								<exclude>**/*.asciidoc</exclude>
-								<exclude>**/TermsOfUse.txt</exclude>
-								<exclude>**/pref-rpt*.txt</exclude>
-								<exclude>**/asciidoctor.css</exclude>
-								<exclude>**/Guardfile</exclude>
-								<exclude>**/target/**/*</exclude>
-								<exclude>**/nb-configuration.xml</exclude>
-								<exclude>.travis.yml</exclude>
-								<exclude>**/*.mwb</exclude>
+                                <exclude>**/bootstrap-timepicker.*</exclude>
+                                <exclude>**/test/selenium/*.*</exclude>
+                                <exclude>**/*.properties</exclude>
+                                <exclude>**/*.asciidoc</exclude>
+                                <exclude>**/TermsOfUse.txt</exclude>
+                                <exclude>**/pref-rpt*.txt</exclude>
+                                <exclude>**/asciidoctor.css</exclude>
+                                <exclude>**/Guardfile</exclude>
+                                <exclude>**/target/**/*</exclude>
+                                <exclude>**/nb-configuration.xml</exclude>
+                                <exclude>.travis.yml</exclude>
+                                <exclude>**/*.mwb</exclude>
 
-							</excludes>
-							<consoleOutput>true</consoleOutput>
-						</configuration>
-						<executions>
-							<execution>
-								<phase>verify</phase>
-								<goals>
-									<goal>check</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+                            </excludes>
+                            <consoleOutput>true</consoleOutput>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

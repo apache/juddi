@@ -68,7 +68,15 @@ public class ReplicationNotifier extends TimerTask {
         private long startBuffer = 5000;//AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_START_BUFFER, 20000l); // 20s startup delay default 
         private long interval = 5000;//AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
         private static String node = null;
-        private static UDDIService uddiService = new UDDIService();
+        private static UDDIService uddiService ;
+        
+        static {
+            try{
+            uddiService = new UDDIService();
+            }catch (Throwable t) {
+                log.error(t,t);
+            }
+        }
 
         /**
          * default constructor

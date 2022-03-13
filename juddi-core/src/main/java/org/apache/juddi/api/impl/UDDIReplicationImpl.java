@@ -41,6 +41,7 @@ import javax.persistence.Query;
 import javax.xml.bind.JAXB;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.BindingProvider;
+import static org.apache.juddi.api.impl.AuthenticatedService.logger;
 import org.apache.juddi.api.util.QueryStatus;
 import org.apache.juddi.api.util.ReplicationQuery;
 import org.apache.juddi.config.AppConfig;

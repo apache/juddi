@@ -66,13 +66,14 @@ public class TckSigningUtil {
     private static Reference initReference(XMLSignatureFactory fac) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
         List transformers = new ArrayList();
         transformers.add(fac.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null));
-        Reference ref = fac.newReference("", fac.newDigestMethod(DigestMethod.SHA1, null), transformers, null, null);
+        Reference ref = fac.newReference("", fac.newDigestMethod(DigestMethod.SHA256, null), transformers, null, null);
         return ref;
     }
 
     private static SignedInfo initSignedInfo(XMLSignatureFactory fac) throws Exception {
         Reference ref = initReference(fac);
-        SignedInfo si = fac.newSignedInfo(fac.newCanonicalizationMethod(CanonicalizationMethod.EXCLUSIVE, (C14NMethodParameterSpec) null), fac.newSignatureMethod(SignatureMethod.DSA_SHA1, null), Collections.singletonList(ref));
+        SignedInfo si = fac.newSignedInfo(fac.newCanonicalizationMethod(CanonicalizationMethod.EXCLUSIVE, 
+                (C14NMethodParameterSpec) null), fac.newSignatureMethod(SignatureMethod.DSA_SHA256, null), Collections.singletonList(ref));
         return si;
     }
 
