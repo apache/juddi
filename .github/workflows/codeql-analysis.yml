@@ -71,7 +71,7 @@ jobs:
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
     - name: Install icedtea
-      run: sudo apt-get install -y icedtea-web
+      run: sudo apt-get install -y icedtea-netx
 
     - name: buildenvprobe
       run: ls /usr/share/icedtea-web
