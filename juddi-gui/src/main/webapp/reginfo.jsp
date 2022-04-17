@@ -75,7 +75,6 @@
                         <!-- dropdown menu links -->
                         <li>
                             <a class="btn btn-danger " href="javascript:deleteBusinessByID('<%=URLEncoder.encode(info.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey(), "UTF-8")%>');"><%=ResourceLoader.GetResource(session, "actions.delete")%></a></li>
-                        <li><a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(info.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey(), "UTF-8")%>&type=business"><%=ResourceLoader.GetResource(session, "actions.sign")%></a></li>
                         <li><a class="btn btn-info " href="#" title="<%=ResourceLoader.GetResource(session, "actions.subscribe.description")%>"><%=ResourceLoader.GetResource(session, "actions.subscribe")%></a></li>
                         <li><a class="btn btn-warning " href="#" title="<%=ResourceLoader.GetResource(session, "actions.transfer.description")%>"><%=ResourceLoader.GetResource(session, "actions.transfer")%></a></li>
                         <li><a class="btn "  href="javascript:ViewAsXML('<%=StringEscapeUtils.escapeJavaScript(info.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())%>');"><%=ResourceLoader.GetResource(session, "actions.asxml")%></a></li>

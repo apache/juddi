@@ -28,18 +28,15 @@
 				<include>org.apache.juddi:juddi-client-cli:jar</include>
 				<include>org.apache.juddi:uddi-ws:jar</include>
 				<include>org.apache.juddi:uddi-migration-tool:jar</include>
-				<include>org.apache.juddi:juddi-gui-dsig:jar</include>
 			</includes>
 			<excludes>
 				<exclude>org.apache.juddi:juddi-client:jar:sources</exclude>
 				<exclude>org.apache.juddi:juddi-client:-clijar:sources</exclude>
 				<exclude>org.apache.juddi:uddi-ws:jar:sources</exclude>
 				<exclude>org.apache.juddi:uddi-migration-tool:jar:sources</exclude>
-				<exclude>org.apache.juddi:juddi-gui-dsig:jar:sources</exclude>
 				<exclude>org.apache.juddi:juddi-client:jar:javadoc</exclude>
 				<exclude>org.apache.juddi:uddi-ws:jar:javadoc</exclude>
 				<exclude>org.apache.juddi:uddi-migration-tool:jar:javadoc</exclude>
-				<exclude>org.apache.juddi:juddi-gui-dsig:jar:javadoc</exclude>
 			</excludes>
 
 			<useProjectArtifact>false</useProjectArtifact>
@@ -110,7 +107,6 @@
 				<include>org.apache.juddi:uddi-tck:jar:test-sources</include>
 				<include>org.apache.juddi:uddi-tck-base:jar:sources</include>
 				<include>org.apache.juddi:uddi-ws:jar:sources</include>
-				<include>org.apache.juddi:juddi-gui-dsig:jar:sources</include>
 				<include>org.apache.juddi:juddi-gui-war:jar:sources</include>
 			</includes>
 			<useProjectArtifact>false</useProjectArtifact>
@@ -153,7 +149,6 @@
 				<include>org.apache.juddi:uddi-tck-runner:jar:javadoc</include>
 				<include>org.apache.juddi:uddi-tck:jar:test-javadoc</include>
 				<include>org.apache.juddi:uddi-ws:jar:javadoc</include>
-				<include>org.apache.juddi:juddi-gui-dsig:jar:javadoc</include>
 				<include>org.apache.juddi:juddi-gui-war:jar:javadoc</include>
 			</includes>
 			<useProjectArtifact>false</useProjectArtifact>

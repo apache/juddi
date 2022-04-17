@@ -1,3 +1,0 @@
-Permissions: all-permissions
-Application-Name: Apache jUDDI Digital Signature Applet
-Codebase: *

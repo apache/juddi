@@ -579,7 +579,6 @@ under the License.
 		<module>juddiv3-war</module>
 		<module>juddiv3-war-repl</module>
 		<module>juddi-examples</module>
-		<module>juddi-gui-dsig</module>
 		<module>juddi-gui</module>
 		<module>juddi-tomcat</module>
 	</modules>
@@ -1022,6 +1021,7 @@ under the License.
 						<configuration>
 							<excludes>
 								<exclude>**/*.nupkg</exclude>
+								<exclude>.github/**/*.*</exclude>
 								<exclude>**/*.psd</exclude>
 								<exclude>**/*.ddl</exclude>
 								<exclude>Doxyfile</exclude>

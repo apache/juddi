@@ -24,13 +24,7 @@ language governing permissions and * limitations under the License. * */ -->
             <artifactId>juddi-client</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.juddi</groupId>
-            <artifactId>juddi-gui-dsig</artifactId>
-            <version>${project.parent.version}</version>
-            <classifier>jar-with-dependencies</classifier>
-            <scope>provided</scope>
-        </dependency>
+       
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
@@ -79,37 +73,7 @@ language governing permissions and * limitations under the License. * */ -->
     </dependencies>
     <build>
         <finalName>juddi-gui</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.apache.juddi</groupId>
-                                    <artifactId>juddi-gui-dsig</artifactId>
-                                    <classifier>jar-with-dependencies</classifier>
-                                    <overWrite>true</overWrite>
-                                    <destFileName>juddi-gui-dsig-all.jar</destFileName>
-                                </artifactItem>
-                            </artifactItems>
-                            <outputDirectory>${project.build.directory}/juddi-gui/applets</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-			
-		
-			
-			
-        </plugins>
+      
         <pluginManagement>
         	<plugins>
         		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
