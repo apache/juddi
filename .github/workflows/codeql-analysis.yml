@@ -74,8 +74,11 @@ jobs:
     - name: javabuild
       run: mvn -B install
       
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+
     - name: dotnet build
-      run:  msbuild.exe juddi-client.net\juddi-client.net.sln /p:Configuration=Debug /p:Platform="Any CPU" /m  
+      run:  msbuild juddi-client.net\juddi-client.net.sln /p:Configuration=Debug /p:Platform="Any CPU" /m  
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
