@@ -132,5 +132,21 @@ language governing permissions and * limitations under the License. * */ -->
         </dependency>
 	</dependencies>
     </profile>
+    <profile>
+      <id>icedtea-web2</id>
+      <activation>
+        <file><exists>/usr/share/icedtea-web/javaws.jar</exists></file>
+      </activation>
+	<dependencies>
+	 <dependency>
+            <groupId>com.sun.jdk</groupId>
+            <artifactId>plugin</artifactId>
+            <version>1.6.0</version>
+            <type>jar</type>
+            <scope>system</scope>
+            <systemPath>/usr/share/icedtea-web/javaws.jar</systemPath>
+        </dependency>
+	</dependencies>
+    </profile>
   </profiles>
 </project>
