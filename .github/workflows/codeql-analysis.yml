@@ -28,7 +28,10 @@ jobs:
       actions: read
       contents: read
       security-events: write
-
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['java']
   
 
     steps:
@@ -92,6 +95,9 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
+      with:
+        languages: ${{ matrix.language }}
+
       
   analyze2:
     name: Analyze2
@@ -100,7 +106,10 @@ jobs:
       actions: read
       contents: read
       security-events: write
-
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['csharp']
   
 
     steps:
@@ -132,3 +141,5 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
+      with:
+        languages: ${{ matrix.language }}
