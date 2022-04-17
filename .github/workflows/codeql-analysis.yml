@@ -79,6 +79,8 @@ jobs:
       run: ls $JAVA_HOME/jre/lib/
     - name: buildenvprobe3
       run: ls $JAVA_HOME/lib
+    - name: buildenvprobe4
+      run: echo $JAVA_HOME
     - name: javabuild
       run: mvn -B install
       
