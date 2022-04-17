@@ -65,7 +65,7 @@ jobs:
     #    uses a compiled language
 
     - run: |
-       mvn clean install -Pdist
+       mvn clean install
 
     - run: |
        msbuild.exe juddi-client.net\juddi-client.net.sln /p:Configuration=Debug /p:Platform="Any CPU" /m  
