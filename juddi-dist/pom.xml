@@ -160,15 +160,6 @@
             <classifier>javadoc</classifier>
         </dependency>
         
-		<!--  documentation -->
-		<dependency>
-			<groupId>org.apache.juddi.juddi-docs</groupId>
-			<artifactId>juddi-docs-dist</artifactId>
-			<version>${project.parent.version}</version>
-			<classifier>docs</classifier>
-			<type>zip</type>
-		</dependency>
-		
 		<!--  tomcat  -->
 		<dependency>
             <groupId>org.apache.juddi</groupId>

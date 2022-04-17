@@ -49,6 +49,7 @@ under the License.
 		<jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file>
 		<timestamp>${maven.build.timestamp}</timestamp>
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+		
 	</properties>
 
 	<issueManagement>
@@ -187,12 +188,7 @@ under the License.
 					<artifactId>asciidoctor-maven-plugin</artifactId>
 					<version>0.1.4</version>
 				</plugin>
-				<plugin>
-					<!-- Entry needed to enable jdocbook unzipping -->
-					<groupId>org.jboss.maven.plugins</groupId>
-					<artifactId>maven-jdocbook-plugin</artifactId>
-					<version>2.3.8</version>
-				</plugin>
+				
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
@@ -714,13 +710,7 @@ under the License.
 				<version>1.3.2</version>
 			</dependency>
 
-			<dependency>
-				<!-- Entry needed to enable jdocbook unzipping -->
-				<groupId>org.jboss.maven.plugins</groupId>
-				<artifactId>maven-jdocbook-plugin</artifactId>
-				<version>2.3.10</version>
-			</dependency>
-
+			
 			<dependency>
 				<groupId>org.hibernate.javax.persistence</groupId>
 				<artifactId>hibernate-jpa-2.1-api</artifactId>
@@ -958,54 +948,7 @@ under the License.
 
 
 	<profiles>
-		<profile>
-			<id>prepare-site</id>
-			<activation>
-				<file>
-					<exists>src/site/site.xml</exists>
-				</file>
-			</activation>
-			<build>
-				<plugins>
-					 <plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-antrun-plugin</artifactId>
-							<dependencies>
-								<!-- force the juddi docs module to build -->
-								<dependency>
-									<groupId>org.apache.juddi.juddi-docs</groupId>
-									<artifactId>juddi-docs</artifactId>
-									<version>${project.version}</version>
-									<type>pom</type>
-								</dependency>
-																	
-							</dependencies>
-							<executions>
-								<execution>
-								  <phase>site</phase>
-								  <configuration>
-									<target>
-										
-										
-										<copy todir="target/site/docs/3.3/juddi-client-guide/">
-											<fileset dir="docs/asciidoc/ClientGuide/target/docbook/publish/en-US" />
-										  </copy>
-										  
-										  <copy todir="target/site/docs/3.3/juddi-guide/">
-											<fileset dir="docs/asciidoc/Guide/target/docbook/publish/en-US" />
-										  </copy>
-										
-									</target>
-								  </configuration>
-								  <goals>
-									<goal>run</goal>
-								  </goals>
-								</execution>
-							  </executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
+		
 		
 		<profile>
 			<id>doclint-java8-disable</id>
@@ -1025,7 +968,6 @@ under the License.
 				<module>uddi-tck</module>
 				<module>uddi-tck-runner</module>
 				<module>juddi-ddl-generator</module>
-				<module>docs</module>
 				<module>juddi-dist</module>
 				<module>uddi-client-dist</module>
 			</modules>
@@ -1039,12 +981,153 @@ under the License.
 				<module>uddi-tck</module>
 				<module>uddi-tck-runner</module>
 				<module>juddi-ddl-generator</module>
-				<module>docs</module>
 				<module>juddi-dist</module>
 				<module>uddi-client-dist</module>
 			</modules>
 			<build>
 				<plugins>
+				
+				<plugin>
+					<groupId>com.github.spyhunter99</groupId>
+					<artifactId>maven-pdf-plugin</artifactId>
+					<version>1.5.0.8</version>
+					<inherited>false</inherited>
+					<executions>
+						<execution>
+						  <id>pdf-client</id>
+						  <phase>prepare-package</phase>
+						  <goals>
+							<goal>pdf</goal>
+						  </goals>
+						  <configuration>
+							<outputDirectory>${project.reporting.outputDirectory}</outputDirectory>
+							<includeReports>false</includeReports>
+							<docDescriptor>src/site/pdf-client.xml</docDescriptor>
+							
+							<!-- optional, the title of a doc defined in pdf-user that is rendered before the TOC 
+							<executiveSummaryName>EXSUM</executiveSummaryName>-->
+							<!-- optional, a header only on the title page
+							<titleHeader>A custom header only on the title pages</titleHeader>-->
+							
+							<!-- optional, the distribution statement is printed on the title page towards the bottom, common use case:
+									confidentiality statements, limited distribution, legalese and other mumbo jumbo.
+							<distributionStatement>DISTRIBUTION STATEMENT: Feel free to give this document to anyone you will take it.</distributionStatement>-->
+								
+							<!-- optional, these header/footer definitions are used on all pages exception the title page -->
+							<pdfFooter>Version ${project.version} 
+								${timestamp}</pdfFooter>
+							<pdfHeader>jUDDI Client Guide</pdfHeader>
+								
+							<!-- optional, the cover page can have a pom defined date too 
+							<pdfCoverDate>1970-1-1</pdfCoverDate>-->
+							
+							<!-- optional, the max depth of the TOC -->
+							<tocMaxDepthToPrint>4</tocMaxDepthToPrint>
+							<!-- optional, you can override any of the colors, fonts, padding etc with your own file here 
+							<foStylesOverride>src/main/resources/fo-styles_1.xslt</foStylesOverride>-->
+						  </configuration>
+						</execution>
+						
+						<execution>
+						  <id>pdf-server</id>
+						  <phase>prepare-package</phase>
+						  <goals>
+							<goal>pdf</goal>
+						  </goals>
+						  <configuration>
+							<outputDirectory>${project.reporting.outputDirectory}</outputDirectory>
+							<includeReports>false</includeReports>
+							<docDescriptor>src/site/pdf-server.xml</docDescriptor>
+							
+							<!-- optional, the title of a doc defined in pdf-user that is rendered before the TOC 
+							<executiveSummaryName>EXSUM</executiveSummaryName>-->
+							<!-- optional, a header only on the title page
+							<titleHeader>A custom header only on the title pages</titleHeader>-->
+							
+							<!-- optional, the distribution statement is printed on the title page towards the bottom, common use case:
+									confidentiality statements, limited distribution, legalese and other mumbo jumbo.
+							<distributionStatement>DISTRIBUTION STATEMENT: Feel free to give this document to anyone you will take it.</distributionStatement>-->
+								
+							<!-- optional, these header/footer definitions are used on all pages exception the title page -->
+							<pdfFooter>Version ${project.version} 
+								${timestamp}</pdfFooter>
+							<pdfHeader>jUDDI Server Guide</pdfHeader>
+								
+							<!-- optional, the cover page can have a pom defined date too 
+							<pdfCoverDate>1970-1-1</pdfCoverDate>-->
+							
+							<!-- optional, the max depth of the TOC -->
+							<tocMaxDepthToPrint>4</tocMaxDepthToPrint>
+							<!-- optional, you can override any of the colors, fonts, padding etc with your own file here 
+							<foStylesOverride>src/main/resources/fo-styles_1.xslt</foStylesOverride>-->
+						  </configuration>
+						</execution>
+					  
+					</executions>
+				</plugin>
+				
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-site-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>pack-site</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>site</goal>
+									<goal>jar</goal>
+								</goals>
+								<configuration>
+									<attach>false</attach>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					
+					<plugin>
+						<groupId>com.coderplus.maven.plugins</groupId>
+						<artifactId>copy-rename-maven-plugin</artifactId>
+						<version>1.0.1</version>
+						<executions>
+							<execution>
+								<id>rename-file</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>rename</goal>
+								</goals>
+								<configuration>
+									<sourceFile>${project.build.directory}/${project.build.finalName}-site.jar</sourceFile>
+									<destinationFile>${project.build.directory}/${project.build.finalName}-site.zip</destinationFile>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>1.10</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>attach-artifact</goal>
+								</goals>
+								<phase>package</phase>
+								<configuration>
+									<artifacts>
+										<artifact>
+											<file>${project.build.directory}/${project.build.finalName}-site.zip</file>
+											<type>zip</type>
+											<classifier>site</classifier>
+										</artifact>
+									</artifacts>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					
+					
+					
 					<!-- Create a source-release artifact that contains the fully buildable 
                     project directory source structure. This is the artifact which is the official 
                     subject of any release vote. -->
