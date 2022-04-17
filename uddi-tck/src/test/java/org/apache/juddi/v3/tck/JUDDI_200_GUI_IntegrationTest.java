@@ -163,10 +163,6 @@ public class JUDDI_200_GUI_IntegrationTest {
                 runTest(baseurl + "settings.jsp");
         }
 
-        @Test
-        public void Test0021() throws Exception {
-                runTest(baseurl + "signer.jsp");
-        }
 
         @Test
         public void Test0022() throws Exception {

@@ -29,19 +29,16 @@
                 <include>org.apache.juddi:juddi-core:jar</include>
                 <include>org.apache.juddi:uddi-tck-base:jar</include>
                 <include>org.apache.juddi:uddi-ws:jar</include>
-                <include>org.apache.juddi:juddi-gui-dsig:jar</include>
             </includes>
             <excludes>
                 <exclude>org.apache.juddi:juddi-client:jar:sources</exclude>
                 <exclude>org.apache.juddi:juddi-core:jar:sources</exclude>
                 <exclude>org.apache.juddi:uddi-tck-base:jar:sources</exclude>
                 <exclude>org.apache.juddi:uddi-ws:jar:sources</exclude>
-                <exclude>org.apache.juddi:juddi-gui-dsig:jar:sources</exclude>
                 <exclude>org.apache.juddi:juddi-client:jar:javadoc</exclude>
                 <exclude>org.apache.juddi:juddi-core:jar:javadoc</exclude>
                 <exclude>org.apache.juddi:uddi-tck-base:jar:javadoc</exclude>
                 <exclude>org.apache.juddi:uddi-ws:jar:javadoc</exclude>
-                <exclude>org.apache.juddi:juddi-gui-dsig:jar:javadoc</exclude>
             </excludes>
             
             <useProjectArtifact>false</useProjectArtifact>
@@ -91,7 +88,6 @@
 				<include>org.apache.juddi:juddi-gui-war:jar:sources</include>
 				<include>org.apache.juddi:uddi-tck-base:jar:sources</include>
 				<include>org.apache.juddi:uddi-ws:jar:sources</include>
-				<include>org.apache.juddi:juddi-gui-dsig:jar:sources</include>
 			</includes>
 			<useProjectArtifact>false</useProjectArtifact>
 			<useProjectAttachments>false</useProjectAttachments>
@@ -124,7 +120,6 @@
                 <include>org.apache.juddi:juddi-gui-war:jar:javadoc</include>
                 <include>org.apache.juddi:uddi-tck-base:jar:javadoc</include>
                 <include>org.apache.juddi:uddi-ws:jar:javadoc</include>
-                <include>org.apache.juddi:juddi-gui-dsig:jar:javadoc</include>
             </includes>
             <useProjectArtifact>false</useProjectArtifact>
             <useProjectAttachments>false</useProjectAttachments>
