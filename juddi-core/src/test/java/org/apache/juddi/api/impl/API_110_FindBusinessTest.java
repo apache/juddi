@@ -29,6 +29,8 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uddi.api_v2.IdentifierBag;
+import org.uddi.api_v2.KeyedReference;
 import org.uddi.api_v3.BusinessInfo;
 import org.uddi.api_v3.BusinessList;
 import org.uddi.api_v3.FindBusiness;
@@ -63,6 +65,7 @@ public class API_110_FindBusinessTest
     private static TckTModel tckTModel                = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
     private static TckBusiness tckBusiness            = new TckBusiness(new UDDIPublicationImpl(), new UDDIInquiryImpl());
     private static UDDIInquiryImpl inquiry            = new UDDIInquiryImpl();
+    private static UDDIv2InquiryImpl inquiryv2            = new UDDIv2InquiryImpl();
 	protected static String authInfoJoe               = null;
 
 	@AfterClass
@@ -128,6 +131,48 @@ public class API_110_FindBusinessTest
 							}
 					}
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				Assert.fail(e.getMessage());
+			}
+		} finally {
+			tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS_XML, TOM_BUSINESS_KEY, 1);
+			
+			tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
+			tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
+			tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
+
+		}
+	}
+	
+        
+        
+        @Test
+	public void findBusinessByTModelV2() {
+		try {
+			tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
+			tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
+			tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
+			
+			tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS_XML, TOM_BUSINESS_KEY, 1);
+			
+			try {
+				int size = 0;
+				
+        
+                                org.uddi.api_v2.BusinessList bl = null;
+	
+                                org.uddi.api_v2.FindBusiness fbb = new org.uddi.api_v2.FindBusiness();
+                                org.uddi.api_v2.IdentifierBag tmb = new org.uddi.api_v2.IdentifierBag();
+				tmb.getKeyedReference().add(new KeyedReference("uuid:578a72bd-8f35-4099-b559-8b4997389bc5",
+                                        "DUNS", "12-345-6781"));
+				fbb.setIdentifierBag(tmb);
+				bl = inquiryv2.findBusiness(fbb);
+				size = bl.getBusinessInfos().getBusinessInfo().size();
+				if (size != 0) {
+					Assert.fail("Should have found no entry on FindBusiness with TModelBag, "
+							+ "found " + size);
+				} 
 			} catch (Exception e) {
 				e.printStackTrace();
 				Assert.fail(e.getMessage());

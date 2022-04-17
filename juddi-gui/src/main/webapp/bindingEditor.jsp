@@ -73,12 +73,12 @@
 <%@include file="header-top.jsp" %>
 <div class="container">
         <script type="text/javascript" src="js/bindingeditor.js"></script>
-        <!-- Main hero unit for a primary marketing message or call to action -->
+        
         <div class="well" >
                 <h1><%=ResourceLoader.GetResource(session, "pages.bindingeditor.title")%></h1>
         </div>
 
-        <!-- Example row of columns -->
+        
         <div class="row">
                 <div class="span12" >
 
@@ -254,7 +254,7 @@
                                                                 if (bd.getCategoryBag() == null) {
                                                                         bd.setCategoryBag(new CategoryBag());
                                                                 }
-                                                                //                        out.write("Keyed Reference Categories:");
+
                                                                 for (int i = 0; i < bd.getCategoryBag().getKeyedReference().size(); i++) {
 
                                                                         out.write("<div id=\"" + PostBackConstants.CATBAG_KEY_REF + i + "\" style=\"border-width:2px; border-style:solid\">");
@@ -366,10 +366,16 @@
                                                                         out.write("<div style=\"float:left;height:100%\">"
                                                                              + "<a href=\"javascript:Remove('" + PostBackConstants.TMODELINSTANCE + k + "');\"><i class=\"icon-trash icon-large\"></i>&nbsp;</a></div>");
 
-                                                                        out.write("<div style=\"float:left\"><b>" + ResourceLoader.GetResource(session, "items.tmodel.key") + " </b> (<a href=\"javascript:tModelModal('" + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.KEYNAME + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>) "
+                                                                        out.write("<div style=\"float:left\"><b>" + ResourceLoader.GetResource(session, "items.tmodel.key") + " </b> "
+                                                                                + "(<a href=\"javascript:tModelModal('" + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.KEYNAME + "','"
+                                                                                +PostBackConstants.TMODELINSTANCE + k + PostBackConstants.DISPLAYNAME + "')\" ><i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>) "
                                                                              + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(bd.getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey(), "UTF8") + "\"><i class=\"icon-zoom-in icon-large\"></i></a>"
                                                                              + ": &nbsp;</div>"
                                                                              + "<div class=\"edit\" id=\"" + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey()) + "</div>");
+                                                                        out.write("<div id=\"" + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.DISPLAYNAME +"\">" + 
+                                                                                
+                                                                                StringEscapeUtils.escapeHtml(x.getTmodelDisplayName(bd.getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey()))
+                                                                                +"</div>");
                                                                     //  out.write("<div style=\"float:left\"><span title=\"Instance Params\">Value</span>:&nbsp;</div>"
                                                                         //          + "<div class=\"edit\" id=\"" + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.VALUE + "\">" + ((bd.getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null) ? StringEscapeUtils.escapeHtml(bd.getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms()) : "") + "</div>");
                                                                 %>

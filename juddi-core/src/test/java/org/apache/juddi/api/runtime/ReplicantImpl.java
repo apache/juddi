@@ -36,9 +36,9 @@ import org.uddi.v3_service.UDDIReplicationPortType;
  */
 @WebService(serviceName = "UDDI_Replication_PortType", targetNamespace = "urn:uddi-org:repl_v3_portType",
         endpointInterface = "org.uddi.v3_service.UDDIReplicationPortType")
-              public class replicantImpl implements UDDIReplicationPortType {
+              public class ReplicantImpl implements UDDIReplicationPortType {
       
-        public replicantImpl(){
+        public ReplicantImpl(){
         }
 
     

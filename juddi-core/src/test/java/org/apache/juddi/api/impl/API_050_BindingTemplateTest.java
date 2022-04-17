@@ -21,13 +21,18 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
 import org.apache.juddi.v3.client.UDDIConstants;
+import org.apache.juddi.v3.client.config.UDDIClient;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.ext.wsdm.WSDMQosConstants;
+import org.apache.juddi.v3.client.mapping.ServiceLocator;
+import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.apache.juddi.v3.tck.TckBindingTemplate;
 import static org.apache.juddi.v3.tck.TckBindingTemplate.JOE_BINDING_KEY;
 import static org.apache.juddi.v3.tck.TckBindingTemplate.JOE_BINDING_XML;
 import org.apache.juddi.v3.tck.TckBusiness;
 import org.apache.juddi.v3.tck.TckBusinessService;
+import org.apache.juddi.v3.tck.TckCommon;
 import org.apache.juddi.v3.tck.TckFindEntity;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
@@ -43,6 +48,7 @@ import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.IdentifierBag;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.TModelBag;
+import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
@@ -244,4 +250,60 @@ public class API_050_BindingTemplateTest {
                         tckTModel.deleteJoePublisherTmodel(authInfoJoe);
                 }
         }
+        
+        @Test
+        public void testJuddi937ServiceLocatorWithCache() throws Exception {
+                try {
+                        tckTModel.saveJoePublisherTmodel(authInfoJoe);
+                        tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessService.saveJoePublisherService(authInfoJoe);
+                        tckBindingTemplate.saveBinding(authInfoJoe, "uddi_data/joepublisher/bindingTemplate.xml", JOE_BINDING_KEY, false);
+
+                        //create a client using invm transport
+                        UDDIClientContainer.removeAll();
+                        UDDIClient.clearServiceLocatorCaches();
+                        UDDIClient c = new UDDIClient("META-INF/uddi.xml");
+                        ServiceLocator serviceLocator = c.getServiceLocator("joe");
+                        serviceLocator.withSimpleCache();
+                        serviceLocator.clearCaches();
+                        String lookupEndpoint = serviceLocator.lookupEndpoint(TckBusinessService.JOE_SERVICE_KEY);
+                        String lookupEndpoint2 = serviceLocator.lookupEndpoint(TckBusinessService.JOE_SERVICE_KEY);
+                        System.out.println(TckCommon.DumpAllServices(authInfoJoe, c.getTransport("default").getUDDIInquiryService()));
+                        Assert.assertNotEquals(lookupEndpoint, lookupEndpoint2);
+                } finally {
+                        tckBusinessService.deleteJoePublisherService(authInfoJoe);
+                        tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+                }
+         }
+        
+        
+        
+        @Test
+        public void testJuddi937ServiceLocatorWithoutCache() throws Exception {
+                try {
+                    
+                        tckTModel.saveJoePublisherTmodel(authInfoJoe);
+                        tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessService.saveJoePublisherService(authInfoJoe);
+                        tckBindingTemplate.saveBinding(authInfoJoe, "uddi_data/joepublisher/bindingTemplate.xml", JOE_BINDING_KEY, false);
+
+                        //create a client using invm transport
+                        UDDIClientContainer.removeAll();
+                        UDDIClient.clearServiceLocatorCaches();
+                        UDDIClient c = new UDDIClient("META-INF/uddi.xml");
+                        ServiceLocator serviceLocator = c.getServiceLocator("joe");
+                        serviceLocator.clearCaches();
+                        //serviceLocator.withSimpleCache();
+                        String lookupEndpoint = serviceLocator.lookupEndpoint(TckBusinessService.JOE_SERVICE_KEY);
+                        String lookupEndpoint2 = serviceLocator.lookupEndpoint(TckBusinessService.JOE_SERVICE_KEY);
+                        
+                        System.out.println(TckCommon.DumpAllServices(authInfoJoe, c.getTransport("default").getUDDIInquiryService()));
+                        Assert.assertEquals(lookupEndpoint, lookupEndpoint2);
+                } finally {
+                        tckBusinessService.deleteJoePublisherService(authInfoJoe);
+                        tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+                }
+         }
 }

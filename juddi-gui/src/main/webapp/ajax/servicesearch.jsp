@@ -73,7 +73,7 @@
 <script type="text/javascript">
     totalrecordsService=<%=ret.totalrecords%>;
     $("#totalrecordsService").text(totalrecordsService);
-    $("#offsetService").text(<%=offset%>);
+    $("#offsetService").val(<%=offset%>);
     $("#displayrecordsService").text (<%=ret.displaycount%>);
     refresh();
 </script>

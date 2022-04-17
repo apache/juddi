@@ -2,6 +2,37 @@ Title: Security Advisories
 
 ## Security Advisories for Apache jUDDI
 
+### CVEID [CVE-2021-37578](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-37578)
+
+VERSION:  older than 3.3.10
+
+PROBLEMTYPE: Remote Code Execution
+
+REFERENCES: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-37578
+
+DESCRIPTION: Apache jUDDI uses several classes related to Java's Remote Method Invocation (RMI) which (as an extension to UDDI) provides an alternate transport for accessing UDDI services.
+
+RMI uses the default Java serialization mechanism to pass parameters in RMI invocations. A remote attacker can send a malicious serialized object to the above RMI entries. The objects get deserialized without any check on the incoming data. In the worst case, it may let the attacker run arbitrary code remotely. 
+
+For both jUDDI web service applications and jUDDI clients, the usage of RMI is disabled by default. Since this is an optional feature and an extension to the UDDI protocol, the likelihood of impact is low. Starting with 3.3.10, all RMI related code was removed.
+
+Severity: Low
+
+Mitigation:
+
+jUDDI Clients, disable RMITransports (found in uddi.xml) and use alternate transports such as HTTPS.
+jUDDI Server (juddiv3.war/WEB-INF/classes/juddiv3.xml), disable JNDI and RMI settings in juddiv3.xml.
+The appropriate settings are located below in xpath style notation.
+
+    juddi/jndi/registration=false
+    juddi/rmi/registration=false
+	
+If the settings are not present, then JNDI and RMI are already disabled. This is the default setting.
+
+Credit:
+
+Artem Smotrakov
+
 ### CVEID  [CVE-2018-1307](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-1307)
 
 VERSION:  3.2 through 3.3.4

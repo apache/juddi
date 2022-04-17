@@ -29,9 +29,11 @@ function reloadTmodelModal()
 
 /**
  *This launches the tModel model div, upon return (and if not abprted), the contents of the div parameter will be replaced with the 
- *first selected tModel
+ *first selected tModel key
+ *divDisplayName if defined, is the display name for the tModel
+ *
  */
-function tModelModal(div){
+function tModelModal(div, divDisplayName){
     $(div).focus();
     //reset the form in case it was lanucheed more than once per page view
     reloadTmodelModal();
@@ -45,7 +47,10 @@ function tModelModal(div){
                 
             else{
                 //alert('Result: ' + result.join());
-                $("#" + div).html(result[0]);
+                $("#" + div).text(result[0]);
+                if (divDisplayName) {
+                    $("#" + divDisplayName).text(result[1]);
+                }
             }
         //    return false;
         }
@@ -86,10 +91,15 @@ $.dialogTmodel = {
             $(".modalableTmodel").each(function()
             {
                 var id=$(this).attr("id");
+                var displayName=$(this).attr("value");
                 if ($(this).is(':checked')) {
                     selectedtmodels.push(
                         id
                         );
+                    selectedtmodels.push(
+                        displayName
+                        );
+                
                 }
             }); 
             

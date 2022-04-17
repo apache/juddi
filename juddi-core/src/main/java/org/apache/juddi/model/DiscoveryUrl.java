@@ -22,6 +22,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -75,6 +76,7 @@ public class DiscoveryUrl implements java.io.Serializable {
 		this.useType = useType;
 	}
 
+        @Lob
 	@Column(name = "url", nullable = false, length=4096)
 	public String getUrl() {
 		return this.url;

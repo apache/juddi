@@ -22,6 +22,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -79,6 +80,7 @@ public class Email implements java.io.Serializable {
 		this.useType = useType;
 	}
 
+        @Lob
 	@Column(name = "email_address", nullable = false, length=4096)
 	public String getEmailAddress() {
 		return this.emailAddress;

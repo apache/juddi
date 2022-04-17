@@ -27,7 +27,7 @@ under the License.
 	<packaging>pom</packaging>
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>juddi-parent</artifactId>
-	<version>3.3.8-SNAPSHOT</version>
+	<version>3.3.11-SNAPSHOT</version>
 	<name>jUDDI_v3 Parent</name>
 	<description>jUDDI (pronounced "Judy") is an open source Java
         implementation of the Universal Description, Discovery, and
@@ -39,13 +39,12 @@ under the License.
 	</prerequisites>
 
 	<properties>
-		<javadoc.extra.settings />
 		<sourceReleaseAssemblyDescriptor>source-release</sourceReleaseAssemblyDescriptor>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<cxf.version>3.3.4</cxf.version>
-		<springframework.version>5.2.3.RELEASE</springframework.version>
-		<apache.tomcat.version>9.0.30</apache.tomcat.version>
+		<springframework.version>5.2.4.RELEASE</springframework.version>
+		<apache.tomcat.version>9.0.37</apache.tomcat.version>
 		<jacoco.it.execution.data.file>${project.build.directory}/coverage-reports/jacoco-it.exec</jacoco.it.execution.data.file>
 		<jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file>
 		<timestamp>${maven.build.timestamp}</timestamp>
@@ -247,14 +246,15 @@ under the License.
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
-                    <version>3.6</version>
+                    <version>3.9.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.3.0</version>
 					<configuration>
 						<aggregate>true</aggregate>
-						<additionalparam>${javadoc.extra.settings}</additionalparam>
+						<doclint>none</doclint>
 					</configuration>
 					<executions>
 						<execution>
@@ -555,7 +555,12 @@ under the License.
 		<plugins>
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.3</version>
+				<version>3.2.0</version>
+				<configuration>
+					<doclint>none</doclint>
+				</configuration>
+				
+				
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -859,13 +864,13 @@ under the License.
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-core</artifactId>
-				<version>5.1.10.Final</version>
+				<version>5.4.18.Final</version>
 
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-entitymanager</artifactId>
-				<version>5.1.10.Final</version>
+				<version>5.4.18.Final</version>
 
 			</dependency>
 
@@ -926,7 +931,7 @@ under the License.
 		<repository>
 			<id>jboss</id>
 			<name>JBoss Repository</name>
-			<url>http://repository.jboss.org/nexus/content/groups/public</url>
+			<url>https://repository.jboss.org/nexus/content/groups/public</url>
 			<layout>default</layout>
 		</repository>
 
@@ -934,6 +939,13 @@ under the License.
 			<id>central</id>
 			<name>Maven Central Repository</name>
 			<url>https://repo1.maven.org/maven2</url>
+			<layout>default</layout>
+		</repository>
+                
+		<repository>
+			<id>central1</id>
+			<name>Maven Central Repository</name>
+			<url>https://repo.maven.org/maven2</url>
 			<layout>default</layout>
 		</repository>
 		<repository>
@@ -946,6 +958,55 @@ under the License.
 
 
 	<profiles>
+		<profile>
+			<id>prepare-site</id>
+			<activation>
+				<file>
+					<exists>src/site/site.xml</exists>
+				</file>
+			</activation>
+			<build>
+				<plugins>
+					 <plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-antrun-plugin</artifactId>
+							<dependencies>
+								<!-- force the juddi docs module to build -->
+								<dependency>
+									<groupId>org.apache.juddi.juddi-docs</groupId>
+									<artifactId>juddi-docs</artifactId>
+									<version>${project.version}</version>
+									<type>pom</type>
+								</dependency>
+																	
+							</dependencies>
+							<executions>
+								<execution>
+								  <phase>site</phase>
+								  <configuration>
+									<target>
+										
+										
+										<copy todir="target/site/docs/3.3/juddi-client-guide/">
+											<fileset dir="docs/asciidoc/ClientGuide/target/docbook/publish/en-US" />
+										  </copy>
+										  
+										  <copy todir="target/site/docs/3.3/juddi-guide/">
+											<fileset dir="docs/asciidoc/Guide/target/docbook/publish/en-US" />
+										  </copy>
+										
+									</target>
+								  </configuration>
+								  <goals>
+									<goal>run</goal>
+								  </goals>
+								</execution>
+							  </executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		
 		<profile>
 			<id>doclint-java8-disable</id>
 			<activation>
@@ -1017,7 +1078,7 @@ under the License.
 					<plugin>
 						<inherited>true</inherited>
 						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-deploy-plugin</artifactId>
+						<artifactId>maven-deploy-plugin</artifactId> 
 						<configuration>
 							<updateReleaseInfo>true</updateReleaseInfo>
 						</configuration>
@@ -1053,6 +1114,7 @@ under the License.
 						<configuration>
 							<excludes>
 								<exclude>**/*.nupkg</exclude>
+								<exclude>.github/**/*.*</exclude>
 								<exclude>**/*.psd</exclude>
 								<exclude>**/*.ddl</exclude>
 								<exclude>Doxyfile</exclude>

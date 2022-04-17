@@ -73,7 +73,7 @@ public class ReplicationConfiguration implements Serializable {
          * Gets the value of the serialNumber property.
          *
          */
-        @Column(name = "serialnumb")
+        @Column(name = "serno")
         @OrderBy(value = "SerialNumber DESC")
         @Id
         public Long getSerialNumber() {
@@ -206,7 +206,10 @@ public class ReplicationConfiguration implements Serializable {
         }
 
         // @OneToMany( fetch = FetchType.LAZY,targetEntity = Edge.class, mappedBy = "Edge")
-        @OneToMany(targetEntity = Edge.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+        @OneToMany(targetEntity = Edge.class, 
+                fetch = FetchType.LAZY, cascade = CascadeType.ALL
+                //mappedBy = "j3_edge"
+                )
         public List<Edge> getEdge() {
                 return this.edge;
         }

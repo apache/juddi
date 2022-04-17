@@ -52,19 +52,7 @@
 				<subscriptionListenerUrl>org.apache.juddi.api.impl.UDDISubscriptionListenerImpl</subscriptionListenerUrl>
 				<juddiApiUrl>org.apache.juddi.api.impl.JUDDIApiImpl</juddiApiUrl>
 				-->
-				<!-- RMI Transport Settings 
-				<proxyTransport>org.apache.juddi.v3.client.transport.RMITransport</proxyTransport>
-				<custodyTransferUrl>/juddiv3/UDDICustodyTransferService</custodyTransferUrl>
-				<inquiryUrl>/juddiv3/UDDIInquiryService</inquiryUrl>
-		        <publishUrl>/juddiv3/UDDIPublicationService</publishUrl>
-		        <securityUrl>/juddiv3/UDDISecurityService</securityUrl>
-				<subscriptionUrl>/juddiv3/UDDISubscriptionService</subscriptionUrl>
-				<subscriptionListenerUrl>/juddiv3/UDDISubscriptionListenerService</subscriptionListenerUrl>
-				<juddiApiUrl>/juddiv3/JUDDIApiService</juddiApiUrl>
-				<javaNamingFactoryInitial>org.jnp.interfaces.NamingContextFactory</javaNamingFactoryInitial>
-				<javaNamingFactoryUrlPkgs>org.jboss.naming</javaNamingFactoryUrlPkgs>
-				<javaNamingProviderUrl>jnp://localhost:1099</javaNamingProviderUrl>
-				-->
+				
 			</node>
 			<node>
 				<name>med</name>

@@ -1037,11 +1037,13 @@ public class UddiHub implements Serializable {
                                         throw ex;
                                 }
                         }
-                        return ResourceLoader.GetResource(session, "actions.saved") + " "
-                             + "<a href=\"serviceEditor.jsp?id=" + URLEncoder.encode(saveService.getBusinessService().get(0).getServiceKey(), "UTF8")
-                             + "\">" + StringEscapeUtils.escapeHtml(saveService.getBusinessService().get(0).getServiceKey()) + "</a>";
+                    return ResourceLoader.GetResource(session, "actions.saved") + " "
+                            + " <script type=\"text/javascript\">window.location.href='"
+                            + StringEscapeUtils.escapeJavaScript("serviceEditor.jsp?id=" + URLEncoder.encode(saveService.getBusinessService().get(0).getServiceKey(), "UTF8")) + "';</script>"
+                            + "<a href=\"serviceEditor.jsp?id=" + URLEncoder.encode(saveService.getBusinessService().get(0).getServiceKey(), "UTF8")
+                            + "\">" + StringEscapeUtils.escapeHtml(saveService.getBusinessService().get(0).getServiceKey()) + "</a>";
                 } catch (Exception ex) {
-                        return HandleException(ex);
+                    return HandleException(ex);
                 }
         }
 
@@ -1071,6 +1073,8 @@ public class UddiHub implements Serializable {
                         }
 
                         return ResourceLoader.GetResource(session, "actions.saved") + " "
+                             + " <script type=\"text/javascript\">window.location.href='"+ 
+                                StringEscapeUtils.escapeJavaScript("businessEditor2.jsp?id=" + URLEncoder.encode(saveBusiness.getBusinessEntity().get(0).getBusinessKey(), "UTF8")) + "';</script>"
                              + "<a href=\"businessEditor2.jsp?id=" + URLEncoder.encode(saveBusiness.getBusinessEntity().get(0).getBusinessKey(), "UTF8")
                              + "\">" + StringEscapeUtils.escapeHtml(saveBusiness.getBusinessEntity().get(0).getBusinessKey()) + "</a>";
                 } catch (Exception ex) {
@@ -2239,7 +2243,9 @@ public class UddiHub implements Serializable {
                                 }
                         }
                         //return ResourceLoader.GetResource(session, "actions.saved");
-                        return ResourceLoader.GetResource(session, "actions.saved") + " "
+                        return ResourceLoader.GetResource(session, "actions.saved") + 
+                                " <script type=\"text/javascript\">window.location.href='"+
+                                StringEscapeUtils.escapeJavaScript("tmodelEditor.jsp?id=" + URLEncoder.encode(saveTModel.getTModel().get(0).getTModelKey(), "UTF8")) + "';</script>"
                              + "<a href=\"tmodelEditor.jsp?id=" + URLEncoder.encode(saveTModel.getTModel().get(0).getTModelKey(), "UTF8")
                              + "\">" + StringEscapeUtils.escapeHtml(saveTModel.getTModel().get(0).getTModelKey()) + "</a>";
                 } catch (Exception ex) {
@@ -3950,5 +3956,15 @@ public class UddiHub implements Serializable {
                 List<String> x = new ArrayList<String>();
                 x.add(id.trim());
                 return deleteBinding(x);
+        }
+        
+        public String getTmodelDisplayName(String id) {
+            TModel tmodel = GettModelDetailsAsObject(id);
+            if (tmodel!=null &&
+                    tmodel.getName()!=null &&
+                    tmodel.getName().getValue()!=null) {
+                return tmodel.getName().getValue();
+            }
+            return "";
         }
 }

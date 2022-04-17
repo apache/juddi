@@ -12,7 +12,7 @@ language governing permissions and * limitations under the License. * */ -->
     <parent>
         <groupId>org.apache.juddi</groupId>
         <artifactId>juddi-parent</artifactId>
-        <version>3.3.8-SNAPSHOT</version>
+        <version>3.3.11-SNAPSHOT</version>
     </parent>
     <artifactId>uddi-client-dist</artifactId>
     <name>UDDI Client Distribution Assembly</name>
@@ -54,6 +54,7 @@ language governing permissions and * limitations under the License. * */ -->
             <groupId>org.apache.juddi</groupId>
             <artifactId>uddi-migration-tool</artifactId>
             <version>${project.parent.version}</version>
+			<classifier>jar-with-dependencies</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.juddi</groupId>

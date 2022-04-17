@@ -25,14 +25,14 @@
 
 <div class="container">
 
-    <!-- Main hero unit for a primary marketing message or call to action -->
+    
     <div class="hero-unit">
         <h1>jUDDI</h1>
         <p><%=ResourceLoader.GetResource(session, "index.juddi")%></p>
         <p><a href="http://juddi.apache.org" class="btn btn-primary btn-large"><%=ResourceLoader.GetResource(session, "learnmore")%> &raquo;</a></p>
     </div>
 
-    <!-- Example row of columns -->
+    
     <div class="row">
         <div class="span4">
             <h2><%=ResourceLoader.GetResource(session, "index.browse.title")%></h2>

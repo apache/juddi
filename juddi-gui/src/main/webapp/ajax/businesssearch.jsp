@@ -29,7 +29,7 @@
     
     UddiHub x = UddiHub.getInstance(application, request.getSession());
     int offset = 0;
-    int maxrecords = 20;
+    int maxrecords = 1000;
     String lang = request.getParameter("lang");
     if (lang == null || lang.length() == 0) {
         lang = null;
@@ -54,8 +54,8 @@
     }
     try {
         maxrecords = Integer.parseInt(request.getParameter("maxrecords"));
-        if (maxrecords <= 0 || maxrecords > 50) {
-            maxrecords = 50;
+        if (maxrecords <= 0 || maxrecords > 1000) {
+            maxrecords = 1000;
         }
     } catch (Exception ex) {
     }
@@ -74,7 +74,7 @@
 <script type="text/javascript">
     totalrecordsBusiness=<%=ret.totalrecords%>;
     $("#totalrecordsBusiness").text(totalrecordsBusiness);
-    $("#offsetBusiness").text(<%=offset%>);
+    $("#offsetBusiness").val(<%=offset%>);
     $("#displayrecordsBusiness").text (<%=ret.displaycount%>);
     refresh();
 </script>

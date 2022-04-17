@@ -38,30 +38,18 @@
     } else {
         long totalsuccess = 0;
         long totalfailures = 0;
-        String[] domains = mbserver.getDomains();
-        for (int i = 0; i < domains.length; i++) {
-            //              out.write(domains[i] + "<br>");
-        }
+       
         ObjectName juddi = new ObjectName("apache.juddi:counter=*");
         juddi.setMBeanServer(mbserver);
         Set<ObjectName> beans = mbserver.queryNames(juddi, null);
         Iterator<ObjectName> it = beans.iterator();
         while (it.hasNext()) {
             ObjectName n = it.next();
-            //   out.write(n.getCanonicalName() + " ");
-            //                out.write(n.getKeyPropertyListString() + "<Br>");
-            Hashtable<String, String> props = n.getKeyPropertyList();
-            Iterator<Entry<String, String>> it2 = props.entrySet().iterator();
-            while (it2.hasNext()) {
-                Entry<String, String> e = it2.next();
-//                        out.write("key = " + e.getKey() + "<br>");
-                //                      out.write("value = " + e.getValue() + "<br>");
-            }
+         
             AttributeList j = (AttributeList) mbserver.getAttributes(n, new String[]{"counter"});
             for (int k = 0; k < j.size(); k++) {
                 String attr = j.get(k).toString();
                 String[] kv = attr.split("=");
-                //out.write("attr = " + kv[0] + " value = " + kv[1] + "<br>");
                 data.put(kv[0], kv[1]);
                 if (kv[0].toLowerCase().contains("success")) {
                    totalsuccess+= Long.parseLong(kv[1].trim());
@@ -71,18 +59,11 @@
                 }
             }
 
-            // out.write(j.getClass().getCanonicalName() + "<br>");
         }
         data.put("totalsuccess", totalsuccess);
         data.put("totalfailures", totalfailures);
     }
-    //  out.write("<br>");
-    //  out.write("<br>");
-    //    out.write("<br>");
-    //  List<MemoryPoolMXBean> memPoolBeans = ManagementFactory.getMemoryPoolMXBeans();
-    // for (MemoryPoolMXBean mpb : memPoolBeans) {
-    //    out.write("Memory Pool: " + mpb.getName() + "<br>");
-    //}
+   
 
     out.write(new org.json.JSONObject(data).toString());
 %>

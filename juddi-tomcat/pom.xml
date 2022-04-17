@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.apache.juddi</groupId>
         <artifactId>juddi-parent</artifactId>
-        <version>3.3.8-SNAPSHOT</version>
+        <version>3.3.11-SNAPSHOT</version>
     </parent>
     <artifactId>juddi-tomcat</artifactId>
     <name>jUDDI Tomcat Packaging</name>
@@ -84,6 +84,13 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
         </dependency>
+        <dependency>
+                <groupId>com.microsoft.sqlserver</groupId>
+                <artifactId>mssql-jdbc</artifactId>
+                <version>8.2.2.jre8</version>
+        </dependency>
+      
+
                                     
     </dependencies>
     <build>
@@ -134,6 +141,8 @@
                                 <property name="dependency.log4j.jar" value="${maven.dependency.log4j.log4j.jar.path}" />
                                 <property name="dependency.mysql.jar" value="${maven.dependency.mysql.mysql-connector-java.jar.path}" />
                                 <property name="dependency.postgres.jar" value="${maven.dependency.org.postgresql.postgresql.jar.path}" />
+                                <property name="dependency.mssql.jar" value="${maven.dependency.com.microsoft.sqlserver.mssql-jdbc.jar.path}" />
+                                  
                                 <property name="dependency.commons-discovery.jar" value="${maven.dependency.commons-discovery.commons-discovery.jar.path}" />
                                 <property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}" />
                                 <property name="dependency.tomcat.zip" value="${maven.dependency.org.apache.tomcat.tomcat.zip.path}" />

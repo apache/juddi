@@ -23,6 +23,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -89,6 +90,7 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 		this.accessPointType = accessPointType;
 	}
 
+        @Lob
 	@Column(name = "access_point_url", length = 4096)
 	public String getAccessPointUrl() {
 		return this.accessPointUrl;

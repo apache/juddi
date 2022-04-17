@@ -19,6 +19,7 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.namespace.QName;
 
@@ -46,7 +47,7 @@ import org.uddi.api_v3.BusinessService;
  */
 public class ServiceLocator {
 	
-	private Log log = LogFactory.getLog(this.getClass());
+	private static final Log log = LogFactory.getLog(ServiceLocator.class);
 	
 	private UDDIClerk clerk;
 	private Properties properties = new Properties();
@@ -54,7 +55,7 @@ public class ServiceLocator {
 	private String policy = null;
 	private SelectionPolicy selectionPolicy = null;
 	private URLLocalizer urlLocalizer = null;
-	
+	private ConcurrentHashMap<String, Topology> simpleCache= null;
 	/**
 	 * Requirement in the config is a clerk with access credentials to the UDDI server
 	 * you want the locator to do lookups to. When a live cache is used the clerk
@@ -80,6 +81,14 @@ public class ServiceLocator {
                         this.properties = clerk.getUDDINode().getProperties();
 	}
 	
+        /**
+	 * Creates a new UDDIServiceCache, which brings up a new WebService Endpoint. This
+	 * EndPoint will be called by the UDDI server if any service changes. A callback
+	 * will result in cleaning the cache. 
+	 * 
+	 * @param baseCallbackURL
+	 * @throws ConfigurationException
+	 */
 	public ServiceLocator withCache(URL baseCallbackURL) throws ConfigurationException {
 		if (serviceCache == null) {
 			serviceCache = initCache(baseCallbackURL);
@@ -109,6 +118,14 @@ public class ServiceLocator {
 		}
 		return this;
 	}
+        
+        
+        public ServiceLocator withSimpleCache(){
+                if (simpleCache==null){
+                       simpleCache= new ConcurrentHashMap<String, Topology>();
+                }
+                return this;
+        }
 	
 	public UDDIServiceCache getUDDIServiceCache() {
 		return serviceCache;
@@ -174,6 +191,13 @@ public class ServiceLocator {
 			throw new ConfigurationException(e.getMessage(),e);
 		}
 	}
+        
+        public void clearCaches(){
+                if (serviceCache!=null)
+                        serviceCache.removeAll();
+                if (simpleCache!=null)
+                        simpleCache.clear();
+        }
 	
 	/**
 	 * 
@@ -182,7 +206,8 @@ public class ServiceLocator {
 	 * @throws TransportException
 	 */
 	public void shutdown() throws RemoteException, ConfigurationException, TransportException {
-		serviceCache.shutdown();
+                if (serviceCache!=null)
+                        serviceCache.shutdown();
 	}
 	/**
 	 * Looks up the Endpoints for a Service. If the cache is in use it will try to 
@@ -199,21 +224,25 @@ public class ServiceLocator {
 	 */
 	public String lookupEndpoint(String serviceKey) throws RemoteException, ConfigurationException, TransportException {
 		Topology topology = null;
-		if (serviceCache==null) { //nocache in use
+                if (simpleCache != null && simpleCache.containsKey(serviceKey)){
+                        topology = simpleCache.get(serviceKey);
+                } else if (serviceCache==null) { //nocache in use
 			topology = lookupEndpointInUDDI(serviceKey);
 		} else { //with cache
 			//try to get it from the cache first
 			topology = serviceCache.lookupService(serviceKey);
-			if (topology==null) { //not found in the cache
+			if (topology == null) { //not found in the cache
 				topology = lookupEndpointInUDDI(serviceKey);
 			}
 		}
-	    if (topology!=null && topology.getEprs().size() > 0) {
-	    	String epr = getPolicy().select(topology);
-	    	return epr;
-	    } else {
-	    	return null;
-	    }
+                if (topology!=null && topology.getEprs().size() > 0) {
+                        if (simpleCache!=null){
+                                simpleCache.put(serviceKey,topology);
+                        }
+                        String epr = getPolicy().select(topology);
+                        return epr;
+                } 
+                return null;
 	}
 	
 	/** 
@@ -264,11 +293,13 @@ public class ServiceLocator {
 						log.debug("epr= " + url);
 						eprs.add(url);
 					} else if(AccessPointType.WSDL_DEPLOYMENT.toString().equals(accessPoint.getUseType())) {
-					//do something here
-                                            //try to open that wsdl, then grab the endpoints
+                                                //do something here
+                                                //try to open that wsdl, then grab the endpoints
+                                                //String url=fetchFromWsdl(accessPoint.getValue());
+                                              
 					}  else if(AccessPointType.BINDING_TEMPLATE.toString().equals(accessPoint.getUseType())) {
-					//do something here
-                                            //grab that binding template and use that address
+                                                //do something here
+                                                //grab that binding template and use that address
 					}
                                                 }
 				}
@@ -282,7 +313,6 @@ public class ServiceLocator {
 		}
 		return topology;
 	}
-	
 	
 	
 }

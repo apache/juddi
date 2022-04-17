@@ -37,7 +37,7 @@ public class ReplicationConfigurationNode implements Serializable {
         private static final long serialVersionUID = 1L;
         private Long id;
         private ReplicationConfiguration parent;
-        String rx;
+        private String rx;
 
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)

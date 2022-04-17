@@ -35,13 +35,15 @@ this page is meant to be included via jsp:include
                <table>
                   <tr><td><%=ResourceLoader.GetResource(session, "totals.records")%></td><td><span id="totalrecords"></span></td></tr>
                   <tr><td><%=ResourceLoader.GetResource(session, "totals.recordsreturned")%></td><td><span id="displayrecords"></span></td></tr>
-                  <tr><td><%=ResourceLoader.GetResource(session, "totals.offset")%></td><td><span id="offset">0</span></td></tr>
+                  <tr><td title="<%=ResourceLoader.GetResource(session, "totals.offset.v2disclaimer")%>">
+                                    <%=ResourceLoader.GetResource(session, "totals.offset")%></td><td><input type="number" id="offset" value="0"></td></tr>
                </table>
             </td>
             <td>
                <table>
                   <tr><td><%=ResourceLoader.GetResource(session, "items.name")%></td><td><input type="text" id="name_tmodel" value="%"></td></tr>
                   <tr><td><%=ResourceLoader.GetResource(session, "items.lang")%></td><td><input type="text" id="lang_tmodel" value=""></td></tr>
+                  <tr><td><%=ResourceLoader.GetResource(session, "totals.fetch")%></td><td><input type="number" id="fetch" value="40"></td></tr>
                </table>
             </td>
             

@@ -169,9 +169,9 @@ public class TckPublisher {
                 return "true".equalsIgnoreCase(x);
         }
 
+        @Deprecated
         public static boolean isRMI() {
-                String x = tckProperties.getProperty("rmi.enabled");
-                return "true".equalsIgnoreCase(x);
+                return false;
         }
 
         public static boolean isLoadTest() {
