@@ -35,7 +35,9 @@ import org.apache.commons.codec.binary.Base64;
  * using 3DES
  *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
+ * @deprecated  to be removed
  */
+@Deprecated
 public class DES {
 
         private static final String UNICODE_FORMAT = "UTF8";

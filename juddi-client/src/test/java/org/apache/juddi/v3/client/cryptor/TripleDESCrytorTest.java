@@ -22,7 +22,9 @@ import static org.junit.Assert.*;
 /**
  *
  * @author Alex O'Ree
+ * @deprecated 
  */
+@Deprecated
 public class TripleDESCrytorTest {
         
         public TripleDESCrytorTest() {
