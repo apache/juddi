@@ -94,7 +94,7 @@ jobs:
       run: sudo apt-get install -y icedtea-netx
 
     - name: javabuild
-      run: mvn -B install -Pdist -DskipTests=true
+      run: mvn -B install -DskipTests=true
       
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
