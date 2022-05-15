@@ -21,7 +21,7 @@ on:
     - cron: '34 23 * * 6'
 
 jobs:
-  name: Build with CI tests
+    name: Build with CI tests
     runs-on: ubuntu-latest
     permissions:
       actions: read
