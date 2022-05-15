@@ -32,7 +32,9 @@ import org.apache.commons.codec.binary.Base64;
 /**
  * Triple DES, 168 bit key
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
+ * @deprecated use better crypto
  */
+@Deprecated
 public class TripleDESCrytor implements Cryptor {
 
     private static final String UNICODE_FORMAT = "UTF8";
