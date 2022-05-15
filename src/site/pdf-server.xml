@@ -21,7 +21,7 @@ under the License.
 outputName="juddi-server-guide" xmlns="http://maven.apache.org/DOCUMENT/1.0.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 <meta>
 <title>Apache jUDDI Server Guide</title>
-<author>Alex O'Ree</author>
+<author>Apache Software Foundation</author>
 </meta>
 <!-- depth of the TOC can be controlled by adding a depth attribute-->
 <toc name="Table of Contents">
@@ -51,7 +51,7 @@ outputName="juddi-server-guide" xmlns="http://maven.apache.org/DOCUMENT/1.0.1" x
 <projectLogo>images\logo.png</projectLogo>
 <companyName>The Apache Software Foundation</companyName>
 <companyLogo>http://www.apache.org/images/asf_logo_wide.png</companyLogo>
-<author>Alex O'Ree, alexoree@apache.org</author>
+<author>Apache jUDDI Team</author>
 </cover>
 </document>
 

@@ -472,11 +472,11 @@ under the License.
 			<plugin>
 				<groupId>com.github.spyhunter99</groupId>
 				<artifactId>maven-pdf-plugin</artifactId>
-				<version>1.5.0.5</version>
+				<version>1.5.0.8</version>
 				<executions>
 					<execution>
 					  <id>pdf-user</id>
-					  <phase>site</phase>
+					  <phase>compile</phase>
 					  <goals>
 						<goal>pdf</goal>
 					  </goals>
@@ -509,7 +509,7 @@ under the License.
 					</execution>
 					<execution>
 					  <id>pdf-server</id>
-					  <phase>site</phase>
+					  <phase>compile</phase>
 					  <goals>
 						<goal>pdf</goal>
 					  </goals>
@@ -528,7 +528,7 @@ under the License.
 						<distributionStatement>DISTRIBUTION STATEMENT: Feel free to give this document to anyone you will take it.</distributionStatement>
 							-->
 						<!-- optional, these header/footer definitions are used on all pages exception the title page -->
-						<pdfFooter>Apache jUDDI
+						<pdfFooter>Apache jUDDI - https://juddi.apache.org
 							Version ${project.version} 
 							${timestamp}</pdfFooter>
 						<pdfHeader>Apache jUDDI
@@ -985,85 +985,53 @@ under the License.
 			</modules>
 			<build>
 				<plugins>
-				
-				<plugin>
-					<groupId>com.github.spyhunter99</groupId>
-					<artifactId>maven-pdf-plugin</artifactId>
-					<version>1.5.0.8</version>
-					<inherited>false</inherited>
-					<executions>
-						<execution>
-						  <id>pdf-client</id>
-						  <phase>prepare-package</phase>
-						  <goals>
-							<goal>pdf</goal>
-						  </goals>
-						  <configuration>
-							<outputDirectory>${project.reporting.outputDirectory}</outputDirectory>
-							<includeReports>false</includeReports>
-							<docDescriptor>src/site/pdf-client.xml</docDescriptor>
-							
-							<!-- optional, the title of a doc defined in pdf-user that is rendered before the TOC 
-							<executiveSummaryName>EXSUM</executiveSummaryName>-->
-							<!-- optional, a header only on the title page
-							<titleHeader>A custom header only on the title pages</titleHeader>-->
-							
-							<!-- optional, the distribution statement is printed on the title page towards the bottom, common use case:
-									confidentiality statements, limited distribution, legalese and other mumbo jumbo.
-							<distributionStatement>DISTRIBUTION STATEMENT: Feel free to give this document to anyone you will take it.</distributionStatement>-->
+					
+					<plugin>
+						<groupId>com.github.spyhunter99</groupId>
+						<artifactId>maven-pdf-plugin</artifactId>
+						<version>1.5.0.8</version>
+						<inherited>false</inherited>
+						<executions>
+							<execution>
+							  <id>pdf-client</id>
+							  <phase>prepare-package</phase>
+							  <goals>
+								<goal>pdf</goal>
+							  </goals>
+							  <configuration>
+								<outputDirectory>${project.reporting.outputDirectory}</outputDirectory>
+								<includeReports>false</includeReports>
+								<docDescriptor>src/site/pdf-client.xml</docDescriptor>
 								
-							<!-- optional, these header/footer definitions are used on all pages exception the title page -->
-							<pdfFooter>Version ${project.version} 
-								${timestamp}</pdfFooter>
-							<pdfHeader>jUDDI Client Guide</pdfHeader>
 								
-							<!-- optional, the cover page can have a pom defined date too 
-							<pdfCoverDate>1970-1-1</pdfCoverDate>-->
-							
-							<!-- optional, the max depth of the TOC -->
-							<tocMaxDepthToPrint>4</tocMaxDepthToPrint>
-							<!-- optional, you can override any of the colors, fonts, padding etc with your own file here 
-							<foStylesOverride>src/main/resources/fo-styles_1.xslt</foStylesOverride>-->
-						  </configuration>
-						</execution>
-						
-						<execution>
-						  <id>pdf-server</id>
-						  <phase>prepare-package</phase>
-						  <goals>
-							<goal>pdf</goal>
-						  </goals>
-						  <configuration>
-							<outputDirectory>${project.reporting.outputDirectory}</outputDirectory>
-							<includeReports>false</includeReports>
-							<docDescriptor>src/site/pdf-server.xml</docDescriptor>
-							
-							<!-- optional, the title of a doc defined in pdf-user that is rendered before the TOC 
-							<executiveSummaryName>EXSUM</executiveSummaryName>-->
-							<!-- optional, a header only on the title page
-							<titleHeader>A custom header only on the title pages</titleHeader>-->
-							
-							<!-- optional, the distribution statement is printed on the title page towards the bottom, common use case:
-									confidentiality statements, limited distribution, legalese and other mumbo jumbo.
-							<distributionStatement>DISTRIBUTION STATEMENT: Feel free to give this document to anyone you will take it.</distributionStatement>-->
+								<pdfFooter>Version ${project.version} 
+									${timestamp}</pdfFooter>
+								<pdfHeader>jUDDI Client Guide</pdfHeader>
 								
-							<!-- optional, these header/footer definitions are used on all pages exception the title page -->
-							<pdfFooter>Version ${project.version} 
-								${timestamp}</pdfFooter>
-							<pdfHeader>jUDDI Server Guide</pdfHeader>
-								
-							<!-- optional, the cover page can have a pom defined date too 
-							<pdfCoverDate>1970-1-1</pdfCoverDate>-->
+							  </configuration>
+							</execution>
 							
-							<!-- optional, the max depth of the TOC -->
-							<tocMaxDepthToPrint>4</tocMaxDepthToPrint>
-							<!-- optional, you can override any of the colors, fonts, padding etc with your own file here 
-							<foStylesOverride>src/main/resources/fo-styles_1.xslt</foStylesOverride>-->
-						  </configuration>
-						</execution>
-					  
-					</executions>
-				</plugin>
+							<execution>
+							  <id>pdf-server</id>
+							  <phase>prepare-package</phase>
+							  <goals>
+								<goal>pdf</goal>
+							  </goals>
+							  <configuration>
+								<outputDirectory>${project.reporting.outputDirectory}</outputDirectory>
+								<includeReports>false</includeReports>
+								<docDescriptor>src/site/pdf-server.xml</docDescriptor>
+								
+								<pdfFooter>Version ${project.version} 
+									${timestamp}</pdfFooter>
+								<pdfHeader>jUDDI Server Guide</pdfHeader>
+									
+								
+							  </configuration>
+							</execution>
+						  
+						</executions>
+					</plugin>
 				
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -1082,7 +1050,7 @@ under the License.
 							</execution>
 						</executions>
 					</plugin>
-					
+					<!--
 					<plugin>
 						<groupId>com.coderplus.maven.plugins</groupId>
 						<artifactId>copy-rename-maven-plugin</artifactId>
@@ -1124,7 +1092,7 @@ under the License.
 							</execution>
 						</executions>
 					</plugin>
-					
+					-->
 					
 					
 					<!-- Create a source-release artifact that contains the fully buildable 
