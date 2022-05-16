@@ -105,6 +105,7 @@
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
+			<scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -116,11 +117,13 @@
                     <artifactId>cglib</artifactId>
                 </exclusion>
             </exclusions>
+			<scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>4.3.6.Final</version>
+			<scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>cglib</groupId>
