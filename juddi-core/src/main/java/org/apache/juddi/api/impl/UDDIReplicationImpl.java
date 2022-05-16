@@ -1203,6 +1203,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                         serviceCounter.update(ReplicationQuery.GET_HIGHWATERMARKS, QueryStatus.SUCCESS, procTime);
 
                 } catch (Exception drfm) {
+                        logger.fatal("Error, this node is: " + getNode(), drfm);
                         throw new FatalErrorException(new ErrorMessage("E_fatalError", drfm.getMessage()));
 
                 } finally {
