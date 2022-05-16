@@ -1187,17 +1187,22 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                         }
                                 }
                         }
-                        //dont forget this node
-                        Long id = (Long) em.createQuery("select (e.id) from ChangeRecord e where e.nodeID = :node  order by e.id desc")
-                                .setParameter("node", getNode()).setMaxResults(1).getSingleResult();
-                        if (id == null) {
-                                id = 0L;
-                        }
+                    //dont forget this node
+                        Query setMaxResults = em.createQuery("select (e.id) from ChangeRecord e where e.nodeID = :node  order by e.id desc")
+                                .setParameter("node", getNode()).setMaxResults(1);
+                        Long id =null;
+                        if (setMaxResults.getResultList().isEmpty()) {
+                            //this can happen at or near startup
+                            id = 0L;
+                        } else {
+                            id = (Long) em.createQuery("select (e.id) from ChangeRecord e where e.nodeID = :node  order by e.id desc")
+                                    .setParameter("node", getNode()).setMaxResults(1).getSingleResult();
+                        }    
                         ChangeRecordIDType x = new ChangeRecordIDType();
                         x.setNodeID(getNode());
                         x.setOriginatingUSN(id);
                         ret.add(x);
-
+                    
                         tx.rollback();
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(ReplicationQuery.GET_HIGHWATERMARKS, QueryStatus.SUCCESS, procTime);
