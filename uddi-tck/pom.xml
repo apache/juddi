@@ -218,7 +218,7 @@
 									<cargo.logging>high</cargo.logging>
 									<cargo.hostname>localhost</cargo.hostname>
 									<cargo.servlet.port>8880</cargo.servlet.port>
-									<cargo.jvmargs>-Xms256m -Xmx256m -XX:MaxPermSize=256M -Djava.endorsed.dirs=${basedir}/target/juddi-tomcat-${project.parent.version}/endorsed -Djavax.net.ssl.keyStore=${basedir}/../juddi-tomcat/keystore.jks -Djavax.net.ssl.keyStorePassword=password -Djavax.net.ssl.trustStore=${basedir}/../juddi-tomcat/truststore.jks -Djavax.net.ssl.trustStorePassword=password -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5000 -Xnoagent</cargo.jvmargs>
+									<cargo.jvmargs>-Xms256m -Djavax.xml.accessExternalSchema=all -Xmx256m -XX:MaxPermSize=256M -Djava.endorsed.dirs=${basedir}/target/juddi-tomcat-${project.parent.version}/endorsed -Djavax.net.ssl.keyStore=${basedir}/../juddi-tomcat/keystore.jks -Djavax.net.ssl.keyStorePassword=password -Djavax.net.ssl.trustStore=${basedir}/../juddi-tomcat/truststore.jks -Djavax.net.ssl.trustStorePassword=password -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5000 -Xnoagent</cargo.jvmargs>
 								</properties>
 							</configuration>
 						</configuration>
@@ -244,7 +244,7 @@
 									<cargo.logging>high</cargo.logging>
 									<cargo.hostname>localhost</cargo.hostname>
 									<cargo.servlet.port>8980</cargo.servlet.port>
-									<cargo.jvmargs>-Xms256m -Xmx256m -XX:MaxPermSize=256M -Djava.endorsed.dirs=${basedir}/target/node2/juddi-tomcat-${project.parent.version}/endorsed -Djavax.net.ssl.keyStore=${basedir}/../juddi-tomcat/keystore.jks -Djavax.net.ssl.keyStorePassword=password  -Djavax.net.ssl.trustStore=${basedir}/../juddi-tomcat/truststore.jks -Djavax.net.ssl.trustStorePassword=password -Xdebug  -Xnoagent</cargo.jvmargs>
+									<cargo.jvmargs>-Xms256m -Djavax.xml.accessExternalSchema=all -Xmx256m -XX:MaxPermSize=256M -Djava.endorsed.dirs=${basedir}/target/node2/juddi-tomcat-${project.parent.version}/endorsed -Djavax.net.ssl.keyStore=${basedir}/../juddi-tomcat/keystore.jks -Djavax.net.ssl.keyStorePassword=password  -Djavax.net.ssl.trustStore=${basedir}/../juddi-tomcat/truststore.jks -Djavax.net.ssl.trustStorePassword=password -Xdebug  -Xnoagent</cargo.jvmargs>
 								</properties>
 							</configuration>
 						</configuration>
@@ -312,6 +312,10 @@
 							<name>java.io.tmpdir</name>
 							<value>${basedir}/temp</value>
 						</property>
+                                                <property>
+                                                    <name>javax.xml.accessExternalSchema</name>
+                                                    <value>all</value>
+                                                </property>
 					</systemProperties>
 				</configuration>
 				<executions>
@@ -334,6 +338,10 @@
 									<name>java.io.tmpdir</name>
 									<value>${basedir}/temp</value>
 								</property>
+                                                                 <property>
+                                                                    <name>javax.xml.accessExternalSchema</name>
+                                                                    <value>all</value>
+                                                                </property>
 							</systemProperties>
 						</configuration>
 					</execution>
@@ -399,6 +407,10 @@
 									<name>derby.stream.error.file</name>
 									<value>target/derby.log</value>
 								</property>
+                                                                 <property>
+                                                                    <name>javax.xml.accessExternalSchema</name>
+                                                                    <value>all</value>
+                                                                </property>
 							</systemProperties>
 						</configuration>
 						<executions>
@@ -416,6 +428,10 @@
 											<name>cactus.contextURL</name>
 											<value>http://localhost:8880/juddi</value>
 										</property>
+                                                                                 <property>
+                                                                                <name>javax.xml.accessExternalSchema</name>
+                                                                                <value>all</value>
+                                                                            </property>
 									</systemProperties>
 								</configuration>
 							</execution>

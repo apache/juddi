@@ -309,7 +309,6 @@ under the License.
 			<algorithms>
 				<algorithm>SHA-512</algorithm>
 			</algorithms>
-			  <!-- put your configurations here -->
 			</configuration>
 		  </plugin>
 			<plugin>
