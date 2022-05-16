@@ -34,10 +34,6 @@ under the License.
         Integration (UDDI) specification for Web Services.</description>
 	<url>http://juddi.apache.org/</url>
 
-	<prerequisites>
-		<maven>3.0.3</maven>
-	</prerequisites>
-
 	<properties>
 		<sourceReleaseAssemblyDescriptor>source-release</sourceReleaseAssemblyDescriptor>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -331,10 +327,10 @@ under the License.
 					  <rules>
 						
 						<requireMavenVersion>
-						  <version>[3.0.3,)</version>
+						  <version>[3.2.1,)</version>
 						</requireMavenVersion>
 						<requireJavaVersion>
-						  <version>[1.6,)</version>
+						  <version>[1.8,)</version>
 						</requireJavaVersion>
 					  </rules>
 					</configuration>
