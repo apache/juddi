@@ -1109,5 +1109,173 @@ under the License.
 				</plugins>
 			</build>
 		</profile>
+                
+                <profile>
+			<id>githubactiondist</id>
+			<modules>
+				<!-- adding these module for dist only -->
+				<module>uddi-tck</module>
+				<module>uddi-tck-runner</module>
+				<module>juddi-ddl-generator</module>
+			</modules>
+			<build>
+				<plugins>
+					<!-- Create a source-release artifact that contains the fully buildable 
+                    project directory source structure. This is the artifact which is the official 
+                    subject of any release vote. -->
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<dependencies>
+							<dependency>
+								<groupId>org.apache.apache.resources</groupId>
+								<artifactId>apache-source-release-assembly-descriptor</artifactId>
+								<version>1.0.6</version>
+							</dependency>
+						</dependencies>
+						<executions>
+							<execution>
+								<id>source-release-assembly</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+									<runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
+									<descriptorRefs>
+										<descriptorRef>${sourceReleaseAssemblyDescriptor}</descriptorRef>
+									</descriptorRefs>
+									<tarLongFileFormat>gnu</tarLongFileFormat>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- We want to deploy the artifact to a staging location for perusal -->
+					<plugin>
+						<inherited>true</inherited>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-deploy-plugin</artifactId>
+						<configuration>
+							<updateReleaseInfo>true</updateReleaseInfo>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.0.1</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.rat</groupId>
+						<artifactId>apache-rat-plugin</artifactId>
+						<configuration>
+							<excludes>
+								<exclude>**/*.nupkg</exclude>
+								<exclude>.github/**/*.*</exclude>
+								<exclude>**/*.psd</exclude>
+								<exclude>**/*.ddl</exclude>
+								<exclude>Doxyfile</exclude>
+								<exclude>**/*log</exclude>
+								<exclude>*.log</exclude>
+								<exclude>qa/*.*</exclude>
+								<exclude>qa/**/*.*</exclude>
+								<exclude>juddi-client.net/packages/NUnit.2.6.2/NUnit.2.6.2.nuspec</exclude>
+								<exclude>juddi-client.net/clean.txt</exclude>
+								<exclude>juddi-client.net/input.txt</exclude>
+								<exclude>juddi-client.net/juddi-client.net/org.apache.juddi.v3.client.mapping/wadl.xsd</exclude>
+								<exclude>juddi-client.net/juddi-client.net/org.apache.juddi.v3.client.mapping/wsdl.xsd</exclude>
+								<exclude>juddi-client.net/juddi-client.net/org.apache.juddi.v3.client.mapping/XMLSchema.xsd</exclude>
+								<exclude>juddi-client.net/packages/NUnit.2.6.2/lib/nunit.framework.xml</exclude>
+								<exclude>juddi-client.net/example/AspnetServiceLifeCycle/global.asa</exclude>
+								<!-- uddi-ws-->
+								<exclude>src/main/resources/inquire_v2.wsdl</exclude>
+								<exclude>src/main/resources/publish_v2.wsdl</exclude>
+								<exclude>src/main/resources/uddi_v2.xsd</exclude>
+								<exclude>src/main/resources/uddi_v2custody.xsd</exclude>
+								<exclude>src/main/resources/uddi_v2replication.xsd</exclude>
+								<exclude>**/datatypes.dtd</exclude>
+								<exclude>**/xml.xsd</exclude>
+								<exclude>**/*.pfx</exclude>
+								<exclude>**/XMLSchema.dtd</exclude>
+								<exclude>**/xmldsig-core-schema.xsd</exclude>
+
+								<!-- TCK BASE -->
+								<exclude>src/main/resources/uddi_data/bpel/riftsaw/bpel-technote.bpel</exclude>
+								<exclude>src/main/resources/uddi_data/bpel/riftsaw/bpel-technote.wsdl</exclude>
+								<!-- juddi-client-->
+								<exclude>src/test/resources/bpel/bpel-technote.bpel</exclude>
+								<exclude>src/test/resources/bpel/bpel-technote.wsdl</exclude>
+								<exclude>**/*.key</exclude>
+								<exclude>**/log4j.xml</exclude>
+
+								<exclude>**/spring-beans.xsd</exclude>
+								<exclude>**/spring-util.xsd</exclude>
+								<exclude>**/spring-beans.xsd</exclude>
+
+								<exclude>**/font-awesome*</exclude>
+								<exclude>**/jquery*.css</exclude>
+								<exclude>**/*.svg</exclude>
+								<exclude>**/*.txt</exclude>
+								<exclude>**/jquery*.js</exclude>
+								<exclude>**/log4j.properties</exclude>
+								<exclude>**/log4j.xml</exclude>
+								<exclude>**/*.sh</exclude>
+								<exclude>**/*.bat</exclude>
+								<exclude>**/*.policy</exclude>
+								<exclude>**/*.md</exclude>
+								<exclude>**/*.form</exclude>
+								<exclude>**/jboss-deployment-structure.xml</exclude>
+								<exclude>**/MANIFEST.MF</exclude>
+								<exclude>**/license/*.*</exclude>
+								<exclude>src/main/resources/schemas/orm_1_0.xsd</exclude>
+								<exclude>src/main/resources/schemas/persistence_1_0.xsd</exclude>
+								<exclude>src/main/resources/spring-beans.xsd.xml</exclude>
+
+								<exclude>**/bootstrap-timepicker.*</exclude>
+								<exclude>**/test/selenium/*.*</exclude>
+								<exclude>**/*.properties</exclude>
+								<exclude>**/*.asciidoc</exclude>
+								<exclude>**/TermsOfUse.txt</exclude>
+								<exclude>**/pref-rpt*.txt</exclude>
+								<exclude>**/asciidoctor.css</exclude>
+								<exclude>**/Guardfile</exclude>
+								<exclude>**/target/**/*</exclude>
+								<exclude>**/nb-configuration.xml</exclude>
+								<exclude>.travis.yml</exclude>
+								<exclude>**/*.mwb</exclude>
+
+							</excludes>
+							<consoleOutput>true</consoleOutput>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>verify</phase>
+								<goals>
+									<goal>check</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 </project>

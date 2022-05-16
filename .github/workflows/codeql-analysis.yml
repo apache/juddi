@@ -52,7 +52,7 @@ jobs:
       run: sudo apt-get install -y icedtea-netx
 
     - name: javabuild
-      run: mvn -B install -Pdist -P${{ matrix.jpa }}
+      run: mvn -B install -Pgithubactiondist -P${{ matrix.jpa }}
       
 
   analyze1:
