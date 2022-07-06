@@ -691,7 +691,7 @@ under the License.
 			<dependency>
 				<groupId>org.jgroups</groupId>
 				<artifactId>jgroups</artifactId>
-				<version>3.4.1.Final</version>
+				<version>5.2.2.Final</version>
 			</dependency>
 			<!-- a lorem ipsum generator MIT license-->
 			<dependency>
