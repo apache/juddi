@@ -93,30 +93,35 @@ import org.apache.juddi.v3.error.UnknownUserException;
 <span class="fc" id="L93">                                tx.commit();</span>
                         }
 <span class="fc" id="L95">                        return authorizedName;</span>
+<span class="nc" id="L96">                } catch (Exception ex) {</span>
+                    //note: we saw an ArrayIndexOutOfBounds exception when using github actions for CI
+                    //with hibernate on derby, root cause is still tbd
+<span class="nc" id="L99">                    log.error(&quot;error during authentication routine, could indicate a database issue&quot;, ex);</span>
+<span class="nc" id="L100">                    throw ex;</span>
                 } finally {
-<span class="pc bpc" id="L97" title="2 of 4 branches missed.">                        if (tx.isActive()) {</span>
-<span class="pc" id="L98">                                tx.rollback();</span>
+<span class="pc bpc" id="L102" title="2 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="pc" id="L103">                                tx.rollback();</span>
                         }
-<span class="pc" id="L100">                        em.close();</span>
+<span class="pc" id="L105">                        em.close();</span>
                 }
         }
 
         public UddiEntityPublisher identify(String authInfo, String authorizedName, WebServiceContext ctx) throws AuthenticationException {
-<span class="fc" id="L105">                EntityManager em = PersistenceManager.getEntityManager();</span>
-<span class="fc" id="L106">                EntityTransaction tx = em.getTransaction();</span>
+<span class="fc" id="L110">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="fc" id="L111">                EntityTransaction tx = em.getTransaction();</span>
                 try {
-<span class="fc" id="L108">                        tx.begin();</span>
-<span class="fc" id="L109">                        Publisher publisher = em.find(Publisher.class, authorizedName);</span>
-<span class="pc bpc" id="L110" title="1 of 2 branches missed.">                        if (publisher == null) {</span>
-<span class="nc" id="L111">                                throw new UnknownUserException(new ErrorMessage(&quot;errors.auth.NoPublisher&quot;, authorizedName));</span>
+<span class="fc" id="L113">                        tx.begin();</span>
+<span class="fc" id="L114">                        Publisher publisher = em.find(Publisher.class, authorizedName);</span>
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">                        if (publisher == null) {</span>
+<span class="nc" id="L116">                                throw new UnknownUserException(new ErrorMessage(&quot;errors.auth.NoPublisher&quot;, authorizedName));</span>
                         }
 
-<span class="fc" id="L114">                        return publisher;</span>
+<span class="fc" id="L119">                        return publisher;</span>
                 } finally {
-<span class="pc bpc" id="L116" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
-<span class="pc" id="L117">                                tx.rollback();</span>
+<span class="pc bpc" id="L121" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="pc" id="L122">                                tx.rollback();</span>
                         }
-<span class="pc" id="L119">                        em.close();</span>
+<span class="pc" id="L124">                        em.close();</span>
                 }
         }
 }

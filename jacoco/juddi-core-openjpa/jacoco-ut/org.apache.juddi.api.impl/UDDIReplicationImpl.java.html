@@ -235,8 +235,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 <span class="fc" id="L235">                                NotifyChangeRecordsAvailable poll = queue.poll();</span>
 <span class="pc bpc" id="L236" title="2 of 4 branches missed.">                                if (poll != null &amp;&amp; !poll.getNotifyingNode().equalsIgnoreCase(getNode())) {</span>
 <span class="fc" id="L237">                                        UDDIReplicationPortType replicationClient = getReplicationClient(poll.getNotifyingNode());</span>
-<span class="pc bpc" id="L238" title="1 of 2 branches missed.">                                        if (replicationClient == null) {</span>
-<span class="nc" id="L239">                                                logger.fatal(&quot;unable to obtain a replication client to node &quot; + poll);</span>
+<span class="fc bfc" id="L238" title="All 2 branches covered.">                                        if (replicationClient == null) {</span>
+<span class="fc" id="L239">                                                logger.fatal(&quot;unable to obtain a replication client to node &quot; + poll);</span>
                                         } else {
                                                 try {
                                                         //get the high water marks for this node
@@ -278,18 +278,18 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 <span class="nc" id="L278">                                                                        recordsreturned = records.size();</span>
 <span class="nc" id="L279">                                                                }</span>
                                                         }
-<span class="nc" id="L281">                                                } catch (Exception ex) {</span>
-<span class="nc" id="L282">                                                        logger.error(&quot;Error caught fetching replication changes from &quot; + poll + &quot; @&quot; + ((BindingProvider) replicationClient).getRequestContext().get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY), ex);</span>
+<span class="fc" id="L281">                                                } catch (Exception ex) {</span>
+<span class="fc" id="L282">                                                        logger.error(&quot;Error caught fetching replication changes from &quot; + poll + &quot; @&quot; + ((BindingProvider) replicationClient).getRequestContext().get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY), ex);</span>
 <span class="nc" id="L283">                                                }</span>
                                         }
-<span class="nc" id="L285">                                } else {</span>
+<span class="fc" id="L285">                                } else {</span>
 <span class="nc bnc" id="L286" title="All 2 branches missed.">                                        if (poll == null) {</span>
 <span class="nc" id="L287">                                                logger.warn(&quot;strange, popped a null object&quot;);</span>
 <span class="nc bnc" id="L288" title="All 2 branches missed.">                                        } else if (poll.getNotifyingNode().equalsIgnoreCase(getNode())) {</span>
 <span class="nc" id="L289">                                                logger.warn(&quot;strange, popped an object from the queue but it was from myself. This probably indicates a configuration error! ignoring...first record: &quot; + poll.getChangesAvailable().getHighWaterMark().get(0).getNodeID()+&quot;:&quot; + poll.getChangesAvailable().getHighWaterMark().get(0).getOriginatingUSN());</span>
                                         }
                                 }
-<span class="nc" id="L292">                        }</span>
+<span class="fc" id="L292">                        }</span>
 <span class="nc" id="L293">                }</span>
 
                 @Override
@@ -940,8 +940,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 <span class="nc" id="L940">        }</span>
 
         private synchronized UDDIReplicationPortType getReplicationClient(String node) {
-<span class="pc bpc" id="L943" title="1 of 2 branches missed.">                if (cache.containsKey(node)) {</span>
-<span class="nc" id="L944">                        return cache.get(node);</span>
+<span class="fc bfc" id="L943" title="All 2 branches covered.">                if (cache.containsKey(node)) {</span>
+<span class="fc" id="L944">                        return cache.get(node);</span>
                 }
 <span class="fc" id="L946">                UDDIService svc = new UDDIService();</span>
 <span class="fc" id="L947">                UDDIReplicationPortType replicationClient = svc.getUDDIReplicationPort();</span>
@@ -958,25 +958,25 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 <span class="fc" id="L958">                        qry.setMaxResults(1);</span>
 
 <span class="fc" id="L960">                        org.apache.juddi.model.ReplicationConfiguration resultList = (org.apache.juddi.model.ReplicationConfiguration) qry.getSingleResult();</span>
-<span class="pc bpc" id="L961" title="1 of 2 branches missed.">                        for (Operator o : resultList.getOperator()) {</span>
-<span class="pc bpc" id="L962" title="1 of 2 branches missed.">                                if (o.getOperatorNodeID().equalsIgnoreCase(node)) {</span>
+<span class="fc bfc" id="L961" title="All 2 branches covered.">                        for (Operator o : resultList.getOperator()) {</span>
+<span class="fc bfc" id="L962" title="All 2 branches covered.">                                if (o.getOperatorNodeID().equalsIgnoreCase(node)) {</span>
 <span class="fc" id="L963">                                        ((BindingProvider) replicationClient).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, o.getSoapReplicationURL());</span>
 <span class="fc" id="L964">                                        cache.put(node, replicationClient);</span>
 <span class="fc" id="L965">                                        return replicationClient;</span>
                                 }
-<span class="nc" id="L967">                        }</span>
-<span class="nc" id="L968">                        tx.rollback();</span>
+<span class="fc" id="L967">                        }</span>
+<span class="fc" id="L968">                        tx.rollback();</span>
 
 <span class="nc" id="L970">                } catch (Exception ex) {</span>
 <span class="nc" id="L971">                        logger.fatal(&quot;Node not found!&quot; + node, ex);</span>
                 } finally {
-<span class="pc bpc" id="L973" title="7 of 8 branches missed.">                        if (tx.isActive()) {</span>
+<span class="pc bpc" id="L973" title="6 of 8 branches missed.">                        if (tx.isActive()) {</span>
 <span class="pc" id="L974">                                tx.rollback();</span>
                         }
 <span class="pc" id="L976">                        em.close();</span>
-<span class="nc" id="L977">                }</span>
+<span class="pc" id="L977">                }</span>
                 //em.close();
-<span class="nc" id="L979">                return null;</span>
+<span class="fc" id="L979">                return null;</span>
 
         }
 <span class="fc" id="L982">        private Map&lt;String, UDDIReplicationPortType&gt; cache = new HashMap&lt;String, UDDIReplicationPortType&gt;();</span>
@@ -1187,37 +1187,43 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                                         }
 <span class="fc" id="L1188">                                }</span>
                         }
-                        //dont forget this node
-<span class="fc" id="L1191">                        Long id = (Long) em.createQuery(&quot;select (e.id) from ChangeRecord e where e.nodeID = :node  order by e.id desc&quot;)</span>
-<span class="fc" id="L1192">                                .setParameter(&quot;node&quot;, getNode()).setMaxResults(1).getSingleResult();</span>
-<span class="pc bpc" id="L1193" title="1 of 2 branches missed.">                        if (id == null) {</span>
-<span class="nc" id="L1194">                                id = 0L;</span>
-                        }
-<span class="fc" id="L1196">                        ChangeRecordIDType x = new ChangeRecordIDType();</span>
-<span class="fc" id="L1197">                        x.setNodeID(getNode());</span>
-<span class="fc" id="L1198">                        x.setOriginatingUSN(id);</span>
-<span class="fc" id="L1199">                        ret.add(x);</span>
+                    //dont forget this node
+<span class="fc" id="L1191">                        Query setMaxResults = em.createQuery(&quot;select (e.id) from ChangeRecord e where e.nodeID = :node  order by e.id desc&quot;)</span>
+<span class="fc" id="L1192">                                .setParameter(&quot;node&quot;, getNode()).setMaxResults(1);</span>
+<span class="fc" id="L1193">                        Long id =null;</span>
+<span class="pc bpc" id="L1194" title="1 of 2 branches missed.">                        if (setMaxResults.getResultList().isEmpty()) {</span>
+                            //this can happen at or near startup
+<span class="nc" id="L1196">                            id = 0L;</span>
+                        } else {
+<span class="fc" id="L1198">                            id = (Long) em.createQuery(&quot;select (e.id) from ChangeRecord e where e.nodeID = :node  order by e.id desc&quot;)</span>
+<span class="fc" id="L1199">                                    .setParameter(&quot;node&quot;, getNode()).setMaxResults(1).getSingleResult();</span>
+                        }    
+<span class="fc" id="L1201">                        ChangeRecordIDType x = new ChangeRecordIDType();</span>
+<span class="fc" id="L1202">                        x.setNodeID(getNode());</span>
+<span class="fc" id="L1203">                        x.setOriginatingUSN(id);</span>
+<span class="fc" id="L1204">                        ret.add(x);</span>
+                    
+<span class="fc" id="L1206">                        tx.rollback();</span>
+<span class="fc" id="L1207">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L1208">                        serviceCounter.update(ReplicationQuery.GET_HIGHWATERMARKS, QueryStatus.SUCCESS, procTime);</span>
 
-<span class="fc" id="L1201">                        tx.rollback();</span>
-<span class="fc" id="L1202">                        long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="fc" id="L1203">                        serviceCounter.update(ReplicationQuery.GET_HIGHWATERMARKS, QueryStatus.SUCCESS, procTime);</span>
-
-<span class="nc" id="L1205">                } catch (Exception drfm) {</span>
-<span class="nc" id="L1206">                        throw new FatalErrorException(new ErrorMessage(&quot;E_fatalError&quot;, drfm.getMessage()));</span>
+<span class="nc" id="L1210">                } catch (Exception drfm) {</span>
+<span class="nc" id="L1211">                        logger.fatal(&quot;Error, this node is: &quot; + getNode(), drfm);</span>
+<span class="nc" id="L1212">                        throw new FatalErrorException(new ErrorMessage(&quot;E_fatalError&quot;, drfm.getMessage()));</span>
 
                 } finally {
-<span class="pc bpc" id="L1209" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
-<span class="nc" id="L1210">                                tx.rollback();</span>
+<span class="pc bpc" id="L1215" title="3 of 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L1216">                                tx.rollback();</span>
                         }
-<span class="pc" id="L1212">                        em.close();</span>
-<span class="fc" id="L1213">                }</span>
-
-<span class="fc" id="L1215">                Iterator&lt;Map.Entry&lt;String, Long&gt;&gt; iterator = map.entrySet().iterator();</span>
-<span class="fc bfc" id="L1216" title="All 2 branches covered.">                while (iterator.hasNext()) {</span>
-<span class="fc" id="L1217">                        Map.Entry&lt;String, Long&gt; next = iterator.next();</span>
-<span class="fc" id="L1218">                        ret.add(new ChangeRecordIDType(next.getKey(), next.getValue()));</span>
+<span class="pc" id="L1218">                        em.close();</span>
 <span class="fc" id="L1219">                }</span>
-<span class="fc" id="L1220">                return ret;</span>
+
+<span class="fc" id="L1221">                Iterator&lt;Map.Entry&lt;String, Long&gt;&gt; iterator = map.entrySet().iterator();</span>
+<span class="fc bfc" id="L1222" title="All 2 branches covered.">                while (iterator.hasNext()) {</span>
+<span class="fc" id="L1223">                        Map.Entry&lt;String, Long&gt; next = iterator.next();</span>
+<span class="fc" id="L1224">                        ret.add(new ChangeRecordIDType(next.getKey(), next.getValue()));</span>
+<span class="fc" id="L1225">                }</span>
+<span class="fc" id="L1226">                return ret;</span>
         }
 
         /**
@@ -1230,21 +1236,21 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
         @Override
         public void notifyChangeRecordsAvailable(NotifyChangeRecordsAvailable body)
                 throws DispositionReportFaultMessage {
-<span class="nc" id="L1233">                long startTime = System.currentTimeMillis();</span>
+<span class="nc" id="L1239">                long startTime = System.currentTimeMillis();</span>
 
                 //some other node just told us there's new records available, call
                 //getChangeRecords from the remote node asynch
-<span class="nc" id="L1237">                new ValidateReplication(null).validateNotifyChangeRecordsAvailable(body, ctx);</span>
+<span class="nc" id="L1243">                new ValidateReplication(null).validateNotifyChangeRecordsAvailable(body, ctx);</span>
 
-<span class="nc" id="L1239">                logger.info(body.getNotifyingNode() + &quot; just told me that there are change records available, enqueuing...size is &quot; + queue.size() + &quot; this node is &quot; + getNode());</span>
+<span class="nc" id="L1245">                logger.info(body.getNotifyingNode() + &quot; just told me that there are change records available, enqueuing...size is &quot; + queue.size() + &quot; this node is &quot; + getNode());</span>
                 //if (!queue.contains(body.getNotifyingNode())) {
-<span class="nc" id="L1241">                queue.add(body);</span>
+<span class="nc" id="L1247">                queue.add(body);</span>
                 //}
-<span class="nc" id="L1243">                long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="nc" id="L1244">                serviceCounter.update(ReplicationQuery.NOTIFY_CHANGERECORDSAVAILABLE,</span>
+<span class="nc" id="L1249">                long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L1250">                serviceCounter.update(ReplicationQuery.NOTIFY_CHANGERECORDSAVAILABLE,</span>
                         QueryStatus.SUCCESS, procTime);
-<span class="nc" id="L1246">        }</span>
-<span class="fc" id="L1247">        private static Queue&lt;NotifyChangeRecordsAvailable&gt; queue = null;</span>
+<span class="nc" id="L1252">        }</span>
+<span class="fc" id="L1253">        private static Queue&lt;NotifyChangeRecordsAvailable&gt; queue = null;</span>
 
         /**
          * transfers custody of an entity from node1/user1 to node2/user2
@@ -1263,55 +1269,55 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
         @Override
         public void transferCustody(TransferCustody body)
                 throws DispositionReportFaultMessage {
-<span class="nc" id="L1266">                long startTime = System.currentTimeMillis();</span>
-<span class="nc" id="L1267">                EntityManager em = PersistenceManager.getEntityManager();</span>
-<span class="nc" id="L1268">                EntityTransaction tx = em.getTransaction();</span>
-<span class="nc" id="L1269">                logger.info(&quot;Inbound transfer request (via replication api, node to node&quot;);</span>
+<span class="nc" id="L1272">                long startTime = System.currentTimeMillis();</span>
+<span class="nc" id="L1273">                EntityManager em = PersistenceManager.getEntityManager();</span>
+<span class="nc" id="L1274">                EntityTransaction tx = em.getTransaction();</span>
+<span class="nc" id="L1275">                logger.info(&quot;Inbound transfer request (via replication api, node to node&quot;);</span>
                 try {
-<span class="nc" id="L1271">                        tx.begin();</span>
+<span class="nc" id="L1277">                        tx.begin();</span>
                 //*this node is transfering data to another node
                         //ValidateReplication.unsupportedAPICall();
                         //a remote node just told me to give up control of some of my entities
 
                         //EntityTransaction tx = em.getTransaction();
                         //confirm i have a replication config
-<span class="nc" id="L1278">                        boolean ok = false;</span>
-<span class="nc" id="L1279">                        ReplicationConfiguration FetchEdges = ReplicationNotifier.FetchEdges();</span>
-<span class="nc bnc" id="L1280" title="All 2 branches missed.">                        if (FetchEdges != null) {</span>
-<span class="nc bnc" id="L1281" title="All 2 branches missed.">                                for (int i = 0; i &lt; FetchEdges.getOperator().size(); i++) {</span>
+<span class="nc" id="L1284">                        boolean ok = false;</span>
+<span class="nc" id="L1285">                        ReplicationConfiguration FetchEdges = ReplicationNotifier.FetchEdges();</span>
+<span class="nc bnc" id="L1286" title="All 2 branches missed.">                        if (FetchEdges != null) {</span>
+<span class="nc bnc" id="L1287" title="All 2 branches missed.">                                for (int i = 0; i &lt; FetchEdges.getOperator().size(); i++) {</span>
                                         //confirm that the destination node is in the replication config
-<span class="nc bnc" id="L1283" title="All 2 branches missed.">                                        if (FetchEdges.getOperator().get(i).getOperatorNodeID().equals(body.getTransferOperationalInfo().getNodeID())) {</span>
-<span class="nc" id="L1284">                                                ok = true;</span>
-<span class="nc" id="L1285">                                                break;</span>
+<span class="nc bnc" id="L1289" title="All 2 branches missed.">                                        if (FetchEdges.getOperator().get(i).getOperatorNodeID().equals(body.getTransferOperationalInfo().getNodeID())) {</span>
+<span class="nc" id="L1290">                                                ok = true;</span>
+<span class="nc" id="L1291">                                                break;</span>
                                         }
                                 }
                         }
-<span class="nc bnc" id="L1289" title="All 2 branches missed.">                        if (!ok) {</span>
-<span class="nc" id="L1290">                                throw new TransferNotAllowedException(new ErrorMessage(&quot;E_transferNotAllowedUnknownNode&quot;));</span>
+<span class="nc bnc" id="L1295" title="All 2 branches missed.">                        if (!ok) {</span>
+<span class="nc" id="L1296">                                throw new TransferNotAllowedException(new ErrorMessage(&quot;E_transferNotAllowedUnknownNode&quot;));</span>
                         }
 
-<span class="nc" id="L1293">                        new ValidateReplication(null).validateTransfer(em, body);</span>
+<span class="nc" id="L1299">                        new ValidateReplication(null).validateTransfer(em, body);</span>
 
-<span class="nc" id="L1295">                        TransferEntities te = new TransferEntities();</span>
-<span class="nc" id="L1296">                        te.setKeyBag(body.getKeyBag());</span>
-<span class="nc" id="L1297">                        te.setTransferToken(body.getTransferToken());</span>
-<span class="nc" id="L1298">                        te.setAuthInfo(null);</span>
+<span class="nc" id="L1301">                        TransferEntities te = new TransferEntities();</span>
+<span class="nc" id="L1302">                        te.setKeyBag(body.getKeyBag());</span>
+<span class="nc" id="L1303">                        te.setTransferToken(body.getTransferToken());</span>
+<span class="nc" id="L1304">                        te.setAuthInfo(null);</span>
                         //make the change
                         //enqueue in replication notifier
                         //discard the token
-<span class="nc" id="L1302">                        logger.debug(&quot;request validated, processing transfer&quot;);</span>
-<span class="nc" id="L1303">                        List&lt;ChangeRecord&gt; executeTransfer = new UDDICustodyTransferImpl().executeTransfer(te, em, body.getTransferOperationalInfo().getAuthorizedName(), body.getTransferOperationalInfo().getNodeID());</span>
+<span class="nc" id="L1308">                        logger.debug(&quot;request validated, processing transfer&quot;);</span>
+<span class="nc" id="L1309">                        List&lt;ChangeRecord&gt; executeTransfer = new UDDICustodyTransferImpl().executeTransfer(te, em, body.getTransferOperationalInfo().getAuthorizedName(), body.getTransferOperationalInfo().getNodeID());</span>
 
-<span class="nc bnc" id="L1305" title="All 2 branches missed.">                        for (ChangeRecord c : executeTransfer) {</span>
+<span class="nc bnc" id="L1311" title="All 2 branches missed.">                        for (ChangeRecord c : executeTransfer) {</span>
                                 try {
-<span class="nc" id="L1307">                                        c.setChangeID(new ChangeRecordIDType());</span>
-<span class="nc" id="L1308">                                        c.getChangeID().setNodeID(getNode());</span>
-<span class="nc" id="L1309">                                        c.getChangeID().setOriginatingUSN(null);</span>
-<span class="nc" id="L1310">                                        ReplicationNotifier.enqueue(MappingApiToModel.mapChangeRecord(c));</span>
-<span class="nc" id="L1311">                                } catch (UnsupportedEncodingException ex) {</span>
-<span class="nc" id="L1312">                                        logger.error(&quot;&quot;, ex);</span>
-<span class="nc" id="L1313">                                }</span>
-<span class="nc" id="L1314">                        }</span>
+<span class="nc" id="L1313">                                        c.setChangeID(new ChangeRecordIDType());</span>
+<span class="nc" id="L1314">                                        c.getChangeID().setNodeID(getNode());</span>
+<span class="nc" id="L1315">                                        c.getChangeID().setOriginatingUSN(null);</span>
+<span class="nc" id="L1316">                                        ReplicationNotifier.enqueue(MappingApiToModel.mapChangeRecord(c));</span>
+<span class="nc" id="L1317">                                } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L1318">                                        logger.error(&quot;&quot;, ex);</span>
+<span class="nc" id="L1319">                                }</span>
+<span class="nc" id="L1320">                        }</span>
                         /**
                          * The custodial node must verify that it has granted
                          * permission to transfer the entities identified and
@@ -1350,22 +1356,22 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                          * transferToken in order to prevent additional calls of
                          * the transfer_entities API.
                          */
-<span class="nc" id="L1353">                        tx.commit();</span>
-<span class="nc" id="L1354">                        long procTime = System.currentTimeMillis() - startTime;</span>
-<span class="nc" id="L1355">                        serviceCounter.update(ReplicationQuery.TRANSFER_CUSTODY,</span>
+<span class="nc" id="L1359">                        tx.commit();</span>
+<span class="nc" id="L1360">                        long procTime = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L1361">                        serviceCounter.update(ReplicationQuery.TRANSFER_CUSTODY,</span>
                                 QueryStatus.SUCCESS, procTime);
-<span class="nc" id="L1357">                } catch (DispositionReportFaultMessage d) {</span>
-<span class="nc" id="L1358">                        logger.error(&quot;Unable to process node to node custody transfer &quot;, d);</span>
-<span class="nc" id="L1359">                        throw d;</span>
+<span class="nc" id="L1363">                } catch (DispositionReportFaultMessage d) {</span>
+<span class="nc" id="L1364">                        logger.error(&quot;Unable to process node to node custody transfer &quot;, d);</span>
+<span class="nc" id="L1365">                        throw d;</span>
                 } finally {
-<span class="nc bnc" id="L1361" title="All 8 branches missed.">                        if (em != null &amp;&amp; em.isOpen()) {</span>
-<span class="nc" id="L1362">                                em.close();</span>
+<span class="nc bnc" id="L1367" title="All 8 branches missed.">                        if (em != null &amp;&amp; em.isOpen()) {</span>
+<span class="nc" id="L1368">                                em.close();</span>
                         }
-<span class="nc bnc" id="L1364" title="All 4 branches missed.">                        if (tx.isActive()) {</span>
-<span class="nc" id="L1365">                                tx.rollback();</span>
+<span class="nc bnc" id="L1370" title="All 4 branches missed.">                        if (tx.isActive()) {</span>
+<span class="nc" id="L1371">                                tx.rollback();</span>
                         }
                 }
-<span class="nc" id="L1368">        }</span>
+<span class="nc" id="L1374">        }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

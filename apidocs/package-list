@@ -20,7 +20,6 @@ org.apache.juddi.example.uddiv2.api.bridge.example
 org.apache.juddi.example.wsdl2uddi
 org.apache.juddi.examples.service.version
 org.apache.juddi.examples.vsv.valuesetvalidator
-org.apache.juddi.gui.dsig
 org.apache.juddi.jaxb
 org.apache.juddi.keygen
 org.apache.juddi.mapping

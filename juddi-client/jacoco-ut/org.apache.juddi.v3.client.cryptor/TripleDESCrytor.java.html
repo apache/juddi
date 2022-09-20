@@ -32,7 +32,9 @@ import org.apache.commons.codec.binary.Base64;
 /**
  * Triple DES, 168 bit key
  * @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O'Ree&lt;/a&gt;
+ * @deprecated use better crypto
  */
+@Deprecated
 public class TripleDESCrytor implements Cryptor {
 
     private static final String UNICODE_FORMAT = &quot;UTF8&quot;;
@@ -49,32 +51,32 @@ public class TripleDESCrytor implements Cryptor {
      *default constructor
      * @throws Exception
      */
-<span class="fc" id="L52">    public TripleDESCrytor() throws Exception {</span>
-<span class="fc" id="L53">        String keyfromfile = CryptorFactory.loadKeyFromFile(&quot;TripleDESCrytor&quot;);</span>
-<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (keyfromfile!=null)</span>
-<span class="fc" id="L55">                    myEncryptionKey=keyfromfile;</span>
+<span class="fc" id="L54">    public TripleDESCrytor() throws Exception {</span>
+<span class="fc" id="L55">        String keyfromfile = CryptorFactory.loadKeyFromFile(&quot;TripleDESCrytor&quot;);</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (keyfromfile!=null)</span>
+<span class="fc" id="L57">                    myEncryptionKey=keyfromfile;</span>
         else
-<span class="fc" id="L57">                myEncryptionKey = &quot;rioTEBCe/RAHRs6tTyYxDqettnVbZA6z&quot;;</span>
-<span class="fc" id="L58">        myEncryptionScheme = DESEDE_ENCRYPTION_SCHEME;</span>
-<span class="fc" id="L59">        arrayBytes = myEncryptionKey.getBytes(UNICODE_FORMAT);</span>
-<span class="fc" id="L60">        ks = new DESedeKeySpec(arrayBytes);</span>
-<span class="fc" id="L61">        skf = SecretKeyFactory.getInstance(myEncryptionScheme);</span>
-<span class="fc" id="L62">        cipher = Cipher.getInstance(myEncryptionScheme);</span>
-<span class="fc" id="L63">        key = skf.generateSecret(ks);</span>
-<span class="fc" id="L64">    }</span>
+<span class="fc" id="L59">                myEncryptionKey = &quot;rioTEBCe/RAHRs6tTyYxDqettnVbZA6z&quot;;</span>
+<span class="fc" id="L60">        myEncryptionScheme = DESEDE_ENCRYPTION_SCHEME;</span>
+<span class="fc" id="L61">        arrayBytes = myEncryptionKey.getBytes(UNICODE_FORMAT);</span>
+<span class="fc" id="L62">        ks = new DESedeKeySpec(arrayBytes);</span>
+<span class="fc" id="L63">        skf = SecretKeyFactory.getInstance(myEncryptionScheme);</span>
+<span class="fc" id="L64">        cipher = Cipher.getInstance(myEncryptionScheme);</span>
+<span class="fc" id="L65">        key = skf.generateSecret(ks);</span>
+<span class="fc" id="L66">    }</span>
 
     @Override
     public String encrypt(String clear) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-<span class="fc" id="L68">        String encryptedString = null;</span>
+<span class="fc" id="L70">        String encryptedString = null;</span>
         try {
-<span class="fc" id="L70">            cipher.init(Cipher.ENCRYPT_MODE, key);</span>
-<span class="fc" id="L71">            byte[] plainText = clear.getBytes(UNICODE_FORMAT);</span>
-<span class="fc" id="L72">            byte[] encryptedText = cipher.doFinal(plainText);</span>
-<span class="fc" id="L73">            encryptedString = new String(Base64.encodeBase64(encryptedText), UNICODE_FORMAT);</span>
-<span class="nc" id="L74">        } catch (Exception e) {</span>
-<span class="nc" id="L75">            e.printStackTrace();</span>
-<span class="fc" id="L76">        }</span>
-<span class="fc" id="L77">        return encryptedString;</span>
+<span class="fc" id="L72">            cipher.init(Cipher.ENCRYPT_MODE, key);</span>
+<span class="fc" id="L73">            byte[] plainText = clear.getBytes(UNICODE_FORMAT);</span>
+<span class="fc" id="L74">            byte[] encryptedText = cipher.doFinal(plainText);</span>
+<span class="fc" id="L75">            encryptedString = new String(Base64.encodeBase64(encryptedText), UNICODE_FORMAT);</span>
+<span class="nc" id="L76">        } catch (Exception e) {</span>
+<span class="nc" id="L77">            e.printStackTrace();</span>
+<span class="fc" id="L78">        }</span>
+<span class="fc" id="L79">        return encryptedString;</span>
     }
 
     /**
@@ -84,34 +86,34 @@ public class TripleDESCrytor implements Cryptor {
     public static String GEN() {
         KeyGenerator kgen;
         try {
-<span class="fc" id="L87">            kgen = KeyGenerator.getInstance(DESEDE_ENCRYPTION_SCHEME);</span>
-<span class="fc" id="L88">            kgen.init(168);</span>
-<span class="fc" id="L89">            SecretKey skey = kgen.generateKey();</span>
-<span class="fc" id="L90">            byte[] raw = skey.getEncoded();</span>
-<span class="fc" id="L91">            return new String(Base64.encodeBase64(raw),UNICODE_FORMAT);</span>
-<span class="nc" id="L92">        } catch (Exception ex) {</span>
-<span class="nc" id="L93">            ex.printStackTrace();;</span>
+<span class="fc" id="L89">            kgen = KeyGenerator.getInstance(DESEDE_ENCRYPTION_SCHEME);</span>
+<span class="fc" id="L90">            kgen.init(168);</span>
+<span class="fc" id="L91">            SecretKey skey = kgen.generateKey();</span>
+<span class="fc" id="L92">            byte[] raw = skey.getEncoded();</span>
+<span class="fc" id="L93">            return new String(Base64.encodeBase64(raw),UNICODE_FORMAT);</span>
+<span class="nc" id="L94">        } catch (Exception ex) {</span>
+<span class="nc" id="L95">            ex.printStackTrace();;</span>
         }
-<span class="nc" id="L95">        return null;</span>
+<span class="nc" id="L97">        return null;</span>
     }
 
     @Override
     public String decrypt(String str) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-<span class="fc" id="L100">        String encryptedString = str;</span>
+<span class="fc" id="L102">        String encryptedString = str;</span>
         try {
-<span class="fc" id="L102">            cipher.init(Cipher.DECRYPT_MODE, key);</span>
-<span class="fc" id="L103">            byte[] encryptedText = Base64.decodeBase64(str.getBytes(UNICODE_FORMAT));</span>
-<span class="fc" id="L104">            byte[] plainTest = cipher.doFinal(encryptedText);</span>
-<span class="fc" id="L105">            encryptedString = new String(plainTest, UNICODE_FORMAT);</span>
-<span class="nc" id="L106">        } catch (Exception e) {</span>
-<span class="nc" id="L107">            e.printStackTrace();</span>
-<span class="fc" id="L108">        }</span>
-<span class="fc" id="L109">        return encryptedString;</span>
+<span class="fc" id="L104">            cipher.init(Cipher.DECRYPT_MODE, key);</span>
+<span class="fc" id="L105">            byte[] encryptedText = Base64.decodeBase64(str.getBytes(UNICODE_FORMAT));</span>
+<span class="fc" id="L106">            byte[] plainTest = cipher.doFinal(encryptedText);</span>
+<span class="fc" id="L107">            encryptedString = new String(plainTest, UNICODE_FORMAT);</span>
+<span class="nc" id="L108">        } catch (Exception e) {</span>
+<span class="nc" id="L109">            e.printStackTrace();</span>
+<span class="fc" id="L110">        }</span>
+<span class="fc" id="L111">        return encryptedString;</span>
     }
 
         @Override
         public String newKey() {
-<span class="fc" id="L114">                return GEN();</span>
+<span class="fc" id="L116">                return GEN();</span>
         }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
