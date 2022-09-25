@@ -25,9 +25,13 @@ The jUDDI v3 client now contains the UDDI 2 web service clients. Although, there
 ````
 org.apache.juddi.v3.client.UDDIServiceV2 svc = new UDDIServiceV2();
 Inquire port = svc.getInquire();
-((BindingProvider) port).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://localhost:8080/juddiv3/services/inquiryv2");
+((BindingProvider) port).getRequestContext().\
+	put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, 
+	"http://localhost:8080/juddiv3/services/inquiryv2");
 Publish pub= svc.getPublish();
-((BindingProvider) pub).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://localhost:8080/juddiv3/services/publishv2");
+((BindingProvider) pub).getRequestContext().\
+	put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, 
+	"http://localhost:8080/juddiv3/services/publishv2");
 ````
 
 All you need to reference the following projects/jars from jUDDI:

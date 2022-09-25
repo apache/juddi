@@ -196,6 +196,13 @@ language governing permissions and * limitations under the License. * */ -->
             <type>jar</type>
             <classifier>javadoc</classifier>
         </dependency>
+			<dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>juddi-parent</artifactId>
+            <version>${project.parent.version}</version>
+			<classifier>client</classifier>
+			<type>pdf</type>
+        </dependency>
       
     </dependencies>
     <build>

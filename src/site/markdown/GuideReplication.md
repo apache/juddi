@@ -57,8 +57,10 @@ For Tomcat, all you need is a connector with "clientAuth=want". Here's an exampl
 <Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
                maxThreads="150" scheme="https" secure="true"
                clientAuth="want" sslProtocol="TLS" 
-               truststoreFile="truststore.jks" truststorePass="password"
-			   keystoreFile="conf/keystore.jks" keystorePass="password"/>
+               truststoreFile="truststore.jks" 
+			   truststorePass="password"
+			   keystoreFile="conf/keystore.jks" 
+			   keystorePass="password"/>
 ````
 
 ##### Mapping certificates to roles
@@ -66,7 +68,9 @@ For Tomcat, all you need is a connector with "clientAuth=want". Here's an exampl
 For each certificate that is used by a jUDDI node to authenticate to another, you'll have to map the Subject DN of the certificate to a user with the role "replication". In our example, we'll use tomcat's _tomcat-users.xml_ file.
 
 ````
-<user username="CN=localhost, OU=jUDDI Test, O=Apache Software Foundation, L=Anytown, ST=MD, C=US" password="null" roles="replication"/>
+<user username="CN=localhost, OU=jUDDI Test, O=Apache Software \
+	Foundation, L=Anytown, ST=MD, C=US" password="null" \
+	roles="replication"/>
 ````
 
 In this example, we've added our test certificate's subject DN to the role of "replication". 
@@ -116,19 +120,27 @@ Everytime the configuration changes, an audit log is required in jUDDI log file.
 Here's an example default configuration
 
 ````
-<?xml version="1.0" encoding="UTF-8"?><replicationConfiguration xmlns="urn:uddi-org:repl_v3" xmlns:ns2="urn:uddi-org:api_v3" xmlns:ns3="http://www.w3.org/2000/09/xmldsig#">
+<?xml version="1.0" encoding="UTF-8"?><replicationConfiguration 
+	xmlns="urn:uddi-org:repl_v3" xmlns:ns2="urn:uddi-org:api_v3" 
+	xmlns:ns3="http://www.w3.org/2000/09/xmldsig#">
     <serialNumber>1424114880586</serialNumber>
-    <timeOfConfigurationUpdate>201502161428-0500</timeOfConfigurationUpdate>
+    <timeOfConfigurationUpdate>
+		201502161428-0500
+	</timeOfConfigurationUpdate>
     <registryContact>
         <ns2:contact>
             <ns2:personName>unknown</ns2:personName>
         </ns2:contact>
     </registryContact>
     <operator>
-        <operatorNodeID>uddi:juddi.apache.org:node1</operatorNodeID>
+        <operatorNodeID>
+			uddi:juddi.apache.org:node1
+		</operatorNodeID>
         <operatorStatus>normal</operatorStatus>
         <ns2:contact/>
-        <soapReplicationURL>http://localhost:8080/juddiv3/services/replication</soapReplicationURL>
+        <soapReplicationURL>
+		http://localhost:8080/juddiv3/services/replication
+		</soapReplicationURL>
     </operator>
     <communicationGraph>
         <node>uddi:juddi.apache.org:node1</node>
@@ -143,7 +155,9 @@ Here's an example non-directed replicaton graph. In this example, all changes pe
 
 ````
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<replicationConfiguration xmlns="urn:uddi-org:repl_v3" xmlns:ns2="urn:uddi-org:api_v3" xmlns:ns3="http://www.w3.org/2000/09/xmldsig#">
+<replicationConfiguration xmlns="urn:uddi-org:repl_v3" 
+	xmlns:ns2="urn:uddi-org:api_v3" 
+	xmlns:ns3="http://www.w3.org/2000/09/xmldsig#">
     <serialNumber>0</serialNumber>
     <timeOfConfigurationUpdate></timeOfConfigurationUpdate>
     <registryContact>
@@ -152,20 +166,28 @@ Here's an example non-directed replicaton graph. In this example, all changes pe
         </ns2:contact>
     </registryContact>
     <operator>
-        <operatorNodeID>uddi:juddi.apache.org:node1</operatorNodeID>
+        <operatorNodeID>
+			uddi:juddi.apache.org:node1
+		</operatorNodeID>
         <operatorStatus>normal</operatorStatus>
         <ns2:contact useType="admin">
             <ns2:personName xml:lang="en">bob</ns2:personName>
         </ns2:contact>
-        <soapReplicationURL>https://localhost:8443/juddiv3replication/services/replication</soapReplicationURL>
+        <soapReplicationURL>
+		https://localhost:8443/juddiv3replication/services/replication
+		</soapReplicationURL>
     </operator>
     <operator>
-        <operatorNodeID>uddi:another.juddi.apache.org:node2</operatorNodeID>
+        <operatorNodeID>
+		uddi:another.juddi.apache.org:node2
+		</operatorNodeID>
         <operatorStatus>normal</operatorStatus>
         <ns2:contact useType="admin">
             <ns2:personName xml:lang="en">mary</ns2:personName>
         </ns2:contact>
-        <soapReplicationURL>https://localhost:9443/juddiv3replication/services/replication</soapReplicationURL>
+        <soapReplicationURL>
+		https://localhost:9443/juddiv3replication/services/replication
+		</soapReplicationURL>
     </operator>
     <communicationGraph>
         <node>uddi:juddi.apache.org:node1</node>
@@ -181,7 +203,9 @@ In this example, we have a directed graph where Node 1 sends to Node2, Node 2 to
 
 ````
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<replicationConfiguration xmlns="urn:uddi-org:repl_v3" xmlns:ns2="urn:uddi-org:api_v3" xmlns:ns3="http://www.w3.org/2000/09/xmldsig#">
+<replicationConfiguration xmlns="urn:uddi-org:repl_v3" 
+xmlns:ns2="urn:uddi-org:api_v3" 
+xmlns:ns3="http://www.w3.org/2000/09/xmldsig#">
     <serialNumber>0</serialNumber>
     <timeOfConfigurationUpdate></timeOfConfigurationUpdate>
     <registryContact>
@@ -190,44 +214,66 @@ In this example, we have a directed graph where Node 1 sends to Node2, Node 2 to
         </ns2:contact>
     </registryContact>
     <operator>
-        <operatorNodeID>uddi:juddi.apache.org:node1</operatorNodeID>
+        <operatorNodeID>
+		uddi:juddi.apache.org:node1
+		</operatorNodeID>
         <operatorStatus>normal</operatorStatus>
         <ns2:contact useType="admin">
             <ns2:personName xml:lang="en">bob</ns2:personName>
         </ns2:contact>
-        <soapReplicationURL>https://localhost:8443/juddiv3replication/services/replication</soapReplicationURL>
+        <soapReplicationURL>
+		https://localhost:8443/juddiv3replication/services/replication
+		</soapReplicationURL>
     </operator>
     <operator>
-        <operatorNodeID>uddi:another.juddi.apache.org:node2</operatorNodeID>
+        <operatorNodeID>
+		uddi:another.juddi.apache.org:node2
+		</operatorNodeID>
         <operatorStatus>normal</operatorStatus>
         <ns2:contact useType="admin">
             <ns2:personName xml:lang="en">mary</ns2:personName>
         </ns2:contact>
-        <soapReplicationURL>https://localhost:9443/juddiv3replication/services/replication</soapReplicationURL>
+        <soapReplicationURL>
+		https://localhost:9443/juddiv3replication/services/replication
+		</soapReplicationURL>
     </operator>
     <operator>
-        <operatorNodeID>uddi:yet.another.juddi.apache.org:node3</operatorNodeID>
+        <operatorNodeID>
+		uddi:yet.another.juddi.apache.org:node3
+		</operatorNodeID>
         <operatorStatus>normal</operatorStatus>
         <ns2:contact useType="admin">
             <ns2:personName xml:lang="en">mary</ns2:personName>
         </ns2:contact>
-        <soapReplicationURL>https://localhost:10443/juddiv3replication/services/replication</soapReplicationURL>
+        <soapReplicationURL>
+		https://localhost:10443/juddiv3replication/services/replication
+		</soapReplicationURL>
     </operator>
     <communicationGraph>
         <node>uddi:another.juddi.apache.org:node2</node>
         <node>uddi:juddi.apache.org:node1</node>
         <node>uddi:yet.another.juddi.apache.org:node3</node>
         <edge>
-            <messageSender>uddi:juddi.apache.org:node1</messageSender>
-            <messageReceiver>uddi:another.juddi.apache.org:node2</messageReceiver>
+            <messageSender>
+			uddi:juddi.apache.org:node1
+			</messageSender>
+            <messageReceiver>
+			uddi:another.juddi.apache.org:node2
+			</messageReceiver>
         </edge>
         <edge>
-            <messageSender>uddi:another.juddi.apache.org:node2</messageSender>
-            <messageReceiver>uddi:yet.another.juddi.apache.org:node3</messageReceiver>
+            <messageSender>uddi:another.juddi.apache.org:node2
+			</messageSender>
+            <messageReceiver>uddi:yet.another.juddi.apache.org:node3
+			</messageReceiver>
         </edge>
         <edge>
-            <messageSender>uddi:yet.another.juddi.apache.org:node3</messageSender>
-            <messageReceiver>uddi:juddi.apache.org:node1</messageReceiver>
+            <messageSender>
+			uddi:yet.another.juddi.apache.org:node3
+			</messageSender>
+            <messageReceiver>
+			uddi:juddi.apache.org:node1
+			</messageReceiver>
         </edge>
     </communicationGraph>
     <maximumTimeToSyncRegistry>1</maximumTimeToSyncRegistry>

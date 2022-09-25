@@ -32,11 +32,15 @@ Components based on jUDDI's Client for the .NET Framework can configure logging 
 ````
 	<!-- DEBUG, INFO, WARN, ERROR -->
 	<add key="org.apache.juddi.v3.client.log.level" value="INFO" />
-    <!-- options are CONSOLE, EVENTLOG, FILE multiple values can be specified, comma delimited.
-		Notes for EVENTLOG, you must run the juddi-installer as admin before running-->
-    <add key="org.apache.juddi.v3.client.log.target" value="CONSOLE" />
+    <!-- options are CONSOLE, EVENTLOG, FILE multiple values can be 
+		specified, comma delimited.
+		Notes for EVENTLOG, you must run the juddi-installer as admin
+		before running-->
+    <add key="org.apache.juddi.v3.client.log.target" 
+		value="CONSOLE" />
 	<!-- only used when target=FILE -->
-    <add key="org.apache.juddi.v3.client.log.logger.file" value="pathToOutputFile" />
+    <add key="org.apache.juddi.v3.client.log.logger.file"
+	value="pathToOutputFile" />
 ````
 
 If nothing is defined, the default log level is "WARN" and the target is "CONSOLE" which is standard out. 

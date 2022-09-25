@@ -46,7 +46,9 @@ The only parts used from uddi.xml are the following
 Executing the TCK runner is simple.
 
 ````
-java (options) -Duddi.client.xml=uddi.xml -jar juddi-tck-runner-{VERSION}-SNAPSHOT-jar-with-dependencies.jar
+java (options) \
+	-Duddi.client.xml=uddi.xml -jar \
+	juddi-tck-runner-{VERSION}-jar-with-dependencies.jar
 ````
 
 Optional parameters

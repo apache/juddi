@@ -21,9 +21,11 @@ TIP: All of the examples in this document reference JSON encoded messages. To sw
 Each method is accessible using the following pattern:
 
 ````
-http://localhost:8080/juddiv3/services/inquiryRest/{encoding}/{method}/{parameters}
+http://localhost:8080/juddiv3/services/inquiryRest/{encoding}/\
+	{method}/{parameters}
 //or
-http://localhost:8080/juddiv3/services/inquiryRest/{encoding}/{method}?{name=value}
+http://localhost:8080/juddiv3/services/inquiryRest/{encoding}/\
+	{method}?{name=value}
 ````
 Notes
 
@@ -46,7 +48,8 @@ Returns all executable endpoints for a given service key, including all binding 
 Example: 
 
 ````
-http://localhost:8080/juddiv3/services/inquiryRest/JSON/endpointsByService/uddi:juddi.apache.org:services-custodytransfer
+http://localhost:8080/juddiv3/services/inquiryRest/JSON/\
+	endpointsByService/uddi:juddi.apache.org:services-custodytransfer
 ````
 
 ##### getDetail
@@ -56,7 +59,8 @@ Return the details of a specific item using query parameters. This implements th
 Example: 
 
 ````
-http://localhost:8080/juddiv3/services/inquiryRest/XML/getDetail?businessKey=uddi:juddi.apache.org:businesses-asf
+http://localhost:8080/juddiv3/services/inquiryRest/XML/\
+	getDetail?businessKey=uddi:juddi.apache.org:businesses-asf
 ````
 
 The following query parameters are supported. Only one can be specified at a time
@@ -123,80 +127,12 @@ The output of JSON encoded messages is obviously different than XML. The followi
         },
         "description": {
             "@xml.lang": "en",
-            "$": "This is a UDDI v3 registry node as implemented by Apache jUDDI."
+            "$": "This is a UDDI v3 registry node as implemented \
+				by Apache jUDDI."
         },
         "businessServices": {
-            "businessService": [
-                {
-                    "@serviceKey": "uddi:juddi.apache.org:services-custodytransfer",
-                    "@businessKey": "uddi:juddi.apache.org:businesses-asf",
-                    "name": {
-                        "@xml.lang": "en",
-                        "$": "UDDI Custody and Ownership Transfer Service"
-                    },
-                    "description": {
-                        "@xml.lang": "en",
-                        "$": "Web Service supporting UDDI Custody and Ownership Transfer API"
-                    },
-                    "bindingTemplates": {
-                        "bindingTemplate": [
-                            {
-                                "@bindingKey": "uddi:juddi.apache.org:servicebindings-custodytransfer-ws",
-                                "@serviceKey": "uddi:juddi.apache.org:services-custodytransfer",
-                                "description": "UDDI Custody and Ownership Transfer API V3",
-                                "accessPoint": {
-                                    "@useType": "wsdlDeployment",
-                                    "$": "http://localhost:8080/juddiv3/services/custody-transfer?wsdl"
-                                },
-                                "tModelInstanceDetails": {
-                                    "tModelInstanceInfo": {
-                                        "@tModelKey": "uddi:uddi.org:v3_ownership_transfer",
-                                        "instanceDetails": {
-                                            "instanceParms": "\n                \n                <?xml version=\"1.0\" encoding=\"utf-8\" ?>\n                <UDDIinstanceParmsContainer\n                 xmlns=\"urn:uddi-org:policy_v3_instanceParms\">\n                  <authInfoUse>required</authInfoUse>\n                </UDDIinstanceParmsContainer>\n                \n                "
-                                        }
-                                    }
-                                },
-                                "categoryBag": {
-                                    "keyedReference": {
-                                        "@tModelKey": "uddi:uddi.org:categorization:types",
-                                        "@keyName": "uddi-org:types:wsdl",
-                                        "@keyValue": "wsdlDeployment"
-                                    }
-                                }
-                            },
-                            {
-                                "@bindingKey": "uddi:juddi.apache.org:servicebindings-custodytransfer-ws-ssl",
-                                "@serviceKey": "uddi:juddi.apache.org:services-custodytransfer",
-                                "description": "UDDI Custody and Ownership Transfer API V3 SSL",
-                                "accessPoint": {
-                                    "@useType": "wsdlDeployment",
-                                    "$": "https://localhost:8443/juddiv3/services/custody-transfer?wsdl"
-                                },
-                                "tModelInstanceDetails": {
-                                    "tModelInstanceInfo": [
-                                        {
-                                            "@tModelKey": "uddi:uddi.org:v3_ownership_transfer",
-                                            "instanceDetails": {
-                                                "instanceParms": "\n                \n                <?xml version=\"1.0\" encoding=\"utf-8\" ?>\n                <UDDIinstanceParmsContainer\n                 xmlns=\"urn:uddi-org:policy_v3_instanceParms\">\n                  <authInfoUse>required</authInfoUse>\n                </UDDIinstanceParmsContainer>\n                \n                "
-                                            }
-                                        },
-                                        {
-                                            "@tModelKey": "uddi:uddi.org:protocol:serverauthenticatedssl3"
-                                        }
-                                    ]
-                                },
-                                "categoryBag": {
-                                    "keyedReference": {
-                                        "@tModelKey": "uddi:uddi.org:categorization:types",
-                                        "@keyName": "uddi-org:types:wsdl",
-                                        "@keyValue": "wsdlDeployment"
-                                    }
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]
+            "businessService": [ ... ]
+            
         },
         "categoryBag": {
             "keyedReference": {

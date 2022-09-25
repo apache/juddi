@@ -63,7 +63,8 @@ Procedure - Windows
 * Build the solution. This will build the juddi-client.net.dll, the same application(s) and the test project(s).
 
 ````
-MSBuild.exe juddi-client.net.sln /p:Configuration=Debug /p:Platform="Any CPU"
+MSBuild.exe juddi-client.net.sln /p:Configuration=Debug \
+	/p:Platform="Any CPU"
 ````
 
 For additional debug output set the environment variable 'debug=true'

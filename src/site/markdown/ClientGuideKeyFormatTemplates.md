@@ -23,7 +23,8 @@ The default templates setup by the jUDDI client are:
 uddi:${keyDomain}:business_${businessName}
 uddi:${keyDomain}:service_${serviceName}
 uddi:${keyDomain}:service_cache_${serverName}
-uddi:${keyDomain}:binding_${serverName}_${serviceName}_${portName}_${serverPort}
+uddi:${keyDomain}:\
+	binding_${serverName}_${serviceName}_${portName}_${serverPort}
 ````
 
 where tokens are expressed using `${}`. The templates are defined in the UDDIKeyConvention class.
@@ -33,15 +34,19 @@ where tokens are expressed using `${}`. The templates are defined in the UDDIKey
 At runtime a serviceKey can be obtained using
 
 ````
-String serviceKey = UDDIKeyConvention.getServiceKey(properties, serviceName);
+String serviceKey = \
+	UDDIKeyConvention.getServiceKey(properties, serviceName);
 ````
 
 The serviceName can be specified in as a property in the first argument, or it can explicitly passed as the second argument. Using the second argument overrides what's specified in the properties. By default it will use the service template `uddi:${keyDomain}:service_${serviceName}`, but if you wish to use a different template you can simple specify that as a property, for example
 
 ````
-String myCustomServiceFormat = `uddi:${keyDomain}:s_${serviceName}`;
-properties.add(Property.SERVICE_KEY_FORMAT, myCustomServiceFormat);
-String myCustomFormattedServiceKey = UDDIKeyConvention.getServiceKey(properties, serviceName);
+String myCustomServiceFormat = \
+	uddi:${keyDomain}:s_${serviceName};
+properties.add(Property.SERVICE_KEY_FORMAT, \
+	myCustomServiceFormat);
+String myCustomFormattedServiceKey = \
+	UDDIKeyConvention.getServiceKey(properties, serviceName);
 ````
 
 #### Where to define to properties?
@@ -69,8 +74,11 @@ You can define the properties in your code, or you can obtain and pass in the pr
 and you can obtain the properties like
 
 ````
-UDDIClient uddiClient = new UDDIClient(`META-INF/wsdl2uddi-uddi.xml`);
-Properties properties = uddiClient.getClientConfig().getUDDINode(`default`).getProperties();
+UDDIClient uddiClient = \
+	new UDDIClient(`META-INF/wsdl2uddi-uddi.xml`);
+Properties properties = \
+	uddiClient.getClientConfig().getUDDINode(`default`)\
+	.getProperties();
 ````
 
 This is exactly what the WSDL2UDDI implementation does, and it the reason the class requires the properties in the constructor.

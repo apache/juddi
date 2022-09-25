@@ -26,17 +26,22 @@ uddi/client@name="someName"
 At least one node is required per client. A node represents a one logical UDDI server (or cluster of servers). Each UDDI node should host at least the inquiry service. A client using the jUDDI client package can be configured to access multiple nodes at the same time.
 
 ````
-<!-- if isHomeJUDDI is true, then this node is loaded by default, when no node is specified in client code -->
+<!-- if isHomeJUDDI is true, then this node is loaded by default,
+ when no node is specified in client code -->
 uddi/client/nodes[]/node@isHomeJUDDI=true/false
 <!-- the name of the node is referenced in client code -->
 uddi/client/nodes[]/node/name
 <!-- the description of the node -->
 uddi/client/nodes[]/node/description
-<!-- the properties section defines HTTP style credentials and a runtime tokenizer for URLs -->
+<!-- the properties section defines HTTP style credentials and a 
+runtime tokenizer for URLs -->
 uddi/client/nodes[]/node/properties
-<!-- The transport represents the class name of the transport mechanism that the client will use to connect
-to the UDDI node. The most commonly used is org.apache.juddi.v3.client.transport.JAXWSTransport, however
-RMITransport, InVMTransport and JAXWSv2TranslationTransport are also defined -->
+<!-- The transport represents the class name of the transport
+ mechanism that the client will use to connect
+to the UDDI node. The most commonly used is 
+org.apache.juddi.v3.client.transport.JAXWSTransport, however
+RMITransport, InVMTransport and JAXWSv2TranslationTransport are 
+also defined -->
 uddi/client/nodes[]/node/proxyTransport
 
 <!-- endpoint URLs -->
@@ -46,7 +51,8 @@ uddi/client/nodes[]/node/publishUrl
 uddi/client/nodes[]/node/securityUrl
 uddi/client/nodes[]/node/subscriptionUrl
 uddi/client/nodes[]/node/subscriptionListenerUrl
-<!-- note: this is for jUDDI v3.x servers only and is not part of the UDDI standard -->
+<!-- note: this is for jUDDI v3.x servers only and is not part
+ of the UDDI standard -->
 uddi/client/nodes[]/node/juddiApiUrl
 ````
 
@@ -65,7 +71,9 @@ JAXWSv2TranslationTransport is a bridge for accessing UDDIv2 web services using 
 Clerks are responsible for mapping stored user credentials to a Node and for automated registration. 
 
 ````
-<!-- if true, the contents of the child node xregister are registered when the UDDIClient object is created, using the credential and node reference.-->
+<!-- if true, the contents of the child node xregister are 
+registered when the UDDIClient object is created, using the
+ credential and node reference.-->
 uddi/client/clerks/registerOnStartup=true/false
 ````
 
@@ -74,9 +82,12 @@ uddi/client/clerks/registerOnStartup=true/false
 Clerks store credentials and map to a specific node.
 
 ````
-<!-- the name is a reference to the Node that these credentials apply to-->
-uddi/client/clerks[]/clerk@node - This is reference to uddi/client/node/name, it must exist
-uddi/client/clerks[]/clerk@name - This is a unique identifier of the clerk
+<!-- the name is a reference to the Node that these credentials 
+apply to-->
+uddi/client/clerks[]/clerk@node - This is reference to 
+	uddi/client/node/name, it must exist
+uddi/client/clerks[]/clerk@name - This is a unique identifier 
+	of the clerk
 uddi/client/clerks[]/clerk@publisher  - This is the username
 uddi/client/clerks[]/clerk@password
 uddi/client/clerks[]/clerk@isPasswordEncrypted=true/false
@@ -86,8 +97,10 @@ uddi/client/clerks[]/clerk@cryptoProvider=(see Crypto providers)
 Credentials can be encrypted using the included batch/bash scripts and then appended to the configuration. Example with encryption:
 
 ````
-<clerk name="default" node="default" publisher="root" password="(cipher text removed)"
-                          isPasswordEncrypted="true" cryptoProvider="org.apache.juddi.v3.client.cryptor.AES128Cryptor" />
+<clerk name="default" node="default" publisher="root" 
+password="(cipher text removed)"
+isPasswordEncrypted="true" 
+cryptoProvider="org.apache.juddi.v3.client.cryptor.AES128Cryptor" />
 ````
 
 Clerks also have settings for the automated cross registration of Businesses and Services on start up. 
@@ -105,7 +118,8 @@ The Signature section contains settings that map to the Digital Signature Utilit
 ````
 uddi/client/signature/signingKeyStorePath
 uddi/client/signature/signingKeyStoreFilePassword
-uddi/client/signature/signingKeyStoreFilePassword@isPasswordEncrypted
+uddi/client/signature/signingKeyStoreFilePassword\
+	@isPasswordEncrypted
 uddi/client/signature/signingKeyStoreFilePassword@cryptoProvider
 uddi/client/signature/signingKeyPassword
 uddi/client/signature/signingKeyPassword@isPasswordEncrypted
@@ -113,7 +127,8 @@ uddi/client/signature/signingKeyPassword@cryptoProvider
 uddi/client/signature/signingKeyAlias
 uddi/client/signature/canonicalizationMethod
 uddi/client/signature/signatureMethod=(default RSA_SHA1)
-uddi/client/signature/XML_DIGSIG_NS=(default http://www.w3.org/2000/09/xmldsig#)
+uddi/client/signature/XML_DIGSIG_NS=\
+	(default http://www.w3.org/2000/09/xmldsig#)
 uddi/client/signature/trustStorePath
 uddi/client/signature/trustStoreType
 uddi/client/signature/trustStorePassword
@@ -138,10 +153,16 @@ The subscriptionCallbacks section defines settings uses by the subscription call
 
 ````
 uddi/client/subscriptionCallbacks/keyDomain
-uddi/client/subscriptionCallbacks/listenUrl this is the URL that is used for callbacks, should be externally resolvable
-uddi/client/subscriptionCallbacks/autoRegisterBindingTemplate=true/false
-uddi/client/subscriptionCallbacks/autoRegisterBusinessServiceKey=(key) append callback endpoint to this service
-uddi/client/subscriptionCallbacks/signatureBehavior=(AbortIfSigned,Sign,DoNothing,SignOnlyIfParentIsntSigned), default DoNothing. Applies when auto registering the endpoint to a business or service that is already signed.
+uddi/client/subscriptionCallbacks/listenUrl this is the URL that 
+	is used for callbacks, should be externally resolvable
+uddi/client/subscriptionCallbacks/autoRegisterBindingTemplate=\
+	true/false
+uddi/client/subscriptionCallbacks/autoRegisterBusinessServiceKey\
+	=(key) append callback endpoint to this service
+uddi/client/subscriptionCallbacks/signatureBehavior=(\
+	AbortIfSigned,Sign,DoNothing,SignOnlyIfParentIsntSigned), 
+	default DoNothing. Applies when auto registering the 
+	endpoint to a business or service that is already signed.
 ````
 
 #### XtoWsdl
@@ -163,17 +184,34 @@ A database server, if one is not available, the embedded Derby engine can be use
 #### Changes in configuration compared to non-embedded
 
 * META-INF/embedded-uddi.xml needs to contain the connection settings for InVmTransport.
-....
-   <!-- In VM Transport Settings -->
-   <proxyTransport>org.apache.juddi.v3.client.transport.InVMTransport</proxyTransport>
-   <custodyTransferUrl>org.apache.juddi.api.impl.UDDICustodyTransferImpl</custodyTransferUrl>
-   <inquiryUrl>org.apache.juddi.api.impl.UDDIInquiryImpl</inquiryUrl>
-   <publishUrl>org.apache.juddi.api.impl.UDDIPublicationImpl</publishUrl>
-   <securityUrl>org.apache.juddi.api.impl.UDDISecurityImpl</securityUrl>
-   <subscriptionUrl>org.apache.juddi.api.impl.UDDISubscriptionImpl</subscriptionUrl>
-   <subscriptionListenerUrl>org.apache.juddi.api.impl.UDDISubscriptionListenerImpl</subscriptionListenerUrl>
-   <juddiApiUrl>org.apache.juddi.api.impl.JUDDIApiImpl</juddiApiUrl>
-....
+````
+<!-- In VM Transport Settings -->
+<proxyTransport>
+org.apache.juddi.v3.client.transport.InVMTransport
+</proxyTransport>
+<custodyTransferUrl>
+org.apache.juddi.api.impl.UDDICustodyTransferImpl
+</custodyTransferUrl>
+<inquiryUrl>
+org.apache.juddi.api.impl.UDDIInquiryImpl
+</inquiryUrl>
+<publishUrl>
+org.apache.juddi.api.impl.UDDIPublicationImpl
+</publishUrl>
+<securityUrl>
+org.apache.juddi.api.impl.UDDISecurityImpl
+</securityUrl>
+<subscriptionUrl>
+org.apache.juddi.api.impl.UDDISubscriptionImpl
+</subscriptionUrl>
+<subscriptionListenerUrl>
+org.apache.juddi.api.impl.UDDISubscriptionListenerImpl
+</subscriptionListenerUrl>
+<juddiApiUrl>
+org.apache.juddi.api.impl.JUDDIApiImpl
+</juddiApiUrl>
+````
+
 * The serverside config file juddiv3.xml needs to be added to the classpath.
 * A META-INF/persistence.xml needs to be added.
 * Add the juddi-core (UDDI server) and derby (Embedded Database) dependencies to the pom. Use the juddi-core-openjpa jar for OpenJPA.

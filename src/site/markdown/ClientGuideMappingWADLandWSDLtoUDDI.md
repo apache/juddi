@@ -20,18 +20,24 @@ properties.put("businessName", domain);
 properties.put("serverName", url.getHost());
 properties.put("serverPort", url.getPort());
 wsdlURL = wsdlDefinition.getDocumentBaseURI();
-WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
+WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new 
+	URLLocalizerDefaultImpl(), properties);
 //This creates a the services from WSDL
-BusinessServices businessServices = wsdl2UDDI.createBusinessServices(wsdlDefinition);
+BusinessServices businessServices = 
+	wsdl2UDDI.createBusinessServices(wsdlDefinition);
 //This creates the tModels from WSDL
-Map<QName, PortType> portTypes = (Map<QName, PortType>) wsdlDefinition.getAllPortTypes();
+Map<QName, PortType> portTypes = 
+	(Map<QName, PortType>) wsdlDefinition.getAllPortTypes();
 //This creates more tModels from WSDL
-Set<TModel> portTypeTModels = wsdl2UDDI.createWSDLPortTypeTModels(wsdlURL, portTypes);
+Set<TModel> portTypeTModels = 
+	wsdl2UDDI.createWSDLPortTypeTModels(wsdlURL, portTypes);
 Map allBindings = wsdlDefinition.getAllBindings();
 //This creates even more tModels from WSDL
-Set<TModel> createWSDLBindingTModels = wsdl2UDDI.createWSDLBindingTModels(wsdlURL, allBindin
+Set<TModel> createWSDLBindingTModels = 
+	wsdl2UDDI.createWSDLBindingTModels(wsdlURL, allBindin
 
-//Now just save the tModels, then add the services to a new or existing business
+//Now just save the tModels, then add the services to a new or 
+//existing business
 
 ````
 
@@ -60,13 +66,18 @@ properties.put("keyDomain", domain);
 properties.put("businessName", domain);
 properties.put("serverName", url.getHost());
 properties.put("serverPort", url.getPort());
-WADL2UDDI wadl2UDDI = new WADL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
+WADL2UDDI wadl2UDDI = new WADL2UDDI(null, 
+	new URLLocalizerDefaultImpl(), properties);
 
 //creates the services
-BusinessService businessServices = wadl2UDDI.createBusinessService(new QName("MyWasdl.namespace", "Servicename"), app);
+BusinessService businessServices = 
+	wadl2UDDI.createBusinessService(
+		new QName("MyWasdl.namespace", "Servicename"), app);
 //creates tModels (if any)
-Set<TModel> portTypeTModels = wadl2UDDI.createWADLPortTypeTModels(wsdlURL, app);
-//Now just save the tModels, then add the services to a new or existing business
+Set<TModel> portTypeTModels = 
+	wadl2UDDI.createWADLPortTypeTModels(wsdlURL, app);
+//Now just save the tModels, then add the services to a new or 
+//existing business
 ````
 
 

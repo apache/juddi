@@ -97,10 +97,14 @@ Here are the first few lines of the publish method:
 ````
 	// Login aka retrieve its authentication token
 	GetAuthToken getAuthTokenMyPub = new GetAuthToken();
-	getAuthTokenMyPub.setUserID("bob");                    //your username
-	getAuthTokenMyPub.setCred("bob");                          //your password
-	AuthToken myPubAuthToken = security.getAuthToken(getAuthTokenMyPub);
-	System.out.println(getAuthTokenMyPub.getUserID() + "'s AUTHTOKEN = " + "******* never log auth tokens!");
+	//your username
+	getAuthTokenMyPub.setUserID("bob");
+	//your password
+	getAuthTokenMyPub.setCred("bob");
+	AuthToken myPubAuthToken = 
+		security.getAuthToken(getAuthTokenMyPub);
+	System.out.println(getAuthTokenMyPub.getUserID() + "'s AUTHTOKEN = \
+		" + "******* never log auth tokens!");
 ````
 
 IMPORTANT: Don't log authentication tokens. In addition, whenever you're done with it, it should be 'discarded'. Think of it as a logout function.
@@ -120,7 +124,8 @@ Name myBusName = new Name();
 myBusName.setValue("My Business");
 myBusEntity.getName().add(myBusName);
 
-// Adding the business entity to the "save" structure, using our publisher's authentication info 
+// Adding the business entity to the "save" structure, using our 
+//publisher's authentication info 
 // and saving away.
 SaveBusiness sb = new SaveBusiness();
 sb.getBusinessEntity().add(myBusEntity);
@@ -129,7 +134,8 @@ BusinessDetail bd = publish.saveBusiness(sb);
 String myBusKey = bd.getBusinessEntity().get(0).getBusinessKey();
 System.out.println("myBusiness key:  " + myBusKey);
 
-// Creating a service to save.  Only adding the minimum data: the parent business key retrieved 
+// Creating a service to save.  Only adding the minimum data: the 
+//parent business key retrieved 
 //from saving the business above and a single name.
 BusinessService myService = new BusinessService();
 myService.setBusinessKey(myBusKey);
@@ -137,9 +143,11 @@ Name myServName = new Name();
 myServName.setValue("My Service");
 myService.getName().add(myServName);
 // Add binding templates, etc...
-// <snip> We removed some stuff here to make the example shorter, check out the source for more info</snip>
+// <snip> We removed some stuff here to make the example shorter, 
+//check out the source for more info</snip>
 
-// Adding the service to the "save" structure, using our publisher's authentication info and 
+// Adding the service to the "save" structure, using our 
+//publisher's authentication info and 
 // saving away.
 SaveService ss = new SaveService();
 ss.getBusinessService().add(myService);
@@ -149,7 +157,8 @@ String myServKey = sd.getBusinessService().get(0).getServiceKey();
 System.out.println("myService key:  " + myServKey);
 
 //and we're done, don't forget to logout!
-security.discardAuthToken(new DiscardAuthToken(myPubAuthToken.getAuthInfo()));
+security.discardAuthToken(new DiscardAuthToken(myPubAuthToken\
+	.getAuthInfo()));
 ````
 
 To summarize, here we have created and saved a BusinessEntity and then created and saved a BusinessService. We've just added the bare minimum data to each entity. Obviously, you would want to fill out each structure with greater information, particularly with services. However, this is beyond the scope of this article, which aims to simply show you how to programmatically publish entities.
@@ -171,7 +180,7 @@ public SimplePublishClerk() {
 		//get the clerk
 		clerk = uddiClient.getClerk("default");
 		if (clerk==null)
-				throw new Exception("the clerk wasn't found, check the config file!");
+			throw new Exception("the clerk wasn't found, check the config file!");
 	} catch (Exception e) {
 			e.printStackTrace();
 	}
@@ -191,14 +200,17 @@ Moving on, the next function is Publish. Here's the short short version.
 ````
 public void publish() {
   try {
-	// Creating the parent business entity that will contain our service.
+	// Creating the parent business entity that will contain our
+	//service.
 	BusinessEntity myBusEntity = new BusinessEntity();
 	Name myBusName = new Name();
 	myBusName.setValue("My Business");
 	myBusEntity.getName().add(myBusName);
-	//<snip>we removed a bunch of useful stuff here, see the full example for the rest of it</snip>
+	//<snip>we removed a bunch of useful stuff here, see the full 
+	//example for the rest of it</snip>
 
-	//register the business, if the return value is null, something went wrong!
+	//register the business, if the return value is null, 
+	//something went wrong!
 	BusinessEntity register = clerk.register(myBusEntity);
 	//don't forget to log out!
 	clerk.discardAuthToken();

@@ -100,7 +100,7 @@
 		<dependencySet>
             <outputDirectory>docs</outputDirectory>
             <includes>
-                <include>org.apache.juddi.juddi-docs:juddi-docs-dist:zip</include>
+                <include>org.apache.juddi:juddi-docs:juddi-docs-dist:zip</include>
             </includes>
             <unpack>true</unpack>
             <useProjectArtifact>false</useProjectArtifact>
@@ -110,6 +110,8 @@
             <directoryMode>0755</directoryMode>
             <fileMode>0755</fileMode>
         </dependencySet>
+		
+		
         
         <dependencySet>
             <outputDirectory>docs/javadoc</outputDirectory>
@@ -154,6 +156,16 @@
             <fileMode>0755</fileMode>
 			<includes>
 				<include>LICENSE</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>../target/site</directory>
+			<outputDirectory>docs</outputDirectory>
+			<filtered>false</filtered>
+			<directoryMode>0755</directoryMode>
+			<fileMode>0755</fileMode>
+			<includes>
+				<include>juddi-server-guide.pdf</include>
 			</includes>
 		</fileSet>
 		<fileSet>

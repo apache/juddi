@@ -43,7 +43,8 @@ Procedure 10.2. Setup Node 2: Marketing
 Create juddi_custom_install_data.
 ````
 cd juddiv3/WEB-INF/classes
-mv RENAME4MARKETING_juddi_custom_install_data juddi_custom_install_data
+mv RENAME4MARKETING_juddi_custom_install_data \
+	juddi_custom_install_data
 ````
 edit: webapps/juddiv3/WEB-INF/classes/juddiv3.properties and set the following property values where 'marketing' is the DNS name of your server.
 ````
@@ -105,37 +106,41 @@ The sales department developed a service called HelloSales. The HelloSales servi
 ````
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <uddi>
-    <reloadDelay>5000</reloadDelay>
-    <manager name="example-manager">
-        <nodes>
-            <node>
-                <name>default</name>
-                <description>Sales jUDDI node</description>  
-                <properties>
-                    <property name="serverName"  value="sales"/>
-                    <property name="serverPort"  value="8080"/>
-                    <property name="keyDomain"   value="sales.apache.org"/>
-                    <property name="department"  value="sales" />
-                </properties>
-                <proxyTransport>
-                    org.apache.juddi.v3.client.transport.InVMTransport
-                </proxyTransport>
-                <custodyTransferUrl>
-                    org.apache.juddi.api.impl.UDDICustodyTransferImpl
-                </custodyTransferUrl>
-                <inquiryUrl>org.apache.juddi.api.impl.UDDIInquiryImpl</inquiryUrl>
-                <publishUrl>org.apache.juddi.api.impl.UDDIPublicationImpl</publishUrl>
-                <securityUrl>org.apache.juddi.api.impl.UDDISecurityImpl</securityUrl>
-                <subscriptionUrl>
-                    org.apache.juddi.api.impl.UDDISubscriptionImpl
-                </subscriptionUrl>
-                <subscriptionListenerUrl>
-                    org.apache.juddi.api.impl.UDDISubscriptionListenerImpl
-                </subscriptionListenerUrl>
-                <juddiApiUrl>org.apache.juddi.api.impl.JUDDIApiImpl</juddiApiUrl>
-            </node>
-        </nodes>
-    </manager>
+<reloadDelay>5000</reloadDelay>
+<manager name="example-manager">
+<nodes>
+<node>
+	<name>default</name>
+	<description>Sales jUDDI node</description>  
+	<properties>
+		<property name="serverName"  value="sales"/>
+		<property name="serverPort"  value="8080"/>
+		<property name="keyDomain"   value="sales.apache.org"/>
+		<property name="department"  value="sales" />
+	</properties>
+	<proxyTransport>
+		org.apache.juddi.v3.client.transport.InVMTransport
+	</proxyTransport>
+	<custodyTransferUrl>
+		org.apache.juddi.api.impl.UDDICustodyTransferImpl
+	</custodyTransferUrl>
+	<inquiryUrl>org.apache.juddi.api.impl.UDDIInquiryImpl
+	</inquiryUrl>
+	<publishUrl>org.apache.juddi.api.impl.UDDIPublicationImpl
+	</publishUrl>
+	<securityUrl>org.apache.juddi.api.impl.UDDISecurityImpl
+	</securityUrl>
+	<subscriptionUrl>
+		org.apache.juddi.api.impl.UDDISubscriptionImpl
+	</subscriptionUrl>
+	<subscriptionListenerUrl>
+		org.apache.juddi.api.impl.UDDISubscriptionListenerImpl
+	</subscriptionListenerUrl>
+	<juddiApiUrl>org.apache.juddi.api.impl.JUDDIApiImpl
+	</juddiApiUrl>
+</node>
+</nodes>
+</manager>
 </uddi>
 ````
 
@@ -154,7 +159,8 @@ For a user to create and save subscriptions the publisher needs to have a valid 
 
 ````
 <save_tModel xmlns="urn:uddi-org:api_v3">
-    <tModel tModelKey="uddi:marketing.apache.org:keygenerator" xmlns="urn:uddi-org:api_v3">
+    <tModel tModelKey="uddi:marketing.apache.org:keygenerator" 
+	xmlns="urn:uddi-org:api_v3">
         <name>marketing-apache-org:keyGenerator</name>
         <description>Marketing domain key generator</description>
         <overviewDoc>
@@ -163,29 +169,35 @@ For a user to create and save subscriptions the publisher needs to have a valid 
             </overviewURL>
         </overviewDoc>
         <categoryBag>
-            <keyedReference tModelKey="uddi:uddi.org:categorization:types" 
+            <keyedReference 
+			tModelKey="uddi:uddi.org:categorization:types" 
                 keyName="uddi-org:types:keyGenerator"
                 keyValue="keyGenerator" />
         </categoryBag>
     </tModel>
     
-    <tModel tModelKey="uddi:marketing.apache.org:subscription:keygenerator" 
+    <tModel 
+	tModelKey="uddi:marketing.apache.org:subscription:keygenerator" 
         xmlns="urn:uddi-org:api_v3">
-        <name>marketing-apache-org:subscription:keyGenerator</name>
-        <description>Marketing Subscriptions domain key generator</description>
+        <name>
+		marketing-apache-org:subscription:keyGenerator</name>
+        <description>Marketing Subscriptions domain key 
+		generator</description>
         <overviewDoc>
             <overviewURL useType="text">
                 http://uddi.org/pubs/uddi_v3.htm#keyGen
             </overviewURL>
         </overviewDoc>
         <categoryBag>
-            <keyedReference tModelKey="uddi:uddi.org:categorization:types" 
+            <keyedReference 
+			tModelKey="uddi:uddi.org:categorization:types" 
                 keyName="uddi-org:types:keyGenerator"
                 keyValue="keyGenerator" />
         </categoryBag>
     </tModel>
 
-    <tModel tModelKey="uddi:sales.apache.org:keygenerator" xmlns="urn:uddi-org:api_v3">
+    <tModel tModelKey="uddi:sales.apache.org:keygenerator" 
+	xmlns="urn:uddi-org:api_v3">
         <name>sales-apache-org:keyGenerator</name>
         <description>Sales Root domain key generator</description>
         <overviewDoc>
@@ -194,7 +206,8 @@ For a user to create and save subscriptions the publisher needs to have a valid 
             </overviewURL>
         </overviewDoc>
         <categoryBag>
-            <keyedReference tModelKey="uddi:uddi.org:categorization:types" 
+            <keyedReference 
+			tModelKey="uddi:uddi.org:categorization:types" 
                 keyName="uddi-org:types:keyGenerator"
                 keyValue="keyGenerator" />
         </categoryBag>
@@ -214,7 +227,8 @@ If we are going to user the marketing publisher to subscribe to updates in the s
     <!--  optional 
     <xregister>
         <servicebinding 
-            entityKey="uddi:marketing.apache.org:servicebindings-subscriptionlistener-ws" 
+			entityKey="uddi:marketing.apache.org:servicebindings-\
+			subscriptionlistener-ws" 
             fromClerk="MarketingCratchit" toClerk="SalesCratchit"/>
     </xregister>
     -->

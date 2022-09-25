@@ -61,31 +61,40 @@ Target platform JBoss-6.x and HSQL using Hibernate and JBossWS-cxf. The juddiv3.
 mvn clean package -P hibernate-jbossws-cxf
 ````
 
-[knownissues]
-.KNOWN ISSUES
-Issue 1::
-+
+##### Known Issues
+
+Issue 1
+
 ````
-15:14:37,275 SEVERE [RegistryServlet] jUDDI registry could not be started. org.apache.commons.configuration.ConfigurationException: java.util.zip.ZipException: error in opening zip file: org.apache.commons.configuration.ConfigurationException: org.apache.commons.configuration.ConfigurationException: java.util.zip.ZipException: error in opening zip file
+15:14:37,275 SEVERE [RegistryServlet] jUDDI registry could not be
+ started. org.apache.commons.configuration.ConfigurationException:
+ java.util.zip.ZipException: error in opening zip file: 
+ org.apache.commons.configuration.ConfigurationException: 
+ org.apache.commons.configuration.ConfigurationException: 
+ java.util.zip.ZipException: error in opening zip file
 ````
-+
+
 Workaround: deploy juddiv3.war as a directory (not a zip file).
+
 Issue 2::
-+
+
 JBoss-5.x Note that configuration 3 and 4 will also run on JBoss-5.x, but you may run into the following
-+
+
 ````
-ERROR [org.jboss.ws.metadata.wsdl.xmlschema.JBossXSErrorHandler] (main) [domain:http://www.w3.org/TR/xml-schema-1]::[key=src-resolve]::Message=src-resolve: Cannot resolve the name ns1:Signature to a element declaration component.
+ERROR [org.jboss.ws.metadata.wsdl.xmlschema.JBossXSErrorHandler] 
+(main) [domain:http://www.w3.org/TR/xml-schema-1]::
+[key=src-resolve]::Message=src-resolve: Cannot resolve the 
+name ns1:Signature to a element declaration component.
 ````
-+
+
 Workaround: Unzip the deployers/jbossws.deployer/jbossws-native-core.jar and add the xmldsig-core-schema.xsd in the schema directory,
-+
+
 ````
 10293 Fri May 27 14:40:40 EDT 2011 schema/xmldsig-core-schema.xsd
 ````
-+
+
 Edit the file META-INF/jbossws-entities.properties by adding a line at the bottom saying:
-+
+
 ````
 http\://www.w3.org/2000/09/xmldsig#=schema/xmldsig-core-schema.xsd
 ````
@@ -105,7 +114,8 @@ Insert jboss-web.xml into the juddiv3.war/WEB-INF directory , should look like t
         <res-ref-name>jdbc/JuddiDS</res-ref-name>
         <jndi-name>java:JuddiDS</jndi-name>
     </resource-ref>
-    <depends>jboss.jdbc:datasource=JuddiDS,service=metadata</depends>
+    <depends>jboss.jdbc:datasource=JuddiDS,service=metadata
+		</depends>
 
 </jboss-web>
 ````
@@ -118,7 +128,8 @@ Replace the WEB-INF/web.xml with the jbossws-native-web.xml within docs/examples
 The first step for configuring a datasource is to copy your JDBC driver into the classpath. Copy your JDBC driver into `${jboss.home.dir}/server/${configuration}/lib`, where configuration is the profile you wish to start with (default, all, etc.). Example :
 
 ````
-cp mysql-connector-java-5.0.8-bin.jar /opt/jboss-5.1.0.GA/server/default/lib
+cp mysql-connector-java-5.0.8-bin.jar \
+	/opt/jboss-5.1.0.GA/server/default/lib
 ````
 
 Next, configure a JBoss datasource file for your db. Listed below is an example datasource for MySQL :
@@ -128,13 +139,17 @@ Next, configure a JBoss datasource file for your db. Listed below is an example 
 <datasources>
  <local-tx-datasource>
    <jndi-name>JuddiDS</jndi-name>
-   <connection-url>jdbc:mysql://localhost:3306/juddiv3</connection-url>
+   <connection-url>jdbc:mysql://localhost:3306/juddiv3
+	</connection-url>
    <driver-class>com.mysql.jdbc.Driver</driver-class>
    <user-name>root</user-name>
    <password></password>
-   <exception-sorter-class-name>org.jboss.resource.adapter.jdbc.vendor.MySQLExceptionSorter</exception-sorter-class-name>
+   <exception-sorter-class-name>
+   org.jboss.resource.adapter.jdbc.vendor.MySQLExceptionSorter
+   </exception-sorter-class-name>
 
-   <!-- corresponding type-mapping in the standardjbosscmp-jdbc.xml (optional) -->
+   <!-- corresponding type-mapping in the 
+	standardjbosscmp-jdbc.xml (optional) -->
    <metadata>
       <type-mapping>mySQL</type-mapping>
    </metadata>
@@ -193,14 +208,18 @@ First, using the asadmin administration tool, import the following file :
 
 ````
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE resources PUBLIC "-//Sun Microsystems Inc.//DTD Application Server 9.0 Domain//EN" "*<install directory>/lib/dtds/sun-resources_1_3.dtd*">
+<!DOCTYPE resources PUBLIC "-//Sun Microsystems Inc.//DTD 
+Application Server 9.0 Domain//EN" "*<install directory>/lib/dtds/sun-resources_1_3.dtd*">
 <resources>
-<jdbc-connection-pool name="mysql-pool" datasource-classname="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" res-type="javax.sql.DataSource">
+<jdbc-connection-pool name="mysql-pool" 
+datasource-classname="com.mysql.jdbc.jdbc2.optional.MysqlDataSource"
+ res-type="javax.sql.DataSource">
 <property name="user" value="juddi"/>
 <property name="password" value="juddi"/>
 <property name="url" value="jdbc:mysql://localhost:3306/juddiv3"/>
 </jdbc-connection-pool>
-<jdbc-resource enabled="true" jndi-name="jdbc/mysql-resource" object-type="user" pool-name="mysql-pool"/>
+<jdbc-resource enabled="true" jndi-name="jdbc/mysql-resource" 
+object-type="user" pool-name="mysql-pool"/>
 </resources>
 ````
 

@@ -47,10 +47,12 @@ import org.apache.juddi.v3.annotations.UDDIServiceBinding;
   description = "Hello World test service")
 @UDDIServiceBinding(
   bindingKey="uddi:myServiceBindingKey",
-  description="WSDL endpoint for the helloWorld Service. This service is used for "
+  description="WSDL endpoint for the helloWorld Service. This \
+	service is used for "
 				  + "testing the jUDDI annotation functionality",
   accessPointType="wsdlDeployment",
-  accessPoint="http://localhost:8080/juddiv3-samples/services/helloworld?wsdl")
+  accessPoint=
+	"http://localhost:8080/juddiv3-samples/services/helloworld?wsdl")
 @WebService(
   endpointInterface = "org.apache.juddi.samples.HelloWorld",
   serviceName = "HelloWorld")
@@ -64,7 +66,8 @@ public class HelloWorldImpl implements HelloWorld {
 ````
 On deployment of this WebService, the juddi-client code will scan this class for UDDI annotations and take care of the registration process. The configuration file uddi.xml of the juddi-client is described in the chapter, Using the jUDDI-Client. In the clerk section you need to reference the Service class 'org.apache.juddi.samples.HelloWorldImpl':
 ````
-<clerk name="BobCratchit" node="default" publisher="sales" password="sales"> 
+<clerk name="BobCratchit" node="default" publisher="sales" 
+	password="sales"> 
      <class>org.apache.juddi.samples.HelloWorldImpl</class>  
 </clerk>
 ````
@@ -83,7 +86,8 @@ client/clerks@registerOnStartup="true"
 Here's a full example
 ````
 <clerks registerOnStartup="false" >
-    <clerk name="default" node="default" publisher="userjoe" password="******" cryptoProvider="" isPasswordEncrypted="false">
+    <clerk name="default" node="default" publisher="userjoe" 
+	password="******" cryptoProvider="" isPasswordEncrypted="false">
         <class>com.mybiz.services.Service1</class>
     </clerk>
 </clerks>
@@ -101,7 +105,8 @@ Clients that run elsewhere simply need to "start" the UDDIClient.
 UDDIClient clerkManager = new UDDIClient("META-INF/uddi.xml");
 // register the clerkManager with the client side container
 UDDIClientContainer.addClient(clerkManager); 
-clerkManager.start(); //will create business/services/bindings as necessary
+clerkManager.start();
+//will create business/services/bindings as necessary
 
 //shutdown down
 clerkManager.stop(); //will unregister binding templates
@@ -139,10 +144,12 @@ The CategoryBag attribute allows you to reference tModels. For example the follo
 ````
 can be put in like
 ````
-categoryBag="keyedReference=keyName=uddi-org:types:wsdl;keyValue=wsdlDeployment;" +
-            "tModelKey=uddi:uddi.org:categorization:types," +  
-                     "keyedReference=keyName=uddi-org:types:wsdl2;keyValue=wsdlDeployment2;" +
-            "tModelKey=uddi:uddi.org:categorization:types2",
+categoryBag="keyedReference=keyName=uddi-org:types:wsdl;keyValue=\
+	wsdlDeployment;" +
+	"tModelKey=uddi:uddi.org:categorization:types," +  
+	"keyedReference=keyName=uddi-org:types:wsdl2;keyValue=\
+	wsdlDeployment2;" +
+	"tModelKey=uddi:uddi.org:categorization:types2",
 ````
 
 ### Considerations for clustered or load balanced web servers and automated registration

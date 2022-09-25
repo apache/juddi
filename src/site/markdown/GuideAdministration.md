@@ -110,7 +110,8 @@ juddi/auth/authenticator/class = org.apache.juddi.auth.JUDDIAuthentication
 The XMLDocAuthentication implementation needs a XML file on the classpath. The juddiv3.xml file would need to look like
 
 ````
-juddi/auth/authenticator/class = org.apache.juddi.auth.XMLDocAuthentication
+juddi/auth/authenticator/class = \
+    org.apache.juddi.auth.XMLDocAuthentication
 juddi/auth/usersfile = juddi-users.xml
 ````
 
@@ -132,7 +133,8 @@ The authenticate phase checks that the user id and password match a value in the
 The CryptedXMLDocAuthentication implementation is similar to the XMLDocAuthentication implementation, but the passwords are encrypted.
 
 ````
-juddi/auth/authenticator/class = org.apache.juddi.auth.CryptedXMLDocAuthentication
+juddi/auth/authenticator/class = \
+    org.apache.juddi.auth.CryptedXMLDocAuthentication
 juddi/auth/usersfile = juddi-users-encrypted.xml
 juddi/cryptor = org.apache.juddi.cryptor.DefaultCryptor
 ````
@@ -155,7 +157,8 @@ The authenticate phase checks that the user id and password match a value in the
 The MD5XMLDocAuthenticator implementation is similar to the XMLDocAuthentication implementation, but the passwords are hashed using MD5.
 
 ````
-juddi/auth/authenticator/class = org.apache.juddi.auth.MD5XMLDocAuthenticator
+juddi/auth/authenticator/class = \
+    org.apache.juddi.auth.MD5XMLDocAuthenticator
 juddi/auth/usersfile = juddi-users-hashed.xml
 juddi/cryptor = org.apache.juddi.cryptor.DefaultCryptor
 ````
@@ -182,7 +185,8 @@ LdapSimpleAuthenticator provides a way of authenticating users using LDAP simple
 To use this class you must add the following properties to the juddi3v.xml file:
 
 ````
-juddi/auth/authenticator/class=org.apache.juddi.auth.LdapSimpleAuthenticator
+juddi/auth/authenticator/class =\
+    org.apache.juddi.auth.LdapSimpleAuthenticator
 juddi/auth/authenticator/url=ldap://localhost:389
 juddi/auth/authenticator/style=simple
 ````
@@ -192,7 +196,8 @@ The juddi/authenticator/url property configures the LdapSimpleAuthenticator clas
 LdapExpandedAuthenticator provides a slightly more flexible way to authenticate users via LDAP.
 
 ````
-juddi/auth/authenticator/class=org.apache.juddi.v3.auth.LdapSimpleAuthenticator
+juddi/auth/authenticator/class =\
+    org.apache.juddi.v3.auth.LdapSimpleAuthenticator
 juddi/auth/authenticator/url=ldap://localhost:389
 juddi/auth/authenticator/style=simple
 juddi/auth/authenticator/ldapexp=CN=%s, OU=Users,DC=Domain, etc
@@ -207,7 +212,8 @@ TIP: The JBoss authentication is not distributed with jUDDI. It can be found her
 To use this class you must add the following properties to the juddiv3.xml file:
 
 ````
-juddi/auth/authenticator/class=org.apache.juddi.auth.JBossAuthenticator
+juddi/auth/authenticator/class = \
+    org.apache.juddi.auth.JBossAuthenticator
 juddi/auth/securityDomain=java:/jaas/other
 ````
 
@@ -218,7 +224,8 @@ The juddi/auth/authenticator/class property plugs the JbossAuthenticator class i
 Certain security configurations may use HTTP based authentication. In this scenario, jUDDI simply trust's that the container will authenticate the user via some mechanism and uses that username for interactions with jUDDI.  To configure this setup, use the following configuration settings in juddiv3.xml:
 
 ````
-juddi/auth/authenticator/class=org.apache.juddi.auth.HTTPContainerAuthenticator
+juddi/auth/authenticator/class = \
+    org.apache.juddi.auth.HTTPContainerAuthenticator
 juddi/auth/authenticator@useAuthToken=false
 ````
 
@@ -230,7 +237,8 @@ In addition, you'll have to make whatever changes necessary to the juddiv3.war/W
 Certain security configurations that enforce authentication before requests come to the web application, such as via Apache HTTPD or a reverse SSL proxy. In these cases, the proxy provided authenticates the user, then passes along the user's identity via a HTTP header. To configure this setup, use the following configuration settings in juddiv3.xml:
 
 ````
-juddi/auth/authenticator/class=org.apache.juddi.auth.HTTPHeaderAuthenticator
+juddi/auth/authenticator/class = \
+    org.apache.juddi.auth.HTTPHeaderAuthenticator
 juddi/auth/authenticator/header=(Some HTTP Header)
 juddi/auth/authenticator@useAuthToken=false
 ````
@@ -251,9 +259,14 @@ For Hibernate, for testing the content of this file looks like
     xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
     http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" 
     version="1.0">
-    <persistence-unit name="juddiDatabase" transaction-type="RESOURCE_LOCAL">
-        <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <jta-data-source>java:comp/env/jdbc/JuddiDS</jta-data-source>
+    <persistence-unit name="juddiDatabase" 
+	    transaction-type="RESOURCE_LOCAL">
+        <provider>
+		   org.hibernate.ejb.HibernatePersistence
+		</provider>
+        <jta-data-source>
+		    java:comp/env/jdbc/JuddiDS
+		</jta-data-source>
         <!-- entity classes -->
         <class>org.apache.juddi.model.Address</class>
         <class>org.apache.juddi.model.AddressLine</class>
@@ -262,10 +275,13 @@ For Hibernate, for testing the content of this file looks like
         <class>org.apache.juddi.model.UddiEntityPublisher</class>
 
         <properties>
-            <property name="hibernate.archive.autodetection" value="class"/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.archive.autodetection" 
+				value="class"/>
+            <property name="hibernate.hbm2ddl.auto" 
+				value="update"/>
             <property name="hibernate.show_sql" value="false"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect"/>
+            <property name="hibernate.dialect" 
+				value="org.hibernate.dialect.DerbyDialect"/>
         </properties>
     </persistence-unit>
 </persistence>
@@ -276,12 +292,18 @@ For OpenJPA the persistence.xml looks like
 ````
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" 
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" 
-             version="1.0">
-  <persistence-unit name="juddiDatabase" transaction-type="RESOURCE_LOCAL">
-    <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-    <non-jta-data-source>java:comp/env/jdbc/JuddiDS</non-jta-data-source>
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
+   http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" 
+   version="1.0">
+  <persistence-unit name="juddiDatabase" 
+    transaction-type="RESOURCE_LOCAL">
+    <provider>
+	  org.apache.openjpa.persistence.PersistenceProviderImpl
+	</provider>
+    <non-jta-data-source>
+	   java:comp/env/jdbc/JuddiDS
+	</non-jta-data-source>
     <!-- entity classes -->
     <class>org.apache.juddi.model.Address</class>
     <class>org.apache.juddi.model.AddressLine</class>
@@ -289,14 +311,21 @@ For OpenJPA the persistence.xml looks like
     <class>org.apache.juddi.model.UddiEntity</class>
     <class>org.apache.juddi.model.UddiEntityPublisher</class>
     <properties>
-      <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='add')"/>
-      <property name="openjpa.Log" value="DefaultLevel=WARN, Tool=INFO"/>
-      <property name="openjpa.jdbc.UpdateManager" value="operation-order"/>
-      <property name="openjpa.jdbc.DBDictionary" value="derby"/>
-      <!-- dialects: derby, postgres, mysql, oracle, sybase, sqlserver 
-           for a complete list check the OpenJPA documentation -->
-      <property name="openjpa.RuntimeUnenhancedClasses" value="warn"/>
-      <property name="openjpa.Compatibility" value="CheckDatabaseForCascadePersistToDetachedEntity=true"/>
+      <property name="openjpa.jdbc.SynchronizeMappings"
+	  value="buildSchema(SchemaAction='add')"/>
+      <property name="openjpa.Log" 
+	  value="DefaultLevel=WARN, Tool=INFO"/>
+      <property name="openjpa.jdbc.UpdateManager" 
+	  value="operation-order"/>
+      <property name="openjpa.jdbc.DBDictionary"
+	  value="derby"/>
+      <!-- dialects: derby, postgres, mysql, oracle, sybase, 
+           sqlserver for a complete list check the OpenJPA 
+		   documentation -->
+      <property name="openjpa.RuntimeUnenhancedClasses" 
+		value="warn"/>
+      <property name="openjpa.Compatibility" 
+	  value="CheckDatabaseForCascadePersistToDetachedEntity=true"/>
     </properties>
   </persistence-unit>
 </persistence>
@@ -380,7 +409,9 @@ Next edit the datasource. For tomcat you need to update the _juddiv3/META-INF/co
 <Context>
     <WatchedResource>WEB-INF/web.xml</WatchedResource>
     <Resource name="jdbc/JuddiDS" auth="Container"
-            type="javax.sql.DataSource" username="juddi" password="juddi"
+            type="javax.sql.DataSource" 
+			username="juddi" 
+			password="juddi"
             driverClassName="org.postgresql.Driver" 
             url="jdbc:postgresql://localhost:5432/juddi"
             maxActive="8"/>
@@ -412,19 +443,26 @@ Note, for this example, my database is called juddi, as is the user who has full
 <datasources>
     <local-tx-datasource>
         <jndi-name>JuddiDS</jndi-name>
-        <connection-url>jdbc:postgresql://localhost:5432/juddi</connection-url>
+        <connection-url>
+			jdbc:postgresql://localhost:5432/juddi
+		</connection-url>
         <driver-class>org.postgresql.Driver</driver-class>
         <user-name>juddi</user-name>
         <password>password</password>
-        <!-- sql to call when connection is created.  Can be anything, 
+        <!-- sql to call when connection is created.  
+		Can be anything, 
         select 1 is valid for PostgreSQL 
         <new-connection-sql>select 1</new-connection-sql>
         -->
-        <!-- sql to call on an existing pooled connection when it is obtained 
-        from pool.  Can be anything, select 1 is valid for PostgreSQL
-        <check-valid-connection-sql>select 1</check-valid-connection-sql>
+        <!-- sql to call on an existing pooled connection when it 
+		is obtained from pool.  Can be anything, select 1 is 
+		valid for PostgreSQL
+        <check-valid-connection-sql>
+			select 1
+		</check-valid-connection-sql>
         -->
-        <!-- corresponding type-mapping in the standardjbosscmp-jdbc.xml -->
+        <!-- corresponding type-mapping in the 
+			standardjbosscmp-jdbc.xml -->
         <metadata>
             <type-mapping>PostgreSQL 8.0</type-mapping>
         </metadata>
@@ -438,7 +476,8 @@ In _persistence.xml_, reference the correct JNDI name of the datasource and remo
 <jta-data-source>java:comp/env/jdbc/JuddiDS</jta-data-source>
 ...
 
-<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+<property name="hibernate.dialect" 
+	value="org.hibernate.dialect.PostgreSQLDialect"/>
 ````
 
 Be sure to have _postgresql-8.3-604.jdbc4.jar_ in the _lib_ folder.
@@ -448,7 +487,8 @@ Be sure to have _postgresql-8.3-604.jdbc4.jar_ in the _lib_ folder.
 To switch over to Oracle you need to add the oracle driver (i.e. the_classes12.jar_) to the  classpath and you will need to edit the _persistence.xml_ 
 
 ````
-<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
+<property name="hibernate.dialect" 
+	value="org.hibernate.dialect.Oracle10gDialect"/>
 ````
 
 To create a Oracle database name juddiv3 with the ultimate in minimalism use 
@@ -470,13 +510,15 @@ The easiest way to handle this is to create an orm.xml file and place it within 
 First make sure you have a running hsqldb. For a standalone server startup use:
 
 ````
-java -cp hsqldb.jar org.hsqldb.server.Server --port 1747 --database.0 file:juddi --dbname.0 juddi
+java -cp hsqldb.jar org.hsqldb.server.Server --port 1747 \
+	--database.0 file:juddi --dbname.0 juddi
 ````
 
 Next, connect the client manager to this instance using:
 
 ````
-java -classpath hsqldb.jar org.hsqldb.util.DatabaseManagerSwing --driver org.hsqldb.jdbcDriver --url jdbc:hsqldb:hsql://localhost:1747/juddi  -user sa
+java -classpath hsqldb.jar org.hsqldb.util.DatabaseManagerSwing \
+	--driver org.hsqldb.jdbcDriver --url jdbc:hsqldb:hsql://localhost:1747/juddi  -user sa
 ````
 
 and create the juddi user:
@@ -491,7 +533,8 @@ ALTER USER juddi set initial schema juddi;
 From now on, one can connect as JUDDI user to that database and the database is now ready to go. To switch jUDDI over to HSQL you need to add the hsql driver (i.e. The _hsqldb.jar_) to the classpath and you will need to edit the _persistence.xml_ 
 
 ````
-<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+<property name="hibernate.dialect" 
+	value="org.hibernate.dialect.HSQLDialect"/>
 ````
 
 and the datasource. For tomcat you the _context.xml_ should look something like 
@@ -502,7 +545,8 @@ and the datasource. For tomcat you the _context.xml_ should look something like
     <WatchedResource>WEB-INF/web.xml</WatchedResource>
     <!-- HSQL data source -->
     <Resource name="jdbc/JuddiDS" auth="Container"
-            type="javax.sql.DataSource" username="JUDDI" password="password"
+            type="javax.sql.DataSource" username="JUDDI" 
+			password="password"
             driverClassName="org.hsqldb.jdbcDriver"
             url="jdbc:hsqldb:hsql://localhost:1747/juddi"
             maxActive="8"/>
@@ -569,7 +613,8 @@ There are a few things worth mentioning for administering the jUDDI Graphical Us
 ### Task: Signing the Digital Signature Applet jar file
 
 ````
-jarsigner -keystore your.keystore -storepass yourpass -keypass keypass <pathto>/juddi-gui.war/applets/juddi-gui-dsig-all.jar
+jarsigner -keystore your.keystore -storepass yourpass -keypass \
+	keypass <pathto>/juddi-gui.war/applets/juddi-gui-dsig-all.jar
 ````
 
 Note: Jarsigner comes with most JDKs and has many command line options.

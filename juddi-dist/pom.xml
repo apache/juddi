@@ -54,6 +54,13 @@
             <artifactId>uddi-ws</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+		<dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>juddi-parent</artifactId>
+            <version>${project.parent.version}</version>
+			<classifier>server</classifier>
+			<type>pdf</type>
+        </dependency>
         <dependency>
             <groupId>org.apache.juddi</groupId>
             <artifactId>uddi-tck-base</artifactId>

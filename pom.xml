@@ -538,6 +538,35 @@ under the License.
 				  
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.3.0</version>
+				<executions>
+				  <execution>
+					<id>attach-artifact</id>
+					<phase>compile</phase>
+					<goals>
+					  <goal>attach-artifact</goal>
+					</goals>
+					<configuration>
+					 <artifacts>
+						<artifact>
+						  <file>target/site/juddi-server-guide.pdf</file>
+						  <type>pdf</type>
+						  <classifier>server</classifier>
+						</artifact>
+						<artifact>
+						  <file>target/site/juddi-client-guide.pdf</file>
+						  <type>pdf</type>
+						  <classifier>client</classifier>
+						</artifact>
+					  </artifacts>
+					  <runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
+					</configuration>
+				  </execution>
+				</executions>
+			  </plugin>
 			
 		
 		</plugins>
