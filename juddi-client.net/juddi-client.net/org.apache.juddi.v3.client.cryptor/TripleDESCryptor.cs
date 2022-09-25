@@ -27,6 +27,7 @@ namespace org.apache.juddi.v3.client.cryptor
     /// 3DES Ciphers
     /// </summary>
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
+    [Obsolete("This class should not be used anymore!", false)]
     internal sealed class TripleDESCryptor : Cryptor
     {
 

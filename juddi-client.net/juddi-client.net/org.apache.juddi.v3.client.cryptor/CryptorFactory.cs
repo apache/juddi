@@ -32,6 +32,7 @@ namespace org.apache.juddi.v3.client.cryptor
 
         public static readonly string AES128 = "AES128Cryptor";
         public static readonly string AES256 = "AES256Cryptor";
+        [Obsolete("This class should not be used anymore!", false)]
         public static readonly string TripleDES = "TripleDESCryptor";
         /// <summary>
         /// known implementations

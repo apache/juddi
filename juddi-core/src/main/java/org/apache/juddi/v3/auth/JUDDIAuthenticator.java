@@ -93,6 +93,11 @@ public class JUDDIAuthenticator implements Authenticator {
                                 tx.commit();
                         }
                         return authorizedName;
+                } catch (Exception ex) {
+                    //note: we saw an ArrayIndexOutOfBounds exception when using github actions for CI
+                    //with hibernate on derby, root cause is still tbd
+                    log.error("error during authentication routine, could indicate a database issue", ex);
+                    throw ex;
                 } finally {
                         if (tx.isActive()) {
                                 tx.rollback();
