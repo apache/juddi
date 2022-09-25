@@ -156,9 +156,9 @@
 
 			<token>
 				<!-- Time in minutes to expire tokes after inactivity-->
-				<Timeout>15</Timeout>
+				<Timeout>30</Timeout>
 				<!-- As of 3.1.5 Duration of time for tokens to expire, regardless of inactivity -->
-				<Expiration>60</Expiration>
+				<Expiration>30</Expiration>
 				<!-- As of 3.2, when set to true, tokens can only be used from the same IP address they were issued to -->
 				<enforceSameIPRule>true</enforceSameIPRule>
 			</token>
@@ -170,6 +170,20 @@
 		<validation>
 			<!-- As of 3.1.5 This setting will force referential integrity for all tModels (except keyGenerators), category bags, bindingTemplate/AccessPoint/hostingRedirector (referencing another host), tModelinstanceparms and anything else that references a KeyName default value is true.  set to false for backwards compatibility or for a more lax registry-->
 			<enforceReferentialIntegrity>true</enforceReferentialIntegrity>
+                        <!-- as of 3.3, reject digitally signed items that are invalid-->
+                        <rejectInvalidSignatures>
+                            <enable>false</enable>
+                            <trustStorePath>./src/test/resources/truststore.jks</trustStorePath>
+                            <trustStoreType>JKS</trustStoreType>
+                            <trustStorePassword
+                                    isPasswordEncrypted="true" 
+                                    cryptoProvider="org.apache.juddi.v3.client.cryptor.AES128Cryptor">8133dcd169105875a711e4b8b3e03bce</trustStorePassword>
+                                    <!-- Test -->
+
+                            <checkTimestamps>true</checkTimestamps>
+                            <checkTrust>true</checkTrust>
+                            <checkRevocationCRL>false</checkRevocationCRL>
+                        </rejectInvalidSignatures>
 		</validation>
 
 		<!--As of 3.1.5 Email delivery options for subscription API functions-->

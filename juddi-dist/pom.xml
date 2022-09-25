@@ -34,7 +34,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.juddi</groupId>
-            <artifactId>juddi-core</artifactId>
+            <artifactId>juddi-core-openjpa</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
@@ -76,7 +76,7 @@
         </dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
-			<artifactId>juddi-core</artifactId>
+			<artifactId>juddi-core-openjpa</artifactId>
 			<version>${project.parent.version}</version>
 			<classifier>sources</classifier>
 		</dependency>
@@ -114,7 +114,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.juddi</groupId>
-            <artifactId>juddi-core</artifactId>
+            <artifactId>juddi-core-openjpa</artifactId>
             <version>${project.parent.version}</version>
             <classifier>javadoc</classifier>
         </dependency>

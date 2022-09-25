@@ -44,7 +44,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
-			<artifactId>juddi-core</artifactId>
+			<artifactId>juddi-core-openjpa</artifactId>
 			<version>${project.parent.version}</version>
 			<scope>compile</scope>
 		</dependency>

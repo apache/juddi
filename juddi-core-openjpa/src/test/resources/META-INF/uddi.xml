@@ -16,71 +16,99 @@
 *
 */ -->
 <uddi xmlns="urn:juddi-apache-org:v3_client" xsi:schemaLocation="classpath:/xsd/uddi-client.xsd"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
-    <reloadDelay>5000</reloadDelay>
-    <client name="juddi-core-unittest-client">
-		<nodes>
-			<node isHomeJUDDI="true">
-			    <!-- required 'default' node -->
-				<name>default</name> 
-				<description>InVM jUDDI node</description>
-				<properties>
-					<property name="serverName" value="localhost" />
-					<!-- for UDDI nodes that use HTTP u/p, using the following 
-					<property name="basicAuthUsername" value="root" />
-					<property name="basicAuthPassword" value="password" />
-					<property name="basicAuthPasswordIsEncrypted" value="false" />
-					<property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
-				</properties>
-				<!-- In VM Transport Settings -->
-				<proxyTransport>org.apache.juddi.v3.client.transport.InVMTransport</proxyTransport>
-				<custodyTransferUrl>org.apache.juddi.api.impl.UDDICustodyTransferImpl</custodyTransferUrl>
-				<inquiryUrl>org.apache.juddi.api.impl.UDDIInquiryImpl</inquiryUrl>
-				<inquiryRESTUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiryRest</inquiryRESTUrl>
-		        <publishUrl>org.apache.juddi.api.impl.UDDIPublicationImpl</publishUrl>
-		        <securityUrl>org.apache.juddi.api.impl.UDDISecurityImpl</securityUrl>
-				<subscriptionUrl>org.apache.juddi.api.impl.UDDISubscriptionImpl</subscriptionUrl>
-				<subscriptionListenerUrl>org.apache.juddi.api.impl.UDDISubscriptionListenerImpl</subscriptionListenerUrl>
-				<juddiApiUrl>org.apache.juddi.api.impl.JUDDIApiImpl</juddiApiUrl>
-			</node>
-		</nodes>
-		<clerks registerOnStartup="false">
-		   <clerk name="joe" node="default" publisher="joepublisher" password="joepublisher" isPasswordEncrypted="false" cryptoProvider=""/>
-	   </clerks>
-	   <signature>
-			<!-- signing stuff -->
-			<signingKeyStorePath>keystore.jks</signingKeyStorePath>
-			<signingKeyStoreType>JKS</signingKeyStoreType>
-			<signingKeyStoreFilePassword 
-				isPasswordEncrypted="false" 
-				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</signingKeyStoreFilePassword>
-			<signingKeyPassword
-				isPasswordEncrypted="false" 
-				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</signingKeyPassword>
-			<signingKeyAlias>my special key</signingKeyAlias>
-			<canonicalizationMethod>http://www.w3.org/2001/10/xml-exc-c14n#</canonicalizationMethod>
-			<signatureMethod>RSA_SHA1</signatureMethod>
-			<XML_DIGSIG_NS>http://www.w3.org/2000/09/xmldsig#</XML_DIGSIG_NS>
-			<!-- validation stuff -->
-			<trustStorePath>truststore.jks</trustStorePath>
-			<trustStoreType>JKS</trustStoreType>
-			<trustStorePassword
-				isPasswordEncrypted="false" 
-				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</trustStorePassword>
+        <reloadDelay>5000</reloadDelay>
+        <client name="juddi-core-unittest-client">
+                <nodes>
+                        <node isHomeJUDDI="true">
+                                <!-- required 'default' node -->
+                                <name>default</name> 
+                                <description>InVM jUDDI node</description>
+                                <properties>
+                                        <property name="serverName" value="localhost" />
+                                        <property name="serverPort" value="8080" />
+                                        <!-- for UDDI nodes that use HTTP u/p, using the following 
+                                        <property name="basicAuthUsername" value="root" />
+                                        <property name="basicAuthPassword" value="password" />
+                                        <property name="basicAuthPasswordIsEncrypted" value="false" />
+                                        <property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
+                                </properties>
+                                <!-- In VM Transport Settings -->
+                                <proxyTransport>org.apache.juddi.v3.client.transport.InVMTransport</proxyTransport>
+                                <custodyTransferUrl>org.apache.juddi.api.impl.UDDICustodyTransferImpl</custodyTransferUrl>
+                                <inquiryUrl>org.apache.juddi.api.impl.UDDIInquiryImpl</inquiryUrl>
+                                <inquiryRESTUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiryRest</inquiryRESTUrl>
+                                <publishUrl>org.apache.juddi.api.impl.UDDIPublicationImpl</publishUrl>
+                                <securityUrl>org.apache.juddi.api.impl.UDDISecurityImpl</securityUrl>
+                                <subscriptionUrl>org.apache.juddi.api.impl.UDDISubscriptionImpl</subscriptionUrl>
+                                <subscriptionListenerUrl>org.apache.juddi.api.impl.UDDISubscriptionListenerImpl</subscriptionListenerUrl>
+                                <juddiApiUrl>org.apache.juddi.api.impl.JUDDIApiImpl</juddiApiUrl>
+                        </node>
+                        <node>
+                                <!-- required 'default' node -->
+                                <name>jaxws</name> 
+                                <description>e</description>
+                                <properties>
+                                        <property name="serverName" value="localhost" />
+                                        <property name="serverPort" value="8080" />
+                                        <!-- for UDDI nodes that use HTTP u/p, using the following 
+                                        <property name="basicAuthUsername" value="root" />
+                                        <property name="basicAuthPassword" value="password" />
+                                        <property name="basicAuthPasswordIsEncrypted" value="false" />
+                                        <property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
+                                </properties>
+                                <!-- In VM Transport Settings -->
+                                <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransportﬂ</proxyTransport>
+                                <custodyTransferUrl>org.apache.juddi.api.impl.UDDICustodyTransferImpl</custodyTransferUrl>
+                                <inquiryUrl>org.apache.juddi.api.impl.UDDIInquiryImpl</inquiryUrl>
+                                <inquiryRESTUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiryRest</inquiryRESTUrl>
+                                <publishUrl>org.apache.juddi.api.impl.UDDIPublicationImpl</publishUrl>
+                                <securityUrl>org.apache.juddi.api.impl.UDDISecurityImpl</securityUrl>
+                                <subscriptionUrl>org.apache.juddi.api.impl.UDDISubscriptionImpl</subscriptionUrl>
+                                <subscriptionListenerUrl>org.apache.juddi.api.impl.UDDISubscriptionListenerImpl</subscriptionListenerUrl>
+                                <juddiApiUrl>org.apache.juddi.api.impl.JUDDIApiImpl</juddiApiUrl>
+                        </node>
+                </nodes>
+                <clerks registerOnStartup="false">
+                        <clerk name="joe" node="default" publisher="joepublisher" password="joepublisher" isPasswordEncrypted="false" cryptoProvider="">
+                                <wsdl businessKey="uddi:uddi.joepublisher.com:businessone">wsdl/sample.wsdl</wsdl>
+                        </clerk>
+		   
+                </clerks>
+                <signature>
+                        <!-- signing stuff -->
+                        <signingKeyStorePath>keystore.jks</signingKeyStorePath>
+                        <signingKeyStoreType>JKS</signingKeyStoreType>
+                        <signingKeyStoreFilePassword 
+                                isPasswordEncrypted="false" 
+                                cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</signingKeyStoreFilePassword>
+                        <signingKeyPassword
+                                isPasswordEncrypted="false" 
+                                cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</signingKeyPassword>
+                        <signingKeyAlias>my special key</signingKeyAlias>
+                        <canonicalizationMethod>http://www.w3.org/2001/10/xml-exc-c14n#</canonicalizationMethod>
+                        <signatureMethod>RSA_SHA1</signatureMethod>
+                        <XML_DIGSIG_NS>http://www.w3.org/2000/09/xmldsig#</XML_DIGSIG_NS>
+                        <!-- validation stuff -->
+                        <trustStorePath>truststore.jks</trustStorePath>
+                        <trustStoreType>JKS</trustStoreType>
+                        <trustStorePassword
+                                isPasswordEncrypted="false" 
+                                cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</trustStorePassword>
 			
-			<checkTimestamps>true</checkTimestamps>
-			<checkTrust>true</checkTrust>
-			<checkRevocationCRL>true</checkRevocationCRL>
-		</signature>
-		<subscriptionCallbacks>
-			<keyDomain>uddi:somebusiness</keyDomain>
-			<listenUrl>http://MyHostname:4444/callback</listenUrl>
-			<autoRegisterBindingTemplate>false</autoRegisterBindingTemplate>
-			<autoRegisterBusinessServiceKey>uddi:somebusiness:someservicekey</autoRegisterBusinessServiceKey>
-			<signatureBehavior>DoNothing</signatureBehavior>
-			<!--valid values are AbortIfSigned,Sign,DoNothing,SignOnlyIfParentIsntSigned, default is DoNothing-->
-		</subscriptionCallbacks>
-		<XtoWsdl>
-			<IgnoreSSLErrors>false</IgnoreSSLErrors>
-		</XtoWsdl>
-	</client>
+                        <checkTimestamps>true</checkTimestamps>
+                        <checkTrust>true</checkTrust>
+                        <checkRevocationCRL>true</checkRevocationCRL>
+                </signature>
+                <subscriptionCallbacks>
+                        <keyDomain>uddi:somebusiness</keyDomain>
+                        <listenUrl>http://MyHostname:4444/callback</listenUrl>
+                        <autoRegisterBindingTemplate>false</autoRegisterBindingTemplate>
+                        <autoRegisterBusinessServiceKey>uddi:somebusiness:someservicekey</autoRegisterBusinessServiceKey>
+                        <signatureBehavior>DoNothing</signatureBehavior>
+                        <!--valid values are AbortIfSigned,Sign,DoNothing,SignOnlyIfParentIsntSigned, default is DoNothing-->
+                </subscriptionCallbacks>
+                <XtoWsdl>
+                        <IgnoreSSLErrors>false</IgnoreSSLErrors>
+                </XtoWsdl>
+        </client>
 </uddi>
