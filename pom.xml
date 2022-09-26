@@ -321,12 +321,6 @@ under the License.
 					<phase>validate</phase>
 					<configuration>
 					  <rules>
-						<requireProperty>
-						  <property>java.vendor</property>
-						  <message>Oracle JDK is required, sorry</message>
-						  <regex>Oracle Corporation</regex>
-						  <regexMessage>Oracle JDK is required</regexMessage>
-						</requireProperty>
 						<requireMavenVersion>
 						  <version>[3.2.1,)</version>
 						</requireMavenVersion>
