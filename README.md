@@ -4,6 +4,25 @@ Here's some quick notes for building, testing and deploying JUDDI from source.
 
 See our website at https://juddi.apache.org 
 
+# NOTICE
+
+December 2023 - Apache jUDDI discussed potentially retiring the project.
+An annoucement was made via the ASF mailing lists. No response was received.
+
+January 2023 - Apache jUDDI PCM team held a formal vote (it passed) to retire the project. 
+It will be moving to the Apache Attic in the near future. See https://attic.apache.org/ for additional details.
+
+## What does this mean?
+
+If you're still using Apache jUDDI, there will be no more releases from
+the jUDDI team at Apache. The source code and binaries will always be
+available, however there will be no support for security updates, patches, 
+or new features.
+
+We recommend to find a new solution, mitgrate to a different product, 
+or if you're willing, fork Apache jUDDI and perform your own maintenance.
+
+
 # Building
 
 1) Acquire a JDK8 and setup the JAVA_HOME environment variable
