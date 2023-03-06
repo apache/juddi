@@ -36,12 +36,13 @@
         </dependency>
         <dependency>
             <groupId>org.apache.juddi</groupId>
-            <artifactId>juddi-core</artifactId>
+            <artifactId>juddi-core-openjpa</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
+            <version>5.4.18.Final</version>
             <exclusions>
                 <exclusion>
                     <groupId>cglib</groupId>
@@ -52,6 +53,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
+            <version>5.4.18.Final</version>
         </dependency>
         <dependency>
             <groupId>org.apache.derby</groupId>

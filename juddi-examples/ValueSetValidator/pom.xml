@@ -33,7 +33,7 @@
 	
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
-			<artifactId>juddi-core</artifactId>
+			<artifactId>juddi-core-openjpa</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>

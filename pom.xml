@@ -568,7 +568,6 @@ under the License.
 		<module>juddi-client</module>
 		<module>juddi-client-cli</module>
 		<module>uddi-migration-tool</module>
-		<module>juddi-core</module>
 		<module>juddi-rest-cxf</module>
 		<module>juddi-core-openjpa</module>
 		<module>juddiv3-war</module>
@@ -772,19 +771,7 @@ under the License.
 
 			</dependency>
 		
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-core</artifactId>
-				<version>5.4.18.Final</version>
-
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-entitymanager</artifactId>
-				<version>5.4.18.Final</version>
-
-			</dependency>
-
+			
 			<dependency>
 				<groupId>org.apache.axis2</groupId>
 				<artifactId>axis2</artifactId>
@@ -875,14 +862,14 @@ under the License.
                     <file>
                         <exists>src/site/site.xml</exists>
                     </file>
-                </activation>
+                </activation><!--
                 <build>
                     <plugins>
                          <plugin>
                                 <groupId>org.apache.maven.plugins</groupId>
                                 <artifactId>maven-antrun-plugin</artifactId>
                                 <dependencies>
-                                    <!-- force the juddi docs module to build -->
+                                     force the juddi docs module to build
                                     <dependency>
                                         <groupId>org.apache.juddi.juddi-docs</groupId>
                                         <artifactId>juddi-docs</artifactId>
@@ -915,7 +902,7 @@ under the License.
                                   </executions>
                         </plugin>
                     </plugins>
-                </build>
+                </build> -->
             </profile>
 	
 
