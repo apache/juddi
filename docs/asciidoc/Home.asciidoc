@@ -1,8 +1,0 @@
-Welcome to the juddi wiki!
-
-jUDDI User Guide
-~~~~~~~~~~~~~~~~~
-The link:wiki/Guide[jUDDI Guide] and the link:wiki/ClientGuide[jUDDI Client Guide] are written in http://www.methods.co.nz/asciidoc/[asciidoc] and the source is published right in this wiki. So, you can edit the documentation right on master, see the link:wiki/GuideReadme[Readme] for more detail on this. The http://powerman.name/doc/asciidoc[Asciidoc cheat-sheet] is a nice place to start learning about Asciidoc itself.
-
-* Pages that start with "Guide" make up the link:wiki/Guide[jUDDI Guide] 
-* Pages that start with "ClientGuide" make up the link:wiki/ClientGuide[jUDDI Client Guide]

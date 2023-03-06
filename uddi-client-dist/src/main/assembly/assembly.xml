@@ -31,7 +31,7 @@
 			</includes>
 			<excludes>
 				<exclude>org.apache.juddi:juddi-client:jar:sources</exclude>
-				<exclude>org.apache.juddi:juddi-client:-clijar:sources</exclude>
+				<exclude>org.apache.juddi:juddi-client-cli:jar:sources</exclude>
 				<exclude>org.apache.juddi:uddi-ws:jar:sources</exclude>
 				<exclude>org.apache.juddi:uddi-migration-tool:jar:sources</exclude>
 				<exclude>org.apache.juddi:juddi-client:jar:javadoc</exclude>
@@ -117,27 +117,6 @@
 			<fileMode>0755</fileMode>
 		</dependencySet>
 
-		<!-- The jUDDI client documentation -->
-		<dependencySet>
-			<outputDirectory>docs/juddi-client-guide</outputDirectory>
-			<includes>
-				<include>org.apache.juddi.juddi-docs:juddi-client-guide:jdocbook
-				</include>
-			</includes>
-			<useProjectArtifact>false</useProjectArtifact>
-			<useProjectAttachments>false</useProjectAttachments>
-			<useTransitiveDependencies>false</useTransitiveDependencies>
-			<useTransitiveFiltering>false</useTransitiveFiltering>
-			<directoryMode>0755</directoryMode>
-			<fileMode>0755</fileMode>
-			<unpack>true</unpack>
-			<unpackOptions>
-				<excludes>
-					<exclude>**/META-INF/**</exclude>
-				</excludes>
-			</unpackOptions>
-		</dependencySet>
-
 		<dependencySet>
 			<outputDirectory>docs/javadoc</outputDirectory>
 			<scope>test</scope>
@@ -169,6 +148,19 @@
 			<fileMode>0755</fileMode>
 			<includes>
 				<include>LICENSE</include>
+			</includes>
+		</fileSet>
+		
+		<!-- The jUDDI client documentation -->
+		
+		<fileSet>
+			<directory>../target/site</directory>
+			<outputDirectory>docs</outputDirectory>
+			<filtered>false</filtered>
+			<directoryMode>0755</directoryMode>
+			<fileMode>0755</fileMode>
+			<includes>
+				<include>juddi-client-guide.pdf</include>
 			</includes>
 		</fileSet>
 		<fileSet>

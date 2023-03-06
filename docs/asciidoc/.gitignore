@@ -1,6 +1,0 @@
-target
-**/target/*
-**/derby.log
-**/.project
-**/.classpath
-**/.settings/*
